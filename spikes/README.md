@@ -4,6 +4,9 @@ Runnable harness for the go/no-go spikes in
 [`docs/plans/week1-validation-spikes.md`](../docs/plans/week1-validation-spikes.md). **Run on the
 Mac Mini.** These answer the questions that gate the build — a measured "no" this week is a success.
 
+📋 **Results so far:** [`docs/plans/week1-go-no-go-memo.md`](../docs/plans/week1-go-no-go-memo.md) —
+the Go/No-Go memo populated with measured numbers from the implemented spikes.
+
 ## Setup (Mini)
 
 ```bash

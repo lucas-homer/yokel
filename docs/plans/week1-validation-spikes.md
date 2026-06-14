@@ -328,6 +328,9 @@ is federal/EIS-shaped, or treat the local gap as a must-build (which changes the
 
 # Go / No-Go memo (fill at end of week)
 
+> 📋 **Filled-in results:** [`week1-go-no-go-memo.md`](./week1-go-no-go-memo.md) — the code spikes
+> (D1–D3, W1–W3) are run and populated; D4/D5 and W4–W6 remain open.
+
 ```
 WEEK-1 VALIDATION RESULTS — <date>
 
