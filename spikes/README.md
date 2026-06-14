@@ -33,7 +33,8 @@ The two that matter most run first. D4 (GSA rate-increase request), D5 (buyer ca
 | --- | --- | --- |
 | **D1** | ✅ implemented | FR (keyless) + Regs.gov pull → DuckDB join → `out/D1_join_rate.md`. |
 | **W3** | ✅ implemented | WBD HUC-8 resolve + FR full-text basin search → `out/W3_value_density.md` + candidate sheet. |
-| D2, D3, W1, W2 | stubs | Each `src/*.ts` carries its objective, method, and decision rule as comments. |
+| **D2** | ✅ implemented | Reuses the D1 pull; Eastern-vs-UTC date conflict in DuckDB → `out/D2_conflict_rate.md`. |
+| D3, W1, W2 | stubs | Each `src/*.ts` carries its objective, method, and decision rule as comments. |
 
 Outputs go to `out/` (gitignored); pulled API data to `data/` (gitignored).
 
