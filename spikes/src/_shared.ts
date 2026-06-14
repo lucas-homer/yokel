@@ -88,36 +88,46 @@ export async function fetchJson<T = unknown>(
     if (limiter) await limiter.wait();
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+
+    // Only network/abort failures are caught here (they're retriable). HTTP-status handling lives
+    // OUTSIDE this try, so a non-retriable 4xx throw propagates immediately instead of being
+    // swallowed by the catch and retried.
+    let res: Response;
     try {
-      const res = await fetch(url, {
+      res = await fetch(url, {
         headers: { Accept: "application/json", ...headers },
         signal: ctrl.signal,
       });
-      if (res.ok) return (await res.json()) as T;
-
-      const retriable = res.status === 429 || res.status >= 500;
-      if (!retriable || attempt >= retries) {
-        const body = await res.text().catch(() => "");
-        throw new Error(
-          `GET ${url} -> ${res.status} ${res.statusText}${body ? `: ${body.slice(0, 300)}` : ""}`,
-        );
-      }
-      const retryAfter = Number(res.headers.get("retry-after"));
-      const backoff = Number.isFinite(retryAfter) && retryAfter > 0
-        ? retryAfter * 1000
-        : Math.min(30_000, 500 * 2 ** attempt);
-      console.warn(`  ${res.status} on attempt ${attempt + 1}; retrying in ${backoff}ms`);
-      await sleep(backoff);
-      attempt++;
     } catch (err) {
+      clearTimeout(timer);
       if (attempt >= retries) throw err;
       const backoff = Math.min(30_000, 500 * 2 ** attempt);
       console.warn(`  fetch error (${String(err)}); retry in ${backoff}ms`);
       await sleep(backoff);
       attempt++;
-    } finally {
-      clearTimeout(timer);
+      continue;
     }
+    clearTimeout(timer);
+
+    if (res.ok) return (await res.json()) as T;
+
+    // Non-retriable (4xx other than 429) or out of attempts → throw and stop.
+    const retriable = res.status === 429 || res.status >= 500;
+    if (!retriable || attempt >= retries) {
+      const body = await res.text().catch(() => "");
+      throw new Error(
+        `GET ${url} -> ${res.status} ${res.statusText}${body ? `: ${body.slice(0, 300)}` : ""}`,
+      );
+    }
+
+    // Retriable status (429 / 5xx): back off and try again, honoring Retry-After.
+    const retryAfter = Number(res.headers.get("retry-after"));
+    const backoff = Number.isFinite(retryAfter) && retryAfter > 0
+      ? retryAfter * 1000
+      : Math.min(30_000, 500 * 2 ** attempt);
+    console.warn(`  ${res.status} on attempt ${attempt + 1}; retrying in ${backoff}ms`);
+    await sleep(backoff);
+    attempt++;
   }
 }
 
