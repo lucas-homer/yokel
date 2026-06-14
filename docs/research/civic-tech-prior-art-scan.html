@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Civic Tech Prior-Art Scan</title>
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --muted: #5a6270;
+    --line: #e3e6ec;
+    --bg: #fbfcfe;
+    --card: #ffffff;
+    --accent: #2c5f8a;
+    --accent-soft: #eaf2f9;
+    --green: #1f7a4d;
+    --green-soft: #e7f4ec;
+    --amber: #9a6700;
+    --amber-soft: #fdf3e0;
+    --red: #a4343a;
+    --red-soft: #fbeceb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px 80px; }
+  header.hero {
+    background: linear-gradient(135deg, #1a3a5c 0%, #2c5f8a 100%);
+    color: #fff;
+    padding: 56px 24px 48px;
+    margin-bottom: 40px;
+  }
+  header.hero .wrap { padding-bottom: 0; }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0.8;
+    margin: 0 0 10px;
+  }
+  header.hero h1 { font-size: 34px; line-height: 1.2; margin: 0 0 14px; font-weight: 700; }
+  header.hero p { font-size: 17px; opacity: 0.92; max-width: 720px; margin: 0; }
+  .meta-row { margin-top: 22px; font-size: 13px; opacity: 0.78; display: flex; gap: 20px; flex-wrap: wrap; }
+
+  .tldr {
+    background: var(--accent-soft);
+    border: 1px solid #cfe0ef;
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin: 0 0 44px;
+  }
+  .tldr h2 { margin: 0 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
+  .tldr p { margin: 0 0 10px; }
+  .tldr p:last-child { margin-bottom: 0; }
+
+  h2.section {
+    font-size: 24px;
+    margin: 48px 0 6px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--line);
+  }
+  h2.section .num {
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 10px;
+  }
+  .section-sub { color: var(--muted); margin: 0 0 22px; font-size: 15px; }
+
+  h3 { font-size: 18px; margin: 30px 0 10px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0 28px;
+    font-size: 14.5px;
+    background: var(--card);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(20,30,50,0.05);
+  }
+  th {
+    background: #f3f6fa;
+    text-align: left;
+    padding: 12px 14px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--line);
+  }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafcfe; }
+  td strong { color: var(--ink); }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid #c5d8e8; }
+  a:hover { border-bottom-color: var(--accent); }
+
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+  .pill.active { background: var(--green-soft); color: var(--green); }
+  .pill.dormant { background: var(--amber-soft); color: var(--amber); }
+  .pill.dead { background: var(--red-soft); color: var(--red); }
+  .pill.mon { background: var(--accent-soft); color: var(--accent); }
+  .pill.act { background: #efeafa; color: #5b3fa0; }
+  .pill.both { background: #e7f4ec; color: var(--green); }
+  .pill.infra { background: #eef0f3; color: #4a5260; }
+
+  code, a.repo {
+    font-family: "SF Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+    font-size: 13px;
+  }
+  a.repo {
+    border-bottom: 1px solid #d6dbe2;
+    color: #2c5f8a;
+    word-break: break-all;
+  }
+  a.repo:hover { border-bottom-color: var(--accent); }
+  .stars { color: var(--amber); font-weight: 600; white-space: nowrap; }
+  table.repos td { font-size: 14px; }
+
+  /* architecture section */
+  .proj {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 0;
+    margin: 20px 0;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(20,30,50,0.05);
+  }
+  .proj-head {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--line);
+    background: #f7f9fc;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .proj-head h3 { margin: 0; font-size: 19px; }
+  .proj-head .sub { color: var(--muted); font-size: 14px; font-weight: 400; }
+  .proj-body { padding: 18px 24px; }
+  .proj-body p { margin: 0 0 12px; font-size: 14.5px; }
+  .verdict-pill {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 4px 11px; border-radius: 20px; letter-spacing: 0.03em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .verdict-pill.buildon { background: var(--green-soft); color: var(--green); }
+  .verdict-pill.hybrid  { background: var(--accent-soft); color: var(--accent); }
+  .verdict-pill.ref     { background: var(--amber-soft); color: var(--amber); }
+  .twocol { display: grid; gap: 16px; margin: 6px 0 4px; }
+  @media (min-width: 640px) { .twocol { grid-template-columns: 1fr 1fr; } }
+  .col-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; margin: 0 0 6px; }
+  .col-label.good { color: var(--green); }
+  .col-label.bad  { color: var(--red); }
+  ul.borrow, ul.avoid { margin: 0; padding-left: 0; list-style: none; font-size: 14px; }
+  ul.borrow li, ul.avoid li { position: relative; padding-left: 22px; margin-bottom: 7px; line-height: 1.45; }
+  ul.borrow li::before { content: "↳"; position: absolute; left: 4px; color: var(--green); font-weight: 700; }
+  ul.avoid li::before  { content: "✕"; position: absolute; left: 4px; color: var(--red); font-weight: 700; font-size: 12px; }
+  .verdict-line {
+    margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line);
+    font-size: 14px;
+  }
+  .verdict-line strong { color: var(--ink); }
+  .diff { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius:5px; white-space:nowrap; }
+  .diff.easy { background: var(--green-soft); color: var(--green); }
+  .diff.med  { background: var(--amber-soft); color: var(--amber); }
+  .diff.hard { background: var(--red-soft); color: var(--red); }
+  table.stack td { font-size: 13.5px; }
+  table.stack td:first-child { font-weight: 600; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    box-shadow: 0 1px 3px rgba(20,30,50,0.04);
+  }
+  .card h3 { margin-top: 0; }
+
+  .gap-grid { display: grid; gap: 16px; margin: 20px 0; }
+  @media (min-width: 680px) { .gap-grid { grid-template-columns: 1fr 1fr; } }
+  .gap {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .gap .n { font-size: 28px; font-weight: 800; color: var(--accent-soft); line-height: 1; }
+  .gap h4 { margin: 6px 0 8px; font-size: 16px; }
+  .gap p { margin: 0; font-size: 14.5px; color: var(--muted); }
+
+  .wedge {
+    background: linear-gradient(135deg, #e7f4ec 0%, #eaf2f9 100%);
+    border: 1px solid #cde3d6;
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 28px 0;
+  }
+  .wedge h3 { margin-top: 0; color: var(--green); }
+
+  .callout {
+    border-left: 3px solid var(--amber);
+    background: var(--amber-soft);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin: 20px 0;
+    font-size: 14.5px;
+  }
+  .next {
+    display: grid; gap: 14px; margin: 18px 0;
+  }
+  @media (min-width: 680px) { .next { grid-template-columns: repeat(3, 1fr); } }
+  .next .opt {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+    background: var(--card);
+  }
+  .next .opt .tag { font-weight: 700; color: var(--accent); font-size: 13px; }
+  .next .opt p { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+
+  footer {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  ul.clean { padding-left: 20px; }
+  ul.clean li { margin-bottom: 6px; }
+  .legend { font-size: 12px; color: var(--muted); margin: -8px 0 18px; }
+  .legend .pill { margin-right: 4px; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Civic Tech Research Team · Prior-Art Scan</p>
+    <h1>Track + Act on Bureaucratic Processes</h1>
+    <p>Who is already building a tool that helps ordinary, non-expert people track public comment periods, hearings &amp; rulemaking — and take meaningful action?</p>
+    <div class="meta-row">
+      <span>Prepared 2026-06-06</span>
+      <span>Sources: SF Civic Tech · Hack for LA · ACT / brigade network · commercial &amp; gov market</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="tldr">
+    <h2>Bottom line</h2>
+    <p><strong>Nobody — in the volunteer civic-tech world or the commercial market — is doing the exact thing you described:</strong> a consumer-facing tool that does <em>both halves</em> (monitor + act) across regulation <em>and</em> local land-use, with proactive discovery for non-experts.</p>
+    <p>The market splits cleanly along seams, and the seam you're aiming at is genuinely open. The catch: several volunteer teams have <em>started</em> pieces of this and let them die — which tells you the hard part is sustaining it, not conceiving it.</p>
+  </div>
+
+  <!-- BRIGADES -->
+  <h2 class="section"><span class="num">01</span>What the brigades have built</h2>
+  <p class="section-sub">The volunteer civic-tech landscape — including the two groups you named.</p>
+
+  <div class="callout">
+    <strong>The brigade network you're picturing no longer exists as such.</strong> Code for America dissolved its ~60-chapter Brigade Network in 2023 (pivoting to direct government software delivery after a $100M gift). Volunteers regrouped under the <strong>Alliance of Civic Technologists (ACT)</strong>, a decentralized federation of ~18 groups. The strongest hubs today are ones that never depended on CfA: <strong>Chi Hack Night, BetaNYC, SF Civic Tech, Open Austin</strong>. The <a href="https://civictech.guide">Civic Tech Field Guide</a> remains the central project directory. <em>This is your recruiting / partner channel if you go the volunteer route.</em>
+  </div>
+
+  <div class="card">
+    <h3>SF Civic Tech <span class="pill active">org active 2026</span></h3>
+    <p>Active in 2026, but <strong>nothing in their portfolio matches.</strong> Closest neighbors are <a href="https://wevote.us">WeVote</a> (ballots — wrong domain) and <a href="https://policyengine.org">PolicyEngine</a> (policy <em>impact</em> simulation — no tracking/action loop). Essentially greenfield there. Note: SF volunteers have repeatedly started gov-engagement tools and let them go dormant — a caution about sustainability.</p>
+  </div>
+
+  <div class="card">
+    <h3>Hack for LA — "Engage" <span class="pill dead">on hold / frozen 2022</span></h3>
+    <p>HfLA is active in 2026, and they have the <strong>single closest concept match.</strong> Engage scrapes council agendas, surfaces them to constituents, and lets them comment. But it's officially <strong>"On Hold," core repos frozen since Dec 2022, no live site.</strong> Scoped only to LA Neighborhood Council agendas. Its <code>engage-scraper</code> ("government agnostic") is worth a look as a reference artifact for the ingestion problem.</p>
+  </div>
+
+  <!-- WORKING PROJECTS -->
+  <h2 class="section"><span class="num">02</span>The most relevant working projects</h2>
+  <p class="section-sub">Verified active. This is the real prior art — study these, possibly build on them.</p>
+  <p class="legend"><span class="pill mon">Monitoring</span> tracks / surfaces &nbsp; <span class="pill act">Action</span> helps you act &nbsp; <span class="pill both">Both</span> end-to-end</p>
+
+  <table>
+    <thead>
+      <tr><th>Project</th><th>Half</th><th>Why it matters</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>MAPLE</strong> (Code for Boston)<br><a href="https://www.mapletestimony.org">mapletestimony.org</a></td>
+        <td><span class="pill act">Action</span></td>
+        <td>Best end-to-end analogue: browse MA bills → read others' testimony → submit + route your own. Single-state, legislative-only. <strong>Your "action layer" reference design.</strong></td>
+      </tr>
+      <tr>
+        <td><strong>City Scrapers</strong> (City Bureau)<br><a href="https://city-scrapers.org">city-scrapers.org</a></td>
+        <td><span class="pill mon">Monitoring</span></td>
+        <td>Most-starred (377★) framework for scraping/standardizing public <em>meeting</em> data across scattered gov sites. Ingestion backbone — a build-vs-buy candidate.</td>
+      </tr>
+      <tr>
+        <td><strong>Councilmatic</strong> (DataMade)<br><a href="https://chicago.councilmatic.org">chicago.councilmatic.org</a></td>
+        <td><span class="pill mon">Monitoring</span></td>
+        <td>Search / browse / <strong>subscribe</strong> to local council legislation. Live in Chicago &amp; NYC; generic deploy kit is dormant.</td>
+      </tr>
+      <tr>
+        <td><strong>Mirrulations</strong> + Civic Tech DC 2025 toolchain<br><a href="https://github.com/mirrulations/mirrulations">github.com/mirrulations</a></td>
+        <td><span class="pill mon">Monitoring</span></td>
+        <td>Full open mirror of Regulations.gov (~27M items) + 2025 hackathon tools doing plain-English Q&amp;A over dockets, comment-substance mapping, non-Regulations.gov scrapers. <strong>Solves the hardest part of federal monitoring — build on it, don't rebuild.</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:14.5px;color:var(--muted)">Plus data layers you'd <em>consume</em> rather than compete with: <a href="https://pluralpolicy.com">Open States / Plural</a>, <a href="https://legiscan.com">LegiScan</a>, <a href="https://govtrack.us">GovTrack</a> (legislation); <a href="https://boardstat.beta.nyc">BoardStat</a> (NYC community-board issues).</p>
+
+  <!-- GITHUB DIRECTORY -->
+  <h2 class="section"><span class="num">03</span>GitHub directory</h2>
+  <p class="section-sub">Verified live against the GitHub API on 2026-06-06. Two groupings: the volunteer groups' orgs, and the individual project repos worth studying. "Active" = pushed within the last ~30 days.</p>
+
+  <h3>A · Volunteer groups &amp; brigades (orgs)</h3>
+  <table class="repos">
+    <thead>
+      <tr><th>Group</th><th>GitHub org</th><th>Repos</th><th>Activity</th><th>Note</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>SF Civic Tech</strong></td><td><a class="repo" href="https://github.com/sfbrigade">github.com/sfbrigade</a></td><td>~149</td><td><span class="pill active">active</span></td><td>The two groups you named. Long-running SF brigade.</td></tr>
+      <tr><td><strong>Hack for LA</strong></td><td><a class="repo" href="https://github.com/hackforla">github.com/hackforla</a></td><td>~148</td><td><span class="pill active">active</span></td><td>Very active — daily pushes. Home of Engage (in a separate org, below).</td></tr>
+      <tr><td><strong>Code for Boston</strong></td><td><a class="repo" href="https://github.com/codeforboston">github.com/codeforboston</a></td><td>~123</td><td><span class="pill active">active</span></td><td>Home of MAPLE — the closest analogue to your idea.</td></tr>
+      <tr><td><strong>BetaNYC</strong></td><td><a class="repo" href="https://github.com/BetaNYC">github.com/BetaNYC</a></td><td>~113</td><td><span class="pill active">active</span></td><td>NYC open-data/civic org. BoardStat, charter-laws-rules.</td></tr>
+      <tr><td><strong>City Bureau</strong> (Chicago)</td><td><a class="repo" href="https://github.com/City-Bureau">github.com/City-Bureau</a></td><td>~69</td><td><span class="pill active">active</span></td><td>Journalism/civic org. Owns the City Scrapers network.</td></tr>
+      <tr><td><strong>DataMade</strong> (Chicago)</td><td><a class="repo" href="https://github.com/datamade">github.com/datamade</a></td><td>~283</td><td><span class="pill active">active</span></td><td>Civic-data consultancy. Builds the Councilmatic framework.</td></tr>
+      <tr><td><strong>Code for Philly</strong></td><td><a class="repo" href="https://github.com/CodeForPhilly">github.com/CodeForPhilly</a></td><td>~134</td><td><span class="pill active">active</span></td><td>Active brigade.</td></tr>
+      <tr><td><strong>OpenOakland</strong></td><td><a class="repo" href="https://github.com/openoakland">github.com/openoakland</a></td><td>~90</td><td><span class="pill dormant">slow</span></td><td>Live but slower cadence (pushes Mar–May 2026).</td></tr>
+      <tr><td><strong>Open Austin</strong></td><td><a class="repo" href="https://github.com/open-austin">github.com/open-austin</a></td><td>~123</td><td><span class="pill active">active</span></td><td>Active brigade.</td></tr>
+      <tr><td><strong>Civic Tech DC</strong> (Code for DC)</td><td><a class="repo" href="https://github.com/civictechdc">github.com/civictechdc</a></td><td>~87</td><td><span class="pill active">active</span></td><td>Hosts the 2025 Regulations.gov hackathon (hackdc2025, spicy-regs).</td></tr>
+      <tr><td><strong>Open Sacramento</strong></td><td><a class="repo" href="https://github.com/opensacorg">github.com/opensacorg</a></td><td>~130</td><td><span class="pill dormant">partial</span></td><td>Org handle is <code>opensacorg</code>. Budget/accountability tools.</td></tr>
+      <tr><td><strong>Alliance of Civic Technologists</strong> (ACT)</td><td><a class="repo" href="https://github.com/civictechnologists">github.com/civictechnologists</a></td><td>3</td><td><span class="pill dormant">minimal</span></td><td>Successor network to CfA's Brigade Network — but almost no code (website + governance).</td></tr>
+      <tr><td><strong>Code for America</strong> (national)</td><td><a class="repo" href="https://github.com/codeforamerica">github.com/codeforamerica</a></td><td>~803</td><td><span class="pill active">active</span></td><td>Largest US civic-tech org; now focused on direct gov delivery.</td></tr>
+      <tr><td><strong>mySociety</strong> (UK)</td><td><a class="repo" href="https://github.com/mysociety">github.com/mysociety</a></td><td>~403</td><td><span class="pill active">active</span></td><td>Prolific. FixMyStreet, parliament tooling — strong prior art for civic engagement patterns.</td></tr>
+      <tr><td><strong>g0v</strong> (Taiwan)</td><td><a class="repo" href="https://github.com/g0v">github.com/g0v</a></td><td>~518</td><td><span class="pill active">active</span></td><td>Large Taiwanese civic-hacker community.</td></tr>
+      <tr><td><strong>Code for All</strong> (global)</td><td><a class="repo" href="https://github.com/Code-for-All">github.com/Code-for-All</a></td><td>~16</td><td><span class="pill dead">dormant</span></td><td>Network still active organizationally, but its GitHub is stale (last push 2023).</td></tr>
+    </tbody>
+  </table>
+
+  <h3>B · Project repos worth studying</h3>
+  <p class="legend"><span class="pill mon">Monitoring</span> &nbsp; <span class="pill act">Action</span> &nbsp; <span class="pill both">Both</span> &nbsp; <span class="pill infra">Infra</span> ingestion / data backbone</p>
+  <table class="repos">
+    <thead>
+      <tr><th>Project</th><th>Repo</th><th>Stack</th><th>Status</th><th>Half</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>MAPLE</strong><br><span style="color:var(--muted);font-size:13px">view bills + submit testimony</span></td>
+        <td><a class="repo" href="https://github.com/codeforboston/maple">codeforboston/maple</a></td>
+        <td>TypeScript</td>
+        <td><span class="pill active">active</span> <span class="stars">56★</span></td>
+        <td><span class="pill both">Both</span></td>
+      </tr>
+      <tr>
+        <td><strong>City Scrapers</strong><br><span style="color:var(--muted);font-size:13px">+ many per-city forks</span></td>
+        <td><a class="repo" href="https://github.com/City-Bureau/city-scrapers">City-Bureau/city-scrapers</a></td>
+        <td>Python</td>
+        <td><span class="pill active">active</span> <span class="stars">377★</span></td>
+        <td><span class="pill infra">Infra</span></td>
+      </tr>
+      <tr>
+        <td><strong>Councilmatic</strong> — live Chicago instance</td>
+        <td><a class="repo" href="https://github.com/datamade/chi-councilmatic">datamade/chi-councilmatic</a></td>
+        <td>Python/Django</td>
+        <td><span class="pill active">active-ish</span> <span class="stars">33★</span></td>
+        <td><span class="pill mon">Monitoring</span></td>
+      </tr>
+      <tr>
+        <td><strong>Councilmatic</strong> — reusable framework</td>
+        <td><a class="repo" href="https://github.com/datamade/django-councilmatic">datamade/django-councilmatic</a><br><a class="repo" href="https://github.com/datamade/councilmatic-starter-template">+ starter-template</a></td>
+        <td>Python/Django</td>
+        <td><span class="pill active">maintained</span> <span class="stars">26★</span></td>
+        <td><span class="pill infra">Infra</span></td>
+      </tr>
+      <tr>
+        <td><strong>Mirrulations</strong><br><span style="color:var(--muted);font-size:13px">mirrors Regulations.gov</span></td>
+        <td><a class="repo" href="https://github.com/mirrulations/mirrulations">mirrulations/mirrulations</a><br><span style="color:var(--muted);font-size:12px">+ mirrulations-fetch, -search in same org</span></td>
+        <td>Python</td>
+        <td><span class="pill active">active</span></td>
+        <td><span class="pill infra">Infra</span></td>
+      </tr>
+      <tr>
+        <td><strong>Engage</strong> (Hack for LA)<br><span style="color:var(--muted);font-size:13px">closest concept; reference only</span></td>
+        <td><a class="repo" href="https://github.com/hackla-engage">github.com/hackla-engage</a><br><span style="color:var(--muted);font-size:12px">engage-scraper, -backend, -client</span></td>
+        <td>Python + JS</td>
+        <td><span class="pill dead">abandoned '22</span></td>
+        <td><span class="pill mon">Monitoring</span></td>
+      </tr>
+      <tr>
+        <td><strong>Open States / Plural</strong> — scrapers</td>
+        <td><a class="repo" href="https://github.com/openstates/openstates-scrapers">openstates/openstates-scrapers</a><br><a class="repo" href="https://github.com/openstates/openstates-core">openstates/openstates-core</a></td>
+        <td>Python</td>
+        <td><span class="pill active">active</span> <span class="stars">903★</span></td>
+        <td><span class="pill infra">Infra</span></td>
+      </tr>
+      <tr>
+        <td><strong>GovTrack</strong></td>
+        <td><a class="repo" href="https://github.com/govtrack/govtrack.us-web">govtrack/govtrack.us-web</a></td>
+        <td>Python/Django</td>
+        <td><span class="pill active">active</span> <span class="stars">411★</span></td>
+        <td><span class="pill mon">Monitoring</span></td>
+      </tr>
+      <tr>
+        <td><strong>scrapers-us-municipal</strong><br><span style="color:var(--muted);font-size:13px">Open Civic Data</span></td>
+        <td><a class="repo" href="https://github.com/opencivicdata/scrapers-us-municipal">opencivicdata/scrapers-us-municipal</a></td>
+        <td>Python</td>
+        <td><span class="pill active">maintained</span> <span class="stars">110★</span></td>
+        <td><span class="pill infra">Infra</span></td>
+      </tr>
+      <tr>
+        <td><strong>Decidim</strong><br><span style="color:var(--muted);font-size:13px">participatory democracy platform</span></td>
+        <td><a class="repo" href="https://github.com/decidim/decidim">decidim/decidim</a></td>
+        <td>Ruby</td>
+        <td><span class="pill active">very active</span> <span class="stars">1,763★</span></td>
+        <td><span class="pill both">Both</span></td>
+      </tr>
+      <tr>
+        <td><strong>Consul Democracy</strong><br><span style="color:var(--muted);font-size:13px">citizen participation/budgeting</span></td>
+        <td><a class="repo" href="https://github.com/consuldemocracy/consuldemocracy">consuldemocracy/consuldemocracy</a></td>
+        <td>Ruby</td>
+        <td><span class="pill active">very active</span> <span class="stars">1,533★</span></td>
+        <td><span class="pill act">Action</span></td>
+      </tr>
+      <tr>
+        <td><strong>BoardStat</strong> (BetaNYC)</td>
+        <td><a class="repo" href="https://github.com/BetaNYC/BoardStat">BetaNYC/BoardStat</a></td>
+        <td>HTML/R</td>
+        <td><span class="pill active">maintained</span> <span class="stars">14★</span></td>
+        <td><span class="pill mon">Monitoring</span></td>
+      </tr>
+      <tr>
+        <td><strong>PolicyEngine</strong><br><span style="color:var(--muted);font-size:13px">tax/benefit microsim — tangential</span></td>
+        <td><a class="repo" href="https://github.com/PolicyEngine">github.com/PolicyEngine</a></td>
+        <td>Python + JS</td>
+        <td><span class="pill active">active</span> <span class="stars">146★</span></td>
+        <td><span class="pill infra">Infra</span></td>
+      </tr>
+      <tr>
+        <td><strong>3DStreet</strong><br><span style="color:var(--muted);font-size:13px">street-design viz for hearings</span></td>
+        <td><a class="repo" href="https://github.com/3DStreet/3dstreet">3DStreet/3dstreet</a></td>
+        <td>JavaScript</td>
+        <td><span class="pill active">active</span> <span class="stars">327★</span></td>
+        <td><span class="pill act">Action</span></td>
+      </tr>
+      <tr>
+        <td><strong>Civic Hack DC 2025</strong><br><span style="color:var(--muted);font-size:13px">hackathon outputs / datasets</span></td>
+        <td><a class="repo" href="https://github.com/civictechdc/hackdc2025">civictechdc/hackdc2025</a></td>
+        <td>Jupyter</td>
+        <td><span class="pill dead">archive '25</span></td>
+        <td><span class="pill mon">Monitoring</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Verification notes &amp; gotchas.</strong>
+    <ul class="clean" style="margin:8px 0 0">
+      <li><strong>Engage</strong> (<code>hackla-engage</code>) is <strong>abandoned</strong> — core repos untouched since Dec 2022. Treat as a reference design, not living software.</li>
+      <li><strong>Consul</strong>: the canonical repo is <code>consuldemocracy/consuldemocracy</code>; the older <code>consuldemocracy/consul</code> path is a 301 redirect — don't link it as primary.</li>
+      <li><strong>Councilmatic</strong> is a <em>family</em>, not one repo. For the framework use <code>django-councilmatic</code>; for a live instance use <code>chi-councilmatic</code>. The paths <code>datamade/councilmatic</code> and <code>opencivicdata/python-councilmatic</code> do <em>not</em> resolve.</li>
+      <li><strong>LegiScan</strong> has <strong>no official public repo</strong> (commercial API) — only third-party clients exist.</li>
+    </ul>
+  </div>
+  <div class="wedge" style="background:var(--accent-soft);border-color:#cfe0ef">
+    <h3 style="color:var(--accent)">Most directly relevant to your idea</h3>
+    <p style="margin-bottom:0"><strong>MAPLE</strong> (both halves, consumer-facing) · <strong>Mirrulations</strong> (the in-house-counsel-style federal monitoring half) · <strong>Open States</strong> (legislation data backbone) · <strong>City Scrapers + Councilmatic</strong> (local hearings/agendas) · <strong>Decidim / Consul</strong> (the action/organizing half).</p>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <h2 class="section"><span class="num">04</span>Architecture &amp; build strategy</h2>
+  <p class="section-sub">Deep teardowns of the six most relevant codebases — stack, the patterns worth borrowing, what to avoid, and a reuse verdict for each. Findings are from reading the actual repos (source, schemas, docs) as of 2026-06-06.</p>
+  <p class="legend">Verdict key: &nbsp;<span class="verdict-pill buildon">build on it</span> &nbsp;<span class="verdict-pill hybrid">hybrid</span> &nbsp;<span class="verdict-pill ref">reference only</span></p>
+
+  <!-- MAPLE -->
+  <div class="proj">
+    <div class="proj-head">
+      <h3>MAPLE <span class="sub">— the closest end-to-end blueprint</span></h3>
+      <span class="verdict-pill buildon">build on it</span>
+    </div>
+    <div class="proj-body">
+      <p><strong>Stack:</strong> Next.js (static export on Vercel) + <strong>Firebase</strong> for all backend — Firestore as system-of-record, Cloud Functions in <em>two</em> codebases (Node/TS for logic, a <em>separate Python codebase just for LLM bill-summarization</em>), Firebase Auth, Storage, and a <code>firestore-send-email</code> extension. Self-hosted <strong>Typesense</strong> for search (incl. vector/semantic). Mature and in-production; backend is well-architected, frontend is cruft-y (three styling systems coexist).</p>
+      <div class="twocol">
+        <div>
+          <p class="col-label good">Borrow</p>
+          <ul class="borrow">
+            <li><strong>Search-indexer factory</strong> — each domain registers schema + <code>convert()</code> + a Firestore <code>onWrite</code> trigger that incrementally syncs to Typesense. Swap "bills" for "rules/hearings/ordinances."</li>
+            <li><strong>Notification engine</strong> — follow → topic → central event collection → per-user feed → batched daily/weekly/monthly digest emails → TTL cleanup. <em>This is your monitoring loop.</em></li>
+            <li><strong>Cursor-based batch scraper</strong> engineered around serverless timeout/concurrency to keep a big dataset fresh on a rolling basis.</li>
+            <li><strong>AI enrichment as a separate service</strong> (their Python functions codebase).</li>
+          </ul>
+        </div>
+        <div>
+          <p class="col-label bad">Avoid</p>
+          <ul class="avoid">
+            <li><strong>The <code>mailto:</code> delivery</strong> — MAPLE doesn't actually submit testimony; it opens the user's mail client. A dodge because MA has no API. You should deliver server-side via real APIs and capture a receipt.</li>
+            <li><strong>Near-zero constituent verification</strong> — district/rep is self-reported; the email just <em>asserts</em> "as your constituent." You'll need address→district geocoding it lacks.</li>
+            <li>The mixed frontend (Bootstrap + MUI + styled-components, Pages Router, old Firebase SDK).</li>
+          </ul>
+        </div>
+      </div>
+      <p class="verdict-line"><strong>Verdict:</strong> The serverless + Firestore + Typesense + event-driven-notifications + separate-AI-codebase shape is a sensible blueprint for the <em>whole</em> product. Mine the backend; rebuild action-delivery and identity.</p>
+    </div>
+  </div>
+
+  <!-- MIRRULATIONS -->
+  <div class="proj">
+    <div class="proj-head">
+      <h3>Mirrulations <span class="sub">— the federal rulemaking backbone</span></h3>
+      <span class="verdict-pill hybrid">hybrid</span>
+    </div>
+    <div class="proj-body">
+      <p><strong>What it is:</strong> an open mirror of <em>all</em> of Regulations.gov (~253k dockets / ~1.8M docs / ~22M comments) because the API is brutally rate-limited (1,000 req/hr/key, hard 5,000-item paging, no bulk export). Architecture: <strong>RabbitMQ job queue + Redis checkpoints + donated-API-key pool</strong>; a work-generator enqueues jobs every 6h, distributed clients self-pace. Output is a <strong>free public S3 bucket</strong> (AWS Open Data, unsigned reads, hourly refresh) of raw JSON.</p>
+      <div class="twocol">
+        <div>
+          <p class="col-label good">Borrow</p>
+          <ul class="borrow">
+            <li><strong>The S3 mirror itself</strong> — terabytes of history, free to read. Use for the bulk/historical corpus.</li>
+            <li><strong><code>mirrulations-search</code>'s Postgres schema</strong> — has <code>is_open_for_comment</code>, <code>comment_start/end_date</code>, user "collections" (watchlists), + Federal Register &amp; CFR joins. A near-ready monitoring data model.</li>
+            <li><strong><code>spicy-regs</code></strong> (actively maintained) — Parquet-on-object-store + DuckDB + an <strong>MCP server</strong> so an LLM can query the corpus via SQL.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="col-label bad">Avoid</p>
+          <ul class="avoid">
+            <li><strong>Don't inherit the crawler for live alerting</strong> — 6h cycle + hourly publish + no retry loop is too laggy/fragile for "comment period just opened."</li>
+            <li>Don't assume the mirror is queryable — it's loose JSON in S3; you build the index/ETL.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="verdict-line"><strong>Verdict — hybrid:</strong> build on the mirror for <em>history</em>; hit the <strong>Regulations.gov v4 + Federal Register APIs directly</strong> for the thin freshness layer that drives alerts. Gaps it leaves: maintained query API, alerting, plain-language summaries, spam detection, state/local + non-Regulations.gov agencies (FCC/SEC — explicitly unsolved), and any "take action."</p>
+    </div>
+  </div>
+
+  <!-- OPEN STATES -->
+  <div class="proj">
+    <div class="proj-head">
+      <h3>Open States / Plural <span class="sub">— the legislation data backbone</span></h3>
+      <span class="verdict-pill buildon">build on it</span>
+    </div>
+    <div class="proj-body">
+      <p><strong>What it is:</strong> the canonical open dataset for 50 states + DC + 4 territories + Congress, built on the <strong>Open Civic Data (OCD) standard</strong> (Popolo-derived: Division / Jurisdiction / Organization / Person / Bill / VoteEvent / Event, all with stable <code>ocd-*</code> IDs). ~200 scrapers normalize wildly different sites by emitting schema-validated JSON. Actively maintained; open data is public-domain and free. <strong>Plural</strong> is the commercial arm that subsidizes it.</p>
+      <div class="twocol">
+        <div>
+          <p class="col-label good">Borrow</p>
+          <ul class="borrow">
+            <li><strong>The OCD data model itself</strong> — adopt its object types + OCD-IDs as your internal canonical schema for free interop. The single most valuable reusable asset here.</li>
+            <li><strong>Consume the v3 REST API</strong> — <code>updated_since</code> polling for incremental monitoring; <code>people.geo</code> for "who represents me."</li>
+            <li><strong>Daily Postgres bulk dump</strong> as backfill / fallback.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="col-label bad">Avoid</p>
+          <ul class="avoid">
+            <li><strong>Don't self-host the ~200 scrapers</strong> — that long tail of constant breakage is the biggest hidden cost in this ecosystem.</li>
+            <li>Don't rely on the free API tier (10/min, 500/day) for production — budget a paid tier.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="verdict-line"><strong>Verdict:</strong> The right, free backbone for the <em>legislation + hearings</em> half. But <strong>no regulations/rulemaking, no comment periods, no real municipal coverage</strong> — those are out of scope (rulemaking is Plural's paid product) and must come from elsewhere.</p>
+    </div>
+  </div>
+
+  <!-- CITY SCRAPERS + COUNCILMATIC + LEGISTAR -->
+  <div class="proj">
+    <div class="proj-head">
+      <h3>City Scrapers + Councilmatic <span class="sub">— and the Legistar unlock</span></h3>
+      <span class="verdict-pill hybrid">hybrid</span>
+    </div>
+    <div class="proj-body">
+      <p>The headline finding reframes the local problem. <strong>Legistar (Granicus) is the key unlock:</strong> agenda/legislative SaaS used by <strong>~70% of large US cities/counties</strong>, and every client exposes a <strong>public, auth-free OData Web API</strong> (<code>webapi.legistar.com/v1/{client}</code>) returning clean JSON — bills, actions, sponsors, votes, agendas, committees, people — queryable incrementally by modified-date.</p>
+      <p><strong>City Scrapers</strong> (Scrapy, GitHub-Actions cron, outputs OCD-Event JSON to object storage) is the proven <em>pattern</em> for the bespoke long tail — one spider per agency + a diff pipeline that marks vanished meetings cancelled. But it's effectively Chicago-only now. <strong>Councilmatic</strong> (Django on old pins, Solr/ES) is a council-watching read UI over a pupa-populated OCD Postgres DB; notifications are RSS-over-saved-search.</p>
+      <div class="twocol">
+        <div>
+          <p class="col-label good">Borrow</p>
+          <ul class="borrow">
+            <li><strong>Build directly on the Legistar Web API</strong> — covers the large-city majority. Use <code>python-legistar-scraper</code> as reference for OData filters/paging; you don't need pupa/OCD-Django/Councilmatic to call it.</li>
+            <li>City Scrapers' <strong>diff/dedup + status-monitoring</strong> pattern (Sentry, "mark vanished as cancelled") for the bespoke spiders you can't avoid.</li>
+            <li>Councilmatic's faceted-search field design + PDF/RTF text extraction.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="col-label bad">Avoid</p>
+          <ul class="avoid">
+            <li><strong>Don't fork Councilmatic</strong> for a consumer product — old Django/Solr pins, single-jurisdiction, expert-facing, RSS-only alerts.</li>
+            <li>Don't expect the generic kits to be turnkey — thin/aging maintainer base.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="verdict-line"><strong>Verdict — hybrid:</strong> Legistar API as backbone for the ~70%; City-Scrapers-style spiders for the long tail (PrimeGov, CivicClerk, Municode, PDF-only — each days-to-weeks <em>plus permanent maintenance</em>). Neither gives you <strong>comment-period deadlines, land-use/zoning/permit data</strong> (Accela/Socrata/ArcGIS — separate problem), cross-city normalization, or any consumer UX.</p>
+    </div>
+  </div>
+
+  <!-- DECIDIM / CONSUL -->
+  <div class="proj">
+    <div class="proj-head">
+      <h3>Decidim &amp; Consul <span class="sub">— the action / organizing layer</span></h3>
+      <span class="verdict-pill ref">reference only</span>
+    </div>
+    <div class="proj-body">
+      <p>Both are heavy Rails participatory-democracy platforms, both <strong>AGPL-3.0</strong> — and that license is the headline. For a proprietary consumer SaaS, AGPL's network-copyleft means hosting a derivative obligates you to release your source. <strong>Borrowing concepts is free; shipping their code isn't.</strong></p>
+      <div class="twocol">
+        <div>
+          <p class="col-label good">Borrow (concepts)</p>
+          <ul class="borrow">
+            <li><strong>Consul's Collaborative Legislation</strong> — government text → clause-by-clause citizen annotation → phased debate→draft→follow-up. The tightest 1:1 match to a comment-period lifecycle that exists anywhere.</li>
+            <li><strong>Decidim's pluggable verification</strong> (SMS / ID-doc / <strong>postal-letter</strong> / census, with scoped permissions like "only verified residents of district X may act") — the best real-person-assurance design in the field.</li>
+            <li><strong>Decidim's Accountability</strong> component — track what happened to a proposal. Directly serves your "effort wasn't wasted" requirement.</li>
+            <li>Consul's escalating verification tiers (browse → SMS to comment → census+letter for binding votes).</li>
+          </ul>
+        </div>
+        <div>
+          <p class="col-label bad">Avoid</p>
+          <ul class="avoid">
+            <li><strong>Don't adopt/fork either</strong> — AGPL, not headless/embeddable, assume an authoritative resident census, and are operationally enterprise-grade.</li>
+            <li>They're <em>destinations a government stands up</em>, not a component fed by your monitoring data.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="verdict-line"><strong>Verdict — reference architectures, not dependencies:</strong> build thin, AGPL-free, purpose-built action flows (à la MAPLE/Resistbot) fed by your own data. The one thing not worth reinventing: port the verification-tier <em>design</em> early.</p>
+    </div>
+  </div>
+
+  <!-- REFERENCE STACK -->
+  <h3>A reference stack — mapping each data source to its ingestion approach</h3>
+  <p class="section-sub" style="margin-bottom:14px">The teardowns converge on a clear tiering of the monitoring problem by how hard each source is to ingest.</p>
+  <table class="stack">
+    <thead>
+      <tr><th>Domain / source</th><th>Approach</th><th>Difficulty</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Canonical schema</td><td>Adopt <strong>OCD object types + OCD-IDs</strong></td><td><span class="diff easy">free win</span></td><td>Free interop with Open States bulk data.</td></tr>
+      <tr><td>Federal legislation</td><td>Congress.gov / GovInfo APIs</td><td><span class="diff easy">easy</span></td><td>Well-served, official APIs.</td></tr>
+      <tr><td>State legislation + hearings</td><td><strong>Open States v3 API</strong> (don't self-host scrapers)</td><td><span class="diff easy">easy</span></td><td>Paid tier for production volume.</td></tr>
+      <tr><td>Federal rulemaking + comment periods</td><td><strong>Regulations.gov + Federal Register APIs</strong> for freshness; <strong>Mirrulations S3</strong> for history</td><td><span class="diff med">medium</span></td><td>Build your own index + alerting on top.</td></tr>
+      <tr><td>Local council / agendas</td><td><strong>Legistar Web API</strong> for ~70%; bespoke spiders for the tail</td><td><span class="diff med">medium</span></td><td>Long tail is permanent maintenance.</td></tr>
+      <tr><td>Land use / zoning / permits</td><td><strong>Net-new</strong> — Accela / Socrata / ArcGIS / parcel GIS</td><td><span class="diff hard">hard</span></td><td>Nobody has solved this. Fragmented &amp; messy.</td></tr>
+      <tr><td>Search / discovery</td><td>MAPLE Typesense indexer-factory + vector search</td><td><span class="diff med">medium</span></td><td>Plus TheyWorkForYou-style topic alerts.</td></tr>
+      <tr><td>Legibility (plain language)</td><td>LLM summarization service + mySociety's <strong>RuleBox</strong></td><td><span class="diff med">medium</span></td><td>RuleBox = cheap firehose-scale classification.</td></tr>
+      <tr><td>Action + delivery</td><td>Thin purpose-built flows; server-side submission; <strong>MapIt</strong>-style geocoding</td><td><span class="diff hard">hard</span></td><td>Port verification tiers from Decidim/Consul.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="wedge" style="background:linear-gradient(135deg,#fdf3e0 0%,#fbeceb 100%);border-color:#ecd9b8">
+    <h3 style="color:var(--amber)">What nobody has built — your actual whitespace</h3>
+    <p>Every agent independently flagged the same five gaps. The data backbones for the <em>legislation</em> half are mature and free; these are where you'd actually be building:</p>
+    <ol class="clean" style="margin:8px 0 0;padding-left:20px">
+      <li><strong>Public comment-period deadlines as a first-class, alertable object</strong> — not modeled in Open States, Legistar, OCD, or City Scrapers.</li>
+      <li><strong>Land use / zoning / permits</strong> — entirely uncovered; separate, messy ingestion.</li>
+      <li><strong>Cross-source, cross-jurisdiction normalization for non-experts</strong> — everyone keeps raw local vocabulary.</li>
+      <li><strong>Plain-language legibility + guided action</strong> — the consumer-facing layer.</li>
+      <li><strong>The monitor → act → see-impact loop in one consumer product.</strong></li>
+    </ol>
+    <p style="margin:12px 0 0">This lines up exactly with the market gaps from the commercial scan below.</p>
+  </div>
+
+  <!-- MYSOCIETY / G0V -->
+  <h3>What to steal from mySociety (UK) &amp; g0v (Taiwan)</h3>
+  <div class="twocol" style="margin-top:14px">
+    <div class="card" style="margin:0">
+      <h3 style="margin-top:0;font-size:17px">🇬🇧 mySociety — proves your exact product surface</h3>
+      <ul class="clean" style="font-size:14px">
+        <li><strong>TheyWorkForYou</strong> (monitor) + <strong>WriteToThem</strong> (action: postcode → your reps → send) + <strong>MapIt</strong> (the postcode→jurisdiction engine underneath). WriteToThem's abstraction — <em>the user never has to know who represents them</em> — is the cleanest version of your hardest UX problem.</li>
+        <li><strong>Vector-search topic alerts</strong> (rebuilt Oct 2025): subscribe to a concept, get related-term expansion + weekly digest. The exact monitoring UX, freshly validated.</li>
+        <li><strong>RuleBox</strong> — LLM <em>writes</em> classification rules that then run on cheap infra. The cost model for a text firehose.</li>
+        <li><strong>Funding model:</strong> commercial arm (<strong>SocietyWorks</strong>) sells the FixMyStreet stack to councils, subsidizing free public products. A B2G SaaS funding a free consumer tool.</li>
+        <li><em>Caution (Keep It In The Community):</em> they wanted a live national land-use register, found council data too messy, shipped a snapshot. Expect that.</li>
+      </ul>
+    </div>
+    <div class="card" style="margin:0">
+      <h3 style="margin-top:0;font-size:17px">🇹🇼 g0v — the deliberation layer</h3>
+      <ul class="clean" style="font-size:14px">
+        <li><strong>vTaiwan + Pol.is</strong> is the headline steal. Pol.is clusters opinion and surfaces <strong>cross-factional consensus statements</strong> — which carry far more weight with officials than a pile of identical form letters, and scale to non-experts without becoming a flame war. Fed ~26 pieces of legislation. <em>(Caveat: vTaiwan is now unfunded/volunteer — deliberation tools need a durable funding home.)</em></li>
+        <li><strong>Join.gov.tw</strong> — a <strong>5,000-signature → mandatory ministry response</strong> threshold. A legible, hard mechanic that converts diffuse concern into accountable action.</li>
+        <li><strong>Cofacts</strong> — meet users <em>inside the messaging app they already use</em> + a community-verified answer cache that gets cheaper per query over time. Applies to "explain this proposed rule."</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wedge" style="margin-top:18px">
+    <h3 style="color:var(--accent)">The synthesis across both</h3>
+    <p style="margin-bottom:0">mySociety proves the <em>monitor-and-contact</em> surface and a funding model; g0v / Pol.is provides the <em>deliberate-to-consensus</em> action layer that turns "email your rep" into "your community reaches a position officials must reckon with." The differentiated product is the combination — anchored on <strong>vector-search topic alerts</strong> (monitor) and <strong>Pol.is-style consensus deliberation</strong> (act).</p>
+  </div>
+
+  <!-- COMMERCIAL -->
+  <h2 class="section"><span class="num">05</span>The commercial landscape</h2>
+  <p class="section-sub">Crowded but cleanly segmented — and every segment misses your user.</p>
+
+  <table>
+    <thead>
+      <tr><th>Segment</th><th>Players</th><th>The gap for your user</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Monitoring / tracking</strong></td>
+        <td>Quorum, FiscalNote / PolicyNote, Bloomberg Gov, Plural, BillTrack50</td>
+        <td>Mature but <strong>B2B and expensive</strong> (cheapest tracking-with-alerts ≈ $1,000/yr). All legislation-centric; all assume you already know the bill/docket number. None focus on <em>comment periods</em> for a lay audience.</td>
+      </tr>
+      <tr>
+        <td><strong>Action / "make your voice heard"</strong></td>
+        <td>Resistbot, 5 Calls, Change.org · (org-side: Phone2Action, CQ Engage, New/Mode)</td>
+        <td>Consumer ones are <strong>free &amp; friendly but Congress-only with near-zero discovery.</strong> The powerful tools tied to specific rulemakings are <strong>sold to organizations</strong> — a resident can't buy them, only be targeted by them.</td>
+      </tr>
+      <tr>
+        <td><strong>Gov-bought participation suites</strong></td>
+        <td>Granicus EngagementHQ, PublicInput, CitizenLab, Decidim</td>
+        <td>Consolidating fast, but <strong>government-as-buyer, project-by-project.</strong> Residents only encounter them per-project. Every deployment is a silo; no cross-jurisdiction resident view.</td>
+      </tr>
+      <tr>
+        <td><strong>Land-use specific</strong></td>
+        <td>coUrbanize, Symbium, City Tracker AI</td>
+        <td>Closest adjacency, still gapped. coUrbanize is <em>developer-initiated</em>; Symbium is parcel/permit compliance; City Tracker is NYC analytics with no action layer.</td>
+      </tr>
+      <tr>
+        <td><strong>Government portals</strong></td>
+        <td>Regulations.gov, FCC ECFS</td>
+        <td>Free, but per GAO the search is so poor non-experts can't find the rulemaking they care about. No "this affects you" discovery, no plain language, nothing below the federal level aggregated.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- GAPS -->
+  <h2 class="section"><span class="num">06</span>The gaps — where your idea lives</h2>
+  <p class="section-sub">Where the research points to genuine white space.</p>
+
+  <div class="gap-grid">
+    <div class="gap">
+      <div class="n">1</div>
+      <h4>Discovery for non-experts</h4>
+      <p><em>The</em> biggest gap. Everything assumes you already know a docket/bill exists. Nobody proactively says "a rule/zoning change/hearing that affects you is open for comment — here's the deadline." AI summarization makes this newly tractable.</p>
+    </div>
+    <div class="gap">
+      <div class="n">2</div>
+      <h4>Both halves, for individuals</h4>
+      <p>Monitoring = B2B/pricey; action = consumer/free but Congress-only &amp; discovery-free; gov platforms = both, but one city's one project. No affordable consumer product does monitor + act together across regulation and local land-use.</p>
+    </div>
+    <div class="gap">
+      <div class="n">3</div>
+      <h4>State &amp; especially LOCAL</h4>
+      <p>Federal is clunky-but-covered. Local zoning / land-use / public-health processes are almost entirely uncovered for residents — exactly the domains you named.</p>
+    </div>
+    <div class="gap">
+      <div class="n">4</div>
+      <h4>Agency rulemaking &amp; public health</h4>
+      <p>Rulemaking (vs. legislation) is barely served on the consumer side at all. The action tools are legislator-centric, not docket/rulemaking-centric.</p>
+    </div>
+  </div>
+
+  <div class="wedge">
+    <h3>Sharpest wedge</h3>
+    <p>A resident-facing, <strong>location-based "watch + act" tool for local/state land-use and rulemaking</strong>, where the <strong>discovery + plain-language layer</strong> (the thing nobody does for non-experts) is the moat, and the action layer mirrors what Resistbot / 5 Calls proved works — but pointed at comment dockets and hearings instead of just Congress.</p>
+    <p style="margin-bottom:0"><strong>Main competitive risk</strong> isn't head-on (no one owns this box) — it's <em>adjacency creep</em>: Granicus could ship a resident app, FiscalNote could de-tier PolicyNote's AI, or Resistbot could extend to dockets.</p>
+  </div>
+
+  <!-- CAVEATS -->
+  <h2 class="section"><span class="num">07</span>Caveats &amp; next steps</h2>
+
+  <div class="callout">
+    <strong>Honest limits from the team:</strong> the Civic Tech Field Guide directory blocked automated fetching (those listings are lower-confidence); enterprise pricing is quote-only; and some hackathon prototypes flagged here may not have shipped past demo day.
+  </div>
+
+  <h3>Where to go deeper</h3>
+  <div class="next">
+    <div class="opt">
+      <span class="tag">A · Teardown</span>
+      <p>Architecture review of MAPLE + Engage — the two closest builds, both with reusable scrapers.</p>
+    </div>
+    <div class="opt">
+      <span class="tag">B · Talk to people</span>
+      <p>Reach out to ACT / a specific brigade to see if anyone's actively scoping this right now.</p>
+    </div>
+    <div class="opt">
+      <span class="tag">C · Stress-test the wedge</span>
+      <p>Who's the user? Is local land-use data even reliably scrapeable? Pressure-test the "local discovery" bet.</p>
+    </div>
+  </div>
+
+  <footer>
+    Compiled by a 4-agent civic-tech research team · SF Civic Tech · Hack for LA · ACT / brigade network · commercial &amp; government market · 2026-06-06.
+    GitHub-backed status claims verified via live API; directory- and pricing-sourced claims lower-confidence.
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Civic Tech Idea Foundry — Seasoned Concepts</title>
+<style>
+  :root {
+    --ink: #17201c;
+    --muted: #647067;
+    --paper: #f6f1e8;
+    --panel: #fffaf0;
+    --line: #ded4c2;
+    --green: #155b45;
+    --blue: #255a7b;
+    --red: #9b3c2f;
+    --amber: #b86e20;
+    --mint: #dceee5;
+    --sky: #dbeaf0;
+    --rose: #f3dfd9;
+    --gold: #f2e2bf;
+    --shadow: 0 22px 60px rgba(42, 33, 18, .12);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(21, 91, 69, .12), transparent 34rem),
+      radial-gradient(circle at 90% 12%, rgba(37, 90, 123, .12), transparent 30rem),
+      var(--paper);
+    color: var(--ink);
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+    line-height: 1.55;
+  }
+  a { color: var(--blue); }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  header {
+    min-height: 78vh;
+    display: grid;
+    align-items: end;
+    padding: 56px 0 48px;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--green);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 26px;
+  }
+  .eyebrow::before { content: ""; width: 42px; height: 1px; background: var(--green); }
+  h1 {
+    font-size: clamp(48px, 9vw, 118px);
+    line-height: .9;
+    letter-spacing: -.06em;
+    max-width: 980px;
+    margin: 0 0 24px;
+  }
+  .subtitle {
+    max-width: 820px;
+    font-size: clamp(20px, 2.2vw, 30px);
+    color: #314038;
+    margin: 0 0 34px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 24px;
+    align-items: stretch;
+    margin-top: 36px;
+  }
+  .brief, .process {
+    background: rgba(255, 250, 240, .78);
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+  }
+  .brief strong { color: var(--green); }
+  .process ol { margin: 10px 0 0; padding-left: 22px; }
+  .process li { margin: 8px 0; }
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: rgba(246, 241, 232, .92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  nav a {
+    flex: 0 0 auto;
+    text-decoration: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 7px 12px;
+    color: var(--ink);
+    font-size: 13px;
+    background: rgba(255,255,255,.35);
+  }
+  main { padding: 56px 0 72px; }
+  .section-title {
+    font-size: clamp(32px, 4vw, 58px);
+    line-height: 1;
+    letter-spacing: -.04em;
+    margin: 0 0 22px;
+  }
+  .scoreboard {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    border-radius: 20px;
+    overflow: hidden;
+    display: block;
+  }
+  .scoreboard thead, .scoreboard tbody, .scoreboard tr { display: table; width: 100%; table-layout: fixed; }
+  .scoreboard th, .scoreboard td {
+    text-align: left;
+    vertical-align: top;
+    padding: 15px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .scoreboard th {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    background: rgba(21,91,69,.06);
+  }
+  .scoreboard td:first-child, .scoreboard th:first-child { width: 72px; }
+  .scoreboard td:nth-child(3), .scoreboard th:nth-child(3) { width: 170px; }
+  .ideas { margin-top: 58px; display: grid; gap: 34px; }
+  article.idea {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 34px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .idea-head {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 24px;
+    padding: 30px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(135deg, rgba(21,91,69,.08), rgba(37,90,123,.05));
+  }
+  .rank {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 44px;
+    line-height: 1;
+    color: var(--green);
+    letter-spacing: -.08em;
+  }
+  .idea h2 {
+    margin: 0 0 8px;
+    font-size: clamp(30px, 4vw, 54px);
+    line-height: .95;
+    letter-spacing: -.045em;
+  }
+  .tagline { font-size: 21px; color: #32463e; margin: 0; max-width: 850px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    border: 1px solid rgba(0,0,0,.08);
+    background: white;
+  }
+  .pill.green { background: var(--mint); color: var(--green); }
+  .pill.blue { background: var(--sky); color: var(--blue); }
+  .pill.amber { background: var(--gold); color: #74430e; }
+  .pill.red { background: var(--rose); color: var(--red); }
+  .idea-body { padding: 30px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .field {
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+    margin-top: 18px;
+  }
+  .field h3 {
+    margin: 0 0 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .field p { margin: 0; }
+  .builds { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .builds span { background: rgba(21,91,69,.08); border: 1px solid rgba(21,91,69,.16); padding: 4px 8px; border-radius: 9px; font-size: 14px; }
+  .verdict {
+    margin-top: 22px;
+    padding: 18px 20px;
+    border-radius: 20px;
+    background: #17201c;
+    color: #fffaf0;
+  }
+  .verdict strong { color: #f2e2bf; }
+  .merged {
+    margin-top: 58px;
+    background: rgba(255,250,240,.74);
+    border: 1px solid var(--line);
+    border-radius: 30px;
+    padding: 26px;
+  }
+  .merged-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .merge-card { padding: 16px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.36); }
+  .merge-card h3 { margin: 0 0 5px; font-size: 18px; }
+  .merge-card p { margin: 0; color: var(--muted); font-size: 15px; }
+  footer { border-top: 1px solid var(--line); padding: 28px 0 42px; color: var(--muted); font-size: 14px; }
+  @media (max-width: 820px) {
+    .hero-grid, .two-col, .merged-grid, .idea-head { grid-template-columns: 1fr; }
+    header { min-height: auto; }
+    .scoreboard { overflow-x: auto; }
+    .scoreboard thead, .scoreboard tbody, .scoreboard tr { min-width: 780px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Pi multiagent idea foundry · June 2026</div>
+    <h1>Seasoned civic-tech concepts</h1>
+    <p class="subtitle">Six project ideas distilled from the prior-art scan, the interrupted Claude foundry, and a fresh Pi subagent process with product, feasibility, adversarial, civic-impact, and funding lenses.</p>
+    <div class="hero-grid">
+      <div class="brief">
+        <p><strong>Thesis:</strong> do not build a generic civic engagement platform. Build narrow, deadline-driven products where a person can say: <em>this affects me, the window is real, I can submit something useful, and I will hear what happened.</em></p>
+      </div>
+      <div class="process">
+        <strong>Workflow used</strong>
+        <ol>
+          <li>Recovered 13 curated candidates from the Claude workflow journal.</li>
+          <li>Ran five Pi subagent lenses: product, feasibility, adversarial, civic impact, and funding.</li>
+          <li>Adjudicated conflicts into a portfolio rather than averaging scores.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</header>
+<nav>
+  <div class="wrap">
+    <a href="#scoreboard">Scoreboard</a>
+    <a href="#scopewatch">ScopeWatch</a>
+    <a href="#docketclock">DocketClock</a>
+    <a href="#codered">CodeRed</a>
+    <a href="#lotline">Lot Line + Block Whip</a>
+    <a href="#workshop">Comment Workshop</a>
+    <a href="#watershed">Watershed Watch</a>
+    <a href="#merged">Merged / deferred</a>
+  </div>
+</nav>
+<main class="wrap">
+  <section id="scoreboard">
+    <h2 class="section-title">Scoreboard</h2>
+    <table class="scoreboard">
+      <thead><tr><th>Rank</th><th>Idea</th><th>Status</th><th>Why it made the cut</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td><strong>ScopeWatch</strong></td><td>Lead wedge</td><td>Strong willingness to pay; rules affect revenue, scope, and claim risk; federal CMS/HHS data supports a narrow MVP.</td></tr>
+        <tr><td>02</td><td><strong>DocketClock</strong></td><td>Infrastructure</td><td>“Deadline as a first-class civic object” is the cleanest reusable gap, especially federal-first.</td></tr>
+        <tr><td>03</td><td><strong>CodeRed</strong></td><td>Vertical local wedge</td><td>Concrete SMB pain, repeat local exposure, reachable through associations and chambers.</td></tr>
+        <tr><td>04</td><td><strong>Lot Line + Block Whip</strong></td><td>City-scoped consumer wedge</td><td>Best local civic story and strong leverage, but only in data-rich qualified cities.</td></tr>
+        <tr><td>05</td><td><strong>Comment Workshop + Closed the Loop</strong></td><td>Cross-cutting module</td><td>Direct answer to wasted effort and form-letter discounting; strongest when embedded behind live issues.</td></tr>
+        <tr><td>06</td><td><strong>Watershed Watch</strong></td><td>Regional/foundation pilot</td><td>High mission fit and outcome loop for existing environmental groups, if source scope stays narrow.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="ideas">
+    <article class="idea" id="scopewatch">
+      <div class="idea-head"><div class="rank">01</div><div><h2>ScopeWatch</h2><p class="tagline">Practice rule radar for independent clinicians.</p><div class="meta-row"><span class="pill green">best first commercial wedge</span><span class="pill blue">federal-first</span><span class="pill amber">SMB / association channel</span></div></div></div>
+      <div class="idea-body">
+        <div class="two-col"><div class="field"><h3>Target user</h3><p>Solo and small-group clinicians or practice managers, starting with one specialty such as PT/OT, behavioral health, optometry, or nurse practitioners.</p></div><div class="field"><h3>Problem</h3><p>CMS, HHS, Medicaid, and licensing-board changes can alter reimbursement, scope of practice, documentation, and legal exposure. Small practices often learn after claims are denied or workflows must change.</p></div></div>
+        <div class="field"><h3>Solution</h3><p>Onboard by specialty, state, payer mix, and practice size. Monitor CMS/HHS rulemakings, classify relevance with cached specialty rules, and produce alerts that explain whether the rule hits the practice, likely revenue/legal direction, deadline, and what evidence would make a useful comment.</p></div>
+        <div class="two-col"><div class="field"><h3>Gap / not duplicate</h3><p>Associations and lobbyists serve members and large systems; Quorum/FiscalNote are policy tools. The underserved job is “does this proposed rule affect my small practice and what can I do this week?”</p></div><div class="field"><h3>MVP</h3><p>One specialty, federal CMS/HHS only, human-reviewed relevance labels during beta, manual submission/receipt capture where APIs are unavailable, no legal-advice claims.</p></div></div>
+        <div class="field"><h3>Builds on</h3><div class="builds"><span>Federal Register API</span><span>Regulations.gov data</span><span>Mirrulations</span><span>spicy-regs / DuckDB</span><span>RuleBox pattern</span><span>MAPLE digest/archive</span></div></div>
+        <div class="two-col"><div class="field"><h3>Action / impact loop</h3><p>Alert → user contributes operational facts → comment filed or receipt captured → final rule watched → outcome labeled as addressed, partially addressed, rejected, not found, or pending.</p></div><div class="field"><h3>Business model</h3><p>Per-practice subscription, association bundle, or billing-consultant channel. Sell risk/revenue intelligence, not “civic engagement.”</p></div></div>
+        <div class="field"><h3>Risks + mitigations</h3><p>False positives, trust, liability, and state-data sprawl. Mitigate with trusted intermediaries, source citations/confidence, informational framing, and narrow funded state expansion.</p></div>
+        <div class="verdict"><strong>Verdict:</strong> strongest first wedge if you want payer clarity. Civic-tech by outcome, but commercialized as small-practice rule intelligence.</div>
+      </div>
+    </article>
+
+    <article class="idea" id="docketclock">
+      <div class="idea-head"><div class="rank">02</div><div><h2>DocketClock</h2><p class="tagline">Every public-comment window as a reliable, subscribable deadline object.</p><div class="meta-row"><span class="pill blue">open-data infrastructure</span><span class="pill green">high leverage</span><span class="pill amber">not first consumer app</span></div></div></div>
+      <div class="idea-body">
+        <div class="two-col"><div class="field"><h3>Target user</h3><p>Civic orgs, associations, newsroom/product builders, vertical products in this portfolio, and eventually agencies or clerks.</p></div><div class="field"><h3>Problem</h3><p>Comment deadlines are buried in inconsistent systems. No normalized service reliably answers what is open, what closes soon, where someone can act, and how confident the deadline is.</p></div></div>
+        <div class="field"><h3>Solution</h3><p>A federal-first deadline index with canonical objects: source ID, title, agency, open/close date, timezone confidence, status, submission URL, source provenance, last-seen timestamp, and watchlist/ICS/webhook outputs.</p></div>
+        <div class="two-col"><div class="field"><h3>Gap / not duplicate</h3><p>Regulations.gov is a portal, Mirrulations is a mirror, and OCD/Open States do not make comment deadlines first-class cross-source civic objects.</p></div><div class="field"><h3>MVP</h3><p>Federal comment deadlines only; REST/CSV/ICS/webhook outputs; explicit confidence fields; no state/local PDF scraping or B2G dashboard in v1.</p></div></div>
+        <div class="field"><h3>Builds on</h3><div class="builds"><span>Regulations.gov</span><span>Federal Register</span><span>Mirrulations history</span><span>mirrulations-search schema</span><span>Open Civic Data concepts</span><span>ICS/webhooks</span></div></div>
+        <div class="two-col"><div class="field"><h3>Action / impact loop</h3><p>Prevents missed windows and powers downstream products. It should report status changes, not claim political causality.</p></div><div class="field"><h3>Business model</h3><p>Open schema/free tier; paid API volume, SLA, webhooks, and org watchlists. B2G only after verticals generate verified input agencies value.</p></div></div>
+        <div class="field"><h3>Risks + mitigations</h3><p>Wrong deadlines are catastrophic; state/local expansion can become a scraper graveyard. Mitigate by staying federal/read-only first and publishing provenance/confidence.</p></div>
+        <div class="verdict"><strong>Verdict:</strong> best infrastructure idea. Build as shared substrate behind vertical wedges, not as a generic civic destination.</div>
+      </div>
+    </article>
+
+    <article class="idea" id="codered">
+      <div class="idea-head"><div class="rank">03</div><div><h2>CodeRed</h2><p class="tagline">Local rule radar for independent food-service operators.</p><div class="meta-row"><span class="pill green">vertical local wedge</span><span class="pill amber">Legistar-first</span><span class="pill blue">association distribution</span></div></div></div>
+      <div class="idea-body">
+        <div class="two-col"><div class="field"><h3>Target user</h3><p>Independent restaurants, cafes, food trucks, bodegas, caterers, and local restaurant/chamber associations in one launch city.</p></div><div class="field"><h3>Problem</h3><p>Operators are blindsided by sidewalk dining, parklets, fees, plastics/organics mandates, health-board hearings, signage rules, scheduling ordinances, and permit changes before they can object or adapt.</p></div></div>
+        <div class="field"><h3>Solution</h3><p>Resolve a business address to jurisdictions and districts. Monitor Legistar city/county agenda and bill data first. Classify restaurant-relevant items into a small vocabulary and produce cards explaining what could change, what it might cost, and what can still be done.</p></div>
+        <div class="two-col"><div class="field"><h3>Gap / not duplicate</h3><p>Gov participation suites are project silos; policy tools target lobbyists. Restaurants need a city-specific operator brief plus a two-minute action path.</p></div><div class="field"><h3>MVP</h3><p>One city, one food-service subvertical, Legistar-first. Avoid national health-code or permit ingestion until a partner funds it.</p></div></div>
+        <div class="field"><h3>Builds on</h3><div class="builds"><span>Legistar OData</span><span>City Scrapers pattern</span><span>MapIt-style jurisdiction mapping</span><span>WriteToThem routing</span><span>RuleBox classification</span></div></div>
+        <div class="two-col"><div class="field"><h3>Action / impact loop</h3><p>Alert → owner submits distinct operational evidence or signs an association packet → hearing/vote tracked → update explains vote, amendments, and next compliance step.</p></div><div class="field"><h3>Business model</h3><p>Association/chamber bundle, sponsored city pilot, or per-location SMB subscription. The buyer pays to avoid surprise costs and license risk.</p></div></div>
+        <div class="field"><h3>Risks + mitigations</h3><p>Low-margin churn, local fragmentation, and perceived industry lobbying. Mitigate through trusted associations, narrow money/license-risk topics, and distinct evidence prompts.</p></div>
+        <div class="verdict"><strong>Verdict:</strong> strong local wedge if brutally scoped. Do not let it become “city hall tracker for every small business.”</div>
+      </div>
+    </article>
+
+    <article class="idea" id="lotline">
+      <div class="idea-head"><div class="rank">04</div><div><h2>Lot Line + Block Whip</h2><p class="tagline">Affected-neighbor land-use alerts and verified action.</p><div class="meta-row"><span class="pill green">cleanest consumer story</span><span class="pill red">data-fragile</span><span class="pill amber">one-city pilot</span></div></div></div>
+      <div class="idea-body">
+        <div class="two-col"><div class="field"><h3>Target user</h3><p>Renters, homeowners, small landlords, and the motivated neighbor who would organize around a specific rezoning or variance if they knew early enough.</p></div><div class="field"><h3>Problem</h3><p>Mailed notices are legalistic, easy to miss, and disconnected from maps, deadlines, and action. Neighbor responses often devolve into duplicate form letters or broad Nextdoor outrage.</p></div></div>
+        <div class="field"><h3>Solution</h3><p>In qualified cities, watch zoning/variance/development-case sources with reliable geometry, hearing dates, and status. Match cases to a private watched address/radius. Organizer mode verifies affected addresses, collects distinct comments, clusters consensus conditions, tracks turnout, and produces a source-linked testimony packet.</p></div>
+        <div class="two-col"><div class="field"><h3>Gap / not duplicate</h3><p>coUrbanize/PublicInput are gov/developer silos; Symbium is lookup; city trackers are search. This is resident-side discovery tied to legal proximity plus quality-preserving action.</p></div><div class="field"><h3>MVP</h3><p>One data-rich city, one process type: rezoning/variance inside statutory notice radius. Human QA early. Organizer mode only after an alert.</p></div></div>
+        <div class="field"><h3>Builds on</h3><div class="builds"><span>ArcGIS/Socrata/Accela where clean</span><span>Legistar planning agendas</span><span>OCD Events</span><span>City Scrapers</span><span>Decidim-style verification</span><span>Pol.is consensus</span><span>MapIt-style geo</span></div></div>
+        <div class="two-col"><div class="field"><h3>Action / impact loop</h3><p>Address watch → source-linked alert → verified affected-neighbor comments/RSVPs → hearing/vote tracked → receipt: approved, denied, conditions changed, continued, or no observable effect.</p></div><div class="field"><h3>Business model</h3><p>Free/low-cost consumer layer funded by neutral data/API customers, local newsroom/nonprofit sponsorship, legal/planning pilots, or foundation support.</p></div></div>
+        <div class="field"><h3>Risks + mitigations</h3><p>Missing parcel data, false negatives, NIMBY capture, renter exclusion, and address privacy. Mitigate with city qualification, source confidence, minimal address storage, renter-friendly verification, and condition-focused campaigns.</p></div>
+        <div class="verdict"><strong>Verdict:</strong> highest local leverage and cleanest story, but fragile. Do it only as a narrow city-scoped wedge, not a national promise.</div>
+      </div>
+    </article>
+
+    <article class="idea" id="workshop">
+      <div class="idea-head"><div class="rank">05</div><div><h2>Comment Workshop + Closed the Loop</h2><p class="tagline">Submit fewer, better comments — then find out what happened.</p><div class="meta-row"><span class="pill green">anti-form-letter</span><span class="pill blue">portfolio module</span><span class="pill amber">honest receipts</span></div></div></div>
+      <div class="idea-body">
+        <div class="two-col"><div class="field"><h3>Target user</h3><p>People or groups already facing a live docket or hearing through another product, organizer, or association.</p></div><div class="field"><h3>Problem</h3><p>Mass-action tools create duplicate comments that officials discount. Users do not know what makes a comment substantive, and after submitting they hear nothing.</p></div></div>
+        <div class="field"><h3>Solution</h3><p>A guided evidence-collection and drafting flow that asks for real facts, costs, local observations, alternatives, and affected status. It checks duplication, discourages low-value templates, provides manual filing instructions or supported submission, stores claims, and tracks outcomes.</p></div>
+        <div class="two-col"><div class="field"><h3>Gap / not duplicate</h3><p>Resistbot/5 Calls optimize volume. Pol.is supports deliberation. Regulations.gov hosts raw dockets. The gap is quality coaching plus official-record follow-up.</p></div><div class="field"><h3>MVP</h3><p>Attach to curated federal dockets or one vertical product. No bulk paraphrasing, no generic weekly habit app, no one-click filing promise unless an official endpoint is available.</p></div></div>
+        <div class="field"><h3>Builds on</h3><div class="builds"><span>Federal Register</span><span>Regulations.gov</span><span>Mirrulations / spicy-regs</span><span>Legistar outcomes</span><span>MAPLE archive</span><span>Pol.is concepts</span><span>Decidim accountability</span></div></div>
+        <div class="two-col"><div class="field"><h3>Action / impact loop</h3><p>Issue brief → fact interview → draft/checklist → official filing/manual receipt → tracking → labels: received, entered into record, addressed, partially addressed, rejected, status changed, not found, or pending.</p></div><div class="field"><h3>Business model</h3><p>Bundle into paid verticals; license to civic orgs and associations; foundation support for public-interest comment quality. Weak as standalone subscription.</p></div></div>
+        <div class="field"><h3>Risks + mitigations</h3><p>AI-laundered astroturf, hallucinated citations, misleading causality, and disappointment. Mitigate with source-grounded drafting, user attestation, similarity checks, and conservative impact labels.</p></div>
+        <div class="verdict"><strong>Verdict:</strong> the clearest answer to “will my effort be wasted?” but it needs a live issue source to create demand.</div>
+      </div>
+    </article>
+
+    <article class="idea" id="watershed">
+      <div class="idea-head"><div class="rank">06</div><div><h2>Watershed Watch</h2><p class="tagline">Permit and docket radar for regional environmental groups.</p><div class="meta-row"><span class="pill green">high civic impact</span><span class="pill amber">foundation-backed</span><span class="pill red">scope carefully</span></div></div></div>
+      <div class="idea-body">
+        <div class="two-col"><div class="field"><h3>Target user</h3><p>Staffed watershed alliances, land trusts, conservation nonprofits, regional environmental coalitions, and volunteer leaders.</p></div><div class="field"><h3>Problem</h3><p>Small environmental groups miss or scramble around environmental reviews, wetland/stormwater permits, rezoning near floodplains, federal/state dockets, and local board votes.</p></div></div>
+        <div class="field"><h3>Solution</h3><p>Define a watch area by watershed/open-space polygon or jurisdiction. Monitor a limited set of federal/state environmental dockets and local agenda/permit sources. Convert matches into deadline cards, evidence prompts, volunteer assignments, consensus packets, and outcome receipts.</p></div>
+        <div class="two-col"><div class="field"><h3>Gap / not duplicate</h3><p>Policy tools are expensive and lobbyist-oriented; gov portals are project-specific; land-use trackers rarely combine geography, environmental mission, action quality, and outcome tracking for small groups.</p></div><div class="field"><h3>MVP</h3><p>One region, one anchor organization/funder, limited source list. Start with federal/state environmental dockets plus Legistar local actions; add permit feeds only when reliable.</p></div></div>
+        <div class="field"><h3>Builds on</h3><div class="builds"><span>Federal Register</span><span>Regulations.gov</span><span>Mirrulations / spicy-regs</span><span>Open States / Plural</span><span>Legistar / City Scrapers</span><span>GIS watershed boundaries</span><span>RuleBox</span><span>Pol.is</span><span>MAPLE</span></div></div>
+        <div class="two-col"><div class="field"><h3>Action / impact loop</h3><p>Watch-area alert → group assigns evidence gathering → consensus-backed comments/testimony → hearing/vote/final-action tracking → campaign report showing what changed and what did not.</p></div><div class="field"><h3>Business model</h3><p>Foundation-backed regional pilot, land-trust/water-board sponsorship, organizational subscriptions for staffed groups, subsidized volunteer access.</p></div></div>
+        <div class="field"><h3>Risks + mitigations</h3><p>Low group budgets, fragmented permit data, alert burnout, activist echo chambers. Mitigate with anchor funding, high-stakes prioritization, source links, and evidence/consensus prompts.</p></div>
+        <div class="verdict"><strong>Verdict:</strong> strong civic impact and funder fit, but not a scalable consumer startup wedge. Best as a regional proof of impact.</div>
+      </div>
+    </article>
+  </section>
+
+  <section id="merged" class="merged">
+    <h2 class="section-title">Merged, split, or deferred</h2>
+    <div class="merged-grid">
+      <div class="merge-card"><h3>RuleRadar</h3><p>Too horizontal. Split into ScopeWatch, CodeRed, or a future one-vertical operator product.</p></div>
+      <div class="merge-card"><h3>ParcelWatch</h3><p>Valuable backend only. Do not build a national per-city infrastructure business before demand is proven.</p></div>
+      <div class="merge-card"><h3>Permit Pulse</h3><p>Useful retention layer for Lot Line; risky standalone because most permits have no action lever.</p></div>
+      <div class="merge-card"><h3>Consensus Comment</h3><p>Strong campaign feature; weak destination product. Use inside Block Whip, Watershed Watch, or Comment Workshop.</p></div>
+      <div class="merge-card"><h3>Statehouse RuleWatch</h3><p>Real white space, but defer unless scoped to one issue domain and a funded state cluster.</p></div>
+      <div class="merge-card"><h3>Generic civic habit app</h3><p>Too aspirational. Habit mechanics only matter when attached to real stakes and deadlines.</p></div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">Generated from <code>foundry/final-synthesis.md</code>, informed by <code>civic-tech-prior-art-scan.html</code> and Pi subagent outputs in <code>foundry/</code>.</div>
+</footer>
+</body>
+</html>

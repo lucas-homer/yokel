@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DocketClock Technical Architecture</title>
+  <style>
+    :root{
+      --bg:#f4ecdc; --ink:#14231c; --muted:#64726b; --panel:#fffaf0; --line:#d9cdb8;
+      --green:#145b43; --blue:#255f7d; --amber:#a36216; --red:#9a4034; --mint:#dfeee4;
+      --shadow:0 24px 70px rgba(44,32,13,.14);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at 12% 0%,rgba(20,91,67,.15),transparent 34rem),radial-gradient(circle at 88% 4%,rgba(37,95,125,.13),transparent 31rem),var(--bg);color:var(--ink);font-family:Georgia,Cambria,"Times New Roman",serif;line-height:1.55}
+    .wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+    header{padding:64px 0 34px;border-bottom:1px solid var(--line)}
+    .eyebrow{font:800 12px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:18px}
+    h1{font-size:clamp(46px,7vw,88px);line-height:.94;letter-spacing:-.055em;margin:0 0 18px;max-width:1000px}
+    .sub{font-size:clamp(19px,2vw,26px);max-width:920px;color:#33433d;margin:0 0 30px}
+    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.panel{background:rgba(255,250,240,.86);border:1px solid var(--line);border-radius:26px;padding:22px;box-shadow:var(--shadow)}
+    h2{font-size:clamp(28px,3vw,44px);line-height:1;letter-spacing:-.04em;margin:0 0 16px}h3{font-size:22px;line-height:1.05;margin:0 0 8px;letter-spacing:-.02em}.panel p{margin:0;color:#33433d}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.pillrow{display:flex;gap:8px;flex-wrap:wrap}.pill{font:800 12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;border:1px solid rgba(0,0,0,.08);border-radius:999px;padding:7px 10px;background:var(--mint);color:var(--green)}
+    main{padding:42px 0 80px}.diagram-shell{background:#fffdf8;border:1px solid var(--line);border-radius:34px;padding:18px;box-shadow:var(--shadow);margin-bottom:38px}canvas{width:100%;height:auto;display:block;border-radius:22px;background:#fffaf0}.caption{display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:14px;margin:12px 8px 0}
+    .sections{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:rgba(255,250,240,.86);border:1px solid var(--line);border-radius:24px;padding:21px;box-shadow:0 14px 40px rgba(44,32,13,.08)}.card p{margin:0;color:#33433d}.card ul{margin:10px 0 0;padding-left:20px;color:#33433d}.wide{grid-column:span 2}.full{grid-column:1/-1}.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px}.step{border:1px solid var(--line);border-radius:16px;padding:13px;background:rgba(255,255,255,.45)}.step strong{display:block;color:var(--green)}
+    table{width:100%;border-collapse:collapse;margin-top:12px;font-size:15px}th,td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}th{font:800 11px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}code{background:rgba(20,91,67,.09);border:1px solid rgba(20,91,67,.14);border-radius:6px;padding:1px 5px}footer{border-top:1px solid var(--line);padding:26px 0 38px;color:var(--muted);font-size:14px}
+    @media(max-width:900px){.hero-grid,.sections,.flow{grid-template-columns:1fr}.wide{grid-column:auto}.caption{display:block}}
+  </style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="eyebrow">DocketClock · technical architecture vision</div>
+  <h1>Deadline truth as civic infrastructure.</h1>
+  <p class="sub">A federal-first system for turning rulemaking notices into reliable, source-backed participation-window objects: clear deadlines, provenance, confidence states, and subscriptions.</p>
+  <div class="hero-grid">
+    <div class="panel"><h3>Architecture thesis</h3><p>Ingest authoritative sources, preserve raw observations, normalize them into versioned <strong>ParticipationWindow</strong> records, route uncertainty to review, then publish APIs and feeds downstream products can trust.</p></div>
+    <div class="panel"><h3>MVP boundary</h3><div class="pillrow"><span class="pill">Federal only</span><span class="pill">Comment windows</span><span class="pill">No filing</span><span class="pill">Provenance-first</span><span class="pill">Review conflicts</span></div></div>
+  </div>
+</div></header>
+<main class="wrap">
+  <section class="diagram-shell">
+    <canvas id="arch" width="1800" height="1180" aria-label="DocketClock technical architecture diagram"></canvas>
+    <div class="caption"><span>Canvas diagram: source ingestion → normalization → trust/review → canonical registry → delivery surfaces.</span><span class="mono">open docketclock-architecture.html</span></div>
+  </section>
+
+  <section class="sections">
+    <article class="card wide"><h2>What the system solves</h2><p>DocketClock turns scattered rulemaking notices into durable, subscribable deadline objects. The hard problem is not “show me rules”; it is “tell me what action window exists, when it closes, whether it changed, where to act, and how confident we are.”</p><div class="flow"><div class="step"><strong>Discover</strong>new or changed notices</div><div class="step"><strong>Normalize</strong>into canonical windows</div><div class="step"><strong>Verify</strong>source, confidence, conflicts</div><div class="step"><strong>Publish</strong>API, RSS, ICS, CSV, webhooks</div><div class="step"><strong>Follow up</strong>closed, extended, final-linked</div></div></article>
+    <article class="card"><h2>Core object</h2><p><code>ParticipationWindow</code> is the unit of trust: docket ID, title, agency, window type, open/close times, timezone, submission URL, provenance, confidence, status, and change history.</p></article>
+
+    <article class="card"><h3>1. Source adapters</h3><ul><li>Federal Register API</li><li>Regulations.gov v4</li><li>Mirrulations / mirror history</li><li>GovInfo/eCFR adjuncts later</li></ul></article>
+    <article class="card"><h3>2. Event log</h3><p>Every observation becomes immutable: source payload hash, fetched-at time, parser version, and extracted candidates. This makes deadline changes auditable instead of mysterious.</p></article>
+    <article class="card"><h3>3. Normalizer</h3><p>Entity resolution ties notices, dockets, agencies, CFR parts, comment URLs, and related corrections/reopenings into one canonical window graph.</p></article>
+    <article class="card"><h3>4. Confidence engine</h3><p>Rules classify windows as high, medium, low, stale, or conflicting based on source agreement, date parse certainty, freshness, and status semantics.</p></article>
+    <article class="card"><h3>5. Human review</h3><p>Only uncertain or high-impact cases need operators: conflicting deadlines, changed close dates, ambiguous timezone/date text, reopened dockets, and user corrections.</p></article>
+    <article class="card"><h3>6. Registry + API</h3><p>Postgres stores canonical objects; search indexes support discovery; delivery workers emit webhooks, RSS, ICS, CSV, and bulk snapshots.</p></article>
+
+    <article class="card full"><h2>Suggested MVP stack</h2><table><thead><tr><th>Layer</th><th>Choice</th><th>Why</th></tr></thead><tbody>
+      <tr><td>Runtime</td><td>TypeScript workers + API</td><td>Good ecosystem for API clients, queues, validation, and web delivery.</td></tr>
+      <tr><td>Database</td><td>Postgres</td><td>Canonical relational registry, JSONB raw observations, version history, auditability.</td></tr>
+      <tr><td>Queue</td><td>Temporal / BullMQ / Cloud Tasks</td><td>Scheduled source polling, retries, review jobs, webhook delivery, backfills.</td></tr>
+      <tr><td>Search</td><td>Postgres FTS first; OpenSearch later</td><td>Start simple; add dedicated search only when needed.</td></tr>
+      <tr><td>Schema</td><td>Zod/JSON Schema + public OpenAPI</td><td>Downstream products need stable typed contracts.</td></tr>
+      <tr><td>Dashboard</td><td>Small admin + design-partner watchlist UI</td><td>Review conflicts, inspect provenance, manage watchlists, test feeds.</td></tr>
+    </tbody></table></article>
+
+    <article class="card wide"><h2>Trust model</h2><p>The product should show uncertainty rather than hiding it. “Unknown,” “stale,” and “conflicting” are first-class states. A bad deadline is worse than no alert, so alerts should be suppressed or downgraded when confidence drops.</p></article>
+    <article class="card"><h2>Expansion rule</h2><p>Do not expand to state/local sources until a funded source cluster exists. State/local scraping is where civic infrastructure goes to die unless there is a payer and review loop.</p></article>
+  </section>
+</main>
+<footer><div class="wrap">Generated for the DocketClock concept. The diagram is rendered with HTML Canvas in this file.</div></footer>
+<script>
+const canvas = document.getElementById('arch');
+const ctx = canvas.getContext('2d');
+const C = {
+  ink:'#14231c', muted:'#5f6d66', panel:'#fffaf0', line:'#d8ccb8', green:'#145b43', blue:'#255f7d', amber:'#a36216', red:'#9a4034',
+  cream:'#fbf4e7', source:'#f6efd9', ingest:'#dceee3', log:'#eaf4ec', norm:'#dcebf2', trust:'#f0dfb8', review:'#f1ded8', dark:'#14231c'
+};
+function roundRect(x,y,w,h,r,fill,stroke=C.line,lw=3){
+  ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); ctx.fillStyle=fill; ctx.fill(); ctx.lineWidth=lw; ctx.strokeStyle=stroke; ctx.stroke();
+}
+function setFont(size, weight=400, family='Georgia'){ ctx.font = `${weight} ${size}px ${family}`; }
+function wrapText(text,x,y,maxWidth,size=24,weight=400,color=C.ink,lineHeight=1.22,maxLines=99,family='Georgia'){
+  setFont(size,weight,family); ctx.fillStyle=color;
+  const words = text.split(/\s+/); let line='', yy=y, count=0;
+  for (const word of words){
+    const test = line ? line + ' ' + word : word;
+    if (ctx.measureText(test).width > maxWidth && line){
+      ctx.fillText(line,x,yy); yy += size*lineHeight; count++;
+      if(count >= maxLines){ ctx.fillText('…',x,yy); return yy + size*lineHeight; }
+      line = word;
+    } else line = test;
+  }
+  if(line){ ctx.fillText(line,x,yy); yy += size*lineHeight; }
+  return yy;
+}
+function label(text,x,y,color=C.green){ wrapText(text,x,y,260,17,800,color,1.1,1,'ui-monospace, Menlo, Consolas, monospace'); }
+function card({x,y,w,h,k,t,d,fill,accent=C.green,title=30,body=21}){
+  roundRect(x,y,w,h,24,fill,C.line,3);
+  label(k,x+28,y+42,accent);
+  const afterTitle = wrapText(t,x+28,y+86,w-56,title,800,C.ink,1.06,3);
+  if(d) wrapText(d,x+28,afterTitle+16,w-56,body,400,C.muted,1.22,5);
+}
+function arrow(x1,y1,x2,y2,color=C.green){
+  ctx.strokeStyle=color; ctx.fillStyle=color; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  const a=Math.atan2(y2-y1,x2-x1); const s=15;
+  ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-s*Math.cos(a-.48),y2-s*Math.sin(a-.48)); ctx.lineTo(x2-s*Math.cos(a+.48),y2-s*Math.sin(a+.48)); ctx.closePath(); ctx.fill();
+}
+function elbow(points,color=C.green){
+  ctx.strokeStyle=color; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(points[0][0],points[0][1]); for(let i=1;i<points.length;i++) ctx.lineTo(points[i][0],points[i][1]); ctx.stroke();
+  const p1=points[points.length-2], p2=points[points.length-1]; const a=Math.atan2(p2[1]-p1[1],p2[0]-p1[0]); ctx.fillStyle=color; const s=15; ctx.beginPath(); ctx.moveTo(p2[0],p2[1]); ctx.lineTo(p2[0]-s*Math.cos(a-.48),p2[1]-s*Math.sin(a-.48)); ctx.lineTo(p2[0]-s*Math.cos(a+.48),p2[1]-s*Math.sin(a+.48)); ctx.closePath(); ctx.fill();
+}
+ctx.fillStyle=C.panel; ctx.fillRect(0,0,canvas.width,canvas.height);
+// Canvas header: enough vertical separation, no overlap.
+label('DOCKETCLOCK DATA FLOW',70,70,C.green);
+wrapText('Trusted participation windows',70,135,980,58,800,C.ink,1.02,2);
+wrapText('A clean pipeline from authoritative source observations to canonical deadline records, confidence states, human review, and subscription-ready delivery surfaces.',70,205,1040,25,400,C.muted,1.28,3);
+// Principle note
+roundRect(1260,70,440,170,26,'rgba(255,253,248,.78)',C.line,3);
+label('PRODUCT PRINCIPLE',1290,115,C.green);
+wrapText('Do not publish fake certainty.',1290,158,370,30,800,C.ink,1.08,2);
+wrapText('Unknown, stale, and conflicting states are first-class product states.',1290,228,365,21,400,C.muted,1.2,3);
+// Coordinates in a tidy grid
+const Sx=70, Ix=440, Px=810, Rx=1210;
+card({x:Sx,y:330,w:300,h:160,k:'SOURCE',t:'Federal Register',d:'Notice metadata, agencies, dates, document types, related docs.',fill:C.source,accent:C.green,title:29,body:20});
+card({x:Sx,y:530,w:300,h:160,k:'SOURCE',t:'Regulations.gov',d:'Dockets, status, comment URLs, attachments, submissions.',fill:C.source,accent:C.green,title:29,body:20});
+card({x:Sx,y:730,w:300,h:160,k:'SOURCE',t:'Mirrors / history',d:'Mirrulations, cached payloads, diffs, and backfills.',fill:C.source,accent:C.green,title:29,body:20});
+card({x:Ix,y:405,w:310,h:210,k:'INGESTION',t:'Source adapters + schedulers',d:'Poll APIs, fetch deltas, respect rate limits, hash payloads, enqueue extraction jobs.',fill:C.ingest,accent:C.green,title:29,body:20});
+card({x:Ix,y:700,w:310,h:170,k:'IMMUTABLE LOG',t:'Raw observations',d:'Payload hash · fetched_at · source URL · parser version · extracted candidates.',fill:C.log,accent:C.green,title:29,body:20});
+card({x:Px,y:335,w:340,h:205,k:'NORMALIZE',t:'Entity resolution + window builder',d:'Tie notices, dockets, agencies, CFR parts, comment URLs, corrections, extensions, reopenings.',fill:C.norm,accent:C.blue,title:28,body:20});
+card({x:Px,y:620,w:340,h:190,k:'TRUST',t:'Confidence + conflict engine',d:'Classify high / medium / low / stale / conflicting. Suppress risky alerts.',fill:C.trust,accent:C.amber,title:28,body:20});
+card({x:Px,y:895,w:340,h:170,k:'HUMAN REVIEW',t:'Review console',d:'Changed deadlines, source disagreement, ambiguous dates, user corrections.',fill:C.review,accent:C.red,title:28,body:20});
+card({x:Rx,y:360,w:420,h:215,k:'REGISTRY',t:'Canonical ParticipationWindow store',d:'Versioned deadline objects with provenance, status, submission URL, close time, timezone, and change history.',fill:'#fffdf8',accent:C.green,title:28,body:20});
+card({x:Rx,y:700,w:420,h:205,k:'DELIVERY',t:'API · webhooks · RSS · ICS · CSV',d:'Watchlists, closing-soon feeds, status-change streams, historical snapshots, bulk export.',fill:'#fffdf8',accent:C.blue,title:28,body:20});
+// Connectors; orthogonal and non-crossing.
+elbow([[370,410],[405,410],[405,475],[440,475]],C.green);
+elbow([[370,610],[405,610],[405,510],[440,510]],C.green);
+elbow([[370,810],[405,810],[405,545],[440,545]],C.green);
+arrow(595,615,595,700,C.green);
+elbow([[750,500],[780,500],[780,438],[810,438]],C.green);
+elbow([[750,785],[780,785],[780,715],[810,715]],C.green);
+arrow(980,540,980,620,C.blue);
+arrow(980,810,980,895,C.amber);
+elbow([[1150,438],[1180,438],[1180,468],[1210,468]],C.green);
+elbow([[1150,715],[1180,715],[1180,803],[1210,803]],C.amber);
+arrow(1420,575,1420,700,C.green);
+// Downstream band
+roundRect(70,980,680,115,24,C.dark,C.dark,3);
+label('DOWNSTREAM USERS',102,1023,'#f0dfb8');
+wrapText('pharmacy desks · childcare associations · journalists · advocacy orgs · civic apps · legal/policy shops',102,1065,610,26,800,'#fffaf0',1.08,2);
+elbow([[1210,840],[1160,840],[1160,1100],[750,1100]],C.blue);
+// Small legend chips
+function chip(x,y,text,color){ roundRect(x,y,170,38,19,'rgba(255,255,255,.55)',color,2); wrapText(text,x+18,y+25,135,15,800,color,1,1,'ui-monospace, Menlo, Consolas, monospace'); }
+chip(70,255,'authoritative',C.green); chip(258,255,'versioned',C.blue); chip(430,255,'confidence-aware',C.amber); chip(660,255,'human-reviewed',C.red);
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+# Ensemble ballot — Civic Impact / Legitimacy
+
+## Numeric ranking
+
+Scores are 1–10, where 10 is strongest for meaningful civic leverage, trustworthiness, verification/legitimacy, equity/access, and showing users their effort was not wasted.
+
+| Rank | Survivor | Civic leverage | Trustworthiness | Verification / legitimacy | Equity / access | Effort not wasted | Avg |
+|---:|---|---:|---:|---:|---:|---:|---:|
+| 1 | RecordReady Clerk Intake | 8 | 9 | 9 | 7 | 9 | 8.4 |
+| 2 | CareRule Scout / Benefits Plainwatch | 9 | 8 | 8 | 9 | 8 | 8.4 |
+| 3 | Tenant Displacement Docket | 9 | 7 | 7 | 10 | 8 | 8.2 |
+| 4 | Conditions Keeper / Outcome Graph | 8 | 8 | 8 | 7 | 9 | 8.0 |
+| 5 | CommentWindow Registry / DocketClock | 8 | 9 | 9 | 6 | 7 | 7.8 |
+| 6 | Concern Router / Civic RouteMap | 8 | 7 | 7 | 8 | 7 | 7.4 |
+| 7 | Childcare Rule Radar / CareNotice Counsel | 7 | 8 | 8 | 7 | 7 | 7.4 |
+| 8 | Pharmacy Docket Desk | 6 | 8 | 8 | 5 | 7 | 6.8 |
+
+## Rationale and required changes
+
+**1. RecordReady Clerk Intake — 8.4.** This is the strongest legitimacy play because it improves the official-record pipeline where public input is actually accepted, organized, acknowledged, and preserved. Civic leverage is indirect but real: fewer lost comments, better packet quality, and clearer receipts before a meeting or comment close. Its equity score is lower than tenant/benefits products because it serves staff first, but if receipting and multilingual/intake-channel support are prioritized it can materially reduce wasted resident effort. Required changes: remain one jurisdiction/body/mailbox, keep staff approval before anything becomes record-ready, maintain immutable audit trails, and explicitly measure reduced staff time plus reduced missing/misfiled comments.
+
+**2. CareRule Scout / Benefits Plainwatch — 8.4.** This has very high civic stakes because Medicaid, HCBS, and benefits rule changes affect vulnerable people who are least able to monitor dockets themselves. Legitimacy depends on expert-reviewed summaries, calm risk framing, and strict legal-advice boundaries; direct-to-recipient blast alerts would undermine trust and could cause panic. It is one of the best equity candidates if routed through P&A, legal-aid, navigator, and disability/aging intermediaries. Required changes: one program/region, expert review before publication, no eligibility determinations, no mass consumer alerts until validated, and receipt/final-action explanations so families see what happened after commenting.
+
+**3. Tenant Displacement Docket — 8.2.** This offers the highest equity and human-stakes leverage: early warnings can preserve appeal, relocation, organizing, or legal-aid windows before displacement becomes irreversible. The legitimacy risks are also serious because public vulnerable-building intelligence could aid landlords or speculators, and source data may arrive too late. It can be highly civic if mediated by trusted tenant/legal-aid organizations rather than exposed as a public surveillance feed. Required changes: one city, one case type, one anchor partner, restricted access, human-reviewed alerts, no landlord-facing lists, and proof that alerts arrive early enough to enable an intervention.
+
+**4. Conditions Keeper / Outcome Graph — 8.0.** This directly addresses the civic legitimacy failure where residents speak once and never learn what happened. Its greatest strength is showing effort was not wasted through continuance, appeal, vote, condition-change, and final-document receipts. The risk is overclaiming causality or enforcement when the record only supports procedural tracking. Required changes: track only source-linked continued dates, votes, appeal windows, and condition text presence/changes; use human review; avoid claims that a comment caused an outcome or that a condition was violated unless backed by official enforcement data.
+
+**5. CommentWindow Registry / DocketClock — 7.8.** This is high-legitimacy infrastructure: accurate deadline objects with provenance can prevent missed participation windows across many downstream civic products. Its direct equity/access score is moderate because the MVP serves professional users and APIs, not residents directly, but it can compound civic leverage if used by trusted intermediaries. Its legitimacy lives or dies on correctness and uncertainty labeling. Required changes: federal-only MVP, deadline confidence/staleness labels, public provenance and change logs, correction workflow, human review for contested deadlines, and no state/local expansion until reliability and maintenance are proven.
+
+**6. Concern Router / Civic RouteMap — 7.4.** The civic leverage is substantial because routing a concern to the correct docket, hearing, agency, bill, or contact is often the missing step between frustration and useful participation. The legitimacy risk is equally substantial: wrong routing can burn trust faster than no help at all. Equity is good if this is used by libraries, hotlines, newsrooms, and legal-aid navigators rather than only policy professionals. Required changes: navigator-facing only, one metro plus narrow federal/state/local sources, citations and confidence on every route, human escalation, and “no reliable official path found” as a normal trusted answer.
+
+**7. Childcare Rule Radar / CareNotice Counsel — 7.4.** This has meaningful but narrower civic leverage: small childcare providers can supply operational evidence on rules that affect affordability, staffing, and license risk. Trust and legitimacy are plausible through associations, CCR&Rs, and shared-services networks, but the product should not masquerade as legal counsel or another generic alert feed. Equity is mixed: it may help under-resourced providers, but only if bundled affordably and translated into practical compliance impacts. Required changes: one state/provider type, association-led distribution, human-reviewed impact memos, post-adoption compliance briefs, and clear distinction between comment assistance and legal advice.
+
+**8. Pharmacy Docket Desk — 6.8.** This is legitimate and commercially plausible through associations or PSAOs, but it ranks lowest on civic-impact criteria because it is more professional/commercial than public-access oriented. It can still produce useful civic input by helping independent pharmacies respond to rules affecting access, reimbursement, controlled substances, and rural/community service capacity. Equity depends on framing around patient access and independent/community pharmacies rather than pure owner burden. Required changes: channel-led distribution, one state plus CMS/DEA/FDA, source-cited member-specific action files, expert review, conflict/legal disclaimers, and explicit prioritization of issues with patient-access or community-health consequences.

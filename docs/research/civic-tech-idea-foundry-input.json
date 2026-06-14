@@ -1,0 +1,822 @@
+{
+  "curated": [
+    {
+      "title": "Lot Line \u2014 address-radius watch for development next door",
+      "one_liner": "Type your home address once and get a plain-language alert the moment a rezoning, variance, or major-development case is filed within the legal notice radius of your parcel \u2014 with a one-tap path to the actual hearing and comment deadline.",
+      "problem": "Homeowners and renters find out a 5-story building or variance next door is happening only when bulldozers arrive, or when a jargon-filled paper notice card gets tossed with junk mail. The statutory mailed notice (300/500 ft) is the only systematic signal residents get, and it has no map, no deadline reminder, and no action path. People who care about their block have no proactive way to learn 'something is being proposed near me.'",
+      "target_user": "Homeowners, renters, and small landlords in mid-to-large US cities who care about their immediate block but are not planning nerds \u2014 the person who would have shown up to the hearing if they'd known in time and understood the stakes.",
+      "solution": "MapIt-style address->parcel geocoding establishes the user's parcel centroid. A scheduled job polls city zoning-case ArcGIS REST feature services and BLDS permit feeds on Socrata, normalizes each case to an OCD Event, and runs a spatial query: is this case within the jurisdiction's statutory notice radius of any watched address? If yes, a MAPLE-pattern LLM enrichment service turns 'Map Amendment ZC 24-117, R-2 to MU-4' into plain language, carries the hearing date and the comment deadline as a first-class object, and offers a one-tap 'I oppose / support / have questions' flow that drafts verified testimony (address->district geocoding proves you're a real affected neighbor, which officials weight over form-letter floods). The novel primitive is the SPATIAL JOIN of a private address against the city's own statutory-notice radius \u2014 productizing the legal notice mechanism itself.",
+      "builds_on": [
+        "MapIt (mySociety) address->jurisdiction/parcel primitive",
+        "ArcGIS REST feature services for zoning-case layers",
+        "BLDS open permit standard on Socrata",
+        "Open Civic Data Events schema",
+        "MAPLE-pattern separate LLM enrichment service + follow->event->feed->digest engine",
+        "City Scrapers Scrapy pattern + vanished-meeting-cancelled diff"
+      ],
+      "gap_filled": "Fills Gap 2 (land use legible/actionable) and Gap 1 (comment-period deadline as alertable object) at the most granular scale. Not a duplicate of coUrbanize/PublicInput (government-buyer per-project silos) nor Symbium (permit-feasibility lookup). The spatial join against statutory-notice radius is net-new for consumers.",
+      "why_now": "BLDS plus the proliferation of city ArcGIS Open Data portals mean parcel-level case and permit geometry is queryable via stable REST/SODA APIs for cities covering most of the US population \u2014 proximity watches without HTML scraping. Cheap RuleBox-style classifiers make per-case plain-language translation affordable at firehose scale.",
+      "merged_from": [
+        "Lot Line \u2014 an address-radius watch for development next door"
+      ]
+    },
+    {
+      "title": "Block Whip \u2014 turn one neighbor's alert into organized, consensus-backed, verified hearing turnout",
+      "one_liner": "When a development or zoning case hits your block, the first neighbor who sees it can rally the exact set of addresses inside the legal notice radius into a deduplicated set of distinct verified comments, a consensus statement, and an RSVP'd hearing turnout \u2014 with a signature threshold that triggers a mandatory response.",
+      "problem": "A single resident commenting gets ignored and identical form-letter floods get discounted, but ten DISTINCT verified neighbors from the affected radius is decisive. Today neighbors have no way to find each other around a specific case \u2014 they rely on a lamppost flyer, a chaotic group text, or a Nextdoor thread full of non-affected people and trolls. No tool scopes organizing to exactly the legally-affected parcels and produces the quality-over-volume testimony officials weight, then converts it into a formal demand.",
+      "target_user": "The one civically-motivated neighbor on a block (often a homeowner or a renter facing displacement) willing to organize but lacking tools to reach exactly the right people \u2014 plus the busy neighbors who would sign on if it took two minutes and felt legitimate.",
+      "solution": "Built on the Lot Line watch layer: when a case is detected the system knows the exact parcel set inside the statutory notice radius (the same set the city must legally mail). An organizer 'adopts' the case and gets a campaign page scoped to those parcels. Neighbors join via address verification (geocoded to confirm they're inside the radius; SMS/postal tiers). Pol.is-style clustering surfaces CROSS-FACTIONAL consensus ('we're not anti-housing, we want the setback and traffic study fixed') as the testimony spine. Each neighbor submits a DISTINCT personalized comment (LLM helps, system prevents identical text). At a defined threshold it compiles a verified-signer testimony packet invoking any local mandatory-response requirement (Join.gov.tw mechanic) and delivers it to the clerk/commission before the hearing. The impact loop closes by ingesting the vote/disposition from Legistar/ArcGIS. Start with 2-3 clean-parcel Legistar cities to dodge the 'live national register' trap.",
+      "builds_on": [
+        "Lot Line / parcel-radius watch layer",
+        "Pol.is / Computational Democracy consensus clustering",
+        "Address->district geocoding + SMS/postal verification tiers",
+        "Legistar (Granicus) OData API for agendas + vote/disposition",
+        "g0v Join.gov.tw signature->mandatory-response mechanic",
+        "WriteToThem postcode->reps send flow",
+        "City Scrapers (Scrapy) for non-Legistar agendas"
+      ],
+      "gap_filled": "Fills Gap 5 (monitor->act->see-impact), Gap 4 (guided action), and Gap 2 (land-use organizing) with explicit anti-astroturf design. Not a duplicate of Decidim/Consul (AGPL, gov-hosted \u2014 we build thin case-scoped flows), Nextdoor (no scoping/verification/output), or Resistbot/5 Calls (Congress-only).",
+      "why_now": "The statutory mailed-notice radius gives a legally-defined, defensible boundary for 'who counts,' solving astroturf-discounting structurally. Pol.is is open and battle-tested; Legistar's auth-free OData exposes hearing outcomes for ~70% of large cities, making impact-loop closure real.",
+      "merged_from": [
+        "Block Whip \u2014 turn one neighbor's alert into an organized hearing turnout",
+        "Neighbor Bloc: signature-to-mandatory-response organizing for local land-use cases"
+      ]
+    },
+    {
+      "title": "Permit Pulse \u2014 neighborhood permit-and-project digest with a 'this affects you, here's the lever' nudge",
+      "one_liner": "A weekly plain-language digest of every new building permit, demolition, curb-cut, and land-use application in your neighborhood, ranked by how much it likely affects you, surfacing the rare items with a still-open action window.",
+      "problem": "Most development that reshapes a neighborhood isn't a dramatic rezoning \u2014 it's the steady drip of demolitions, by-right additions, ADUs, curb cuts, alcohol/cannabis licenses, and grading permits that individually fly under the radar but collectively reshape a block. Residents have no aggregated, legible view, and for most of it the action window (administrative protest, design-review comment, license objection) is short, obscure, and never surfaced as a deadline. The data exists in BLDS/Socrata/Accela but as raw permit codes residents can't parse.",
+      "target_user": "Neighborhood association leaders, local small-business owners, and engaged residents who want a low-effort 'what's changing around here' feed plus a clear signal on the rare items where their input still has a legal window.",
+      "solution": "Ingest BLDS permit data from Socrata across adopter cities and Accela Citizen Access where exposed, plus license/zoning feeds, normalized to OCD. A RuleBox-style LLM-generates-rules pipeline classifies each raw permit into resident-meaningful categories ('teardown/new build', 'big addition', 'new bar', 'curb cut affecting parking', 'cell tower', 'grading near slope') and scores impact by type x proximity. It tags which items still have an OPEN ACTION WINDOW and elevates those as first-class deadline objects. The weekly digest leads with 'Nothing needs you this week' or '2 items have an open window' so busy people trust it. Action paths route to the right channel or escalate into a Block Whip campaign. Cofacts-style cached community answers ('what does a Type V demolition permit mean?') get cheaper per query over time.",
+      "builds_on": [
+        "BLDS open permit standard on Socrata + Accela Citizen Access",
+        "RuleBox (mySociety) LLM-generated classification rules at firehose scale",
+        "TheyWorkForYou concept-subscription + weekly-digest pattern",
+        "Open Civic Data normalization model",
+        "Cofacts community-verified cached-answer pattern",
+        "spicy-regs DuckDB+MCP pattern as model for an LLM-queryable normalized local corpus"
+      ],
+      "gap_filled": "Fills Gap 3 (cross-source normalization of raw permit vocab) and Gap 4 (plain-language legibility), surfacing otherwise-invisible administrative windows (Gap 1). Not a duplicate of buildingeye/BuildZoom (search/lead tools, no impact scoring or action window) nor City Tracker AI/coUrbanize (project-page slivers).",
+      "why_now": "BLDS adoption gives a cross-city permit schema for the first time, and RuleBox-style classifiers make translating millions of cryptic permit rows into impact-ranked categories economically viable \u2014 the unglamorous normalization moat 'adjacency creep' competitors have no incentive to build.",
+      "merged_from": [
+        "Permit Pulse \u2014 neighborhood permit-and-project digest with a 'this affects you, here's the lever' nudge"
+      ]
+    },
+    {
+      "title": "ParcelWatch \u2014 open zoning/land-use change feed keyed to your address (infra)",
+      "one_liner": "A location-to-land-use-event service that turns the mess of Accela/Socrata/ArcGIS/Legistar into a single normalized stream of zoning changes, variances, and development hearings subscribable by parcel or radius, that other apps build on.",
+      "problem": "Land use, zoning, and permits for residents are entirely uncovered: the data is scattered across Accela portals, Socrata tables, ArcGIS parcel layers, and Legistar planning agendas, each in raw local vocabulary. A resident can't answer 'is anything being rezoned or built near me, and is there a hearing I can speak at?' Advocacy groups, local-news outlets, and proptech apps all rebuild fragile per-city scrapers.",
+      "target_user": "Primary payer: B2B2C \u2014 neighborhood associations, local-news outlets, real-estate/proptech apps, and advocacy orgs that embed or resell the feed. Beneficiary: the resident who gets an address-based alert (and the consumer Lot Line/Block Whip/Permit Pulse layers, which consume this).",
+      "solution": "Build the missing 'what's changing on the land near me' normalization layer, scoped city-by-city rather than promising a live national register (heeding Keep-It-In-The-Community). Per launch city: connect Legistar for planning/zoning agenda items, pull Socrata/ArcGIS permit and rezoning datasets, add City-Scrapers Scrapy spiders with the diff/'mark-vanished-as-cancelled' pattern for the Accela/PDF long tail. Normalize each event to an OCD Event with parcel geometry, a plain-language change type, hearing date, and comment endpoint. Expose a geocode->events API and radius/parcel subscriptions. RuleBox-style classifiers map raw local permit codes to a normalized taxonomy. Open-core: open the OCD-mapped schema and one reference city; charge per-city coverage and embedding. This is the shared backend the consumer land-use products run on.",
+      "builds_on": [
+        "Legistar Web API (planning/zoning agendas)",
+        "City Scrapers Scrapy + diff/cancelled pipeline",
+        "Socrata + ArcGIS municipal open-data + parcel GIS",
+        "MapIt-style geocode->jurisdiction primitive",
+        "Open Civic Data Event model + OCD-IDs",
+        "mySociety RuleBox classification rules"
+      ],
+      "gap_filled": "Fills Gap 2 (land use legible/actionable \u2014 clearest whitespace) plus Gap 3 (cross-source normalization), as reusable infrastructure. Not a duplicate of coUrbanize (developer per-project), Symbium (parcel compliance lookup), City Tracker AI (NYC analytics, no action), or Granicus EngagementHQ (per-project gov silo). None offer a cross-source, address-subscribable, normalized land-use event API.",
+      "why_now": "Legistar covers ~70% of large cities auth-free, Socrata/ArcGIS open-data mandates have matured so raw parcel/permit layers are increasingly public, and RuleBox makes normalizing thousands of idiosyncratic permit codes economically feasible.",
+      "merged_from": [
+        "ParcelWatch \u2014 open zoning/land-use change feed keyed to your address"
+      ]
+    },
+    {
+      "title": "RuleRadar for Small Operators \u2014 'this rule changes how you run your business'",
+      "one_liner": "A vertical alert + guided-comment service that tells a specific class of small operator (independent restaurants, family farms, home daycares, owner-operator truckers) exactly which open federal/state proposed rules touch their operation and helps them write a comment grounded in their own real facts.",
+      "problem": "Small business owners and sole proprietors are directly regulated by FDA, USDA, DOT/FMCSA, OSHA, EPA, and state boards but never see proposed rules until they're final and compliance is mandatory. Regulations.gov has the data but zero discovery: you can't say 'I run a 12-table BYOB restaurant in Ohio' and get back the 3 open dockets that change your obligations. Trade associations cover dues-paying members; the long tail of non-member operators is flying blind while only big incumbents file comments.",
+      "target_user": "Owner-operators and very small business owners in heavily-regulated verticals who are NOT members of a well-staffed trade association \u2014 the independent restaurant owner, the 3-truck logistics outfit, the home childcare provider, the small specialty-crop farmer.",
+      "solution": "User picks a vertical profile and a few operation attributes (size, state, what they make/sell/transport). Continuously query Mirrulations/spicy-regs (DuckDB+Parquet over the full corpus) plus the Federal Register API for newly-opened dockets, and run RuleBox-style LLM-generated rules mapping dockets to vertical profiles cheaply at firehose scale. When an open-comment docket matches (is_open_for_comment + comment_end_date), the user gets a plain-language 'this affects you because\u2026' alert with the deadline as a first-class countdown. Guided drafting asks for the operator's OWN specifics so each comment is substantively unique. Comments submit via the Regulations.gov v4 API; the operator gets the tracking number back and a notification when the final rule publishes showing whether the agency addressed comments like theirs.",
+      "builds_on": [
+        "Mirrulations (full Regulations.gov S3 mirror)",
+        "spicy-regs (Parquet + DuckDB + MCP)",
+        "mirrulations-search schema (is_open_for_comment, comment dates, collections)",
+        "Federal Register API (new-docket firehose)",
+        "Regulations.gov v4 API (submission + tracking)",
+        "mySociety RuleBox (LLM-generated classification at cheap scale)"
+      ],
+      "gap_filled": "Fills Gap 1 (comment deadlines first-class) and Gap 4 (legibility + guided action) for a horizontal small-operator audience. Not a duplicate of Quorum/FiscalNote (B2B lobbyist, no small-operator onboarding) nor Regulations.gov (no discovery/profiling/drafting). The vertical-profile->docket ruleset gets cheaper/more accurate over time (Cofacts cache economics).",
+      "why_now": "spicy-regs + Mirrulations make LLM SQL across the historical corpus cost cents instead of hammering the rate-limited live API, and RuleBox proves LLM-authored rules run firehose-scale on cheap infra. Cheap long-context LLMs make per-operator translation viable. 2025-2026 rule churn means more open dockets that matter.",
+      "merged_from": [
+        "RuleRadar for Small Operators \u2014 \"This rule changes how you run your business\""
+      ]
+    },
+    {
+      "title": "ScopeWatch \u2014 regulatory radar for independent clinicians and small private practices",
+      "one_liner": "A 'lite in-house counsel' that watches the federal and state rules changing how independent clinicians get paid and what they're allowed to do, turning each into a 'does this hit me / here's the comment you can file' card.",
+      "problem": "Solo and small-group clinicians (NPs, PTs, optometrists, dentists, behavioral health, independent PCPs) are governed by a relentless drip of rulemaking they can't track: annual CMS Physician Fee Schedule and Quality Payment Program rules, state Medicaid bulletins, state board scope-of-practice changes, prior-authorization rules. These materially change income and legal exposure, comment periods are open and short, and only hospital systems and trade-association lobbyists with full-time staff watch. The independent finds out after the rule is final, when a claim is denied.",
+      "target_user": "Owner-operators of independent/small clinical practices (1-15 providers) \u2014 NPs, PTs/OTs, optometrists, dentists, mental-health clinicians, independent PCPs \u2014 and small practice managers without a compliance department.",
+      "solution": "Onboard by specialty + state + payer mix + ZIP. Ingest Regulations.gov v4 + Federal Register for CMS/HHS dockets, backfilled against Mirrulations/spicy-regs so an LLM can SQL relevant historical dockets cheaply. Layer Open States/Plural v3 for state scope-of-practice and Medicaid. Use RuleBox to have an LLM GENERATE classification rules once per specialty, then run them over the firehose so each user sees only rules tagged to their specialty/state/payer mix. Comment deadlines promoted to first-class alertable objects with countdown and calendar push. Plain-language card per rule: 'What it is / Does it hit your practice / Dollar-impact direction / Deadline / Draft a comment.' Guided composer drafts a substantive individualized comment, submits to Regulations.gov, archives a versioned receipt. Impact loop: when finalized, pull the response-to-comments and show whether the user's concern was addressed.",
+      "builds_on": [
+        "Regulations.gov v4 + Federal Register API",
+        "Mirrulations + spicy-regs Parquet/DuckDB/MCP",
+        "Open States / Plural v3 for state scope-of-practice and Medicaid",
+        "mySociety RuleBox (LLM-generated rules at firehose scale)",
+        "MAPLE patterns (follow->feed->digest; versioned archive; separate enrichment)",
+        "Open Civic Data schema"
+      ],
+      "gap_filled": "Primarily Gaps 1 (CMS-docket deadlines as alertable objects tied to clinician income) and 4 (legibility + guided action). Not a duplicate of Quorum/FiscalNote (priced out of solo practice, no 'does this hit MY panel') nor Regulations.gov (no discovery). The specialty+payer-mix filter is the defensible wedge against horizontal adjacency-creep.",
+      "why_now": "Annual CMS conversion-factor fights, expiring telehealth flexibilities, and state-by-state scope-of-practice expansion are acute in 2024-2026; RuleBox plus the spicy-regs MCP corpus make per-specialty firehose classification cheap enough for a low-ARPU audience previously uneconomical to serve.",
+      "merged_from": [
+        "ScopeWatch \u2014 regulatory radar for independent clinicians and small private practices"
+      ]
+    },
+    {
+      "title": "CodeRed \u2014 health-code, licensing, and ordinance radar for independent restaurants and food-service",
+      "one_liner": "A pocket compliance officer for independent restaurants and food trucks that monitors the city/county rules, fees, and ordinances that can shut them down or raise their costs \u2014 and tells them when there's still time to object.",
+      "problem": "Independent restaurant, cafe, food-truck, and bodega owners operate on thin margins and are blindsided by local actions: health-code revisions, license/permit fee hikes, sidewalk-dining and parklet ordinance changes, minimum-wage and scheduling ordinances, single-use-plastic and organics mandates, sign rules, and conditional-use decisions for their block. These are decided in council and board-of-health meetings with comment windows the owner never hears about, sourced in Legistar agendas and PDF packets. By the time they learn, it's law. They have no lawyer and no association rep watching their specific city.",
+      "target_user": "Owner-operators of independent food-service businesses (single-location restaurants, cafes, food trucks, caterers, corner stores) in mid-to-large US cities/counties, plus small local restaurant associations and chambers acting on their behalf.",
+      "solution": "Onboard by business address + business type. Resolve to governing jurisdictions and council district with a MapIt-style clone. Pull local legislative activity from Legistar OData (~70% of large cities/counties auth-free) \u2014 bills, agendas, committee items, board-of-health calendars. For the long tail deploy City Scrapers (Scrapy->OCD Events) with the vanished-meeting diff. Normalize raw local vocabulary ('parklet', 'sidewalk cafe permit', 'mobile food vending', 'A-frame sign') into a consumer-facing canonical set using RuleBox classifiers. Surface upcoming items and comment/hearing windows as first-class deadline objects. Each item becomes a plain-language card with a 2-minute comment composer routed to the right council member (WriteToThem pattern), plus a 'rally my block' share so nearby owners co-sign. Track items through to vote and show how the member voted and whether language changed.",
+      "builds_on": [
+        "Legistar (Granicus) OData Web API",
+        "City Scrapers (Scrapy->OCD Events) + cancelled-meeting diff",
+        "MapIt clone for address->jurisdictions/council district",
+        "mySociety WriteToThem + RuleBox",
+        "MAPLE follow->event->feed->digest + versioned archive",
+        "Open Civic Data Events/People schema"
+      ],
+      "gap_filled": "Gaps 1 (local hearing/comment deadlines), 3 (normalizing fragmented local vocab), 4 (plain-language + guided action), and the organize slice of 5. Not a duplicate of Granicus EngagementHQ/PublicInput (gov-sold, per-project silos), Quorum/FiscalNote (federal/state B2B), 5 Calls/Resistbot (Congress-only), or coUrbanize (project-specific). The address+business-type filter on Legistar is the wedge.",
+      "why_now": "Post-pandemic cities churn sidewalk-dining/parklet ordinances, plastics/organics mandates, and fees faster than ever, while Legistar's broad auth-free coverage plus LLM topic classification finally make affordable personalized local monitoring feasible for a fragmented low-ARPU SMB audience nobody serves.",
+      "merged_from": [
+        "CodeRed \u2014 health-code, licensing, and ordinance radar for independent restaurant and food-service owners"
+      ]
+    },
+    {
+      "title": "Watershed Watch \u2014 development-and-permit radar for local environmental and watershed groups",
+      "one_liner": "A monitoring + mobilization tool for small volunteer environmental groups that watches the permits, comment periods, and council/agency actions affecting their specific watershed or open space, turning each into a ready-to-mobilize action with a measurable outcome.",
+      "problem": "Small volunteer-run environmental groups (watershed alliances, friends-of-the-creek, land trusts) are perpetually late to the fights that matter most: a development's environmental review, a stormwater/wetlands permit, an EPA/state comment period, a rezoning that paves a floodplain, a board-of-supervisors creek vote. Signals are scattered across federal Regulations.gov dockets, the Federal Register, state legislation, and \u2014 hardest \u2014 local council agendas and Accela/Socrata/ArcGIS land-use systems. These groups have passion but no policy staff, miss short windows, submit weak duplicate comments officials discount, and burn out because they can't see whether their effort changed anything.",
+      "target_user": "Volunteer leaders and small staff of local environmental/watershed/conservation groups and land trusts focused on a defined geographic area (a creek, bay, forest, airshed, or set of neighborhoods).",
+      "solution": "Define a watch area by drawing/selecting a watershed or jurisdiction boundary; resolve to governing jurisdictions and council districts via a MapIt-style service. Monitor three streams normalized into one feed: (a) federal environmental dockets via Regulations.gov v4 + Federal Register, with Mirrulations/spicy-regs for context; (b) state environmental legislation via Open States/Plural v3; (c) local land-use/permit actions via Legistar + City Scrapers, plus best-effort Accela/Socrata/ArcGIS ingestion made legible as 'a project at [address] in your watershed is in environmental review.' Promote every comment period and hearing to a first-class deadline object. Each item is a plain-language card. The action layer differentiates on QUALITY: a Pol.is-style step surfaces cross-factional consensus, then a guided composer turns it into individualized substantive comments and routes turnout. Impact loop closes the sustainability gap: archive versioned testimony, pull response-to-comments and vote records, and show 'your 40 comments + 12 speakers -> the wetland buffer was widened.' Funded by a SocietyWorks-style B2G/foundation tier selling aggregated anonymized watershed-engagement dashboards to land trusts, foundations, and regional water boards.",
+      "builds_on": [
+        "Regulations.gov v4 + Federal Register; Mirrulations + spicy-regs",
+        "Open States / Plural v3 for state environmental legislation",
+        "Legistar OData + City Scrapers for local land-use",
+        "Accela / Socrata / ArcGIS parcel-permit feeds (gap 2 frontier)",
+        "MapIt clone for boundary->jurisdictions",
+        "Pol.is / Computational Democracy for consensus",
+        "MAPLE versioned archive + notification engine; RuleBox + WriteToThem"
+      ],
+      "gap_filled": "Hits the most gaps: 1, 2 (land-use frontier), 3 (cross-source normalization into one watershed feed), 4, and 5 (full loop with a built-in burnout/sustainability answer). Not a duplicate: geography-and-mission-scoped for amateur groups, not the lobbyist B2B incumbents; Granicus/PublicInput are gov-side; City Tracker AI/Symbium are slivers without the organize+impact loop or environmental-docket integration. Funding model is part of the idea.",
+      "why_now": "Land-use and environmental-review fights intensify with housing/infrastructure pressure on floodplains, more jurisdictions expose permit data via Socrata/ArcGIS/Accela, and Pol.is deliberation plus cheap LLM classification let tiny volunteer groups produce quality-over-volume consensus testimony \u2014 at a cost a foundation tier can sustain.",
+      "merged_from": [
+        "Watershed Watch \u2014 development-and-permit radar for local environmental and watershed groups"
+      ]
+    },
+    {
+      "title": "Statehouse RuleWatch \u2014 the missing layer for state agency rulemaking",
+      "one_liner": "A monitor + targeted-comment product for STATE agency regulations and their comment periods \u2014 the layer between Open States' bill coverage and Regulations.gov's federal-only scope, translated into 'this affects your community.'",
+      "problem": "State agencies (health, environmental quality, education, licensing, utilities commissions) issue the rules most directly governing daily life, with real comment periods \u2014 but there is NO federated, normalized, alertable index of them. Open States/Plural covers state legislation and hearings but explicitly NOT regulations. Each state publishes rulemaking in a different register (Texas Register, California OAL, NY State Register) with its own vocabulary, formats, and deadline conventions. A resident has no way to learn their health department opened comment on a rule affecting, say, well-water testing or assisted-living staffing.",
+      "target_user": "Residents and small community/advocacy groups who care about a state-level issue (water quality, school standards, eldercare, utility rates, occupational licensing) but can't read 50 administrative registers \u2014 and local advocates who have no tool for state rulemaking the way they have Open States for bills.",
+      "solution": "Build a normalization pipeline (City Scrapers/Scrapy, one scraper per register since there's no API) that ingests state administrative registers and proposed-rule notices into the OCD model with OCD-IDs, extracting the comment deadline as a first-class object. RuleBox-style rules normalize each state's raw vocabulary into shared topic concepts so a non-expert can subscribe to 'drinking water' or 'nursing home staffing' nationally and get matches regardless of local terminology (TheyWorkForYou concept-subscribe + term-expansion). MapIt-style geocoding ties a rule's geographic scope to the user. Guided drafting + submission routes to each state's actual channel (web form, email, or generated cover letter for PDF-only states \u2014 realistic, MAPLE-style). Subscribers get a weekly digest plus deadline alerts.",
+      "builds_on": [
+        "Open States / Plural v3 (explicit complement; reuse people.geo and OCD-IDs)",
+        "Open Civic Data standard + OCD-IDs",
+        "City Scrapers (Scrapy) per-source scraper + diff/cancellation pipeline",
+        "MapIt (geographic scope->resident)",
+        "mySociety RuleBox (normalization across heterogeneous state vocab)",
+        "TheyWorkForYou concept-subscription + term-expansion + weekly digest"
+      ],
+      "gap_filled": "Fills Gap 1 (deadlines first-class), Gap 3 (cross-jurisdiction normalization of 50 registers), and Gap 4. Not a duplicate: Open States/Plural deliberately excludes rulemaking; Regulations.gov is federal-only; Quorum/FiscalNote treat state regs as B2B compliance, not resident-facing 'affects your community' alerts. The scraper-built normalized state-rulemaking corpus is the moat.",
+      "why_now": "More policy pushes to the states in 2025-2026, raising the stakes of state rulemaking precisely as it remains the least legible layer. LLM-generated scrapers + RuleBox normalization make unifying 50 idiosyncratic registers newly feasible, and Open States has proven the consumption-over-self-hosting model and OCD schema this layer plugs into.",
+      "merged_from": [
+        "Statehouse RuleWatch \u2014 the missing layer for state agency rulemaking"
+      ]
+    },
+    {
+      "title": "Consensus Comment \u2014 turn scattered residents into one statement officials can't ignore",
+      "one_liner": "A Pol.is-style deliberation room attached to any live comment period (federal rule, state rulemaking, local hearing) that converts scattered opinions into ranked cross-factional consensus statements and files the result as a single weighted, deduplicated packet on the official record.",
+      "problem": "When a rule or zoning change drops, residents either do nothing or flood the docket with identical form letters officials are trained to discount as astroturf. The genuinely persuasive thing \u2014 'here is what 80% of us across the political spectrum actually agree on' \u2014 never gets produced because nobody runs the deliberation, and no tool both clusters opinion AND files the result officially. Felt acutely by the informal organizer who can rally bodies but can't synthesize them, and who quits because the docket-level effort is invisible.",
+      "target_user": "The volunteer neighborhood organizer / HOA-adjacent resident who can get 50-300 neighbors mildly engaged on a specific rule, zoning case, or federal comment period but lacks tooling to make that engagement count at docket scale.",
+      "solution": "For any item with an open comment window (Regulations.gov commentEndDate, Federal Register doc, Legistar agenda item), spin up a lightweight Pol.is-derived room. An LLM pre-summarizes the docket (via Mirrulations/spicy-regs) into plain-language statement seeds to bootstrap it. Participants vote agree/disagree/pass and add statements; clustering surfaces statements winning majorities ACROSS opinion clusters (the cross-factional consensus vTaiwan proved officials respect). At deadline the tool generates a structured packet \u2014 consensus statements ranked by cross-cluster support, N-of-M signer counts, address-geocoded district verification \u2014 and submits via Regulations.gov v4 (federal) or as routable testimony for Legistar municipalities. Each signer can also file a short individual comment so volume AND quality land. Funding: SocietyWorks-style B2G \u2014 sell agencies and clerks a 'consensus dashboard' so the quality signal is legible to them too.",
+      "builds_on": [
+        "Pol.is / Computational Democracy clustering",
+        "Regulations.gov v4 API (commentEndDate + submission)",
+        "Federal Register API",
+        "Legistar OData API for municipal hearing items",
+        "MAPLE testimony-routing + versioned archive",
+        "MapIt-style address->district geocoding for signer verification",
+        "Open Civic Data IDs to key each room to a canonical item"
+      ],
+      "gap_filled": "Fills Gap 1 (deadline as trigger), Gap 4 (guided action), and Gap 5 (loop) \u2014 and is the docket-scale/cross-jurisdiction complement to Block Whip's parcel-radius scope. Not a duplicate: Pol.is/vTaiwan has no comment-period ingestion or official-submission pipe; Resistbot/5 Calls do volume with no clustering or discovery; Granicus EngagementHQ is a per-project gov silo.",
+      "why_now": "Mirrulations + spicy-regs make the full corpus cheaply queryable so an LLM can pre-summarize any docket into statement seeds; Pol.is clustering is open and proven; officials' fatigue with form-letter floods makes a credible quality signal more valuable than ever.",
+      "merged_from": [
+        "Consensus Comment: turn 200 angry neighbors into one statement officials can't ignore"
+      ]
+    },
+    {
+      "title": "Comment Workshop \u2014 verified, substantive comments engineered to survive the form-letter filter, built into a weekly habit",
+      "one_liner": "A guided drafting tool that turns a person's lived experience into a unique, verified, on-the-record comment deliberately built to beat the 'discount the form-letter flood' filter \u2014 wrapped in a light weekly civic habit so the muscle actually forms.",
+      "problem": "Two linked failures. (1) Mass-action tools generate thousands of identical comments agencies count as one, so well-meaning effort is literally wasted \u2014 directly contradicting 'know my effort isn't wasted.' Ordinary people don't know what makes a comment count (raising a new factual issue, citing a specific impact, identifying a data gap) or how to prove they're a real affected person. (2) Civic action is sporadic and reactive, so non-experts never build a cadence; they keep meaning to get involved and don't.",
+      "target_user": "The civically-motivated non-expert with a real stake in specific open items (a parent affected by a school-nutrition rule, a homeowner near a proposed air standard) \u2014 the 'I keep meaning to get involved' professional with ~20 minutes a week who wants to feel competent rather than overwhelmed.",
+      "solution": "Onboarding: postcode + a few topic concepts; a MapIt-style geocoder resolves jurisdictions and TheyWorkForYou-style vector alerts auto-expand the concepts. Each week the engine surfaces ONE high-relevance, deadline-stamped item (comment period closing soon, upcoming hearing) ranked by personal relevance + closing window, with the commentEndDate as a first-class object. The co-draft flow is deliberately anti-form-letter: it interviews the user for situated knowledge, coaches them to raise substantive points agencies must respond to, drafts in their voice, and runs Pol.is-style clustering plus a similarity check against the MAPLE versioned archive to detect and rewrite anything drifting toward what thousands already said. Real-person assurance via address->district geocoding and tiered SMS/ID/postal verification. After submission via the v4 API the user gets the tracking number and, when the final rule drops, an LLM diff of the agency's response-to-comments against their point. Streaks and a 'civic level' reward consistency; delivered and nudged through messaging apps.",
+      "builds_on": [
+        "Regulations.gov v4 + Federal Register API (dockets, deadlines, submission, tracking)",
+        "Pol.is / Computational Democracy (detect form-letter convergence; surface distinctive angle)",
+        "MapIt-style geocoding + tiered SMS/ID/postal verification",
+        "TheyWorkForYou vector topic alerts (concept subscribe + term expansion)",
+        "MAPLE versioned archive (corpus for the originality/similarity check) + follow->feed->digest",
+        "RuleBox (per-user relevance ranking at firehose scale)",
+        "Mirrulations (historical response-to-comments corpus to learn what gets a substantive reply)"
+      ],
+      "gap_filled": "Fills Gap 4 (guided action) and Gap 5 (loop), the explicit anti-duplicate of Resistbot/5 Calls/Countable (volume of identical actions). Defensible because the verification + de-duplication + impact-diff + habit-loop combination is what volume tools won't build (it caps their vanity metrics).",
+      "why_now": "Agencies are drowning in AI-generated mass comments and openly discounting them, so 'quality and verified' is the only kind whose effort isn't wasted. Cheap LLMs make per-comment coaching, voice-preserving co-draft, similarity-dedup, and the post-hoc 'did the agency address your point' diff affordable; per-user weekly relevance ranking via RuleBox was analyst-cost two years ago.",
+      "merged_from": [
+        "Comment Workshop \u2014 verified, substantive comments that officials actually weigh",
+        "Streak \u2014 civic habit-building with quality-gated AI co-drafting"
+      ]
+    },
+    {
+      "title": "Closed the Loop \u2014 the 'did my comment matter?' impact-receipt engine",
+      "one_liner": "An automated impact-tracker that follows every comment, petition, or testimony a user submitted and reports back in plain language, over the messaging app they already use, whether and how a rule, bill, or board action changed \u2014 closing the void that makes people quit.",
+      "problem": "The single biggest reason busy non-experts stop participating is the void after they act: they submit a comment or testify and never hear anything again, so the effort feels pointless. Agencies DO publish response-to-comments and final rules, and city bodies DO vote, but no consumer product connects a specific person's submission to that downstream outcome. 'I commented once, nothing happened as far as I know, why bother again' kills sustainability for the user and any product in this space.",
+      "target_user": "Anyone who has submitted a comment or testimony \u2014 especially the lapsed civic actor who cares about a local development or rule but is too busy to re-check dockets and minutes \u2014 plus the organizer who needs to show their group the campaign worked to keep them mobilized.",
+      "solution": "When a user acts (or just follows an item), store the OCD-ID / docket / bill ID and watch it. For federal rules, diff the proposed vs final rule via Federal Register + Mirrulations, and use the spicy-regs DuckDB/MCP layer so an LLM can ask 'did the final rule change on the point this user raised?' For legislation, poll Open States updated_since for status and roll-call changes. For local items, watch Legistar/City Scrapers for the agenda item's vote and minutes. A RuleBox-style classifier (generated once, run at firehose scale) detects whether the agency's response addresses the user's substance \u2014 adopted, rejected-with-reason, or unaddressed. Deliver a plain-language receipt: 'The EPA finalized this rule. It adopted the longer comment window you and 1,200 others asked for. Here's the paragraph.' Delivered as a Cofacts-style message thread (SMS/WhatsApp/Telegram), honest about null results ('No change yet \u2014 final rule expected Q3'), and aggregated across a deliberation room for a group's batting average. This is the retention engine that makes a paid tier or grant distribution defensible.",
+      "builds_on": [
+        "Federal Register API + Regulations.gov v4 (proposed-vs-final diff)",
+        "Mirrulations + spicy-regs Parquet/DuckDB/MCP (LLM 'was my point addressed')",
+        "Open States/Plural v3 updated_since + roll-call votes",
+        "Legistar Web API + City Scrapers Events for local outcomes",
+        "OCD-IDs as the stable join key over time",
+        "MAPLE follow->event->feed->digest + versioned archive"
+      ],
+      "gap_filled": "Primarily Gap 5 (the see-impact half no consumer product owns) and Gap 4 (legibility). No existing player does post-action impact attribution: Resistbot/5 Calls stop at send; Regulations.gov has no follow-up; Quorum's analytics are B2B/lobbyist-facing and don't tell an individual constituent 'your point survived into the final rule.' Designed as a horizontal layer that plugs into all the other ideas' action flows.",
+      "why_now": "The final-vs-proposed diff at scale only became cheap with Mirrulations + spicy-regs MCP, so semantically matching a user's comment to the agency's response-to-comments is now a tractable LLM task rather than manual analyst work.",
+      "merged_from": [
+        "Closed the Loop \u2014 the \"did my comment matter?\" receipt engine",
+        "Did It Matter: an evidence-grade impact tracer for comments you already filed"
+      ]
+    },
+    {
+      "title": "DocketClock \u2014 the open Comment-Period Deadline API, funded by a B2G clerk dashboard",
+      "one_liner": "An open, normalized deadline API that treats every open public-comment period (federal rule, state rulemaking, local hearing) as a first-class alertable object with an OCD-ID and ICS feed \u2014 with a paid B2G clerk-side dashboard whose verified-resident network cross-subsidizes the free consumer feed.",
+      "problem": "No system anywhere exposes 'comment-period deadline' as a queryable, alertable object. Regulations.gov has commentEndDate buried in clunky JSON; state and municipal windows live in PDFs and agenda footnotes; nobody can answer 'what's open for comment near me and closing this week?' Every downstream builder re-derives this from scratch. Meanwhile civic consumer products keep going dormant for lack of revenue (Engage went dormant, vTaiwan is unfunded), and agencies/clerks get low-quality, often-astroturfed input with no way to verify a commenter is a real local resident. Both sides of the same market are underserved and nobody has wired them together.",
+      "target_user": "Primary payer: city/county clerks, planning departments, and small federal/state agency offices that run comment periods and want verified, structured, de-duplicated input \u2014 plus developers and civic orgs building action tools on the API. Beneficiary: the busy resident who just wants a reliable 'this comment period in your area closes in 5 days' alert.",
+      "solution": "A picks-and-shovels data service with a built-in funding model. Ingest the freshness layer from Regulations.gov v4 + Federal Register (poll updated_since), backfill from Mirrulations, and adopt mirrulations-search Postgres columns (is_open_for_comment, comment_start/end_date) verbatim. Add a state rulemaking layer (registers/RSS) and a local layer via Legistar where agenda items carry a window. Normalize every item to an OCD Event with a stable OCD-ID, a canonical deadline timestamp + timezone, status, and the official submission endpoint. Ship a REST API (filter by geo/domain/days-to-deadline), per-watchlist ICS feeds, and webhooks. The B2G side: an agency posts/auto-syncs a comment period; the platform broadcasts the deadline to nearby verified residents, ingests comments with address->district verification and duplicate flagging, clusters them Pol.is-style, and hands the clerk a structured de-duplicated exportable packet they currently assemble by hand. Every agency that buys in enriches the consumer feed; every verified resident raises the value of the B2G layer. Open the schema and free tier; charge for volume/SLA/webhooks and the clerk dashboard.",
+      "builds_on": [
+        "Regulations.gov v4 + Federal Register API (commentEndDate freshness)",
+        "Mirrulations S3 mirror + mirrulations-search Postgres schema",
+        "Open Civic Data standard + OCD-IDs",
+        "Legistar Web API (local agenda items with windows)",
+        "spicy-regs Parquet/DuckDB for historical backfill",
+        "Pol.is consensus clustering for the agency dashboard",
+        "Address->district geocoding + tiered verification (the value agencies pay for)",
+        "SocietyWorks B2G-funds-free-consumer cross-subsidy model"
+      ],
+      "gap_filled": "Directly fills Gap 1 (deadlines as a first-class alertable object \u2014 net-new, exists nowhere) plus Gap 3 (normalization) and Gap 5, with the sustainability answer the constraints demand baked in. Not a duplicate: Regulations.gov has the field but no discovery/alerting/cross-jurisdiction API; Quorum/FiscalNote are B2B trackers with no clean deadline feed; Mirrulations is a raw mirror; Granicus EngagementHQ/PublicInput are per-project gov silos with near-zero verification and no consumer discovery. Defensibility against adjacency creep is the two-sided verified-resident network.",
+      "why_now": "Mirrulations provides the full historical corpus free on AWS Open Data and spicy-regs made it SQL-queryable, so the expensive backfill and schema already exist \u2014 the missing piece is the maintained freshness+deadline-normalization layer. mirrulations-search already ships the comment-window fields and watchlist collections. GAO has flagged Regulations.gov search as unusable for non-experts, and agencies are under rising pressure to filter AI-generated floods, creating demand pull on both sides right now.",
+      "merged_from": [
+        "DocketClock \u2014 the open Comment-Period Deadline API",
+        "CommentDeadline B2G \u2014 the SocietyWorks-style engine that funds the free consumer app"
+      ]
+    }
+  ],
+  "generated": [
+    {
+      "title": "RuleRadar for Small Operators \u2014 \"This rule changes how you run your business\"",
+      "one_liner": "A vertical alert + guided-comment service that tells a specific class of small operator (e.g., independent restaurants, family farms, home daycares, owner-operator truckers) exactly which open federal/state proposed rules touch their operation and helps them write a comment grounded in their own real-world facts.",
+      "problem": "Small business owners and sole proprietors are directly regulated by agencies (FDA, USDA, DOT/FMCSA, OSHA, EPA, state licensing boards) but never see proposed rules until they're final and compliance is mandatory. Regulations.gov has the data but zero discovery: you can't say 'I run a 12-table BYOB restaurant in Ohio' and get back 'these 3 open dockets change your menu-labeling, grease-trap, and tipped-wage reporting obligations.' Trade associations cover this for dues-paying members, but the long tail of operators who aren't members are flying blind and only the big incumbents' comments get filed.",
+      "target_user": "Owner-operators and very small business owners in heavily-regulated verticals who are NOT members of a well-staffed trade association \u2014 the independent restaurant owner, the 3-truck logistics outfit, the home-based childcare provider, the small specialty-crop farmer.",
+      "solution": "User picks a vertical profile and a few operation attributes (size, state, what they make/sell/transport). We continuously query Mirrulations/spicy-regs (DuckDB+Parquet over the full Regulations.gov corpus, plus the Federal Register API for newly-opened dockets) and run RuleBox-style LLM-generated classification rules that map dockets to vertical profiles cheaply at firehose scale. When a docket with an open comment period (is_open_for_comment + comment_end_date from the mirrulations-search schema) matches your profile, you get a plain-language 'this affects you because\u2026' alert with the deadline as a first-class countdown. Guided comment drafting asks for the operator's OWN specifics (your costs, your headcount, your local conditions) so each filed comment is substantively unique and carries the operator's real data \u2014 explicitly NOT a form-letter clone. Comments are submitted via the Regulations.gov v4 API and the operator gets the official comment-tracking-number back, plus a notification when the final rule publishes showing whether the agency's response addressed comments like theirs.",
+      "builds_on": [
+        "Mirrulations (full Regulations.gov S3 mirror)",
+        "spicy-regs (Parquet + DuckDB + MCP for LLM SQL over the corpus)",
+        "mirrulations-search schema (is_open_for_comment, comment_start/end_date, collections watchlists)",
+        "Federal Register API (new-docket firehose)",
+        "Regulations.gov v4 API (comment submission + tracking numbers)",
+        "mySociety RuleBox (LLM-generated classification rules at cheap firehose scale)"
+      ],
+      "gap_filled": "Fills Gap 1 (comment-period deadlines as a first-class alertable object) and Gap 4 (plain-language legibility + guided action). Not a duplicate of Quorum/FiscalNote (B2B lobbyist tooling, no small-operator vertical onboarding, no per-operator 'affects you' mapping) nor Regulations.gov (no discovery, no profiling, no drafting). The defensible moat is the vertical profile->docket classification ruleset that gets cheaper and more accurate over time (Cofacts-style cache economics).",
+      "why_now": "spicy-regs + Mirrulations now make it possible to run LLM SQL across the entire historical regulations corpus for cents instead of hammering the rate-limited live API, and RRuleBox proves LLM-authored classification rules can run firehose-scale on cheap infra. Cheap long-context LLMs make per-operator 'this affects you because\u2026' translation economically viable for the first time. Regulatory volatility in 2025-2026 (rapid rule churn, rescissions, re-proposals) means small operators face more open dockets that matter to them than ever."
+    },
+    {
+      "title": "Comment Workshop \u2014 verified, substantive comments that officials actually weigh",
+      "one_liner": "A guided drafting tool that turns a person's lived experience into a unique, on-the-record comment with real-person assurance, deliberately engineered to survive the 'discount the form-letter flood' filter that agencies apply.",
+      "problem": "Mass-action tools (Resistbot-style) generate thousands of identical comments that agencies are explicitly trained to count as a single comment, so well-meaning citizen effort is literally wasted \u2014 directly contradicting the user's core fear ('know my effort isn't wasted'). Meanwhile, a genuinely substantive, fact-bearing comment from one affected person can change a rule, but ordinary people don't know what makes a comment 'count' (raising a new factual issue, citing a specific impact, identifying a legal/data gap) and have no way to prove they're a real affected person rather than a bot or a bulk campaign.",
+      "target_user": "The civically motivated non-expert who has a real stake in a specific open rule (a parent affected by a school-nutrition rule, a patient affected by a drug-pricing rule, a homeowner near a proposed EPA air standard) and wants their single comment to actually move the needle.",
+      "solution": "For any open docket (sourced from Regulations.gov v4 / Federal Register, with the comment_end_date surfaced as a first-class deadline object), the tool runs an interview that extracts the user's UNIQUE situated knowledge and coaches them to raise substantive points agencies must respond to \u2014 not talking points. It uses Pol.is / Computational Democracy clustering across all drafts in a docket to detect and AVOID convergence: if your draft is drifting toward what 4,000 others already said, it nudges you to your distinctive angle, and surfaces cross-factional consensus statements that carry disproportionate weight. Crucially it layers real-person assurance: address->district geocoding plus tiered verification (SMS, ID, or postal-letter for the highest tier) so the comment is filed with a credibility signal. After submission via the v4 API, the user gets their tracking number and, when the final rule drops, an LLM diff of the agency's 'response to comments' against their specific point \u2014 closing the see-impact loop.",
+      "builds_on": [
+        "Regulations.gov v4 API + Federal Register API (dockets, deadlines, submission, tracking numbers)",
+        "Pol.is / Computational Democracy Project (clustering to detect form-letter convergence and surface cross-factional consensus)",
+        "MapIt-style address->jurisdiction geocoding (real-person/affected-party assurance)",
+        "MAPLE patterns (versioned public testimony archive; but upgrading its near-zero verification and mailto-only delivery)",
+        "Mirrulations (historical 'response to comments' corpus to train what makes a comment get a substantive agency reply)"
+      ],
+      "gap_filled": "Fills Gap 4 (guided action) and Gap 5 (monitor->act->see-impact in one product). Explicitly the anti-duplicate of Resistbot/5 Calls/Countable, which optimize for volume of identical actions \u2014 this optimizes for substantive, verified, non-duplicate comments, the exact thing agencies don't discount. Defensible because the verification + de-duplication + impact-diff combination is the credibility layer no volume-tool wants to build (it caps their vanity metrics).",
+      "why_now": "Agencies are increasingly drowning in AI-generated mass comments and openly discounting them, so a 'quality and verified' product is now the only kind whose effort isn't wasted. Cheap LLMs make per-comment substantive coaching and the post-hoc 'did the agency address your point' diff affordable; Pol.is-style clustering at comment-draft time is newly tractable."
+    },
+    {
+      "title": "Statehouse RuleWatch \u2014 the missing layer for state agency rulemaking",
+      "one_liner": "A monitor + targeted-comment product for STATE agency regulations and their comment periods, the layer that sits between Open States' bill coverage and Regulations.gov's federal-only scope, translated into 'this affects your community' for residents.",
+      "problem": "State agencies (health departments, environmental quality, education, licensing, utilities commissions) issue the rules that most directly govern daily life, with real public comment periods \u2014 but there is NO federated, normalized, alertable index of them. Open States/Plural covers state legislation and hearings but explicitly does NOT cover regulations/rulemaking. Each state publishes its rulemaking in a different register (Texas Register, California OAL, NY State Register\u2026) with its own raw vocabulary, formats, and deadline conventions. A resident has essentially no way to learn that their state's health department has opened comment on a rule affecting, say, well-water testing or assisted-living staffing.",
+      "target_user": "Residents and small community/advocacy groups who care about a state-level issue (water quality, school standards, eldercare, utility rates, occupational licensing) but can't read 50 different state administrative registers \u2014 and the local advocates/organizers who currently have no tool for state rulemaking the way they have Open States for bills.",
+      "solution": "Build a normalization pipeline (City Scrapers / Scrapy pattern, one scraper per state register since there's no API) that ingests state administrative registers and proposed-rule notices into the Open Civic Data model with OCD-IDs, extracting the comment deadline as a first-class object. RuleBox-style LLM-generated rules normalize each state's raw vocabulary into shared topic concepts so a non-expert can subscribe to 'drinking water' or 'nursing home staffing' nationally and get matches regardless of local terminology (TheyWorkForYou's subscribe-to-a-concept + auto-expand-related-terms model). MapIt-style geocoding ties a rule's geographic scope to the user's location for 'this affects your community' framing. Guided comment drafting + submission routes to each state's actual comment channel (web form, email, or generated cover letter for postal/PDF-only states \u2014 be realistic, MAPLE-style, some channels are mailto). Subscribers get a weekly digest (TheyWorkForYou cadence) plus deadline alerts.",
+      "builds_on": [
+        "Open States / Plural v3 (the explicit complement \u2014 bills+hearings already covered, regulations are the named gap; reuse their people.geo for who-represents-me and OCD-IDs for jurisdiction linkage)",
+        "Open Civic Data standard + OCD-IDs (canonical model for the new rulemaking events)",
+        "City Scrapers (Scrapy) (proven per-source scraper + diff/cancellation pipeline, applied to state registers)",
+        "MapIt (geographic scope -> resident)",
+        "mySociety RuleBox (LLM-generated normalization/classification rules across heterogeneous state vocab)",
+        "TheyWorkForYou (concept-subscription + term-expansion + weekly digest engine)"
+      ],
+      "gap_filled": "Fills Gap 1 (comment deadlines first-class), Gap 3 (cross-source, cross-jurisdiction normalization \u2014 state registers all use raw local vocab today), and Gap 4. Not a duplicate: Open States/Plural deliberately excludes rulemaking; Regulations.gov is federal-only; Quorum/FiscalNote treat state regs as a B2B compliance product, not a resident-facing 'affects your community' alert. The scraper-built normalized state-rulemaking corpus is the moat \u2014 painful to assemble, which is exactly why no consumer player has.",
+      "why_now": "More policy is being pushed to the states in 2025-2026, raising the stakes of state agency rulemaking precisely as it remains the least legible layer. LLM-generated scrapers + RuleBox-style normalization make the previously-uneconomic task of unifying 50 idiosyncratic state registers newly feasible, and Open States has already proven the consumption-over-self-hosting model and the OCD schema that this layer can plug straight into."
+    },
+    {
+      "title": "Closed the Loop \u2014 the \"did my comment matter?\" receipt engine",
+      "one_liner": "An automated impact-tracker that follows every comment, petition, or testimony a user submits and reports back, in plain language over the messaging app they already use, whether and how a rule, bill, or board changed.",
+      "problem": "The single biggest reason busy non-experts stop doing civic actions is the void after they act: they submit a comment to Regulations.gov or testify at a zoning hearing and never hear anything again, so the effort feels pointless. No consumer product tracks the downstream outcome of an action a specific user took. 'Comment-period deadlines are not a first-class alertable object anywhere' and neither is 'what happened to the thing I commented on.'",
+      "target_user": "The lapsed civic actor: someone who has previously written a comment or shown up to a meeting once, cares about a local development or environmental rule, but is too busy to manually re-check dockets and meeting minutes to see if it mattered.",
+      "solution": "When a user takes an action (or even just follows an item), the engine stores the OCD-ID / docket ID / bill ID and watches it. For federal rules it diffs the proposed rule against the final rule via the Federal Register API + Mirrulations corpus (the spicy-regs DuckDB/Parquet + MCP layer lets an LLM ask 'did the final rule change on the point this user raised?'). For legislation it polls Open States updated_since for status changes and roll-call votes. For local items it watches Legistar/City Scrapers events for the agenda item's vote outcome and minutes. An LLM produces a short receipt: 'The EPA finalized this rule. It adopted the longer comment window you and 1,200 others asked for. Here's the paragraph in the final rule that addresses it.' Delivered as a Cofacts-style message thread (SMS/WhatsApp/Telegram), not just email. Honest about null results too ('No change yet \u2014 final rule expected Q3').",
+      "builds_on": [
+        "Federal Register API + Regulations.gov v4 (proposed-vs-final diff, commentEndDate)",
+        "Mirrulations S3 mirror + spicy-regs Parquet/DuckDB + MCP server (LLM-queryable corpus for 'was my point addressed')",
+        "Open States/Plural v3 updated_since polling + roll-call votes for bill status",
+        "Legistar Web API + City Scrapers Events for local agenda-item outcomes",
+        "OCD-IDs as the stable join key linking a user's action to the item over time",
+        "MAPLE follow->event->feed->digest notification engine pattern + versioned testimony archive"
+      ],
+      "gap_filled": "Primarily Gap 5 (the monitor->act->see-impact loop in one consumer product) and Gap 4 (plain-language legibility). No existing player does post-action impact attribution: Resistbot/5 Calls stop at send; Regulations.gov has no follow-up; Quorum's analytics are B2B/lobbyist-facing and don't tell an individual constituent 'your point survived into the final rule.' This is the explicit 'see the impact' half of the thesis that nobody owns.",
+      "why_now": "The final-vs-proposed-rule diff at scale only became cheap with the Mirrulations mirror + spicy-regs MCP layer (LLM-over-SQL on the full corpus), so the expensive part \u2014 semantically matching a user's comment to the agency's response-to-comments \u2014 is now a tractable LLM task rather than manual analyst work."
+    },
+    {
+      "title": "Streak \u2014 civic habit-building with quality-gated AI co-drafting",
+      "one_liner": "A consumer app that turns scattered comment periods and hearings into a light recurring habit (one relevant, deadline-stamped action a week) where an AI co-drafts comments that raise quality and originality, never mass-produces identical form letters.",
+      "problem": "Two linked failures: (1) non-experts have no cadence \u2014 civic action is sporadic and reactive, so the muscle never forms; and (2) the tools that do exist (Resistbot, advocacy form-letter blasts) generate astroturf-grade identical text that officials explicitly discount, so volume tools actively destroy impact. There is no product that builds a sustainable personal civic habit while making each contribution genuinely higher quality.",
+      "target_user": "The 'I keep meaning to get involved' professional \u2014 cares about local land use/zoning and a couple of issue areas, has maybe 20 minutes a week, wants a low-guilt routine and to feel competent rather than overwhelmed.",
+      "solution": "Onboarding: postcode + a few topic concepts. A MapIt-style geocoder resolves the user's jurisdictions; TheyWorkForYou-style vector topic alerts auto-expand the concepts. Each week the engine surfaces ONE high-relevance, deadline-stamped item (comment period closing soon, upcoming hearing) ranked by personal relevance + a closing window. The AI co-draft flow is deliberately anti-form-letter: it interviews the user for a specific personal stake ('how does this parcel affect your commute / your kid's school / your block?'), drafts in the user's voice, and runs a similarity check against already-submitted text in the MAPLE-style versioned archive to flag and rewrite anything too templated. Streaks, gentle nudges, and a 'civic level' reward consistency. Real-person assurance via address->district geocoding and tiered SMS/ID verification so submissions carry weight. Delivered and nudged through messaging apps.",
+      "builds_on": [
+        "MapIt (mySociety) postcode->jurisdiction/officials primitive + WriteToThem send flow",
+        "TheyWorkForYou vector-search topic alerts (subscribe to a concept, auto-expand related terms)",
+        "Regulations.gov/Federal Register commentEndDate + Open States hearings + Legistar agendas for the weekly item feed",
+        "MAPLE versioned public testimony archive (used as the corpus for the originality/similarity check)",
+        "RuleBox (LLM-generated classification rules run on cheap infra) to score per-user relevance at firehose scale",
+        "Address->district geocoding + tiered SMS/ID verification for real-person assurance"
+      ],
+      "gap_filled": "Gap 4 (plain-language legibility + guided action) and Gap 5 (the loop), plus directly answering the hard-won lesson that identical form letters get discounted. Not a duplicate of Resistbot/5 Calls (Congress-only, no discovery, no quality gate, no habit loop) nor of advocacy mail tools (which optimize for volume). The novel mechanic is quality-as-a-feature: the similarity check against a real testimony archive is the opposite of what every form-letter tool does.",
+      "why_now": "LLMs make per-user voice-preserving co-drafting + similarity-deduplication cheap enough to run for free consumers, and RuleBox-style generated classifiers make weekly personalized relevance ranking affordable at firehose scale \u2014 both were analyst-cost tasks a couple years ago."
+    },
+    {
+      "title": "CommentDeadline B2G \u2014 the SocietyWorks-style engine that funds the free consumer app",
+      "one_liner": "A paid B2G SaaS that gives agencies and city clerks a clean dashboard of incoming verified comments and a deadline-broadcast pipe, whose every data integration and verified-resident network simultaneously powers a free consumer deadline-alert app \u2014 the cross-subsidy funding model.",
+      "problem": "Civic-engagement consumer products keep going dormant (Hack for LA's Engage, unfunded vTaiwan) because they have no revenue. Meanwhile agencies and clerks publishing comment periods get low-quality, hard-to-process, often astroturfed input and have no easy way to verify a commenter is a real local resident. Both sides of the same market are underserved, and nobody has wired them together so one pays for the other.",
+      "target_user": "Paying side: city/county clerks, planning departments, and small federal/state agency offices that run comment periods and want verified, structured, de-duplicated input. Free side: the busy resident who just wants a reliable 'this comment period in your area closes in 5 days' alert.",
+      "solution": "B2G product: an agency posts or auto-syncs a comment period; the platform makes the deadline a first-class object, broadcasts it to nearby verified residents, ingests comments with address->district verification and astroturf/duplicate flagging, clusters them with Pol.is-style consensus detection to surface cross-factional agreement, and hands the clerk a structured, de-duplicated, exportable packet (the thing they currently assemble by hand). Consumer product: the SAME normalized feed of comment-period deadlines \u2014 built from Regulations.gov/Federal Register commentEndDate, Legistar agendas, City Scrapers events \u2014 powers a free messaging-app alert app ('a comment period on the rezoning near you closes Friday'). Every agency that buys in enriches the consumer feed; every verified resident raises the value of the B2G verification layer. Deadlines as a first-class alertable object are the shared spine.",
+      "builds_on": [
+        "Regulations.gov v4 + Federal Register commentEndDate, Legistar Web API, City Scrapers Events \u2014 normalized into OCD Events as the deadline spine",
+        "mirrulations-search Postgres schema (already has is_open_for_comment, comment_start/end_date, user collections/watchlists, FR & CFR joins) as the ready-made data backbone",
+        "Pol.is / Computational Democracy consensus clustering for the agency-facing comment-analysis dashboard",
+        "Address->district geocoding + tiered verification (the value the agency pays for)",
+        "SocietyWorks B2G-funds-free-consumer cross-subsidy model as the explicit business design",
+        "MapIt for 'which residents are near/affected by this item'"
+      ],
+      "gap_filled": "Gap 1 (public comment-period deadlines as a first-class, alertable object \u2014 net-new per the lessons) and Gap 3 (cross-source normalization), wrapped in a sustainability answer that is part of the idea per the constraints. Not a duplicate of Granicus EngagementHQ/PublicInput/CitizenLab: those are per-project government silos with near-zero constituent verification and no consumer discovery side; this is a cross-jurisdiction deadline utility whose consumer reach is the reason agencies get better input. The defensibility against adjacency creep is the two-sided network: the verified-resident graph.",
+      "why_now": "The mirrulations-search schema already ships comment-window fields + user watchlist collections, so the deadline-object backbone is essentially pre-built; agencies are under rising pressure to filter AI-generated comment floods, making verified-resident input a concrete thing they'll pay for right now \u2014 which is exactly the cross-subsidy that keeps the free consumer app from going dormant."
+    },
+    {
+      "title": "Consensus Comment: turn 200 angry neighbors into one statement officials can't ignore",
+      "one_liner": "A Pol.is-style deliberation room attached to every live public comment period, that converts scattered resident opinions into a ranked set of cross-factional consensus statements and submits them as a single weighted, deduplicated comment packet to the agency of record.",
+      "problem": "When a rule or zoning change drops, residents either do nothing or flood the docket with identical form-letter copies that officials are trained to discount as astroturf. The genuinely persuasive thing -- 'here is what 80% of us across the political spectrum actually agree on' -- never gets produced because nobody runs the deliberation, and there's no tool that both clusters opinion AND files the result on the official record. Felt most acutely by the informal neighborhood organizer (the one person on Nextdoor who cares) who can rally bodies but can't synthesize them.",
+      "target_user": "The volunteer neighborhood organizer / HOA-adjacent resident who can get 50-300 neighbors mildly engaged on a specific local rule, zoning case, or federal comment period but lacks tooling to make that engagement count.",
+      "solution": "For any item with an open comment window (Regulations.gov commentEndDate, Legistar agenda item with a hearing date, or a Federal Register doc), spin up a lightweight Pol.is-derived deliberation room. Participants vote agree/disagree/pass on short statements and submit their own; the clustering engine surfaces statements that win majorities ACROSS opinion clusters (the cross-factional consensus that vTaiwan proved officials respect). At deadline, the tool generates a structured comment packet -- the consensus statements ranked by cross-cluster support, with N-of-M signer counts and address-geocoded district verification -- and submits it via Regulations.gov v4 API (federal) or as a formatted, routable testimony doc for Legistar municipalities (MAPLE-style routing where no API submit exists). Each signer also gets the option to file their own short individual comment so volume AND quality both land. Funding: B2G/SocietyWorks model -- sell agencies and city clerks a 'consensus dashboard' that ingests the deliberation so the quality-over-volume signal is legible to them too.",
+      "builds_on": [
+        "Pol.is / Computational Democracy Project clustering for cross-factional consensus",
+        "Regulations.gov v4 API (commentEndDate + comment submission)",
+        "Federal Register API",
+        "Legistar OData API for municipal hearing items",
+        "MAPLE testimony-routing + versioned public archive patterns",
+        "MapIt-style address->district geocoding for signer verification",
+        "Open Civic Data IDs to key each deliberation room to a canonical item"
+      ],
+      "gap_filled": "Fills gap 1 (comment-period deadline as the trigger object), gap 4 (guided action), and gap 5 (monitor->act->see-impact in one product). Not a duplicate: Pol.is/vTaiwan is a deliberation engine with no comment-period ingestion or official-submission pipe; Resistbot/5 Calls do volume action with no clustering or discovery; Granicus EngagementHQ is a per-project government-bought silo, not a consumer tool that follows the docket across jurisdictions and synthesizes opinion.",
+      "why_now": "Mirrulations + spicy-regs (Parquet/DuckDB/MCP) now make the full Regulations.gov corpus cheaply queryable, so an LLM can pre-summarize any docket into plain-language statement seeds to bootstrap a room; Pol.is clustering is open and proven; and officials' fatigue with form-letter floods means a credible quality signal has never been more valuable."
+    },
+    {
+      "title": "Did It Matter: an evidence-grade impact tracer for comments you already filed",
+      "one_liner": "Follow the comments and testimony you submitted through to the final agency action, and get an alert with the receipt -- 'the final rule changed X, and N of the consensus points you co-signed appear in the agency's response-to-comments' -- closing the loop that makes people quit civic engagement.",
+      "problem": "The single biggest reason busy non-experts stop participating is that they never learn whether their effort mattered. Agencies DO publish response-to-comments documents and final rules, and city bodies DO vote, but nobody connects a citizen's specific submitted comment to that downstream outcome. The feeling is universal: 'I commented once, nothing happened as far as I know, why bother again.' This kills sustainability for the user AND for any product in this space.",
+      "target_user": "Anyone who has submitted a comment or testimony (especially repeat would-be participants) plus the organizer who needs to show their group that the campaign worked to keep them mobilized next time.",
+      "solution": "When a user files a comment (via idea 1, via Regulations.gov directly that they forward in, or via a municipal testimony tool), store the comment text and the OCD-ID of the item. Then poll for the terminal events: the Federal Register final rule + its response-to-comments section (Mirrulations/Federal Register), or the Legistar/Open States final vote and committee disposition. Use an LLM enrichment service (RuleBox-style cheap classification rules generated once, run at firehose scale over the corpus) to detect whether the agency's response addresses the substance the user raised -- adopted, rejected-with-reason, or unaddressed -- and to diff the proposed vs final text on the dimensions the user cared about. Deliver a plain-language 'impact receipt': what changed, whether your point shows up in the official reasoning, and the vote tally / who moved. Aggregate across a deliberation room to show the group's collective batting average. Funding: this is the retention engine that makes a paid consumer tier or grant-funded distribution defensible.",
+      "builds_on": [
+        "Mirrulations S3 mirror + spicy-regs DuckDB/MCP for response-to-comments and final-rule diffing",
+        "Federal Register API (proposed vs final rule)",
+        "Open States / Plural v3 for final votes and bill disposition",
+        "Legistar OData for municipal vote outcomes",
+        "mySociety RuleBox pattern (LLM-generated classification rules run cheaply at scale)",
+        "MAPLE versioned testimony archive (provenance of what the user actually said)",
+        "Open Civic Data IDs to link a submission to its terminal event"
+      ],
+      "gap_filled": "Fills gap 5 (the see-impact half of the loop, which no consumer product delivers) and reinforces gap 4 (legibility -- translating bureaucratic response-to-comments into 'did your point land'). Not a duplicate: Regulations.gov shows raw dockets with zero personalized impact tracing; Quorum/FiscalNote do outcome tracking but B2B/lobbyist-facing and don't tie to an individual citizen's filed comment; nobody in the brigade world (MAPLE included) closes this loop.",
+      "why_now": "Response-to-comments and final-rule text are now in cheap-to-query Parquet via spicy-regs, and LLM classification (RuleBox-style) makes substance-matching between a citizen comment and an agency's reasoning economically feasible at scale for the first time -- this was pure manual labor two years ago."
+    },
+    {
+      "title": "Neighbor Bloc: signature-to-mandatory-response organizing for local land-use cases",
+      "one_liner": "A WriteToThem-simple flow where a resident starts a verified, address-geocoded petition on a specific zoning/permit/development case, neighbors in the affected district co-sign, and at a threshold it auto-converts into a deliberated, consensus-backed testimony packet delivered before the hearing -- with a Join.gov.tw-style mandatory-response ask.",
+      "problem": "Land use is where residents feel powerless and where the data is most opaque (Accela/Socrata/ArcGIS/parcel GIS). A development or rezoning lands on a planning commission agenda, the affected neighbors find out late or never, and even when they show up, scattered three-minute public comments don't aggregate into anything a commission must formally answer. There's no mechanism that says 'X verified residents of this exact district demand a response on this exact case.' Felt by the homeowner who discovers a four-story project next door only after entitlements are filed.",
+      "target_user": "Residents directly affected by a specific local land-use action -- the homeowner, renter, or small-business owner near a proposed development, variance, or rezoning -- and the ad-hoc neighbor group that forms around it.",
+      "solution": "Ingest local hearing agendas (Legistar where available; City Scrapers/Scrapy for the long tail of PrimeGov/CivicClerk/PDF-only) and link each land-use item to its parcel via available GIS/Socrata/Accela feeds, geocoding the affected district. A resident starts a Neighbor Bloc on a specific case; the tool uses MapIt-style geocoding to verify each co-signer actually lives in the affected area (the credibility tier officials respect) and to auto-notify other residents in radius who've opted in. Co-signers run a quick Pol.is-style pass to surface their actual shared concerns vs fringe ones, so the output is a consensus position, not a mob. At a defined threshold, it compiles a verified-signer testimony packet -- 'N residents within X feet, here are our cross-factional consensus conditions' -- and delivers it to the clerk/commission before the hearing, explicitly invoking any local mandatory-response or written-determination requirement (Join.gov.tw mechanic where local rules allow). Start with 2-3 Legistar cities with clean parcel data to dodge the 'live national register' trap that sank Keep It In The Community. Funding: B2G to city planning departments who want fewer chaotic hearings and a cleaner consensus signal; consumer free tier subsidized by it.",
+      "builds_on": [
+        "Legistar OData API for hearing agendas + committees",
+        "City Scrapers (Scrapy) for non-Legistar municipal agendas",
+        "Socrata / Accela / ArcGIS parcel GIS feeds for case-to-parcel linkage",
+        "MapIt (mySociety) clone for address->affected-district verification",
+        "mySociety WriteToThem flow (hide 'who represents you', just send)",
+        "Pol.is clustering for neighbor consensus",
+        "g0v Join.gov.tw signature->mandatory-response mechanic",
+        "Open Civic Data Events schema for the hearing item"
+      ],
+      "gap_filled": "Fills gap 2 (land use/zoning made legible + actionable for residents -- the clearest whitespace), gap 1 (the hearing deadline as the trigger), and gap 5 (loop, especially when paired with idea 2's impact tracer). Not a duplicate: coUrbanize/Symbium are land-use slivers (developer-engagement or permit-feasibility, not resident-side verified organizing); Granicus EngagementHQ is government-bought per-project; Resistbot/5 Calls are Congress-only with no land-use or geocoded-signer mechanic; CitizenLab is a municipal vendor silo.",
+      "why_now": "Legistar covers ~70% of large cities auth-free, City Scrapers makes the long tail tractable, and address-geocoding + parcel GIS are now commoditized -- so verified, district-scoped signer assurance (the thing that makes officials reckon with a petition rather than discount it) is finally buildable by a small consumer team rather than only an enterprise gov vendor."
+    },
+    {
+      "title": "ScopeWatch \u2014 regulatory radar for independent clinicians and small private practices",
+      "one_liner": "A 'lite in-house counsel' that watches the federal and state rules that change how independent clinicians get paid and what they're allowed to do, and turns each one into a one-paragraph 'does this hit me / here's the comment you can file' card.",
+      "problem": "Solo and small-group clinicians (NPs, PTs, optometrists, dentists, behavioral health, independent PCPs) are governed by a relentless drip of rulemaking they can't track: annual CMS Medicare Physician Fee Schedule and Quality Payment Program rules (reimbursement cuts, telehealth flexibilities expiring), state Medicaid bulletins, state board scope-of-practice changes, and prior-authorization rules. These materially change their income and legal exposure, comment periods are open and short, and the only people watching are hospital systems and trade-association lobbyists with full-time policy staff. The independent practitioner finds out after the rule is final, when a claim gets denied. They are not lawyers, have no policy staff, and have zero time.",
+      "target_user": "Owner-operators of independent/small clinical practices (1-15 providers) \u2014 NPs, PTs/OTs, optometrists, dentists, mental-health clinicians, independent PCPs \u2014 and small practice managers, who lack a policy or compliance department.",
+      "solution": "Onboard by specialty + state + payer mix (Medicare/Medicaid/commercial) + practice ZIP. Ingest Regulations.gov v4 + Federal Register API for CMS/HHS dockets (PFS, QPP, telehealth, 'No Surprises'), backfilled and history-searched against the Mirrulations S3 mirror / spicy-regs DuckDB+MCP corpus so an LLM can SQL the relevant historical dockets cheaply. Layer Open States / Plural v3 for state legislation touching scope-of-practice and Medicaid. Use mySociety's RuleBox pattern: have an LLM GENERATE classification rules ('telehealth originating-site', 'PT direct-access', 'CRNA supervision') once per specialty, then run those cheap rules over the firehose so each user only sees rules tagged to their specialty/state/payer mix. Comment-period deadlines (commentEndDate) are promoted to first-class alertable objects (gap 1) with a countdown and a calendar push. Plain-language card per rule (gap 4): 'What it is / Does it hit your practice / Dollar impact direction / Deadline / Draft a comment.' Action layer: a guided comment composer that drafts a substantive, individualized comment grounded in the user's real practice facts (officials discount identical form letters), submits to Regulations.gov, and archives a versioned receipt MAPLE-style. Impact loop: when a rule finalizes, pull the agency's response-to-comments and show whether the user's concern was addressed (gap 5).",
+      "builds_on": [
+        "Regulations.gov v4 API + Federal Register API (commentEndDate as alertable object)",
+        "Mirrulations S3 mirror + spicy-regs Parquet/DuckDB/MCP for cheap historical docket querying",
+        "Open States / Plural v3 for state scope-of-practice and Medicaid legislation",
+        "mySociety RuleBox (LLM-generated classification rules run at firehose scale)",
+        "MAPLE patterns (follow->event->feed->digest engine; versioned testimony archive; separate LLM enrichment service)",
+        "Open Civic Data schema as internal model"
+      ],
+      "gap_filled": "Primarily gaps 1 (comment deadlines as a first-class alertable object, tied to CMS dockets that move clinician income) and 4 (plain-language legibility + guided action). Not a duplicate: Quorum/FiscalNote are B2B lobbyist tools priced out of a solo practice and don't translate to 'does this hit MY panel'; Regulations.gov has no discovery, filtering, or alerting; specialty trade associations send newsletters, not a personalized, ZIP/payer-filtered deadline radar with a comment composer. The vertical specialty+payer-mix filter is the defensible wedge against horizontal adjacency-creep.",
+      "why_now": "The annual CMS PFS conversion-factor fights, expiring telehealth flexibilities, and state-by-state scope-of-practice expansion are acute and recurring in 2024-2026; LLM-generated classification (RuleBox) plus the spicy-regs MCP corpus now make per-specialty firehose classification cheap enough to serve a low-ARPU consumer/SMB audience that was previously uneconomical to reach."
+    },
+    {
+      "title": "CodeRed \u2014 health-code, licensing, and ordinance radar for independent restaurant and food-service owners",
+      "one_liner": "A pocket compliance officer for independent restaurants and food trucks that monitors the city/county rules, fees, and ordinances that can shut them down or raise their costs \u2014 and tells them when there's still time to object.",
+      "problem": "Independent restaurant, cafe, food-truck, and bodega owners operate on thin margins and are blindsided by local government actions: new health-code revisions, license/permit fee hikes, sidewalk-dining and parklet ordinance changes, minimum-wage and scheduling ordinances, single-use-plastic and organics-recycling mandates, sign and signage rules, and zoning/conditional-use decisions for their block. These are decided in city council and board-of-health meetings with public-comment windows the owner never hears about, sourced in Legistar agendas and PDF packets. By the time they learn, the rule is law or the hearing is over. They are not lawyers and have no association rep watching their specific city.",
+      "target_user": "Owner-operators of independent food-service businesses (single-location restaurants, cafes, food trucks, caterers, corner stores) in mid-to-large US cities/counties, plus small local restaurant associations and chambers acting on their behalf.",
+      "solution": "Onboard by business address + business type (full-service / mobile / retail food). Resolve the address to its governing jurisdictions and council district with a MapIt-style clone (gap: the 'what governs me' primitive). Pull the firehose of local legislative activity from the Legistar (Granicus) OData API, which covers ~70% of large US cities/counties auth-free \u2014 bills, agendas, committee items, board-of-health calendars. For non-Legistar long-tail cities, deploy the City Scrapers (Scrapy -> OCD Events) pattern with the vanished-meeting->cancelled diff pipeline. Normalize everyone's raw local vocabulary ('parklet', 'sidewalk cafe permit', 'mobile food vending', 'A-frame sign') into a consumer-facing canonical set (gap 3) using LLM-generated RuleBox-style classifiers per food-service topic. Surface upcoming agenda items and any public-comment/hearing windows as first-class alertable deadline objects (gap 1). Each item becomes a plain-language card (gap 4): 'A council committee meets Thursday on a food-truck zone restriction near you \u2014 here's what it does, here's the 2-minute comment you can submit or the meeting you can show up to.' Action: a one-tap testimony/email composer routed to the right council member (WriteToThem pattern hides 'who represents you'), plus a 'rally my block' share so nearby owners co-sign (gap 5 organize). Impact: track the item through to vote and show how the member voted and whether the language changed.",
+      "builds_on": [
+        "Legistar (Granicus) OData Web API \u2014 auth-free local-gov bills/agendas/committees for ~70% of large cities/counties",
+        "City Scrapers (Scrapy -> OCD Events) + cancelled-meeting diff pipeline for the long tail",
+        "MapIt (mySociety) clone for address -> jurisdictions/council district",
+        "mySociety WriteToThem (postcode -> reps -> send) and RuleBox classification",
+        "MAPLE follow->event->feed->digest notification engine + versioned testimony archive",
+        "Open Civic Data Events/People schema as internal model"
+      ],
+      "gap_filled": "Gaps 1 (local hearing/comment deadlines as alertable objects), 3 (normalizing fragmented local vocab for a non-expert), 4 (plain-language + guided action), and the organize slice of 5. Not a duplicate: Granicus' own EngagementHQ/PublicInput are sold to the government and siloed per-project \u2014 they don't give a business owner a cross-jurisdiction personal radar; Quorum/FiscalNote are federal/state B2B; 5 Calls/Resistbot are Congress-only with no local discovery; coUrbanize is land-use-project-specific, not an ongoing ordinance radar for a business. The address+business-type vertical filter on top of Legistar is the wedge.",
+      "why_now": "Post-pandemic cities are churning sidewalk-dining/parklet ordinances, plastics and organics mandates, and fee structures faster than ever, while Legistar's broad auth-free coverage plus LLM topic classification finally make affordable, personalized local monitoring feasible for a fragmented, low-ARPU SMB audience nobody serves today."
+    },
+    {
+      "title": "Watershed Watch \u2014 development-and-permit radar for local environmental and watershed groups",
+      "one_liner": "A monitoring + mobilization tool for small volunteer environmental groups that watches the permits, comment periods, and council/agency actions affecting their specific watershed or open space, and turns each one into a ready-to-mobilize action with a measurable outcome.",
+      "problem": "Small, volunteer-run local environmental groups (watershed alliances, friends-of-the-creek, land trusts, neighborhood conservation groups) are perpetually late to the fights that matter most to them: a proposed development's environmental review, a stormwater/wetlands permit, an EPA/state rule comment period, a rezoning that paves a floodplain, a board-of-supervisors vote on a creek. The relevant signals are scattered across federal Regulations.gov dockets, the Federal Register, state legislation, and \u2014 hardest of all \u2014 local council agendas and land-use/permit systems (Accela, Socrata, ArcGIS). These groups have passion but no policy staff, miss the short windows, and submit weak duplicate comments that officials discount. They also burn out because they can't see whether their effort changed anything (the sustainability failure mode).",
+      "target_user": "Volunteer leaders and small staff of local environmental/watershed/conservation groups and land trusts focused on a defined geographic area (a creek, bay, forest, airshed, or set of neighborhoods).",
+      "solution": "Define a watch area by drawing/selecting a watershed or jurisdiction boundary; resolve it to governing jurisdictions via a MapIt-style service and to council districts. Monitor three streams normalized into one feed (gap 3): (a) federal environmental dockets via Regulations.gov v4 + Federal Register, with the Mirrulations/spicy-regs corpus for historical context and cheap LLM querying; (b) state environmental legislation via Open States/Plural v3; (c) local land-use/permit actions via the Legistar OData API plus City Scrapers for agendas, and \u2014 the hard frontier (gap 2) \u2014 best-effort ingestion of land-use/permit data from Accela/Socrata/ArcGIS feeds where a jurisdiction exposes them, made legible as 'a project at [address] in your watershed is in environmental review.' Promote every comment period and hearing to a first-class alertable deadline object (gap 1). Each item is a plain-language card (gap 4). The action layer differentiates on QUALITY and consensus, not volume: integrate a Pol.is-style deliberation step so the group's members and neighbors surface cross-factional consensus statements, then the guided composer turns those into individualized, substantive comments (which officials weight over identical form letters) and routes turnout to the right hearing (organize, gap 5). Impact loop closes the sustainability gap: archive versioned testimony MAPLE-style, pull agency response-to-comments and council vote records, and show the group 'your 40 comments + 12 speakers -> the wetland buffer was widened' so volunteers see their effort wasn't wasted.",
+      "builds_on": [
+        "Regulations.gov v4 + Federal Register API; Mirrulations S3 mirror + spicy-regs DuckDB/MCP for environmental docket history",
+        "Open States / Plural v3 for state environmental legislation",
+        "Legistar OData API + City Scrapers for local land-use agenda items",
+        "Accela / Socrata / ArcGIS parcel-permit feeds for the land-use frontier (gap 2)",
+        "MapIt clone for watershed/boundary -> jurisdictions",
+        "Pol.is / Computational Democracy Project for cross-factional consensus statements",
+        "MAPLE versioned testimony archive + notification engine; mySociety RuleBox + WriteToThem patterns"
+      ],
+      "gap_filled": "Hits the most gaps: 1 (comment deadlines), 2 (land use/permits made legible \u2014 the clearest, hardest whitespace), 3 (cross-source normalization into one watershed feed), 4 (plain-language guided action), and 5 (the full monitor->act->see-impact loop with a built-in answer to the burnout/sustainability failure). Not a duplicate: this is geography-and-mission-scoped for amateur groups, not the lobbyist-facing B2B incumbents; Granicus/PublicInput are government-side; City Tracker AI/Symbium are land-use slivers without the organize+impact loop or the environmental-docket integration. Funding model is part of the idea: a SocietyWorks-style B2G/foundation tier (sell aggregated, anonymized watershed-engagement dashboards to land trusts, foundations, and regional water boards) cross-subsidizes the free volunteer-group product, directly addressing the recurring dormancy failure.",
+      "why_now": "Land-use and environmental-review fights are intensifying with housing/infrastructure pressure on floodplains and open space, more jurisdictions now expose permit data via Socrata/ArcGIS/Accela APIs, and Pol.is-style deliberation plus cheap LLM classification finally let tiny volunteer groups produce the quality-over-volume, consensus-backed testimony that officials actually weigh \u2014 at a cost structure a foundation tier can sustain."
+    },
+    {
+      "title": "DocketClock \u2014 the open Comment-Period Deadline API",
+      "one_liner": "An open, normalized dataset and API that treats every open public-comment period (federal rule, state rulemaking, local hearing) as a first-class alertable object with a hard deadline, an OCD-ID, and an ICS feed.",
+      "problem": "No system anywhere exposes 'comment-period deadline' as a queryable, alertable object. Regulations.gov has a commentEndDate field buried in clunky JSON; state and municipal comment windows live in PDFs and agenda footnotes; nobody can answer 'what's open for comment near me and closing this week?' Every downstream builder (Resistbot, a brigade app, a journalist, an advocacy org) re-derives this from scratch. The pain is felt by anyone building civic-action software and by power-user residents who keep missing deadlines.",
+      "target_user": "Primary payer: developers and civic orgs building action tools (B2B/open-core). Secondary beneficiary: the busy resident downstream, plus journalists and advocacy nonprofits who need a deadline feed.",
+      "solution": "A picks-and-shovels data service. Ingest the freshness layer from Regulations.gov v4 + Federal Register APIs directly (poll updated_since), backfill history from the Mirrulations S3 mirror, and adopt the mirrulations-search Postgres columns (is_open_for_comment, comment_start/end_date) verbatim. Add a state rulemaking layer (state register/admin-code RSS where it exists) and a local layer via the Legistar Web API where agenda items carry a comment window. Normalize every item to an OCD Event/Bill with a stable OCD-ID, attach a single canonical deadline timestamp + timezone, status (open/closing-soon/closed), and the official submission endpoint. Ship it as: a REST API (filter by geo, domain, days-to-deadline), per-watchlist ICS calendar feeds, and webhooks ('a comment period matching this saved query just opened/closes in 72h'). Open the schema and a free tier; charge for volume/SLA/webhooks.",
+      "builds_on": [
+        "Regulations.gov v4 API + Federal Register API (commentEndDate freshness layer)",
+        "Mirrulations S3 mirror + mirrulations-search Postgres schema (is_open_for_comment, comment_start/end_date)",
+        "Open Civic Data standard + OCD-IDs (canonical object model)",
+        "Legistar Web API (local agenda items with comment windows)",
+        "spicy-regs Parquet/DuckDB for historical backfill queries"
+      ],
+      "gap_filled": "Directly fills Gap 1 (comment-period deadlines as a first-class alertable object \u2014 explicitly net-new, exists nowhere) and supports Gap 5. Not a duplicate: Regulations.gov has the field but no discovery/alerting/cross-jurisdiction normalization and no deadline-as-object API; Quorum/FiscalNote are B2B legislation trackers that assume you know the docket and don't expose a clean deadline feed; Mirrulations is a raw mirror, not a maintained alertable API. This is the thin freshness+normalization layer none of them ship.",
+      "why_now": "Mirrulations now provides the full historical corpus free on AWS Open Data and the 2025 Civic Tech DC toolchain (spicy-regs) made the corpus SQL-queryable, so the expensive part (the backfill and the schema) already exists \u2014 the missing piece is just the maintained freshness+deadline-normalization layer on top. GAO has publicly flagged Regulations.gov search as unusable for non-experts, creating clear demand pull."
+    },
+    {
+      "title": "ParcelWatch \u2014 open zoning/land-use change feed keyed to your address",
+      "one_liner": "A location-to-land-use-event service that turns the mess of Accela/Socrata/ArcGIS/Legistar into a single normalized stream of zoning changes, variances, and development hearings you can subscribe to by parcel or radius.",
+      "problem": "Land use, zoning, and permits for residents are entirely uncovered: the data is scattered across Accela permit portals, Socrata open-data tables, ArcGIS parcel layers, and Legistar planning-commission agendas, each in raw local vocabulary. A resident cannot answer 'is anything being rezoned or built near me, and is there a hearing I can speak at?' Advocacy groups, local journalists, and YIMBY/NIMBY organizers all rebuild fragile per-city scrapers. The busy homeowner who'd care about a 5-story project next door never finds out until the bulldozers arrive.",
+      "target_user": "Primary payer: B2B2C \u2014 neighborhood associations, local-news outlets, real-estate/proptech apps, and advocacy orgs that embed or resell the feed. Beneficiary: the resident who gets an address-based alert.",
+      "solution": "Build the missing 'what's changing on the land near me' normalization layer, deliberately scoped city-by-city rather than promising a live national register (heeding mySociety's Keep-It-In-The-Community lesson \u2014 ship depth over false national coverage). For each launch city: connect the Legistar Web API for planning/zoning agenda items, pull the city's Socrata/ArcGIS permit and rezoning datasets, and add City-Scrapers-style Scrapy spiders (with the diff/dedup + 'mark-vanished-as-cancelled' pattern) for the Accela/PDF long tail. Normalize each event to an OCD Event with a parcel geometry, a plain-language change type (rezoning, variance, demolition, new construction, conditional-use), the hearing date, and the comment endpoint. Expose a geocode->events API and radius/parcel subscriptions. Use an LLM RuleBox-style classifier (LLM writes the classification rules, cheap infra runs them) to map raw local permit codes to a normalized taxonomy. Open-core: open the OCD-mapped schema and one reference city; charge per-city coverage and embedding.",
+      "builds_on": [
+        "Legistar Web API (planning/zoning commission agendas)",
+        "City Scrapers Scrapy pattern + diff/cancelled pipeline (Accela/PDF long tail)",
+        "Socrata + ArcGIS municipal open-data + parcel GIS layers",
+        "MapIt-style geocode->jurisdiction primitive (address to governing bodies)",
+        "Open Civic Data Event model + OCD-IDs",
+        "mySociety RuleBox pattern (LLM-generated classification rules on cheap infra)"
+      ],
+      "gap_filled": "Fills Gap 2 (land use/zoning/permits made legible + actionable \u2014 the clearest whitespace, entirely uncovered) plus Gap 3 (cross-source normalization). Not a duplicate: coUrbanize is developer-initiated and per-project, Symbium is parcel/permit compliance lookup not a change-alert feed, City Tracker AI is NYC analytics with no action layer, and Granicus EngagementHQ is a per-project gov silo. None offer a cross-source, address-subscribable, normalized land-use event API that other apps can build on.",
+      "why_now": "Legistar's auth-free OData API now covers ~70% of large cities, Socrata/ArcGIS open-data mandates have matured so the raw parcel and permit layers are increasingly public, and LLM-generated classification (RuleBox) finally makes normalizing thousands of idiosyncratic local permit codes economically feasible \u2014 the per-code mapping that used to require a human is now cheap."
+    },
+    {
+      "title": "Constituent \u2014 an open verified-resident + civic-action delivery protocol",
+      "one_liner": "An embeddable identity-and-delivery layer that geocodes a person to their districts, issues tiered real-person assurance (SMS/ID/postal), and submits comments/testimony server-side with a captured receipt \u2014 so any civic app can prove its users are real constituents.",
+      "problem": "Credible civic action requires real-person assurance, but the action tools that exist fake it: MAPLE self-reports district and just opens a mailto:, Resistbot/5 Calls assert constituency without verification, and officials discount identical form-letter floods. Meanwhile the only good verification design (Decidim's) is AGPL and not headless, so no proprietary consumer app can embed it. Every new civic-action builder must rebuild address->district geocoding, verification tiers, and submission-with-receipt from zero \u2014 and most do it badly, which is exactly why their comments get ignored.",
+      "target_user": "Primary payer: developers and civic orgs (B2B/open-core) building action features \u2014 brigades, advocacy nonprofits, the action layer of any of the other ideas here. Beneficiary: the resident whose comment actually counts because it's verified, and the official who can trust the volume.",
+      "solution": "A headless, purpose-built (not AGPL-fork) protocol + API with three components. (1) Resolve: a MapIt/WriteToThem-style address->districts->officials primitive that hides 'who represents you' (clone the MapIt approach, seed with Open States people.geo and Census/TIGER districts). (2) Verify: tiered real-person assurance mirroring Decidim's escalation concept but reimplemented and embeddable \u2014 browse (none), comment (SMS), binding/high-trust (ID or postal-letter), each issuing a signed, scoped attestation ('verified resident of district X, tier 2'). (3) Deliver: submit to the real endpoint server-side \u2014 Regulations.gov v4 comment POST, agency portals, or generate a routable letter where no API exists \u2014 and return a structured receipt the app can show the user ('submitted, tracking id, here's where it went'). This closes the monitor->act->see-impact loop's missing trust + delivery piece. Open the protocol spec and SDK; charge per verified action and for the postal/ID verification tiers (which carry real cost). Funding model echoes SocietyWorks: the verification SaaS funds free public use.",
+      "builds_on": [
+        "Decidim's tiered verification design (concept only \u2014 SMS/ID/postal, scoped 'verified resident of district X')",
+        "MapIt + WriteToThem patterns (address->districts->reps, hide who-represents-you)",
+        "Open States v3 people.geo + Census/TIGER for districting",
+        "Regulations.gov v4 comment-submission API (server-side delivery + receipt)",
+        "MAPLE notification/testimony-archive patterns (versioned public record) while replacing its mailto: dodge and zero-verification weakness"
+      ],
+      "gap_filled": "Fills Gap 4 (guided action) and the action+impact half of Gap 5, and directly addresses the hard-won lesson that astroturf/unverified floods get discounted. Not a duplicate: Resistbot/5 Calls are Congress-only with no verification and no docket delivery; Decidim has the verification design but is AGPL, gov-deployed, and not embeddable; Granicus/PublicInput are per-project gov silos, not a reusable cross-app protocol. This is the open, headless verified-constituent + delivery layer that does not exist as infrastructure.",
+      "why_now": "Regulations.gov v4 now supports programmatic comment submission, so server-side delivery with a real receipt is finally possible instead of mailto: dodges; officials are visibly discounting AI-generated form-letter floods, sharply raising the value of provable real-person constituency; and AGPL constraints on Decidim/Consul mean the best verification design is locked away from proprietary builders, leaving a clean opening for an embeddable reimplementation."
+    },
+    {
+      "title": "Lot Line \u2014 an address-radius watch for development next door",
+      "one_liner": "Type your home address once and get a plain-language alert the moment a rezoning, variance, or major-development case is filed within the legal notice radius of your parcel \u2014 with a one-tap path to the actual hearing.",
+      "problem": "Homeowners and renters find out a 5-story building or a variance next door is happening only when the bulldozers arrive, or when a paper notice card buried in junk mail gets tossed. The statutory mailed notice (300/500 ft) is the ONLY systematic signal residents get today, and it's a postcard with case-number jargon, no map, no deadline reminder, and no action path. People who care about their block have no proactive way to learn 'something is being proposed near me.'",
+      "target_user": "Homeowners, renters, and small landlords in mid-to-large US cities who care about their immediate block but are not planning nerds \u2014 the person who would have shown up to the hearing if they'd known in time and understood what was at stake.",
+      "solution": "MapIt-style address->parcel geocoding establishes the user's parcel centroid. A scheduled job polls city zoning-case ArcGIS REST feature services (Zoning Commission / BZA case layers carry geometry + case type) and BLDS permit feeds on Socrata, normalizes each case to an OCD Event, and runs a spatial query: is this case's parcel within the jurisdiction's statutory notice radius (300/500/660 ft, configured per city) of any watched address? If yes, an LLM enrichment service (MAPLE-pattern, separate from ingest) turns 'Map Amendment ZC 24-117, R-2 to MU-4' into 'A developer wants to rezone the lot at 412 Oak to allow a mixed-use building up to 5 stories.' The alert carries the hearing date, the comment deadline as a first-class object, and a one-tap 'I oppose / I support / I have questions' flow that drafts verified testimony (address->district geocoding proves you're a real affected neighbor, which officials weight heavily vs. form-letter floods).",
+      "builds_on": [
+        "MapIt (mySociety) address->jurisdiction/parcel primitive",
+        "ArcGIS REST feature services for zoning-case layers (queryable case geometry + case type)",
+        "BLDS open permit standard published on Socrata (San Diego County, Seattle, Boston, Fort Worth, etc.)",
+        "Open Civic Data Events schema as internal normalization model",
+        "MAPLE-pattern separate LLM enrichment service + follow->event->feed->digest engine",
+        "City Scrapers Scrapy pattern + vanished-meeting-cancelled diff for long-tail PDF cities"
+      ],
+      "gap_filled": "Fills Gap 2 (land use made legible/actionable) and Gap 1 (comment-period deadline as alertable object) at the most granular scale. Not a duplicate of coUrbanize/PublicInput (those are government-buyer, per-project engagement silos a resident can only see if the city already bought it and pointed them to it) nor Symbium (a feasibility/permit-lookup tool, not a proactive proximity watch). The novel primitive is the SPATIAL JOIN of a private address against the city's own statutory-notice radius \u2014 productizing the legal notice mechanism itself, which no consumer player does.",
+      "why_now": "The BLDS standard plus the proliferation of city ArcGIS Open Data portals mean parcel-level zoning-case and permit geometry is now queryable via stable REST/SODA APIs for cities covering a majority of the US population \u2014 you can do proximity watches without scraping HTML portals. Cheap LLM enrichment (RuleBox-style generated classifiers) finally makes per-case plain-language translation affordable at firehose scale."
+    },
+    {
+      "title": "Block Whip \u2014 turn one neighbor's alert into an organized hearing turnout",
+      "one_liner": "When a development case hits your block, Block Whip lets the first neighbor who sees it rally the other addresses inside the same legal notice radius into a coordinated, deduplicated, verified set of comments and an RSVP'd hearing turnout.",
+      "problem": "Officials discount identical form-letter floods and astroturf, and a single resident commenting gets ignored, but ten DISTINCT verified neighbors from the affected radius is decisive. Today neighbors have no way to find each other around a specific case \u2014 they rely on a paper flyer on a lamppost, a chaotic group text, or a Nextdoor thread that mixes in non-affected people and trolls. There is no tool that scopes organizing to exactly the legally-affected parcels and produces the quality-over-volume testimony officials actually weight.",
+      "target_user": "The one civically-motivated neighbor on a block (often a homeowner or a renter facing displacement) who is willing to organize but lacks the tools to reach exactly the right people, plus the busy neighbors who would sign on if it took two minutes and felt legitimate.",
+      "solution": "Built on top of the Lot Line watch layer: when a case is detected, the system knows the exact set of parcels inside the statutory notice radius (the same set the city must legally mail). An organizer 'adopts' the case and gets a campaign page scoped to those parcels. Neighbors join via address verification (geocoded to confirm they're inside the radius; SMS/postal tiers for assurance). Pol.is-style opinion clustering runs on the joined neighbors to surface CROSS-FACTIONAL consensus statements ('we're not anti-housing, we want the setback and traffic study fixed') rather than a yes/no brawl \u2014 that consensus statement becomes the spine of the testimony. Each neighbor submits a DISTINCT, personalized comment (LLM helps them say it in their own words; the system actively prevents identical text). Output: a verified turnout roster + a deduplicated comment bundle + a one-page consensus summary the organizer can hand to a council member. After the hearing, the impact loop closes by ingesting the vote/disposition from the same Legistar/ArcGIS source.",
+      "builds_on": [
+        "Lot Line / the parcel-radius watch layer (the affected-parcel set)",
+        "Pol.is / Computational Democracy consensus-clustering engine",
+        "Address->district geocoding + SMS/postal verification tiers for real-person assurance",
+        "Legistar (Granicus) OData API for hearing agendas, committee, and vote/disposition outcomes",
+        "g0v Join.gov.tw threshold pattern (signatures->mandatory response) as the organizing-goal mechanic",
+        "WriteToThem postcode->reps send flow for routing to the specific commissioners"
+      ],
+      "gap_filled": "Fills Gap 5 (monitor->act->see-impact in one consumer product) and Gap 4 (guided action), with the explicit anti-astroturf design the constraints demand. Not a duplicate of Decidim/Consul (AGPL, government-hosted, general-purpose deliberation platforms \u2014 we build a thin, case-scoped action flow instead of forking) nor Nextdoor (social feed, no case scoping, no verification, no testimony output) nor Resistbot/5 Calls (Congress-only, no local discovery, no neighbor coordination).",
+      "why_now": "The statutory mailed-notice radius gives a legally-defined, defensible boundary for 'who counts' \u2014 solving the astroturf-discounting problem structurally rather than by moderation. Pol.is is open and battle-tested (vTaiwan, ~26 laws), and Legistar's auth-free OData API now exposes hearing outcomes for ~70% of large cities, making the impact-loop closure real rather than aspirational."
+    },
+    {
+      "title": "Permit Pulse \u2014 neighborhood permit-and-project digest with a 'this affects you, here's the lever' nudge",
+      "one_liner": "A weekly plain-language digest of every new building permit, demolition, curb-cut, and land-use application in your neighborhood, ranked by how much it likely affects you, with the specific window and channel to weigh in on the ones that matter.",
+      "problem": "Most development that changes a neighborhood is NOT a dramatic rezoning \u2014 it's the steady drip of demolition permits, by-right large additions, ADUs, curb cuts, alcohol/cannabis licenses, and grading permits that individually fly under the radar but collectively reshape a block. Residents have no aggregated, legible view of this drip, and for most of it the action window (administrative protest, design-review comment, license objection) is short, obscure, and never surfaced as a deadline. The data exists in BLDS/Socrata permit feeds and Accela portals but is raw permit codes residents can't parse.",
+      "target_user": "Neighborhood association leaders, local small-business owners, and engaged residents who want a low-effort 'what's changing around here' situational-awareness feed and a clear signal on the rare items where their input still has a legal window.",
+      "solution": "Ingest BLDS-standard permit data from Socrata across adopter cities and Accela Citizen Access where exposed, plus license/zoning case feeds, all normalized to OCD. A RuleBox-style LLM-GENERATES-rules pipeline classifies each raw permit into resident-meaningful categories ('teardown/new build', 'big addition', 'new bar/restaurant', 'curb cut affecting parking', 'cell tower', 'grading near slope') and scores 'impact-on-you' by type x proximity to the subscriber's address. Crucially, it tags which items still have an OPEN ACTION WINDOW (design review comment period, administrative-decision appeal/protest deadline, ABC/cannabis license protest window) and elevates those \u2014 making the deadline a first-class alertable object. The weekly digest leads with 'Nothing needs you this week' or '2 items have an open window' so busy people trust it. Action paths route to the right channel (design-review comment, license protest letter, or escalate into a Block Whip campaign if it's a contestable hearing case). Cofacts-style cached community answers ('what does a Type V demolition permit mean?') get cheaper per query over time.",
+      "builds_on": [
+        "BLDS open permit standard on Socrata + Accela Citizen Access / Construct API",
+        "RuleBox (mySociety) LLM-generated classification rules running on cheap infra at firehose scale",
+        "TheyWorkForYou vector-search topic-alert + weekly-digest pattern (subscribe to a concept, auto-expand related terms)",
+        "Open Civic Data normalization model across the messy local permit vocab",
+        "Cofacts community-verified cached-answer pattern for permit-jargon explanations",
+        "Mirrulations/spicy-regs DuckDB+MCP pattern as the model for an LLM-queryable normalized local corpus"
+      ],
+      "gap_filled": "Fills Gap 3 (cross-source/cross-jurisdiction normalization for non-experts \u2014 turning raw BLDS/Accela permit vocab into one legible taxonomy) and Gap 4 (plain-language legibility), and surfaces the otherwise-invisible administrative action windows (Gap 1). Not a duplicate of buildingeye/BuildZoom-style permit lookup (those are search/contractor-lead tools with no impact scoring, no action window, no digest) nor City Tracker AI / coUrbanize (project-page slivers, not a normalized neighborhood firehose with an action layer).",
+      "why_now": "BLDS adoption gives a genuinely cross-city permit schema for the first time, and RuleBox-style generated classifiers make it economically viable to translate millions of cryptic permit rows into resident-meaningful, impact-ranked categories \u2014 a task that was previously too expensive to do per-row and too varied to hand-code. This is the unglamorous-but-defensible normalization moat that 'adjacency creep' competitors (Granicus, Plural) have no incentive to build because their buyers are governments and lobbyists, not residents."
+    }
+  ],
+  "critiques": [
+    {
+      "kill_shots": [
+        {
+          "claim": "The core join \u2014 'event keyed to your parcel' \u2014 does not exist in the source data. Legistar planning agenda items are free-text matters ('Application 2024-XXX, 123 Main St'); Socrata/ArcGIS permit tables use inconsistent or no parcel IDs; Accela PDFs have addresses, not geometry. The geocode->parcel->event linkage is the entire value prop and it is NOT a data-pull, it is per-record, per-city geocoding + entity-resolution that breaks constantly. The 'why_now' (RuleBox makes normalization feasible) handwaves the hardest part. This is the load-bearing claim and it is the weakest.",
+          "severity": "high"
+        },
+        {
+          "claim": "Parcel geometry is a licensed, expensive layer, not open data. The OCD Event 'with parcel geometry' depends on authoritative parcel boundaries that, outside the ~50 cities with clean ArcGIS parcel layers, come from Regrid/CoreLogic at real per-record/subscription cost requiring upfront commitments. Either coverage is patchy (defeating 'subscribe by parcel/radius') or COGS is high enough to wreck open-core economics. The idea treats parcel GIS as a free primitive; it is the most expensive input in the stack.",
+          "severity": "high"
+        },
+        {
+          "claim": "Per-city maintenance is the exact failure mode the brief warns against, just relabeled. Legistar covers agendas not zoning specifics; the actual coverage requires Accela/PDF Scrapy spiders (the long tail), bespoke Socrata/ArcGIS connectors, AND geocoding glue PER CITY. 'Scoped city-by-city' = N fragile pipelines with N decay curves. This is the self-hosting-200-scrapers trap (cited as a hard-won lesson) wearing a different hat, and it scales linearly with cities sold \u2014 the opposite of infrastructure leverage.",
+          "severity": "high"
+        },
+        {
+          "claim": "Demand is asserted, not evidenced, and the B2B2C buyer is thin. The plan stacks three speculative consumer apps (Lot Line/Block Whip/Permit Pulse) ON TOP of an infra layer that has no proven downstream. Neighborhood associations have ~zero budget; local news is contracting and won't pay for a feed; proptech already buys Regrid/CoreLogic and cares about ownership/value, not hearing dates. No search surfaced evidence anyone pays for 'is anything being built near me.' Infra with no validated app is a bet on demand you haven't seen.",
+          "severity": "high"
+        },
+        {
+          "claim": "Action is shallow / theater risk. Even if you surface the hearing, the 'meaningful action' (speak at a local planning hearing, often in-person, on a weekday) is high-friction and the product doesn't actually lower it. Land-use outcomes are decided by entrenched local dynamics; an alert that you could have spoken but the variance passed anyway delivers the 'effort wasted' feeling the thesis exists to avoid \u2014 and you can't show impact for discretionary local approvals.",
+          "severity": "medium"
+        },
+        {
+          "claim": "Adjacency-creep exposure is acute, not hypothetical. Granicus OWNS Legistar \u2014 they sit on the richest input and can light up a parcel-keyed planning feed as a feature. Regrid sits on the parcel layer + already aggregates zoning. Either incumbent is one product decision from the box, and you'd be reselling Granicus's own data back to a market Granicus already bills.",
+          "severity": "medium"
+        }
+      ],
+      "biggest_risk": "The product is sold as a normalized DATA feed but is actually a per-city ENTITY-RESOLUTION-AND-GEOCODING service whose hardest, most fragile, never-finished work (linking a free-text agenda item or address-only permit to an authoritative, licensed parcel geometry) is exactly the part the pitch waves away as 'RuleBox makes it feasible.' Maintenance scales linearly with coverage while neither the speculative B2B2C buyers nor the stacked consumer apps have demonstrated willingness to pay \u2014 so you carry rising COGS (licensed parcels) and rising fragility (N decaying pipelines) against unvalidated revenue, which is the canonical civic-tech sustainability death spiral.",
+      "verdict_lean": "weak"
+    },
+    {
+      "biggest_risk": "The entire product is a dependent layer on top of \"Lot Line\" \u2014 a parcel-radius watch layer that supposedly already knows \"the exact parcel set inside the statutory notice radius the city must legally mail.\" That layer is the hardest, most fragmented data problem in the whole thesis and it is assumed pre-built. Building it requires, PER JURISDICTION: (a) parcel GIS boundaries (county assessor ArcGIS/Socrata, no standard schema), (b) the case's subject parcel(s) and their geometry, (c) the jurisdiction's specific notice-radius rule (300ft, 500ft, 1000ft, \"abutters + across street,\" variable by case type \u2014 encoded in local zoning code, not in any API), (d) buffer geometry + parcel intersection, (e) parcel-to-mailing-address-to-occupant resolution (assessor records give OWNER of record, frequently an LLC or absentee owner, NOT the renter \"facing displacement\" who is the stated target user). Legistar gives you the agenda item but NOT the geocoded subject parcel \u2014 that linkage is unstructured text in a staff report PDF. So the \"legally-defined, defensible boundary\" that the entire anti-astroturf thesis (\"why now\") rests on does not fall out of any API; it is bespoke GIS + NLP work per city, i.e. the exact \"Nobody has solved this / hard\" cell the prior-art scan flags for land use. If Lot Line is hand-waved, Block Whip has no scoping primitive and collapses into Nextdoor-with-verification.",
+      "kill_shots": [
+        {
+          "claim": "The 'signature threshold that triggers a mandatory response' is the headline mechanic and the Gap-5 'see-impact' payoff, but it is borrowed from Join.gov.tw \u2014 a TAIWAN NATIONAL e-petition statute. No US municipality has a statute requiring a written response when N verified neighbors sign. US notice-and-comment in local land use guarantees only that submitted comments enter the record; a commission can ignore every one and approve anyway. So the product PROMISES a legal trigger it cannot deliver, and the impact loop closes on 'your packet was filed' not 'a mandatory response was compelled.' This is the difference between meaningful action and dressed-up theater, and it is mislabeled as a structural 'why now.'",
+          "severity": "high"
+        },
+        {
+          "claim": "The target user is internally contradictory with the data source. The radius set comes from assessor/parcel records, which key on the OWNER OF RECORD (often an LLC, trust, or absentee landlord). The renter 'facing displacement' \u2014 explicitly named as a core target user \u2014 does NOT appear in parcel ownership data and cannot be auto-enrolled or address-verified against the parcel as owner. The legally-noticed set in most jurisdictions is also owners, not tenants. So the product's verification/scoping engine structurally excludes one of its two stated primary users.",
+          "severity": "high"
+        },
+        {
+          "claim": "Demand is event-triggered, rare, and non-recurring per user, which is poison for retention and unit economics. A given block faces a noticed land-use case maybe once every few years. The 'one civically-motivated neighbor' churns to zero the moment the hearing ends. There is no habitual use, no subscription logic for the organizer, and the busy neighbors who 'sign on in two minutes' never return. This is a single-use coordination tool masquerading as a product, with CAC that must be re-paid every campaign and no compounding base \u2014 the recurring civic-tech failure mode (Hack for LA Engage dormant, vTaiwan unfunded) the thesis itself warns about, with no funding model proposed beyond the generic.",
+          "severity": "high"
+        },
+        {
+          "claim": "Cold-start / liquidity is fatal at the unit of a single block. Network-effect value requires that when neighbor A adopts a case, the other 8-40 addresses in the radius are ALREADY reachable users \u2014 but they are not; they have never heard of the app. So every campaign starts from zero and the organizer must do the same door-knocking/flyering the tool claims to replace, just to onboard the radius. The tool does not solve discovery (it can't email/SMS strangers it has no contact info for), so its 'reach exactly the right people' value prop reduces to a landing page the organizer still has to distribute manually.",
+          "severity": "high"
+        },
+        {
+          "claim": "Adjacency-creep defensibility is weak on the side that matters. Granicus OWNS Legistar AND sells EngagementHQ (the gov-facing comment intake). A verified-constituent, radius-scoped testimony packet is a natural feature for Granicus to bundle and sell to its existing city customers \u2014 and Granicus can deprioritize, rate-limit, or change ToS on the auth-free OData API that Block Whip depends on for both case detection AND impact-loop disposition. The product is built on an incumbent's free API while competing for the same workflow that incumbent monetizes B2G.",
+          "severity": "medium"
+        },
+        {
+          "claim": "Verification rigor and astroturf-resistance are in tension with the 'two minutes, feels legitimate' onboarding and the 'LLM helps write distinct comments' flow. Postal-tier verification (the only one that actually proves residency at an address) takes days and kills the time-boxed pre-hearing window; SMS/geocode tiers prove a phone and a clicked pin, not residency. Meanwhile an LLM that generates 'distinct, personalized, non-identical' comments is mechanically an astroturf-laundering machine \u2014 it manufactures the surface variation that officials use identical-text detection to discount, which means once the technique is known, officials discount LLM-varied packets too. The anti-astroturf thesis can be inverted into an astroturf-at-scale tool.",
+          "severity": "medium"
+        },
+        {
+          "claim": "Impact-loop closure via 'Legistar/ArcGIS vote/disposition' is overstated. Legistar exposes council/commission actions for items that go to a tracked body, but many land-use approvals are ADMINISTRATIVE (staff-level, planning director, ZBA) and never produce a clean Legistar disposition record; continuances, withdrawals, and conditions-of-approval are the norm and are messy free text. ArcGIS does not store hearing outcomes at all. So 'see the impact' frequently degrades to 'we don't actually know what happened,' undermining the core promise that effort wasn't wasted.",
+          "severity": "medium"
+        }
+      ],
+      "verdict_lean": "weak"
+    },
+    {
+      "kill_shots": [
+        {
+          "claim": "The 'submit via Regulations.gov v4 API + get tracking number back' flow \u2014 the entire 'act' half of the monitor->act->see-impact loop \u2014 is DEAD. As of August 8, 2025, GSA shut off the POST/comment-submission method for ALL non-federal-agency users; attempts now return a 403. Sources: Hacker News 'Comments API shutting down Friday', Public Citizen 'Trump Quietly Removes Public Comment Tool', sensiblesafeguards.org 'GSA Must Reinstate the POST API'. The pitch's flagship differentiator (programmatic submission + tracking-number confirmation) is currently impossible. What's left is 'we drafted text, now you go manually paste it into regulations.gov, find the docket, fill the form, and solve a CAPTCHA' \u2014 i.e. the exact clunky experience the idea claims to replace. The 'see-impact' close-the-loop (notify when final rule addresses comments like yours) also breaks because you no longer reliably capture the user's submission ID.",
+          "severity": "high"
+        },
+        {
+          "claim": "The action is half-theater, and worse, the idea's own quality framing undercuts it. Agencies explicitly discount near-duplicate/mass comments (EBSA posts 'a representative sample plus a tally'); comments are 'not a vote.' A tool that mass-produces LLM-assembled comments from a profile template \u2014 even with operator 'specifics' slotted in \u2014 risks producing detectably templated text that agencies pattern-match and discount, especially at the volume needed for a viable business. The genuinely impactful comment (unique, fact-based, citing your real operation) is exactly the one an LLM-guided form helps least with and a busy non-expert is least able to produce. So either it scales (and gets discounted) or it's substantive (and doesn't scale past hand-holding).",
+          "severity": "high"
+        },
+        {
+          "claim": "Demand is largely imagined. SBA/Brookings/Mercatus document that small operators don't comment because (a) they don't think it'll make a difference and (b) the NPRMs are 70-80 pages of jargon. Crucially, these owners don't know what they don't know \u2014 they aren't searching for a comment-period alert tool, they discover rules at compliance time. That's a push/awareness problem (cold acquisition of disengaged, time-poor, low-willingness-to-pay sole proprietors), the single hardest consumer go-to-market. The people who DO care and pay already get it from their trade association \u2014 and the explicit target ('non-members of a well-staffed trade association') is, almost by definition, the segment that has self-selected OUT of caring about policy advocacy.",
+          "severity": "high"
+        },
+        {
+          "claim": "The docket->vertical-profile matching is harder and lower-precision than RuleBox implies. RuleBox generates regex/IF-THEN rules to assign labels to text that is ALREADY about a known taxonomy (parliamentary speech, FOI requests). Mapping a 70-page NPRM to 'this changes obligations for a 12-table BYOB restaurant in Ohio' requires deep semantic + legal-scope reasoning (applicability thresholds, exemptions, effective dates, state preemption), not keyword classification. False positives ('this affects you' when it doesn't) destroy trust instantly with a non-expert audience; false negatives (missing the rule that matters) are a liability. RuleBox's cheap-regex economics don't transfer to this judgment task \u2014 you're back to expensive per-docket LLM reasoning, eroding the 'why now / costs cents' thesis.",
+          "severity": "medium"
+        },
+        {
+          "claim": "Defensibility is thin against adjacency creep and the value isn't durable. Federal-only scope (the part with clean data) is the part most exposed: Resistbot/advocacy infra already does Congress action and would extend to dockets the moment the POST API returns; trade associations + their existing software vendors own the trusted relationship with operators. The 'gets cheaper over time (Cofacts cache)' claim is weak because regulatory churn means dockets are mostly novel \u2014 yesterday's classification cache rarely matches today's new NPRM, so the cache hit rate stays low.",
+          "severity": "medium"
+        }
+      ],
+      "biggest_risk": "The product's headline value \u2014 programmatic comment submission with a returned tracking number and a closed 'did-it-matter' loop \u2014 is not buildable today because GSA killed the Regulations.gov POST API for all non-government users in August 2025. Strip that out and the idea collapses into 'alerts + an LLM-drafted blob you go paste manually,' which is a thin wrapper that (a) doesn't solve the real friction (manual portal + CAPTCHA), (b) targets the segment least likely to act (disengaged non-members), and (c) produces exactly the templated comments agencies are trained to discount.",
+      "verdict_lean": "kill"
+    },
+    {
+      "kill_shots": [
+        {
+          "claim": "The flagship action (draft + file an individualized comment on CMS rules) is largely theater for the highest-value dockets. CMS explicitly states letter-writing campaigns and near-identical/AI-generated comments 'are not useful' and that it values comments citing published clinical evidence. Research shows mass comment campaigns 'do not elicit substantive changes' in final rules. A single solo NP/PT cannot meaningfully move the annual PFS conversion-factor rule (thousands of comments dominated by AMA/AHA/specialty-society technical letters). The 'see if your concern was addressed' impact loop will almost always return 'no' \u2014 which directly violates the thesis that the user's effort isn't wasted.",
+          "severity": "high"
+        },
+        {
+          "claim": "The real incumbent is not Quorum \u2014 it is the specialty trade associations, and they are FREE. AANP (State Policy Tracker, State Practice Environment), APTA (free Advocacy Network, state advocacy map, bill alerts, sign-up for specific bills), AMA, AOA, ADA all run member advocacy programs already segmented by specialty + state, with lobbyists and pre-drafted comment campaigns. The claimed 'specialty+payer-mix filter' defensible wedge is mostly already delivered as a free member benefit the target user has. ScopeWatch risks being a paid, lower-credibility duplicate.",
+          "severity": "high"
+        },
+        {
+          "claim": "The state data layer is materially overclaimed. Open States/Plural v3 covers legislation + hearings only \u2014 NOT regulations, medical-board rulemaking, or Medicaid provider bulletins (the idea's own constraints say Plural 'does NOT cover regulations/rulemaking/comment-periods/municipal'). State scope-of-practice changes frequently occur via board regulation and PDF-only Medicaid bulletins across 50+ fragmented sites. So 'layer Open States for state scope-of-practice and Medicaid' does not deliver the most differentiated content; that content requires exactly the bespoke-scraper maintenance trap the constraints warn against.",
+          "severity": "high"
+        },
+        {
+          "claim": "'Dollar-impact direction for your payer mix' and 'lite in-house counsel' framing is unbacked financial/legal advice generated by an LLM over notoriously dense payment rules. A confident wrong call on a denial-prone CMS rule produces liability and churn; getting it reliably right requires the expert staff the product claims to replace.",
+          "severity": "medium"
+        },
+        {
+          "claim": "Low ARPU vs high content cost. The audience is explicitly low-ARPU, yet the content that justifies the product (state board + Medicaid normalization, per-specialty rule maintenance, response-to-comments parsing) is high-touch and must stay fresh annually as CMS rules and 50 states' rules change. Free federal pieces (Regulations.gov, Federal Register, Mirrulations) are commodity; the paid-worthy layer is the unsustainable one \u2014 the classic sustainability failure mode flagged in the constraints.",
+          "severity": "medium"
+        }
+      ],
+      "biggest_risk": "The product's two pillars collapse together: the most valuable content (state scope-of-practice and Medicaid rule changes) is the data that doesn't actually exist in the cited free sources and requires the bespoke-scraper maintenance trap, while the most credible/easy content (federal CMS dockets) is exactly where an individual solo clinician's comment is least likely to matter and where free trade-association advocacy networks already serve the same specialty+state-segmented audience better and for free. So you are paywalling theater on top of a maintenance trap, against free incumbents the user already belongs to.",
+      "verdict_lean": "weak"
+    },
+    {
+      "biggest_risk": "The \"novel primitive\" \u2014 a spatial join against the city's statutory-notice radius \u2014 is neither novel nor cleanly buildable. The notice radius is not a machine-readable object: it is set per-ordinance, varies by case type within a single city, and is frequently discretionary (sourced confirmation: APA/UNC SOG say radius \"varies by location and often by type of proposed action,\" determination usually left to individual communities). So the product can't query a radius; it must hand-author and maintain a radius-rules table per city per case type, on top of hand-writing a bespoke ArcGIS/Socrata adapter per city (every observed zoning-case feature service \u2014 cor.gov, henrico.va.us, sandyspringsga.gov \u2014 has a different schema, layer ID set, field names, and inconsistent geometry). This is precisely the ~200-scraper, fragmented-local-data maintenance trap the brief flagged as the recurring failure mode, reincarnated at parcel granularity. The result: high per-city onboarding cost, brittle freshness, and a coverage map that looks impressive in 3 demo cities and collapses across the long tail \u2014 for a consumer who only cares about the ONE city they live in (no network effect to amortize the cost).",
+      "kill_shots": [
+        {
+          "claim": "Not net-new / secretly a duplicate: address-radius development alerts already ship. PublicInput explicitly markets proximity engagement 'down to the street address level' with resident subscriptions; coUrbanize targets neighbors near a project; cities run their own development trackers with 'sign up for alerts around a property' (Portland, Raleigh Neighborhood Notification Initiative, Colorado Springs, Boise); and Development.i already does the exact address-radius application alert. The 'spatial join against notice radius' is a marketing frame, not a defensible primitive.",
+          "severity": "high"
+        },
+        {
+          "claim": "The core data is fragmented and unstandardized. BLDS covers building permits (not zoning/variance cases) and stalled at ~12 cities since ~2018. Zoning-CASE feature services exist only in some cities, each with a bespoke, inconsistent schema and often no usable application-boundary geometry \u2014 making the spatial query unreliable and forcing per-city engineering.",
+          "severity": "high"
+        },
+        {
+          "claim": "The notice radius \u2014 the supposed clever input \u2014 is per-ordinance, per-case-type, and often discretionary, so it cannot be queried; it must be manually curated and kept current per jurisdiction, multiplying the maintenance burden rather than leveraging existing data.",
+          "severity": "high"
+        },
+        {
+          "claim": "Demand/retention is structurally weak: development next door is an episodic, near-zero-base-rate event for any single household. The user gets one relevant alert every few years, so there is nothing to retain them or to monetize as recurring revenue \u2014 fatal given the brief's own 'sustainability is the failure mode' warning. Consumers won't pay a subscription for a once-in-five-years notice.",
+          "severity": "high"
+        },
+        {
+          "claim": "Incumbent adjacency crush is easy here. Granicus (Legistar/EngagementHQ), PublicInput, and especially Nextdoor (already redesigned around a dynamic neighborhood map + real-time local alerts, with massive verified-household distribution) can bolt on 'development near you' faster than a startup can onboard cities one ArcGIS adapter at a time.",
+          "severity": "medium"
+        },
+        {
+          "claim": "The 'meaningful action' is thin where it matters most. For the highest-stakes discretionary cases (variances, rezonings), the binding signal is mailed notice to owners of record and turnout at a quasi-judicial hearing; a one-tap drafted comment from a self-asserted nearby address is the same lightly-weighted input officials already discount, and the app cannot verify owner-of-record status without paid parcel/title data.",
+          "severity": "medium"
+        }
+      ],
+      "verdict_lean": "weak"
+    },
+    {
+      "kill_shots": [
+        {
+          "claim": "The 'why now' is built on a dead standard. BLDS is the entire normalization thesis, but its canonical site permitdata.org now 301-redirects to an unrelated domain (mobojo.com), and the official GitHub README states verbatim: 'this data standard is not being actively maintained, and is provided for informational purposes.' BLDS peaked around 2017-2018 with ~12 sample cities and never reached cross-city scale. The 'cross-city permit schema for the first time' premise is false; you'd be normalizing a long tail of bespoke Socrata/Accela/ArcGIS schemas city-by-city exactly like everyone before you, i.e. the sustainability failure mode flagged in the brief.",
+          "severity": "high"
+        },
+        {
+          "claim": "The differentiating asset \u2014 the 'still-open action window' \u2014 is NOT in the permit data being ingested. Public objection/comment windows live in (a) notices physically mailed to owners within 300 feet of a project and (b) design-review/zoning board hearing agendas. These are separate, jurisdiction-specific, often PDF-only sources. BLDS/Socrata permit rows carry status and dates but no comment-end-date / appeal-window / hearing-date field. So the headline feature ('2 items have an open window') requires a second, far harder scraping pipeline that the idea hand-waves, and it's the part with no standard at all.",
+          "severity": "high"
+        },
+        {
+          "claim": "The action is largely theater because most of the cited permit types are by-right. Demolitions, ADUs, by-right additions, and curb cuts that the idea explicitly lists as the 'steady drip' generally have NO public comment or protest mechanism \u2014 by-right means there is nothing to object to. The genuine action windows (design review, license objections, discretionary review) attach to a minority of items, and even there official discounting of non-expert form objections (per the brief's own astroturf lesson) means the 'lever' rarely moves outcomes. The promised 'see the impact' loop has little impact to show.",
+          "severity": "high"
+        },
+        {
+          "claim": "Demand is thin and the user is already served / hard to reach. Neighborhood-permit alerts already exist (BuildZoom, buildingeye, neighborhoodalerts.com), and Nextdoor owns the engaged-resident channel for 'what's changing nearby' with built-in distribution this product lacks. The target user (neighborhood association leaders, small-biz owners) is a tiny, low-frequency, low-willingness-to-pay segment \u2014 and the brief's own funding-model warning bites hardest here since there's no obvious B2G or B2B funder for a hyperlocal consumer permit feed.",
+          "severity": "medium"
+        },
+        {
+          "claim": "Maintenance burden is the documented trap, multiplied. Permit data per the brief lives in Accela/Socrata/ArcGIS/parcel GIS with no live national register (the 'Keep It In The Community' lesson). Each city needs a custom ingest, a custom permit-code-to-resident-category mapping, AND a custom notice/agenda scraper for the action window. RuleBox classifies text cheaply but cannot invent comment-deadline data that isn't published. Coverage will be a patchwork that erodes user trust the moment a digest misses a real teardown.",
+          "severity": "medium"
+        }
+      ],
+      "biggest_risk": "The core value proposition is data that doesn't exist in the source the idea relies on. The 'this affects you, here's the lever' promise depends on a first-class, alertable action window \u2014 but those windows live in mailed 300-foot notices and hearing agendas, not in BLDS/Socrata permit feeds, and most of the listed permit types are by-right with no lever at all. Combined with BLDS being an abandoned, sub-scale standard, the product collapses into either a stale 'list of nearby permits' (already done by BuildZoom/buildingeye/Nextdoor) or a heroic per-city scraping operation that is precisely the documented sustainability failure mode.",
+      "verdict_lean": "kill"
+    },
+    {
+      "kill_shots": [
+        {
+          "claim": "No API, no register standard = the moat IS the maintenance trap the context explicitly warns against. State administrative registers have no APIs (the idea admits this), so this is 50+ bespoke scrapers against PDF-heavy, format-churning state register sites. The context flags self-hosting ~200 Open States scrapers as a 'huge maintenance trap' and says local-gov data fragmentation forced mySociety to ship a static snapshot. This idea voluntarily takes on exactly that trap with FEWER hands than Open States' funded community. 'LLM-generated scrapers make it feasible' is hand-waving: LLMs lower the cost of WRITING a scraper, not of detecting silent breakage across 50 sources weekly, parsing scanned-PDF rule notices, or extracting a non-standardized deadline field reliably. Scraper rot is the single most likely cause of death.",
+          "severity": "high"
+        },
+        {
+          "claim": "Demand is unproven and likely thin at the consumer level. State agency rulemaking is the LEAST salient civic layer to non-experts precisely BECAUSE it's obscure and procedural. The thesis user is 'too busy to be an expert' \u2014 but caring about a specific state well-water rule before it's finalized requires expert-level issue awareness that this user, by definition, lacks. The people who DO follow state rulemaking (trade associations, regulated industries, advocacy orgs) are exactly the B2B/compliance buyers Quorum/FiscalNote already serve. There is no evidence of a mass consumer pull for 'subscribe to nursing home staffing rules across 50 states' \u2014 that's an org's job, not a busy resident's. The product risks building a hard corpus for an audience that's actually B2B, contradicting the consumer thesis.",
+          "severity": "high"
+        },
+        {
+          "claim": "The 'meaningful action' loop is theater here, worse than at the federal level. Many states' rulemaking comment channels are PDF-only or email \u2014 the idea concedes it'll generate 'a cover letter for PDF-only states.' A generated cover letter is the identical-form-letter astroturf flood the context warns 'gets discounted by officials.' Worse: state administrative procedure acts vary wildly on whether public comment even moves the needle (many state rules are agency-discretion with pro-forma comment windows and no required response, unlike g0v's 5,000-signature mandatory-response mechanism). 'See the impact' is nearly impossible to deliver: states rarely publish comment-by-comment response-to-comments documents the way federal agencies do. The core promise \u2014 know your effort wasn't wasted \u2014 is the hardest thing to keep here.",
+          "severity": "high"
+        },
+        {
+          "claim": "Adjacency creep is acute and from a stronger position. FiscalNote/Quorum/Plural ALREADY ingest state regulations as a B2B compliance product \u2014 they have the corpus this idea claims as its moat. Their gap is only the consumer-facing 'affects your community' wrapper, which is a thin UI layer they can add far more cheaply than this team can build 50 scrapers from zero. Open States/Plural could also extend into regs (it's the same org/data culture). The defensible asset is supposedly 'the scraper-built normalized corpus,' but incumbents either already have it or can buy/license register data. The moat is shallow and faces incumbents who own the expensive part.",
+          "severity": "medium"
+        },
+        {
+          "claim": "Cross-state topic normalization (the RuleBox claim) is far harder and lower-value than presented. 'Drinking water' or 'nursing home staffing' meaning the same thing across 50 states' vocabularies is the easy 20%; the actual rules are buried in citation-coded administrative-code amendments ('amend 25 TAC 290.xxx') whose human-readable subject is often a one-line notice. LLM classification at firehose scale will produce false-positive matches that erode trust fast in a low-frequency-alert product where one bad alert is a high fraction of what a user sees. And national topic-subscription has a relevance problem: a Texas rule is irrelevant to a California resident, so the value is actually single-state + single-issue \u2014 a much smaller surface that doesn't need 50-register normalization at all.",
+          "severity": "medium"
+        },
+        {
+          "claim": "Funding/sustainability has no answer, and the context names sustainability as the recurring failure mode. The consumer is busy and won't pay; the people who'd pay are B2B (which contradicts the thesis and pits you against incumbents). mySociety funds free consumer products via a B2G arm (SocietyWorks); MAPLE/vTaiwan went dormant/unfunded. This idea proposes the highest-maintenance corpus (50 hand-built scrapers) with the weakest monetization (busy non-experts) and no stated B2G or grant engine. The cost curve goes up over time (scraper rot) while consumer willingness-to-pay stays near zero.",
+          "severity": "medium"
+        }
+      ],
+      "biggest_risk": "The lethal combination is a high-cost, ever-rotting corpus (50 bespoke scrapers against API-less, PDF-heavy state registers \u2014 exactly the maintenance trap the context warns about) built to serve a consumer demand that probably isn't there. State rulemaking is the least salient layer to a busy non-expert; the audience that actually cares is the B2B/compliance crowd already served by FiscalNote/Quorum. So you pay the hardest data-engineering bill in the whole problem space to reach either a tiny consumer niche or a market where incumbents already own the corpus \u2014 with no funding model and a 'see the impact' promise that states' weak comment-response norms make nearly impossible to keep.",
+      "verdict_lean": "weak"
+    },
+    {
+      "biggest_risk": "The \"watershed-scoped permit radar\" depends on the one data layer the thesis itself flags as the hardest and least available: parcel-level land-use/permit data in Accela/Socrata/ArcGIS. This is exactly gap 2, described as \"entirely uncovered\" and \"hard, separate.\" There is no national permit schema, no national parcel-to-watershed crosswalk, and coverage is per-jurisdiction bespoke. The product's core promise \u2014 \"a project at [address] in your watershed is in environmental review\" \u2014 requires (a) the permit to be in a machine-readable feed at all (most are PDF/Accela portals with no API), (b) a geocodable address or parcel, and (c) a spatial join to a user-drawn watershed polygon. Each jurisdiction breaks differently and silently. So the headline feature is the weakest-coverage, highest-maintenance, least-fundable layer, and the layers that DO work (federal Regulations.gov, Open States) are national/state-level and barely \"watershed-specific.\" The result is a product whose unique value (hyperlocal environmental development radar) lives precisely where the data does not, and whose reliable data is generic enough that incumbents already touch it.",
+      "kill_shots": [
+        {
+          "claim": "The differentiating feature \u2014 local permit/land-use ingestion scoped to a watershed \u2014 sits entirely on the data layer the thesis flags as 'entirely uncovered,' fragmented across Accela/Socrata/ArcGIS/PDF with no national schema or parcel-to-watershed crosswalk. 'Best-effort Accela/Socrata/ArcGIS ingestion' is hand-waving over the single hardest engineering problem in the whole space, and silent per-jurisdiction breakage means a watershed group will trust the feed and miss the exact fight it was built to catch. A monitoring tool that has false-negative gaps is worse than no tool: it creates false security.",
+          "severity": "high"
+        },
+        {
+          "claim": "Coverage is inversely correlated with value. The streams that are reliable (Regulations.gov v4, Federal Register, Open States/Plural) are federal/state and rarely the local creek/floodplain fight. The stream that is the actual mission (a specific rezoning paving a floodplain, a local stormwater permit) is the long-tail local data that even mySociety's 'Keep It In The Community' couldn't keep live nationally and had to ship as a static snapshot. So for any given small watershed, the feed will mostly surface generic federal dockets the group doesn't care about, and miss the local item it does \u2014 destroying the core 'never late to the fight that matters' promise.",
+          "severity": "high"
+        },
+        {
+          "claim": "Market is too small and too poor for the consumer side, and the B2G/foundation funding model is unproven hand-waving. 'Small volunteer-run environmental groups' have no budget and high churn \u2014 they are the textbook non-paying user. The escape hatch is 'sell aggregated anonymized watershed-engagement dashboards to land trusts, foundations, and regional water boards,' but that is a speculative B2G sales motion with long cycles, tiny TAM (a few thousand US watershed orgs / regional boards), and no evidence those buyers want an engagement dashboard. This is the recurring failure mode the thesis explicitly names (Engage went dormant, vTaiwan unfunded) dressed up as a solution rather than solved.",
+          "severity": "high"
+        },
+        {
+          "claim": "Per-user watershed boundaries multiply maintenance, not amortize it. Unlike a fixed jurisdiction list, every group draws its own polygon, demanding correct spatial joins against parcel GIS, council districts, and permit geocoding for arbitrary, overlapping areas. Each new watershed can require touching a new set of municipal systems with new auth, new formats, new breakage. There is no economy of scale: the 200-scraper maintenance trap the thesis warns against reappears as a per-customer-geography scraper trap, which is strictly worse.",
+          "severity": "high"
+        },
+        {
+          "claim": "The Pol.is consensus + individualized-comment-composer 'quality over volume' layer is over-engineered for the user. A 5-person friends-of-the-creek group does not need cross-factional opinion clustering to know it opposes paving a wetland \u2014 Pol.is earns its keep at vTaiwan scale (thousands of participants), not 12 speakers. Bolting a deliberation engine onto a tiny homogeneous group is theater that adds build cost and friction without changing the outcome, and the 'individualized substantive comments' generated by LLM are exactly the kind of templated near-duplicates officials learn to discount.",
+          "severity": "medium"
+        },
+        {
+          "claim": "The impact-attribution loop ('your 40 comments -> the wetland buffer was widened') is mostly unfalsifiable and risks credibility damage. Causation between public comments and a permit-condition change is rarely documentable; response-to-comments documents seldom credit a specific group, and votes turn on many factors. Over-claiming impact to fight burnout is the fastest way to lose trust with sophisticated environmental-org users who know how the process actually works, and under-claiming leaves the sustainability gap unaddressed \u2014 the loop cuts both ways.",
+          "severity": "medium"
+        },
+        {
+          "claim": "Adjacency-creep and partial-duplication are live. Granicus (Legistar owner + EngagementHQ) already sits on the local-gov data and the engagement side; it could surface 'environmental review items near you' as a feature. Resistbot/5 Calls own the action habit. City Tracker AI / coUrbanize / Symbium own land-use slivers. The defensibility claim is 'geography-and-mission-scoped,' but mission-scoping to environmental groups is a go-to-market choice, not a moat \u2014 nothing stops an incumbent from adding a watershed filter on data they already hold.",
+          "severity": "medium"
+        }
+      ],
+      "verdict_lean": "weak"
+    }
+  ]
+}
