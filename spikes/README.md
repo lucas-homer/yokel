@@ -34,7 +34,8 @@ The two that matter most run first. D4 (GSA rate-increase request), D5 (buyer ca
 | **D1** | ✅ implemented | FR (keyless) + Regs.gov pull → DuckDB join → `out/D1_join_rate.md`. |
 | **W3** | ✅ implemented | WBD HUC-8 resolve + FR full-text basin search → `out/W3_value_density.md` + candidate sheet. |
 | **D2** | ✅ implemented | Reuses the D1 pull; Eastern-vs-UTC date conflict in DuckDB → `out/D2_conflict_rate.md`. |
-| D3, W1, W2 | stubs | Each `src/*.ts` carries its objective, method, and decision rule as comments. |
+| **D3** | ✅ implemented | FR 90-day title detector + FP heuristics → `out/D3_extension_volume.md` + 50-row label sheet. |
+| W1, W2 | stubs | Each `src/*.ts` carries its objective, method, and decision rule as comments. |
 
 Outputs go to `out/` (gitignored); pulled API data to `data/` (gitignored).
 
@@ -43,8 +44,8 @@ Outputs go to `out/` (gitignored); pulled API data to `data/` (gitignored).
 - `REGS_KEY` — **required for an authoritative D1 run.** Without it D1 falls back to `DEMO_KEY`
   (free key: <https://api.data.gov/signup/>). DEMO_KEY works only while the open set fits in one
   cursor window (~5k docs) before its hourly cap bites.
-- `D1_USE_CACHE=1` — re-run D1's join/report over the last `data/` pull with **no API calls** (iterate
-  on the analysis, or when the Regs.gov hourly budget is spent).
+- `D1_USE_CACHE=1` / `D3_USE_CACHE=1` — re-run the analysis over the last `data/` pull with **no API
+  calls** (iterate on the report, or when an API budget is spent).
 - `HUC8=02060005` — which HUC-8 W3 measures (default Choptank). Add a keyword seed in `BASIN_SEED`
   for new basins, or pass `W3_KEYWORDS="term1,term2,..."` to extend the search/filter terms.
 - `SPICY_REGS_PARQUET` — (future) glob for the spicy-regs/Mirrulations Parquet so W3 can cross-check
