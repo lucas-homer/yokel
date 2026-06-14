@@ -22,11 +22,12 @@ TRACK D — DocketClock
 TRACK W — Watershed Watch  (run? yes — code gates only)
  W1 POST /comments open to non-gov? NO  → action loop = draft+copy-paste
  W2 EPA EIS machine-readable? scraper (HTML/JSF)  fragility: HIGH (mitigated by keyless FR EIS spine)
- W3 novel in-basin windows/qtr: ~4  (EIS ~1.25 / Regs ~2.75) → GO (provisional — upper bound, label to confirm)
+ W3 novel in-basin windows/qtr: LABELED → 0/qtr (16 candidates → 0 confirmed) → STOP
+    upper bound was ~4/qtr; all 16 dropped (national "Chesapeake Bay" rules; wrong Talbot County, GA; non-novel Bay Bridge study)
  W4 geo-recall on 50: — (not run)  partner labels committed? — (needs partner)
  W5 §404 pattern: — (not run)  → —
  W6 partner: Tier-1 alone worth a paid seat? — (not run)
- ──> WEDGE DECISION: DEFER the commit — no red light from code; gated on W3 labeling + partner (W4/W6)
+ ──> WEDGE DECISION: STOP — W3 (business kill-shot) reads red once labeled; single-HUC-8 wedge misses the value-density line on federal data alone
 ```
 
 ---
@@ -103,37 +104,50 @@ neither blocks starting substrate work, but D5 should land before heavy investme
   expected breakage with FR as the always-on fallback.
 - Artifact: `spikes/out/W2_eis_source.md`.
 
-### W3 — in-basin value density ⟵ BUSINESS KILL-SHOT → **GO (provisional)**
-- Choptank HUC-8 `02060005` (DE/MD), last 4 quarters: **~16 candidate in-basin Tier-1 windows
-  (~4/quarter)**, **31% EIS share** (5 EIS / 11 Regs.gov rulemaking).
-- These are **upper-bound candidates** from FR full-text basin search — the sheet already shows the
-  expected false positives (national rules that merely name "Chesapeake Bay"). The plan's number is
-  *novel* in-basin windows, which requires the candidate sheet to be hand-labeled.
-- **Decision:** above the ~2–3/quarter death line **with a real EIS share → provisional GO**, pending
-  manual labeling to convert candidates to confirmed-novel windows.
-- Artifact: `spikes/out/W3_value_density.md` (+ candidate sheet to label).
+### W3 — in-basin value density ⟵ BUSINESS KILL-SHOT → **STOP (labeled)**
+- Choptank HUC-8 `02060005` (DE/MD), last 4 quarters: the upper-bound **16 candidates (~4/quarter,
+  31% EIS share)** collapse to **0 confirmed novel in-basin windows** once hand-labeled.
+- All 16 dropped: **11** national/regional rules that merely name "Chesapeake Bay" (WOTUS, migratory
+  birds, ESA findings, Baltimore/Hampton Roads safety zones, Delaware River); **1** nationwide
+  drawbridge-cleanup rule (Tuckahoe); **3 hits / 2 EIS** that are the **wrong Talbot County — Georgia**
+  ("Dresden–Talbot County 500 kV", USDA GA); and **2 hits / 1 EIS** that are the high-profile Bay
+  Bridge crossing study counted twice (mainstem bay, not Choptank-proper; not *novel*). Net EIS: **0**.
+- **Root cause:** "Chesapeake Bay" is far too broad for one HUC-8 — the bay watershed dwarfs the
+  Choptank, so the term only pulls out-of-basin national rules. The *tight* in-basin terms (Choptank,
+  Tuckahoe, Tred Avon, the four counties) returned **nothing real** — just a Georgia county collision.
+- **Decision:** 0/quarter is below the ~2–3/quarter death line → **STOP.** This is the week's intended
+  "measured no": a single-HUC-8 wedge does not clear value density on federal data alone.
+- **Honest gap:** FR-only — the Regs.gov/Mirrulations parquet cross-check (`SPICY_REGS_PARQUET`) was
+  never wired in. But the lexicon covers the basin name, every major tributary, and all four counties,
+  so it is unlikely to hide a *handful*/quarter. Reviving the wedge needs that cross-check **or** a
+  widening from one HUC-8 to a multi-basin region (a different product thesis).
+- Artifacts: `spikes/out/W3_value_density.md` (candidates) · `spikes/out/W3_value_density_labeled.md` (labeled result).
 
 ### W4 / W5 / W6 — not run (partner-dependent)
 - **W4** (geo-recall on a 50-row labeled set), **W5** (USACE §404 ingestion pattern), and **W6** (partner
   confirms Tier-1-alone is worth a paid seat) all require the Chesapeake design partner and were not run.
 
-### → WEDGE DECISION: **DEFER the commit — no red light, gated on labeling + partner**
-None of the code gates read red: the action loop has a viable fallback (W1), the EIS source is
-ingestible with guardrails (W2), and in-basin signal is provisionally sufficient (W3). But the
-*business* go/no-go can't be finalized until **W3 is hand-labeled** and the **partner gates (W4/W6)**
-are answered. Recommend: finish W3 labeling, then run the partner conversations before committing to a
-pilot.
+### → WEDGE DECISION: **STOP — the business kill-shot fired once labeled**
+The code gates never read red — the action loop has a viable fallback (W1) and the EIS source is
+ingestible with guardrails (W2). But the gate that governs the wedge is **value density (W3)**, and
+labeled it reads **0 novel in-basin windows/quarter** — below the death line. The partner gates
+(W4/W5/W6) are now moot to run: there is no in-basin signal to bring a partner. **Do not pursue
+Watershed Watch as a single-HUC-8 federal-data wedge.** Two non-trivial revivals remain on the shelf
+(Regs.gov parquet cross-check; multi-basin geography) — record them, but neither is this week's build.
 
 ---
 
 ## The single most important line
-**D1 (does the join hold?) → green. W3 (is there enough in-basin signal?) → provisional green.**
-Neither master gate reads red. Substrate: **BUILD now.** Wedge: **proceed to partner validation** with
-the two known forks baked in (draft+copy-paste filing; scraper-behind-interface EIS).
+**D1 (does the join hold?) → green. W3 (is there enough in-basin signal?) → red, once labeled (0/quarter).**
+The two master gates split: the substrate's holds, the wedge's doesn't. Substrate: **BUILD now.**
+Wedge: **STOP** — a single-HUC-8 federal-data wedge does not clear value density. The week did its job:
+one measured go (DocketClock) and one measured no (Watershed Watch).
 
 ## Still open before a full go/no-go
 1. **D3** — label the 50-row sample → precision → deny-list vs LLM-classifier call.
-2. **W3** — label the candidate sheet → confirmed novel windows (vs upper-bound candidates).
+2. ~~**W3** — label the candidate sheet~~ — **DONE:** 0 confirmed novel in-basin windows/quarter → STOP
+   (`spikes/out/W3_value_density_labeled.md`).
 3. **D4** — file the GSA rate-increase request; record ticket + ETA.
 4. **D5** — 3–5 buyer interviews (demand signal).
-5. **W4 / W5 / W6** — partner-dependent: geo-recall labels, §404 pattern, Tier-1 paid-seat confirmation.
+5. ~~**W4 / W5 / W6**~~ — **moot:** partner-dependent gates with no in-basin signal to validate. Revisit
+   only if a wedge revival (Regs.gov parquet cross-check, or multi-basin geography) changes W3.
