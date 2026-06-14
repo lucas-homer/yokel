@@ -1,6 +1,6 @@
 # Week-1 Validation — Go / No-Go Memo
 
-**Date:** 2026-06-14 · **Status:** code spikes complete (D1–D3, W1–W3); non-code tasks (D4/D5, W4–W6) pending.
+**Date:** 2026-06-14 · **Status:** DECIDED — Substrate **BUILD** (D1 green); Watershed Watch **STOP & shelved** (W3 labeled red). Open: D3 precision label, D4 GSA request, D5 interviews. W4–W6 moot.
 **Method:** all numbers are measured against live APIs on 2026-06-14. See `spikes/` for runnable harness and
 `spikes/out/*.md` for per-spike artifacts. A measured "no" this week is a success.
 
