@@ -63,6 +63,6 @@ createdb watershed && psql watershed -c "CREATE EXTENSION postgis;"
 ## Notes
 
 - `docs/research/` holds the heavy HTML reports + foundry JSON for reference; open the HTML in a
-  browser. Agents should not load these routinely (see `CLAUDE.md`).
+  browser. Agents should not load these routinely (see `AGENTS.md`).
 - The architecture markdown is generated: `python3 tools/gen_arch_md.py` regenerates it from
   `arch-foundry-result.json`.

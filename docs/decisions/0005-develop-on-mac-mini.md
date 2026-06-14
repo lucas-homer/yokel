@@ -19,6 +19,6 @@ intended to live on a Mac Mini. We need the project to move cleanly between mach
 ## Consequences
 
 - Everything that matters travels as text via git; the repo stays light and reproducible.
-- `SETUP.md` is the canonical Mini bootstrap; `CLAUDE.md` encodes the two-machine convention so
+- `SETUP.md` is the canonical Mini bootstrap; `AGENTS.md` encodes the two-machine convention so
   agents don't try to install/build on the Air.
 - Secrets never live in the repo (`.env` gitignored; `.env.example` is the template).

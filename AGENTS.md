@@ -1,6 +1,8 @@
-# CLAUDE.md — working notes for agents
+# AGENTS.md — working notes for agents
 
 Read this first. It's the map and the conventions. Keep it small and high-signal.
+Provider-agnostic on purpose (Claude + other models/harnesses). Follows the
+[AGENTS.md](https://agents.md) convention.
 
 ## What this project is
 

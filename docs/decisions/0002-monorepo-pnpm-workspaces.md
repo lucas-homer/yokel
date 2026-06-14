@@ -13,7 +13,7 @@ The Watershed Watch standalone contingency is explicitly "fork the deployment, n
 
 One monorepo, pnpm workspaces only (no Turborepo/nx yet). Layout: `packages/contracts` (the shared
 seam), `apps/docketclock`, `apps/watershed-watch`, `spikes/`, `docs/`. Heavy generated artifacts live
-in `docs/research/` and are deliberately not referenced by any `CLAUDE.md` so agents don't auto-load
+in `docs/research/` and are deliberately not referenced by any `AGENTS.md` so agents don't auto-load
 them. TypeScript + Node 24.
 
 ## Consequences
