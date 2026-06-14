@@ -35,7 +35,10 @@ The two that matter most run first. D4 (GSA rate-increase request), D5 (buyer ca
 | **W3** | ✅ implemented | WBD HUC-8 resolve + FR full-text basin search → `out/W3_value_density.md` + candidate sheet. |
 | **D2** | ✅ implemented | Reuses the D1 pull; Eastern-vs-UTC date conflict in DuckDB → `out/D2_conflict_rate.md`. |
 | **D3** | ✅ implemented | FR 90-day title detector + FP heuristics → `out/D3_extension_volume.md` + 50-row label sheet. |
-| W1, W2 | stubs | Each `src/*.ts` carries its objective, method, and decision rule as comments. |
+| **W1** | ✅ implemented | Non-destructive POST probes of Regs.gov submission endpoints → `out/W1_comment_post.md`. |
+| **W2** | ✅ implemented | EPA EIS endpoint probes + FR EIS-notice spine sample → `out/W2_eis_source.md`. |
+
+All six code spikes are implemented. D4/D5 and W4–W6 are non-code action/interview tasks — see the plan.
 
 Outputs go to `out/` (gitignored); pulled API data to `data/` (gitignored).
 
@@ -59,3 +62,7 @@ Outputs go to `out/` (gitignored); pulled API data to `data/` (gitignored).
 - FR **returns** `type` as display strings (`"Notice"`, `"Proposed Rule"`, `"Rule"`) even though the
   request *filter* uses abbreviations (`NOTICE`/`PRORULE`/`RULE`). Classify on the display values.
 - The National Map WBD HUC-8 layer is `wbd/MapServer/4`.
+- Regs.gov v4 `GET /comments` requires `page[size] >= 5` (a `1` returns HTTP 400).
+- Regs.gov v4 comment submission is **tier-gated**: a standard key gets `201` on `POST /submission-keys`
+  but `403 API_KEY_UNAUTHORIZED` on `POST /comments` (W1 kill-shot). EPA's EIS DB (cdxapps) is HTML-only;
+  the Federal Register EIS-notice stream is the keyless machine-readable spine (W2).
