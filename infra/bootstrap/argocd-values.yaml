@@ -1,0 +1,17 @@
+# Argo CD Helm values — LOCAL dev. The cloud overlay hardens these (TLS, SSO, HA).
+configs:
+  params:
+    server.insecure: "true"   # local only — no in-cluster TLS; cloud terminates TLS at ingress
+dex:
+  enabled: false              # no SSO locally
+notifications:
+  enabled: false
+applicationSet:
+  enabled: false              # not used yet
+# Single-replica everything for a laptop-class cluster.
+controller:
+  replicas: 1
+repoServer:
+  replicas: 1
+server:
+  replicas: 1

@@ -1,0 +1,24 @@
+# k3d cluster config — codifies the local dev cluster (ADR 0008 / 0009).
+# Create via `task dev-up` (preferred) or: k3d cluster create --config infra/k3d/yokel.yaml
+# k3s ships Traefik, which we use as the local ingress (cloud overlay can swap to ingress-nginx).
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: yokel
+servers: 1
+agents: 1
+image: rancher/k3s:v1.31.5-k3s1
+registries:
+  # Local image registry for the Tilt inner-loop (Phase 1). Host: localhost:5050.
+  create:
+    name: yokel-registry
+    host: "0.0.0.0"
+    hostPort: "5050"
+ports:
+  - port: "8080:80"        # Traefik HTTP → localhost:8080 (ingress reachable on the host)
+    nodeFilters:
+      - loadbalancer
+options:
+  k3d:
+    wait: true
+    timeout: "120s"

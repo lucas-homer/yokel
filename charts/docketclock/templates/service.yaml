@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: docketclock
+  labels:
+    app.kubernetes.io/name: docketclock
+spec:
+  selector:
+    app.kubernetes.io/name: docketclock
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}

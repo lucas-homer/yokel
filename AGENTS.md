@@ -24,7 +24,8 @@ Full designs: `docs/architecture/docketclock.md` and `docs/architecture/watershe
 ## Where things live
 
 - **Decisions / the "why":** `docs/decisions/` (ADRs). Add an ADR for any consequential call.
-- **Plans:** `docs/plans/` — the immediate work is `week1-validation-spikes.md`.
+- **Plans:** `docs/plans/` — the immediate work is `week1-validation-spikes.md`. How we build with
+  agent teams (roles, phases, gating): `docs/plans/agent-orchestration.md`; the team lives in `.claude/agents/`.
 - **Heavy reference:** `docs/research/` (100KB+ HTML reports, foundry JSON). **Do NOT read these
   routinely** — they're large and burn context. The markdown in `docs/architecture/` is the
   distilled, canonical form. Reach into `docs/research/` only when explicitly needed.
@@ -40,6 +41,15 @@ Full designs: `docs/architecture/docketclock.md` and `docs/architecture/watershe
   unknown/conflicting states honestly; never assert an API field/endpoint exists without verifying.
 - **Stack:** TypeScript (Node 24), pnpm workspaces, Fastify + Zod, Postgres 16 (+ PostGIS for
   Watershed). No Turborepo/OpenSearch/Temporal until a measured bottleneck justifies them.
+- **Infrastructure (ADR 0008 + 0009):** Kubernetes is the platform, GitOps-managed by **Argo CD**.
+  Postgres 16 is **self-hosted via CloudNativePG**; the app tier runs in-cluster. Packaging is **Helm**
+  (vendored operators + our `charts/docketclock` with `values-local.yaml` / `values-cloud.yaml`);
+  secrets via **External Secrets Operator + self-hosted Vault**; cloud provisioning via **Terraform**
+  (structure now, provider deferred). Dev is **full in-cluster** on **k3d/colima** on the Mini — bring
+  it up with `cd infra && task dev-up` (the codified runbook is `infra/`). Deploys land via **git →
+  Argo reconciles**, not imperative `kubectl`. This **overrides** the architecture doc's "No Kubernetes
+  / managed-Postgres" hosting line. The Postgres-as-everything data choices (outbox queue, FTS) are
+  unchanged.
 - ADRs use the lightweight format in `docs/decisions/0001-record-architecture-decisions.md`.
 
 ## Naming

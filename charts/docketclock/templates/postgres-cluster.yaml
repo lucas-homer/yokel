@@ -1,0 +1,21 @@
+# CloudNativePG Cluster — the DocketClock Postgres 16 database. The operator generates and rotates
+# the app credentials as the Secret `docketclock-pg-app` (keys incl. `uri`). Append-only enforcement
+# of the observation log (the trust primitive) is added in Phase 1 via schema triggers + role grants.
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: docketclock-pg
+spec:
+  instances: {{ .Values.postgres.instances }}
+  {{- if .Values.postgres.imageName }}
+  imageName: {{ .Values.postgres.imageName }}
+  {{- end }}
+  storage:
+    size: {{ .Values.postgres.storageSize }}
+    {{- if .Values.postgres.storageClass }}
+    storageClass: {{ .Values.postgres.storageClass }}
+    {{- end }}
+  bootstrap:
+    initdb:
+      database: docketclock
+      owner: docketclock

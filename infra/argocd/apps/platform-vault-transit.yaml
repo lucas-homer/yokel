@@ -1,0 +1,41 @@
+# Transit Vault — the LOCAL seal provider (ADR 0009). It exists only to auto-unseal the main Vault,
+# standing in for the cloud KMS we'd use in prod. Dev-mode (in-memory, always unsealed); its sole job
+# is to hold the `autounseal` transit key. There is NO transit Vault in cloud — there the main Vault
+# seals against a real KMS. If this pod restarts the key is lost and the main Vault can't unseal:
+# recover with `task dev-down && task dev-up` (see infra/README.md). Seeded by vault-transit-init.sh.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault-transit
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"   # the seal provider must exist before the main Vault unseals
+spec:
+  project: default
+  source:
+    repoURL: https://helm.releases.hashicorp.com
+    chart: vault
+    targetRevision: "0.33.0"
+    helm:
+      values: |
+        server:
+          dev:
+            enabled: true
+            devRootToken: "transit-root"   # DEV ONLY — this Vault holds nothing but the seal key
+          standalone:
+            enabled: false
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+        injector:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

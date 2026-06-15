@@ -8,18 +8,18 @@ bridge. This is the bootstrap for standing up the local dev environment on the M
 ```bash
 # Homebrew (if not present): https://brew.sh
 # Core tooling
-brew install git gh node@24 postgresql@16 duckdb
-brew install postgis            # needed by Watershed Watch (HUC geo); optional for DocketClock-only
+brew install git gh node@24 duckdb            # duckdb powers the Week-1 spikes
+
+# Kubernetes / IaC toolchain (the platform — ADR 0008/0009). Postgres runs IN-CLUSTER via
+# CloudNativePG, not natively.
+brew install colima k3d kubectl helm go-task terraform tilt
 
 # pnpm via corepack (ships with Node)
 corepack enable
 corepack prepare pnpm@10.23.0 --activate
-
-# Start Postgres
-brew services start postgresql@16
 ```
 
-Verify: `node -v` (≥ 22, repo targets 24), `pnpm -v` (10.x), `psql --version` (16.x).
+Verify: `node -v` (≥ 22, repo targets 24), `pnpm -v` (10.x), `kubectl version --client`, `task --version`.
 
 ## 2. Clone
 
@@ -45,13 +45,18 @@ cp spikes/.env.example spikes/.env
 
 Never commit `.env` (it's gitignored). Only `.env.example` is tracked.
 
-## 5. Create the local databases (when you start building, not required for spikes)
+## 5. Bring up the platform (when you start building; not required for spikes)
+
+DocketClock runs on Kubernetes (ADR 0008/0009). The local cluster + Postgres (CloudNativePG), Argo CD,
+and External Secrets + Vault all come up from code:
 
 ```bash
-createdb docketclock
-# Watershed Watch adds PostGIS:
-createdb watershed && psql watershed -c "CREATE EXTENSION postgis;"
+cd infra && task dev-up        # colima → k3d → Argo CD → CNPG/ESO/Vault → app
+task status                    # Argo Applications + key pods
 ```
+
+See `infra/README.md` for the full runbook. The `docketclock` database is provisioned by the
+CloudNativePG Cluster — there is no `createdb`.
 
 ## 6. Where to start
 

@@ -1,0 +1,63 @@
+# HashiCorp Vault — the ESO backend (ADR 0009). LOCAL = HA-raft (1 replica), persistent, auto-unsealed
+# via a Transit seal provided by `vault-transit` (the local stand-in for cloud KMS). Same shape as prod;
+# prod swaps the `seal "transit"` stanza for `seal "gcpckms"`/`"awskms"` (no static token — workload
+# identity) and scales replicas to 3. Initialized + seeded by vault-seed.sh (recovery keys, not Shamir).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: https://helm.releases.hashicorp.com
+    chart: vault
+    targetRevision: "0.33.0"
+    helm:
+      values: |
+        server:
+          dev:
+            enabled: false
+          ha:
+            enabled: true
+            replicas: 1                  # cloud overlay: 3
+            raft:
+              enabled: true
+              setNodeId: true
+              config: |
+                ui = true
+                listener "tcp" {
+                  tls_disable     = 1
+                  address         = "[::]:8200"
+                  cluster_address = "[::]:8201"
+                }
+                storage "raft" {
+                  path = "/vault/data"
+                }
+                # Auto-unseal. LOCAL: transit seal backed by the in-cluster `vault-transit`.
+                # CLOUD (Phase 3): replace this whole stanza with `seal "gcpckms" { ... }` /
+                # `seal "awskms" { ... }` — KMS via workload identity, no static token.
+                seal "transit" {
+                  address         = "http://vault-transit.vault.svc:8200"
+                  token           = "transit-root"   # DEV ONLY (the transit Vault's dev root token)
+                  disable_renewal = "false"
+                  key_name        = "autounseal"
+                  mount_path      = "transit/"
+                }
+                service_registration "kubernetes" {}
+          dataStorage:
+            enabled: true
+            size: 1Gi                    # cloud overlay: larger + a cloud StorageClass
+        injector:
+          enabled: false                 # we use ESO, not the agent injector
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
