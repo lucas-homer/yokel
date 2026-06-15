@@ -7,7 +7,9 @@
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json",
+    "migrate": "tsx src/db/migrate.ts",
+    "test": "tsx test/observation-log.test.ts"
   },
   "dependencies": {
     "@yokel/contracts": "workspace:*",

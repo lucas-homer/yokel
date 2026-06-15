@@ -27,6 +27,15 @@ postgres:
   storageSize: 1Gi
   storageClass: "" # "" = cluster default (local-path on k3d); cloud sets a CSI class
 
+# Schema migrations — run as a CNPG-aware Job (Argo PreSync hook) that applies migrations/*.sql before
+# the app rolls out (integrator discipline: migrations are a Job, never `kubectl exec` by hand). DISABLED
+# until apps/docketclock has a real built image — the placeholder `traefik/whoami` can't run the runner.
+# Phase 1 sets this true together with the Dockerfile + image swap. The Job uses the SAME image as the
+# app and the CNPG-managed `docketclock-pg-app` DATABASE_URL (key `uri`).
+migrations:
+  enabled: false
+  command: ["node", "dist/db/migrate.js"]
+
 # Vault backend for External Secrets (dev token auth locally; cloud uses the kubernetes auth method).
 vault:
   server: http://vault.vault.svc:8200
