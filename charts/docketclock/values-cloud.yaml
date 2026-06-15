@@ -1,0 +1,18 @@
+# CLOUD overlay — STUB (Phase 3). The env-specific seams that differ from local; shapes stay identical.
+postgres:
+  instances: 3                 # HA
+  imageName: ""                # TODO(phase-3): pin exact 16.x
+  storageClass: ""             # TODO(phase-3): cloud CSI class (e.g. gp3 / pd-ssd)
+  # TODO(phase-3): backup to object storage (S3/GCS) for PITR
+
+ingress:
+  enabled: true
+  className: nginx             # TODO(phase-3): cloud ingress + cert-manager TLS
+  host: docketclock.example.com
+
+vault:
+  # TODO(phase-3): switch ESO from the dev root token to the kubernetes auth method (no static token).
+  # The Vault *server* seal swap (transit → `seal "gcpckms"`/`"awskms"`, replicas → 3, drop vault-transit)
+  # lives in the cloud platform-vault Application, not here — see platform-vault.yaml comments.
+  tokenSecret:
+    name: ""

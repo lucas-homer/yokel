@@ -1,0 +1,21 @@
+# App-of-apps ROOT (local) — the pure-GitOps entrypoint: Argo reads infra/argocd/apps from git and
+# manages every platform Application. Activates once this repo is pushed (Argo pulls from the remote).
+# For an offline local loop, `task platform` applies the platform apps directly instead.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/lucas-homer/yokel.git
+    targetRevision: main
+    path: infra/argocd/apps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

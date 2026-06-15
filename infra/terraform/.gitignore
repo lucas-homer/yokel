@@ -1,0 +1,8 @@
+# Terraform local artifacts — never commit provider binaries or state.
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars        # may hold secrets; commit *.tfvars.example instead
+!*.tfvars.example
+# .terraform.lock.hcl IS committed once providers are pinned (Phase 3).

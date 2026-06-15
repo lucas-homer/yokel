@@ -1,0 +1,9 @@
+# LOCAL overlay — k3d on the Mini. Single instance, default (local-path) StorageClass, dev Vault token.
+postgres:
+  instances: 1
+  storageClass: ""        # local-path (k3d default)
+
+ingress:
+  enabled: true
+  className: traefik
+  host: docketclock.local

@@ -1,0 +1,30 @@
+# DocketClock app — our first-party Helm chart, reconciled by Argo from git (the GitOps path).
+# Syncs once the repo is pushed (chart lives at charts/docketclock). For the offline local loop,
+# `task app-local` helm-installs the same chart directly. sync-wave 2 = after operators + secrets.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: docketclock
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/lucas-homer/yokel.git
+    targetRevision: main
+    path: charts/docketclock
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-local.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: docketclock
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

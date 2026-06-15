@@ -1,0 +1,44 @@
+# DocketClock app Deployment. Today: a placeholder image proving the wiring (Service/Ingress reachable,
+# ESO external secrets + CNPG DB creds injected). Phase 1 swaps in our built image and makes the
+# secret/DB refs required (optional:true now so the tracer bullet isn't blocked on secret/DB timing).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docketclock
+  labels:
+    app.kubernetes.io/name: docketclock
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: docketclock
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: docketclock
+    spec:
+      containers:
+        - name: app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+          envFrom:
+            - secretRef:
+                name: docketclock-external   # ESO-materialized external secrets
+                optional: true
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: docketclock-pg-app    # CNPG-managed app credentials
+                  key: uri
+                  optional: true
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
