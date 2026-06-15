@@ -37,6 +37,11 @@ create table if not exists observations (
 create index if not exists observations_fr_doc_idx
   on observations (fr_document_number, source, fetched_at desc)
   where fr_document_number is not null;
+-- NOTE(regs-adapter): this indexes regs_object_id, but the FR<->Regs reconciler joins/dedupes on the
+-- Regs.gov DOCUMENT id (regs_document_id) — FR never exposes the objectId (see federal-register.ts).
+-- When the Regs.gov adapter lands, its dedupe lookup will key on (source, regs_document_id), so add a
+-- matching observations_regs_doc_idx then rather than a second index here. This index is reserved for
+-- the (rarer) objectId-keyed path; don't widen the FR slice to populate it.
 create index if not exists observations_regs_obj_idx
   on observations (regs_object_id, source, fetched_at desc)
   where regs_object_id is not null;
