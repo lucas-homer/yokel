@@ -1,5 +1,5 @@
 /**
- * contract.adversary.ts — the standalone adversary's runnable attack on the FROZEN @0.1.0 contract.
+ * contract.adversary.ts — the standalone adversary's runnable attack on the FROZEN @0.2.1 contract.
  *
  * Goal: try to make `confidence` LIE at the SCHEMA level, and prove each documented edge case is
  * representable WITHOUT forcing fake certainty. Each block crafts a concrete payload, parses it
@@ -49,7 +49,10 @@ function baseWindow(over: Record<string, unknown> = {}) {
     tags: [],
     version: 1,
     current_observation_ids: [],
-    provenance: { agreeing_observation_ids: [], conflicting_observation_ids: [] },
+    provenance: {
+      agreeing_observation_ids: [],
+      conflicting_observation_ids: [],
+    },
     change_history: [],
     ...over,
   };
@@ -86,7 +89,9 @@ function baseWindow(over: Record<string, unknown> = {}) {
   assert(
     "FR-2018-27875 ATTACK: 'conflicting' + tz_normalization_only is REJECTED",
     !r.success,
-    r.success ? "schema accepted the tz-as-conflict lie!" : "refinement #2 caught it",
+    r.success
+      ? "schema accepted the tz-as-conflict lie!"
+      : "refinement #2 caught it",
   );
 }
 
@@ -101,7 +106,9 @@ function baseWindow(over: Record<string, unknown> = {}) {
   assert(
     "FR-2018-27875 ATTACK: tz_normalization_only mixed with other flags under 'conflicting' is REJECTED",
     !r.success,
-    r.success ? "schema let tz flag ride along with a conflict verdict!" : "refinement #2 still catches it",
+    r.success
+      ? "schema let tz flag ride along with a conflict verdict!"
+      : "refinement #2 still catches it",
   );
 }
 
@@ -130,8 +137,14 @@ function baseWindow(over: Record<string, unknown> = {}) {
   assert("EPA 2025-02910 extension observation parses", rObs.success);
 
   // ONE observation -> TWO distinct windows with DIFFERENT deadlines, via the M:N join.
-  const targetA = { observation_id: "obs-epa-1", ocd_id: makeOcdId({ frDocNum: "2025-02910" }) };
-  const targetB = { observation_id: "obs-epa-1", ocd_id: makeOcdId({ regsObjectId: "0900006484abcd01" }) };
+  const targetA = {
+    observation_id: "obs-epa-1",
+    ocd_id: makeOcdId({ frDocNum: "2025-02910" }),
+  };
+  const targetB = {
+    observation_id: "obs-epa-1",
+    ocd_id: makeOcdId({ regsObjectId: "0900006484abcd01" }),
+  };
   const rA = ObservationTarget.safeParse(targetA);
   const rB = ObservationTarget.safeParse(targetB);
   assert(
@@ -142,15 +155,29 @@ function baseWindow(over: Record<string, unknown> = {}) {
 
   // And the two target windows can carry DIFFERENT resolved_close_utc — not forced to agree.
   const winA = ParticipationWindow.safeParse(
-    baseWindow({ ocd_id: targetA.ocd_id, fr_document_number: "2025-02910", confidence: "high", resolved_close_utc: "2025-03-15T03:59:00.000Z", conflict_flags: ["multi_target_notice"] }),
+    baseWindow({
+      ocd_id: targetA.ocd_id,
+      fr_document_number: "2025-02910",
+      confidence: "high",
+      resolved_close_utc: "2025-03-15T03:59:00.000Z",
+      conflict_flags: ["multi_target_notice"],
+    }),
   );
   const winB = ParticipationWindow.safeParse(
-    baseWindow({ ocd_id: targetB.ocd_id, fr_document_number: "2025-02910", confidence: "high", resolved_close_utc: "2025-04-01T03:59:00.000Z", conflict_flags: ["multi_target_notice"] }),
+    baseWindow({
+      ocd_id: targetB.ocd_id,
+      fr_document_number: "2025-02910",
+      confidence: "high",
+      resolved_close_utc: "2025-04-01T03:59:00.000Z",
+      conflict_flags: ["multi_target_notice"],
+    }),
   );
   assert(
     "EPA 2025-02910: the two fanned-out windows hold DIFFERENT deadlines (no latest-wins collapse)",
     winA.success && winB.success,
-    winA.success && winB.success ? "distinct close dates representable" : "schema rejected divergent deadlines",
+    winA.success && winB.success
+      ? "distinct close dates representable"
+      : "schema rejected divergent deadlines",
   );
 }
 
@@ -168,8 +195,11 @@ function baseWindow(over: Record<string, unknown> = {}) {
     resolved_close_utc: "2025-04-01T03:59:00.000Z",
   });
   const r = ParticipationWindow.safeParse(w);
-  assert("FR 2025-03547 LOW + null_end_date_open_status (original date retained) parses", r.success,
-    r.success ? "" : JSON.stringify(r.error.issues));
+  assert(
+    "FR 2025-03547 LOW + null_end_date_open_status (original date retained) parses",
+    r.success,
+    r.success ? "" : JSON.stringify(r.error.issues),
+  );
 }
 
 // 3b — the truly-unknown case: no structured deadline anywhere => UNKNOWN + null close. MUST PASS.
@@ -183,8 +213,11 @@ function baseWindow(over: Record<string, unknown> = {}) {
     raw_regs_close_datetime: null,
   });
   const r = ParticipationWindow.safeParse(w);
-  assert("FR 2025-03547 UNKNOWN with null resolved_close_utc (no invented date) parses", r.success,
-    r.success ? "" : JSON.stringify(r.error.issues));
+  assert(
+    "FR 2025-03547 UNKNOWN with null resolved_close_utc (no invented date) parses",
+    r.success,
+    r.success ? "" : JSON.stringify(r.error.issues),
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────
@@ -200,8 +233,11 @@ function baseWindow(over: Record<string, unknown> = {}) {
     resolved_close_utc: "2024-01-15T05:00:00.000Z",
   });
   const r = ParticipationWindow.safeParse(w);
-  assert("BLM 2023-27468 keyword_false_positive flag is expressible on a window", r.success,
-    r.success ? "" : JSON.stringify(r.error.issues));
+  assert(
+    "BLM 2023-27468 keyword_false_positive flag is expressible on a window",
+    r.success,
+    r.success ? "" : JSON.stringify(r.error.issues),
+  );
 
   // And on the published /conflicts feed (min(1) flag satisfied).
   const cr = ConflictRecord.safeParse({
@@ -214,7 +250,10 @@ function baseWindow(over: Record<string, unknown> = {}) {
     govinfo_url: null,
     detected_at: "2024-01-01T00:00:00.000Z",
   });
-  assert("BLM 2023-27468 keyword_false_positive expressible on a ConflictRecord", cr.success);
+  assert(
+    "BLM 2023-27468 keyword_false_positive expressible on a ConflictRecord",
+    cr.success,
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────
@@ -225,24 +264,39 @@ function baseWindow(over: Record<string, unknown> = {}) {
 {
   const lie = baseWindow({ confidence: "high", resolved_close_utc: null });
   const r = ParticipationWindow.safeParse(lie);
-  assert("ATTACK: HIGH + null resolved_close_utc is REJECTED (no confident null)", !r.success,
-    r.success ? "schema accepted a HIGH window with no deadline!" : "refinement #1 caught it");
+  assert(
+    "ATTACK: HIGH + null resolved_close_utc is REJECTED (no confident null)",
+    !r.success,
+    r.success
+      ? "schema accepted a HIGH window with no deadline!"
+      : "refinement #1 caught it",
+  );
 }
 
 // 5b — ATTACK: STALE + null close. MUST FAIL (STALE still asserts a real, just-aging, deadline).
 {
   const lie = baseWindow({ confidence: "stale", resolved_close_utc: null });
   const r = ParticipationWindow.safeParse(lie);
-  assert("ATTACK: STALE + null resolved_close_utc is REJECTED", !r.success,
-    r.success ? "schema accepted a STALE window with no deadline!" : "refinement #1 caught it");
+  assert(
+    "ATTACK: STALE + null resolved_close_utc is REJECTED",
+    !r.success,
+    r.success
+      ? "schema accepted a STALE window with no deadline!"
+      : "refinement #1 caught it",
+  );
 }
 
 // 5c — ATTACK: LOW + null close. MUST FAIL per refinement #1 (only conflicting/unknown may be null).
 {
   const lie = baseWindow({ confidence: "low", resolved_close_utc: null });
   const r = ParticipationWindow.safeParse(lie);
-  assert("ATTACK: LOW + null resolved_close_utc is REJECTED", !r.success,
-    r.success ? "schema accepted a LOW window with no deadline!" : "refinement #1 caught it");
+  assert(
+    "ATTACK: LOW + null resolved_close_utc is REJECTED",
+    !r.success,
+    r.success
+      ? "schema accepted a LOW window with no deadline!"
+      : "refinement #1 caught it",
+  );
 }
 
 // 5d — THE OTHER DIRECTION (the more dangerous lie): can a GUESSED date sneak in under
@@ -291,15 +345,25 @@ function baseWindow(over: Record<string, unknown> = {}) {
   } catch {
     threw = true;
   }
-  assert("makeOcdId throws when neither frDocNum nor regsObjectId is supplied", threw);
+  assert(
+    "makeOcdId throws when neither frDocNum nor regsObjectId is supplied",
+    threw,
+  );
 
   // An internal-UUID-shaped ocd_id must be rejected at the seam.
-  const r = ParticipationWindow.safeParse(baseWindow({ ocd_id: "550e8400-e29b-41d4-a716-446655440000" }));
-  assert("non-federal-scheme ocd_id (a UUID) is REJECTED at the window seam", !r.success);
+  const r = ParticipationWindow.safeParse(
+    baseWindow({ ocd_id: "550e8400-e29b-41d4-a716-446655440000" }),
+  );
+  assert(
+    "non-federal-scheme ocd_id (a UUID) is REJECTED at the window seam",
+    !r.success,
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────
 console.log("\n=== contract.adversary results ===");
 console.log(log.join("\n"));
-console.log(`\n${failures === 0 ? "ALL EXPECTATIONS MET" : `${failures} EXPECTATION(S) UNMET`}`);
+console.log(
+  `\n${failures === 0 ? "ALL EXPECTATIONS MET" : `${failures} EXPECTATION(S) UNMET`}`,
+);
 process.exit(failures === 0 ? 0 : 1);

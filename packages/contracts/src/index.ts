@@ -3,7 +3,7 @@
  * (Watershed Watch). Verticals join on stable OCD-IDs, never internal UUIDs.
  *
  * ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
- * │ FROZEN @ 0.2.0 (2026-06-14)                                                                    │
+ * │ FROZEN @ 0.2.1 (2026-06-15)                                                                    │
  * │                                                                                               │
  * │ LOCKED (builders may propose changes; the contract-keeper adjudicates — nobody else edits):   │
  * │   • Confidence / ConflictFlag / WindowType / WindowStatus enums.                              │
@@ -30,6 +30,14 @@
  * │     commits (built-in agency/CFR enrichment writes into the opaque `tags` field as-is).        │
  * │   • The reconciliation RuleBox rule schema + explanation object internals.                     │
  * └─────────────────────────────────────────────────────────────────────────────────────────────┘
+ *
+ * REVISIONS
+ *   • 0.2.1 (2026-06-15) — OcdId hardening (no schema-shape change; tightened validation only).
+ *       The OcdId regex was narrowed from `…/federal/.+` to pin the final segment to the two legal
+ *       shapes ({frDocNum} | regs:{regsObjectId}), forbidding slashes, embedded whitespace, and a
+ *       trailing-newline tail so the public join key can't be structurally ambiguous. makeOcdId now
+ *       self-validates via OcdId.parse, so the sole minting path can never emit a malformed id.
+ *       Strictly more restrictive than 0.2.0; no field/enum added or removed.
  *
  * Canonical spec: docs/architecture/docketclock.md (field tables, confidence model, edge cases:
  * FR-2018-27875 tz artifact, BLM 2023-27468 deny-list, EPA 2025-02910 multi-target,
@@ -97,20 +105,42 @@ export type ObservationSource = z.infer<typeof ObservationSource>;
  * Federal scheme: ocd-participation-window/federal/{frDocNum}
  *   (or regs:{regsObjectId} when the FR document number is absent).
  * Generated once at first observation; NEVER changes across extensions.
+ *
+ * The final segment is pinned to the two legal shapes so the PUBLIC join key can never carry a slash
+ * (path-traversal-shaped ids), embedded whitespace/newlines, or a trailing-newline tail — any of which
+ * would let two "equal" ids fail to join. `.+` was too permissive; see contract.adversary.probe.ts (E).
+ *   • {frDocNum}: alphanumeric, may contain dashes (e.g. 2018-27875, E9-12345). No slash/space.
+ *   • regs:{regsObjectId}: the `regs:` prefix + alphanumerics.
+ * `(?![\s\S])` is JS's airtight end-of-string anchor — unlike `$`, it also rejects a trailing "\n".
  */
 export const OcdId = z
   .string()
-  .regex(/^ocd-participation-window\/federal\/.+$/);
+  .regex(
+    /^ocd-participation-window\/federal\/(?:regs:[A-Za-z0-9]+|[A-Za-z0-9][A-Za-z0-9-]*)(?![\s\S])/,
+    "ocd_id must match ocd-participation-window/federal/{frDocNum|regs:regsObjectId} (no slashes/whitespace)",
+  );
 export type OcdId = z.infer<typeof OcdId>;
 
-export function makeOcdId(opts: { frDocNum?: string; regsObjectId?: string }): OcdId {
-  if (opts.frDocNum) return `ocd-participation-window/federal/${opts.frDocNum}`;
-  if (opts.regsObjectId) return `ocd-participation-window/federal/regs:${opts.regsObjectId}`;
-  throw new Error("makeOcdId requires frDocNum or regsObjectId");
+export function makeOcdId(opts: {
+  frDocNum?: string;
+  regsObjectId?: string;
+}): OcdId {
+  const raw = opts.frDocNum
+    ? `ocd-participation-window/federal/${opts.frDocNum}`
+    : opts.regsObjectId
+      ? `ocd-participation-window/federal/regs:${opts.regsObjectId}`
+      : null;
+  if (raw === null)
+    throw new Error("makeOcdId requires frDocNum or regsObjectId");
+  // makeOcdId is the ONLY minting path, so validate here: a slash- or whitespace-bearing source id
+  // must never mint a structurally-ambiguous public key. Throws (ZodError) on a malformed source id.
+  return OcdId.parse(raw);
 }
 
 /** sha256 hex digest of a raw payload — the idempotency + tamper-evidence key on the log. */
-export const PayloadHash = z.string().regex(/^[a-f0-9]{64}$/, "payload_hash must be a sha256 hex digest");
+export const PayloadHash = z
+  .string()
+  .regex(/^[a-f0-9]{64}$/, "payload_hash must be a sha256 hex digest");
 export type PayloadHash = z.infer<typeof PayloadHash>;
 
 /**
