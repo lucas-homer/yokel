@@ -1,19 +1,19 @@
 /**
- * contract.adversary.probe.ts — SECOND-PASS adversary probe against the FROZEN @0.2.0 contract.
+ * contract.adversary.probe.ts — SECOND-PASS adversary probe against the FROZEN @0.2.1 contract.
  *
  * The committed contract.adversary.ts already guards the four named edge cases. This probe hunts for
  * NOVEL ways to make `confidence` lie that the existing refinements may not cover. Each block prints
  * the OBSERVED parse result (PASS/FAIL of safeParse) so the adversary can judge whether the schema's
  * behavior is acceptable — these are not all "must fail"; some expose gaps where the schema is SILENT.
  *
- * Run: pnpm --filter @yokel/contracts exec tsx src/contract.adversary.probe.ts
+ * Run: pnpm --filter @yokel/contracts exec tsx test/contract.adversary.probe.ts
  */
 import {
   ParticipationWindow,
   ConflictRecord,
   OcdId,
   makeOcdId,
-} from "./index.js";
+} from "../src/index.js";
 
 const out: string[] = [];
 function probe(name: string, accepted: boolean, note = "") {
