@@ -25,7 +25,14 @@
  */
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { DATA_DIR, fetchJson, qs, today, writeData, writeOut } from "./_shared.js";
+import {
+  DATA_DIR,
+  fetchJson,
+  qs,
+  today,
+  writeData,
+  writeOut,
+} from "./_shared.js";
 
 const WINDOW_DAYS = 90;
 const SAMPLE_SIZE = 50;
@@ -62,10 +69,21 @@ function daysBefore(dateStr: string, days: number): string {
 }
 
 async function pullWindow(gte: string, lte: string): Promise<FrDoc[]> {
-  const fields = ["document_number", "title", "type", "action", "publication_date", "agencies"];
-  const fieldsQs = fields.map((f) => `${encodeURIComponent("fields[]")}=${f}`).join("&");
+  const fields = [
+    "document_number",
+    "title",
+    "type",
+    "action",
+    "publication_date",
+    "agencies",
+  ];
+  const fieldsQs = fields
+    .map((f) => `${encodeURIComponent("fields[]")}=${f}`)
+    .join("&");
   const types = ["NOTICE", "PRORULE", "RULE"];
-  const typeQs = types.map((t) => `${encodeURIComponent("conditions[type][]")}=${t}`).join("&");
+  const typeQs = types
+    .map((t) => `${encodeURIComponent("conditions[type][]")}=${t}`)
+    .join("&");
   const first =
     `https://www.federalregister.gov/api/v1/documents.json?` +
     qs({
@@ -82,8 +100,11 @@ async function pullWindow(gte: string, lte: string): Promise<FrDoc[]> {
   let url: string | null = first;
   let page = 0;
   while (url && page < 40) {
-    const res: { count?: number; results?: FrDoc[]; next_page_url?: string | null } =
-      await fetchJson(url);
+    const res: {
+      count?: number;
+      results?: FrDoc[];
+      next_page_url?: string | null;
+    } = await fetchJson(url);
     if (page === 0) console.log(`  FR reports count=${res.count}`);
     for (const r of res.results ?? []) out.push(r);
     url = res.next_page_url ?? null;
@@ -104,21 +125,41 @@ function fpHint(title: string, kws: Keyword[]): string {
   const movesComment = /\b(comment|deadline|comment period|reopen)\b/.test(t);
 
   // PRA / OMB info-collection "extension" — a different kind of comment, not a docket deadline.
-  if (kws.includes("extension") && /\b(information collection|paperwork reduction|omb (review|control)|currently approved collection|collection of information)\b/.test(t) && !movesComment) {
+  if (
+    kws.includes("extension") &&
+    /\b(information collection|paperwork reduction|omb (review|control)|currently approved collection|collection of information)\b/.test(
+      t,
+    ) &&
+    !movesComment
+  ) {
     return "likely PRA/info-collection extension (not a docket comment deadline)";
   }
   // The named BLM trap: a public-land withdrawal, not a comment-period withdrawal.
-  if (kws.includes("withdraw") && /\b(public land|land order|\bacres?\b|mineral|national forest|reclamation|grazing|bureau of land management|\bblm\b)\b/.test(t)) {
+  if (
+    kws.includes("withdraw") &&
+    /\b(public land|land order|\bacres?\b|mineral|national forest|reclamation|grazing|bureau of land management|\bblm\b)\b/.test(
+      t,
+    )
+  ) {
     return "likely land-withdrawal FP (not a comment deadline)";
   }
   // Drug/SRO/application "withdrawal of approval" — a withdrawal, but not of a comment period.
-  if (kws.includes("withdraw") && /\bwithdrawal of (the )?(approval|application)|abbreviated new drug|self-regulatory|securities exchange\b/.test(t)) {
+  if (
+    kws.includes("withdraw") &&
+    /\bwithdrawal of (the )?(approval|application)|abbreviated new drug|self-regulatory|securities exchange\b/.test(
+      t,
+    )
+  ) {
     return "likely approval/application withdrawal (not a comment deadline)";
   }
   if (kws.includes("withdraw") && !movesComment) {
     return "withdrawal — confirm it touches a comment period";
   }
-  if (kws.includes("correction") && !movesComment && !/\b(extend|extension)\b/.test(t)) {
+  if (
+    kws.includes("correction") &&
+    !movesComment &&
+    !/\b(extend|extension)\b/.test(t)
+  ) {
     return "likely editorial/technical correction";
   }
   return "";
@@ -128,7 +169,9 @@ async function main(): Promise<void> {
   const runDate = today();
   const lte = runDate;
   const gte = daysBefore(runDate, WINDOW_DAYS);
-  console.log(`D3: keyword detector over FR ${gte} → ${lte} (${WINDOW_DAYS} days)\n`);
+  console.log(
+    `D3: keyword detector over FR ${gte} → ${lte} (${WINDOW_DAYS} days)\n`,
+  );
 
   // D3_USE_CACHE=1 re-applies the detector to the last pull in data/ without hitting FR.
   const cachePath = resolve(DATA_DIR, "fr_90day.json");
@@ -160,7 +203,11 @@ async function main(): Promise<void> {
       fp_hint: fpHint(title, kws),
     });
   }
-  candidates.sort((a, b) => a.publication_date.localeCompare(b.publication_date) || a.document_number.localeCompare(b.document_number));
+  candidates.sort(
+    (a, b) =>
+      a.publication_date.localeCompare(b.publication_date) ||
+      a.document_number.localeCompare(b.document_number),
+  );
 
   const perKeyword = KEYWORDS.map((k) => ({
     k,
@@ -172,11 +219,19 @@ async function main(): Promise<void> {
   // Stride-sample 50 evenly across the window (deterministic, representative).
   const stride = Math.max(1, Math.floor(candidates.length / SAMPLE_SIZE));
   const sample: Candidate[] = [];
-  for (let i = 0; i < candidates.length && sample.length < SAMPLE_SIZE; i += stride) {
+  for (
+    let i = 0;
+    i < candidates.length && sample.length < SAMPLE_SIZE;
+    i += stride
+  ) {
     sample.push(candidates[i]!);
   }
 
-  writeData("d3_candidates.json", { window: { gte, lte }, total_docs: docs.length, candidates });
+  writeData("d3_candidates.json", {
+    window: { gte, lte },
+    total_docs: docs.length,
+    candidates,
+  });
 
   const perKwRow = perKeyword.map((x) => `${x.k} ${x.n}`).join(" · ");
   const sampleTable = sample
@@ -239,7 +294,9 @@ _Artifacts: \`data/fr_90day.json\` (${docs.length} docs), \`data/d3_candidates.j
     `docs=${docs.length}  candidates=${candidates.length} (${dailyCandidates.toFixed(1)}/day)  ` +
       `[${perKwRow}]  fp_hinted=${hinted}`,
   );
-  console.log(`Projected movers/day: 0.7→${projAt(0.7)}  0.5→${projAt(0.5)}  0.3→${projAt(0.3)}`);
+  console.log(
+    `Projected movers/day: 0.7→${projAt(0.7)}  0.5→${projAt(0.5)}  0.3→${projAt(0.3)}`,
+  );
   console.log(`Sample of ${sample.length} written for hand-labeling.`);
   console.log(`Wrote ${outPath}`);
 }

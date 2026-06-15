@@ -11,11 +11,11 @@
 The architecture (`docs/architecture/docketclock.md`) deliberately chose a ruthless anti-ops MVP:
 Postgres-as-everything (append-only observation log, outbox queue, FTS), hosted on a zero-ops PaaS
 (Render/Fly) with **managed** Postgres, explicitly "No Kubernetes/Lambda." That stance assumed
-Kubernetes is a net *cost* — true for a team that would have to learn it.
+Kubernetes is a net _cost_ — true for a team that would have to learn it.
 
 That assumption does not hold here. The operator is already fluent in Kubernetes, has the tooling on
 the Mac Mini (`kubectl`, `helm`, `kind`, `k3d`, `colima`), and intends K8s to be the long-term
-platform. For a K8s-fluent operator, self-hosting on K8s is *lower* friction than learning a managed
+platform. For a K8s-fluent operator, self-hosting on K8s is _lower_ friction than learning a managed
 DB platform's quirks and lock-in — and it keeps the app tier and the database on one substrate.
 
 The one project-specific constraint that any host must satisfy: the observation log is an
@@ -54,6 +54,6 @@ requires real Postgres with full role control — which self-hosting via an oper
   string change, and the cloud cluster choice stays open until deploy time.
 - `docs/architecture/docketclock.md` now diverges from reality on hosting; this ADR is the source of
   truth for infra. The Postgres-as-everything data decisions (outbox queue, FTS, no
-  OpenSearch/Temporal/BullMQ) are **unchanged** — only *where/how Postgres and the app run* changed.
+  OpenSearch/Temporal/BullMQ) are **unchanged** — only _where/how Postgres and the app run_ changed.
 - `SETUP.md` (Mini bootstrap) and `AGENTS.md` must point here so future agents target the cluster, not
   a bare local Postgres.

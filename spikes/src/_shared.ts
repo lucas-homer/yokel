@@ -122,17 +122,22 @@ export async function fetchJson<T = unknown>(
 
     // Retriable status (429 / 5xx): back off and try again, honoring Retry-After.
     const retryAfter = Number(res.headers.get("retry-after"));
-    const backoff = Number.isFinite(retryAfter) && retryAfter > 0
-      ? retryAfter * 1000
-      : Math.min(30_000, 500 * 2 ** attempt);
-    console.warn(`  ${res.status} on attempt ${attempt + 1}; retrying in ${backoff}ms`);
+    const backoff =
+      Number.isFinite(retryAfter) && retryAfter > 0
+        ? retryAfter * 1000
+        : Math.min(30_000, 500 * 2 ** attempt);
+    console.warn(
+      `  ${res.status} on attempt ${attempt + 1}; retrying in ${backoff}ms`,
+    );
     await sleep(backoff);
     attempt++;
   }
 }
 
 /** Build a query string from params, encoding bracketed keys (FR/JSON:API style). */
-export function qs(params: Record<string, string | number | undefined>): string {
+export function qs(
+  params: Record<string, string | number | undefined>,
+): string {
   const parts: string[] = [];
   for (const [k, v] of Object.entries(params)) {
     if (v === undefined) continue;

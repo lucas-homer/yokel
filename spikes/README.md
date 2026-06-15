@@ -16,14 +16,14 @@ cp .env.example .env         # add REGS_KEY from https://api.data.gov/signup/
 
 ## The spikes
 
-| Cmd            | Spike | Question (the decision it gates)                                              |
-| -------------- | ----- | ---------------------------------------------------------------------------- |
-| `pnpm d1`      | D1 ⭐ | frDocNum join hit-rate — primary key vs docket_id/RIN fallback (MASTER GATE)  |
-| `pnpm d2`      | D2    | Eastern-date conflict rate — "conflict intelligence" vs "reliable alerts"     |
-| `pnpm d3`      | D3    | extension/correction volume + deny-list precision — review-console staffing   |
-| `pnpm w1`      | W1    | is Regulations.gov `POST /comments` open to non-gov submitters? (kill-shot)   |
-| `pnpm w2`      | W2    | EPA EIS machine-readability — API vs scraper                                  |
-| `pnpm w3` ⭐   | W3    | novel in-basin windows/quarter for a Chesapeake HUC-8 (business kill-shot)    |
+| Cmd          | Spike | Question (the decision it gates)                                             |
+| ------------ | ----- | ---------------------------------------------------------------------------- |
+| `pnpm d1`    | D1 ⭐ | frDocNum join hit-rate — primary key vs docket_id/RIN fallback (MASTER GATE) |
+| `pnpm d2`    | D2    | Eastern-date conflict rate — "conflict intelligence" vs "reliable alerts"    |
+| `pnpm d3`    | D3    | extension/correction volume + deny-list precision — review-console staffing  |
+| `pnpm w1`    | W1    | is Regulations.gov `POST /comments` open to non-gov submitters? (kill-shot)  |
+| `pnpm w2`    | W2    | EPA EIS machine-readability — API vs scraper                                 |
+| `pnpm w3` ⭐ | W3    | novel in-basin windows/quarter for a Chesapeake HUC-8 (business kill-shot)   |
 
 ⭐ = the two that matter most: D1 (does the join hold?) and W3 (is there enough basin signal?).
 
@@ -32,14 +32,14 @@ The two that matter most run first. D4 (GSA rate-increase request), D5 (buyer ca
 
 ## Status
 
-| Spike | State | Notes |
-| --- | --- | --- |
-| **D1** | ✅ implemented | FR (keyless) + Regs.gov pull → DuckDB join → `out/D1_join_rate.md`. |
-| **W3** | ✅ implemented | WBD HUC-8 resolve + FR full-text basin search → `out/W3_value_density.md` + candidate sheet. |
-| **D2** | ✅ implemented | Reuses the D1 pull; Eastern-vs-UTC date conflict in DuckDB → `out/D2_conflict_rate.md`. |
+| Spike  | State          | Notes                                                                                         |
+| ------ | -------------- | --------------------------------------------------------------------------------------------- |
+| **D1** | ✅ implemented | FR (keyless) + Regs.gov pull → DuckDB join → `out/D1_join_rate.md`.                           |
+| **W3** | ✅ implemented | WBD HUC-8 resolve + FR full-text basin search → `out/W3_value_density.md` + candidate sheet.  |
+| **D2** | ✅ implemented | Reuses the D1 pull; Eastern-vs-UTC date conflict in DuckDB → `out/D2_conflict_rate.md`.       |
 | **D3** | ✅ implemented | FR 90-day title detector + FP heuristics → `out/D3_extension_volume.md` + 50-row label sheet. |
-| **W1** | ✅ implemented | Non-destructive POST probes of Regs.gov submission endpoints → `out/W1_comment_post.md`. |
-| **W2** | ✅ implemented | EPA EIS endpoint probes + FR EIS-notice spine sample → `out/W2_eis_source.md`. |
+| **W1** | ✅ implemented | Non-destructive POST probes of Regs.gov submission endpoints → `out/W1_comment_post.md`.      |
+| **W2** | ✅ implemented | EPA EIS endpoint probes + FR EIS-notice spine sample → `out/W2_eis_source.md`.                |
 
 All six code spikes are implemented. D4/D5 and W4–W6 are non-code action/interview tasks — see the plan.
 
@@ -63,7 +63,7 @@ Outputs go to `out/` (gitignored); pulled API data to `data/` (gitignored).
   docs) you must advance a `lastModifiedDate` cursor and dedupe by `id`.
 - FR `conditions[term]` has **no `"a" OR "b"` boolean** — issue one quoted phrase per call.
 - FR **returns** `type` as display strings (`"Notice"`, `"Proposed Rule"`, `"Rule"`) even though the
-  request *filter* uses abbreviations (`NOTICE`/`PRORULE`/`RULE`). Classify on the display values.
+  request _filter_ uses abbreviations (`NOTICE`/`PRORULE`/`RULE`). Classify on the display values.
 - The National Map WBD HUC-8 layer is `wbd/MapServer/4`.
 - Regs.gov v4 `GET /comments` requires `page[size] >= 5` (a `1` returns HTTP 400).
 - Regs.gov v4 comment submission is **tier-gated**: a standard key gets `201` on `POST /submission-keys`

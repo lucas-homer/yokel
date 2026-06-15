@@ -60,8 +60,12 @@ async function main(): Promise<void> {
 
   const result = await withDuckDB(async (conn) => {
     await conn.run("SET TimeZone='UTC';"); // deterministic; we use explicit timezone() everywhere anyway
-    await conn.run(`CREATE TABLE fr_open AS SELECT * FROM read_json_auto('${frPath}');`);
-    await conn.run(`CREATE TABLE regs_open AS SELECT * FROM read_json_auto('${regsPath}');`);
+    await conn.run(
+      `CREATE TABLE fr_open AS SELECT * FROM read_json_auto('${frPath}');`,
+    );
+    await conn.run(
+      `CREATE TABLE regs_open AS SELECT * FROM read_json_auto('${regsPath}');`,
+    );
 
     // The join with both date interpretations materialized once.
     await conn.run(`
@@ -124,7 +128,7 @@ async function main(): Promise<void> {
   const conflictPct = Number(agg.conflict_pct);
   const story =
     conflictPct >= 3
-      ? 'lead the product story with **conflict intelligence**; `/conflicts` is the marquee feature'
+      ? "lead the product story with **conflict intelligence**; `/conflicts` is the marquee feature"
       : conflictPct < 1
         ? "lead with **reliable alerts + audit log**; conflicts is a quiet correctness feature"
         : "borderline (1–3%) — conflicts is a real but secondary feature; lean on alerts, keep `/conflicts`";
@@ -166,9 +170,11 @@ async function main(): Promise<void> {
 **conflict_pct = ${agg.conflict_pct}% → ${story}.**
 
 - **Eastern-normalization rule: ${ruleConfirmed ? "✅ CONFIRMED NECESSARY" : "⚠️ no tz false-positives in this sample"}.**
-  ${ruleConfirmed
-    ? `${agg.tz_false_positives} pair(s) differ in UTC but agree in Eastern — a naive UTC threshold would have raised ${agg.tz_false_positives} false "conflict" alert(s).`
-    : "Keep the rule regardless (the foundry's load-bearing fix); this snapshot just didn't contain a boundary case."}
+  ${
+    ruleConfirmed
+      ? `${agg.tz_false_positives} pair(s) differ in UTC but agree in Eastern — a naive UTC threshold would have raised ${agg.tz_false_positives} false "conflict" alert(s).`
+      : "Keep the rule regardless (the foundry's load-bearing fix); this snapshot just didn't contain a boundary case."
+  }
 
 ## True conflicts — hand-verify these are real (extension/correction), not parse bugs
 

@@ -63,4 +63,3 @@ and `charts/docketclock/values-cloud.yaml`). There is **no** `vault-transit` in 
 - **`wait-platform` hangs.** Argo syncs asynchronously; check `task status` and the Argo UI
   (`task argocd-ui`). A platform Application stuck `OutOfSync` usually means a pinned chart version or
   values key drifted — see `infra/argocd/apps/`.
-

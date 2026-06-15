@@ -84,8 +84,17 @@ function recentQuarters(todayStr: string, n = 4): Quarter[] {
 }
 
 const FR = "https://www.federalregister.gov/api/v1/documents.json";
-const FIELDS = ["document_number", "title", "abstract", "publication_date", "type", "agencies"];
-const fieldsQs = FIELDS.map((f) => `${encodeURIComponent("fields[]")}=${f}`).join("&");
+const FIELDS = [
+  "document_number",
+  "title",
+  "abstract",
+  "publication_date",
+  "type",
+  "agencies",
+];
+const fieldsQs = FIELDS.map(
+  (f) => `${encodeURIComponent("fields[]")}=${f}`,
+).join("&");
 const RULE_TYPES = ["NOTICE", "PRORULE", "RULE"];
 
 /**
@@ -93,8 +102,14 @@ const RULE_TYPES = ["NOTICE", "PRORULE", "RULE"];
  * (FR conditions[term] does NOT support `"a" OR "b"` boolean — one phrase per call.)
  * Full-text means body mentions count, not just title/abstract — that's the recall we need.
  */
-async function frSearchPhrase(phrase: string, gte: string, lte: string): Promise<FrDoc[]> {
-  const typeQs = RULE_TYPES.map((t) => `${encodeURIComponent("conditions[type][]")}=${t}`).join("&");
+async function frSearchPhrase(
+  phrase: string,
+  gte: string,
+  lte: string,
+): Promise<FrDoc[]> {
+  const typeQs = RULE_TYPES.map(
+    (t) => `${encodeURIComponent("conditions[type][]")}=${t}`,
+  ).join("&");
   const first =
     `${FR}?` +
     qs({
@@ -111,7 +126,8 @@ async function frSearchPhrase(phrase: string, gte: string, lte: string): Promise
   let url: string | null = first;
   let page = 0;
   while (url && page < 10) {
-    const res: { results?: FrDoc[]; next_page_url?: string | null } = await fetchJson(url);
+    const res: { results?: FrDoc[]; next_page_url?: string | null } =
+      await fetchJson(url);
     for (const r of res.results ?? []) out.push(r);
     url = res.next_page_url ?? null;
     page++;
@@ -123,7 +139,10 @@ async function frSearchPhrase(phrase: string, gte: string, lte: string): Promise
 // even though the request *filter* uses abbreviations (NOTICE/PRORULE/RULE).
 const isEis = (doc: FrDoc): boolean => {
   const hay = `${doc.title ?? ""} ${doc.abstract ?? ""}`.toLowerCase();
-  return doc.type === "Notice" && (hay.includes("environmental impact statement") || /\beis\b/.test(hay));
+  return (
+    doc.type === "Notice" &&
+    (hay.includes("environmental impact statement") || /\beis\b/.test(hay))
+  );
 };
 
 /** EIS notice | Regs.gov rulemaking (Proposed Rule/Rule) | null (other notice — out of Tier-1 scope here). */
@@ -146,7 +165,10 @@ interface Candidate {
 
 async function main(): Promise<void> {
   const runDate = today();
-  const extra = (process.env.W3_KEYWORDS || "").split(",").map((s) => s.trim()).filter(Boolean);
+  const extra = (process.env.W3_KEYWORDS || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
   const keywords = [...(BASIN_SEED[HUC8] ?? []), ...extra];
   if (keywords.length === 0) {
     throw new Error(
@@ -157,7 +179,14 @@ async function main(): Promise<void> {
   // 1. Resolve basin metadata.
   console.log(`W3: resolving HUC-8 ${HUC8} via The National Map WBD...`);
   const wbd = await fetchJson<{
-    features?: { attributes: { huc8: string; name: string; states: string; areaacres: number } }[];
+    features?: {
+      attributes: {
+        huc8: string;
+        name: string;
+        states: string;
+        areaacres: number;
+      };
+    }[];
   }>(
     "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/4/query?" +
       qs({
@@ -169,7 +198,9 @@ async function main(): Promise<void> {
   );
   const basin = wbd.features?.[0]?.attributes;
   if (!basin) throw new Error(`HUC8 ${HUC8} not found in WBD layer 4.`);
-  console.log(`  ${basin.name} (${basin.states}), ${Math.round(basin.areaacres).toLocaleString()} acres`);
+  console.log(
+    `  ${basin.name} (${basin.states}), ${Math.round(basin.areaacres).toLocaleString()} acres`,
+  );
 
   const quarters = recentQuarters(runDate);
   console.log(`  Quarters: ${quarters.map((q) => q.label).join(", ")}`);
@@ -204,15 +235,21 @@ async function main(): Promise<void> {
         });
       }
     }
-    console.log(`  ${q.label}: EIS=${eisN}  Regs=${regsN}  (from ${hits} full-text hits across ${keywords.length} phrases)`);
+    console.log(
+      `  ${q.label}: EIS=${eisN}  Regs=${regsN}  (from ${hits} full-text hits across ${keywords.length} phrases)`,
+    );
   }
 
   writeData("w3_candidates.json", { basin, quarters, keywords, candidates });
 
   // 2. Aggregate per quarter.
   const perQuarter = quarters.map((q) => {
-    const eis = candidates.filter((c) => c.quarter === q.label && c.bucket === "EIS").length;
-    const regs = candidates.filter((c) => c.quarter === q.label && c.bucket === "Regs").length;
+    const eis = candidates.filter(
+      (c) => c.quarter === q.label && c.bucket === "EIS",
+    ).length;
+    const regs = candidates.filter(
+      (c) => c.quarter === q.label && c.bucket === "Regs",
+    ).length;
     return { q: q.label, eis, regs, total: eis + regs };
   });
   const totEis = perQuarter.reduce((s, r) => s + r.eis, 0);
@@ -286,7 +323,9 @@ _Artifact: \`data/w3_candidates.json\` (${candidates.length} candidates)._
 
   const outPath = writeOut("W3_value_density.md", md);
   console.log(`\n=== W3 RESULT ===`);
-  console.log(`basin=${basin.name}  candidates=${tot}  avg/qtr=${avgPerQ}  EIS share=${eisShare}%`);
+  console.log(
+    `basin=${basin.name}  candidates=${tot}  avg/qtr=${avgPerQ}  EIS share=${eisShare}%`,
+  );
   console.log(`Verdict: ${verdict}`);
   console.log(`Wrote ${outPath}`);
 }

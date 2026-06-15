@@ -25,12 +25,12 @@ postgres:
   instances: 1
   imageName: ""
   storageSize: 1Gi
-  storageClass: ""        # "" = cluster default (local-path on k3d); cloud sets a CSI class
+  storageClass: "" # "" = cluster default (local-path on k3d); cloud sets a CSI class
 
 # Vault backend for External Secrets (dev token auth locally; cloud uses the kubernetes auth method).
 vault:
   server: http://vault.vault.svc:8200
-  path: secret            # kv-v2 mount
+  path: secret # kv-v2 mount
   version: v2
   tokenSecret:
     name: vault-token

@@ -32,7 +32,12 @@ interface Probe {
   bodySnippet: string;
 }
 
-async function probe(label: string, method: string, url: string, body?: unknown): Promise<Probe> {
+async function probe(
+  label: string,
+  method: string,
+  url: string,
+  body?: unknown,
+): Promise<Probe> {
   try {
     const res = await fetch(url, {
       method,
@@ -74,23 +79,45 @@ async function probe(label: string, method: string, url: string, body?: unknown)
 
 async function main(): Promise<void> {
   if (!process.env.REGS_KEY) {
-    console.warn("WARNING: REGS_KEY not set — probing with DEMO_KEY; result reflects DEMO_KEY's tier.\n");
+    console.warn(
+      "WARNING: REGS_KEY not set — probing with DEMO_KEY; result reflects DEMO_KEY's tier.\n",
+    );
   }
   const base = "https://api.regulations.gov/v4";
 
-  console.log("W1: probing Regs.gov submission endpoints (non-destructive)...\n");
+  console.log(
+    "W1: probing Regs.gov submission endpoints (non-destructive)...\n",
+  );
   // 1. Can our key initiate a submission at all?
-  const subKey = await probe("POST /v4/submission-keys", "POST", `${base}/submission-keys`, {
-    data: { type: "submission-keys" },
-  });
-  console.log(`  ${subKey.label} -> ${subKey.status}${subKey.errorCode ? ` (${subKey.errorCode})` : ""}`);
+  const subKey = await probe(
+    "POST /v4/submission-keys",
+    "POST",
+    `${base}/submission-keys`,
+    {
+      data: { type: "submission-keys" },
+    },
+  );
+  console.log(
+    `  ${subKey.label} -> ${subKey.status}${subKey.errorCode ? ` (${subKey.errorCode})` : ""}`,
+  );
 
   // 2. Is the comment endpoint reachable by our tier? EMPTY body — cannot persist anything.
-  const commentPost = await probe("POST /v4/comments {}", "POST", `${base}/comments`, {});
-  console.log(`  ${commentPost.label} -> ${commentPost.status}${commentPost.errorCode ? ` (${commentPost.errorCode})` : ""}`);
+  const commentPost = await probe(
+    "POST /v4/comments {}",
+    "POST",
+    `${base}/comments`,
+    {},
+  );
+  console.log(
+    `  ${commentPost.label} -> ${commentPost.status}${commentPost.errorCode ? ` (${commentPost.errorCode})` : ""}`,
+  );
 
   // 3. Sanity: the same key can READ comments (proves the key itself is valid).
-  const commentGet = await probe("GET /v4/comments", "GET", `${base}/comments?page%5Bsize%5D=5`);
+  const commentGet = await probe(
+    "GET /v4/comments",
+    "GET",
+    `${base}/comments?page%5Bsize%5D=5`,
+  );
   console.log(`  ${commentGet.label} -> ${commentGet.status}`);
 
   // Classify access to comment submission.
@@ -102,7 +129,7 @@ async function main(): Promise<void> {
       ? "OPEN to non-gov — endpoint reachable (validation error, not auth denial)"
       : `INDETERMINATE — unexpected status ${commentPost.status}; inspect the body`;
   const path = denied
-    ? "**Fallback:** structured draft + copy-paste + guided link-out. Receipt = \"filed by member (self-reported)\" (honest second-class)."
+    ? '**Fallback:** structured draft + copy-paste + guided link-out. Receipt = "filed by member (self-reported)" (honest second-class).'
     : reachable
       ? "**Automated filing in scope:** build the one-click submit; receipt shows the Regs.gov submission ID (first-class)."
       : "Re-run and inspect the raw response before choosing a path.";
@@ -144,7 +171,9 @@ ${path}
 
   const outPath = writeOut("W1_comment_post.md", md);
   console.log(`\n=== W1 RESULT ===`);
-  console.log(`submission-keys=${subKey.status}  comments POST=${commentPost.status}${commentPost.errorCode ? ` (${commentPost.errorCode})` : ""}  comments GET=${commentGet.status}`);
+  console.log(
+    `submission-keys=${subKey.status}  comments POST=${commentPost.status}${commentPost.errorCode ? ` (${commentPost.errorCode})` : ""}  comments GET=${commentGet.status}`,
+  );
   console.log(`Verdict: ${verdict}`);
   console.log(`Wrote ${outPath}`);
 }

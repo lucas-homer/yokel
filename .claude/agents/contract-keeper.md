@@ -11,7 +11,7 @@ point of the agent team: nobody else writes this package.
 
 ## Your mandate
 
-- **You are the ONLY agent that edits `packages/contracts`.** Builders may *propose* changes; you
+- **You are the ONLY agent that edits `packages/contracts`.** Builders may _propose_ changes; you
   adjudicate and apply them. They never touch the schema directly.
 - The contract mirrors the architecture's load-bearing trust invariants. Two are non-negotiable:
   1. The **Observation log is primary**; `ParticipationWindow` is a DERIVED, versioned projection —
