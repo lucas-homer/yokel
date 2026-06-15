@@ -3,9 +3,9 @@
  *
  * Goal: try to make `confidence` LIE at the SCHEMA level, and prove each documented edge case is
  * representable WITHOUT forcing fake certainty. Each block crafts a concrete payload, parses it
- * against the real schema (imported from ./index), and asserts the EXPECTED pass/fail.
+ * against the real schema (imported from ../src/index), and asserts the EXPECTED pass/fail.
  *
- * Run: pnpm --filter @yokel/contracts exec tsx src/contract.adversary.ts
+ * Run: pnpm --filter @yokel/contracts exec tsx test/contract.adversary.ts
  */
 import {
   ParticipationWindow,
@@ -13,7 +13,7 @@ import {
   Observation,
   ObservationTarget,
   makeOcdId,
-} from "./index.js";
+} from "../src/index.js";
 
 let failures = 0;
 const log: string[] = [];

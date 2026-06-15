@@ -17,6 +17,7 @@ project actually opens to contributors / goes public. A GitHub repo rename is ch
 so this is low-stakes and reversible.
 
 Candidate directions if/when we rename (recorded so the thinking isn't lost):
+
 - **Watch/signal motif** (ties the product family together): Lookout, Belfry/Townbell, Beacon.
 - **Voice / being heard** (the monitor→act→impact loop): Heard, Holler, Aye.
 - **Civic-commons gravitas**: Commons, Neighbor.

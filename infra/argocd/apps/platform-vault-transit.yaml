@@ -9,7 +9,7 @@ metadata:
   name: vault-transit
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-1"   # the seal provider must exist before the main Vault unseals
+    argocd.argoproj.io/sync-wave: "-1" # the seal provider must exist before the main Vault unseals
 spec:
   project: default
   source:

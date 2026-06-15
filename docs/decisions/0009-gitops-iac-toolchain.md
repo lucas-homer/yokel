@@ -6,7 +6,7 @@
 
 ## Context
 
-ADR 0008 made Kubernetes the platform but didn't specify *how* it is provisioned and operated. The
+ADR 0008 made Kubernetes the platform but didn't specify _how_ it is provisioned and operated. The
 requirement: the dev environment closely matches production, everything is defined as code, and changes
 are applied via GitOps (declarative, git-as-source-of-truth) rather than imperative commands.
 
@@ -44,7 +44,7 @@ are applied via GitOps (declarative, git-as-source-of-truth) rather than imperat
 - On a Tailscale host, colima must start with explicit public DNS (`--dns 1.1.1.1 --dns 8.8.8.8`) or
   the lima forwarder breaks image pulls inside the k3d nodes — baked into `task cluster-up`.
 - Cloud specifics (provider, backups object storage, ingress/TLS, the Vault **KMS seal** + replica
-  bump + Kubernetes auth method) remain deferred to Phase 3; only the Terraform *structure* exists now.
+  bump + Kubernetes auth method) remain deferred to Phase 3; only the Terraform _structure_ exists now.
 - Local trade-off: `vault-transit` runs dev-mode (in-memory), so if **that** pod restarts the autounseal
   key is lost and the main Vault can't unseal — recover with `task dev-down && task dev-up`. Accepted for
   a solo dev box; prod has no such edge (KMS is a managed, always-available service).

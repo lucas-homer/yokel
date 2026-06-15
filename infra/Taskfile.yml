@@ -1,6 +1,6 @@
 # DocketClock local platform — the codified runbook (ADR 0009). Run from infra/: `task dev-up`.
 # The ONLY imperative seam is installing Argo CD; Argo then reconciles everything else from git/charts.
-version: '3'
+version: "3"
 
 vars:
   CLUSTER: yokel
@@ -13,9 +13,9 @@ tasks:
       - task: cluster-up
       - task: bootstrap-argocd
       - task: platform
-      - task: vault-transit-init   # enable the transit seal so the main Vault can auto-unseal
-      - task: vault-seed           # init + seed the main Vault (must precede wait-platform: an
-      - task: wait-platform        #   uninitialized Vault is never Healthy until vault-seed inits it)
+      - task: vault-transit-init # enable the transit seal so the main Vault can auto-unseal
+      - task: vault-seed # init + seed the main Vault (must precede wait-platform: an
+      - task: wait-platform #   uninitialized Vault is never Healthy until vault-seed inits it)
       - task: app-local
       - echo "✅ Stack up. 'task status' for state; 'task argocd-ui' for the Argo dashboard."
 

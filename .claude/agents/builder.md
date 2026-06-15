@@ -20,7 +20,7 @@ substrate, end to end, against a frozen contract.
   artifacts in `spikes/out/`. Red → green → refactor.
 - **Stay in your lane.** Touch only the files your component owns. You run in a worktree during
   parallel phases; another builder is working next to you. Don't refactor shared code without saying so.
-- **Honor the conventions in `AGENTS.md`:** TypeScript (Node 22), pnpm workspaces, Fastify + Zod,
+- **Honor the conventions in `AGENTS.md`:** TypeScript (Node 24), pnpm workspaces, Fastify + Zod,
   Postgres 16. No Turborepo/OpenSearch/Temporal/BullMQ until a measured bottleneck. Postgres is the
   queue (outbox). Append-only is enforced at the DB level (trigger), not by convention.
 - **Don't publish fake certainty.** Never assert an API field/endpoint exists without verifying it

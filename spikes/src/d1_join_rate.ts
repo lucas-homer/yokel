@@ -71,13 +71,18 @@ async function pullFr(): Promise<FrDoc[]> {
   let page = 0;
   const MAX_PAGES = 60;
   while (url && page < MAX_PAGES) {
-    const res: { count: number; results?: FrDoc[]; next_page_url?: string | null } =
-      await fetchJson(url);
+    const res: {
+      count: number;
+      results?: FrDoc[];
+      next_page_url?: string | null;
+    } = await fetchJson(url);
     if (page === 0) console.log(`  FR reports count=${res.count}`);
     for (const r of res.results ?? []) out.push(r);
     url = res.next_page_url ?? null;
     page++;
-    console.log(`  FR page ${page}: +${res.results?.length ?? 0} (total ${out.length})`);
+    console.log(
+      `  FR page ${page}: +${res.results?.length ?? 0} (total ${out.length})`,
+    );
   }
   return out;
 }
@@ -124,13 +129,15 @@ async function pullRegs(): Promise<RegsDoc[]> {
       };
       if (cursor) params["filter[lastModifiedDate][ge]"] = cursor;
       const url = `${base}?${qs(params)}`;
-      const res = await fetchJson<{ data?: RegsDocRaw[]; meta?: { totalElements?: number } }>(
-        url,
-        { headers: { "X-Api-Key": REGS_KEY }, limiter },
-      );
+      const res = await fetchJson<{
+        data?: RegsDocRaw[];
+        meta?: { totalElements?: number };
+      }>(url, { headers: { "X-Api-Key": REGS_KEY }, limiter });
       const data = res.data ?? [];
       if (round === 0 && pageNum === 1) {
-        console.log(`  Regs reports totalElements=${res.meta?.totalElements ?? "?"}`);
+        console.log(
+          `  Regs reports totalElements=${res.meta?.totalElements ?? "?"}`,
+        );
       }
       for (const d of data) {
         const doc: RegsDoc = {
@@ -147,7 +154,9 @@ async function pullRegs(): Promise<RegsDoc[]> {
         }
         lastSeenLmd = d.attributes.lastModifiedDate ?? lastSeenLmd;
       }
-      console.log(`  Regs round ${round} page ${pageNum}: +${data.length} (total ${seen.size})`);
+      console.log(
+        `  Regs round ${round} page ${pageNum}: +${data.length} (total ${seen.size})`,
+      );
       if (data.length < PAGE_SIZE) {
         // exhausted this cursor window
         return [...seen.values()];
@@ -176,10 +185,18 @@ async function main(): Promise<void> {
   const useCache = process.env.D1_USE_CACHE === "1";
   let fr: FrDoc[];
   let regs: RegsDoc[];
-  if (useCache && existsSync(resolve(DATA_DIR, "fr_open.json")) && existsSync(resolve(DATA_DIR, "regs_open.json"))) {
-    console.log("D1_USE_CACHE=1 — loading data/fr_open.json + data/regs_open.json (no API calls)\n");
+  if (
+    useCache &&
+    existsSync(resolve(DATA_DIR, "fr_open.json")) &&
+    existsSync(resolve(DATA_DIR, "regs_open.json"))
+  ) {
+    console.log(
+      "D1_USE_CACHE=1 — loading data/fr_open.json + data/regs_open.json (no API calls)\n",
+    );
     fr = JSON.parse(readFileSync(resolve(DATA_DIR, "fr_open.json"), "utf8"));
-    regs = JSON.parse(readFileSync(resolve(DATA_DIR, "regs_open.json"), "utf8"));
+    regs = JSON.parse(
+      readFileSync(resolve(DATA_DIR, "regs_open.json"), "utf8"),
+    );
   } else {
     console.log("Pulling FR open set (keyless)...");
     fr = await pullFr();
@@ -263,7 +280,10 @@ async function main(): Promise<void> {
   const p = stats.primary!;
   const f = stats.fallback!;
   const hitPct = Number(p.hit_pct);
-  const verdict = hitPct >= 60 ? "GO — frDocNum as primary reconciliation key" : "PIVOT — Regs.gov-primary + docket_id/RIN fallback";
+  const verdict =
+    hitPct >= 60
+      ? "GO — frDocNum as primary reconciliation key"
+      : "PIVOT — Regs.gov-primary + docket_id/RIN fallback";
 
   const md = `# D1 — frDocNum join hit-rate
 
@@ -312,7 +332,9 @@ _Artifacts: \`data/fr_open.json\` (${fr.length} rows), \`data/regs_open.json\` (
 
   const outPath = writeOut("D1_join_rate.md", md);
   console.log(`\n=== D1 RESULT ===`);
-  console.log(`regs_open=${p.regs_open}  joined=${p.joined}  hit_pct=${p.hit_pct}%  combined=${f.combined_pct}%`);
+  console.log(
+    `regs_open=${p.regs_open}  joined=${p.joined}  hit_pct=${p.hit_pct}%  combined=${f.combined_pct}%`,
+  );
   console.log(`Verdict: ${verdict}`);
   console.log(`Wrote ${outPath}`);
 }

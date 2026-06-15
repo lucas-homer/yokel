@@ -1,13 +1,13 @@
 # CLOUD overlay — STUB (Phase 3). The env-specific seams that differ from local; shapes stay identical.
 postgres:
-  instances: 3                 # HA
-  imageName: ""                # TODO(phase-3): pin exact 16.x
-  storageClass: ""             # TODO(phase-3): cloud CSI class (e.g. gp3 / pd-ssd)
+  instances: 3 # HA
+  imageName: "" # TODO(phase-3): pin exact 16.x
+  storageClass: "" # TODO(phase-3): cloud CSI class (e.g. gp3 / pd-ssd)
   # TODO(phase-3): backup to object storage (S3/GCS) for PITR
 
 ingress:
   enabled: true
-  className: nginx             # TODO(phase-3): cloud ingress + cert-manager TLS
+  className: nginx # TODO(phase-3): cloud ingress + cert-manager TLS
   host: docketclock.example.com
 
 vault:

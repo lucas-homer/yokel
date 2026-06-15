@@ -22,12 +22,56 @@
 import { fetchJson, qs, today, writeData, writeOut } from "./_shared.js";
 
 const US_STATES = [
-  "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida",
-  "Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine",
-  "Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska",
-  "Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio",
-  "Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas",
-  "Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming",
+  "Alabama",
+  "Alaska",
+  "Arizona",
+  "Arkansas",
+  "California",
+  "Colorado",
+  "Connecticut",
+  "Delaware",
+  "Florida",
+  "Georgia",
+  "Hawaii",
+  "Idaho",
+  "Illinois",
+  "Indiana",
+  "Iowa",
+  "Kansas",
+  "Kentucky",
+  "Louisiana",
+  "Maine",
+  "Maryland",
+  "Massachusetts",
+  "Michigan",
+  "Minnesota",
+  "Mississippi",
+  "Missouri",
+  "Montana",
+  "Nebraska",
+  "Nevada",
+  "New Hampshire",
+  "New Jersey",
+  "New Mexico",
+  "New York",
+  "North Carolina",
+  "North Dakota",
+  "Ohio",
+  "Oklahoma",
+  "Oregon",
+  "Pennsylvania",
+  "Rhode Island",
+  "South Carolina",
+  "South Dakota",
+  "Tennessee",
+  "Texas",
+  "Utah",
+  "Vermont",
+  "Virginia",
+  "Washington",
+  "West Virginia",
+  "Wisconsin",
+  "Wyoming",
 ];
 
 interface EndpointProbe {
@@ -39,14 +83,32 @@ interface EndpointProbe {
   note: string;
 }
 
-async function probeEndpoint(label: string, url: string, note: string): Promise<EndpointProbe> {
+async function probeEndpoint(
+  label: string,
+  url: string,
+  note: string,
+): Promise<EndpointProbe> {
   try {
     const res = await fetch(url, { method: "GET", redirect: "follow" });
     const ct = res.headers.get("content-type") ?? "";
     const machineReadable = res.ok && /json|csv|excel|spreadsheet|xml/.test(ct);
-    return { label, url, status: res.status, contentType: ct.split(";")[0] ?? ct, machineReadable, note };
+    return {
+      label,
+      url,
+      status: res.status,
+      contentType: ct.split(";")[0] ?? ct,
+      machineReadable,
+      note,
+    };
   } catch (err) {
-    return { label, url, status: 0, contentType: "", machineReadable: false, note: `${note} (error: ${String(err).slice(0, 80)})` };
+    return {
+      label,
+      url,
+      status: 0,
+      contentType: "",
+      machineReadable: false,
+      note: `${note} (error: ${String(err).slice(0, 80)})`,
+    };
   }
 }
 
@@ -62,8 +124,10 @@ interface FrEis {
 function draftFinal(title: string): string {
   const t = title.toLowerCase();
   if (t.includes("notice of intent")) return "NOI";
-  if (t.includes("draft") && t.includes("supplement")) return "Draft Supplement";
-  if (t.includes("final") && t.includes("supplement")) return "Final Supplement";
+  if (t.includes("draft") && t.includes("supplement"))
+    return "Draft Supplement";
+  if (t.includes("final") && t.includes("supplement"))
+    return "Final Supplement";
   if (t.includes("draft")) return "Draft";
   if (t.includes("final")) return "Final";
   return "—";
@@ -75,7 +139,9 @@ function statesIn(title: string): string {
 }
 
 async function main(): Promise<void> {
-  console.log("W2: probing EPA EIS sources for a machine-readable endpoint...\n");
+  console.log(
+    "W2: probing EPA EIS sources for a machine-readable endpoint...\n",
+  );
 
   const probes = await Promise.all([
     probeEndpoint(
@@ -99,7 +165,10 @@ async function main(): Promise<void> {
       "REST data service base (is EIS a table?)",
     ),
   ]);
-  for (const p of probes) console.log(`  ${p.label} -> ${p.status} ${p.contentType} ${p.machineReadable ? "[machine-readable]" : ""}`);
+  for (const p of probes)
+    console.log(
+      `  ${p.label} -> ${p.status} ${p.contentType} ${p.machineReadable ? "[machine-readable]" : ""}`,
+    );
 
   const epaMachineReadable = probes.some((p) => p.machineReadable);
 
@@ -108,9 +177,18 @@ async function main(): Promise<void> {
   const gte = (() => {
     const t = today();
     const [y, m, d] = t.split("-").map(Number) as [number, number, number];
-    return new Date(Date.UTC(y, m - 1, d) - 30 * 86_400_000).toISOString().slice(0, 10);
+    return new Date(Date.UTC(y, m - 1, d) - 30 * 86_400_000)
+      .toISOString()
+      .slice(0, 10);
   })();
-  const fields = ["document_number", "title", "publication_date", "comments_close_on", "html_url", "agencies"];
+  const fields = [
+    "document_number",
+    "title",
+    "publication_date",
+    "comments_close_on",
+    "html_url",
+    "agencies",
+  ];
   const url =
     "https://www.federalregister.gov/api/v1/documents.json?" +
     qs({
@@ -123,7 +201,9 @@ async function main(): Promise<void> {
     fields.map((f) => `${encodeURIComponent("fields[]")}=${f}`).join("&");
   const res: { count?: number; results?: FrEis[] } = await fetchJson(url);
   const eis = res.results ?? [];
-  console.log(`  FR EIS notices in last 30d: ${eis.length} (reported count=${res.count})`);
+  console.log(
+    `  FR EIS notices in last 30d: ${eis.length} (reported count=${res.count})`,
+  );
 
   const sample = eis.map((e) => {
     const title = (e.title ?? "").replace(/\s+/g, " ").trim();
@@ -138,14 +218,22 @@ async function main(): Promise<void> {
       url: e.html_url ?? "",
     };
   });
-  writeData("w2_eis_sample.json", { window: { gte, lte: today() }, probes, count: sample.length, sample });
+  writeData("w2_eis_sample.json", {
+    window: { gte, lte: today() },
+    probes,
+    count: sample.length,
+    sample,
+  });
 
   const withClose = sample.filter((s) => s.comments_close_on).length;
   const withState = sample.filter((s) => s.states).length;
   const withStage = sample.filter((s) => s.stage !== "—").length;
 
   const probeTable = probes
-    .map((p) => `| ${p.label} | ${p.status || "—"} | \`${p.contentType || "—"}\` | ${p.machineReadable ? "✅" : "❌"} | ${p.note} |`)
+    .map(
+      (p) =>
+        `| ${p.label} | ${p.status || "—"} | \`${p.contentType || "—"}\` | ${p.machineReadable ? "✅" : "❌"} | ${p.note} |`,
+    )
     .join("\n");
 
   const sampleTable = sample
@@ -207,8 +295,12 @@ _Artifact: \`data/w2_eis_sample.json\` (${sample.length} records + probe results
 
   const outPath = writeOut("W2_eis_source.md", md);
   console.log(`\n=== W2 RESULT ===`);
-  console.log(`EPA machine-readable: ${epaMachineReadable ? "yes" : "no (scraper-only)"}`);
-  console.log(`FR EIS spine sample: ${sample.length} notices; comment-close on ${withClose}, state on ${withState}, stage on ${withStage}`);
+  console.log(
+    `EPA machine-readable: ${epaMachineReadable ? "yes" : "no (scraper-only)"}`,
+  );
+  console.log(
+    `FR EIS spine sample: ${sample.length} notices; comment-close on ${withClose}, state on ${withState}, stage on ${withStage}`,
+  );
   console.log(`Verdict: ${verdict.replace(/\*\*/g, "")}`);
   console.log(`Wrote ${outPath}`);
 }

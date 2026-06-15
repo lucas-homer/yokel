@@ -108,7 +108,7 @@ export type ObservationSource = z.infer<typeof ObservationSource>;
  *
  * The final segment is pinned to the two legal shapes so the PUBLIC join key can never carry a slash
  * (path-traversal-shaped ids), embedded whitespace/newlines, or a trailing-newline tail — any of which
- * would let two "equal" ids fail to join. `.+` was too permissive; see contract.adversary.probe.ts (E).
+ * would let two "equal" ids fail to join. `.+` was too permissive; see test/contract.adversary.probe.ts (E).
  *   • {frDocNum}: alphanumeric, may contain dashes (e.g. 2018-27875, E9-12345). No slash/space.
  *   • regs:{regsObjectId}: the `regs:` prefix + alphanumerics.
  * `(?![\s\S])` is JS's airtight end-of-string anchor — unlike `$`, it also rejects a trailing "\n".
