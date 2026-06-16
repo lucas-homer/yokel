@@ -43,7 +43,12 @@ import {
 } from "../src/sources/regulations-gov.js";
 import { ingestObservation } from "../src/ingest/observe.js";
 import { reconcileOcdId } from "../src/reconcile/persist.js";
-import { readCursor, writeCursor, stampChecked } from "../src/poll/cursor.js";
+import {
+  readCursor,
+  writeCursor,
+  touchPolledAt,
+  stampChecked,
+} from "../src/poll/cursor.js";
 import { pollRegsOnce, type PollDeps } from "../src/poll/poll.js";
 
 let failures = 0;
@@ -150,6 +155,22 @@ try {
   assert(
     "MONOTONIC: a backward write does NOT regress the stored cursor",
     (await readCursor(sql, SOURCE)) === "2026-06-02T00:00:00.000Z",
+    String(await readCursor(sql, SOURCE)),
+  );
+
+  // NULL-CURSOR ADVANCE (PR #20 review): an empty first poll stamps a row with a NULL cursor
+  // (touchPolledAt). A later real writeCursor MUST still advance — Postgres greatest() ignores NULL
+  // operands (greatest(NULL, <new>) = <new>), so the cursor can never get "stuck" at NULL.
+  await sql`delete from poll_cursor`;
+  await touchPolledAt(sql, SOURCE, NOW); // NULL-cursor row (empty first poll)
+  assert(
+    "NULL-CURSOR: cursor reads null after a touch-only (empty) poll",
+    (await readCursor(sql, SOURCE)) === null,
+  );
+  await writeCursor(sql, SOURCE, "2026-06-09T00:00:00.000Z", NOW);
+  assert(
+    "NULL-CURSOR: a real writeCursor advances past a NULL cursor (greatest ignores NULL — not stuck)",
+    (await readCursor(sql, SOURCE)) === "2026-06-09T00:00:00.000Z",
     String(await readCursor(sql, SOURCE)),
   );
 

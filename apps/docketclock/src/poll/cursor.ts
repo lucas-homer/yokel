@@ -50,9 +50,11 @@ export async function writeCursor(
     insert into poll_cursor (source, cursor_last_modified, last_polled_at, updated_at)
     values (${source}, ${cursor.toISOString()}, ${polledAt.toISOString()}, now())
     on conflict (source) do update set
-      -- forward-only: keep whichever is newer (greatest is NULL-tolerant only if both are non-null; the
-      -- stored value is non-null here because a row exists with a previously-written cursor — but a row
-      -- could exist with a NULL cursor if last_polled_at was stamped on an empty first poll, so coalesce).
+      -- forward-only: keep whichever is newer. Postgres greatest() IGNORES NULL operands (unlike the SQL
+      -- standard / MySQL, which return NULL), so even if a NULL cursor row exists (touchPolledAt stamps
+      -- last_polled_at with a NULL cursor on an empty first poll), greatest(NULL, <new>) = <new> and the
+      -- cursor advances correctly. excluded.cursor_last_modified is always non-null here (writeCursor
+      -- validates it), so this can never resolve to NULL or get "stuck". (Verified against PG16.)
       cursor_last_modified = greatest(
         poll_cursor.cursor_last_modified,
         excluded.cursor_last_modified
