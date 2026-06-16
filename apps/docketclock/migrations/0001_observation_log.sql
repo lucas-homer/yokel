@@ -6,6 +6,8 @@
 -- MANY dockets (EPA 2025-02910), so observations relate to windows MANY-TO-MANY via observation_targets.
 --
 -- Idempotent: safe to re-run (guarded by IF NOT EXISTS / CREATE OR REPLACE).
+-- Requires PostgreSQL 13+: gen_random_uuid() is a core built-in since 13 (no pgcrypto needed). We
+-- target PG16 (CNPG in-cluster; tests run against postgres:16).
 
 -- ── observations — one immutable row per fetched raw payload ───────────────────────────────────────
 create table if not exists observations (

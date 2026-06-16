@@ -8,9 +8,12 @@
  */
 import { readdir, readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { createClient, type Sql } from "./client.js";
 
+// Resolved relative to this module: src/db/ -> migrations/ when run via tsx, and dist/db/ ->
+// dist/migrations/ when run compiled (the chart Job runs `node dist/db/migrate.js`). `pnpm build`
+// copies migrations/ into dist/ so both layouts find the .sql files at ../../migrations.
 const MIGRATIONS_DIR = join(
   dirname(fileURLToPath(import.meta.url)),
   "..",
@@ -47,8 +50,10 @@ export async function runMigrations(sql: Sql): Promise<string[]> {
   return applied;
 }
 
-// CLI entrypoint — only when run directly, not when imported by tests.
-if (import.meta.url === `file://${process.argv[1]}`) {
+// CLI entrypoint — only when run directly, not when imported by tests. pathToFileURL canonicalizes
+// argv[1] (which may be a relative path, e.g. `dist/db/migrate.js`) so the comparison is robust.
+const invokedPath = process.argv[1];
+if (invokedPath && import.meta.url === pathToFileURL(invokedPath).href) {
   const sql = createClient();
   try {
     const applied = await runMigrations(sql);

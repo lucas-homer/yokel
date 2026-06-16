@@ -31,6 +31,13 @@ export async function ingestObservation(
 
   // Dedupe: compare against the LATEST payload for this (source, document_id). FR keys on
   // fr_document_number; if absent there is nothing to dedupe against (insert unconditionally).
+  //
+  // CONCURRENCY(single-writer): this read-then-insert assumes ONE ingest writer (the differential
+  // polling loop), so the latest-hash check can't race. Deliberately NOT a UNIQUE(payload_hash)
+  // constraint — the log is an append-only time series and the same hash legitimately RE-appears
+  // when a payload changes and later reverts; we only skip an *immediate* re-fetch of the latest.
+  // When multi-writer ingest arrives, harden with an advisory lock / serializable txn (or tolerate
+  // the rare benign duplicate, since replay is idempotent) — not a hash uniqueness constraint.
   if (candidate.fr_document_number) {
     const [latest] = await sql<{ payload_hash: string }[]>`
       select payload_hash
