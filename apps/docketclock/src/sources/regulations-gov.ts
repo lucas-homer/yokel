@@ -145,9 +145,11 @@ export function regsListUrl(opts: {
   const base = opts.base ?? regsBase();
   const params = new URLSearchParams();
   // NOTE(poll-loop, issue #18): this filter discovers OPEN windows, but a window that just got
-  // withdrawn flips withinCommentPeriod -> false and drops out of the list — so the poll loop must
-  // separately re-poll the detail of windows it has seen open to observe the withdrawn-vs-open
-  // transition (a marquee CONFLICTING signal). The bare list filter alone will silently miss it.
+  // withdrawn flips withinCommentPeriod -> false and drops out of the list. The poll loop therefore
+  // does NOT rely on the filtered list alone: pollRegsOnce (src/poll/poll.ts) runs a SECOND "re-poll
+  // pass" that re-fetches, BY documentId (bypassing this filter), the windows it has seen open that
+  // dropped out and are stale — landing the withdrawn:true observation so reconciliation can flip the
+  // window (-> withdrawn, or CONFLICTING withdrawn_vs_open vs an open FR counterpart). See that module.
   params.set("filter[withinCommentPeriod]", "true");
   if (opts.sinceUtcIso) {
     params.set(
