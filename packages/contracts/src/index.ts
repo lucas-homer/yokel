@@ -59,7 +59,7 @@ export type Confidence = z.infer<typeof Confidence>;
 /** Typed (not boolean) so consumers handle each failure mode distinctly. */
 export const ConflictFlag = z.enum([
   "fr_regs_date_mismatch",
-  "tz_normalization_only", // same Eastern date, differ only in UTC — MEDIUM, never CONFLICTING
+  "tz_normalization_only", // same Eastern date, differ only in UTC — informational; may ride with HIGH, never CONFLICTING
   "extension_chain_unresolved",
   "correction_pending",
   "withdrawn_vs_open",
