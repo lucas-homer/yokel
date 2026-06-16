@@ -18,8 +18,8 @@
  * │       - high | medium | low | stale  =>  resolved_close_utc MUST be non-null (assert a close).  │
  * │       - unknown  =>  resolved_close_utc MUST be null (both deadline fields missing; never       │
  * │         coerce a guess). conflicting MAY be null (engine abstains) but is not force-nulled.     │
- * │       - tz_normalization_only is a MEDIUM signal; it must NOT co-occur with confidence         │
- * │         'conflicting' (the load-bearing FR-2018-27875 fix, expressed structurally).            │
+ * │       - tz_normalization_only is an INFORMATIONAL marker: may ride with HIGH, never with        │
+ * │         'conflicting' (the load-bearing FR-2018-27875 fix, expressed structurally).             │
  * │   • tags is string[] and OPAQUE to core — HUC/vertical fields NEVER enter the canonical object.│
  * │                                                                                               │
  * │ INTENTIONALLY DEFERRED (contract pre-shaped or out of MVP scope — add when the builder lands): │
@@ -59,7 +59,7 @@ export type Confidence = z.infer<typeof Confidence>;
 /** Typed (not boolean) so consumers handle each failure mode distinctly. */
 export const ConflictFlag = z.enum([
   "fr_regs_date_mismatch",
-  "tz_normalization_only", // same Eastern date, differ only in UTC — MEDIUM, never CONFLICTING
+  "tz_normalization_only", // same Eastern date, differ only in UTC — informational; may ride with HIGH, never CONFLICTING
   "extension_chain_unresolved",
   "correction_pending",
   "withdrawn_vs_open",
@@ -222,8 +222,9 @@ export type ChangeHistoryEntry = z.infer<typeof ChangeHistoryEntry>;
  *   (1) confidence 'conflicting' | 'unknown' => resolved_close_utc may be null (never coerce a guess).
  *       (HIGH/MEDIUM/LOW/STALE keep close as-is; the engine only ever ABSTAINS, never invents.)
  *   (2) conflict_flags containing 'tz_normalization_only' must NOT co-occur with confidence
- *       'conflicting' — a same-Eastern-date / differ-only-in-UTC case is a MEDIUM signal, NOT a
- *       conflict. This is the FR-2018-27875 fatal-flaw fix expressed structurally.
+ *       'conflicting' — a same-Eastern-date / differ-only-in-UTC case is an INFORMATIONAL signal (it may
+ *       ride with HIGH, never CONFLICTING), NOT a conflict. This is the FR-2018-27875 fatal-flaw fix
+ *       expressed structurally.
  */
 export const ParticipationWindow = z
   .object({
@@ -263,10 +264,10 @@ export const ParticipationWindow = z
     change_history: z.array(ChangeHistoryEntry).default([]),
   })
   .superRefine((w, ctx) => {
-    // (2) tz_normalization_only is a MEDIUM signal — it can never ride with a 'conflicting' verdict.
-    // A 1-UTC-day gap that resolves to the SAME Eastern date is a normalization artifact, not a
-    // conflict; pairing it with CONFLICTING would re-introduce the exact false-positive flood the
-    // Eastern-date rule exists to prevent (FR-2018-27875).
+    // (2) tz_normalization_only is an INFORMATIONAL signal — it may ride with HIGH (or MEDIUM) but can
+    // never ride with a 'conflicting' verdict. A 1-UTC-day gap that resolves to the SAME Eastern date is
+    // a normalization artifact, not a conflict; pairing it with CONFLICTING would re-introduce the exact
+    // false-positive flood the Eastern-date rule exists to prevent (FR-2018-27875).
     if (
       w.confidence === "conflicting" &&
       w.conflict_flags.includes("tz_normalization_only")
@@ -275,7 +276,7 @@ export const ParticipationWindow = z
         code: z.ZodIssueCode.custom,
         path: ["conflict_flags"],
         message:
-          "tz_normalization_only is a MEDIUM signal and must not co-occur with confidence 'conflicting' (FR-2018-27875 Eastern-date artifact, not a conflict).",
+          "tz_normalization_only is an informational signal (may ride with HIGH, never CONFLICTING) and must not co-occur with confidence 'conflicting' (FR-2018-27875 Eastern-date artifact, not a conflict).",
       });
     }
 
