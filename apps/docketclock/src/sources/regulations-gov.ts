@@ -144,6 +144,10 @@ export function regsListUrl(opts: {
 }): string {
   const base = opts.base ?? regsBase();
   const params = new URLSearchParams();
+  // NOTE(poll-loop, issue #18): this filter discovers OPEN windows, but a window that just got
+  // withdrawn flips withinCommentPeriod -> false and drops out of the list — so the poll loop must
+  // separately re-poll the detail of windows it has seen open to observe the withdrawn-vs-open
+  // transition (a marquee CONFLICTING signal). The bare list filter alone will silently miss it.
   params.set("filter[withinCommentPeriod]", "true");
   if (opts.sinceUtcIso) {
     params.set(
