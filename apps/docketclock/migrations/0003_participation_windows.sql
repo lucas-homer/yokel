@@ -15,7 +15,17 @@
 --   conflict_records — surrogate PK; a row is INSERTed when reconcile detects a disagreeing FR/Regs
 --     pair. Re-running reconcile on the SAME disagreeing pair must not duplicate rows, so we UPSERT on
 --     the natural key (ocd_id, observation_a_id, observation_b_id) — the pair of source observations
---     that disagree uniquely identifies the conflict; detected_at is refreshed on re-detection.
+--     that disagree uniquely identifies the conflict. detected_at is PRESERVED as the first-detection
+--     timestamp across re-detections (the upsert refreshes metadata only — conflict_flags/govinfo_url/
+--     resolved_at — never detected_at).
+--
+-- Operational (NON-contract) columns — present in this projection but deliberately NOT part of the
+-- @yokel/contracts shapes, so adding them never touches the frozen contract:
+--   participation_windows.derived_at          — last re-derivation timestamp.
+--   participation_windows.reconciler_version  — which rulebook version (RECONCILER_VERSION) derived the
+--     row; bumped on any rule change, mirrors PARSER_VERSION on the adapters. Lets us identify rows that
+--     need re-derivation after a rulebook change without reading the contract object.
+--   conflict_records.resolved_at              — proof-feed retirement marker (see the column comment).
 --
 -- Idempotent: safe to re-run (guarded by IF NOT EXISTS).
 -- Array / json-ish contract fields are stored as jsonb (docket_id, conflict_flags, tags,
@@ -57,7 +67,10 @@ create table if not exists participation_windows (
   provenance             jsonb not null default '{"agreeing_observation_ids":[],"conflicting_observation_ids":[]}'::jsonb,
   change_history         jsonb not null default '[]'::jsonb,
 
-  derived_at             timestamptz not null default now()  -- last re-derivation stamp (operational)
+  derived_at             timestamptz not null default now(),  -- last re-derivation stamp (operational)
+  -- operational, NOT a @yokel/contracts field: the rulebook version that derived this row (mirrors the
+  -- adapters' PARSER_VERSION). Lets ops find rows needing re-derivation after a rule change.
+  reconciler_version     text not null default 'reconcile-v1'
 );
 
 create index if not exists participation_windows_confidence_idx
@@ -85,7 +98,8 @@ create table if not exists conflict_records (
   resolved_at        timestamptz,
 
   -- The disagreeing source-observation PAIR uniquely identifies a conflict. Re-running reconcile on the
-  -- same pair UPSERTs (refreshes detected_at) rather than duplicating the proof-feed row.
+  -- same pair UPSERTs (refreshing metadata only — conflict_flags/govinfo_url/resolved_at) rather than
+  -- duplicating the proof-feed row; detected_at is PRESERVED as the first-detection timestamp.
   unique (ocd_id, observation_a_id, observation_b_id)
 );
 

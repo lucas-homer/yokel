@@ -334,6 +334,96 @@ function parses(name: string, w: unknown): void {
   parses("LATE-COMMENTS", window);
 }
 
+// ── MEDIUM(tz) — FR/Regs agree on Eastern date, Regs NOT open for comment, UTC day differs ────────────
+// Eastern dates agree but Regs openForComment=false degrades HIGH → MEDIUM (the contradiction-free
+// agreement is gone). Because the close is the 11:59 p.m. ET artifact (Regs stores it the NEXT UTC day),
+// tz_normalization_only ALSO attaches. The contract permits tz_normalization_only with MEDIUM.
+{
+  // FR Eastern 2026-06-16; Regs 2026-06-17T03:59:59Z = Eastern 06-16 / UTC 06-17 (UTC day differs).
+  const fr = frObs(OCD, { comments_close_on: "2026-06-16" });
+  const regs = regsObs(OCD, {
+    commentEndDate: "2026-06-17T03:59:59Z",
+    withdrawn: false,
+    openForComment: false, // not open → degrade to MEDIUM
+  });
+  const { window, conflict } = reconcile([fr, regs], NOW);
+  assert(
+    "MEDIUM(tz, not-open): confidence medium",
+    window.confidence === "medium",
+    window.confidence,
+  );
+  assert(
+    "MEDIUM(tz, not-open): flag is exactly [tz_normalization_only]",
+    window.conflict_flags.length === 1 &&
+      window.conflict_flags[0] === "tz_normalization_only",
+    window.conflict_flags.join(","),
+  );
+  assert("MEDIUM(tz, not-open): no ConflictRecord", conflict === null);
+  parses("MEDIUM(tz, not-open)", window);
+}
+
+// ── MEDIUM — FR has a date + Regs has NO commentEndDate but allowLateComments=true → late_comment_ambiguous ─
+// FR supplies the close; the Regs observation exists but is dateless (no commentEndDate) and NOT open for
+// comment (so it does NOT hit the null_end_date_open_status LOW branch, which requires openForComment=true).
+// One source with a usable close + a Regs row that allows late comments → MEDIUM + late_comment_ambiguous.
+{
+  const fr = frObs(OCD, { comments_close_on: "2026-07-20" });
+  const regs = regsObs(OCD, {
+    commentEndDate: null,
+    withdrawn: false,
+    openForComment: false, // NOT true → avoids the null_end_date_open_status branch
+    allowLateComments: true,
+  });
+  const { window, conflict } = reconcile([fr, regs], NOW);
+  assert(
+    "FR+LATE-DATELESS-REGS: confidence medium",
+    window.confidence === "medium",
+    window.confidence,
+  );
+  assert(
+    "FR+LATE-DATELESS-REGS: conflict_flags includes late_comment_ambiguous",
+    window.conflict_flags.includes("late_comment_ambiguous"),
+    window.conflict_flags.join(","),
+  );
+  assert("FR+LATE-DATELESS-REGS: no ConflictRecord", conflict === null);
+  assert(
+    "FR+LATE-DATELESS-REGS: resolved_close via FR 11:59pm ET",
+    window.resolved_close_utc === frCloseDateToUtcInstant("2026-07-20"),
+    String(window.resolved_close_utc),
+  );
+  parses("FR+LATE-DATELESS-REGS", window);
+}
+
+// ── DEGRADE — a rolled-over Regs commentEndDate (2026-02-30 → Mar 2) is treated as ABSENT, not fabricated ─
+// Symmetric with the FR asCalendarDate guard: a date that silently rolls over must NEVER become an
+// operative close. With NO FR date either, the window degrades to UNKNOWN (null close) — never March.
+{
+  const fr = frObs(OCD, { comments_close_on: null });
+  const regs = regsObs(OCD, {
+    commentEndDate: "2026-02-30T00:00:00Z", // rolls over to Mar 2 in a naive parse
+    withdrawn: false,
+    openForComment: false,
+  });
+  const { window, conflict } = reconcile([fr, regs], NOW);
+  assert(
+    "BAD-REGS-DATE: confidence unknown (rolled-over date treated as absent)",
+    window.confidence === "unknown",
+    window.confidence,
+  );
+  assert(
+    "BAD-REGS-DATE: resolved_close_utc null (no fabricated March date)",
+    window.resolved_close_utc === null,
+    String(window.resolved_close_utc),
+  );
+  assert(
+    "BAD-REGS-DATE: no rolled-over March date appears anywhere",
+    !String(window.resolved_close_utc).startsWith("2026-03"),
+    String(window.resolved_close_utc),
+  );
+  assert("BAD-REGS-DATE: no ConflictRecord", conflict === null);
+  parses("BAD-REGS-DATE", window);
+}
+
 // ── LOW — null_end_date_open_status (Regs commentEndDate null + openForComment true, FR supplies date) ─
 {
   const fr = frObs(OCD, { comments_close_on: "2026-07-20" });
@@ -688,6 +778,16 @@ try {
     "window row persisted at version 0",
     row1?.version === 0,
     String(row1?.version),
+  );
+
+  // The operational reconciler_version column (NOT a contract field) records which rulebook derived it.
+  const [verRow] = await sql<{ reconciler_version: string }[]>`
+    select reconciler_version from participation_windows where ocd_id = ${OCD}
+  `;
+  assert(
+    "persisted window carries reconciler_version = 'reconcile-v1'",
+    verRow?.reconciler_version === "reconcile-v1",
+    String(verRow?.reconciler_version),
   );
 
   // Re-derive with the SAME data → idempotent, no version bump.

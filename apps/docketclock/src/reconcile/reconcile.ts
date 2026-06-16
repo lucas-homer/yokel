@@ -40,15 +40,21 @@ export interface ReconcileResult {
   conflict: ConflictRecord | null;
 }
 
-/** Latest observation of a given source by fetched_at (ISO string compare is chronological for "…Z"). */
+/** Latest observation of a given source, compared by PARSED epoch-ms (not lexicographic string). */
 function latestBySource(
   observations: Observation[],
   source: Observation["source"],
 ): Observation | null {
+  // The Observation contract pins fetched_at to z.string().datetime() (UTC "…Z"), so lexicographic and
+  // epoch ordering agree today — but epoch compare stays correct if that ever loosens to allow offsets.
   let latest: Observation | null = null;
   for (const o of observations) {
     if (o.source !== source) continue;
-    if (!latest || o.fetched_at > latest.fetched_at) latest = o;
+    if (
+      !latest ||
+      new Date(o.fetched_at).getTime() > new Date(latest.fetched_at).getTime()
+    )
+      latest = o;
   }
   return latest;
 }
@@ -64,11 +70,50 @@ function govinfoUrl(
   return `https://www.govinfo.gov/content/pkg/FR-${publicationDate}/html/${documentNumber}.htm`;
 }
 
-/** ISO+offset (or "…Z") Regs commentEndDate -> a canonical UTC "…Z" instant. null on a bad date. */
+/**
+ * ISO+offset (or "…Z") Regs commentEndDate -> a canonical UTC "…Z" instant. null on a bad date.
+ *
+ * Symmetric with the FR path's asCalendarDate (extract.ts): besides rejecting NaN, we require the parsed
+ * instant to round-trip to the date portion of the input string. `new Date("2026-02-30…")` silently rolls
+ * over to Mar 2 — that fabricated instant must NEVER become an operative close, so a rolled-over
+ * commentEndDate is treated as ABSENT (null) and the rulebook degrades to UNKNOWN rather than surfacing a
+ * date the source never asserted.
+ *
+ * The round-trip is offset-AWARE: we compare the input's leading YYYY-MM-DD against the parsed instant's
+ * calendar components IN THE INPUT'S OWN timezone (UTC for a "…Z" or +00:00 input; the stated offset
+ * otherwise). Regs.gov v4 returns UTC ("…Z") per docketclock.md ("responses UTC"), but parsing the offset
+ * keeps a legitimate offset-bearing value (where the local date legitimately differs from its UTC date)
+ * from being falsely rejected.
+ */
 function regsCloseToUtc(commentEndDate: string | null): string | null {
   if (!commentEndDate) return null;
   const d = new Date(commentEndDate);
-  return Number.isNaN(d.getTime()) ? null : d.toISOString();
+  if (Number.isNaN(d.getTime())) return null;
+  // Round-trip guard against silent rollover (e.g. 2026-02-30 -> Mar 2).
+  const m =
+    /^(\d{4})-(\d{2})-(\d{2})(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(Z|[+-]\d{2}:?\d{2})?)?$/.exec(
+      commentEndDate,
+    );
+  if (m) {
+    const [, y, mo, dd, tz] = m;
+    // Shift the instant into the input's own offset frame, then read its UTC components there.
+    let offsetMinutes = 0; // default / "Z" / "+00:00" => UTC
+    if (tz && tz !== "Z") {
+      const om = /^([+-])(\d{2}):?(\d{2})$/.exec(tz);
+      if (om) {
+        const sign = om[1] === "-" ? -1 : 1;
+        offsetMinutes = sign * (Number(om[2]) * 60 + Number(om[3]));
+      }
+    }
+    const local = new Date(d.getTime() + offsetMinutes * 60_000);
+    if (
+      local.getUTCFullYear() !== Number(y) ||
+      local.getUTCMonth() !== Number(mo) - 1 ||
+      local.getUTCDate() !== Number(dd)
+    )
+      return null;
+  }
+  return d.toISOString();
 }
 
 export function reconcile(

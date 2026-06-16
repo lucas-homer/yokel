@@ -77,11 +77,17 @@ function easternOffsetMinutes(instant: Date): number {
     hour12: false,
   }).formatToParts(instant);
   const p = (t: string) => Number(parts.find((x) => x.type === t)?.value);
-  const hour = p("hour") === 24 ? 0 : p("hour");
+  // Some locales/zones render midnight as hour===24 of the SAME day. Normalize to 00:00 of the NEXT day:
+  // zeroing the hour without advancing the day would leave the reconstructed wall-clock 24h too early.
+  // Date.UTC normalizes day overflow, so passing day+1 with hour 0 rolls month/year boundaries correctly.
+  const rawHour = p("hour");
+  const isMidnightOverflow = rawHour === 24;
+  const hour = isMidnightOverflow ? 0 : rawHour;
+  const day = isMidnightOverflow ? p("day") + 1 : p("day");
   const asUtc = Date.UTC(
     p("year"),
     p("month") - 1,
-    p("day"),
+    day,
     hour,
     p("minute"),
     p("second"),
