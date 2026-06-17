@@ -3,7 +3,7 @@
  * (Watershed Watch). Verticals join on stable OCD-IDs, never internal UUIDs.
  *
  * ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
- * │ FROZEN @ 0.3.0 (2026-06-16)                                                                    │
+ * │ FROZEN @ 0.4.0 (2026-06-17)                                                                    │
  * │                                                                                               │
  * │ LOCKED (builders may propose changes; the contract-keeper adjudicates — nobody else edits):   │
  * │   • Confidence / ConflictFlag / WindowType / WindowStatus enums.                              │
@@ -36,6 +36,18 @@
  * └─────────────────────────────────────────────────────────────────────────────────────────────┘
  *
  * REVISIONS
+ *   • 0.4.0 (2026-06-17) — Cross-window (chain) conflict support on ConflictRecord (additive; for #31).
+ *       Added three optional/defaulted fields to ConflictRecord so the ONE published /conflicts feed can
+ *       also carry chain conflicts spanning TWO windows (an amendment's window vs the original's):
+ *       conflict_scope ("cross_source" default | "cross_window"), ocd_id_b (side B's distinct window,
+ *       null for cross_source), and govinfo_url_b (side B's govinfo anchor, null for cross_source). A
+ *       superRefine pins the invariants — cross_window REQUIRES ocd_id_b present AND distinct from ocd_id;
+ *       cross_source REQUIRES ocd_id_b null. Backward-compatible by defaults: a legacy row / current
+ *       reconcile emit site that omits all three parses as cross_source with both B fields null (the
+ *       original meaning), so NO existing field changed type/nullability and NO emit site needs edits.
+ *       NO new ConflictFlag added (chain reopening flag intentionally DEFERRED — see O4 on #31); the
+ *       existing flag vocabulary (extension_chain_unresolved / correction_pending / withdrawn_vs_open /
+ *       multi_target_notice) already covers chain conflicts.
  *   • 0.3.0 (2026-06-16) — REST response envelope (additive; no existing schema/enum changed).
  *       Added the Delivery API read-surface (GET /windows, /windows/{ocd_id}, /conflicts) envelope:
  *       the DISCLAIMER + API_VERSION canonical constants, the EnvelopeMeta schema
@@ -329,20 +341,84 @@ export type ParticipationWindow = z.infer<typeof ParticipationWindow>;
 
 /**
  * ConflictRecord — a row in the PUBLISHED GET /conflicts proof feed (the credibility moat no
- * single-source competitor offers). Carries the two source observations that disagree, the govinfo
- * legal-reliance anchor, the typed conflict_flags, and when it was detected.
+ * single-source competitor offers). Carries the two observations that disagree, the govinfo
+ * legal-reliance anchor(s), the typed conflict_flags, and when it was detected.
+ *
+ * conflict_scope discriminates the TWO kinds of disagreement this one published shape carries:
+ *   • "cross_source" (the original, default shape) — the two observations are on the SAME window
+ *     (`ocd_id`) and disagree across SOURCES (FR vs Regs). `ocd_id_b` is null and `govinfo_url_b`
+ *     is null because there is no "B window": both sides share `ocd_id`/`govinfo_url`. This is the
+ *     only shape the reconcile engine emits today (FR↔Regs date mismatch / withdrawn-vs-open).
+ *   • "cross_window" (#31 chain conflicts) — the two observations live on TWO DIFFERENT windows: an
+ *     amendment notice (extension/correction/withdrawal) is a SEPARATE FR document that mints its
+ *     OWN ocd_id, so the disagreement spans `ocd_id` (side A) and `ocd_id_b` (side B). Both sides are
+ *     self-describing: each carries its own observation id, source, and govinfo anchor (`govinfo_url`
+ *     for A, `govinfo_url_b` for B). Such conflicts are often SAME-SOURCE (both federal_register: the
+ *     amendment doc vs the original doc), so source_a/source_b may be equal here.
+ *
+ * Back-compat by defaults: the three #31 fields are all optional/defaulted, so a legacy serialized
+ * row (and every reconcile emit site today) that carries NEITHER ocd_id_b NOR conflict_scope parses
+ * cleanly as { conflict_scope: "cross_source", ocd_id_b: null, govinfo_url_b: null } — i.e. exactly
+ * the original cross-source meaning. No existing field changed type or nullability; this is additive.
  */
-export const ConflictRecord = z.object({
-  ocd_id: OcdId,
-  // the two disagreeing source observations (by log id) + their source provenance
-  observation_a_id: z.string(),
-  observation_b_id: z.string(),
-  source_a: ObservationSource,
-  source_b: ObservationSource,
-  conflict_flags: z.array(ConflictFlag).min(1), // a conflict record always names at least one flag
-  govinfo_url: z.string().url().nullable(), // legal-reliance backstop embedded in the feed
-  detected_at: z.string().datetime(),
-});
+export const ConflictRecord = z
+  .object({
+    ocd_id: OcdId, // side A's window (the only window for cross_source)
+    // the two disagreeing observations (by log id) + their source provenance
+    observation_a_id: z.string(),
+    observation_b_id: z.string(),
+    source_a: ObservationSource,
+    source_b: ObservationSource,
+    conflict_flags: z.array(ConflictFlag).min(1), // a conflict record always names at least one flag
+    govinfo_url: z.string().url().nullable(), // side A's legal-reliance backstop, embedded in the feed
+
+    // ── #31 cross-window (chain) fields — additive, defaulted for back-compat ──────────────────────
+    // conflict_scope: which kind of disagreement (see the doc block above). Defaults to "cross_source"
+    // so legacy rows / current emit sites that omit it keep their original meaning.
+    conflict_scope: z
+      .enum(["cross_source", "cross_window"])
+      .default("cross_source"),
+    // ocd_id_b: side B's window — present ONLY for cross_window (the amendment's standalone window) and
+    // null for cross_source (both sides share `ocd_id`). Enforced by the superRefine below.
+    ocd_id_b: OcdId.nullable().default(null),
+    // govinfo_url_b: side B's legal-reliance anchor — its own govinfo URL when B is a distinct window
+    // (cross_window). Null for cross_source (there is no second window/anchor).
+    govinfo_url_b: z.string().url().nullable().default(null),
+    detected_at: z.string().datetime(),
+  })
+  .superRefine((c, ctx) => {
+    // cross_window MUST name a second window, and it must be a DIFFERENT window than side A — otherwise
+    // it is not a cross-WINDOW conflict at all (a chain conflict spans two ocd_ids by definition).
+    if (c.conflict_scope === "cross_window") {
+      if (c.ocd_id_b === null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["ocd_id_b"],
+          message:
+            "conflict_scope 'cross_window' requires ocd_id_b (side B's distinct window); a chain conflict spans two windows.",
+        });
+      } else if (c.ocd_id_b === c.ocd_id) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["ocd_id_b"],
+          message:
+            "conflict_scope 'cross_window' requires ocd_id_b to differ from ocd_id (the two sides are distinct windows); use 'cross_source' for a same-window disagreement.",
+        });
+      }
+    } else {
+      // cross_source is single-window: there is no side-B window, so ocd_id_b MUST be null. (govinfo_url_b
+      // is left free to be null by default; a non-null B anchor without a B window is meaningless but not
+      // worth a hard error — the load-bearing invariant is the window identity, pinned via ocd_id_b.)
+      if (c.ocd_id_b !== null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["ocd_id_b"],
+          message:
+            "conflict_scope 'cross_source' is a single-window (FR↔Regs) disagreement; ocd_id_b must be null (use 'cross_window' for a chain conflict spanning two windows).",
+        });
+      }
+    }
+  });
 export type ConflictRecord = z.infer<typeof ConflictRecord>;
 
 /**
