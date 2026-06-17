@@ -3,7 +3,7 @@
  * (Watershed Watch). Verticals join on stable OCD-IDs, never internal UUIDs.
  *
  * ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
- * │ FROZEN @ 0.2.1 (2026-06-15)                                                                    │
+ * │ FROZEN @ 0.3.0 (2026-06-16)                                                                    │
  * │                                                                                               │
  * │ LOCKED (builders may propose changes; the contract-keeper adjudicates — nobody else edits):   │
  * │   • Confidence / ConflictFlag / WindowType / WindowStatus enums.                              │
@@ -14,6 +14,9 @@
  * │   • ParticipationWindow as a DERIVED, versioned projection over the Observation log, with      │
  * │       provenance summary + append-only change_history.                                         │
  * │   • ConflictRecord (published /conflicts proof feed) + AccuracyRecord (track-record metric).   │
+ * │   • REST response envelope: DISCLAIMER + API_VERSION constants, EnvelopeMeta, Pagination, and  │
+ * │       the apiItemEnvelope / apiListEnvelope factories (the single source for response shape so  │
+ * │       the published OpenAPI and actual responses can never diverge).                            │
  * │   • Refinements that make illegal states unrepresentable (see each schema):                    │
  * │       - high | medium | low | stale  =>  resolved_close_utc MUST be non-null (assert a close).  │
  * │       - unknown  =>  resolved_close_utc MUST be null (both deadline fields missing; never       │
@@ -23,7 +26,8 @@
  * │   • tags is string[] and OPAQUE to core — HUC/vertical fields NEVER enter the canonical object.│
  * │                                                                                               │
  * │ INTENTIONALLY DEFERRED (contract pre-shaped or out of MVP scope — add when the builder lands): │
- * │   • REST/webhook envelope payloads (disclaimer + api_version + request_id) — Week 6-7.         │
+ * │   • Webhook payload schemas (HMAC-signed outbox events: notify_on kinds + delivery envelope) — │
+ * │     Week 6-7, alongside GET /events undelivered visibility. (REST envelope landed @0.3.0.)      │
  * │   • RSS/Atom/ICS/CSV serialization shapes — v1.1.                                              │
  * │   • MCP tool I/O schemas — until a named AI-agent buyer commits.                               │
  * │   • Enrichment-API tag-namespace contract for THIRD-PARTY verticals — when Watershed Watch     │
@@ -32,6 +36,14 @@
  * └─────────────────────────────────────────────────────────────────────────────────────────────┘
  *
  * REVISIONS
+ *   • 0.3.0 (2026-06-16) — REST response envelope (additive; no existing schema/enum changed).
+ *       Added the Delivery API read-surface (GET /windows, /windows/{ocd_id}, /conflicts) envelope:
+ *       the DISCLAIMER + API_VERSION canonical constants, the EnvelopeMeta schema
+ *       (disclaimer + api_version + request_id), the Pagination schema (limit/offset/total), and the
+ *       apiItemEnvelope(data) / apiListEnvelope(item) factories that compose per-endpoint response
+ *       schemas so the published OpenAPI spec and the actual responses share ONE definition. Every
+ *       Observation/ParticipationWindow/ConflictRecord shape is unchanged; the "REST envelope" item
+ *       moved OUT of INTENTIONALLY DEFERRED (webhook payloads remain deferred to Week 6-7).
  *   • 0.2.1 (2026-06-15) — OcdId hardening (no schema-shape change; tightened validation only).
  *       The OcdId regex was narrowed from `…/federal/.+` to pin the final segment to the two legal
  *       shapes ({frDocNum} | regs:{regsObjectId}), forbidding slashes, embedded whitespace, and a
@@ -347,3 +359,79 @@ export const AccuracyRecord = z.object({
   evaluated_at: z.string().datetime(),
 });
 export type AccuracyRecord = z.infer<typeof AccuracyRecord>;
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// REST RESPONSE ENVELOPE — the Delivery API read-surface contract (GET /windows, /windows/{ocd_id},
+// /conflicts). docketclock.md: "Every response carries disclaimer + api_version + request_id."
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+/**
+ * DISCLAIMER — the canonical legal-reliance string every API response carries (in EnvelopeMeta).
+ *
+ * Why it exists: buyers carry deadline LIABILITY, and the Federal Register payloads we derive from are
+ * an "Unofficial XML rendition — NOT legal notice" (see docketclock.md data-source gotchas). govinfo is
+ * the legal-reliance backstop, so the disclaimer steers anyone about to rely on a deadline back to the
+ * official sources (and the per-window govinfo_url) BEFORE acting. This is a product invariant, not
+ * decoration — it must ride on every response, which is why it lives in the frozen contract, not the API.
+ */
+export const DISCLAIMER =
+  "DocketClock data is derived from the Federal Register and Regulations.gov APIs and is provided for " +
+  "informational purposes only — it is NOT legal notice. Verify all deadlines against the official " +
+  "sources (govinfo.gov) before relying on them.";
+
+/**
+ * API_VERSION — the current public REST API MAJOR version. The REST path/version policy keys off this
+ * (e.g. /v1/windows) and it is echoed in every EnvelopeMeta.api_version so a cached/forwarded response
+ * always self-identifies its contract generation. Bump on a breaking response-shape change only.
+ */
+export const API_VERSION = "v1";
+
+/**
+ * EnvelopeMeta — the trio attached to EVERY Delivery API response (merged into each response object by
+ * the envelope factories below). disclaimer is the legal-reliance line (see DISCLAIMER); api_version is
+ * the public-API generation (see API_VERSION); request_id is a per-request UUID minted by the API on
+ * each request for support/tracing/log-correlation (clients quote it in tickets). All three are always
+ * present — like confidence/conflict_flags, the envelope never suppresses its own honesty signals.
+ */
+export const EnvelopeMeta = z.object({
+  disclaimer: z.string(),
+  api_version: z.string(),
+  request_id: z.string(), // UUID set by the API per request — for support/tracing
+});
+export type EnvelopeMeta = z.infer<typeof EnvelopeMeta>;
+
+/**
+ * Pagination — the limit/offset/total block on list endpoints (GET /windows, /conflicts).
+ *   • limit  — max items the caller asked for in this page (non-negative).
+ *   • offset — how many items were skipped before this page (non-negative).
+ *   • total  — total items matching the query across ALL pages (non-negative), so a client can compute
+ *     remaining pages without walking them. All three are non-negative integers.
+ */
+export const Pagination = z.object({
+  limit: z.number().int().nonnegative(),
+  offset: z.number().int().nonnegative(),
+  total: z.number().int().nonnegative(),
+});
+export type Pagination = z.infer<typeof Pagination>;
+
+/**
+ * apiItemEnvelope(dataSchema) — composes the single-resource response shape: { data } + EnvelopeMeta.
+ * The API layer applies it per endpoint, e.g. apiItemEnvelope(ParticipationWindow) for
+ * GET /windows/{ocd_id} (or an ocd_id + observations detail shape). A pure schema factory — no runtime
+ * logic beyond composition — so the published OpenAPI and the actual response derive from ONE definition.
+ */
+export function apiItemEnvelope<T extends z.ZodTypeAny>(dataSchema: T) {
+  return z.object({ data: dataSchema }).merge(EnvelopeMeta);
+}
+
+/**
+ * apiListEnvelope(itemSchema) — composes the paginated list response shape:
+ * { data: itemSchema[], pagination: Pagination } + EnvelopeMeta. Applied per endpoint, e.g.
+ * apiListEnvelope(ParticipationWindow) for GET /windows and apiListEnvelope(ConflictRecord) for
+ * GET /conflicts. A pure schema factory — composition only — so spec and responses can never diverge.
+ */
+export function apiListEnvelope<T extends z.ZodTypeAny>(itemSchema: T) {
+  return z
+    .object({ data: z.array(itemSchema), pagination: Pagination })
+    .merge(EnvelopeMeta);
+}

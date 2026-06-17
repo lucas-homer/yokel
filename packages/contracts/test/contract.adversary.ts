@@ -13,6 +13,11 @@ import {
   Observation,
   ObservationTarget,
   makeOcdId,
+  DISCLAIMER,
+  API_VERSION,
+  EnvelopeMeta,
+  Pagination,
+  apiListEnvelope,
 } from "../src/index.js";
 
 let failures = 0;
@@ -357,6 +362,48 @@ function baseWindow(over: Record<string, unknown> = {}) {
   assert(
     "non-federal-scheme ocd_id (a UUID) is REJECTED at the window seam",
     !r.success,
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+// EDGE 7 — REST response envelope (@0.3.0). Every response carries disclaimer + api_version +
+// request_id; list responses carry a non-negative limit/offset/total. The envelope never suppresses
+// its own honesty signals, and the factories compose response shapes so spec == response.
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+{
+  // 7a — EnvelopeMeta accepts a well-formed envelope...
+  const goodMeta = {
+    disclaimer: DISCLAIMER,
+    api_version: API_VERSION,
+    request_id: "550e8400-e29b-41d4-a716-446655440000",
+  };
+  assert(
+    "EnvelopeMeta accepts a good envelope",
+    EnvelopeMeta.safeParse(goodMeta).success,
+  );
+
+  // 7b — ...and REJECTS a missing field (request_id dropped).
+  const { request_id: _drop, ...missingReq } = goodMeta;
+  assert(
+    "EnvelopeMeta REJECTS an envelope missing request_id",
+    !EnvelopeMeta.safeParse(missingReq).success,
+  );
+
+  // 7c — Pagination rejects negatives (offset < 0).
+  assert(
+    "Pagination REJECTS a negative offset",
+    !Pagination.safeParse({ limit: 25, offset: -1, total: 100 }).success,
+  );
+
+  // 7d — apiListEnvelope(ParticipationWindow) accepts a well-formed paginated window response.
+  const listResp = {
+    data: [baseWindow()],
+    pagination: { limit: 25, offset: 0, total: 1 },
+    ...goodMeta,
+  };
+  assert(
+    "apiListEnvelope(ParticipationWindow) accepts a well-formed paginated response",
+    apiListEnvelope(ParticipationWindow).safeParse(listResp).success,
   );
 }
 

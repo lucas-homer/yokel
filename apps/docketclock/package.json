@@ -9,14 +9,17 @@
     "build": "tsc -p tsconfig.json && cp -r migrations dist/",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json",
     "migrate": "tsx src/db/migrate.ts",
-    "test": "tsx test/fetch-retry.test.ts && tsx test/regs.test.ts && tsx test/reconcile.test.ts && tsx test/observation-log.test.ts && tsx test/ingest.test.ts && tsx test/poll.test.ts",
+    "api": "tsx src/api/run.ts",
+    "test": "tsx test/fetch-retry.test.ts && tsx test/regs.test.ts && tsx test/reconcile.test.ts && tsx test/observation-log.test.ts && tsx test/ingest.test.ts && tsx test/poll.test.ts && tsx test/api.test.ts",
     "smoke:fr": "tsx src/sources/federal-register.smoke.ts",
     "smoke:regs": "tsx src/sources/regulations-gov.smoke.ts",
     "smoke:poll": "tsx src/poll/poll.smoke.ts"
   },
   "dependencies": {
+    "@fastify/swagger": "^9.7.0",
     "@yokel/contracts": "workspace:*",
     "fastify": "^5.0.0",
+    "fastify-type-provider-zod": "4.0.2",
     "postgres": "^3.4.0",
     "zod": "^3.23.0"
   },
