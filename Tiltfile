@@ -8,8 +8,9 @@
 # allow_k8s_contexts('k3d-yokel')  # uncomment to guard against deploying to the wrong context
 
 # Build the real image (the API, poller, and migration runner all run from it; the chart sets the
-# command per workload). We run via tsx from source, so a live_update sync of the TS source + a
-# container restart picks up edits without a full rebuild.
+# command per workload). We run via tsx from source with no watch mode, so syncing the TS source is
+# not enough on its own — restart_container() bounces the process so the edited source is re-read
+# (cheaper than a full image rebuild). Keep restart_container() LAST in the list.
 docker_build(
     'docketclock',
     context='.',
@@ -17,6 +18,7 @@ docker_build(
     live_update=[
         sync('apps/docketclock/src', '/app/apps/docketclock/src'),
         sync('packages/contracts/src', '/app/packages/contracts/src'),
+        restart_container(),
     ],
 )
 

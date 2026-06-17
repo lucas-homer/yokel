@@ -17,6 +17,8 @@ WORKDIR /app
 
 # Workspace manifests first, for layer caching. ALL member manifests are needed so pnpm can build the
 # workspace graph and validate the frozen lockfile — even though we only install docketclock's subset.
+# MAINTENANCE: adding a new pnpm workspace member means adding its package.json COPY here too, or the
+# `--frozen-lockfile` install fails with a cryptic lockfile-mismatch error (the graph won't resolve).
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json tsconfig.base.json ./
 COPY packages/contracts/package.json packages/contracts/
 COPY apps/docketclock/package.json apps/docketclock/

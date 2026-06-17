@@ -41,11 +41,21 @@ spec:
                 secretKeyRef:
                   name: docketclock-external
                   key: docketclock_api_keys
+          # Readiness targets /readyz (503s when the DB is unreachable) so a DB-less pod is pulled from
+          # the Service rotation. Liveness targets /healthz (always 200 while the event loop is alive) so
+          # only a truly hung process is restarted — a DB blip must NOT trigger a restart loop.
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: {{ .Values.service.targetPort }}
             initialDelaySeconds: 3
             periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
