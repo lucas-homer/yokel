@@ -51,6 +51,21 @@ export function todayEastern(now: Date = new Date()): string {
   }).format(now);
 }
 
+/**
+ * The Eastern calendar date `lookbackDays` days BEFORE `now`, as `YYYY-MM-DD`. Used as the keyword
+ * discovery's publication_date LOWER BOUND (the trailing window for amendment-notice discovery — see
+ * frKeywordListUrl). Subtracts whole days in UTC then formats in Eastern; day-granularity makes the
+ * exact instant immaterial (the FR publication_date filter is date-granular). Distinct from todayEastern
+ * only by the day offset.
+ */
+export function easternDateDaysAgo(
+  lookbackDays: number,
+  now: Date = new Date(),
+): string {
+  const shifted = new Date(now.getTime() - lookbackDays * 86_400_000);
+  return todayEastern(shifted);
+}
+
 // Re-exported for back-compat with importers that reach for these via the FR adapter.
 export { payloadHash } from "./payload.js";
 export type { ObservationCandidate } from "./observation-candidate.js";
@@ -233,6 +248,102 @@ export async function listOpenCommentDocuments(
   } & FetchOpts,
 ): Promise<FrListItem[]> {
   const url = frListUrl(opts);
+  const raw = (await fetchJsonWithRetry(url, {
+    retries: opts.retries,
+    timeoutMs: opts.timeoutMs,
+    headers: opts.headers,
+  })) as FrListShape;
+  const items: FrListItem[] = (raw.results ?? [])
+    .filter((r): r is NonNullable<typeof r> => !!r && !!r.document_number)
+    .map((r) => ({
+      documentNumber: r.document_number as string,
+      publicationDate: r.publication_date ?? null,
+    }));
+  return dedupeByDocumentNumber(items);
+}
+
+// ── KEYWORD (AMENDMENT-NOTICE) DISCOVERY (#26) ────────────────────────────────────────────────────────
+//
+// The amendment vocabulary. An extension / correction / reopening / WITHDRAWAL notice frequently carries
+// NO open comment_date of its own (a withdrawal CLOSES a period; a correction may just fix text), so the
+// comment_date discovery query above never sees it — yet the #31 chain-reconcile pass must be able to
+// chain a withdrawal/extension onto the window it amends, which means the notice must be in the
+// append-only log. This keyword path gets those notices ingested through the SAME path.
+//
+// VERIFIED FR `term` SEMANTICS (live keyless API, 2026-06-17): `conditions[term]=` is a relevance-ranked
+// FULL-TEXT search. Whitespace-separated terms NARROW the match (it behaves like AND/phrase proximity,
+// NOT OR): single `withdrawal` matches >10k docs, but `extension correction reopening withdrawal`
+// matches only 705 — the opposite of what we want. The repeated-array form `conditions[term][]=a&[]=b`
+// narrows even harder (an explicit AND). So there is NO single-request OR. To get the UNION of all four
+// amendment types we issue ONE single-term query per term and union the document numbers (the caller's
+// dedupeByDocumentNumber collapses overlap). The term match is deliberately BROAD/imprecise (it surfaces
+// false positives like "land withdrawal"); precision is downstream — noticeFlags' regex + the eventual
+// RuleBox, and the differential-by-log skip means we only fetch_NEW docs regardless of recall noise.
+export const AMENDMENT_TERMS = [
+  "extension",
+  "correction",
+  "reopening",
+  "withdrawal",
+] as const;
+
+/**
+ * Build an FR documents.json list URL for ONE amendment KEYWORD, bounded to a recent publication-date
+ * window. Mirrors frListUrl's order/per_page/page/fields exactly; the ONLY differences are the filter
+ * (conditions[term] instead of conditions[comment_date][gte]) and the publication_date LOWER BOUND.
+ *
+ *   - conditions[term]={term}: a single amendment keyword (the caller issues one URL per term and unions).
+ *   - conditions[publication_date][gte]={publicationDateOnOrAfter}: a recent trailing-window LOWER BOUND.
+ *
+ * WHY a publication_date BOUND HERE — and why it was WRONG for the open-comment set: the open-comment set
+ * is the FULL set of currently-open windows, whose publication_date can be ~18 months in the past (a long
+ * comment period opened long ago) — bounding it by publication_date would permanently BURY that open
+ * back-catalog (see frListUrl's B1 note). The keyword set is the OPPOSITE shape: it is unbounded over ALL
+ * of FR history (every "extension"/"correction"/"withdrawal" ever printed). An AMENDMENT notice, however,
+ * is published CLOSE IN TIME to the window it amends — within days/weeks, not years — so we only ever need
+ * a recent TRAILING window, never the full back-catalog. Bounding by publication_date is therefore both
+ * SAFE (we don't miss any amendment relevant to a still-relevant window) and NECESSARY (an unbounded term
+ * query would page all of FR history every cycle and blow the FR rate budget + the 10k page ceiling). The
+ * differential-by-log skip in the poller then dedupes anything already ingested, so re-listing the same
+ * trailing window each cycle costs only a few list pages, not re-fetches.
+ */
+export function frKeywordListUrl(opts: {
+  term: string;
+  publicationDateOnOrAfter: string;
+  perPage?: number;
+  page?: number;
+  base?: string;
+}): string {
+  const base = opts.base ?? frBase();
+  const params = new URLSearchParams();
+  params.set("conditions[term]", opts.term);
+  params.set(
+    "conditions[publication_date][gte]",
+    opts.publicationDateOnOrAfter,
+  );
+  params.set("order", "newest"); // descending publication_date — keep newest amendments IF ever truncated
+  params.set("per_page", String(opts.perPage ?? 1000)); // FR allows up to 1000 per page
+  params.set("page", String(opts.page ?? 1));
+  params.set("fields[]", "document_number");
+  params.append("fields[]", "publication_date");
+  return `${base}/documents.json?${params.toString()}`;
+}
+
+/**
+ * Fetch ONE keyword list page (one amendment term, one page) → FrListItem[], deduped by documentNumber.
+ * Mirrors listOpenCommentDocuments exactly (same `results[]` envelope, same missing-document_number
+ * guard, same retry-scope passthrough). FR is KEYLESS. The caller pages this to completion per term and
+ * unions across terms + the open-comment set.
+ */
+export async function listAmendmentDocuments(
+  opts: {
+    term: string;
+    publicationDateOnOrAfter: string;
+    perPage?: number;
+    page?: number;
+    base?: string;
+  } & FetchOpts,
+): Promise<FrListItem[]> {
+  const url = frKeywordListUrl(opts);
   const raw = (await fetchJsonWithRetry(url, {
     retries: opts.retries,
     timeoutMs: opts.timeoutMs,
