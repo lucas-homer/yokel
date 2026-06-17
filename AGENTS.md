@@ -39,10 +39,12 @@ Full designs: `docs/architecture/docketclock.md` and `docs/architecture/watershe
   especially D1 (frDocNum join hit-rate) and W3 (in-basin value density). A measured "no" is a win.
 - **Don't publish fake certainty.** This is the product's core principle AND a working norm: surface
   unknown/conflicting states honestly; never assert an API field/endpoint exists without verifying.
-- **Stack:** TypeScript (Node 24), pnpm workspaces, Fastify + Zod, Postgres 16 (+ PostGIS for
+- **Stack:** TypeScript (Node 24), pnpm workspaces, Fastify + Zod, Postgres 18 (+ PostGIS for
   Watershed). No Turborepo/OpenSearch/Temporal until a measured bottleneck justifies them.
 - **Infrastructure (ADR 0008 + 0009):** Kubernetes is the platform, GitOps-managed by **Argo CD**.
-  Postgres 16 is **self-hosted via CloudNativePG**; the app tier runs in-cluster. Packaging is **Helm**
+  Postgres 18 is **self-hosted via CloudNativePG** (chart `postgres.imageName` is PINNED, and CI's test
+  Postgres matches it — keep them in lockstep; a 16/18 skew once let a PG18-only SQL parse error past CI);
+  the app tier runs in-cluster. Packaging is **Helm**
   (vendored operators + our `charts/docketclock` with `values-local.yaml` / `values-cloud.yaml`);
   secrets via **External Secrets Operator + self-hosted Vault**; cloud provisioning via **Terraform**
   (structure now, provider deferred). Dev is **full in-cluster** on **k3d/colima** on the Mini — bring

@@ -27,14 +27,16 @@ jobs:
       - run: pnpm lint
       - run: pnpm build
 
-  # Test suite. A postgres:16 service backs the DB-dependent suites (the append-only
+  # Test suite. A postgres:18 service backs the DB-dependent suites (the append-only
   # observation log + ingest); DB-free suites ignore DATABASE_URL. Each suite runs
   # its own migrations via runMigrations(), so no separate migrate step is needed.
+  # PINNED to 18 to MATCH the live CNPG cluster (chart postgres.imageName) — a prior
+  # 16-here / 18-in-prod skew let a PG18-only `= any($1)` parse error past CI.
   test:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:16
+        image: postgres:18
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres

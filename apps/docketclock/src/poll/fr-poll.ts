@@ -86,6 +86,8 @@ export interface FrPollDeps {
   fetchDetail(documentNumber: string): Promise<unknown>;
   /** The clock. Defaults to () => new Date(). */
   now(): Date;
+  /** Sleep between FR detail fetches (the cold-start throttle). Defaults to a real setTimeout sleep. */
+  sleep(ms: number): Promise<void>;
 }
 
 export interface FrPollSummary {
@@ -100,6 +102,7 @@ export interface FrPollSummary {
 export interface FrPollOptions {
   perPage?: number;
   maxPages?: number;
+  interFetchDelayMs?: number;
 }
 
 const DEFAULTS = {
@@ -107,6 +110,14 @@ const DEFAULTS = {
   // makes the cap REAL and exactly FR's hard ceiling (10 * 1000 = 10,000): page 11 would 400.
   perPage: 1000,
   maxPages: 10,
+  // COLD-START THROTTLE: the first cycle on a fresh DB fetches the FULL open back-catalog (~1,000 docs)
+  // one detail at a time. Firing those back-to-back trips FR's burst limit (429 "temporarily
+  // deactivated" — observed live). FR publishes no hard rate, but tolerated only ~5 req/s briefly; this
+  // 300ms inter-fetch delay (~3 req/s) keeps us under it. http.ts already honors Retry-After on any 429
+  // that still slips through, and per-doc isolation re-lists a throttled doc next cycle, so a cold start
+  // converges politely over a cycle or two. Steady state fetches only the few newly-published docs, so
+  // the delay is immaterial there. Tunable via the option; tests inject a no-op sleep.
+  interFetchDelayMs: 300,
 };
 
 function resolveDeps(deps?: Partial<FrPollDeps>): FrPollDeps {
@@ -114,6 +125,7 @@ function resolveDeps(deps?: Partial<FrPollDeps>): FrPollDeps {
     listPage: deps?.listPage ?? ((o) => listOpenCommentDocuments(o)),
     fetchDetail: deps?.fetchDetail ?? ((n) => fetchFrDocument(n)),
     now: deps?.now ?? (() => new Date()),
+    sleep: deps?.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms))),
   };
 }
 
@@ -176,19 +188,34 @@ export async function pollFrOnce(
     // docs are immutable → a seen doc never needs re-fetching). A doc that previously FAILED is absent from
     // the log, so it is naturally re-listed here and retried below.
     const docNums = open.map((i) => i.documentNumber);
+    // The `::text[]` cast is load-bearing, not decorative. This seenRows query is the FIRST statement on
+    // the poller's fresh connection, and postgres.js's `sql.array(...)` sends the array param WITHOUT a
+    // resolved element-type OID on a cold connection. Postgres 16 inferred the array type anyway, but
+    // Postgres 18 rejects it at Parse time with `42809 op ANY/ALL (array) requires array on right side`
+    // (a behavior change that bit us live: CNPG defaulted to PG18 while CI/tests run PG16). Passing the
+    // bare JS array with an explicit `::text[]` cast makes the type unambiguous at Parse on any PG
+    // version. (Note: `sql.array(x)::text[]` does NOT work — postgres.js stringifies it, yielding a
+    // "malformed array literal" — so it's the bare-array + cast form specifically.)
     const seenRows = await sql<{ fr_document_number: string }[]>`
       select fr_document_number
       from observations
       where source = ${SOURCE}
-        and fr_document_number = any(${sql.array(docNums)})
+        and fr_document_number = any(${docNums}::text[])
     `;
     const seen = new Set(seenRows.map((r) => r.fr_document_number));
 
+    let fetchAttempts = 0; // FR detail fetches ATTEMPTED (success OR 429/fail) — drives the throttle gate
     for (const item of open) {
       if (seen.has(item.documentNumber)) {
         summary.skipped++;
-        continue;
+        continue; // already in the log — no FR fetch, so no throttle either
       }
+      // Throttle BEFORE each FR detail fetch except the first (the cold-start politeness gate). Counts
+      // ATTEMPTS, not successes, so the request RATE stays bounded even across a run of 429s.
+      if (fetchAttempts > 0 && o.interFetchDelayMs > 0) {
+        await d.sleep(o.interFetchDelayMs);
+      }
+      fetchAttempts++;
       try {
         const detail = await d.fetchDetail(item.documentNumber);
         summary.fetched++;
