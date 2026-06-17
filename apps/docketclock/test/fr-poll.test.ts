@@ -88,9 +88,18 @@ function serverFake(opts: {
   failOn?: Set<string>;
   maxRequestedPage?: { value: number };
   fetchCalls?: Map<string, number>;
+  sleeps?: { count: number; totalMs: number };
 }): Partial<FrPollDeps> {
   return {
     now: () => opts.now,
+    // No-op sleep so the cold-start throttle never makes a test actually wait; record calls so a test
+    // can assert the throttle fires once per FR fetch beyond the first (and never for skipped docs).
+    sleep: async (ms: number) => {
+      if (opts.sleeps) {
+        opts.sleeps.count++;
+        opts.sleeps.totalMs += ms;
+      }
+    },
     listPage: async (req) => {
       const { commentOpenOnOrAfter, perPage, page } = req;
       if (page * perPage > 10_000)
@@ -421,6 +430,51 @@ try {
       "TRUNCATION: NO page beyond maxPages was ever requested (the fake would have thrown otherwise)",
       maxRequestedPage.value === maxPages,
       String(maxRequestedPage.value),
+    );
+  }
+
+  // ── THROTTLE — the cold-start politeness gate fires once per FR fetch beyond the first, never on skips ─
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    const set: FakeDoc[] = [
+      {
+        documentNumber: "2026-30001",
+        publicationDate: "2026-06-10",
+        commentsCloseOn: "2026-07-10",
+        regsDocumentId: null,
+      },
+      {
+        documentNumber: "2026-30002",
+        publicationDate: "2026-06-11",
+        commentsCloseOn: "2026-07-11",
+        regsDocumentId: null,
+      },
+    ];
+    const sleeps1 = { count: 0, totalMs: 0 };
+    const s1 = await pollFrOnce(
+      sql,
+      serverFake({ now: NOW, set, sleeps: sleeps1 }),
+      { interFetchDelayMs: 300 },
+    );
+    assert(
+      "THROTTLE: 2 fetches → sleep fires exactly ONCE (before the 2nd; not the 1st)",
+      s1.fetched === 2 && sleeps1.count === 1 && sleeps1.totalMs === 300,
+      `fetched=${s1.fetched} sleeps=${sleeps1.count} ms=${sleeps1.totalMs}`,
+    );
+    // CYCLE 2: both now in the log → all SKIPPED → zero FR fetches → throttle never fires.
+    const sleeps2 = { count: 0, totalMs: 0 };
+    const s2 = await pollFrOnce(
+      sql,
+      serverFake({ now: NOW, set, sleeps: sleeps2 }),
+      { interFetchDelayMs: 300 },
+    );
+    assert(
+      "THROTTLE: skipped (already-in-log) docs never sleep",
+      s2.fetched === 0 && s2.skipped === 2 && sleeps2.count === 0,
+      `fetched=${s2.fetched} skipped=${s2.skipped} sleeps=${sleeps2.count}`,
     );
   }
 

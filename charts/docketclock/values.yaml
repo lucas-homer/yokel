@@ -22,10 +22,13 @@ ingress:
   host: docketclock.local
 
 # CloudNativePG Cluster — Postgres self-manages its own creds (the `<cluster>-app` Secret); ESO is NOT
-# in this path. imageName empty => operator default; pin an exact 16.x tag in Phase 1.
+# in this path. imageName is PINNED (was "" => operator default, which silently tracked the latest major
+# and drifted prod to PG18 while CI/tests ran PG16 — that version skew let a PG18-only `= any($1)` parse
+# error reach the live poller). Pinned to PG18 to MATCH what the cluster already runs and what CI now
+# tests against (see .github/workflows/ci.yml). Bump deliberately, in lockstep with CI.
 postgres:
   instances: 1
-  imageName: ""
+  imageName: "ghcr.io/cloudnative-pg/postgresql:18.3-system-trixie"
   storageSize: 1Gi
   storageClass: "" # "" = cluster default (local-path on k3d); cloud sets a CSI class
 
