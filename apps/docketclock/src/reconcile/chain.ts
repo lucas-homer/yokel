@@ -77,7 +77,10 @@ export interface ChainCandidate {
   fr_observation_id: string;
   fr_document_number: string | null;
   docket_ids: string[];
+  // rin = the PRIMARY (first) RIN, kept for projection/back-compat. The Rule-2 corroboration logic uses
+  // the FULL `rins` array (intersection), so a multi-RIN doc whose first elements differ still links.
   rin: string | null;
+  rins: string[];
   is_extension: boolean;
   is_correction: boolean;
   is_withdrawal: boolean;
@@ -153,6 +156,19 @@ function shareDocket(a: ChainCandidate, b: ChainCandidate): boolean {
 }
 
 /**
+ * Rule 2 (RIN half) — A and B share at least one NON-EMPTY RIN (array intersection, mirrors shareDocket).
+ * FR returns RINs as a plural array (`regulation_id_numbers`, see extract.ts), and a doc may carry many.
+ * A shared RIN is a strong, unique identity signal, so intersection is high-precision: A and B corroborate
+ * iff some non-empty RIN is in BOTH arrays. Empty strings are ignored and EMPTY arrays NEVER corroborate
+ * (the common Notice/amendment case has rins=[] — those must fall back to the explicit-reference path).
+ */
+function shareRin(a: ChainCandidate, b: ChainCandidate): boolean {
+  const set = new Set(a.rins.filter((r) => r.length > 0));
+  if (set.size === 0) return false;
+  return b.rins.some((r) => r.length > 0 && set.has(r));
+}
+
+/**
  * Rule 2 — identity corroboration: shared non-empty RIN OR B's DATES text explicitly names A's
  * fr_document_number. Shared docket ALONE is insufficient (dockets accrete unrelated notices for years).
  *
@@ -219,13 +235,10 @@ export function chainReconcile(
       // Rule 1 — shared docket.
       if (!shareDocket(a, b)) continue;
 
-      // Rule 2 — identity corroboration (shared non-empty RIN OR explicit doc-number reference).
-      const sharedRin =
-        a.rin !== null &&
-        a.rin !== "" &&
-        b.rin !== null &&
-        b.rin !== "" &&
-        a.rin === b.rin;
+      // Rule 2 — identity corroboration (shared non-empty RIN [array intersection] OR explicit
+      // doc-number reference). RINs are FR's plural array; intersection links multi-RIN docs that a
+      // scalar first-element equality would miss, while empty arrays never corroborate.
+      const sharedRin = shareRin(a, b);
       const referenced = explicitlyReferences(b, a.fr_document_number);
       if (!sharedRin && !referenced) continue;
 
