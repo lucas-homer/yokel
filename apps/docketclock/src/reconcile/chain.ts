@@ -126,8 +126,23 @@ function pubMs(date: string | null): number | null {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
   if (!m) return null;
   const [, y, mo, d] = m;
-  const t = Date.UTC(Number(y), Number(mo) - 1, Number(d));
-  return Number.isNaN(t) ? null : t;
+  const year = Number(y);
+  const month = Number(mo);
+  const day = Number(d);
+  const t = Date.UTC(year, month - 1, day);
+  // ROUND-TRIP GUARD (mirrors extract.ts asCalendarDate / reconcile.ts regsCloseToUtc): reject a date that
+  // silently rolled over (2026-02-30 -> Mar 2) or is out of range. A FABRICATED publication_date must never
+  // satisfy the ordering (rule 3) or recency (rule 4) tests and emit a chain conflict — degrade to "no
+  // date" so the conservative engine UNDER-links rather than chaining off malformed data. (extractFr only
+  // asStr-validates publication_date, so this is the real validation point.)
+  const dt = new Date(t);
+  if (
+    dt.getUTCFullYear() !== year ||
+    dt.getUTCMonth() !== month - 1 ||
+    dt.getUTCDate() !== day
+  )
+    return null;
+  return t;
 }
 
 /** Rule 1 — A and B share at least one docket_id (non-empty array intersection). */

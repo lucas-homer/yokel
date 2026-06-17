@@ -257,6 +257,27 @@ function amendment(over: Partial<ChainCandidate> = {}): ChainCandidate {
   );
 }
 
+// 6b. Malformed publication_date (silent-rollover guard, Copilot C2): a fabricated date like 2026-02-30
+// must NOT round-trip through pubMs and satisfy the ordering/recency rules. With B's pub unparseable, the
+// pair has no usable ordering → NO conflict (conservative under-link, never chain off malformed data).
+{
+  const a = original({ publication_date: "2025-01-01" });
+  const b = amendment({ publication_date: "2026-02-30" }); // rolls over to Mar 2 if unguarded
+  const r = chainReconcile([a, b], NOW);
+  assert(
+    "6b malformed B.publication_date (2026-02-30): NO conflict (round-trip guard)",
+    r.length === 0,
+    String(r.length),
+  );
+  // Out-of-range month is likewise rejected (not coerced).
+  const b2 = amendment({ publication_date: "2025-13-01" });
+  assert(
+    "6b out-of-range month (2025-13-01): NO conflict",
+    chainReconcile([a, b2], NOW).length === 0,
+    String(chainReconcile([a, b2], NOW).length),
+  );
+}
+
 // 7. Dead docket: A closed long before B's publication → NO conflict (rule 4).
 {
   const a = original({

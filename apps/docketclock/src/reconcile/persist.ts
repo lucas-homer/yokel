@@ -283,7 +283,16 @@ export interface ChainPersistResult {
   retired: number;
 }
 
-/** Stable composite key over a cross_window pair (used by the not-in-live-set retirement sweep). */
+/**
+ * Stable composite key over a cross_window pair (used by the not-in-live-set retirement sweep). The SQL
+ * retirement query rebuilds this SAME key by string concatenation, so the two must agree exactly.
+ *
+ * SEPARATOR INVARIANT: `|` is a safe delimiter because NEITHER component can contain it — an OcdId is
+ * pinned by the contract regex (no `|`; verified by the adversary) and observation ids are UUIDs. If a
+ * future id format ever admitted `|`, two distinct tuples could collapse to one key and a stale row could
+ * silently fail to retire; at that point switch to a composite-column compare
+ * (`(ocd_id, ocd_id_b, observation_a_id, observation_b_id) = ANY(VALUES …)`) which needs no delimiter.
+ */
 function pairKey(c: {
   ocd_id: string;
   ocd_id_b: string;
@@ -319,6 +328,13 @@ export async function persistChainConflicts(
   return sql.begin(async (tx) => {
     // UPSERT each live cross_window conflict. detected_at is PRESERVED on re-detection (absent from the DO
     // UPDATE SET); resolved_at is reset to null so a previously-retired-then-relinked pair revives.
+    //
+    // ARBITER SAFETY: the `on conflict` key omits conflict_scope yet can never overwrite a cross_source row.
+    // A cross_window row always carries a non-empty ocd_id_b (B's distinct window), while a cross_source row
+    // carries the '' sentinel — and the contract superRefine FORBIDS a cross_source ConflictRecord from
+    // having a non-empty ocd_id_b (it would fail .parse before reaching persist). So the 4-tuple keys of the
+    // two scopes are structurally disjoint on ocd_id_b; this insert can only ever match another cross_window
+    // row. (If the cross_source path ever emitted a non-empty ocd_id_b the index would need conflict_scope.)
     for (const c of conflicts) {
       await tx`
         insert into conflict_records (
