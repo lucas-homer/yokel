@@ -135,13 +135,21 @@ try {
       (await count()) === "1",
       await count(),
     );
-    const [after] = await sql<{ detected_at: Date }[]>`
-      select detected_at from conflict_records where ocd_id = ${OCD_DEDUP}
+    const [after] = await sql<{ detected_at: Date; conflict_scope: string }[]>`
+      select detected_at, conflict_scope from conflict_records where ocd_id = ${OCD_DEDUP}
     `;
     assert(
       "DEDUP: detected_at preserved across re-detection",
       after!.detected_at.getTime() === before!.detected_at.getTime(),
       `${before!.detected_at.toISOString()} -> ${after!.detected_at.toISOString()}`,
+    );
+    // conflict_scope is deliberately absent from the persist DO UPDATE SET — the 4-col key already
+    // guarantees a re-detected pair maps to the same row, so the scope must NOT change on re-detection.
+    // Pin that invariant explicitly so a future edit to the UPDATE clause can't silently mutate scope.
+    assert(
+      "DEDUP: conflict_scope is immutable across re-detection (absent from DO UPDATE SET)",
+      after!.conflict_scope === before!.conflict_scope,
+      `${before!.conflict_scope} -> ${after!.conflict_scope}`,
     );
   }
 
