@@ -476,6 +476,22 @@ try {
       s2.fetched === 0 && s2.skipped === 2 && sleeps2.count === 0,
       `fetched=${s2.fetched} skipped=${s2.skipped} sleeps=${sleeps2.count}`,
     );
+    // ESCAPE HATCH: interFetchDelayMs=0 disables the throttle entirely (fresh schema → both docs fetched).
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    const sleeps0 = { count: 0, totalMs: 0 };
+    const s0 = await pollFrOnce(
+      sql,
+      serverFake({ now: NOW, set, sleeps: sleeps0 }),
+      { interFetchDelayMs: 0 },
+    );
+    assert(
+      "THROTTLE: interFetchDelayMs=0 disables the throttle (2 fetches, 0 sleeps)",
+      s0.fetched === 2 && sleeps0.count === 0,
+      `fetched=${s0.fetched} sleeps=${sleeps0.count}`,
+    );
   }
 
   // ── EMPTY OPEN SET — no docs open → no fetch, polled stamp written, no throw ─────────────────────────
