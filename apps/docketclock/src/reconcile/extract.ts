@@ -93,7 +93,13 @@ export function extractFr(raw: unknown): FrFields {
   // FR's real RIN field is the PLURAL ARRAY `regulation_id_numbers` (the singular `regulation_id_number`
   // comes back null on every live document). Read the array; the single `rin` projection takes its first
   // element (primary RIN) for the contract column, while `rins` keeps the full set for the chain pass.
-  const rins = asStrArray(doc.regulation_id_numbers);
+  // TRIM + DROP BLANKS at the source (the extractor's "non-empty string or null" convention, per asStr):
+  // a stray "" / whitespace-only entry must never leak into the `rin` contract column NOR let the chain
+  // pass's shareRin corroborate two unrelated docs on a junk value. Cleaned here so every downstream
+  // consumer (rin projection + rins) sees only real, non-empty RINs.
+  const rins = asStrArray(doc.regulation_id_numbers)
+    .map((r) => r.trim())
+    .filter((r) => r.length > 0);
   return {
     commentsCloseOn: asCalendarDate(doc.comments_close_on),
     datesText: asStr(doc.dates),

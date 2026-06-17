@@ -75,6 +75,36 @@ function assert(name: string, cond: boolean, detail = "") {
   );
 }
 
+// 5. Blank / whitespace entries (Copilot #35) → trimmed + dropped at the source: rins carries only real
+// non-empty RINs and `rin` is a real RIN or null, NEVER "" — so no junk leaks into the contract column
+// and shareRin can't corroborate on a whitespace value.
+{
+  const fr = extractFr({
+    document_number: "2025-00005",
+    regulation_id_numbers: ["", "  ", " 0412-AB19 ", "0414-AA00"],
+  });
+  assert(
+    "5 blank entries dropped + trimmed: rins = real RINs only",
+    JSON.stringify(fr.rins) === JSON.stringify(["0412-AB19", "0414-AA00"]),
+    JSON.stringify(fr.rins),
+  );
+  assert(
+    "5 leading blank does not make rin '': rin = first REAL rin",
+    fr.rin === "0412-AB19",
+    String(fr.rin),
+  );
+  // All-blank array → rin null (not "").
+  const allBlank = extractFr({
+    document_number: "2025-00006",
+    regulation_id_numbers: ["", "   "],
+  });
+  assert(
+    "5 all-blank array: rin null, rins []",
+    allBlank.rin === null && allBlank.rins.length === 0,
+    `${allBlank.rin} / ${JSON.stringify(allBlank.rins)}`,
+  );
+}
+
 console.log("\n=== extract results ===");
 console.log(out.join("\n"));
 console.log(
