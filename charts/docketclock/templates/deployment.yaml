@@ -1,44 +1,51 @@
-# DocketClock app Deployment. Today: a placeholder image proving the wiring (Service/Ingress reachable,
-# ESO external secrets + CNPG DB creds injected). Phase 1 swaps in our built image and makes the
-# secret/DB refs required (optional:true now so the tracer bullet isn't blocked on secret/DB timing).
+# DocketClock API Deployment — the Fastify Delivery API (read REST surface: /v1/windows, /v1/conflicts,
+# /openapi.json). Runs `tsx src/api/run.ts` from the built image. The Service targets ONLY this workload
+# (component: api), so the sibling poller Deployment never receives HTTP traffic.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: docketclock
   labels:
     app.kubernetes.io/name: docketclock
+    app.kubernetes.io/component: api
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/name: docketclock
+      app.kubernetes.io/component: api
   template:
     metadata:
       labels:
         app.kubernetes.io/name: docketclock
+        app.kubernetes.io/component: api
     spec:
       containers:
-        - name: app
+        - name: api
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["pnpm", "exec", "tsx", "src/api/run.ts"]
           ports:
             - containerPort: {{ .Values.service.targetPort }}
-          envFrom:
-            - secretRef:
-                name: docketclock-external   # ESO-materialized external secrets
-                optional: true
           env:
+            - name: PORT
+              value: {{ .Values.service.targetPort | quote }}
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: docketclock-pg-app    # CNPG-managed app credentials
+                  name: docketclock-pg-app # CNPG-managed app credentials
                   key: uri
-                  optional: true
+            # The API reads UPPERCASE DOCKETCLOCK_API_KEYS; the ESO secret key is lowercase.
+            - name: DOCKETCLOCK_API_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: docketclock-external
+                  key: docketclock_api_keys
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 2
+            initialDelaySeconds: 3
             periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
