@@ -767,6 +767,18 @@ try {
       "400" in confResponses,
       JSON.stringify(Object.keys(confResponses)),
     );
+    // PR #22 review #5: the spec must also advertise the 500 the routes can return (poison-row /
+    // unexpected error → enveloped ErrorResponse), so consumers see the full response surface.
+    assert(
+      "REVIEW#5: /v1/windows publishes a 500 response in the spec",
+      "500" in winResponses,
+      JSON.stringify(Object.keys(winResponses)),
+    );
+    assert(
+      "REVIEW#5: /v1/conflicts publishes a 500 response in the spec",
+      "500" in confResponses,
+      JSON.stringify(Object.keys(confResponses)),
+    );
   }
 } finally {
   await app.close();
