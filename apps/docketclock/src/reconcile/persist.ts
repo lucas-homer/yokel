@@ -452,6 +452,7 @@ export async function chainReconcileOnce(
       fr_document_number: fr.documentNumber,
       docket_ids: fr.docketIds,
       rin: fr.rin,
+      rins: fr.rins,
       is_extension: r.is_extension,
       is_correction: r.is_correction,
       is_withdrawal: r.is_withdrawal,

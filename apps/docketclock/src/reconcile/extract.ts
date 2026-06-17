@@ -8,7 +8,8 @@
  *
  * FR raw shape (source = "federal_register"): the FR document JSON — comments_close_on (date-only,
  * Eastern, no tz), dates (verbatim legal text), publication_date, document_number, comment_url,
- * docket_ids, regulation_id_number.
+ * docket_ids, regulation_id_numbers (a PLURAL ARRAY — the singular `regulation_id_number` is null on
+ * every live FR document; the real RIN(s) live in the array, often empty for Notices/amendments).
  * Regs raw shape (source = "regulations_gov"): the v4 JSON:API document — data.attributes with
  * commentEndDate (ISO+offset), openForComment, withdrawn, allowLateComments, withinCommentPeriod,
  * docketId.
@@ -66,7 +67,13 @@ export interface FrFields {
   documentNumber: string | null;
   commentUrl: string | null;
   docketIds: string[];
+  // rin = the PRIMARY RIN (first element of regulation_id_numbers) for the ParticipationWindow.rin
+  // contract column. LOSSY-BY-DESIGN: the contract column is a single nullable string, so a multi-RIN
+  // doc keeps only its first RIN here. The full set lives in `rins` (consumed by the chain RIN-
+  // intersection corroboration, which must not lose multi-RIN docs).
   rin: string | null;
+  // rins = the FULL regulation_id_numbers array (FR's real RIN field — plural; often [] for Notices).
+  rins: string[];
 }
 
 export function extractFr(raw: unknown): FrFields {
@@ -81,7 +88,18 @@ export function extractFr(raw: unknown): FrFields {
       commentUrl: null,
       docketIds: [],
       rin: null,
+      rins: [],
     };
+  // FR's real RIN field is the PLURAL ARRAY `regulation_id_numbers` (the singular `regulation_id_number`
+  // comes back null on every live document). Read the array; the single `rin` projection takes its first
+  // element (primary RIN) for the contract column, while `rins` keeps the full set for the chain pass.
+  // TRIM + DROP BLANKS at the source (the extractor's "non-empty string or null" convention, per asStr):
+  // a stray "" / whitespace-only entry must never leak into the `rin` contract column NOR let the chain
+  // pass's shareRin corroborate two unrelated docs on a junk value. Cleaned here so every downstream
+  // consumer (rin projection + rins) sees only real, non-empty RINs.
+  const rins = asStrArray(doc.regulation_id_numbers)
+    .map((r) => r.trim())
+    .filter((r) => r.length > 0);
   return {
     commentsCloseOn: asCalendarDate(doc.comments_close_on),
     datesText: asStr(doc.dates),
@@ -90,7 +108,8 @@ export function extractFr(raw: unknown): FrFields {
     documentNumber: asStr(doc.document_number),
     commentUrl: asStr(doc.comment_url),
     docketIds: asStrArray(doc.docket_ids),
-    rin: asStr(doc.regulation_id_number),
+    rin: rins.length > 0 ? rins[0]! : null,
+    rins,
   };
 }
 

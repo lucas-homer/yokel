@@ -33,6 +33,7 @@ function original(over: Partial<ChainCandidate> = {}): ChainCandidate {
     fr_document_number: "2025-00001",
     docket_ids: ["EPA-HQ-OW-2025-0001"],
     rin: "2040-AA01",
+    rins: ["2040-AA01"],
     is_extension: false,
     is_correction: false,
     is_withdrawal: false,
@@ -55,6 +56,7 @@ function amendment(over: Partial<ChainCandidate> = {}): ChainCandidate {
     fr_document_number: "2025-00002",
     docket_ids: ["EPA-HQ-OW-2025-0001"],
     rin: "2040-AA01",
+    rins: ["2040-AA01"],
     is_extension: true,
     is_correction: false,
     is_withdrawal: false,
@@ -231,15 +233,60 @@ function amendment(over: Partial<ChainCandidate> = {}): ChainCandidate {
 
 // 5. Shared docket but DIFFERENT rin and no explicit reference → NO conflict (rule 2 fails).
 {
-  const a = original({ rin: "2040-AA01" });
+  const a = original({ rin: "2040-AA01", rins: ["2040-AA01"] });
   const b = amendment({
-    rin: "2040-ZZ99", // different rin
+    rin: "2040-ZZ99",
+    rins: ["2040-ZZ99"], // DISJOINT rin array (no intersection with A)
     dates_text:
       "The comment period is extended. Comments now due March 1, 2025.", // no doc-number reference
   });
   const r = chainReconcile([a, b], NOW);
   assert(
-    "5 docket-only (diff rin, no reference): NO conflict (shared docket alone insufficient)",
+    "5 docket-only (disjoint rin arrays, no reference): NO conflict (shared docket alone insufficient)",
+    r.length === 0,
+    String(r.length),
+  );
+}
+
+// 5b. RIN ARRAY INTERSECTION links where scalar first-element equality would MISS. A and B carry
+// multi-RIN arrays whose FIRST elements DIFFER but which share ONE RIN in common. With docket+ordering+
+// recency all satisfied and NO explicit doc reference, the only thing that can link them is the RIN
+// intersection — proving Rule 2 is true array-intersection, not first-element equality.
+{
+  const a = original({
+    rin: "0412-AB19",
+    rins: ["0412-AB19", "2040-SHARED"], // first element 0412-AB19
+  });
+  const b = amendment({
+    rin: "0999-XX00",
+    rins: ["0999-XX00", "2040-SHARED"], // first element differs; shares 2040-SHARED
+    dates_text:
+      "The comment period is extended. Comments now due March 1, 2025.", // no doc-number reference
+  });
+  const r = chainReconcile([a, b], NOW);
+  assert(
+    "5b RIN intersection (shared non-first RIN, differing first elements): conflict emitted via rule 2",
+    r.length === 1 &&
+      r[0]!.ocd_id === a.ocd_id &&
+      r[0]!.conflict_flags.includes("extension_chain_unresolved"),
+    String(r.length),
+  );
+}
+
+// 5c. EMPTY RIN arrays on BOTH sides + shared docket + NO explicit reference → NO conflict. The common
+// Notice/amendment shape is rins=[] (the live FR reality), and empty arrays must NEVER corroborate — this
+// re-pins the "shared docket alone is insufficient" guarantee under the array-intersection rule.
+{
+  const a = original({ rin: null, rins: [] });
+  const b = amendment({
+    rin: null,
+    rins: [],
+    dates_text:
+      "The comment period is extended. Comments now due March 1, 2025.", // no doc-number reference
+  });
+  const r = chainReconcile([a, b], NOW);
+  assert(
+    "5c empty RIN arrays both sides (no reference): NO conflict (empty never corroborates)",
     r.length === 0,
     String(r.length),
   );
@@ -308,9 +355,10 @@ function amendment(over: Partial<ChainCandidate> = {}): ChainCandidate {
 
 // 8. Explicit-reference path: rin differs/null but B.dates_text names A's fr_document_number → conflict.
 {
-  const a = original({ rin: null, fr_document_number: "2024-30637" });
+  const a = original({ rin: null, rins: [], fr_document_number: "2024-30637" });
   const b = amendment({
-    rin: "2040-ZZ99", // different/non-matching rin
+    rin: "2040-ZZ99",
+    rins: ["2040-ZZ99"], // non-matching rin array (forces the explicit-reference path)
     // FR-style reference WITH the embedded-space line-wrap artifact (the EPA 2025-02910 pattern).
     dates_text:
       "The comment period for notice FRL 12023-01-OW (FR 2024- 30637) (89 FR 105041) is extended. Comments now due April 25, 2025.",
@@ -331,6 +379,7 @@ function amendment(over: Partial<ChainCandidate> = {}): ChainCandidate {
     fr_observation_id: "obs-A1",
     fr_document_number: "2024-30637",
     rin: null,
+    rins: [],
     docket_ids: ["EPA-HQ-OW-2024-0454"],
     publication_date: "2024-12-26",
     status: "open",
@@ -340,6 +389,7 @@ function amendment(over: Partial<ChainCandidate> = {}): ChainCandidate {
     fr_observation_id: "obs-A2",
     fr_document_number: "2025-00734",
     rin: null,
+    rins: [],
     docket_ids: ["EPA-HQ-OW-2025-0099"],
     publication_date: "2025-01-15",
     status: "open",
@@ -349,6 +399,7 @@ function amendment(over: Partial<ChainCandidate> = {}): ChainCandidate {
     fr_observation_id: "obs-Bmt",
     fr_document_number: "2025-02910",
     rin: null,
+    rins: [],
     docket_ids: ["EPA-HQ-OW-2024-0454", "EPA-HQ-OW-2025-0099"],
     publication_date: "2025-02-20",
     dates_text:
@@ -451,7 +502,9 @@ async function runDbTests(): Promise<void> {
         comments_close_on: opts.commentsCloseOn,
         publication_date: opts.publicationDate,
         docket_ids: opts.docketIds,
-        regulation_id_number: opts.rin,
+        regulation_id_number: null,
+        // FR's real RIN field is the PLURAL ARRAY (the singular is null on every live doc).
+        regulation_id_numbers: opts.rin ? [opts.rin] : [],
       };
       const cand = parseFrObservation(raw);
       await ingestObservation(sql, cand);
@@ -562,7 +615,8 @@ async function runDbTests(): Promise<void> {
         comments_close_on: "2026-09-15",
         publication_date: "2026-05-20",
         docket_ids: ["EPA-HQ-CHAIN-0001"],
-        regulation_id_number: "2040-CHA1",
+        regulation_id_number: null,
+        regulation_id_numbers: ["2040-CHA1"],
       };
       const candFp = parseFrObservation(rawBfp);
       // Force a later fetched_at so this becomes the LATEST FR observation for B. The original B was
