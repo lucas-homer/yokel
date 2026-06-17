@@ -374,6 +374,12 @@ export function reconcile(
       observation_b_id: regs.observation_id,
       source_a: fr.source,
       source_b: regs.source,
+      // This per-ocd_id engine only ever emits CROSS-SOURCE (FR↔Regs, intra-window) conflicts: both
+      // observations share `ocd_id`, so the 0.4.0 cross-window fields take their cross_source defaults
+      // (ocd_id_b/govinfo_url_b null). The cross-window (chain) emission lives in the #31 chain pass.
+      conflict_scope: "cross_source",
+      ocd_id_b: null,
+      govinfo_url_b: null,
       conflict_flags: conflictFlags,
       govinfo_url: govinfo,
       detected_at: nowIso,
