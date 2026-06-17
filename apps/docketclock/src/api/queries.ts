@@ -271,6 +271,11 @@ interface ConflictRow {
   conflict_flags: string[];
   govinfo_url: string | null;
   detected_at: Date | string;
+  // #31 cross-window fields. ocd_id_b is NOT NULL at the DB level (DEFAULT '' = "no side B"), so it is
+  // never null HERE; the '' sentinel is mapped back to the contract's null on read (see toConflict).
+  conflict_scope: string;
+  ocd_id_b: string;
+  govinfo_url_b: string | null;
   // NOTE: resolved_at is deliberately NOT selected — it is the server-side retirement marker, NOT part
   // of the contract ConflictRecord. The feed publishes only LIVE conflicts (resolved_at IS NULL).
 }
@@ -294,8 +299,18 @@ export async function listConflicts(
 
   // The proof feed is LIVE-only — resolved_at IS NULL is non-negotiable (never surface a dead conflict).
   let where = sql`where resolved_at is null`;
-  if (filters.ocdId !== undefined)
-    where = sql`${where} and ocd_id = ${filters.ocdId}`;
+  if (filters.ocdId === "") {
+    // EMPTY filter (#31 adversary B1): match NOTHING. cross_source rows carry the ocd_id_b='' sentinel,
+    // so an either-side OR with '' would leak the ENTIRE cross_source feed as a foreign, scoped-looking
+    // result (the forbidden "fake certainty"). An empty scope request names no window — `ocd_id = ''`
+    // matches nothing (no real row has an empty ocd_id), preserving pre-Slice-1's honest total=0.
+    where = sql`${where} and ocd_id = ''`;
+  } else if (filters.ocdId !== undefined) {
+    // EITHER-SIDE match (#31): a window must find conflicts where it is side A OR side B (the amendment
+    // wants the chain conflict it is the second party to). The empty case is handled above, so here the
+    // id is a real (non-empty) OcdId and the ocd_id_b='' sentinel on cross_source rows never matches it.
+    where = sql`${where} and (ocd_id = ${filters.ocdId} or ocd_id_b = ${filters.ocdId})`;
+  }
 
   const [countRow] = await sql<{ count: string }[]>`
     select count(*)::text as count from conflict_records ${where}
@@ -304,7 +319,8 @@ export async function listConflicts(
 
   const rows = await sql<ConflictRow[]>`
     select ocd_id, observation_a_id, observation_b_id, source_a, source_b,
-           conflict_flags, govinfo_url, detected_at
+           conflict_flags, govinfo_url, detected_at,
+           conflict_scope, ocd_id_b, govinfo_url_b
     from conflict_records
     ${where}
     order by detected_at desc, ocd_id asc
@@ -323,6 +339,12 @@ export async function listConflicts(
       conflict_flags: r.conflict_flags,
       govinfo_url: r.govinfo_url,
       detected_at: isoOrNull(r.detected_at)!,
+      // #31 NULL-vs-'' SEAM (see 0006 header): DB ocd_id_b '' (the "no side B" sentinel) maps back to the
+      // contract's null. A non-'' value is a real cross_window side-B window. The superRefine then holds:
+      // cross_source ⇒ ocd_id_b null; cross_window ⇒ ocd_id_b present and distinct from ocd_id.
+      conflict_scope: r.conflict_scope,
+      ocd_id_b: r.ocd_id_b === "" ? null : r.ocd_id_b,
+      govinfo_url_b: r.govinfo_url_b,
     }),
   );
 
