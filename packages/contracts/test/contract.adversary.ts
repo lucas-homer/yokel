@@ -408,6 +408,119 @@ function baseWindow(over: Record<string, unknown> = {}) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────
+// EDGE 8 — ConflictRecord cross-window (chain) invariants (@0.4.0, #31). One published /conflicts
+// shape carries TWO kinds of disagreement; the superRefine must make the illegal pairings of
+// conflict_scope × ocd_id_b unrepresentable, while the legacy (defaulted) cross_source path stays
+// back-compat. Side A and side B are DISTINCT valid federal OcdIds.
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+{
+  const ocdA = makeOcdId({ frDocNum: "2025-03547" }); // original window
+  const ocdB = makeOcdId({ frDocNum: "2025-09999" }); // amendment's standalone window
+  assert(
+    "EDGE 8 setup: side A and side B are DISTINCT valid OcdIds",
+    ocdA !== ocdB,
+    `${ocdA} vs ${ocdB}`,
+  );
+
+  /** A valid cross_window ConflictRecord we can spread + mutate per attack. */
+  const baseConflict = (over: Record<string, unknown> = {}) => ({
+    ocd_id: ocdA,
+    observation_a_id: "o-orig",
+    observation_b_id: "o-amend",
+    source_a: "federal_register",
+    source_b: "federal_register", // chain conflicts are often SAME-SOURCE (FR amendment vs FR original)
+    conflict_flags: ["extension_chain_unresolved"],
+    govinfo_url: null,
+    conflict_scope: "cross_window",
+    ocd_id_b: ocdB,
+    govinfo_url_b: null,
+    detected_at: "2026-06-17T00:00:00.000Z",
+    ...over,
+  });
+
+  // 8a — ATTACK: cross_window WITHOUT a side-B window. MUST FAIL (a chain conflict spans two windows).
+  {
+    const r = ConflictRecord.safeParse(baseConflict({ ocd_id_b: null }));
+    assert(
+      "EDGE 8 ATTACK: cross_window + ocd_id_b null is REJECTED (a chain conflict must name side B)",
+      !r.success,
+      r.success
+        ? "schema accepted a cross_window conflict with no side-B window!"
+        : "superRefine caught it",
+    );
+  }
+
+  // 8b — ATTACK (the #31 builder footgun): cross_window with ocd_id_b === ocd_id (SAME window on both
+  // sides). MUST FAIL — a chain conflict's two sides are DISTINCT windows; a same-window disagreement
+  // is cross_source, not cross_window.
+  {
+    const r = ConflictRecord.safeParse(baseConflict({ ocd_id_b: ocdA }));
+    assert(
+      "EDGE 8 ATTACK (#31 footgun): cross_window + ocd_id_b === ocd_id (same window both sides) is REJECTED",
+      !r.success,
+      r.success
+        ? "schema accepted a cross_window conflict pointing at itself on both sides!"
+        : "superRefine caught the self-pair",
+    );
+  }
+
+  // 8c — ATTACK: cross_source carrying a non-null ocd_id_b. MUST FAIL — cross_source is single-window
+  // (FR↔Regs on ONE ocd_id); there is no side-B window.
+  {
+    const r = ConflictRecord.safeParse(
+      baseConflict({ conflict_scope: "cross_source", ocd_id_b: ocdB }),
+    );
+    assert(
+      "EDGE 8 ATTACK: cross_source + non-null ocd_id_b is REJECTED (single-window scope has no side B)",
+      !r.success,
+      r.success
+        ? "schema accepted a cross_source conflict carrying a second window!"
+        : "superRefine caught it",
+    );
+  }
+
+  // 8d — a valid cross_window record (distinct side-B window, all required fields present). MUST PASS.
+  {
+    const r = ConflictRecord.safeParse(baseConflict());
+    assert(
+      "EDGE 8: a valid cross_window ConflictRecord (distinct ocd_id_b) parses",
+      r.success,
+      r.success ? "" : JSON.stringify(r.error.issues),
+    );
+  }
+
+  // 8e — BACK-COMPAT: a record OMITTING conflict_scope/ocd_id_b/govinfo_url_b parses and defaults to
+  // the legacy cross_source meaning (conflict_scope === "cross_source", ocd_id_b === null). This is
+  // the wire/parse guarantee that lets every current reconcile emit site stay valid against 0.4.0.
+  {
+    const r = ConflictRecord.safeParse({
+      ocd_id: ocdA,
+      observation_a_id: "o1",
+      observation_b_id: "o2",
+      source_a: "federal_register",
+      source_b: "regulations_gov",
+      conflict_flags: ["fr_regs_date_mismatch"],
+      govinfo_url: null,
+      detected_at: "2026-06-17T00:00:00.000Z",
+    });
+    assert(
+      "EDGE 8 BACK-COMPAT: a legacy record omitting the cross-window fields parses",
+      r.success,
+      r.success ? "" : JSON.stringify(r.error.issues),
+    );
+    assert(
+      "EDGE 8 BACK-COMPAT: omitted conflict_scope defaults to 'cross_source' and ocd_id_b to null",
+      r.success &&
+        r.data.conflict_scope === "cross_source" &&
+        r.data.ocd_id_b === null,
+      r.success
+        ? `conflict_scope=${r.data.conflict_scope} ocd_id_b=${String(r.data.ocd_id_b)}`
+        : "record did not parse",
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────────────────────
 console.log("\n=== contract.adversary results ===");
 console.log(log.join("\n"));
 console.log(
