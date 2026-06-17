@@ -826,6 +826,625 @@ try {
     );
   }
 
+  // ════════════════════════════════════════════════════════════════════════════════════════════════════
+  // #21 BOUNDED-RETRY / DEAD-LETTER (Regs)
+  // ════════════════════════════════════════════════════════════════════════════════════════════════════
+
+  // ── #21 BOUNDED RETRY UNCHANGED — a doc failing ONCE still HOLDS the cursor + retries (not dead-letter) ─
+  // This re-confirms the #20/#1 behavior survives: with the default maxFailAttempts=5, a single failure
+  // does NOT dead-letter — the cursor stays frozen (the failed older doc is not passed).
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    const older = "BR-OLD-0001";
+    const newer = "BR-NEW-0001";
+    const deps = fakeDeps({
+      now: NOW,
+      pages: [
+        [
+          { documentId: older, lastModifiedDate: "2026-05-10T00:00:00Z" },
+          { documentId: newer, lastModifiedDate: "2026-05-12T00:00:00Z" },
+        ],
+      ],
+      details: {
+        [newer]: regsDetail(newer, "2025-BRN1", {
+          commentEndDate: "2026-08-02T12:00:00Z",
+          withinCommentPeriod: true,
+          openForComment: true,
+          withdrawn: false,
+        }),
+      },
+      failOn: new Set([older]),
+    });
+    const s = await pollRegsOnce(sql, deps, {});
+    assert(
+      "#21 BOUNDED: a SINGLE failure does NOT dead-letter the doc",
+      s.deadLettered === 0,
+      String(s.deadLettered),
+    );
+    assert(
+      "#21 BOUNDED: a single failure still HOLDS the cursor (does not pass the older failed doc)",
+      s.cursorAdvancedTo === null,
+      String(s.cursorAdvancedTo),
+    );
+    const [dl] = await sql<
+      { attempts: number; dead_lettered_at: Date | null }[]
+    >`
+      select attempts, dead_lettered_at from poll_dead_letter
+      where source = ${SOURCE} and document_key = ${older}
+    `;
+    assert(
+      "#21 BOUNDED: a ledger row exists at attempts=1, NOT yet dead-lettered (dead_lettered_at null)",
+      dl!.attempts === 1 && dl!.dead_lettered_at === null,
+      `attempts=${dl?.attempts} dl=${dl?.dead_lettered_at}`,
+    );
+  }
+
+  // ── #21 REGS DEAD-LETTER (CORE acceptance) — a doc failing maxFailAttempts cycles is dead-lettered and
+  // the cursor ADVANCES PAST it (it no longer freezes the prefix). This is the wedged-cursor fix.
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    const bad = "DL-OLD-0001"; // older-dated, fails EVERY cycle
+    const good = "DL-NEW-0001"; // newer-dated, always succeeds
+    const badMod = "2026-05-10T00:00:00Z";
+    const goodMod = "2026-05-12T00:00:00Z";
+    const maxFailAttempts = 3;
+    const pages = [
+      [
+        { documentId: bad, lastModifiedDate: badMod },
+        { documentId: good, lastModifiedDate: goodMod },
+      ],
+    ];
+    const details = {
+      [good]: regsDetail(good, "2025-DLN1", {
+        commentEndDate: "2026-08-02T12:00:00Z",
+        withinCommentPeriod: true,
+        openForComment: true,
+        withdrawn: false,
+      }),
+    };
+    // Cycles 1..(N-1): bad fails, NOT yet dead-lettered → cursor stays frozen (held by the older bad doc).
+    let lastSummary;
+    for (let cycle = 1; cycle < maxFailAttempts; cycle++) {
+      const deps = fakeDeps({
+        now: NOW,
+        pages,
+        details,
+        failOn: new Set([bad]),
+      });
+      lastSummary = await pollRegsOnce(sql, deps, { maxFailAttempts });
+      assert(
+        `#21 DEAD-LETTER: cycle ${cycle} (< N) does NOT dead-letter and HOLDS the cursor (null)`,
+        lastSummary.deadLettered === 0 && lastSummary.cursorAdvancedTo === null,
+        `dl=${lastSummary.deadLettered} cursor=${lastSummary.cursorAdvancedTo}`,
+      );
+    }
+    // Cycle N: bad fails for the Nth consecutive time → DEAD-LETTERED (summary.deadLettered=1, the
+    // threshold-crossing call). TIMING (the follow-up fix): the bad doc was STILL in this cycle's
+    // differential list (the `dead` set is fetched at the TOP of the cycle, before it crossed), so its
+    // failure FROZE the prefix THIS cycle — the cursor stays null on cycle N. It un-wedges next cycle.
+    const depsN = fakeDeps({
+      now: NOW,
+      pages,
+      details,
+      failOn: new Set([bad]),
+    });
+    const sN = await pollRegsOnce(sql, depsN, { maxFailAttempts });
+    assert(
+      "#21 DEAD-LETTER (CORE): cycle N dead-letters the perma-failing doc (summary.deadLettered=1)",
+      sN.deadLettered === 1,
+      String(sN.deadLettered),
+    );
+    assert(
+      "#21 DEAD-LETTER (CORE): cycle N (the crossing cycle) still HOLDS the cursor (bad doc was in the list + froze it)",
+      sN.cursorAdvancedTo === null,
+      String(sN.cursorAdvancedTo),
+    );
+    const [dl] = await sql<
+      { attempts: number; dead_lettered_at: Date | null }[]
+    >`
+      select attempts, dead_lettered_at from poll_dead_letter
+      where source = ${SOURCE} and document_key = ${bad}
+    `;
+    assert(
+      "#21 DEAD-LETTER (CORE): the ledger row has dead_lettered_at SET and attempts >= N",
+      !!dl && dl.dead_lettered_at !== null && dl.attempts >= maxFailAttempts,
+      `attempts=${dl?.attempts} dl=${dl?.dead_lettered_at}`,
+    );
+
+    // Cycle N+1: the bad doc is now in the `dead` set → FILTERED OUT of `live`. Its slot is gone from the
+    // ascending list, so the contiguous-success cursor advances PAST it to the good doc's date. The alert
+    // does NOT re-fire and deadLettered is NOT re-counted (gated on newlyDeadLettered).
+    const depsN1 = fakeDeps({
+      now: NOW,
+      pages,
+      details,
+      failOn: new Set([bad]),
+    });
+    const sN1 = await pollRegsOnce(sql, depsN1, { maxFailAttempts });
+    assert(
+      "#21 DEAD-LETTER (CORE): cycle N+1 ADVANCES the cursor PAST the now-filtered dead-lettered doc",
+      sN1.cursorAdvancedTo === new Date(goodMod).toISOString(),
+      String(sN1.cursorAdvancedTo),
+    );
+    assert(
+      "#21 DEAD-LETTER (CORE): cycle N+1 does NOT re-count deadLettered (alert fires exactly once)",
+      sN1.deadLettered === 0,
+      String(sN1.deadLettered),
+    );
+    // The good doc still ingested every cycle (isolation intact).
+    const [goodObs] = await sql<{ count: string }[]>`
+      select count(*)::text as count from observations where regs_document_id = ${good}
+    `;
+    assert(
+      "#21 DEAD-LETTER: the good doc still ingested throughout (isolation intact)",
+      goodObs!.count === "1",
+      goodObs!.count,
+    );
+  }
+
+  // ── #21 PARSE/INGEST FAILURES COUNT (not just fetch) — a doc whose PARSE consistently throws
+  // dead-letters the same way (owner-comment: count parse/ingest, not only fetch). fetchDetail SUCCEEDS
+  // but returns a malformed payload that parseRegsObservation rejects.
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    const parseBad = "PARSE-BAD-0001";
+    const maxFailAttempts = 2;
+    const pages = [
+      [{ documentId: parseBad, lastModifiedDate: "2026-05-10T00:00:00Z" }],
+    ];
+    // A payload that fetchDetail returns fine but parseRegsObservation cannot parse (no data.attributes).
+    const malformed = { data: { id: parseBad } };
+    let dlSummary;
+    for (let cycle = 1; cycle <= maxFailAttempts; cycle++) {
+      const deps: Partial<PollDeps> = {
+        now: () => NOW,
+        listPage: async ({ pageNumber }) => pages[pageNumber - 1] ?? [],
+        fetchDetail: async () => malformed, // fetch SUCCEEDS, parse will throw
+      };
+      dlSummary = await pollRegsOnce(sql, deps, { maxFailAttempts });
+    }
+    assert(
+      "#21 PARSE-COUNTS: a doc whose PARSE consistently throws is dead-lettered (fetch succeeded)",
+      dlSummary!.deadLettered === 1,
+      String(dlSummary!.deadLettered),
+    );
+    const [dl] = await sql<
+      { attempts: number; dead_lettered_at: Date | null }[]
+    >`
+      select attempts, dead_lettered_at from poll_dead_letter
+      where source = ${SOURCE} and document_key = ${parseBad}
+    `;
+    assert(
+      "#21 PARSE-COUNTS: the ledger counted the parse failures (attempts >= N, dead_lettered_at set)",
+      !!dl && dl.attempts >= maxFailAttempts && dl.dead_lettered_at !== null,
+      `attempts=${dl?.attempts} dl=${dl?.dead_lettered_at}`,
+    );
+  }
+
+  // ── #21 RECOVERY / CLEAR ON SUCCESS — a doc that fails < N then SUCCEEDS has its ledger row cleared ──
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    const doc = "RECOVER-0001";
+    const mod = "2026-05-10T00:00:00Z";
+    const detail = regsDetail(doc, "2025-RCV1", {
+      commentEndDate: "2026-08-02T12:00:00Z",
+      withinCommentPeriod: true,
+      openForComment: true,
+      withdrawn: false,
+    });
+    const pages = [[{ documentId: doc, lastModifiedDate: mod }]];
+    // Cycle 1: fail (attempts=1, bounded).
+    await pollRegsOnce(
+      sql,
+      fakeDeps({ now: NOW, pages, details: {}, failOn: new Set([doc]) }),
+      { maxFailAttempts: 5 },
+    );
+    const [mid] = await sql<{ attempts: number }[]>`
+      select attempts from poll_dead_letter where source = ${SOURCE} and document_key = ${doc}
+    `;
+    assert(
+      "#21 RECOVERY: after one failure a ledger row exists (attempts=1)",
+      mid!.attempts === 1,
+      String(mid?.attempts),
+    );
+    // Cycle 2: succeed → row cleared + recovered counted.
+    const s2 = await pollRegsOnce(
+      sql,
+      fakeDeps({ now: NOW, pages, details: { [doc]: detail } }),
+      { maxFailAttempts: 5 },
+    );
+    assert(
+      "#21 RECOVERY: a later success counts summary.recovered (the failing row was cleared)",
+      s2.recovered === 1,
+      String(s2.recovered),
+    );
+    const [gone] = await sql<{ count: string }[]>`
+      select count(*)::text as count from poll_dead_letter where source = ${SOURCE} and document_key = ${doc}
+    `;
+    assert(
+      "#21 RECOVERY: the ledger row is DELETED after success (attempts reset)",
+      gone!.count === "0",
+      gone!.count,
+    );
+    assert(
+      "#21 RECOVERY: the recovered doc cursor advances (it succeeded normally)",
+      s2.cursorAdvancedTo === new Date(mod).toISOString(),
+      String(s2.cursorAdvancedTo),
+    );
+  }
+
+  // ── #21 RETRY SWEEP — a dead-lettered doc whose fetchDetail now SUCCEEDS is re-ingested by the sweep
+  // once deadLetterRetryStaleAfterMs has elapsed; the row is cleared; recovered counted. A not-yet-due
+  // dead-letter is NOT retried.
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    const doc = "SWEEP-0001";
+    const mod = "2026-05-10T00:00:00Z";
+    const maxFailAttempts = 2;
+    const retryMs = 6 * 3_600_000;
+    const detail = regsDetail(doc, "2025-SWP1", {
+      commentEndDate: "2026-09-01T12:00:00Z",
+      withinCommentPeriod: true,
+      openForComment: true,
+      withdrawn: false,
+    });
+    const pages = [[{ documentId: doc, lastModifiedDate: mod }]];
+    // Cycles 1..N at NOW: fail → dead-lettered (dead_lettered_at = NOW).
+    for (let cycle = 1; cycle <= maxFailAttempts; cycle++) {
+      await pollRegsOnce(
+        sql,
+        fakeDeps({ now: NOW, pages, details: {}, failOn: new Set([doc]) }),
+        { maxFailAttempts, deadLetterRetryStaleAfterMs: retryMs },
+      );
+    }
+    const [dlRow] = await sql<{ dead_lettered_at: Date | null }[]>`
+      select dead_lettered_at from poll_dead_letter where source = ${SOURCE} and document_key = ${doc}
+    `;
+    assert(
+      "#21 SWEEP SEED: the doc is dead-lettered after N failures",
+      dlRow!.dead_lettered_at !== null,
+      String(dlRow?.dead_lettered_at),
+    );
+
+    // A cycle SOON after (within retryMs), fetchDetail now SUCCEEDS, list EMPTY: the sweep must NOT retry
+    // yet (dead_lettered_at is too recent). The differential list is empty so nothing else touches it.
+    const soon = new Date(NOW.getTime() + 60 * 60 * 1000); // +1h < 6h
+    const sSoon = await pollRegsOnce(
+      sql,
+      {
+        now: () => soon,
+        listPage: async () => [],
+        fetchDetail: async () => detail,
+      },
+      { maxFailAttempts, deadLetterRetryStaleAfterMs: retryMs },
+    );
+    assert(
+      "#21 SWEEP: a not-yet-due dead-letter is NOT retried (throttle holds)",
+      sSoon.deadLetterRetried === 0 && sSoon.recovered === 0,
+      `retried=${sSoon.deadLetterRetried} recovered=${sSoon.recovered}`,
+    );
+    const [stillThere] = await sql<{ count: string }[]>`
+      select count(*)::text as count from poll_dead_letter where source = ${SOURCE} and document_key = ${doc}
+    `;
+    assert(
+      "#21 SWEEP: the dead-letter row is still present (not yet drained)",
+      stillThere!.count === "1",
+      stillThere!.count,
+    );
+
+    // A cycle PAST retryMs: the sweep re-attempts; fetchDetail succeeds → re-ingested, row cleared, recovered.
+    const later = new Date(NOW.getTime() + 7 * 3_600_000); // +7h > 6h
+    const sLater = await pollRegsOnce(
+      sql,
+      {
+        now: () => later,
+        listPage: async () => [],
+        fetchDetail: async () => detail,
+      },
+      { maxFailAttempts, deadLetterRetryStaleAfterMs: retryMs },
+    );
+    assert(
+      "#21 SWEEP: a DUE dead-letter is re-attempted by the sweep (deadLetterRetried=1)",
+      sLater.deadLetterRetried === 1,
+      String(sLater.deadLetterRetried),
+    );
+    assert(
+      "#21 SWEEP: the recovered doc is counted + ingested by the sweep",
+      sLater.recovered === 1,
+      String(sLater.recovered),
+    );
+    const [cleared] = await sql<{ count: string }[]>`
+      select count(*)::text as count from poll_dead_letter where source = ${SOURCE} and document_key = ${doc}
+    `;
+    assert(
+      "#21 SWEEP: the dead-letter row is CLEARED after a successful sweep retry",
+      cleared!.count === "0",
+      cleared!.count,
+    );
+    const [obs] = await sql<{ count: string }[]>`
+      select count(*)::text as count from observations where regs_document_id = ${doc}
+    `;
+    assert(
+      "#21 SWEEP: the previously-doomed doc finally has an observation (sweep re-ingested it)",
+      obs!.count === "1",
+      obs!.count,
+    );
+  }
+
+  // ── #21-B1 REGRESSION — a NULL-dated perma-failing differential doc must NOT wedge the cursor forever ─
+  // The wedge: regs (unlike FR) never removed dead-lettered docs from the differential list, and a
+  // NULL-dated doc froze the prefix. A perma-failing list item with lastModifiedDate=null re-entered the
+  // list every cycle and re-froze the prefix forever → the cursor never advanced past it. The fix filters
+  // dead-lettered docs out of `live`, so the prefix advances past its now-absent slot. We run the doc to
+  // dead-letter, then ≥2 more cycles, and assert the cursor ADVANCES (to a newer good doc that sorts AFTER
+  // the null-dated one). This test FAILS on the pre-fix code (the cursor stays null forever).
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    const nullBad = "B1-NULLBAD-0001"; // NULL lastModifiedDate, fails EVERY cycle
+    const good = "B1-GOOD-0001"; // a real date, always succeeds
+    const goodMod = "2026-05-15T00:00:00Z";
+    const maxFailAttempts = 2;
+    // A NULL lastModifiedDate sorts FIRST (oldest), so nullBad is processed before good every cycle.
+    const pages: RegsListItem[][] = [
+      [
+        { documentId: nullBad, lastModifiedDate: null },
+        { documentId: good, lastModifiedDate: goodMod },
+      ],
+    ];
+    const details = {
+      [good]: regsDetail(good, "2025-B1G1", {
+        commentEndDate: "2026-09-01T12:00:00Z",
+        withinCommentPeriod: true,
+        openForComment: true,
+        withdrawn: false,
+      }),
+    };
+    // Cycles 1..N: nullBad fails. Until dead-lettered it is in `live` and (being NULL-dated + failing)
+    // freezes the prefix → cursor null. On cycle N it crosses the threshold (still froze the prefix).
+    let lastNull;
+    for (let cycle = 1; cycle <= maxFailAttempts; cycle++) {
+      lastNull = await pollRegsOnce(
+        sql,
+        fakeDeps({ now: NOW, pages, details, failOn: new Set([nullBad]) }),
+        { maxFailAttempts },
+      );
+      assert(
+        `#21-B1: cycle ${cycle} (≤ N) HOLDS the cursor at null (NULL-dated bad doc froze the prefix)`,
+        lastNull.cursorAdvancedTo === null,
+        `cursor=${lastNull.cursorAdvancedTo}`,
+      );
+    }
+    const [b1dl] = await sql<{ dead_lettered_at: Date | null }[]>`
+      select dead_lettered_at from poll_dead_letter
+      where source = ${SOURCE} and document_key = ${nullBad}
+    `;
+    assert(
+      "#21-B1: the NULL-dated bad doc is dead-lettered after N failures",
+      b1dl!.dead_lettered_at !== null,
+      String(b1dl?.dead_lettered_at),
+    );
+    // Cycle N+1 and N+2: nullBad is now in `dead` → filtered out of `live`. The cursor ADVANCES to good's
+    // date and STAYS advanced (it does NOT regress to null). This is the un-wedge that B1 exists to fix.
+    const sN1 = await pollRegsOnce(
+      sql,
+      fakeDeps({ now: NOW, pages, details, failOn: new Set([nullBad]) }),
+      { maxFailAttempts },
+    );
+    assert(
+      "#21-B1 (KEY): cycle N+1 ADVANCES the cursor past the NULL-dated dead-lettered doc (no longer wedged)",
+      sN1.cursorAdvancedTo === new Date(goodMod).toISOString(),
+      `cursor=${sN1.cursorAdvancedTo}`,
+    );
+    const sN2 = await pollRegsOnce(
+      sql,
+      fakeDeps({ now: NOW, pages, details, failOn: new Set([nullBad]) }),
+      { maxFailAttempts },
+    );
+    assert(
+      "#21-B1 (KEY): a further cycle keeps the cursor advanced (non-null) — never re-wedged",
+      sN2.cursorAdvancedTo === new Date(goodMod).toISOString(),
+      `cursor=${sN2.cursorAdvancedTo}`,
+    );
+    assert(
+      "#21-B1: the dead-letter alert/count does NOT re-fire on the post-dead-letter cycles",
+      sN1.deadLettered === 0 && sN2.deadLettered === 0,
+      `N+1=${sN1.deadLettered} N+2=${sN2.deadLettered}`,
+    );
+  }
+
+  // ── #21-B2 REGRESSION — an already-dead-lettered OPEN window is NOT re-polled (pass 2) and the alert
+  // does NOT re-fire. The wedge: the re-poll pass had no dead-letter skip, so it re-fetched a
+  // dead-lettered open window every ~6h, re-failed, and (with the old level-triggered gate) re-counted
+  // deadLettered + re-fired the loud alert every cycle. The fix excludes dead-lettered windows from pass 2.
+  // We seed an OPEN window via the differential pass, dead-letter it, then re-poll on a later (stale)
+  // cycle and assert pass 2 does NOT fetch it and deadLettered stays 0.
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    const doc = "B2-DOC-0001";
+    const mod = "2026-05-10T00:00:00Z";
+    const maxFailAttempts = 2;
+    const repollMs = 6 * 3_600_000;
+    const retryMs = 6 * 3_600_000;
+    const openDetail = regsDetail(doc, "2025-B2D1", {
+      commentEndDate: "2026-09-01T12:00:00Z",
+      withinCommentPeriod: true,
+      openForComment: true,
+      withdrawn: false,
+    });
+    const pages = [[{ documentId: doc, lastModifiedDate: mod }]];
+
+    // Cycle 0: ingest the doc OPEN (creates an open window with a regs_document_id + a fresh watch stamp).
+    await pollRegsOnce(
+      sql,
+      fakeDeps({ now: NOW, pages, details: { [doc]: openDetail } }),
+      { maxFailAttempts, repollStaleAfterMs: repollMs },
+    );
+    const [seedWin] = await sql<{ status: string }[]>`
+      select status from participation_windows where regs_document_id = ${doc}
+    `;
+    assert(
+      "#21-B2 SEED: the window is OPEN with a regs_document_id (re-poll-eligible once stale)",
+      seedWin!.status === "open",
+      String(seedWin?.status),
+    );
+
+    // Cycles 1..N (the doc now drops out of the differential list AND fetchDetail fails): the doc fails
+    // its re-poll N times and dead-letters. Advance the clock each cycle so the re-poll throttle fires.
+    let dlCycleSummary;
+    for (let cycle = 1; cycle <= maxFailAttempts; cycle++) {
+      const t = new Date(NOW.getTime() + cycle * (repollMs + 3_600_000));
+      dlCycleSummary = await pollRegsOnce(
+        sql,
+        {
+          now: () => t,
+          listPage: async () => [], // doc dropped from the differential list
+          fetchDetail: async () => {
+            throw new Error("synthetic re-poll failure");
+          },
+        },
+        {
+          maxFailAttempts,
+          repollStaleAfterMs: repollMs,
+          deadLetterRetryStaleAfterMs: retryMs,
+        },
+      );
+    }
+    const [b2dl] = await sql<{ dead_lettered_at: Date | null }[]>`
+      select dead_lettered_at from poll_dead_letter
+      where source = ${SOURCE} and document_key = ${doc}
+    `;
+    assert(
+      "#21-B2 SEED: the open window's doc is dead-lettered after N re-poll failures",
+      b2dl!.dead_lettered_at !== null,
+      String(b2dl?.dead_lettered_at),
+    );
+
+    // The crossing cycle counted deadLettered exactly once.
+    assert(
+      "#21-B2: the threshold-crossing cycle counts deadLettered exactly once",
+      dlCycleSummary!.deadLettered === 1,
+      String(dlCycleSummary!.deadLettered),
+    );
+
+    // A LATER stale cycle: the doc is still dropped from the differential list and is past the re-poll
+    // throttle. Pass 2 must NOT re-fetch the dead-lettered window. fetchDetail records whether it was
+    // called for our doc; the differential list stays empty so only pass 2/3 could call it. We make the
+    // clock recent enough that the drain sweep is NOT yet due (so pass 3 doesn't touch it either), proving
+    // it is pass-2 exclusion, not the sweep, keeping it untouched.
+    const fetchedDocs: string[] = [];
+    const laterButSweepNotDue = new Date(
+      NOW.getTime() + (maxFailAttempts + 1) * (repollMs + 3_600_000),
+    );
+    // Ensure the sweep is NOT due: set deadLetterRetryStaleAfterMs huge so coalesce(last_retry_at,
+    // dead_lettered_at) is never older than the cutoff.
+    const sLater = await pollRegsOnce(
+      sql,
+      {
+        now: () => laterButSweepNotDue,
+        listPage: async () => [],
+        fetchDetail: async (id: string) => {
+          fetchedDocs.push(id);
+          throw new Error("should not be fetched");
+        },
+      },
+      {
+        maxFailAttempts,
+        repollStaleAfterMs: repollMs,
+        deadLetterRetryStaleAfterMs: 1000 * 3_600_000, // sweep effectively never due
+      },
+    );
+    assert(
+      "#21-B2 (KEY): pass 2 does NOT re-fetch the dead-lettered open window (fetchDetail never called for it)",
+      !fetchedDocs.includes(doc),
+      `fetched=[${fetchedDocs.join(",")}]`,
+    );
+    assert(
+      "#21-B2 (KEY): a subsequent cycle does NOT re-count deadLettered (alert does not cry wolf)",
+      sLater.deadLettered === 0,
+      String(sLater.deadLettered),
+    );
+    assert(
+      "#21-B2: the dead-lettered window is excluded from the re-poll pass (repolled does not include it)",
+      sLater.repolled === 0,
+      String(sLater.repolled),
+    );
+  }
+
+  // ── #21 RETRY SWEEP — A FAILED sweep retry does NOT re-count deadLettered or re-alert ────────────────
+  // The pass-3 sweep is the sole re-attempt path for a dead-lettered doc. A still-failing sweep retry must
+  // bump the throttle (markRetryAttempt) WITHOUT touching summary.deadLettered or re-firing the alert.
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    const doc = "SWEEP-FAIL-0001";
+    const mod = "2026-05-10T00:00:00Z";
+    const maxFailAttempts = 2;
+    const retryMs = 6 * 3_600_000;
+    const pages = [[{ documentId: doc, lastModifiedDate: mod }]];
+    // Dead-letter the doc.
+    for (let cycle = 1; cycle <= maxFailAttempts; cycle++) {
+      await pollRegsOnce(
+        sql,
+        fakeDeps({ now: NOW, pages, details: {}, failOn: new Set([doc]) }),
+        { maxFailAttempts, deadLetterRetryStaleAfterMs: retryMs },
+      );
+    }
+    // A cycle PAST retryMs where the sweep re-attempts but STILL fails: deadLettered must stay 0.
+    const later = new Date(NOW.getTime() + 7 * 3_600_000);
+    const sLater = await pollRegsOnce(
+      sql,
+      {
+        now: () => later,
+        listPage: async () => [],
+        fetchDetail: async () => {
+          throw new Error("still broken on the sweep");
+        },
+      },
+      { maxFailAttempts, deadLetterRetryStaleAfterMs: retryMs },
+    );
+    assert(
+      "#21 SWEEP-FAIL: a still-failing sweep retry was attempted (deadLetterRetried=1)",
+      sLater.deadLetterRetried === 1,
+      String(sLater.deadLetterRetried),
+    );
+    assert(
+      "#21 SWEEP-FAIL: a failed sweep retry does NOT re-count deadLettered (no re-alert)",
+      sLater.deadLettered === 0,
+      String(sLater.deadLettered),
+    );
+    const [bumped] = await sql<{ attempts: number }[]>`
+      select attempts from poll_dead_letter where source = ${SOURCE} and document_key = ${doc}
+    `;
+    assert(
+      "#21 SWEEP-FAIL: the failed sweep retry bumped attempts (markRetryAttempt ran)",
+      bumped!.attempts > maxFailAttempts,
+      String(bumped?.attempts),
+    );
+  }
+
   // ── FIX #2 — an FR-ONLY open window (regs_document_id set, ZERO regulations_gov obs) IS re-polled ────
   // An FR observation carries regulations_dot_gov_info.document_id → regs_document_id onto the window via
   // reconcile, with NO regulations_gov observation. The old subquery was NULL → never eligible. Now

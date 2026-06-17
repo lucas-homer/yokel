@@ -394,6 +394,132 @@ try {
     );
   }
 
+  // ── #21 FR DEAD-LETTER + SKIP + RETRY SWEEP ──────────────────────────────────────────────────────────
+  // A persistently-failing FR doc is dead-lettered after N consecutive failed cycles; from then on it is
+  // NOT re-fetched on the hot path (assert via the fetchDetail spy); the slow retry sweep re-attempts it
+  // once deadLetterRetryStaleAfterMs has elapsed, and a now-succeeding fetch recovers + clears it.
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+
+    const docFail = "2026-DLFAIL1";
+    const maxFailAttempts = 3;
+    const retryMs = 6 * 3_600_000;
+    const set: FakeDoc[] = [
+      {
+        documentNumber: docFail,
+        publicationDate: "2026-05-29",
+        commentsCloseOn: "2026-08-01",
+        regsDocumentId: null,
+      },
+    ];
+    const fetchCalls = new Map<string, number>();
+
+    // Cycles 1..N at NOW: fetchDetail always FAILS → after N consecutive failures the doc is dead-lettered.
+    let dlSummary;
+    for (let cycle = 1; cycle <= maxFailAttempts; cycle++) {
+      dlSummary = await pollFrOnce(
+        sql,
+        serverFake({
+          now: NOW,
+          set,
+          failOn: new Set([docFail]),
+          fetchCalls,
+        }),
+        {
+          perPage: 1000,
+          maxFailAttempts,
+          deadLetterRetryStaleAfterMs: retryMs,
+        },
+      );
+    }
+    assert(
+      "#21 FR DEAD-LETTER: the doc is dead-lettered on the Nth consecutive failure",
+      dlSummary!.deadLettered === 1,
+      String(dlSummary!.deadLettered),
+    );
+    const fetchesAtDeadLetter = fetchCalls.get(docFail) ?? 0;
+    assert(
+      "#21 FR DEAD-LETTER: it was fetch-attempted exactly N times across the N failing cycles",
+      fetchesAtDeadLetter === maxFailAttempts,
+      String(fetchesAtDeadLetter),
+    );
+    const [dlRow] = await sql<
+      { attempts: number; dead_lettered_at: Date | null }[]
+    >`
+      select attempts, dead_lettered_at from poll_dead_letter
+      where source = ${SOURCE} and document_key = ${docFail}
+    `;
+    assert(
+      "#21 FR DEAD-LETTER: a ledger row exists with dead_lettered_at set and attempts >= N",
+      !!dlRow &&
+        dlRow.dead_lettered_at !== null &&
+        dlRow.attempts >= maxFailAttempts,
+      `attempts=${dlRow?.attempts} dl=${dlRow?.dead_lettered_at}`,
+    );
+
+    // A subsequent cycle SOON after (within retryMs): the doc is now SKIPPED from the hot path (NOT
+    // re-fetched), and the sweep is NOT yet due → fetchDetail call count is UNCHANGED.
+    const soon = new Date(NOW.getTime() + 60 * 60 * 1000); // +1h < 6h
+    const sSoon = await pollFrOnce(
+      sql,
+      serverFake({ now: soon, set, fetchCalls }), // fetchDetail would SUCCEED now (no failOn)
+      { perPage: 1000, maxFailAttempts, deadLetterRetryStaleAfterMs: retryMs },
+    );
+    assert(
+      "#21 FR SKIP: a dead-lettered doc is SKIPPED on the hot path (folded into skipped, fetched=0)",
+      sSoon.skipped === 1 && sSoon.fetched === 0,
+      `skipped=${sSoon.skipped} fetched=${sSoon.fetched}`,
+    );
+    assert(
+      "#21 FR SKIP: fetchDetail was NOT called (hot-path skip) and the sweep was not yet due",
+      (fetchCalls.get(docFail) ?? 0) === fetchesAtDeadLetter &&
+        sSoon.deadLetterRetried === 0,
+      `calls=${fetchCalls.get(docFail)} retried=${sSoon.deadLetterRetried}`,
+    );
+
+    // A cycle PAST retryMs: the slow sweep re-attempts it; fetchDetail now succeeds → recovered + cleared.
+    const later = new Date(NOW.getTime() + 7 * 3_600_000); // +7h > 6h
+    const sLater = await pollFrOnce(
+      sql,
+      serverFake({ now: later, set, fetchCalls }),
+      { perPage: 1000, maxFailAttempts, deadLetterRetryStaleAfterMs: retryMs },
+    );
+    assert(
+      "#21 FR SWEEP: the slow sweep re-attempts the dead-lettered doc once due (deadLetterRetried=1)",
+      sLater.deadLetterRetried === 1,
+      String(sLater.deadLetterRetried),
+    );
+    assert(
+      "#21 FR SWEEP: the now-succeeding doc is recovered + ingested by the sweep",
+      sLater.recovered === 1 && sLater.ingested === 1,
+      `recovered=${sLater.recovered} ingested=${sLater.ingested}`,
+    );
+    assert(
+      "#21 FR SWEEP: fetchDetail WAS called by the sweep (call count advanced past the skip phase)",
+      (fetchCalls.get(docFail) ?? 0) === fetchesAtDeadLetter + 1,
+      String(fetchCalls.get(docFail)),
+    );
+    const [cleared] = await sql<{ count: string }[]>`
+      select count(*)::text as count from poll_dead_letter where source = ${SOURCE} and document_key = ${docFail}
+    `;
+    assert(
+      "#21 FR SWEEP: the dead-letter row is CLEARED after the successful sweep retry",
+      cleared!.count === "0",
+      cleared!.count,
+    );
+    const [obs] = await sql<{ count: string }[]>`
+      select count(*)::text as count from observations where fr_document_number = ${docFail}
+    `;
+    assert(
+      "#21 FR SWEEP: the previously-doomed FR doc finally has an observation",
+      obs!.count === "1",
+      obs!.count,
+    );
+  }
+
   // ── TRUNCATION + 10k-CEILING — open set > perPage*maxPages → truncated, no page past the cap requested ─
   {
     await sql.unsafe(
