@@ -128,9 +128,13 @@ const ConflictListQuery = z.object({
   offset: PageOffset,
 });
 
-/** The request_id minted per request, stashed on the request for the envelope + error handler. */
+/**
+ * The per-request id. Fastify's `req.id` (set by genReqId below to a UUID) IS the request_id — one id
+ * shared by the envelope, the x-request-id header, AND Fastify's own log lines, so all three correlate
+ * for support/tracing (we deliberately do NOT mint a second UUID).
+ */
 function requestId(req: FastifyRequest): string {
-  return (req as FastifyRequest & { requestId: string }).requestId;
+  return req.id;
 }
 
 export function buildServer(
@@ -139,7 +143,8 @@ export function buildServer(
 ): FastifyInstance {
   const app = Fastify({
     logger: opts.logger ?? false,
-    // We mint our OWN request_id (a UUID) in the onRequest hook; don't let Fastify's default id win.
+    // genReqId mints req.id as a UUID — and that SAME id is reused for the envelope + x-request-id
+    // header (see requestId()/the onRequest hook), so logs and responses share one correlatable id.
     genReqId: () => randomUUID(),
   }).withTypeProvider<ZodTypeProvider>();
 
@@ -170,14 +175,13 @@ export function buildServer(
 
   // ── request_id + x-request-id header (every response) ──────────────────────────────────────────────
   app.addHook("onRequest", async (req, reply) => {
-    const id = randomUUID();
-    (req as FastifyRequest & { requestId: string }).requestId = id;
-    reply.header("x-request-id", id);
+    // Echo the request's id (genReqId UUID) so the client sees the SAME id our envelope + logs use.
+    reply.header("x-request-id", req.id);
   });
 
   // ── enveloped error handler (never leak a stack trace in the body) ─────────────────────────────────
   app.setErrorHandler((err: FastifyError, req, reply) => {
-    const id = requestId(req) ?? "unknown";
+    const id = requestId(req);
     // Zod validation failures arrive with a 400 + a `validation` array (set by validatorCompiler).
     const statusCode =
       typeof err.statusCode === "number" && err.statusCode >= 400
@@ -211,7 +215,7 @@ export function buildServer(
       error: { code: "not_found", message: "route not found" },
       disclaimer: DISCLAIMER,
       api_version: API_VERSION,
-      request_id: requestId(req) ?? "unknown",
+      request_id: requestId(req),
     });
   });
 
