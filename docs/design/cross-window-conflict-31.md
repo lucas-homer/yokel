@@ -9,7 +9,7 @@
 > 0.4.0 with the reconcile emit site unchanged (Zod `.default(...)` fields are required on the
 > inferred OUTPUT type). The 0.4.0 contract PR (#32) therefore DOES include the 3-field, zero-behavior
 > `reconcile.ts` emit-site edit (`conflict_scope: "cross_source"`, `ocd_id_b: null`, `govinfo_url_b:
-> null`) to restore that typecheck — the existing per-`ocd_id` engine keeps emitting only cross_source
+null`) to restore that typecheck — the existing per-`ocd_id` engine keeps emitting only cross_source
 > conflicts, so runtime behavior is unchanged. What remains for the #31 BUILD is the NEW behavior: the
 > cross_window EMISSION, pair-aware retirement (scope the per-`ocd_id` sweep to cross_source rows), the
 > migration (carry `conflict_scope`/`ocd_id_b`/`govinfo_url_b` columns), and the `/conflicts`
