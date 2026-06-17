@@ -66,6 +66,7 @@ import {
   fetchFrDocument,
   parseFrObservation,
   todayEastern,
+  dedupeByDocumentNumber,
   type FrListItem,
 } from "../sources/federal-register.js";
 import { ingestObservation } from "../ingest/observe.js";
@@ -138,90 +139,77 @@ export async function pollFrOnce(
   // comment_date filter is date-granular and interpreted in Eastern). This is the ONLY discovery filter.
   const commentOpenOnOrAfter = todayEastern(now);
 
-  // ── PAGE THE FULL OPEN-COMMENT LIST TO COMPLETION ───────────────────────────────────────────────────
-  const accumulated: FrListItem[] = [];
-  for (let page = 1; page <= o.maxPages; page++) {
-    const items = await d.listPage({
-      commentOpenOnOrAfter,
-      perPage: o.perPage,
-      page,
-    });
-    summary.pagesFetched++;
-    accumulated.push(...items);
-    if (items.length < o.perPage) break; // a short page is the last
-    if (page === o.maxPages && items.length === o.perPage) {
-      // Stopped at the cap with a still-full page: coverage is INCOMPLETE — surface, don't swallow.
-      summary.truncated = true;
-      console.warn(
-        `pollFrOnce: hit maxPages=${o.maxPages} (per_page=${o.perPage}) with a full last page — coverage ` +
-          `TRUNCATED. FR caps page * per_page at 10,000; beyond that switch to search_after_cursor (#scale).`,
-      );
+  // The whole cycle runs inside a try/finally: the "we ran" stamp (last_polled_at) MUST be written on
+  // EVERY exit — including a list-phase failure (e.g. FR returns a 400 mid-page-walk) — so monitoring of
+  // the federal_register stamp never goes dark on a failed cycle. The error still propagates (finally does
+  // not swallow it) to run.ts's isolated FR try/catch. There is no FR date cursor (publication_date is
+  // immutable, not a change cursor), so this stamp is the only operational state the FR poll persists.
+  try {
+    // ── PAGE THE FULL OPEN-COMMENT LIST TO COMPLETION ─────────────────────────────────────────────────
+    const accumulated: FrListItem[] = [];
+    for (let page = 1; page <= o.maxPages; page++) {
+      const items = await d.listPage({
+        commentOpenOnOrAfter,
+        perPage: o.perPage,
+        page,
+      });
+      summary.pagesFetched++;
+      accumulated.push(...items);
+      if (items.length < o.perPage) break; // a short page is the last
+      if (page === o.maxPages && items.length === o.perPage) {
+        // Stopped at the cap with a still-full page: coverage is INCOMPLETE — surface, don't swallow.
+        summary.truncated = true;
+        console.warn(
+          `pollFrOnce: hit maxPages=${o.maxPages} (per_page=${o.perPage}) with a full last page — coverage ` +
+            `TRUNCATED. FR caps page * per_page at 10,000; beyond that switch to search_after_cursor (#scale).`,
+        );
+      }
     }
-  }
 
-  // Dedupe across pages by documentNumber (keep the latest).
-  const open = dedupeByDocumentNumber(accumulated);
-  summary.listed = open.length;
-  if (open.length === 0) {
-    await touchPolledAt(sql, SOURCE, now); // observability stamp ("we ran"), no FR date cursor exists
+    // Dedupe across pages by documentNumber (keep the latest).
+    const open = dedupeByDocumentNumber(accumulated);
+    summary.listed = open.length;
+    if (open.length === 0) return summary; // nothing open; the finally still stamps "we ran"
+
+    // ── DIFFERENTIAL BY THE LOG ─────────────────────────────────────────────────────────────────────────
+    // Which of the listed doc numbers already carry a federal_register observation? Those are SKIPPED (FR
+    // docs are immutable → a seen doc never needs re-fetching). A doc that previously FAILED is absent from
+    // the log, so it is naturally re-listed here and retried below.
+    const docNums = open.map((i) => i.documentNumber);
+    const seenRows = await sql<{ fr_document_number: string }[]>`
+      select fr_document_number
+      from observations
+      where source = ${SOURCE}
+        and fr_document_number = any(${sql.array(docNums)})
+    `;
+    const seen = new Set(seenRows.map((r) => r.fr_document_number));
+
+    for (const item of open) {
+      if (seen.has(item.documentNumber)) {
+        summary.skipped++;
+        continue;
+      }
+      try {
+        const detail = await d.fetchDetail(item.documentNumber);
+        summary.fetched++;
+        const candidate = parseFrObservation(detail);
+        const { inserted, ocdId } = await ingestObservation(sql, candidate);
+        if (inserted) summary.ingested++;
+        // RECONCILE-ALWAYS: idempotent re-derive from the append-only log for the doc we just fetched.
+        await reconcileOcdId(sql, ocdId, now);
+      } catch (err) {
+        // Per-document isolation: one bad payload must not wedge the cycle. Log + continue. The doc stays
+        // UNSEEN (no observation row) → it is re-listed in full next cycle and retried (replaces the old
+        // contiguous-success cursor's "never silently skip a failure" guarantee).
+        console.error(
+          `pollFrOnce: FR doc ${item.documentNumber} failed — skipping (retried via re-list next cycle):`,
+          err instanceof Error ? err.message : err,
+        );
+      }
+    }
+
     return summary;
+  } finally {
+    await touchPolledAt(sql, SOURCE, now); // "we ran" stamp on every exit (success, empty, or list failure)
   }
-
-  // ── DIFFERENTIAL BY THE LOG ─────────────────────────────────────────────────────────────────────────
-  // Which of the listed doc numbers already carry a federal_register observation? Those are SKIPPED (FR
-  // docs are immutable → a seen doc never needs re-fetching). A doc that previously FAILED is absent from
-  // the log, so it is naturally re-listed here and retried below.
-  const docNums = open.map((i) => i.documentNumber);
-  const seenRows = await sql<{ fr_document_number: string }[]>`
-    select fr_document_number
-    from observations
-    where source = ${SOURCE}
-      and fr_document_number = any(${sql.array(docNums)})
-  `;
-  const seen = new Set(seenRows.map((r) => r.fr_document_number));
-
-  for (const item of open) {
-    if (seen.has(item.documentNumber)) {
-      summary.skipped++;
-      continue;
-    }
-    try {
-      const detail = await d.fetchDetail(item.documentNumber);
-      summary.fetched++;
-      const candidate = parseFrObservation(detail);
-      const { inserted, ocdId } = await ingestObservation(sql, candidate);
-      if (inserted) summary.ingested++;
-      // RECONCILE-ALWAYS: idempotent re-derive from the append-only log for the doc we just fetched.
-      await reconcileOcdId(sql, ocdId, now);
-    } catch (err) {
-      // Per-document isolation: one bad payload must not wedge the cycle. Log + continue. The doc stays
-      // UNSEEN (no observation row) → it is re-listed in full next cycle and retried (replaces the old
-      // contiguous-success cursor's "never silently skip a failure" guarantee).
-      console.error(
-        `pollFrOnce: FR doc ${item.documentNumber} failed — skipping (retried via re-list next cycle):`,
-        err instanceof Error ? err.message : err,
-      );
-    }
-  }
-
-  // No FR date cursor exists (publication_date is immutable, not a change cursor). Stamp only that we ran.
-  await touchPolledAt(sql, SOURCE, now);
-  return summary;
-}
-
-/**
- * Dedupe FR list items by documentNumber, keeping the LATEST publicationDate — collapses the cross-page
- * accumulation. (Local copy mirroring poll.ts's cross-page dedupe; the adapter dedupes within a page,
- * this dedupes across pages.)
- */
-function dedupeByDocumentNumber(items: FrListItem[]): FrListItem[] {
-  const latest = new Map<string, FrListItem>();
-  for (const item of items) {
-    if (!item.documentNumber) continue;
-    const prev = latest.get(item.documentNumber);
-    if (!prev || (item.publicationDate ?? "") > (prev.publicationDate ?? "")) {
-      latest.set(item.documentNumber, item);
-    }
-  }
-  return [...latest.values()];
 }

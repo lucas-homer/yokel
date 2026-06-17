@@ -18,7 +18,7 @@
  * maxPages guard prevents reaching it.
  *
  * Coverage:
- *   - UNIT: todayEastern; frListUrl (comment_date][gte present, NO publication_date param, order=newest,
+ *   - UNIT: todayEastern; frListUrl (comment_date][gte] present, NO publication_date param, order=newest,
  *     per_page default 1000, fields present);
  *   - B1 BACK-CATALOG: an open doc published ~18 months ago IS listed → fetched → ingested → window
  *     (the regression that the old publication_date cursor would have silently buried);
@@ -441,6 +441,46 @@ try {
     `;
     assert(
       "EMPTY: a 'we ran' stamp (last_polled_at) is still written for observability",
+      polled!.count === "1",
+      polled!.count,
+    );
+  }
+
+  // ── LIST-PHASE FAILURE — a listPage throw STILL stamps last_polled_at (try/finally), error propagates ──
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    const boom = new Error("FR 400: synthetic list-phase failure");
+    let threw: unknown = null;
+    try {
+      await pollFrOnce(
+        sql,
+        {
+          now: () => NOW,
+          listPage: async () => {
+            throw boom;
+          },
+          fetchDetail: async () => {
+            throw new Error("should never fetch when listing failed");
+          },
+        },
+        {},
+      );
+    } catch (err) {
+      threw = err;
+    }
+    assert(
+      "LIST-FAILURE: the list-phase error PROPAGATES (run.ts isolates it per-pass)",
+      threw === boom,
+      String(threw),
+    );
+    const [polled] = await sql<{ count: string }[]>`
+      select count(*)::text as count from poll_cursor where source = ${SOURCE} and last_polled_at is not null
+    `;
+    assert(
+      "LIST-FAILURE: last_polled_at is STILL stamped (finally) so monitoring never goes dark",
       polled!.count === "1",
       polled!.count,
     );

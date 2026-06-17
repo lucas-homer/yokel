@@ -157,7 +157,7 @@ interface FrListShape {
  * fetched-in-detail at most once per poll. String compare is chronological for FR's fixed `YYYY-MM-DD`
  * publication_date.
  */
-function dedupeByDocumentNumber(items: FrListItem[]): FrListItem[] {
+export function dedupeByDocumentNumber(items: FrListItem[]): FrListItem[] {
   const latest = new Map<string, FrListItem>();
   for (const item of items) {
     if (!item.documentNumber) continue;
