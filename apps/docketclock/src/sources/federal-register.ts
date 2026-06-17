@@ -20,13 +20,36 @@ import {
   type ObservationCandidate,
 } from "./observation-candidate.js";
 
+/** Default FR v1 base. Overridable (e.g. a mock) via FR_API_BASE — mirrors REGS_API_BASE. */
+const DEFAULT_BASE = "https://www.federalregister.gov/api/v1";
+
+function frBase(): string {
+  return process.env.FR_API_BASE || DEFAULT_BASE;
+}
+
 const FR_DOC_URL = (documentNumber: string) =>
-  `https://www.federalregister.gov/api/v1/documents/${encodeURIComponent(documentNumber)}.json`;
+  `${frBase()}/documents/${encodeURIComponent(documentNumber)}.json`;
 
 /** Pins which parser produced the notice-type flags below. Bump when the flag logic changes. */
 export const PARSER_VERSION = "fr-v1";
 
 const SOURCE: ObservationSource = "federal_register";
+
+/**
+ * TODAY in America/New_York as a date-only `YYYY-MM-DD` string. The FR `comment_date` filter is
+ * date-granular and interpreted in Eastern (the legal-publication zone), so "currently open" means
+ * comment_date >= the Eastern calendar date — NOT a UTC instant (a naive UTC date would be wrong for
+ * up to 5 hours each night). Mirrors the en-CA date formatter idiom in the FR smoke's todayEastern().
+ * (Distinct from regulations-gov.ts formatEastern, which is a wall-clock DATETIME for the v4 filter.)
+ */
+export function todayEastern(now: Date = new Date()): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+}
 
 // Re-exported for back-compat with importers that reach for these via the FR adapter.
 export { payloadHash } from "./payload.js";
@@ -111,4 +134,115 @@ export function parseFrObservation(raw: unknown): ObservationCandidate {
     );
   }
   return candidate;
+}
+
+/** A single FR list result — the document number to fetch-in-detail + its (immutable) publication date. */
+export interface FrListItem {
+  documentNumber: string;
+  publicationDate: string | null;
+}
+
+/** The FR documents.json list response: `{ count, results: [...] }` (FR uses `results`, NOT Regs's `data`). */
+interface FrListShape {
+  count?: number;
+  results?: Array<{
+    document_number?: string | null;
+    publication_date?: string | null;
+  } | null>;
+}
+
+/**
+ * Dedupe FR list items by documentNumber, keeping the row with the LATEST publicationDate. The open
+ * set is paged across multiple requests; this collapses any cross-page duplicate so each document is
+ * fetched-in-detail at most once per poll. String compare is chronological for FR's fixed `YYYY-MM-DD`
+ * publication_date.
+ */
+function dedupeByDocumentNumber(items: FrListItem[]): FrListItem[] {
+  const latest = new Map<string, FrListItem>();
+  for (const item of items) {
+    if (!item.documentNumber) continue;
+    const prev = latest.get(item.documentNumber);
+    if (!prev || (item.publicationDate ?? "") > (prev.publicationDate ?? "")) {
+      latest.set(item.documentNumber, item);
+    }
+  }
+  return [...latest.values()];
+}
+
+/**
+ * Build an FR documents.json list URL for open-comment discovery — the FULL OPEN SET, no date cursor.
+ *
+ *   - conditions[comment_date][gte]={commentOpenOnOrAfter}: the caller passes Eastern-today, so the
+ *     list is exactly the documents whose comment period is still open (closes today or later). This is
+ *     the ONLY discovery filter — there is deliberately NO publication_date cursor (see WHY below).
+ *   - order=newest: descending publication_date. NOT load-bearing for correctness — the detail fetch is
+ *     by document number, so order never changes which docs we ingest. It only matters IF coverage is
+ *     ever truncated at maxPages: newest-first means we keep the MOST RECENT open docs and drop the
+ *     oldest tail, the least-bad failure mode (and one the ~1,000-window scale never actually hits).
+ *   - per_page (default 1000, FR's max) + page: the paging knobs.
+ *   - fields[]=document_number&fields[]=publication_date: the only two fields the list pass needs (the
+ *     detail fetch carries the full record).
+ *
+ * WHY NO publication_date CURSOR (the B1 fix): FR `publication_date` is IMMUTABLE — it is the day the
+ * notice was printed and never changes. It is NOT a change-cursor like Regs `lastModifiedDate`. Open
+ * comment periods routinely run for MONTHS, so an open doc's publication_date can be far in the past
+ * (live FR carries open docs published ~18 months ago). Filtering discovery by
+ * conditions[publication_date][gte]={cursor} would list only docs published in the cursor's narrow
+ * window and then permanently bury the older open back-catalog (the cursor never reaches them again,
+ * because publication_date never moves). So discovery MUST be the full open set each cycle; the
+ * differential optimization lives in the caller (skip docs already in the append-only log), keyed on
+ * the immutability of FR docs — not on any date.
+ *
+ * SCALE NOTE: FR enforces page * per_page <= 10,000 (page 11 at per_page=1000 returns HTTP 400). Beyond
+ * 10k open docs the list must switch to FR's search_after_cursor; the ~1,000-window design has ~10x
+ * headroom today, so that is a deferred scale follow-up, not this slice.
+ *
+ * NOTE(fr-keyword-discovery, #26): this URL discovers OPEN-comment windows ONLY (the comment_date
+ * filter). The keyword path — extension / correction / reopening / WITHDRAWAL notices, which do NOT
+ * carry an open comment_date yet must still be ingested so the reconciler can flip an existing window —
+ * is DEFERRED to issue #26. It will add a parallel term=/conditions[term]= query here. Not in this slice.
+ */
+export function frListUrl(opts: {
+  commentOpenOnOrAfter: string;
+  perPage?: number;
+  page?: number;
+  base?: string;
+}): string {
+  const base = opts.base ?? frBase();
+  const params = new URLSearchParams();
+  params.set("conditions[comment_date][gte]", opts.commentOpenOnOrAfter);
+  params.set("order", "newest"); // descending publication_date — keep newest open docs IF ever truncated
+  params.set("per_page", String(opts.perPage ?? 1000)); // FR allows up to 1000 per page
+  params.set("page", String(opts.page ?? 1));
+  params.set("fields[]", "document_number");
+  params.append("fields[]", "publication_date");
+  return `${base}/documents.json?${params.toString()}`;
+}
+
+/**
+ * Fetch ONE list page of currently-open FR comment documents (document numbers + publication dates),
+ * deduped by documentNumber. FR is KEYLESS (no X-Api-Key); reuses the shared retry-scope fetcher.
+ * Mirrors listChangedDocuments. Maps `results[]` (FR's envelope) and guards a missing document_number.
+ */
+export async function listOpenCommentDocuments(
+  opts: {
+    commentOpenOnOrAfter: string;
+    perPage?: number;
+    page?: number;
+    base?: string;
+  } & FetchOpts,
+): Promise<FrListItem[]> {
+  const url = frListUrl(opts);
+  const raw = (await fetchJsonWithRetry(url, {
+    retries: opts.retries,
+    timeoutMs: opts.timeoutMs,
+    headers: opts.headers,
+  })) as FrListShape;
+  const items: FrListItem[] = (raw.results ?? [])
+    .filter((r): r is NonNullable<typeof r> => !!r && !!r.document_number)
+    .map((r) => ({
+      documentNumber: r.document_number as string,
+      publicationDate: r.publication_date ?? null,
+    }));
+  return dedupeByDocumentNumber(items);
 }
