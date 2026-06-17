@@ -253,6 +253,40 @@ try {
       spec.statusCode === 200,
       String(spec.statusCode),
     );
+    const ready = await app.inject({ method: "GET", url: "/readyz" });
+    assert(
+      "READINESS: /readyz is PUBLIC and → 200 {status:ok, db:ok} when the DB is reachable",
+      ready.statusCode === 200 &&
+        ready.json().status === "ok" &&
+        ready.json().db === "ok",
+      `${ready.statusCode} ${JSON.stringify(ready.json())}`,
+    );
+  }
+
+  // ── READINESS: /readyz FAILS (503) when the DB is unreachable (so k8s pulls the pod from rotation) ──
+  // A client pointed at a dead port refuses fast (ECONNREFUSED), so the `select 1` ping throws → 503.
+  {
+    const deadSql = createClient(
+      "postgres://nobody:nobody@127.0.0.1:1/none?connect_timeout=1",
+    );
+    const deadApp = buildServer(deadSql, { apiKeys: ["test-key"] });
+    await deadApp.ready();
+    const r = await deadApp.inject({ method: "GET", url: "/readyz" });
+    assert(
+      "READINESS: /readyz → 503 {status:unavailable, db:down} when the DB is unreachable",
+      r.statusCode === 503 &&
+        r.json().status === "unavailable" &&
+        r.json().db === "down",
+      `${r.statusCode} ${JSON.stringify(r.json())}`,
+    );
+    const live = await deadApp.inject({ method: "GET", url: "/healthz" });
+    assert(
+      "LIVENESS: /healthz still → 200 {db:down} when the DB is unreachable (a DB blip must not restart the pod)",
+      live.statusCode === 200 && live.json().db === "down",
+      `${live.statusCode} ${JSON.stringify(live.json())}`,
+    );
+    await deadApp.close();
+    await deadSql.end({ timeout: 1 });
   }
 
   // ── FAIL-CLOSED: a server with NO keys configured 401s every data request ──────────────────────────

@@ -1,0 +1,16 @@
+# Keep the Docker build context small + secret-free. The Dockerfile COPYs explicit paths anyway; this
+# mainly speeds the context upload and guarantees node_modules/dist/.env never leak into an image layer.
+**/node_modules
+**/dist
+.git
+.github
+**/*.log
+**/.env
+.env
+spikes/data
+spikes/out
+docs
+tools
+infra
+charts
+**/*.md

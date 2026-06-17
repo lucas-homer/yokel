@@ -95,6 +95,13 @@ const HealthResponse = z.object({
   db: z.enum(["ok", "down"]),
 });
 
+// /readyz is the READINESS surface (vs /healthz = liveness): it returns 503 when the DB ping fails, so
+// Kubernetes pulls a DB-less pod out of the Service rotation instead of routing traffic into 500s.
+const ReadyResponse = z.object({
+  status: z.enum(["ok", "unavailable"]),
+  db: z.enum(["ok", "down"]),
+});
+
 // The enveloped error shape (400/401/404/500) — also published in the spec so a buyer sees it. EVERY
 // response carries the trio (disclaimer + api_version + request_id), errors included — the architecture
 // invariant is non-negotiable, so the disclaimer is in the schema AND every error send below.
@@ -251,6 +258,27 @@ export function buildServer(
         db = "down";
       }
       return { status: "ok" as const, db };
+    },
+  );
+
+  // ── PUBLIC: readiness ────────────────────────────────────────────────────────────────────────────
+  // Unlike /healthz, this FAILS (503) when the DB is unreachable — the readinessProbe targets it so a
+  // pod that can't reach Postgres is taken out of the Service rotation rather than serving 500s.
+  app.get(
+    "/readyz",
+    { schema: { response: { 200: ReadyResponse, 503: ReadyResponse } } },
+    async (_req, reply) => {
+      let db: "ok" | "down" = "ok";
+      try {
+        await sql`select 1`;
+      } catch {
+        db = "down";
+      }
+      void reply.code(db === "ok" ? 200 : 503);
+      return {
+        status: db === "ok" ? ("ok" as const) : ("unavailable" as const),
+        db,
+      };
     },
   );
 

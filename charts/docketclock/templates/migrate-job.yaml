@@ -1,8 +1,10 @@
 {{- if .Values.migrations.enabled }}
-# DocketClock schema migrations — a CNPG-aware Job run as an Argo CD PreSync hook, so the append-only
-# observation log + its triggers are provisioned reproducibly BEFORE the app rolls out (never by hand).
-# Gated on .Values.migrations.enabled (default false) until apps/docketclock ships a real image — see
-# values.yaml. The Job runs the same image as the app and reads the CNPG-managed app DATABASE_URL.
+# DocketClock schema migrations — a CNPG-aware Job run BEFORE the app rolls out (never by hand), so the
+# append-only observation log + its triggers are provisioned reproducibly. Runs the same image as the
+# app and reads the CNPG-managed app DATABASE_URL. Wired as a hook for BOTH delivery paths:
+#   • Argo CD PreSync (the GitOps path) and
+#   • Helm pre-install/pre-upgrade (the `task app-local` / Tilt path) — so a re-`helm upgrade` re-creates
+#     the (immutable) Job instead of failing, AND migrations finish before the Deployments start.
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -13,6 +15,9 @@ metadata:
   annotations:
     argocd.argoproj.io/hook: PreSync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   backoffLimit: 3
   template:

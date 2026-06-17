@@ -1,0 +1,45 @@
+# DocketClock poller Deployment — the differential Regs.gov poll loop (issue #18). A long-running,
+# self-rescheduling worker (`tsx src/poll/run.ts`): each cycle it discovers + ingests changed
+# open-comment documents, re-polls seen-open windows for withdrawals, and reconciles — advancing the
+# persisted cursor. NO Service/Ingress (it serves no HTTP); a single replica (the ingest/reconcile path
+# assumes ONE writer — see the CONCURRENCY note in observe.ts), so do NOT scale this beyond 1.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docketclock-poller
+  labels:
+    app.kubernetes.io/name: docketclock
+    app.kubernetes.io/component: poller
+spec:
+  replicas: 1 # single-writer: never >1
+  strategy:
+    type: Recreate # never run two pollers at once during a rollout (cursor race / double-writer)
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: docketclock
+      app.kubernetes.io/component: poller
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: docketclock
+        app.kubernetes.io/component: poller
+    spec:
+      containers:
+        - name: poller
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["pnpm", "exec", "tsx", "src/poll/run.ts"]
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: docketclock-pg-app # CNPG-managed app credentials
+                  key: uri
+            # The poller reads UPPERCASE REGS_API_KEY; the ESO secret key is lowercase.
+            - name: REGS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: docketclock-external
+                  key: regs_api_key
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
