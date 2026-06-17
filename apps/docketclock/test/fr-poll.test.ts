@@ -34,7 +34,11 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClient } from "../src/db/client.js";
 import { runMigrations } from "../src/db/migrate.js";
-import { frListUrl, todayEastern } from "../src/sources/federal-register.js";
+import {
+  frListUrl,
+  todayEastern,
+  AMENDMENT_TERMS,
+} from "../src/sources/federal-register.js";
 import { pollFrOnce, type FrPollDeps } from "../src/poll/fr-poll.js";
 
 let failures = 0;
@@ -126,6 +130,10 @@ function serverFake(opts: {
         publicationDate: d.publicationDate,
       }));
     },
+    // #26: this is the OPEN-SET fake. The keyword (amendment) discovery path is exercised by its own
+    // suite (fr-keyword-poll.test.ts); here we stub it to EMPTY so these open-set assertions stay
+    // deterministic (otherwise the poller's default listKeywordPage would hit the live FR API).
+    listKeywordPage: async () => [],
     fetchDetail: async (documentNumber: string) => {
       if (opts.fetchCalls)
         opts.fetchCalls.set(
@@ -544,8 +552,11 @@ try {
       { perPage, maxPages },
     );
     assert(
-      "TRUNCATION: stopped at maxPages",
-      s.pagesFetched === maxPages,
+      // #26: pagesFetched now sums the open-set pages (capped at maxPages here) PLUS one page per
+      // amendment term (each empty → 1 page). So maxPages open pages + AMENDMENT_TERMS.length keyword
+      // pages. The open-set bound itself is asserted by maxRequestedPage below; this just pins the sum.
+      "TRUNCATION: open-set stopped at maxPages (pagesFetched = maxPages + one empty page per keyword term)",
+      s.pagesFetched === maxPages + AMENDMENT_TERMS.length,
       String(s.pagesFetched),
     );
     assert(

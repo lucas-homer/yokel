@@ -61,6 +61,7 @@ function asCalendarDate(v: unknown): string | null {
 export interface FrFields {
   commentsCloseOn: string | null; // "YYYY-MM-DD" Eastern date-only (NO timezone)
   datesText: string | null; // verbatim legal DATES language
+  title: string | null; // the FR document title (the land-withdrawal signal often lives ONLY here)
   publicationDate: string | null; // "YYYY-MM-DD" (for the govinfo URL)
   documentNumber: string | null;
   commentUrl: string | null;
@@ -74,6 +75,7 @@ export function extractFr(raw: unknown): FrFields {
     return {
       commentsCloseOn: null,
       datesText: null,
+      title: null,
       publicationDate: null,
       documentNumber: null,
       commentUrl: null,
@@ -83,6 +85,7 @@ export function extractFr(raw: unknown): FrFields {
   return {
     commentsCloseOn: asCalendarDate(doc.comments_close_on),
     datesText: asStr(doc.dates),
+    title: asStr(doc.title),
     publicationDate: asStr(doc.publication_date),
     documentNumber: asStr(doc.document_number),
     commentUrl: asStr(doc.comment_url),

@@ -25,10 +25,13 @@
  * "never silently skip a failure" guarantee as the old cursor, but simpler and immune to the B1 hole.
  *
  * NO RE-POLL PASS (unlike pollRegsOnce). Because FR docs are immutable there is nothing to re-poll by
- * id. Discovering the WITHDRAWAL/extension/correction notices themselves is the keyword path — deferred
- * to issue #26 (see NOTE(fr-keyword-discovery, #26) in federal-register.ts). Meanwhile the Regs.gov
- * re-poll pass in poll.ts already lands the withdrawn:true operational signal and reconciles any
- * cross-source window.
+ * id. Discovering the WITHDRAWAL/extension/correction notices themselves is the KEYWORD path (#26):
+ * alongside the open-comment set, each cycle also pages a bounded conditions[term]= query per amendment
+ * keyword (extension/correction/reopening/withdrawal) over a recent publication-date trailing window, and
+ * UNIONs those document numbers into the same working set. An amendment notice that carries no open
+ * comment_date of its own is thus still ingested through the SAME append-only path, so the #31
+ * chain-reconcile pass can chain it onto the window it amends. See frKeywordListUrl in
+ * federal-register.ts for the verified FR `term` semantics + the lookback rationale.
  *
  * FR-FIRST HANDOFF: an FR document carries regulations_dot_gov_info.document_id → regs_document_id on
  * the derived window (see parseFrObservation). Discovering FR docs FIRST means the SAME cycle's later
@@ -71,9 +74,12 @@
 import type { Sql } from "../db/client.js";
 import {
   listOpenCommentDocuments,
+  listAmendmentDocuments,
+  AMENDMENT_TERMS,
   fetchFrDocument,
   parseFrObservation,
   todayEastern,
+  easternDateDaysAgo,
   dedupeByDocumentNumber,
   type FrListItem,
 } from "../sources/federal-register.js";
@@ -97,6 +103,17 @@ export interface FrPollDeps {
     perPage: number;
     page: number;
   }): Promise<FrListItem[]>;
+  /**
+   * Fetch ONE keyword list page (one amendment term, one page). Defaults to listAmendmentDocuments.
+   * Discovers extension/correction/reopening/WITHDRAWAL notices that carry no open comment_date (#26),
+   * so the #31 chain-reconcile pass has them in the log. Injected like listPage for tests.
+   */
+  listKeywordPage(opts: {
+    term: string;
+    publicationDateOnOrAfter: string;
+    perPage: number;
+    page: number;
+  }): Promise<FrListItem[]>;
   /** Fetch one FR document detail by document number. Defaults to fetchFrDocument. */
   fetchDetail(documentNumber: string): Promise<unknown>;
   /** The clock. Defaults to () => new Date(). */
@@ -106,7 +123,8 @@ export interface FrPollDeps {
 }
 
 export interface FrPollSummary {
-  listed: number; // distinct open docs the list returned (after cross-page dedupe)
+  listed: number; // distinct docs the discovery UNION returned (open + keyword, after cross-page dedupe)
+  keywordListed: number; // distinct docs the KEYWORD (amendment) set contributed (pre-union, #26 visibility)
   fetched: number; // docs whose detail we fetched this cycle (= not already in the log)
   ingested: number; // docs that appended a NEW observation (inserted === true)
   skipped: number; // docs already in the log (differential-by-log) OR dead-lettered, NOT fetched
@@ -124,6 +142,12 @@ export interface FrPollOptions {
   interFetchDelayMs?: number;
   maxFailAttempts?: number;
   deadLetterRetryStaleAfterMs?: number;
+  /**
+   * The KEYWORD (amendment) discovery trailing window, in days. The keyword set is bounded by
+   * conditions[publication_date][gte] = (Eastern now - keywordLookbackDays) so it pages a recent window
+   * instead of all of FR history (see frKeywordListUrl). Default 120 (DEFAULTS.keywordLookbackDays).
+   */
+  keywordLookbackDays?: number;
 }
 
 const DEFAULTS = {
@@ -145,11 +169,20 @@ const DEFAULTS = {
   // #21: a dead-lettered FR doc is re-attempted by the drain sweep at most this often — a SLOW cadence so
   // a perma-failing doc cannot re-burn the budget, while a recovered doc still self-heals within ~6h.
   deadLetterRetryStaleAfterMs: 6 * 3_600_000,
+  // #26 KEYWORD DISCOVERY trailing window. Amendment notices (extension/correction/reopening/withdrawal)
+  // are published CLOSE in time to the window they amend (days/weeks), so a recent trailing window catches
+  // them without paging all of FR history. 120 days is a comfortable margin over the typical correction/
+  // extension lag while keeping each per-term list well under FR's 10k page ceiling (verified live: each
+  // single-term query over a 120d window returns ~150–1,936 docs). Tunable; the differential-by-log skip
+  // means re-listing the same window each cycle only re-fetches genuinely NEW docs.
+  keywordLookbackDays: 120,
 };
 
 function resolveDeps(deps?: Partial<FrPollDeps>): FrPollDeps {
   return {
     listPage: deps?.listPage ?? ((o) => listOpenCommentDocuments(o)),
+    listKeywordPage:
+      deps?.listKeywordPage ?? ((o) => listAmendmentDocuments(o)),
     fetchDetail: deps?.fetchDetail ?? ((n) => fetchFrDocument(n)),
     now: deps?.now ?? (() => new Date()),
     sleep: deps?.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms))),
@@ -167,6 +200,7 @@ export async function pollFrOnce(
 
   const summary: FrPollSummary = {
     listed: 0,
+    keywordListed: 0,
     fetched: 0,
     ingested: 0,
     skipped: 0,
@@ -178,8 +212,16 @@ export async function pollFrOnce(
   };
 
   // The open-comment cutoff: TODAY in America/New_York (Eastern is the legal-publication zone; the FR
-  // comment_date filter is date-granular and interpreted in Eastern). This is the ONLY discovery filter.
+  // comment_date filter is date-granular and interpreted in Eastern). This is the open-set discovery filter.
   const commentOpenOnOrAfter = todayEastern(now);
+  // The KEYWORD (amendment) discovery LOWER BOUND: a recent trailing publication-date window. Unlike the
+  // open set (which must be the full open back-catalog, no date bound), amendment notices appear close in
+  // time to the window they amend, so a trailing window is safe AND bounds the otherwise all-of-history
+  // term search (see frKeywordListUrl). Eastern, day-granular, like the open-comment cutoff.
+  const keywordPublishedOnOrAfter = easternDateDaysAgo(
+    o.keywordLookbackDays,
+    now,
+  );
 
   // The whole cycle runs inside a try/finally: the "we ran" stamp (last_polled_at) MUST be written on
   // EVERY exit — including a list-phase failure (e.g. FR returns a 400 mid-page-walk) — so monitoring of
@@ -187,31 +229,72 @@ export async function pollFrOnce(
   // not swallow it) to run.ts's isolated FR try/catch. There is no FR date cursor (publication_date is
   // immutable, not a change cursor), so this stamp is the only operational state the FR poll persists.
   try {
-    // ── PAGE THE FULL OPEN-COMMENT LIST TO COMPLETION ─────────────────────────────────────────────────
-    const accumulated: FrListItem[] = [];
-    for (let page = 1; page <= o.maxPages; page++) {
-      const items = await d.listPage({
-        commentOpenOnOrAfter,
-        perPage: o.perPage,
-        page,
-      });
-      summary.pagesFetched++;
-      accumulated.push(...items);
-      if (items.length < o.perPage) break; // a short page is the last
-      if (page === o.maxPages && items.length === o.perPage) {
-        // Stopped at the cap with a still-full page: coverage is INCOMPLETE — surface, don't swallow.
-        summary.truncated = true;
-        console.warn(
-          `pollFrOnce: hit maxPages=${o.maxPages} (per_page=${o.perPage}) with a full last page — coverage ` +
-            `TRUNCATED. FR caps page * per_page at 10,000; beyond that switch to search_after_cursor (#scale).`,
-        );
+    // Page ONE discovery query (open-set or one keyword term) to completion, accumulating into `sink`.
+    // Counts pages into summary.pagesFetched and surfaces TRUNCATION honestly (a full last page at the
+    // cap means coverage is incomplete — warn, never silently cap), for the keyword pages too. `label`
+    // names the query in the truncation warning.
+    const pageToCompletion = async (
+      label: string,
+      fetchPage: (page: number) => Promise<FrListItem[]>,
+      sink: FrListItem[],
+    ): Promise<void> => {
+      for (let page = 1; page <= o.maxPages; page++) {
+        const items = await fetchPage(page);
+        summary.pagesFetched++;
+        sink.push(...items);
+        if (items.length < o.perPage) break; // a short page is the last
+        if (page === o.maxPages && items.length === o.perPage) {
+          // Stopped at the cap with a still-full page: coverage is INCOMPLETE — surface, don't swallow.
+          summary.truncated = true;
+          console.warn(
+            `pollFrOnce: hit maxPages=${o.maxPages} (per_page=${o.perPage}) with a full last page on ` +
+              `${label} — coverage TRUNCATED. FR caps page * per_page at 10,000; beyond that switch to ` +
+              `search_after_cursor (#scale).`,
+          );
+        }
       }
-    }
+    };
 
-    // Dedupe across pages by documentNumber (keep the latest).
-    const open = dedupeByDocumentNumber(accumulated);
+    // ── PAGE THE FULL OPEN-COMMENT LIST TO COMPLETION ─────────────────────────────────────────────────
+    const openAccumulated: FrListItem[] = [];
+    await pageToCompletion(
+      "open-comment set",
+      (page) => d.listPage({ commentOpenOnOrAfter, perPage: o.perPage, page }),
+      openAccumulated,
+    );
+
+    // ── PAGE EACH KEYWORD (AMENDMENT) TERM TO COMPLETION (#26) ────────────────────────────────────────
+    // FR `term` has no single-request OR (whitespace narrows the match; verified live — see
+    // frKeywordListUrl), so we issue one single-term query per amendment keyword and union the results.
+    // Each is paged to completion + truncation-checked exactly like the open set. The trailing
+    // publication-date bound keeps each per-term set well under FR's 10k page ceiling.
+    const keywordAccumulated: FrListItem[] = [];
+    for (const term of AMENDMENT_TERMS) {
+      await pageToCompletion(
+        `keyword '${term}'`,
+        (page) =>
+          d.listKeywordPage({
+            term,
+            publicationDateOnOrAfter: keywordPublishedOnOrAfter,
+            perPage: o.perPage,
+            page,
+          }),
+        keywordAccumulated,
+      );
+    }
+    // keywordListed: the distinct docs the keyword set contributed (pre-union, #26 visibility/metrics).
+    summary.keywordListed = dedupeByDocumentNumber(keywordAccumulated).length;
+
+    // UNION + dedupe the open-comment set with the keyword set into ONE working set. An amendment doc is
+    // just another document number to ingest; everything downstream (differential-by-log skip, dead-letter
+    // skip, throttle, per-doc fetch+parse+ingest+reconcile, retry sweep) is UNCHANGED. dedupeByDocumentNumber
+    // collapses any doc that appears in BOTH sets so it is fetched at most once.
+    const open = dedupeByDocumentNumber([
+      ...openAccumulated,
+      ...keywordAccumulated,
+    ]);
     summary.listed = open.length;
-    if (open.length === 0) return summary; // nothing open; the finally still stamps "we ran"
+    if (open.length === 0) return summary; // nothing to ingest; the finally still stamps "we ran"
 
     // ── DIFFERENTIAL BY THE LOG ─────────────────────────────────────────────────────────────────────────
     // Which of the listed doc numbers already carry a federal_register observation? Those are SKIPPED (FR

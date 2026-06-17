@@ -25,6 +25,12 @@ import type { Sql } from "../db/client.js";
 import type { ChangeHistoryEntry, ParticipationWindow } from "@yokel/contracts";
 import type { ReconcileResult } from "./reconcile.js";
 import { RECONCILER_VERSION, reconcile } from "./reconcile.js";
+import {
+  chainReconcile,
+  type ChainCandidate,
+  type ChainConflict,
+} from "./chain.js";
+import { extractFr } from "./extract.js";
 
 export interface PersistResult {
   inserted: boolean; // true if this was a first-time insert of the window
@@ -261,4 +267,217 @@ export async function reconcileOcdId(
   const result = reconcile(observations, now);
   const persist = await persistReconciliation(sql, result, now);
   return { ...result, persist };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────────────────────────
+// CROSS-WINDOW (chain) pass — #31 Slice 3. The DB-aware sibling of persistReconciliation/reconcileOcdId,
+// but for the cross_window engine (chain.ts). Unlike the per-ocd_id cross_source reconcile, the chain
+// pass is a FULL SWEEP: it reads ALL windows-joined-to-their-FR-observation, computes the complete live
+// cross_window set in one pure call, then UPSERTs the live set and retires every stale cross_window row.
+// ─────────────────────────────────────────────────────────────────────────────────────────────────
+
+export interface ChainPersistResult {
+  /** cross_window rows live after this sweep (upserted with resolved_at = null). */
+  conflictsLive: number;
+  /** still-open cross_window rows retired (resolved_at stamped) because they left the live set. */
+  retired: number;
+}
+
+/**
+ * Stable composite key over a cross_window pair (used by the not-in-live-set retirement sweep). The SQL
+ * retirement query rebuilds this SAME key by string concatenation, so the two must agree exactly.
+ *
+ * SEPARATOR INVARIANT: `|` is a safe delimiter because NEITHER component can contain it — an OcdId is
+ * pinned by the contract regex (no `|`; verified by the adversary) and observation ids are UUIDs. If a
+ * future id format ever admitted `|`, two distinct tuples could collapse to one key and a stale row could
+ * silently fail to retire; at that point switch to a composite-column compare
+ * (`(ocd_id, ocd_id_b, observation_a_id, observation_b_id) = ANY(VALUES …)`) which needs no delimiter.
+ */
+function pairKey(c: {
+  ocd_id: string;
+  ocd_id_b: string;
+  observation_a_id: string;
+  observation_b_id: string;
+}): string {
+  return `${c.ocd_id}|${c.ocd_id_b}|${c.observation_a_id}|${c.observation_b_id}`;
+}
+
+/**
+ * persistChainConflicts — UPSERT the freshly-computed live cross_window set, then RETIRE every still-open
+ * cross_window row whose pair is NOT in that live set. ATOMIC: the whole sweep runs in ONE transaction so
+ * the upsert and retirement move together (a crash mid-sweep rolls back rather than leaving the feed in a
+ * half-retired state). Mirrors persistReconciliation's atomicity discipline.
+ *
+ * SCOPE ISOLATION (the load-bearing #31 invariant): every statement is scoped to
+ * `conflict_scope = 'cross_window'`. This pass NEVER touches a cross_source row — symmetric to Slice 1
+ * scoping the per-ocd_id sweeps to cross_source. So a chain sweep can never collaterally retire a live
+ * FR↔Regs conflict that merely shares an ocd_id on one side, and the cross_source reconcile can never
+ * retire a chain conflict.
+ *
+ * RETIREMENT (the part Slice 1 did NOT do): because the chain pass is a full sweep each cycle, a global
+ * retire of stale cross_window rows is correct. If the live set is empty, retire ALL open cross_window
+ * rows; else retire open cross_window rows whose composite pair key is not among the live tuples. PG18
+ * array binding uses `any(${arr}::text[])` (bare array + cast) — never sql.array().
+ */
+export async function persistChainConflicts(
+  sql: Sql,
+  conflicts: ChainConflict[],
+  now: Date = new Date(),
+): Promise<ChainPersistResult> {
+  const nowIso = now.toISOString();
+  return sql.begin(async (tx) => {
+    // UPSERT each live cross_window conflict. detected_at is PRESERVED on re-detection (absent from the DO
+    // UPDATE SET); resolved_at is reset to null so a previously-retired-then-relinked pair revives.
+    //
+    // ARBITER SAFETY: the `on conflict` key omits conflict_scope yet can never overwrite a cross_source row.
+    // A cross_window row always carries a non-empty ocd_id_b (B's distinct window), while a cross_source row
+    // carries the '' sentinel — and the contract superRefine FORBIDS a cross_source ConflictRecord from
+    // having a non-empty ocd_id_b (it would fail .parse before reaching persist). So the 4-tuple keys of the
+    // two scopes are structurally disjoint on ocd_id_b; this insert can only ever match another cross_window
+    // row. (If the cross_source path ever emitted a non-empty ocd_id_b the index would need conflict_scope.)
+    for (const c of conflicts) {
+      await tx`
+        insert into conflict_records (
+          ocd_id, observation_a_id, observation_b_id, source_a, source_b,
+          conflict_flags, govinfo_url, detected_at, resolved_at,
+          conflict_scope, ocd_id_b, govinfo_url_b
+        ) values (
+          ${c.ocd_id}, ${c.observation_a_id}, ${c.observation_b_id},
+          ${c.source_a}, ${c.source_b}, ${tx.json(c.conflict_flags)},
+          ${c.govinfo_url}, ${c.detected_at}, ${null},
+          ${c.conflict_scope}, ${c.ocd_id_b}, ${c.govinfo_url_b}
+        )
+        on conflict (ocd_id, observation_a_id, observation_b_id, ocd_id_b) do update set
+          conflict_flags = excluded.conflict_flags,
+          govinfo_url    = excluded.govinfo_url,
+          govinfo_url_b  = excluded.govinfo_url_b,
+          resolved_at    = null
+      `;
+    }
+
+    // RETIRE stale cross_window rows — strictly scoped to conflict_scope='cross_window'.
+    let retired = 0;
+    if (conflicts.length === 0) {
+      // Empty live set ⇒ every open cross_window row is stale.
+      const rows = await tx`
+        update conflict_records
+          set resolved_at = ${nowIso}
+        where conflict_scope = 'cross_window'
+          and resolved_at is null
+        returning conflict_id
+      `;
+      retired = rows.length;
+    } else {
+      // Retire open cross_window rows whose composite pair key is NOT among the live tuples. The composite
+      // key (ocd_id|ocd_id_b|observation_a_id|observation_b_id) is rebuilt in SQL and compared against the
+      // live keys via NOT (key = any(${arr}::text[])) — PG18-safe bare-array binding + cast.
+      const liveKeys = conflicts.map(pairKey);
+      const rows = await tx`
+        update conflict_records
+          set resolved_at = ${nowIso}
+        where conflict_scope = 'cross_window'
+          and resolved_at is null
+          and not (
+            ocd_id || '|' || ocd_id_b || '|' || observation_a_id || '|' || observation_b_id
+            = any(${liveKeys}::text[])
+          )
+        returning conflict_id
+      `;
+      retired = rows.length;
+    }
+
+    return { conflictsLive: conflicts.length, retired };
+  });
+}
+
+export interface ChainReconcileOnceResult extends ChainPersistResult {
+  /** total windows-with-an-FR-observation read as candidates. */
+  candidates: number;
+  /** how many candidates carry an amendment signal (extension/correction/withdrawal). */
+  amendments: number;
+  /** linked (A,B) pairs the pure engine emitted (== conflictsLive). */
+  linked: number;
+}
+
+/**
+ * chainReconcileOnce — read the candidate set (every participation_window joined to its LATEST
+ * federal_register observation, so the amendment flags + DATES text reflect the current FR doc), build
+ * ChainCandidate[], run the pure chain engine, and persist. The single DB-aware orchestration point; the
+ * rulebook (chain.ts) stays pure + deterministic.
+ *
+ * Candidate join: a window contributes a candidate only when it HAS a federal_register observation (the
+ * chain conflict is FR-doc ↔ FR-doc). We pick the LATEST FR observation per ocd_id by fetched_at. is_*
+ * flags + raw come straight off that observation row; publication_date / docket_ids / rin / dates_text are
+ * extracted from the FR raw payload (extractFr) — the same projection reconcile.ts uses, so the chain pass
+ * sees identical structured fields.
+ */
+export async function chainReconcileOnce(
+  sql: Sql,
+  now: Date = new Date(),
+): Promise<ChainReconcileOnceResult> {
+  // LATEST federal_register observation per window, joined to the window's status + resolved close +
+  // govinfo anchor. distinct on (w.ocd_id) ordered by fetched_at desc gives the freshest FR doc.
+  // INVARIANT (N1): this read THROWS on any DB failure (postgres.js rejects), so it can NEVER silently
+  // return [] and trip the retire-all-cross_window path below. The empty live set only retires-all on a
+  // GENUINELY empty candidate set (no FR-backed windows), never on a transient DB error.
+  const rows = await sql<
+    {
+      ocd_id: string;
+      fr_observation_id: string;
+      is_extension: boolean;
+      is_correction: boolean;
+      is_withdrawal: boolean;
+      raw: unknown;
+      status: string;
+      resolved_close_utc: Date | string | null;
+      govinfo_url: string | null;
+    }[]
+  >`
+    select distinct on (w.ocd_id)
+      w.ocd_id,
+      o.observation_id as fr_observation_id,
+      o.is_extension, o.is_correction, o.is_withdrawal, o.raw,
+      w.status, w.resolved_close_utc, w.govinfo_url
+    from participation_windows w
+    join observations o
+      on o.ocd_id = w.ocd_id and o.source = 'federal_register'
+    order by w.ocd_id, o.fetched_at desc, o.observation_id desc
+  `;
+
+  const candidates: ChainCandidate[] = rows.map((r) => {
+    const fr = extractFr(r.raw);
+    return {
+      ocd_id: r.ocd_id,
+      fr_observation_id: r.fr_observation_id,
+      fr_document_number: fr.documentNumber,
+      docket_ids: fr.docketIds,
+      rin: fr.rin,
+      is_extension: r.is_extension,
+      is_correction: r.is_correction,
+      is_withdrawal: r.is_withdrawal,
+      title: fr.title,
+      publication_date: fr.publicationDate,
+      govinfo_url: r.govinfo_url,
+      dates_text: fr.datesText,
+      status: r.status,
+      resolved_close_utc:
+        r.resolved_close_utc instanceof Date
+          ? r.resolved_close_utc.toISOString()
+          : r.resolved_close_utc,
+    };
+  });
+
+  const amendments = candidates.filter(
+    (c) => c.is_extension || c.is_correction || c.is_withdrawal,
+  ).length;
+
+  const conflicts = chainReconcile(candidates, now);
+  const persisted = await persistChainConflicts(sql, conflicts, now);
+
+  return {
+    candidates: candidates.length,
+    amendments,
+    linked: conflicts.length,
+    ...persisted,
+  };
 }

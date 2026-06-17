@@ -4,9 +4,17 @@
  * docs/architecture/docketclock.md "1. Discover") runs, SEQUENTIALLY in ONE process:
  *
  *   1. pollFrOnce  — FR open-comment discovery (FIRST), then
- *   2. pollRegsOnce — Regs.gov differential + re-poll pass,
+ *   2. pollRegsOnce — Regs.gov differential + re-poll pass, then
+ *   3. chainReconcileOnce — the cross_window (chain) reconcile sweep (#31),
  *
- * logging BOTH summaries (labelled `fr:` and `regs:`).
+ * logging ALL THREE summaries (labelled `fr:`, `regs:`, `chain:`).
+ *
+ * WHY CHAIN RUNS LAST (a derive-over-derived pass): the chain pass reads the participation_windows +
+ * federal_register observations the FR and Regs passes just wrote — it derives cross_window conflicts
+ * over the windows the first two passes produced. Running it AFTER both means an amendment notice and the
+ * original it amends, if both were (re)discovered this cycle, are linked in the SAME cycle. It is a full
+ * sweep over the projection and, like the other passes, MUST be single-writer (it UPSERTs/retires
+ * conflict_records) — which the sequential, non-overlapping scheduler already guarantees.
  *
  * WHY FR-FIRST + SEQUENTIAL (single-writer invariant): there is exactly ONE poller process. The
  * ingest/reconcile path is NOT concurrency-safe — there is no per-ocd_id lock (see the
@@ -34,6 +42,7 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { createClient } from "../db/client.js";
 import { regsApiKey } from "../sources/regulations-gov.js";
+import { chainReconcileOnce } from "../reconcile/persist.js";
 import { pollFrOnce } from "./fr-poll.js";
 import { pollRegsOnce } from "./poll.js";
 
@@ -74,6 +83,20 @@ async function main(): Promise<void> {
         );
       } catch (err) {
         console.error(`[${new Date().toISOString()}] regs poll failed:`, err);
+      }
+      // 3rd pass — cross_window (chain) reconcile sweep. Runs LAST (derive-over-derived; see header) and
+      // is INDEPENDENTLY try/caught so a chain failure cannot affect the FR/Regs passes (and vice-versa).
+      try {
+        const chain = await chainReconcileOnce(sql);
+        console.log(
+          `[${new Date().toISOString()}] chain:`,
+          JSON.stringify(chain),
+        );
+      } catch (err) {
+        console.error(
+          `[${new Date().toISOString()}] chain reconcile failed:`,
+          err,
+        );
       }
     } catch (err) {
       // Belt-and-braces: anything outside the two passes (should be nothing) must not kill the scheduler.
