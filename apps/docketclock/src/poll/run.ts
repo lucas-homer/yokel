@@ -38,7 +38,7 @@
  *
  * Run: DATABASE_URL=... pnpm --filter @yokel/docketclock tsx src/poll/run.ts
  */
-import { existsSync } from "node:fs";
+import { existsSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { createClient } from "../db/client.js";
 import { regsApiKey } from "../sources/regulations-gov.js";
@@ -50,6 +50,26 @@ const envPath = fileURLToPath(new URL("../../../../.env", import.meta.url));
 if (existsSync(envPath)) process.loadEnvFile(envPath);
 
 const INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS) || 15 * 60_000;
+
+// LIVENESS (#25): the poller serves no HTTP, so Kubernetes can't probe an endpoint. Instead the loop
+// rewrites this heartbeat file at the end of EVERY settled cycle; the poller Deployment's exec
+// livenessProbe restarts the pod once the file ages past ~2x the poll interval (a hung/zombie loop stops
+// updating it). OPT-IN: only k8s sets POLLER_HEARTBEAT_FILE — a bare `tsx run.ts` (local/dev/smoke) sets
+// nothing and writes no file. A write failure is logged, never thrown: it must not crash the loop, and
+// if writes keep failing the probe will (correctly) trip a restart on its own.
+const HEARTBEAT_FILE = process.env.POLLER_HEARTBEAT_FILE ?? "";
+
+function writeHeartbeat(): void {
+  if (!HEARTBEAT_FILE) return;
+  try {
+    writeFileSync(HEARTBEAT_FILE, `${new Date().toISOString()}\n`);
+  } catch (err) {
+    console.error(
+      `[${new Date().toISOString()}] heartbeat write failed:`,
+      err,
+    );
+  }
+}
 
 async function main(): Promise<void> {
   regsApiKey(); // fail loudly on a missing key before we enter the loop
@@ -103,6 +123,11 @@ async function main(): Promise<void> {
       console.error(`[${new Date().toISOString()}] poll cycle failed:`, err);
     } finally {
       running = false;
+      // Mark this cycle SETTLED (liveness #25). Written here in `finally`, not on full success: a pass-
+      // level failure (FR down, Regs 4xx) is already isolated above and must NOT restart the pod — the
+      // loop is still healthily cycling. Only a loop that never reaches this point (hung inside a pass,
+      // awaiting forever) lets the file go stale and earns a restart.
+      writeHeartbeat();
       // Queue the NEXT cycle only now that this one has settled — self-rescheduling, never overlapping.
       if (!stopping) timer = setTimeout(() => void tick(), INTERVAL_MS);
     }
@@ -124,6 +149,9 @@ async function main(): Promise<void> {
   process.on("SIGTERM", () => void shutdown("SIGTERM"));
   process.on("SIGINT", () => void shutdown("SIGINT"));
 
+  // Seed the heartbeat at startup so the file exists the instant the container is up — the first cycle
+  // may run longer than the probe's initialDelay, and an absent file reads as "not alive" (restart).
+  writeHeartbeat();
   await tick();
 }
 
