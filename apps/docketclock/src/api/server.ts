@@ -275,7 +275,10 @@ export function buildServer(
         db = "down";
       }
       void reply.code(db === "ok" ? 200 : 503);
-      return { status: db === "ok" ? ("ok" as const) : ("unavailable" as const), db };
+      return {
+        status: db === "ok" ? ("ok" as const) : ("unavailable" as const),
+        db,
+      };
     },
   );
 
