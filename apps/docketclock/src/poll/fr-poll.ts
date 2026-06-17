@@ -57,6 +57,14 @@
  * caught per-document, logged, and the loop continues (the failed doc stays unseen → re-listed + retried
  * next cycle).
  *
+ * BOUNDED RETRY → DEAD-LETTER (#21): re-listing a failing doc every cycle is correct for a TRANSIENT
+ * failure but a PERMANENTLY-failing doc re-burns the FR rate budget forever. So a doc that fails
+ * maxFailAttempts CONSECUTIVE cycles is DEAD-LETTERED (poll_dead_letter, 0005): from then on it is SKIPPED
+ * from the hot fetch path (no more budget burn) and re-attempted only by a slow drain sweep on a 6h
+ * throttle, so a recovered doc self-heals without becoming a hot retry loop. ANY success clears the ledger
+ * (consecutive-failure reset). Parse/ingest failures count toward the threshold too, not only fetch
+ * failures (per the #21 owner-comment).
+ *
  * DETERMINISTIC: the network and the clock are INJECTED (FrPollDeps), exactly like pollRegsOnce. Tests
  * drive fakes; live network lives only in run.ts / the smoke.
  */
@@ -72,6 +80,13 @@ import {
 import { ingestObservation } from "../ingest/observe.js";
 import { reconcileOcdId } from "../reconcile/persist.js";
 import { touchPolledAt } from "./cursor.js";
+import {
+  recordFailure,
+  clearDeadLetter,
+  selectDeadLetteredForRetry,
+  markRetryAttempt,
+  deadLetteredKeys,
+} from "./dead-letter.js";
 
 const SOURCE = "federal_register";
 
@@ -94,15 +109,21 @@ export interface FrPollSummary {
   listed: number; // distinct open docs the list returned (after cross-page dedupe)
   fetched: number; // docs whose detail we fetched this cycle (= not already in the log)
   ingested: number; // docs that appended a NEW observation (inserted === true)
-  skipped: number; // docs already in the log (differential-by-log), NOT fetched
+  skipped: number; // docs already in the log (differential-by-log) OR dead-lettered, NOT fetched
   pagesFetched: number;
   truncated: boolean; // true if we stopped at maxPages with a still-full page (coverage incomplete)
+  // #21 bounded-retry / dead-letter
+  deadLettered: number; // docs newly DEAD-LETTERED this cycle (crossed maxFailAttempts)
+  deadLetterRetried: number; // dead-lettered docs re-attempted by the slow drain sweep this cycle
+  recovered: number; // previously-failing docs (a ledger row existed) that succeeded + were cleared
 }
 
 export interface FrPollOptions {
   perPage?: number;
   maxPages?: number;
   interFetchDelayMs?: number;
+  maxFailAttempts?: number;
+  deadLetterRetryStaleAfterMs?: number;
 }
 
 const DEFAULTS = {
@@ -118,6 +139,12 @@ const DEFAULTS = {
   // converges politely over a cycle or two. Steady state fetches only the few newly-published docs, so
   // the delay is immaterial there. Tunable via the option; tests inject a no-op sleep.
   interFetchDelayMs: 300,
+  // #21: an FR doc that fails this many CONSECUTIVE cycles is dead-lettered and stops being re-fetched on
+  // the hot path (it was burning the FR rate budget by re-failing every cycle). 5 tolerates a transient.
+  maxFailAttempts: 5,
+  // #21: a dead-lettered FR doc is re-attempted by the drain sweep at most this often — a SLOW cadence so
+  // a perma-failing doc cannot re-burn the budget, while a recovered doc still self-heals within ~6h.
+  deadLetterRetryStaleAfterMs: 6 * 3_600_000,
 };
 
 function resolveDeps(deps?: Partial<FrPollDeps>): FrPollDeps {
@@ -145,6 +172,9 @@ export async function pollFrOnce(
     skipped: 0,
     pagesFetched: 0,
     truncated: false,
+    deadLettered: 0,
+    deadLetterRetried: 0,
+    recovered: 0,
   };
 
   // The open-comment cutoff: TODAY in America/New_York (Eastern is the legal-publication zone; the FR
@@ -204,11 +234,24 @@ export async function pollFrOnce(
     `;
     const seen = new Set(seenRows.map((r) => r.fr_document_number));
 
+    // #21: the currently DEAD-LETTERED FR docs. These are SKIPPED from the hot fetch path (a perma-failing
+    // FR doc otherwise gets re-fetched + re-failed every cycle, burning the FR rate budget). They are
+    // drained only by the slow retry sweep below. Docs still in BOUNDED retry (failed < N, not yet
+    // dead-lettered) are NOT in this set, so they are still re-fetched every cycle — the correct
+    // transient-failure behavior, identical to today.
+    const dead = await deadLetteredKeys(sql, SOURCE);
+
     let fetchAttempts = 0; // FR detail fetches ATTEMPTED (success OR 429/fail) — drives the throttle gate
     for (const item of open) {
       if (seen.has(item.documentNumber)) {
         summary.skipped++;
         continue; // already in the log — no FR fetch, so no throttle either
+      }
+      if (dead.has(item.documentNumber)) {
+        // Dead-lettered: NOT re-fetched on the hot path (recorded + alerted when it was dead-lettered, and
+        // drained by the retry sweep). Folded into `skipped` (it is a no-fetch skip just like a seen doc).
+        summary.skipped++;
+        continue;
       }
       // Throttle BEFORE each FR detail fetch except the first (the cold-start politeness gate). Counts
       // ATTEMPTS, not successes, so the request RATE stays bounded even across a run of 429s.
@@ -224,13 +267,78 @@ export async function pollFrOnce(
         if (inserted) summary.ingested++;
         // RECONCILE-ALWAYS: idempotent re-derive from the append-only log for the doc we just fetched.
         await reconcileOcdId(sql, ocdId, now);
+        // #21: success clears any accumulated failures (consecutive-failure reset); count a recovery only
+        // if a ledger row actually existed (the doc HAD been failing). In steady state this is a no-op.
+        if (await clearDeadLetter(sql, SOURCE, item.documentNumber))
+          summary.recovered++;
       } catch (err) {
-        // Per-document isolation: one bad payload must not wedge the cycle. Log + continue. The doc stays
-        // UNSEEN (no observation row) → it is re-listed in full next cycle and retried (replaces the old
-        // contiguous-success cursor's "never silently skip a failure" guarantee).
+        const msg = err instanceof Error ? err.message : String(err);
+        // Per-document isolation: one bad payload must not wedge the cycle. Log + continue. Below the
+        // threshold the doc stays UNSEEN (no observation row) → re-listed + retried next cycle (today's
+        // behavior). On the Nth consecutive failure it is DEAD-LETTERED: a loud alert, and from next cycle
+        // it is skipped from the hot fetch path (stops burning the budget) — drained by the sweep instead.
+        const { attempts, newlyDeadLettered } = await recordFailure(
+          sql,
+          SOURCE,
+          item.documentNumber,
+          msg,
+          now,
+          o.maxFailAttempts,
+        );
+        // Gate the loud alert + count on newlyDeadLettered (the threshold-crossing call), NOT the
+        // level-triggered deadLettered — otherwise a doc that re-fails after being dead-lettered would
+        // re-fire the alert + re-count every cycle (cry-wolf). FR already skips dead-lettered docs on the
+        // hot path, so this is defensive consistency with the Regs path.
+        if (newlyDeadLettered) {
+          summary.deadLettered++;
+          console.error(
+            `pollFrOnce: DEAD-LETTER FR doc ${item.documentNumber} after ${attempts} consecutive ` +
+              `attempts — will NO LONGER be re-fetched on the hot path; recorded for retry sweep: ${msg}`,
+          );
+        } else {
+          console.error(
+            `pollFrOnce: FR doc ${item.documentNumber} failed (attempt ${attempts}/${o.maxFailAttempts}) ` +
+              `— skipping (retried via re-list next cycle): ${msg}`,
+          );
+        }
+      }
+    }
+
+    // ── DEAD-LETTER RETRY SWEEP (#21) — the SLOW drain ─────────────────────────────────────────────────
+    // Re-attempt dead-lettered FR docs whose drain throttle has gone stale. Respects the SAME inter-fetch
+    // throttle (d.sleep) as the hot path so the sweep cannot burst FR. A recovered doc is cleared +
+    // counted; one still broken bumps last_retry_at (+ attempts) so it is not re-attempted until stale
+    // again. Runs INSIDE the try (so a sweep failure still hits the finally touchPolledAt). Per-doc
+    // try/catch isolation.
+    const dlRetry = await selectDeadLetteredForRetry(
+      sql,
+      SOURCE,
+      new Date(now.getTime() - o.deadLetterRetryStaleAfterMs),
+    );
+    for (const dl of dlRetry) {
+      summary.deadLetterRetried++;
+      if (fetchAttempts > 0 && o.interFetchDelayMs > 0) {
+        await d.sleep(o.interFetchDelayMs);
+      }
+      fetchAttempts++;
+      try {
+        const detail = await d.fetchDetail(dl.document_key);
+        summary.fetched++;
+        const candidate = parseFrObservation(detail);
+        const { inserted, ocdId } = await ingestObservation(sql, candidate);
+        if (inserted) summary.ingested++;
+        await reconcileOcdId(sql, ocdId, now);
+        if (await clearDeadLetter(sql, SOURCE, dl.document_key))
+          summary.recovered++;
         console.error(
-          `pollFrOnce: FR doc ${item.documentNumber} failed — skipping (retried via re-list next cycle):`,
-          err instanceof Error ? err.message : err,
+          `pollFrOnce: RECOVERED dead-lettered FR doc ${dl.document_key} on retry sweep — cleared.`,
+        );
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await markRetryAttempt(sql, SOURCE, dl.document_key, now, msg);
+        console.error(
+          `pollFrOnce: dead-lettered FR doc ${dl.document_key} STILL failing on retry sweep — ` +
+            `re-throttled: ${msg}`,
         );
       }
     }
