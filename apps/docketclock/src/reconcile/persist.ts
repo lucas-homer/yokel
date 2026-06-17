@@ -149,27 +149,43 @@ export async function persistReconciliation(
       // Current window is CONFLICTING. Upsert the current pair as LIVE (resolved_at = NULL); re-detecting
       // the SAME pair must NOT duplicate it and must NOT bump its original detected_at (idempotent
       // refresh of the metadata only — detected_at is the FIRST-detection stamp).
+      // NULL-vs-'' SEAM (see 0006 header): the contract carries ocd_id_b as nullable (null for a
+      // cross_source conflict — there is no side-B window), but the DB column is NOT NULL DEFAULT '' so
+      // the widened unique key dedups cross_source rows (all share ''). Map contract null → DB ''.
+      // reconcile emits only cross_source today, so conflict_scope is 'cross_source', ocd_id_b is '',
+      // govinfo_url_b is null — but we read the fields off the ConflictRecord (defaults) so the seam is
+      // already correct the moment a later slice begins emitting cross_window.
+      const ocdIdB = conflict.ocd_id_b ?? "";
       await tx`
         insert into conflict_records (
           ocd_id, observation_a_id, observation_b_id, source_a, source_b,
-          conflict_flags, govinfo_url, detected_at, resolved_at
+          conflict_flags, govinfo_url, detected_at, resolved_at,
+          conflict_scope, ocd_id_b, govinfo_url_b
         ) values (
           ${conflict.ocd_id}, ${conflict.observation_a_id}, ${conflict.observation_b_id},
           ${conflict.source_a}, ${conflict.source_b}, ${tx.json(conflict.conflict_flags)},
-          ${conflict.govinfo_url}, ${conflict.detected_at}, ${null}
+          ${conflict.govinfo_url}, ${conflict.detected_at}, ${null},
+          ${conflict.conflict_scope}, ${ocdIdB}, ${conflict.govinfo_url_b}
         )
-        on conflict (ocd_id, observation_a_id, observation_b_id) do update set
+        on conflict (ocd_id, observation_a_id, observation_b_id, ocd_id_b) do update set
           conflict_flags = excluded.conflict_flags,
           govinfo_url    = excluded.govinfo_url,
+          govinfo_url_b  = excluded.govinfo_url_b,
           resolved_at    = null
       `;
       // Retire every OTHER still-open conflict row for this ocd_id — a superseded pair (a newer
       // conflicting pair replaced it) must not linger live in the proof feed.
+      //
+      // SCOPED TO cross_source (#31 seam): a single-window FR↔Regs reconcile must NEVER collaterally
+      // retire a cross_window/chain row that merely happens to name this ocd_id as side A. Such a row is
+      // owned by a different (cross-window) detection pass, not by this FR↔Regs reconcile. This predicate
+      // is a no-op today (no cross_window rows are emitted yet) but is the correct seam for the next slice.
       await tx`
         update conflict_records
           set resolved_at = ${now.toISOString()}
         where ocd_id = ${conflict.ocd_id}
           and resolved_at is null
+          and conflict_scope = 'cross_source'
           and not (
             observation_a_id = ${conflict.observation_a_id}
             and observation_b_id = ${conflict.observation_b_id}
@@ -177,12 +193,15 @@ export async function persistReconciliation(
       `;
     } else {
       // Current window is NOT conflicting — the conflict (if any) is RESOLVED. Retire ALL still-open
-      // conflict rows for this ocd_id so the proof feed stops publishing a dead conflict.
+      // cross_source conflict rows for this ocd_id so the proof feed stops publishing a dead conflict.
+      // SCOPED TO cross_source for the same reason as the supersede sweep above: a not-conflicting FR↔Regs
+      // re-derivation must not retire a future cross_window row that shares this ocd_id as side A.
       await tx`
         update conflict_records
           set resolved_at = ${now.toISOString()}
         where ocd_id = ${window.ocd_id}
           and resolved_at is null
+          and conflict_scope = 'cross_source'
       `;
     }
 
