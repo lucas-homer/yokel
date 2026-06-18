@@ -24,6 +24,8 @@ import { RuleBox } from "@yokel/contracts";
 /**
  * The rulebook version is the RULEBOOK's OWN version (independent of the @yokel/contracts package
  * version); it is stamped into verdict provenance in a later slice, so keep it human-meaningful.
+ * UPDATE THIS whenever the rulebook CONTENT changes (a rule added/removed/edited) — a stale version
+ * would mis-attribute provenance for verdicts derived under the new rules.
  */
 export const RULEBOOK_VERSION = "rulebox-2026-06-18";
 

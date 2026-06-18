@@ -28,7 +28,8 @@
  * │       union of ClassifyRule | DenyRule; NoticeFlagKey enum; SerializableRegex). Expresses today's │
  * │       two regex stopgaps as data (notice-flags 4 classify regexes; chain.ts DENY_PATTERNS deny    │
  * │       regexes). Regexes are DATA ({source,flags}) that must COMPILE at load; rule ids are kebab + │
- * │       unique; classify rules reserve an OPTIONAL `ambiguous` marker (no LLM payload). [2026-06-18] │
+ * │       unique; classify rules reserve an OPTIONAL `ambiguous` marker (no LLM payload). SerializableRegex │
+ * │       REJECTS the stateful g/y flags (evaluator .test()s without resetting lastIndex). [2026-06-18] │
  * │                                                                                               │
  * │ INTENTIONALLY DEFERRED (contract pre-shaped or out of MVP scope — add when the builder lands): │
  * │   • Webhook payload schemas (HMAC-signed outbox events: notify_on kinds + delivery envelope) — │
@@ -48,7 +49,8 @@
  *       RuleBox { version, rules[] }, Rule = discriminatedUnion("kind", [ClassifyRule, DenyRule]),
  *       the NoticeFlagKey enum (the four is_* notice flags, sans prefix), and SerializableRegex
  *       ({source,flags}) — a JSON-round-trippable regex whose source must COMPILE and whose flags are the
- *       legal JS subset, validated at LOAD not match time. ClassifyRule sets a NoticeFlagKey and reserves
+ *       legal JS subset MINUS the stateful g/y (the evaluator .test()s without resetting lastIndex, so g/y
+ *       would break determinism — rejected at LOAD, not match time). ClassifyRule sets a NoticeFlagKey and reserves
  *       an OPTIONAL `ambiguous` boolean (escalation marker; NO LLM/adjudication payload — that's deferred);
  *       DenyRule suppresses an amendment signal (the BLM 2023-27468 land-withdrawal trap), no target flag.
  *       Both carry a kebab `id` (unique within a box, superRefine-enforced) + a `rationale` audit string.
@@ -507,6 +509,10 @@ export type NoticeFlagKey = z.infer<typeof NoticeFlagKey>;
  * The legal-flag regex pins each char to the JS set (d,g,i,m,s,u,y) and forbids duplicates via the
  * negative-lookahead; `new RegExp` is the final authority (it also rejects e.g. `u`+`v` style clashes
  * and malformed sources), so the refine is the load-bearing check and the flag regex is the fast guard.
+ *
+ * The STATEFUL g/y flags are additionally rejected (second refine, path: flags): the evaluator calls
+ * RegExp.prototype.test() without resetting lastIndex, so a g/y rule would go non-deterministic across
+ * repeated .test() calls — the "PURE + deterministic" guarantee is enforced structurally, at LOAD time.
  */
 export const SerializableRegex = z
   .object({
@@ -533,7 +539,16 @@ export const SerializableRegex = z
         "SerializableRegex.source must compile with the given flags (rejected at load, never deferred to match time)",
       path: ["source"],
     },
-  );
+  )
+  // The evaluator (apps/docketclock/src/rulebox) calls RegExp.prototype.test() WITHOUT resetting
+  // lastIndex, so the stateful g/y flags would make a rule non-deterministic across repeated .test()
+  // calls — breaking the "PURE + deterministic" guarantee. Reject them at LOAD, not at match time.
+  // Runs after the compile check (which never throws here): a source that compiles with g/y still fails.
+  .refine((r) => !r.flags.includes("g") && !r.flags.includes("y"), {
+    message:
+      "SerializableRegex must not use the stateful g/y flags — the evaluator calls .test() without resetting lastIndex, which would break determinism",
+    path: ["flags"],
+  });
 export type SerializableRegex = z.infer<typeof SerializableRegex>;
 
 /**

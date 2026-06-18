@@ -199,71 +199,96 @@ const CORPUS = [
   );
 }
 
-// ── C(ii). ALL 427 real D3 spike candidate titles through the deny differential. ────────────────────
+// ── C(ii). Real D3 spike titles through the deny + classify differential. ───────────────────────────
+// Two-tier so CI and fresh clones are deterministic: a COMMITTED curated fixture (always present) is the
+// hard regression bar; the full 427-row scratch corpus (spikes/data/, gitignored) is swept as a BONUS
+// only when present locally — its absence is logged, never failed (no silent gap, no CI red).
+function denyClassifyDifferential(
+  label: string,
+  titles: string[],
+): { divergences: number; deniedCount: number } {
+  let divergences = 0;
+  let deniedCount = 0;
+  for (const t of titles) {
+    const denyEq = isDenied(t) === origDenied(t);
+    const classifyEq =
+      JSON.stringify(noticeFlagsFromRules(t)) === JSON.stringify(origFlags(t));
+    if (!denyEq || !classifyEq) {
+      divergences++;
+      out.push(
+        `       ${label} DIVERGENCE ${JSON.stringify(t.slice(0, 80))}: deny rules=${isDenied(t)} orig=${origDenied(t)}; classifyEq=${classifyEq}`,
+      );
+    }
+    if (isDenied(t)) deniedCount++;
+  }
+  return { divergences, deniedCount };
+}
+
+// Tier 1 — the COMMITTED fixture (required; this is what runs in CI).
+{
+  const here = dirname(fileURLToPath(import.meta.url));
+  const fx = JSON.parse(
+    readFileSync(join(here, "fixtures/d3-spike-titles.json"), "utf8"),
+  ) as { denied: string[]; notDenied: string[] };
+  const all = [...fx.denied, ...fx.notDenied];
+  const { divergences } = denyClassifyDifferential("Cii-fixture", all);
+  assert(
+    "Cii deny+classify differential over committed fixture: zero divergence vs original literals",
+    divergences === 0,
+    `${all.length} titles, ${divergences} divergent`,
+  );
+  // The institutional land-withdrawal traps MUST be denied (under-suppression guard).
+  assert(
+    "Cii every committed `denied` trap is suppressed (land-withdrawal false-positives)",
+    fx.denied.every((t) => isDenied(t)),
+    fx.denied.map((t) => `${t.slice(0, 28)}=${isDenied(t)}`).join("; "),
+  );
+  // The documented BLM 2023-27468 spike3 are explicitly present and denied.
+  const spike3 = fx.denied.filter((t) =>
+    /Public Land Order No\. 7963|Flathead National Forest|Camp Hale/.test(t),
+  );
+  assert(
+    "Cii the 3 documented D3 spike titles are present and DENIED",
+    spike3.length === 3 && spike3.every((t) => isDenied(t)),
+    `${spike3.length}/3 matched`,
+  );
+  // Genuine comment-period / extension notices MUST NOT be denied (over-suppression guard).
+  assert(
+    "Cii every committed `notDenied` genuine notice is NOT suppressed",
+    fx.notDenied.every((t) => !isDenied(t)),
+    fx.notDenied.map((t) => `${t.slice(0, 28)}=${isDenied(t)}`).join("; "),
+  );
+}
+
+// Tier 2 — the full real corpus (BONUS; local only — gitignored scratch, absent in CI).
 {
   const here = dirname(fileURLToPath(import.meta.url));
   const dataPath = join(here, "../../../spikes/data/d3_candidates.json");
-  let cands: Array<{ title?: string | null }> = [];
+  let cands: Array<{ title?: string | null }> | null = null;
   try {
     const j = JSON.parse(readFileSync(dataPath, "utf8")) as {
       candidates?: Array<{ title?: string | null }>;
     };
     cands = j.candidates ?? [];
-  } catch (e) {
-    assert("Cii spike data loaded", false, String(e));
+  } catch {
+    cands = null; // scratch corpus not generated locally — fine; the fixture already gated CI.
   }
-  assert(
-    "Cii spike candidate corpus is non-trivial",
-    cands.length > 100,
-    `${cands.length}`,
-  );
-
-  let divergences = 0;
-  let deniedCount = 0;
-  for (const c of cands) {
-    const t = c.title ?? "";
-    const r = isDenied(t);
-    const o = origDenied(t);
-    if (r !== o) {
-      divergences++;
-      out.push(
-        `       SPIKE DENY DIVERGENCE ${JSON.stringify(t.slice(0, 80))}: rules=${r} orig=${o}`,
-      );
-    }
-    if (r) deniedCount++;
-  }
-  assert(
-    "Cii deny differential over ALL real D3 titles: zero divergence",
-    divergences === 0,
-    `${cands.length} titles, ${deniedCount} denied, ${divergences} divergent`,
-  );
-
-  // Also run classify over the same real titles (catches a regression that no curated corpus would).
-  let classifyDiv = 0;
-  for (const c of cands) {
-    const t = c.title ?? "";
-    if (
-      JSON.stringify(noticeFlagsFromRules(t)) !== JSON.stringify(origFlags(t))
-    )
-      classifyDiv++;
-  }
-  assert(
-    "Cii classify differential over ALL real D3 titles: zero divergence",
-    classifyDiv === 0,
-    `${classifyDiv} divergent of ${cands.length}`,
-  );
-
-  // The 3 institutional spike titles MUST still be denied (under-suppression guard).
-  const spike3 = cands
-    .map((c) => c.title ?? "")
-    .filter((t) =>
-      /Public Land Order No\. 7963|Flathead National Forest|Camp Hale/.test(t),
+  if (cands === null) {
+    out.push(
+      "  SKIP  Cii full D3 scratch corpus absent (spikes/data/ gitignored) — committed fixture is the CI bar",
     );
-  assert(
-    "Cii the documented D3 spike titles are present and DENIED",
-    spike3.length >= 1 && spike3.every((t) => isDenied(t)),
-    `${spike3.length} matched: ${spike3.map((t) => `${t.slice(0, 24)}=${isDenied(t)}`).join("; ")}`,
-  );
+  } else {
+    const titles = cands.map((c) => c.title ?? "");
+    const { divergences, deniedCount } = denyClassifyDifferential(
+      "Cii-corpus",
+      titles,
+    );
+    assert(
+      "Cii deny+classify differential over ALL real D3 titles: zero divergence",
+      divergences === 0,
+      `${titles.length} titles, ${deniedCount} denied, ${divergences} divergent`,
+    );
+  }
 }
 
 // ── D. STATEFULNESS: repeated + interleaved calls are stable (no lastIndex drift). ──────────────────
