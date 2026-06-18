@@ -52,14 +52,17 @@ spec:
           # zombie loop stops updating it; once it is older than 2x the poll interval the probe fails and
           # K8s restarts THE one pod — safe because strategy:Recreate + replicas:1 preserve the single-
           # writer invariant across the restart. Threshold is derived from pollIntervalMs (ms -> s, x2) so
-          # it can never drift from the cadence. BusyBox `stat -c %Y` / ash `$(( ))` verified on
-          # node:24-alpine; a missing file errors the arithmetic -> non-zero -> probe fails (intended).
+          # it can never drift from the cadence. The path is bound + quoted (defensive: tolerates a future
+          # heartbeat.file with spaces/metachars), and a missing file is made EXPLICIT via `[ -f ]` —
+          # short-circuits to a non-zero exit -> probe fails -> restart (rather than leaning on the
+          # arithmetic blowing up on empty `stat` output). BusyBox `stat -c %Y` / ash `$(( ))` /
+          # `[ -f ]` all verified on node:24-alpine.
           livenessProbe:
             exec:
               command:
                 - sh
                 - -c
-                - test $(( $(date +%s) - $(stat -c %Y {{ .Values.poller.heartbeat.file }}) )) -lt {{ mul (div .Values.poller.pollIntervalMs 1000) 2 }}
+                - 'f="{{ .Values.poller.heartbeat.file }}"; [ -f "$f" ] && test $(( $(date +%s) - $(stat -c %Y "$f") )) -lt {{ mul (div .Values.poller.pollIntervalMs 1000) 2 }}'
             initialDelaySeconds: 30
             periodSeconds: 60
             failureThreshold: 3
