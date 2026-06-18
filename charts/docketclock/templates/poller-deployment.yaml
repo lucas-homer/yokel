@@ -41,5 +41,30 @@ spec:
                 secretKeyRef:
                   name: docketclock-external
                   key: regs_api_key
+            # Cadence + liveness heartbeat path. POLLER_HEARTBEAT_FILE is set ONLY here (k8s), so the
+            # loop writes a heartbeat in-cluster but not on a bare local `tsx run.ts` run.
+            - name: POLL_INTERVAL_MS
+              value: {{ .Values.poller.pollIntervalMs | quote }}
+            - name: POLLER_HEARTBEAT_FILE
+              value: {{ .Values.poller.heartbeat.file | quote }}
+          # LIVENESS (#25): no HTTP server here, so this is an EXEC probe over the heartbeat file the poll
+          # loop rewrites at the end of every settled cycle (src/poll/run.ts -> writeHeartbeat). A hung /
+          # zombie loop stops updating it; once it is older than 2x the poll interval the probe fails and
+          # K8s restarts THE one pod — safe because strategy:Recreate + replicas:1 preserve the single-
+          # writer invariant across the restart. Threshold is derived from pollIntervalMs (ms -> s, x2) so
+          # it can never drift from the cadence. The path is bound + quoted (defensive: tolerates a future
+          # heartbeat.file with spaces/metachars), and a missing file is made EXPLICIT via `[ -f ]` —
+          # short-circuits to a non-zero exit -> probe fails -> restart (rather than leaning on the
+          # arithmetic blowing up on empty `stat` output). BusyBox `stat -c %Y` / ash `$(( ))` /
+          # `[ -f ]` all verified on node:24-alpine.
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - 'f="{{ .Values.poller.heartbeat.file }}"; [ -f "$f" ] && test $(( $(date +%s) - $(stat -c %Y "$f") )) -lt {{ mul (div .Values.poller.pollIntervalMs 1000) 2 }}'
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

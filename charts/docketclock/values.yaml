@@ -41,6 +41,16 @@ migrations:
   enabled: true
   command: ["pnpm", "exec", "tsx", "src/db/migrate.ts"]
 
+# Poller cadence + liveness (#25). The poll loop self-reschedules every pollIntervalMs (matches the
+# default in src/poll/run.ts) and rewrites heartbeat.file at the end of every settled cycle. The poller
+# Deployment's exec livenessProbe derives its staleness threshold as 2x pollIntervalMs, so the cadence
+# and the probe can never drift: the heartbeat updates once per cycle, so the probe must tolerate up to
+# one fully-missed cycle (idle wait + a cycle's own runtime) before it restarts the single pod.
+poller:
+  pollIntervalMs: 900000 # 15 min
+  heartbeat:
+    file: /tmp/poller-heartbeat
+
 # Vault backend for External Secrets (dev token auth locally; cloud uses the kubernetes auth method).
 vault:
   server: http://vault.vault.svc:8200
