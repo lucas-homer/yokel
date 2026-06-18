@@ -8,19 +8,23 @@
 # allow_k8s_contexts('k3d-yokel')  # uncomment to guard against deploying to the wrong context
 
 # Build the real image (the API, poller, and migration runner all run from it; the chart sets the
-# command per workload). On a source change Tilt does a FULL rebuild + redeploy.
-#
-# NO live_update here (deliberate — see #28). We run `tsx` from source with no watch mode, so a
-# live_update sync alone never re-reads the edited file. The old restart_container() step that bounced
-# the process is DEPRECATED for k8s resources in current Tilt; and restart_process's entrypoint wrapper
-# does not fit this chart, which runs ONE image with a different `command:` PER workload (api/poller/
-# migrate) — a k8s `command:` overrides the image entrypoint, so the wrapper would be bypassed. The
-# clean fast-reload path is `tsx watch` driven by values-local.yaml (chart change) — tracked in #28.
-# A full rebuild is correct + reproducible; only per-edit latency is worse until #28 lands.
+# command per workload). HOT-RELOAD (#28): live_update sync()s edited source STRAIGHT into the running
+# container, and the local overlay (values-local.yaml) runs api/poller under `tsx watch`, which re-reads
+# the synced file and restarts the process — true hot reload with NO deprecated restart_container() and
+# NO restart_process entrypoint wrapper (which couldn't serve this chart's three distinct per-workload
+# `command:`s anyway: a k8s command overrides the image entrypoint, bypassing the wrapper). Only the two
+# source trees are synced; a change OUTSIDE them (package.json, lockfile, Dockerfile, migrations/) is not
+# matched by a sync step, so Tilt falls back to a full rebuild + redeploy — exactly what those need.
 docker_build(
     'docketclock',
     context='.',
     dockerfile='apps/docketclock/Dockerfile',
+    live_update=[
+        # tsx runs from source (no dist/); sync the TS the runtime actually executes + the contract it
+        # imports. Container paths mirror the Dockerfile COPYs under WORKDIR /app.
+        sync('apps/docketclock/src', '/app/apps/docketclock/src'),
+        sync('packages/contracts/src', '/app/packages/contracts/src'),
+    ],
 )
 
 k8s_yaml(helm(

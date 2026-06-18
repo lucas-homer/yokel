@@ -16,6 +16,14 @@ service:
   port: 80
   targetPort: 8080
 
+# Per-workload entrypoints. ONE image (apps/docketclock/Dockerfile) runs all three workloads; the chart
+# picks the `command:` per workload. Default = plain `tsx` (prod / Argo). The local overlay
+# (values-local.yaml) swaps api + poller to `tsx watch` for Tilt hot-reload (#28). Migrations are
+# DELIBERATELY left on plain `tsx` in BOTH overlays: the migrate Job is one-shot and MUST exit, but
+# `tsx watch` never exits — it would hang the pre-sync hook forever.
+api:
+  command: ["pnpm", "exec", "tsx", "src/api/run.ts"]
+
 ingress:
   enabled: true
   className: traefik
@@ -47,6 +55,7 @@ migrations:
 # and the probe can never drift: the heartbeat updates once per cycle, so the probe must tolerate up to
 # one fully-missed cycle (idle wait + a cycle's own runtime) before it restarts the single pod.
 poller:
+  command: ["pnpm", "exec", "tsx", "src/poll/run.ts"]
   pollIntervalMs: 900000 # 15 min
   heartbeat:
     file: /tmp/poller-heartbeat

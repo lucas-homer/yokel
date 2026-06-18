@@ -1,4 +1,14 @@
 # LOCAL overlay — k3d on the Mini. Single instance, default (local-path) StorageClass, dev Vault token.
+
+# Hot-reload under Tilt (#28): `tsx watch` re-reads the source Tilt live_update sync()s into the running
+# container, restarting the process on every edit — true hot reload with no deprecated restart_container.
+# Dev-only: prod / Argo (values.yaml) stays on plain `tsx`. Migrations are intentionally NOT overridden
+# here — the migrate Job is one-shot and must exit, so it stays plain `tsx` (a `watch` would never end).
+api:
+  command: ["pnpm", "exec", "tsx", "watch", "src/api/run.ts"]
+poller:
+  command: ["pnpm", "exec", "tsx", "watch", "src/poll/run.ts"]
+
 postgres:
   instances: 1
   storageClass: "" # local-path (k3d default)

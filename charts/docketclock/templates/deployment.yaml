@@ -24,7 +24,8 @@ spec:
         - name: api
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["pnpm", "exec", "tsx", "src/api/run.ts"]
+          # Values-driven so the local overlay can swap plain `tsx` for `tsx watch` (#28 hot-reload).
+          command: {{ .Values.api.command | toJson }}
           ports:
             - containerPort: {{ .Values.service.targetPort }}
           env:
