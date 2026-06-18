@@ -28,7 +28,8 @@ spec:
         - name: poller
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["pnpm", "exec", "tsx", "src/poll/run.ts"]
+          # Values-driven so the local overlay can swap plain `tsx` for `tsx watch` (#28 hot-reload).
+          command: {{ .Values.poller.command | toJson }}
           env:
             - name: DATABASE_URL
               valueFrom:
