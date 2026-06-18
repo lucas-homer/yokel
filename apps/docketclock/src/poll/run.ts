@@ -64,10 +64,7 @@ function writeHeartbeat(): void {
   try {
     writeFileSync(HEARTBEAT_FILE, `${new Date().toISOString()}\n`);
   } catch (err) {
-    console.error(
-      `[${new Date().toISOString()}] heartbeat write failed:`,
-      err,
-    );
+    console.error(`[${new Date().toISOString()}] heartbeat write failed:`, err);
   }
 }
 
