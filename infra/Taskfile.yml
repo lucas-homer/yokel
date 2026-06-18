@@ -29,7 +29,37 @@ tasks:
       # Create only if absent — checked AFTER colima is up (k3d needs the docker daemon to see the
       # cluster). A no-op task-level `status:` guard would race: it runs before colima starts, so it
       # can't see a cluster living inside a stopped VM and would wrongly try to recreate it.
+      # NOTE: this does NOT resume a cluster that exists-but-is-stopped (e.g. after colima was restarted);
+      # use `task cluster-restart` for that — it starts the nodes AND repairs the kubelet certs.
+      # IP-STABILITY (optional, on a FUTURE recreate only): append `--subnet 172.28.0.0/16` to give the
+      # cluster a DEDICATED docker subnet, which makes node IPs far more stable across colima restarts and
+      # reduces the kubelet-cert drift below. It is experimental IPAM and only takes effect at create time,
+      # so adopt it the next time you `dev-down` + `dev-up`. The guaranteed live fix for drift is
+      # `task cluster-restart`.
       - k3d cluster list {{.CLUSTER}} >/dev/null 2>&1 || k3d cluster create --config k3d/yokel.yaml
+
+  cluster-restart:
+    desc: Resume the cluster after a colima/Docker restart (start nodes + repair the kubelet serving certs)
+    cmds:
+      # The cluster and its CNPG PVC survive a colima STOP (they live on the VM disk), so this RESUMES them
+      # rather than recreating (which would lose data). Run this whenever colima was stopped/slept and
+      # `kubectl` / `tilt` start failing with connection or x509 errors.
+      - colima status >/dev/null 2>&1 || colima start --cpu 6 --memory 12 --disk 60 --dns 1.1.1.1 --dns 8.8.8.8
+      - k3d cluster start {{.CLUSTER}}
+      # KUBELET CERT REPAIR (the load-bearing step). Across a colima restart the k3d node IPs can shift on
+      # the docker network, but each node's kubelet SERVING cert was issued for its OLD IP — so
+      # apiserver→kubelet (kubectl logs/exec/port-forward, and Tilt's log stream + port-forwards) fails
+      # with `x509: certificate is valid for <old-ip>, not <new-ip>`. Restarting the node containers makes
+      # k3s re-issue the serving cert for the node's CURRENT IP. (1 server + 1 agent per k3d/yokel.yaml.)
+      - docker restart k3d-{{.CLUSTER}}-server-0 k3d-{{.CLUSTER}}-agent-0
+      # Wait for both nodes Ready, tolerating the brief apiserver downtime from the server-node restart.
+      - |
+        for i in $(seq 1 40); do
+          [ "$(kubectl get nodes --no-headers 2>/dev/null | grep -c ' Ready ')" = "2" ] && break
+          sleep 3
+        done
+      - kubectl get nodes
+      - echo "✅ cluster resumed; kubelet certs repaired. CNPG + app pods re-race the DB briefly, then settle ('task status')."
 
   bootstrap-argocd:
     desc: Install Argo CD via Helm (the single imperative seam)
