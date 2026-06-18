@@ -14,7 +14,7 @@
 import { makeOcdId, type ObservationSource } from "@yokel/contracts";
 import { fetchJsonWithRetry, type FetchOpts } from "./http.js";
 import { payloadHash } from "./payload.js";
-import { noticeFlags } from "./notice-flags.js";
+import { noticeFlags, type NoticeFlags } from "./notice-flags.js";
 import {
   ObservationCandidateSchema,
   type ObservationCandidate,
@@ -31,7 +31,7 @@ const FR_DOC_URL = (documentNumber: string) =>
   `${frBase()}/documents/${encodeURIComponent(documentNumber)}.json`;
 
 /** Pins which parser produced the notice-type flags below. Bump when the flag logic changes. */
-export const PARSER_VERSION = "fr-v1";
+export const PARSER_VERSION = "fr-v2"; // v2: reopening split out of is_extension into is_reopening (#O4)
 
 const SOURCE: ObservationSource = "federal_register";
 
@@ -102,6 +102,20 @@ function str(v: unknown): string | null {
 }
 
 /**
+ * Derive the notice-type flags from a raw FR document — the classification haystack is title + type +
+ * action, joined exactly as the ingest path composes it. Exported as the SINGLE source of truth so the
+ * #O4 re-derive backfill reproduces byte-for-byte what the adapter classified at insert (no drift between
+ * live parsing and the backfill — the load-bearing correctness property of the backfill).
+ */
+export function frNoticeFlags(raw: unknown): NoticeFlags {
+  const doc = (raw && typeof raw === "object" ? raw : {}) as FrDocShape;
+  const haystack = [doc.title, doc.type, doc.action]
+    .map((s) => str(s) ?? "")
+    .join(" \n ");
+  return noticeFlags(haystack);
+}
+
+/**
  * Map a raw FR document JSON into a validated Observation candidate. Throws if the document number is
  * absent (it is the primary OCD-ID minting input) or if the result does not satisfy the frozen
  * Observation contract.
@@ -123,10 +137,6 @@ export function parseFrObservation(raw: unknown): ObservationCandidate {
   const regsDocumentId = regsInfo ? str(regsInfo.document_id) : null;
   const regsObjectId = regsInfo ? str(regsInfo.object_id) : null;
 
-  const haystack = [doc.title, doc.type, doc.action]
-    .map((s) => str(s) ?? "")
-    .join(" \n ");
-
   const candidate: ObservationCandidate = {
     ocd_id: makeOcdId({ frDocNum }),
     source: SOURCE,
@@ -137,7 +147,7 @@ export function parseFrObservation(raw: unknown): ObservationCandidate {
     fetched_at: new Date().toISOString(),
     parser_version: PARSER_VERSION,
     raw_dates_text: str(doc.dates),
-    ...noticeFlags(haystack),
+    ...frNoticeFlags(raw),
     raw,
   };
 

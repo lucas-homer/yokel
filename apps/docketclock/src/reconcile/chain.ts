@@ -84,6 +84,7 @@ export interface ChainCandidate {
   is_extension: boolean;
   is_correction: boolean;
   is_withdrawal: boolean;
+  is_reopening: boolean; // a previously-CLOSED comment period re-opened (distinct from an extension) — #O4
   title: string | null; // the FR document title — the land-withdrawal signal often lives ONLY here
   publication_date: string | null; // "YYYY-MM-DD"
   govinfo_url: string | null;
@@ -107,9 +108,13 @@ export interface ChainConflict {
   detected_at: string;
 }
 
-/** Is this candidate an amendment of SOME original? (extension OR correction OR withdrawal). */
-function isAmendment(c: ChainCandidate): boolean {
-  return c.is_extension || c.is_correction || c.is_withdrawal;
+/**
+ * Is this candidate an amendment of SOME original? (extension OR correction OR withdrawal OR reopening).
+ * Exported so the chainReconcileOnce summary counts amendments by the SAME definition the engine links on
+ * — a new notice type added here updates both the engine and the metric in ONE place (no divergence).
+ */
+export function isAmendment(c: ChainCandidate): boolean {
+  return c.is_extension || c.is_correction || c.is_withdrawal || c.is_reopening;
 }
 
 /**
@@ -199,6 +204,11 @@ function classify(b: ChainCandidate, multiTarget: boolean): ConflictFlag[] {
   // B withdraws while A reads open.
   if (b.is_withdrawal) flags.push("withdrawn_vs_open");
   if (b.is_extension) flags.push("extension_chain_unresolved");
+  // #O4: reopening is its OWN outcome, not an extension. After the notice-flags split a pure reopening has
+  // is_extension=false, so it emits `reopening` alone; a notice titled both ("Extension and Reopening…")
+  // honestly carries both flags. This is the mislabel O4 fixes — before, a reopening rode is_extension and
+  // emitted only `extension_chain_unresolved`.
+  if (b.is_reopening) flags.push("reopening");
   if (b.is_correction) flags.push("correction_pending");
   if (multiTarget) flags.push("multi_target_notice");
   return flags;

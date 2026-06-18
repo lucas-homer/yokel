@@ -224,6 +224,7 @@ interface ObservationRow {
   is_extension: boolean;
   is_correction: boolean;
   is_withdrawal: boolean;
+  is_reopening: boolean;
   raw: unknown;
 }
 
@@ -240,7 +241,7 @@ export async function getWindowObservations(
   const rows = await sql<ObservationRow[]>`
     select observation_id, ocd_id, source, fr_document_number, regs_document_id, regs_object_id,
            payload_hash, fetched_at, parser_version, raw_dates_text,
-           is_extension, is_correction, is_withdrawal, raw
+           is_extension, is_correction, is_withdrawal, is_reopening, raw
     from observations
     where ocd_id = ${ocdId}
     order by fetched_at desc, observation_id desc

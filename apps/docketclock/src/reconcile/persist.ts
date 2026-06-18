@@ -27,6 +27,7 @@ import type { ReconcileResult } from "./reconcile.js";
 import { RECONCILER_VERSION, reconcile } from "./reconcile.js";
 import {
   chainReconcile,
+  isAmendment,
   type ChainCandidate,
   type ChainConflict,
 } from "./chain.js";
@@ -243,12 +244,13 @@ export async function reconcileOcdId(
       is_extension: boolean;
       is_correction: boolean;
       is_withdrawal: boolean;
+      is_reopening: boolean;
       raw: unknown;
     }[]
   >`
     select observation_id, ocd_id, source, fr_document_number, regs_document_id, regs_object_id,
            payload_hash, fetched_at, parser_version, raw_dates_text,
-           is_extension, is_correction, is_withdrawal, raw
+           is_extension, is_correction, is_withdrawal, is_reopening, raw
     from observations
     where ocd_id = ${ocdId}
     order by fetched_at asc
@@ -427,6 +429,7 @@ export async function chainReconcileOnce(
       is_extension: boolean;
       is_correction: boolean;
       is_withdrawal: boolean;
+      is_reopening: boolean;
       raw: unknown;
       status: string;
       resolved_close_utc: Date | string | null;
@@ -436,7 +439,7 @@ export async function chainReconcileOnce(
     select distinct on (w.ocd_id)
       w.ocd_id,
       o.observation_id as fr_observation_id,
-      o.is_extension, o.is_correction, o.is_withdrawal, o.raw,
+      o.is_extension, o.is_correction, o.is_withdrawal, o.is_reopening, o.raw,
       w.status, w.resolved_close_utc, w.govinfo_url
     from participation_windows w
     join observations o
@@ -456,6 +459,7 @@ export async function chainReconcileOnce(
       is_extension: r.is_extension,
       is_correction: r.is_correction,
       is_withdrawal: r.is_withdrawal,
+      is_reopening: r.is_reopening,
       title: fr.title,
       publication_date: fr.publicationDate,
       govinfo_url: r.govinfo_url,
@@ -468,9 +472,8 @@ export async function chainReconcileOnce(
     };
   });
 
-  const amendments = candidates.filter(
-    (c) => c.is_extension || c.is_correction || c.is_withdrawal,
-  ).length;
+  // Count amendments by the SAME predicate the engine links on (single source of truth — see chain.ts).
+  const amendments = candidates.filter(isAmendment).length;
 
   const conflicts = chainReconcile(candidates, now);
   const persisted = await persistChainConflicts(sql, conflicts, now);

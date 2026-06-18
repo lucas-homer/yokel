@@ -19,14 +19,14 @@
 import { makeOcdId, type ObservationSource } from "@yokel/contracts";
 import { fetchJsonWithRetry, type FetchOpts } from "./http.js";
 import { payloadHash } from "./payload.js";
-import { noticeFlags } from "./notice-flags.js";
+import { noticeFlags, type NoticeFlags } from "./notice-flags.js";
 import {
   ObservationCandidateSchema,
   type ObservationCandidate,
 } from "./observation-candidate.js";
 
 /** Pins which parser produced the notice-type flags below. Bump when the flag logic changes. */
-export const PARSER_VERSION = "regs-v1";
+export const PARSER_VERSION = "regs-v2"; // v2: reopening split out of is_extension into is_reopening (#O4)
 
 const SOURCE: ObservationSource = "regulations_gov";
 
@@ -223,6 +223,28 @@ function str(v: unknown): string | null {
 }
 
 /**
+ * Derive the notice-type flags from a raw Regs.gov v4 document. The keyword haystack is
+ * title + documentType; is_withdrawal additionally OR's the AUTHORITATIVE operational `withdrawn=true`
+ * attribute (the same rule the ingest path applies). Exported as the SINGLE source of truth so the #O4
+ * re-derive backfill reproduces the adapter's EXACT derivation — including the withdrawn-OR — with no
+ * drift between live parsing and the backfill.
+ */
+export function regsNoticeFlags(raw: unknown): NoticeFlags {
+  const attrs =
+    (raw && typeof raw === "object"
+      ? ((raw as RegsDocShape).data?.attributes ?? null)
+      : null) ?? {};
+  const haystack = [attrs.title, attrs.documentType]
+    .map((s) => str(s) ?? "")
+    .join(" \n ");
+  const flags = noticeFlags(haystack);
+  return {
+    ...flags,
+    is_withdrawal: flags.is_withdrawal || attrs.withdrawn === true,
+  };
+}
+
+/**
  * Map a raw Regs.gov v4 document-detail JSON into a validated Observation candidate.
  *
  * Identity mapping (docs/architecture/docketclock.md): the JSON:API `data.id` IS the Regs DOCUMENT id
@@ -252,10 +274,9 @@ export function parseRegsObservation(raw: unknown): ObservationCandidate {
       `parseRegsObservation: ${regsDocumentId} has neither frDocNum nor objectId — cannot mint an OCD-ID`,
     );
 
-  const haystack = [attrs.title, attrs.documentType]
-    .map((s) => str(s) ?? "")
-    .join(" \n ");
-  const flags = noticeFlags(haystack);
+  // regsNoticeFlags re-navigates raw → data.attributes itself; it ALSO folds in the authoritative
+  // withdrawn=true (so is_withdrawal here is the final value — do not OR again).
+  const flags = regsNoticeFlags(raw);
 
   const candidate: ObservationCandidate = {
     ocd_id: makeOcdId({
@@ -272,7 +293,8 @@ export function parseRegsObservation(raw: unknown): ObservationCandidate {
     raw_dates_text: null, // Regs.gov carries structured dates, not FR's verbatim legal DATES text
     is_extension: flags.is_extension,
     is_correction: flags.is_correction,
-    is_withdrawal: flags.is_withdrawal || attrs.withdrawn === true,
+    is_withdrawal: flags.is_withdrawal,
+    is_reopening: flags.is_reopening,
     raw,
   };
 
