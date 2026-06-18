@@ -1,18 +1,19 @@
 /**
  * Notice-type flag detection — a minimal keyword pass over a notice's title/type/action text, shared by
- * the FR and Regs.gov adapters so the keyword set AND the documented false-positive caveat live in ONE
- * place. Kept deliberately simple; the real classifier (RuleBox deny-list + Haiku escalation) lands later.
+ * the FR and Regs.gov adapters so the keyword set lives in ONE place. The 4 keyword patterns now live as
+ * DATA in the versioned RuleBox (src/rulebox/rulebook.ts, validated at load) and run through the single
+ * deterministic evaluator; this module is a thin, signature-stable delegator so every caller (FR/Regs
+ * adapters, backfill) is untouched. The DENY-list (the BLM 2023-27468 land-withdrawal false-positive
+ * guard) is NOT applied here — it stays scoped to the chain engine exactly as before (applying it here
+ * would change behavior). What is still deferred is the LLM/Gemini ambiguous-tail escalation (the
+ * deterministic RuleBox itself has landed); see docs/architecture/docketclock.md.
+ *
+ * O4 (the clean split): a REOPENING is its own flag, NOT folded into extension. An EXTENSION moves a
+ * still-open deadline later (continuous); a REOPENING re-opens an ALREADY-CLOSED comment period (a gap —
+ * a fresh reliance window) — distinct legal events. A reopening sets is_reopening (NOT is_extension),
+ * else the chain engine mislabels it `extension_chain_unresolved`; a notice titled both fires both flags.
  */
-// O4 (the clean split): `reopen…` moved OUT of RE_EXTENSION into its own RE_REOPENING. An EXTENSION moves
-// a still-open deadline later (continuous); a REOPENING re-opens an ALREADY-CLOSED comment period (a gap —
-// a fresh reliance window). They are distinct legal events, so a reopening must set is_reopening (NOT
-// is_extension) — otherwise the chain engine mislabels it `extension_chain_unresolved`. The two are
-// mutually exclusive in vocabulary but a single notice CAN be titled both ("Extension and Reopening…"),
-// in which case both flags fire honestly.
-const RE_EXTENSION = /\bextension\b|\bextend(?:ed|ing)?\b/i;
-const RE_CORRECTION = /\bcorrection\b|\bcorrect(?:ed|ing)?\b/i;
-const RE_WITHDRAWAL = /\bwithdraw(?:al|n|ing)?\b/i;
-const RE_REOPENING = /\breopen(?:ed|ing|s)?\b/i;
+import { noticeFlagsFromRules } from "../rulebox/index.js";
 
 export interface NoticeFlags {
   is_extension: boolean;
@@ -21,15 +22,6 @@ export interface NoticeFlags {
   is_reopening: boolean;
 }
 
-// TODO(rulebox): route these flags through the RuleBox deny-list before trusting them. The BLM
-// 2023-27468 "land-withdrawal extension" title is a keyword false-positive (a land withdrawal, NOT a
-// comment-period extension/withdrawal) and must be suppressed here; genuinely-ambiguous titles escalate
-// to a single Haiku call, not the hot path (docs/architecture/docketclock.md).
 export function noticeFlags(text: string): NoticeFlags {
-  return {
-    is_extension: RE_EXTENSION.test(text),
-    is_correction: RE_CORRECTION.test(text),
-    is_withdrawal: RE_WITHDRAWAL.test(text),
-    is_reopening: RE_REOPENING.test(text),
-  };
+  return noticeFlagsFromRules(text);
 }

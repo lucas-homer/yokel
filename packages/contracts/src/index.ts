@@ -3,7 +3,7 @@
  * (Watershed Watch). Verticals join on stable OCD-IDs, never internal UUIDs.
  *
  * ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
- * │ FROZEN @ 0.5.0 (2026-06-17)                                                                    │
+ * │ FROZEN @ 0.6.0 (2026-06-18)                                                                    │
  * │                                                                                               │
  * │ LOCKED (builders may propose changes; the contract-keeper adjudicates — nobody else edits):   │
  * │   • Confidence / ConflictFlag / WindowType / WindowStatus enums.                              │
@@ -24,6 +24,12 @@
  * │       - tz_normalization_only is an INFORMATIONAL marker: may ride with HIGH, never with        │
  * │         'conflicting' (the load-bearing FR-2018-27875 fix, expressed structurally).             │
  * │   • tags is string[] and OPAQUE to core — HUC/vertical fields NEVER enter the canonical object.│
+ * │   • RuleBox: the deterministic, VERSIONED rules-as-DATA rulebook (RuleBox + Rule discriminated  │
+ * │       union of ClassifyRule | DenyRule; NoticeFlagKey enum; SerializableRegex). Expresses today's │
+ * │       two regex stopgaps as data (notice-flags 4 classify regexes; chain.ts DENY_PATTERNS deny    │
+ * │       regexes). Regexes are DATA ({source,flags}) that must COMPILE at load; rule ids are kebab + │
+ * │       unique; classify rules reserve an OPTIONAL `ambiguous` marker (no LLM payload). SerializableRegex │
+ * │       REJECTS the stateful g/y flags (evaluator .test()s without resetting lastIndex). [2026-06-18] │
  * │                                                                                               │
  * │ INTENTIONALLY DEFERRED (contract pre-shaped or out of MVP scope — add when the builder lands): │
  * │   • Webhook payload schemas (HMAC-signed outbox events: notify_on kinds + delivery envelope) — │
@@ -32,10 +38,24 @@
  * │   • MCP tool I/O schemas — until a named AI-agent buyer commits.                               │
  * │   • Enrichment-API tag-namespace contract for THIRD-PARTY verticals — when Watershed Watch     │
  * │     commits (built-in agency/CFR enrichment writes into the opaque `tags` field as-is).        │
- * │   • The reconciliation RuleBox rule schema + explanation object internals.                     │
+ * │   • The reconciliation confidence-EXPLANATION object internals (rules_fired / source_agreement / │
+ * │     parse_path / staleness / conflict_ids) and the AMBIGUOUS-tail Adjudicator schema (provider   │
+ * │     port + verdict). RuleBox's rule schema landed @0.6.0; these consume it but are a later slice. │
  * └─────────────────────────────────────────────────────────────────────────────────────────────┘
  *
  * REVISIONS
+ *   • 0.6.0 (2026-06-18) — RuleBox rule schema (additive; no existing schema/enum changed). Adds the
+ *       deterministic, VERSIONED rules-as-DATA rulebook the reconcile classifier (Slice 1b) will consume:
+ *       RuleBox { version, rules[] }, Rule = discriminatedUnion("kind", [ClassifyRule, DenyRule]),
+ *       the NoticeFlagKey enum (the four is_* notice flags, sans prefix), and SerializableRegex
+ *       ({source,flags}) — a JSON-round-trippable regex whose source must COMPILE and whose flags are the
+ *       legal JS subset MINUS the stateful g/y (the evaluator .test()s without resetting lastIndex, so g/y
+ *       would break determinism — rejected at LOAD, not match time). ClassifyRule sets a NoticeFlagKey and reserves
+ *       an OPTIONAL `ambiguous` boolean (escalation marker; NO LLM/adjudication payload — that's deferred);
+ *       DenyRule suppresses an amendment signal (the BLM 2023-27468 land-withdrawal trap), no target flag.
+ *       Both carry a kebab `id` (unique within a box, superRefine-enforced) + a `rationale` audit string.
+ *       This encodes today's two regex stopgaps (notice-flags.ts 4 RE_* + chain.ts DENY_PATTERNS) as data.
+ *       Observation/ConflictFlag/ConflictRecord and every existing schema are UNCHANGED; purely additive.
  *   • 0.5.0 (2026-06-17) — `reopening` becomes a first-class notice classification (additive; un-defers
  *       O4 on #31). Two additions, both additive: (a) a new ConflictFlag member "reopening" — a
  *       previously-CLOSED comment period RE-OPENED (a gap + fresh reliance window), the legally distinct
@@ -449,6 +469,160 @@ export const AccuracyRecord = z.object({
   evaluated_at: z.string().datetime(),
 });
 export type AccuracyRecord = z.infer<typeof AccuracyRecord>;
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// RULEBOX — the deterministic, VERSIONED rulebook (rules-as-DATA, Zod-validated) that does cheap
+// keyword classification forever (docketclock.md: "JSON RuleBox + Zod"). A future LLM (Gemini, via a
+// provider-agnostic port in a LATER slice) is consulted ONLY for the AMBIGUOUS tail (<5% of records)
+// and NEVER touches confidence or deadline resolution. THIS schema is the data shape the deterministic
+// evaluator (Slice 1b) consumes — no LLM/adjudication types live here (deferred to the Adjudicator slice).
+//
+// It expresses, as DATA, the two regex stopgaps in the codebase today:
+//   • classify rules ⇐ apps/docketclock/src/sources/notice-flags.ts (4 keyword regexes → notice flags).
+//   • deny rules     ⇐ apps/docketclock/src/reconcile/chain.ts DENY_PATTERNS (5 land-withdrawal regexes
+//     that mark an amendment candidate's signal a keyword false-positive — the BLM 2023-27468 trap).
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+/**
+ * NoticeFlagKey — the FOUR notice-type classifications a classify rule may set, pinned to the exact
+ * is_* notice-flag vocabulary already on Observation (is_extension/is_correction/is_withdrawal/
+ * is_reopening). A classify rule names a NoticeFlagKey, not a free string, so a rulebook can never set
+ * a flag the canonical object does not carry. The values are the bare key (e.g. "extension") — the
+ * evaluator maps `extension` → the is_extension boolean; keeping the bare key avoids re-encoding the
+ * `is_` prefix in data and keeps the enum aligned with the keyof the four flags one-to-one.
+ */
+export const NoticeFlagKey = z.enum([
+  "extension",
+  "correction",
+  "withdrawal",
+  "reopening",
+]);
+export type NoticeFlagKey = z.infer<typeof NoticeFlagKey>;
+
+/**
+ * SerializableRegex — a regex stored as DATA so a rulebook can live as JSON and round-trip (NOT a live
+ * RegExp instance; z.instanceof(RegExp) would not survive serialization). `flags` is constrained to the
+ * legal JS regex flag set, and the whole pattern is refined to COMPILE: an un-compilable source (or an
+ * illegal flag combination) fails validation at LOAD time, not silently at match time. This is the
+ * single trust boundary that guarantees the evaluator never calls `new RegExp` on data that throws.
+ *
+ * The legal-flag regex pins each char to the JS set (d,g,i,m,s,u,y) and forbids duplicates via the
+ * negative-lookahead; `new RegExp` is the final authority (it also rejects e.g. `u`+`v` style clashes
+ * and malformed sources), so the refine is the load-bearing check and the flag regex is the fast guard.
+ *
+ * The STATEFUL g/y flags are additionally rejected (second refine, path: flags): the evaluator calls
+ * RegExp.prototype.test() without resetting lastIndex, so a g/y rule would go non-deterministic across
+ * repeated .test() calls — the "PURE + deterministic" guarantee is enforced structurally, at LOAD time.
+ */
+export const SerializableRegex = z
+  .object({
+    source: z.string().min(1), // the regex body, e.g. "\\bextension\\b|\\bextend(?:ed|ing)?\\b"
+    flags: z
+      .string()
+      .regex(
+        /^(?!.*(.).*\1)[dgimsuy]*$/,
+        "flags must be a subset of the legal JS regex flags (d,g,i,m,s,u,y) with no duplicates",
+      )
+      .default(""),
+  })
+  .refine(
+    (r) => {
+      try {
+        new RegExp(r.source, r.flags);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    {
+      message:
+        "SerializableRegex.source must compile with the given flags (rejected at load, never deferred to match time)",
+      path: ["source"],
+    },
+  )
+  // The evaluator (apps/docketclock/src/rulebox) calls RegExp.prototype.test() WITHOUT resetting
+  // lastIndex, so the stateful g/y flags would make a rule non-deterministic across repeated .test()
+  // calls — breaking the "PURE + deterministic" guarantee. Reject them at LOAD, not at match time.
+  // Runs after the compile check (which never throws here): a source that compiles with g/y still fails.
+  .refine((r) => !r.flags.includes("g") && !r.flags.includes("y"), {
+    message:
+      "SerializableRegex must not use the stateful g/y flags — the evaluator calls .test() without resetting lastIndex, which would break determinism",
+    path: ["flags"],
+  });
+export type SerializableRegex = z.infer<typeof SerializableRegex>;
+
+/**
+ * ClassifyRule — a keyword pattern that, when it matches a notice's text, SETS a notice-type flag.
+ * Mirrors the 4 RE_* regexes in notice-flags.ts as data (one rule per flag, or many rules per flag).
+ *
+ * `ambiguous` (OPTIONAL, default false) is a RESERVED marker: a rule may flag its match as needing
+ * escalation to the AMBIGUOUS-tail adjudicator (a later slice). It is intentionally a bare boolean and
+ * carries NO LLM/adjudication payload — the Adjudicator schema (provider port, verdict, rules_fired
+ * explanation) is deferred. A rulebook that omits it is the common case (today's 4 regexes are all
+ * unambiguous), so it never changes existing behavior and the deterministic evaluator may ignore it.
+ */
+export const ClassifyRule = z.object({
+  kind: z.literal("classify"),
+  id: z
+    .string()
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "rule id must be kebab-case"),
+  pattern: SerializableRegex,
+  sets: NoticeFlagKey, // the notice flag this match sets (constrained to the four known flags)
+  rationale: z.string().min(1), // audit-trail description (why this pattern, what it targets)
+  ambiguous: z.boolean().default(false), // RESERVED escalation marker; no LLM payload in this slice
+});
+export type ClassifyRule = z.infer<typeof ClassifyRule>;
+
+/**
+ * DenyRule — a keyword pattern whose match marks an amendment candidate a KEYWORD FALSE-POSITIVE, so
+ * its amendment signal is SUPPRESSED (the candidate is never linked). Mirrors chain.ts DENY_PATTERNS:
+ * the BLM 2023-27468 "land-withdrawal extension" trap (a public-lands action, NOT a comment-period
+ * action). A deny rule sets NO flag — it only suppresses — so it carries no `sets` target.
+ */
+export const DenyRule = z.object({
+  kind: z.literal("deny"),
+  id: z
+    .string()
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "rule id must be kebab-case"),
+  pattern: SerializableRegex,
+  rationale: z.string().min(1), // audit-trail description (why this is a false-positive vehicle)
+});
+export type DenyRule = z.infer<typeof DenyRule>;
+
+/** Rule — the discriminated union the evaluator dispatches on (`kind`). */
+export const Rule = z.discriminatedUnion("kind", [ClassifyRule, DenyRule]);
+export type Rule = z.infer<typeof Rule>;
+
+/**
+ * RuleBox — a deterministic, VERSIONED rulebook: an ordered list of classify + deny rules.
+ *
+ * `version` is the RULEBOOK's OWN version string, INDEPENDENT of the @yokel/contracts package version —
+ * it gets stamped into verdict provenance (rules_fired) in a later slice, so it must be a required,
+ * human-meaningful, non-empty string (e.g. "rulebox-2026-06-18" or a semver). Rule `id`s are unique
+ * across the box (a duplicate id would make a fired-rule reference ambiguous in the audit trail).
+ */
+export const RuleBox = z
+  .object({
+    version: z.string().min(1), // the rulebook's own version (NOT the package version)
+    rules: z.array(Rule).default([]),
+  })
+  .superRefine((box, ctx) => {
+    const seen = new Set<string>();
+    for (let i = 0; i < box.rules.length; i++) {
+      const rule = box.rules[i];
+      if (rule === undefined) continue;
+      const id = rule.id;
+      if (seen.has(id)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["rules", i, "id"],
+          message: `duplicate rule id "${id}" — rule ids must be unique within a RuleBox (fired-rule references must be unambiguous in the audit trail).`,
+        });
+      }
+      seen.add(id);
+    }
+  });
+export type RuleBox = z.infer<typeof RuleBox>;
 
 // ───────────────────────────────────────────────────────────────────────────────────────────────
 // REST RESPONSE ENVELOPE — the Delivery API read-surface contract (GET /windows, /windows/{ocd_id},

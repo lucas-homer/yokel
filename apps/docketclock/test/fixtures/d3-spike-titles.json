@@ -1,0 +1,16 @@
+{
+  "_comment": "Committed regression fixture for rulebox-adversarial.test.ts. A curated subset of REAL Federal Register titles drawn from the D3 extension-volume spike corpus (spikes/data/d3_candidates.json, which is gitignored scratch and absent in CI). `denied` are land-withdrawal keyword false-positives the deny-list MUST suppress (the institutional BLM 2023-27468 traps); `notDenied` are genuine comment-period / extension notices the deny-list must NOT touch. The adversarial test ALWAYS runs the differential over this fixture (so CI and fresh clones are deterministic) and ADDITIONALLY sweeps the full 427-row scratch corpus when it is present locally.",
+  "denied": [
+    "Correction of Public Land Order No. 7963; National Defense Operating Area Withdrawal, Doña Ana, Luna, and Hidalgo Counties, NM",
+    "Flathead National Forest; Montana; Mid-Swan Landscape Restoration & Wildland Urban Interface Fuels Project; Withdrawal",
+    "White River National Forest; Eagle County, CO; Camp Hale Restoration and Enhancement Project EIS; Withdrawal",
+    "Notice of Withdrawal of Guidance Circular 4704.1A"
+  ],
+  "notDenied": [
+    "Accidental Release Prevention Requirements: Risk Management Programs Under the Clean Air Act; Common Sense Approach to Chemical Accident Prevention; Extension of Comment Period",
+    "60-Day Notice of Intent To Seek Extension of Approval of Collection: System Diagram Maps",
+    "60-Day Notice of Intent To Seek Extension of Approval of Collection: Rail Depreciation Studies",
+    "Agency Information Collection Activities; Comment Request on Application for Extension of Time To File Information Returns",
+    "30-Day Notice of Intent To Seek Extension of Approval of Collection: Statutory Authority To Preserve Rail Service"
+  ]
+}
