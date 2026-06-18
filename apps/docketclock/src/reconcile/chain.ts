@@ -28,6 +28,7 @@ import {
   type ConflictFlag,
   type OcdId,
 } from "@yokel/contracts";
+import { isDenied } from "../rulebox/index.js";
 
 /**
  * RECENCY_WINDOW_MS — rule 4's "original is still relevant" threshold. An amendment to a long-DEAD docket
@@ -40,36 +41,18 @@ import {
  */
 export const RECENCY_WINDOW_MS = 60 * 24 * 60 * 60 * 1000; // 60 days
 
-/**
- * DENY_PATTERNS — the conservative keyword-false-positive stopgap the notice-flags TODO calls for (the
- * full RuleBox deny-list is deferred). The headline trap is BLM 2023-27468: a "land withdrawal" (a public-
- * lands action) trips the is_withdrawal/is_extension regex even though it is NOT a comment-period action.
- * Real BLM/USFS land-withdrawal notices carry `dates: None` (null DATES text) and put the withdrawal
- * SIGNAL in the TITLE — so the haystack (isKeywordFalsePositive) checks BOTH title and DATES text. If an
- * amendment candidate's title OR DATES text matches ANY of these, its amendment signal is treated as a
- * keyword false-positive and the candidate is FILTERED (never linked). Extensible: add a pattern here.
- *
- * Each pattern targets the land-withdrawal LEGAL VEHICLE, not a bare incidental word — verified to match
- * the 3 real D3 spike titles (Public Land Order No. 7963; Flathead National Forest … Withdrawal; White
- * River National Forest … Camp Hale … Withdrawal) WITHOUT eating genuine comment-period notices. This
- * deliberately errs toward UNDER-linking (the safe direction per AGENTS.md "don't publish fake certainty");
- * the full RuleBox is deferred. Do NOT add bare /\bland\b/ or /\bnational forest\b/ alone (they would
- * over-suppress genuine forest-rule comment periods) — every pattern must require the withdrawal/land-
- * order vehicle.
- */
-export const DENY_PATTERNS: RegExp[] = [
-  // Public Land Order / Public Lands Order — the PLO vehicle (matches the "…Public Land Order No. 7963…" title).
-  /\bpublic\s+lands?\s+orders?\b/i,
-  // "land withdrawal" as one phrase (the BLM 2023-27468 headline trap).
-  /\bland[\s-]?withdrawal\b/i,
-  // withdrawal of … land(s) / withdraws lands / withdrawing public land. Allow STACKED qualifiers
-  // ("certain public land", "national forest system lands") via a repeatable qualifier group.
-  /\bwithdraw(?:al\s+of|s|ing)?\s+(?:(?:certain|public|national|forest|system)\s+)*lands?\b/i,
-  // National Forest … Withdrawal in EITHER order (Flathead/Camp Hale "…National Forest…; Withdrawal" titles).
-  /\bnational\s+forest\b[^.]*\bwithdrawal\b|\bwithdrawal\b[^.]*\bnational\s+forest\b/i,
-  // Notice of (proposed) Withdrawal — the BLM withdrawal-notice vehicle.
-  /\bnotice\s+of\s+(?:proposed\s+)?withdrawal\b/i,
-];
+// The conservative keyword-false-positive deny-list now lives as DATA in the versioned RuleBox
+// (src/rulebox/rulebook.ts, validated at load); isKeywordFalsePositive sources it via the evaluator's
+// isDenied(). The headline trap is BLM 2023-27468: a "land withdrawal" (a public-lands action) trips the
+// is_withdrawal/is_extension keyword pass even though it is NOT a comment-period action. Real BLM/USFS
+// land-withdrawal notices carry `dates: None` (null DATES text) and put the withdrawal SIGNAL in the
+// TITLE — so the haystack below checks BOTH title and DATES text. If an amendment candidate's title OR
+// DATES text matches ANY deny rule, its amendment signal is a keyword false-positive and the candidate is
+// FILTERED (never linked). Each deny rule targets the land-withdrawal LEGAL VEHICLE, not a bare incidental
+// word — verified against the 3 real D3 spike titles (Public Land Order No. 7963; Flathead National
+// Forest … Withdrawal; White River National Forest … Camp Hale … Withdrawal) WITHOUT eating genuine
+// comment-period notices. To extend the deny-list, add a rule to the rulebook (NOT here). The
+// deterministic RuleBox has landed; the LLM/Gemini ambiguous-tail escalation is what remains deferred.
 
 /** One window joined with its (latest) federal_register observation — the chain pass's input row. */
 export interface ChainCandidate {
@@ -125,7 +108,7 @@ export function isAmendment(c: ChainCandidate): boolean {
  */
 function isKeywordFalsePositive(c: ChainCandidate): boolean {
   const haystack = [c.title, c.dates_text].filter(Boolean).join(" ");
-  return DENY_PATTERNS.some((re) => re.test(haystack));
+  return isDenied(haystack);
 }
 
 /** Parse "YYYY-MM-DD" to a UTC instant ms, or null. */
