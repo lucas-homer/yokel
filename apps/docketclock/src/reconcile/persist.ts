@@ -27,6 +27,7 @@ import type { ReconcileResult } from "./reconcile.js";
 import { RECONCILER_VERSION, reconcile } from "./reconcile.js";
 import {
   chainReconcile,
+  isAmendment,
   type ChainCandidate,
   type ChainConflict,
 } from "./chain.js";
@@ -471,10 +472,8 @@ export async function chainReconcileOnce(
     };
   });
 
-  const amendments = candidates.filter(
-    (c) =>
-      c.is_extension || c.is_correction || c.is_withdrawal || c.is_reopening,
-  ).length;
+  // Count amendments by the SAME predicate the engine links on (single source of truth — see chain.ts).
+  const amendments = candidates.filter(isAmendment).length;
 
   const conflicts = chainReconcile(candidates, now);
   const persisted = await persistChainConflicts(sql, conflicts, now);

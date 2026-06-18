@@ -108,8 +108,12 @@ export interface ChainConflict {
   detected_at: string;
 }
 
-/** Is this candidate an amendment of SOME original? (extension OR correction OR withdrawal OR reopening). */
-function isAmendment(c: ChainCandidate): boolean {
+/**
+ * Is this candidate an amendment of SOME original? (extension OR correction OR withdrawal OR reopening).
+ * Exported so the chainReconcileOnce summary counts amendments by the SAME definition the engine links on
+ * — a new notice type added here updates both the engine and the metric in ONE place (no divergence).
+ */
+export function isAmendment(c: ChainCandidate): boolean {
   return c.is_extension || c.is_correction || c.is_withdrawal || c.is_reopening;
 }
 
