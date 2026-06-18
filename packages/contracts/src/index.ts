@@ -3,7 +3,7 @@
  * (Watershed Watch). Verticals join on stable OCD-IDs, never internal UUIDs.
  *
  * ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
- * │ FROZEN @ 0.6.0 (2026-06-18)                                                                    │
+ * │ FROZEN @ 0.7.0 (2026-06-18)                                                                    │
  * │                                                                                               │
  * │ LOCKED (builders may propose changes; the contract-keeper adjudicates — nobody else edits):   │
  * │   • Confidence / ConflictFlag / WindowType / WindowStatus enums.                              │
@@ -30,6 +30,14 @@
  * │       regexes). Regexes are DATA ({source,flags}) that must COMPILE at load; rule ids are kebab + │
  * │       unique; classify rules reserve an OPTIONAL `ambiguous` marker (no LLM payload). SerializableRegex │
  * │       REJECTS the stateful g/y flags (evaluator .test()s without resetting lastIndex). [2026-06-18] │
+ * │   • Adjudication (AMBIGUOUS-tail escalation, provider-NEUTRAL — no SDK/"gemini"/"anthropic" types): │
+ * │       AdjudicationInput = discriminatedUnion("kind", [notice, chain]); BOTH carry rulebook_version │
+ * │       (part of cache identity). AdjudicationVerdict is a SINGLE shared shape: categorical            │
+ * │       AdjudicationClassification (affirm | reject | uncertain (abstain)) + free-text rationale, with │
+ * │       NO numeric confidence/score field ANYWHERE (confidence is never LLM-scored; advisory only,     │
+ * │       never deadline resolution). AdjudicationRecord = persisted cache/replay row (content_hash:     │
+ * │       PayloadHash key over canonical(input); input; verdict; adjudicator_id PROVENANCE — NOT part of │
+ * │       the key, first verdict per content_hash wins forever; created_at). [2026-06-18]               │
  * │                                                                                               │
  * │ INTENTIONALLY DEFERRED (contract pre-shaped or out of MVP scope — add when the builder lands): │
  * │   • Webhook payload schemas (HMAC-signed outbox events: notify_on kinds + delivery envelope) — │
@@ -39,11 +47,35 @@
  * │   • Enrichment-API tag-namespace contract for THIRD-PARTY verticals — when Watershed Watch     │
  * │     commits (built-in agency/CFR enrichment writes into the opaque `tags` field as-is).        │
  * │   • The reconciliation confidence-EXPLANATION object internals (rules_fired / source_agreement / │
- * │     parse_path / staleness / conflict_ids) and the AMBIGUOUS-tail Adjudicator schema (provider   │
- * │     port + verdict). RuleBox's rule schema landed @0.6.0; these consume it but are a later slice. │
+ * │     parse_path / staleness / conflict_ids). RuleBox's rule schema landed @0.6.0 and the AMBIGUOUS- │
+ * │     tail Adjudication schemas landed @0.7.0; the explanation object consumes both but is a later slice. │
  * └─────────────────────────────────────────────────────────────────────────────────────────────┘
  *
  * REVISIONS
+ *   • 0.7.0 (2026-06-18) — Adjudication subsystem schemas (additive; no existing schema/enum/field changed).
+ *       The AMBIGUOUS-tail escalation seam (RuleBox Slice 2): the deterministic RuleBox (0.6.0) classifies
+ *       ~95%+ for free; a ClassifyRule's reserved `ambiguous` marker escalates the rest to a SINGLE LLM call
+ *       resolved behind a provider-agnostic port (Gemini first) defined in the APP — these schemas are
+ *       provider-NEUTRAL (no SDK types, no "gemini"/"anthropic" anywhere; the provider surfaces ONLY as the
+ *       adjudicator_id provenance STRING). Three new exports: (1) AdjudicationInput = discriminatedUnion
+ *       ("kind", [notice, chain]) — notice disambiguates a keyword notice-type match vs false-positive
+ *       (flag_key + text); chain decides whether amendment B amends original A (A/B title + dates_text +
+ *       publication_date + shared_docket/shared_rin/explicit_reference corroboration). BOTH members carry
+ *       rulebook_version so a rulebook content change re-keys (re-adjudicates) rather than replaying a stale
+ *       verdict. The input is LOAD-BEARING (it feeds the content hash) — minimal faithful signal set, not
+ *       over-modeled. (2) AdjudicationVerdict = a SINGLE shared shape (not kind-discriminated): categorical
+ *       AdjudicationClassification (affirm | reject | uncertain) + free-text rationale. NO numeric
+ *       confidence/probability/score field exists ANYWHERE in these schemas — by design, enforced by absence
+ *       (confidence is NEVER LLM-scored; the verdict is advisory classification only, never deadline
+ *       resolution). `uncertain` is the explicit ABSTAIN value the null adapter / failed-or-timed-out call
+ *       returns so the caller degrades to the deterministic conservative path. A stray model-emitted
+ *       `confidence` is STRIPPED on parse (default Zod object behavior, matching every existing schema here),
+ *       never stored. (3) AdjudicationRecord = the persisted cache/replay row: content_hash (reuses the
+ *       existing PayloadHash 64-hex shape; sha256 of canonical(input), app-computed) is the CACHE KEY; plus
+ *       input + verdict + adjudicator_id ("provider:model@rulebook_version" PROVENANCE, EXCLUDED from the key
+ *       so the FIRST verdict per content_hash wins and is stable FOREVER — swapping providers changes only
+ *       future uncached inputs, the replay-determinism guarantee) + created_at. Every existing schema is
+ *       UNCHANGED; purely additive.
  *   • 0.6.0 (2026-06-18) — RuleBox rule schema (additive; no existing schema/enum changed). Adds the
  *       deterministic, VERSIONED rules-as-DATA rulebook the reconcile classifier (Slice 1b) will consume:
  *       RuleBox { version, rules[] }, Rule = discriminatedUnion("kind", [ClassifyRule, DenyRule]),
@@ -623,6 +655,136 @@ export const RuleBox = z
     }
   });
 export type RuleBox = z.infer<typeof RuleBox>;
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// ADJUDICATION — the AMBIGUOUS-tail escalation contract (provider-NEUTRAL). The deterministic RuleBox
+// (above) resolves ~95%+ of records for free; a ClassifyRule's reserved `ambiguous` marker means "this
+// match is genuinely ambiguous — escalate to a SINGLE LLM call." A future provider (Google Gemini first,
+// behind a provider-agnostic PORT defined in the app — NOT here) resolves ONLY the ambiguous tail (<5%
+// of records, ~50 calls/day; docketclock.md). These schemas are the data crossing that seam.
+//
+// HARD INVARIANTS the shapes enforce STRUCTURALLY (docketclock.md confidence model):
+//   • Confidence is NEVER LLM-scored. The verdict carries NO numeric confidence/probability/score field
+//     of ANY kind — only a categorical `classification` + a free-text `rationale`. Enforced by absence.
+//   • The LLM never touches deadline resolution: a verdict is ADVISORY classification only. It feeds the
+//     deterministic engine's notice-flag / chain-link decision; it never sets resolved_close_utc.
+//   • Verdicts are PERSISTED + replayed (an LLM call is non-deterministic; the system prizes deterministic
+//     replay), keyed by a content_hash over the canonical input, with provenance recording which engine
+//     produced each verdict. The FIRST verdict for a content_hash wins and is stable forever.
+//
+// Provider-neutral by construction: no SDK types, no "gemini"/"anthropic" in any schema. The provider is
+// an app-level adapter detail surfaced ONLY as a provenance STRING (adjudicator_id), never as structure.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+/**
+ * AdjudicationInput — what is sent to the adjudicator when a deterministic match is AMBIGUOUS, AND what
+ * defines the cache identity (its canonical serialization is sha256'd into AdjudicationRecord.content_hash).
+ * A discriminated union over the TWO escalation seams the RuleBox surfaces:
+ *
+ *   • "notice" — is a keyword match a TRUE notice-type signal or a keyword FALSE-POSITIVE? (The hot-path
+ *     peer of the deterministic DenyRule / BLM 2023-27468 trap, for titles a deny rule can't settle.)
+ *   • "chain"  — does amendment B genuinely amend original A? (The chain-classification escalation; the
+ *     advisory peer of the deterministic chain pass.)
+ *
+ * BOTH members carry `rulebook_version` — the deterministic rulebook that PRODUCED the ambiguity. It is
+ * part of the cache identity, so a rulebook content change naturally RE-ADJUDICATES (a new content_hash)
+ * rather than replaying a verdict the old rules implied. This shape is LOAD-BEARING (it feeds the content
+ * hash): favor stability over completeness — the minimal faithful signal set, deliberately NOT over-modeled.
+ */
+export const AdjudicationInput = z.discriminatedUnion("kind", [
+  /**
+   * notice seam — disambiguate a notice-type keyword match. Carries the text under question (the
+   * haystack the keyword tripped in) and WHICH NoticeFlagKey the deterministic rule was about to set,
+   * so the adjudicator answers a precise yes/no rather than re-classifying from scratch.
+   */
+  z.object({
+    kind: z.literal("notice"),
+    rulebook_version: z.string().min(1), // the rulebook that produced the ambiguity (part of cache identity)
+    flag_key: NoticeFlagKey, // the notice flag the tripped keyword would set, if confirmed
+    text: z.string(), // the haystack under question (title / DATES text the keyword matched in)
+  }),
+  /**
+   * chain seam — decide whether amendment B genuinely amends original A. Carries the minimal faithful
+   * signal set a human/LLM chain decision needs: each side's title + dates_text + publication_date, and
+   * the three corroboration signals (shared docket? shared RIN? an explicit reference from B to A?).
+   * NOT modeled: full payloads, observation ids, ocd_ids — none change the amends/doesn't-amend verdict,
+   * and including them would churn the content hash without changing the decision.
+   */
+  z.object({
+    kind: z.literal("chain"),
+    rulebook_version: z.string().min(1), // the rulebook that produced the ambiguity (part of cache identity)
+    // side A — the original notice
+    a_title: z.string(),
+    a_dates_text: z.string().nullable(),
+    a_publication_date: z.string().nullable(), // date-only as published; not normalized
+    // side B — the candidate amendment
+    b_title: z.string(),
+    b_dates_text: z.string().nullable(),
+    b_publication_date: z.string().nullable(),
+    // corroboration signals the chain decision weighs (deterministically computed by the app, passed in)
+    shared_docket: z.boolean(), // A and B share a docket id
+    shared_rin: z.boolean(), // A and B share a RIN
+    explicit_reference: z.boolean(), // B's text explicitly references A (e.g. "amends 2025-02910")
+  }),
+]);
+export type AdjudicationInput = z.infer<typeof AdjudicationInput>;
+
+/**
+ * AdjudicationClassification — the categorical verdict the adjudicator returns. Categorical, NEVER a
+ * score — there is deliberately NO numeric confidence anywhere in this contract (confidence is never
+ * LLM-scored; docketclock.md). `uncertain` is the explicit ABSTAIN value: the null adapter returns it,
+ * and any failed/timed-out real call returns it, so the caller degrades to the deterministic conservative
+ * path (treat as NOT-a-signal / NOT-a-chain) rather than acting on a fabricated answer.
+ */
+export const AdjudicationClassification = z.enum([
+  "affirm", // the ambiguous signal is REAL: a true notice-type signal / B genuinely amends A
+  "reject", // the ambiguous signal is a FALSE-POSITIVE: not a notice signal / B does not amend A
+  "uncertain", // ABSTAIN — null adapter, or a failed/timed-out call; caller takes the conservative path
+]);
+export type AdjudicationClassification = z.infer<
+  typeof AdjudicationClassification
+>;
+
+/**
+ * AdjudicationVerdict — the provider-neutral RESULT. A SINGLE shared shape (NOT kind-discriminated): both
+ * seams reduce to the same honest outcome — affirm/reject/uncertain + a rationale — and the per-seam
+ * meaning of "affirm" lives in the INPUT's kind (already on the persisted record), so discriminating the
+ * verdict by kind would only duplicate that with no new information. Simpler shape, same expressiveness.
+ *
+ * `classification` is categorical (see AdjudicationClassification). `rationale` is free text for the audit
+ * trail (why the adjudicator decided this). There is NO numeric confidence/probability/score field, by
+ * DESIGN: confidence is never LLM-scored — surfacing a model-emitted number would manufacture exactly the
+ * fake certainty this product exists to refuse. A model that volunteers a "confidence: 0.9" has that field
+ * STRIPPED on parse (default Zod object behavior, matching every other schema here), never stored.
+ */
+export const AdjudicationVerdict = z.object({
+  classification: AdjudicationClassification,
+  rationale: z.string(), // free-text audit trail; the ONLY explanatory field — no score accompanies it
+});
+export type AdjudicationVerdict = z.infer<typeof AdjudicationVerdict>;
+
+/**
+ * AdjudicationRecord — the PERSISTED cache row (audit + deterministic replay), provider-neutral.
+ *
+ * content_hash is the CACHE KEY: sha256 of the CANONICAL serialization of `input` (which includes
+ * rulebook_version, so a rulebook change re-keys). Reuses PayloadHash (64-hex) — the app computes it; the
+ * contract only TYPES it. Same input ⇒ same hash ⇒ replay the stored verdict instead of calling the LLM.
+ *
+ * adjudicator_id is PROVENANCE, NOT part of the cache key. It records WHICH engine produced the verdict as
+ * a "provider:model@rulebook_version" string (e.g. "null:abstain@rulebox-2026-06-18" or
+ * "gemini:gemini-2.5-flash@rulebox-2026-06-18"). CRITICAL replay-determinism guarantee: the FIRST verdict
+ * for a content_hash WINS and is stable FOREVER. Swapping providers changes only FUTURE (uncached) inputs;
+ * it NEVER re-adjudicates a content_hash that already has a row. (Because adjudicator_id is excluded from
+ * the hash, two providers answering the "same" question still collide on one cache key — first writer wins.)
+ */
+export const AdjudicationRecord = z.object({
+  content_hash: PayloadHash, // sha256 of canonical(input) — the cache key (app-computed; includes rulebook_version)
+  input: AdjudicationInput, // the question that was adjudicated (the hashed payload)
+  verdict: AdjudicationVerdict, // the advisory result
+  adjudicator_id: z.string().min(1), // PROVENANCE "provider:model@rulebook_version" — NOT part of content_hash
+  created_at: z.string().datetime(), // when this verdict was first persisted (ISO-8601)
+});
+export type AdjudicationRecord = z.infer<typeof AdjudicationRecord>;
 
 // ───────────────────────────────────────────────────────────────────────────────────────────────
 // REST RESPONSE ENVELOPE — the Delivery API read-surface contract (GET /windows, /windows/{ocd_id},
