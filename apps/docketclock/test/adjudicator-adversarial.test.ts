@@ -18,11 +18,11 @@
  *      both spies actually got called (a true concurrent miss). Run many rounds to exercise the window.
  *   5. ERROR-PATH HONESTY — a throwing adjudicate() PROPAGATES, NOTHING is persisted (no fabricated
  *      `uncertain` row), and a subsequent consult with a working adapter succeeds and persists cleanly.
- *   6. NO NUMERIC-CONFIDENCE LEAK ON THE RETURN PATH — an adapter that volunteers a stray `confidence`
- *      gets it STRIPPED from the value consultAdjudicator RETURNS (AdjudicationRecord.parse on select-back).
- *      NOTE (see verdict): the stray field is still written into the jsonb column on insert — the strip
- *      happens on read-out, not before persistence. This test pins the RETURN guarantee and documents the
- *      persistence gap with an explicit assertion so a fix (parse-before-insert) flips it green.
+ *   6. NO NUMERIC-CONFIDENCE LEAK — an adapter that volunteers a stray `confidence` gets it STRIPPED both
+ *      from the value consultAdjudicator RETURNS and from the PERSISTED jsonb. consult.ts parses the verdict
+ *      (AdjudicationVerdict.parse) BEFORE the write-once insert, so a fabricated numeric confidence can never
+ *      be baked into the immutable audit row (confidence is NEVER LLM-scored). This lock asserts the
+ *      invariant end-to-end — both the return value AND the stored row are clean.
  *
  * The pure-hashing locks run without postgres; the DB locks need DATABASE_URL (throwaway postgres:18).
  * Repo test style: hand-rolled assert, out[] accumulator, failures counter, process.exit.
@@ -339,9 +339,10 @@ if (!process.env.DATABASE_URL) {
         select verdict from adjudications
         where content_hash = ${adjudicationContentHash(input)}
       `;
-      // BLOCKING GAP: the stray confidence IS persisted into the jsonb column because consult.ts
-      // inserts the raw adapter verdict (sql.json(verdict)) without AdjudicationVerdict.parse first.
-      // The fix is parse-before-insert; this assertion flips green when that lands.
+      // REGRESSION LOCK: consult.ts parses the verdict (AdjudicationVerdict.parse) BEFORE the write-once
+      // insert, so a stray numeric confidence is stripped before it can reach the immutable jsonb row.
+      // This pins that invariant — if a future edit reverts to inserting the raw adapter verdict, the
+      // persisted row would carry `confidence` and this assertion goes red.
       assert(
         "PERSISTED jsonb verdict has NO numeric confidence (parse-before-insert)",
         !("confidence" in row[0]!.verdict),

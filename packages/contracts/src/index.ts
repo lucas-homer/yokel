@@ -33,7 +33,7 @@
  * │   • Adjudication (AMBIGUOUS-tail escalation, provider-NEUTRAL — no SDK/"gemini"/"anthropic" types): │
  * │       AdjudicationInput = discriminatedUnion("kind", [notice, chain]); BOTH carry rulebook_version │
  * │       (part of cache identity). AdjudicationVerdict is a SINGLE shared shape: categorical            │
- * │       AdjudicationClassification (affirm | reject | uncertain-abstain) + free-text rationale, with   │
+ * │       AdjudicationClassification (affirm | reject | uncertain (abstain)) + free-text rationale, with │
  * │       NO numeric confidence/score field ANYWHERE (confidence is never LLM-scored; advisory only,     │
  * │       never deadline resolution). AdjudicationRecord = persisted cache/replay row (content_hash:     │
  * │       PayloadHash key over canonical(input); input; verdict; adjudicator_id PROVENANCE — NOT part of │

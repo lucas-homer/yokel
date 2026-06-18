@@ -64,22 +64,26 @@ export async function consultAdjudicator(
   adjudicator: Adjudicator,
   input: AdjudicationInput,
 ): Promise<ConsultResult> {
-  const contentHash = adjudicationContentHash(input);
+  // PARSE the input ONCE, up front, and use the canonical form for EVERYTHING — hashing, the cache key,
+  // the adjudicator call, provenance, and persistence. Feeding the adapter the SAME parsed value the cache
+  // is keyed on closes a poisoning seam: a caller that smuggles unmodeled fields (e.g. via `any`) could
+  // otherwise influence the adapter's verdict with fields the content_hash excludes, so that verdict would
+  // later replay for the canonical input. Parsing once also removes a redundant double-parse.
+  const canonicalInput = AdjudicationInput.parse(input);
+  const contentHash = adjudicationContentHash(canonicalInput);
 
   // 1. Cache lookup — a HIT replays the stored verdict and never calls the adjudicator.
   const hit = await selectByHash(sql, contentHash);
   if (hit) return { verdict: hit.verdict, cached: true };
 
-  // 2. MISS — call the adjudicator (may throw; we let it propagate, nothing is persisted on error).
-  //    PARSE the verdict before it touches the immutable write-once row: an adapter that volunteers a
-  //    stray field (e.g. a numeric `confidence`) must NOT have it baked into the audit log — confidence is
-  //    NEVER LLM-scored, and this row is the source-of-truth for replay. Same for the input we persist:
-  //    store the canonical parsed form so the stored input matches the form that produced content_hash.
+  // 2. MISS — call the adjudicator on the CANONICAL input (may throw; we let it propagate, nothing is
+  //    persisted on error). PARSE the verdict before it touches the immutable write-once row: an adapter
+  //    that volunteers a stray field (e.g. a numeric `confidence`) must NOT have it baked into the audit
+  //    log — confidence is NEVER LLM-scored, and this row is the source-of-truth for replay.
   const verdict = AdjudicationVerdict.parse(
-    await adjudicator.adjudicate(input),
+    await adjudicator.adjudicate(canonicalInput),
   );
-  const canonicalInput = AdjudicationInput.parse(input);
-  const adjudicatorId = `${adjudicator.id}@${input.rulebook_version}`;
+  const adjudicatorId = `${adjudicator.id}@${canonicalInput.rulebook_version}`;
 
   // 3. Write-once insert: the first writer for this content_hash wins; a concurrent insert is a no-op.
   await sql`
