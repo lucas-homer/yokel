@@ -136,6 +136,7 @@ function baseWindow(over: Record<string, unknown> = {}) {
     is_extension: true,
     is_correction: false,
     is_withdrawal: false,
+    is_reopening: false,
     raw: {},
   };
   const rObs = Observation.safeParse(obs);

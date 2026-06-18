@@ -69,13 +69,13 @@ export async function ingestObservation(
       insert into observations
         (ocd_id, source, fr_document_number, regs_document_id, regs_object_id,
          payload_hash, fetched_at, parser_version, raw_dates_text,
-         is_extension, is_correction, is_withdrawal, raw)
+         is_extension, is_correction, is_withdrawal, is_reopening, raw)
       values
         (${candidate.ocd_id}, ${candidate.source}, ${candidate.fr_document_number},
          ${candidate.regs_document_id}, ${candidate.regs_object_id},
          ${candidate.payload_hash}, ${candidate.fetched_at}, ${candidate.parser_version},
          ${candidate.raw_dates_text}, ${candidate.is_extension}, ${candidate.is_correction},
-         ${candidate.is_withdrawal}, ${tx.json(candidate.raw as never)})
+         ${candidate.is_withdrawal}, ${candidate.is_reopening}, ${tx.json(candidate.raw as never)})
       returning observation_id
     `;
     const id = row!.observation_id;

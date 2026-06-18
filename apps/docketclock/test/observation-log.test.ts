@@ -58,10 +58,10 @@ try {
   const [row] = await sql`
     insert into observations
       (ocd_id, source, fr_document_number, payload_hash, parser_version, raw_dates_text,
-       is_extension, is_correction, is_withdrawal, raw)
+       is_extension, is_correction, is_withdrawal, is_reopening, raw)
     values
       (${ocdId}, 'federal_register', '2025-02910', ${"a".repeat(64)}, 'p1',
-       'Comments due March 15, 2025', true, false, false, ${sql.json({ doc: "2025-02910" })})
+       'Comments due March 15, 2025', true, false, false, false, ${sql.json({ doc: "2025-02910" })})
     returning *
   `;
   assert(
@@ -83,6 +83,7 @@ try {
     is_extension: row!.is_extension,
     is_correction: row!.is_correction,
     is_withdrawal: row!.is_withdrawal,
+    is_reopening: row!.is_reopening,
     raw: row!.raw,
   });
   assert(

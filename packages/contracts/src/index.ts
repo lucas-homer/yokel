@@ -3,7 +3,7 @@
  * (Watershed Watch). Verticals join on stable OCD-IDs, never internal UUIDs.
  *
  * ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
- * │ FROZEN @ 0.4.0 (2026-06-17)                                                                    │
+ * │ FROZEN @ 0.5.0 (2026-06-17)                                                                    │
  * │                                                                                               │
  * │ LOCKED (builders may propose changes; the contract-keeper adjudicates — nobody else edits):   │
  * │   • Confidence / ConflictFlag / WindowType / WindowStatus enums.                              │
@@ -36,6 +36,17 @@
  * └─────────────────────────────────────────────────────────────────────────────────────────────┘
  *
  * REVISIONS
+ *   • 0.5.0 (2026-06-17) — `reopening` becomes a first-class notice classification (additive; un-defers
+ *       O4 on #31). Two additions, both additive: (a) a new ConflictFlag member "reopening" — a
+ *       previously-CLOSED comment period RE-OPENED (a gap + fresh reliance window), the legally distinct
+ *       peer of extension_chain_unresolved (which moves a STILL-OPEN deadline later, continuous); and (b)
+ *       a 4th required boolean on Observation, is_reopening, a true peer of is_extension/is_correction/
+ *       is_withdrawal. WindowStatus already carried `reopened`, so this only aligns the conflict +
+ *       observation vocabulary with a distinction the window level already commits to. No existing field
+ *       changed type/nullability and no enum member was reordered/renamed, so a legacy consumer still
+ *       parses; the only new producer obligation is supplying is_reopening (wired in the same PR's
+ *       notice-flags split + backfill, outside contracts). Supersedes the 0.4.0 note that deferred a chain
+ *       reopening flag — O4 is no longer deferred.
  *   • 0.4.0 (2026-06-17) — Cross-window (chain) conflict support on ConflictRecord (additive; for #31).
  *       Added three optional/defaulted fields to ConflictRecord so the ONE published /conflicts feed can
  *       also carry chain conflicts spanning TWO windows (an amendment's window vs the original's):
@@ -45,9 +56,10 @@
  *       cross_source REQUIRES ocd_id_b null. Backward-compatible by defaults: a legacy row / current
  *       reconcile emit site that omits all three parses as cross_source with both B fields null (the
  *       original meaning), so NO existing field changed type/nullability and NO emit site needs edits.
- *       NO new ConflictFlag added (chain reopening flag intentionally DEFERRED — see O4 on #31); the
- *       existing flag vocabulary (extension_chain_unresolved / correction_pending / withdrawn_vs_open /
- *       multi_target_notice) already covers chain conflicts.
+ *       NO new ConflictFlag added at 0.4.0 (chain reopening flag was deferred — see O4 on #31; that
+ *       deferral was lifted at 0.5.0, which adds the "reopening" flag). At 0.4.0 the existing flag
+ *       vocabulary (extension_chain_unresolved / correction_pending / withdrawn_vs_open /
+ *       multi_target_notice) already covered chain conflicts.
  *   • 0.3.0 (2026-06-16) — REST response envelope (additive; no existing schema/enum changed).
  *       Added the Delivery API read-surface (GET /windows, /windows/{ocd_id}, /conflicts) envelope:
  *       the DISCLAIMER + API_VERSION canonical constants, the EnvelopeMeta schema
@@ -87,6 +99,7 @@ export const ConflictFlag = z.enum([
   "extension_chain_unresolved",
   "correction_pending",
   "withdrawn_vs_open",
+  "reopening", // a previously-CLOSED comment period was RE-OPENED (a fresh reliance window after a gap) — distinct from extension_chain_unresolved, which moves a STILL-OPEN deadline later (continuous)
   "null_end_date_open_status",
   "late_comment_ambiguous",
   "multi_target_notice",
@@ -198,6 +211,7 @@ export const Observation = z.object({
   is_extension: z.boolean(),
   is_correction: z.boolean(),
   is_withdrawal: z.boolean(),
+  is_reopening: z.boolean(), // 4th notice-type flag, peer to the three above; a previously-CLOSED comment period re-opened (a gap + fresh reliance window), NOT an open-deadline extension
 
   // the raw payload, retained intact for replay/transparency (JSONB at rest)
   raw: z.unknown(),

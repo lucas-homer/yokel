@@ -37,6 +37,7 @@ function original(over: Partial<ChainCandidate> = {}): ChainCandidate {
     is_extension: false,
     is_correction: false,
     is_withdrawal: false,
+    is_reopening: false,
     title: "Notice of Proposed Rulemaking; Request for Comments",
     publication_date: "2025-01-01",
     govinfo_url:
@@ -60,6 +61,7 @@ function amendment(over: Partial<ChainCandidate> = {}): ChainCandidate {
     is_extension: true,
     is_correction: false,
     is_withdrawal: false,
+    is_reopening: false,
     title: "Extension of Comment Period",
     publication_date: "2025-02-01",
     govinfo_url:
@@ -135,6 +137,66 @@ function amendment(over: Partial<ChainCandidate> = {}): ChainCandidate {
       r[0]!.conflict_flags.includes("correction_pending") &&
       r[0]!.conflict_flags.length === 1,
     r.map((c) => c.conflict_flags.join("|")).join("; "),
+  );
+}
+
+// 3b. #O4 REOPENING chain → `reopening`, NOT `extension_chain_unresolved`. The clean split: a reopening
+// amendment has is_extension=false / is_reopening=true, so it emits ONLY the reopening flag. This is the
+// exact mislabel O4 fixes — before the split a reopening rode is_extension and emitted the wrong flag.
+{
+  const b = amendment({
+    is_extension: false,
+    is_reopening: true,
+    title: "Reopening of the Comment Period",
+    dates_text:
+      "The comment period is reopened. Comments now due March 1, 2025.",
+  });
+  const r = chainReconcile([original(), b], NOW);
+  assert(
+    "3b reopening: one conflict, flag `reopening` ONLY (not extension_chain_unresolved)",
+    r.length === 1 &&
+      r[0]!.conflict_flags.includes("reopening") &&
+      !r[0]!.conflict_flags.includes("extension_chain_unresolved") &&
+      r[0]!.conflict_flags.length === 1,
+    r.map((c) => c.conflict_flags.join("|")).join("; "),
+  );
+}
+
+// 3c. A notice titled BOTH (extension AND reopening) honestly carries BOTH flags — neither suppressed.
+{
+  const b = amendment({
+    is_extension: true,
+    is_reopening: true,
+    title: "Extension and Reopening of the Comment Period",
+    dates_text:
+      "The comment period is reopened and extended; comments due March 1, 2025.",
+  });
+  const r = chainReconcile([original(), b], NOW);
+  assert(
+    "3c extension+reopening: both flags present",
+    r.length === 1 &&
+      r[0]!.conflict_flags.includes("reopening") &&
+      r[0]!.conflict_flags.includes("extension_chain_unresolved"),
+    r.map((c) => c.conflict_flags.join("|")).join("; "),
+  );
+}
+
+// 3d. A pure reopening (is_extension=false) STILL passes isAmendment and links — guards against the split
+// accidentally dropping reopenings out of the chain pass (they must remain amendments).
+{
+  const b = amendment({
+    is_extension: false,
+    is_correction: false,
+    is_withdrawal: false,
+    is_reopening: true,
+    title: "Reopening of the Comment Period",
+    dates_text: "Comments now due March 1, 2025.",
+  });
+  const r = chainReconcile([original(), b], NOW);
+  assert(
+    "3d pure reopening still links (isAmendment includes is_reopening)",
+    r.length === 1,
+    String(r.length),
   );
 }
 
