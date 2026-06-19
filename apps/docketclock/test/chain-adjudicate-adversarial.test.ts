@@ -133,7 +133,7 @@ function spyAdjudicator(
   );
   assert(
     "I4 classify NEVER injects llm_corroborated (provenance is appended OUTSIDE classify)",
-    !c1.includes("llm_corroborated" as never),
+    !c1.includes("llm_corroborated"),
     JSON.stringify(c1),
   );
   assert(

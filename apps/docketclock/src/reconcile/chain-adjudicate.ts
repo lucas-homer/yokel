@@ -8,9 +8,11 @@
  *   for an LLM outage is byte-identical to the deterministic-only output — an outage can NEVER break the
  *   chain pass or fabricate a link.
  *
- *   NULL-ADAPTER NO-OP — the NullAdjudicator returns `uncertain` for everything, so under the null adapter
- *   (prod until the integrator provisions a key) NOTHING is promoted: the persisted set is byte-identical
- *   to today's confident-only set.
+ *   NULL-ADAPTER NO-OP — under the null adapter (prod until the integrator provisions a key) we SHORT-
+ *   CIRCUIT before consulting: nothing is promoted AND nothing is written to the adjudications cache. This
+ *   is load-bearing — caching the null adapter's `uncertain` (keyed by content_hash, which excludes the
+ *   adjudicator id) would permanently shadow the real provider's later adjudication of the same pair. So
+ *   the persisted set is byte-identical to today's confident-only set AND the cache stays pristine for 3c.
  *
  *   HONESTY — every promoted link carries the `llm_corroborated` ConflictFlag ALONGSIDE its deterministic
  *   type flag(s), so the feed never presents an LLM-judged link as deterministically certain.
@@ -26,6 +28,7 @@
  */
 import { RULEBOOK_VERSION } from "../rulebox/index.js";
 import { consultAdjudicator } from "../adjudicator/consult.js";
+import { NULL_ADJUDICATOR_ID } from "../adjudicator/null-adjudicator.js";
 import type { Adjudicator } from "../adjudicator/port.js";
 import type { Sql } from "../db/client.js";
 import {
@@ -84,6 +87,27 @@ export async function adjudicateAmbiguousPairs(
   cap: number,
 ): Promise<ChainAdjudicateResult> {
   const ambiguous = ambiguousPairs.length;
+
+  // NULL-ADAPTER SHORT-CIRCUIT: an always-abstaining adjudicator would only ever return `uncertain`, and
+  // consulting it would persist that `uncertain` into the content-hash cache — permanently shadowing the
+  // real provider's later adjudication of the same pair (the key excludes adjudicator_id). So when no real
+  // provider is configured we do ZERO consults and ZERO cache writes: a true no-op that keeps the cache
+  // pristine for Slice 3c. Ambiguous pairs are still counted/surfaced; nothing is escalated or linked.
+  if (adjudicator.id === NULL_ADJUDICATOR_ID) {
+    if (ambiguous > 0) {
+      console.info(
+        `[chain-adjudicate] surfaced=${ambiguous} but no real adjudicator configured (null:abstain) — skipping escalation`,
+      );
+    }
+    return {
+      ambiguous,
+      escalated: 0,
+      escalationsCapped: 0,
+      llmLinked: 0,
+      links: [],
+    };
+  }
+
   const toEscalate = ambiguousPairs.slice(0, Math.max(0, cap));
   const escalated = toEscalate.length;
   const escalationsCapped = ambiguous - escalated;
@@ -133,9 +157,13 @@ export async function adjudicateAmbiguousPairs(
     links.push(buildChainConflict(a, b, flags, now));
   }
 
-  console.info(
-    `[chain-adjudicate] surfaced=${ambiguous} escalated=${escalated} capped=${escalationsCapped} llmLinked=${links.length}`,
-  );
+  // Only log when something actually happened — poll/run.ts already logs the per-cycle chain summary, so
+  // an unconditional line here would just add steady-state noise on every (mostly-empty) reconcile.
+  if (ambiguous > 0) {
+    console.info(
+      `[chain-adjudicate] surfaced=${ambiguous} escalated=${escalated} capped=${escalationsCapped} llmLinked=${links.length}`,
+    );
+  }
 
   return {
     ambiguous,

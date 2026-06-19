@@ -169,8 +169,9 @@ try {
       adjudicator: new NullAdjudicator(),
     });
     assert(
-      "I1 null adapter: ambiguous pair surfaced (ambiguous=1) but NOT linked (linked=0, llmLinked=0, conflictsLive=0)",
+      "I1 null adapter: ambiguous pair surfaced (ambiguous=1) but NOT escalated/linked (escalated=0, linked=0, llmLinked=0, conflictsLive=0)",
       run.ambiguous === 1 &&
+        run.escalated === 0 &&
         run.linked === 0 &&
         run.llmLinked === 0 &&
         run.conflictsLive === 0,
@@ -181,6 +182,15 @@ try {
       "I1 null adapter: nothing persisted to the live feed (byte-identical to today)",
       live.total === 0,
       String(live.total),
+    );
+    // The load-bearing fix: a null run writes ZERO adjudications rows, so it can never shadow the real
+    // provider's later adjudication of these inputs (the cache key excludes adjudicator_id).
+    const [cacheCount] = await sql<{ count: string }[]>`
+      select count(*)::text as count from adjudications`;
+    assert(
+      "I1 null adapter: ZERO adjudications cache rows written (cache stays pristine for 3c)",
+      cacheCount!.count === "0",
+      cacheCount!.count,
     );
   }
 
