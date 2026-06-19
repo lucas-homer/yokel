@@ -9,12 +9,14 @@
  *
  * PRECEDENCE (a Gemini adapter requires BOTH a provider selector AND a key, else we fall back to null):
  *   1. ADJUDICATOR must equal "gemini" (case-insensitive). Any other value, or unset, or "null" → NullAdjudicator.
- *   2. A key must be present: LLM_API_KEY (generic — what we provision) takes precedence, else GEMINI_API_KEY.
- *      ADJUDICATOR=gemini with NO key → NullAdjudicator (we do NOT construct a keyless gemini client).
+ *   2. The provider's OWN key must be present: GEMINI_API_KEY. (Credentials are provider-specific, so the env
+ *      var names the provider — the provider-agnostic seam is THIS selector + the Adjudicator port, not the
+ *      key name. A future provider adds its own branch reading e.g. ANTHROPIC_API_KEY.) ADJUDICATOR=gemini
+ *      with NO key → NullAdjudicator (we do NOT construct a keyless gemini client).
  *   3. Only when both hold do we return GeminiAdjudicator with:
  *        - GEMINI_MODEL   (default "gemini-2.5-flash") → id "gemini:<model>"
  *        - GEMINI_BASE_URL (optional; default the public endpoint)
- *        - LLM_TIMEOUT_MS (default 15000)
+ *        - LLM_TIMEOUT_MS (generic — a timeout is provider-agnostic behavior, not a credential; default 15000)
  */
 import type { Adjudicator } from "./port.js";
 import { NullAdjudicator } from "./null-adjudicator.js";
@@ -32,11 +34,12 @@ export function selectAdjudicator(
     return new NullAdjudicator();
   }
 
-  // generic LLM_API_KEY wins; fall back to the provider-specific GEMINI_API_KEY. TRIM both: secret
-  // material from K8s/Vault/ESO commonly carries a trailing newline, and a whitespace-only value is NOT
-  // a usable key — treating it as present would construct a client that 400s every cycle instead of
-  // degrading. Trimming keeps the safe-default guard honest for mis-provisioned env.
-  const apiKey = (env.LLM_API_KEY || env.GEMINI_API_KEY || "").trim();
+  // The gemini provider reads its OWN key, GEMINI_API_KEY (a credential is provider-specific — the
+  // abstraction lives in this selector, not the key name). TRIM it: secret material from K8s/Vault/ESO
+  // commonly carries a trailing newline, and a whitespace-only value is NOT a usable key — treating it as
+  // present would construct a client that 400s every cycle instead of degrading. Trimming keeps the
+  // safe-default guard honest for mis-provisioned env.
+  const apiKey = (env.GEMINI_API_KEY || "").trim();
   if (!apiKey) {
     // provider selected but no (usable) key → do NOT construct a keyless client; degrade to abstain.
     return new NullAdjudicator();
