@@ -60,6 +60,18 @@ poller:
   heartbeat:
     file: /tmp/poller-heartbeat
 
+# LLM adjudicator (chain-seam escalation, Slice 3). Activation is gated by BOTH provider==gemini AND a
+# non-empty llm_api_key (from Vault via ESO). With the key empty (the seeded default) the poller runs
+# null:abstain — byte-identical to deterministic-only, so this chart is SAFE/dormant until a real key is
+# seeded. ACTIVATION needs no Helm/values change, but is NOT automatic: (1) seed a real llm_api_key into
+# Vault, (2) let ESO refresh the docketclock-external Secret (its refreshInterval, ≤1h, or force it), then
+# (3) RESTART the poller pod — LLM_API_KEY is a secretKeyRef env read at pod start, so a running pod will
+# not pick up the new value until it rolls (`kubectl -n docketclock rollout restart deploy/docketclock-poller`).
+adjudicator:
+  provider: gemini # selectAdjudicator gate; "null"/unset disables regardless of key
+  model: gemini-2.5-flash
+  maxEscalationsPerCycle: 25 # CHAIN_MAX_ESCALATIONS_PER_CYCLE — per-cycle escalation cap (tunable)
+
 # Vault backend for External Secrets (dev token auth locally; cloud uses the kubernetes auth method).
 vault:
   server: http://vault.vault.svc:8200
@@ -72,14 +84,16 @@ vault:
 
 # External-origin secrets pulled Vault -> K8s Secret `docketclock-external`. The app maps the (lowercase)
 # secret keys to the UPPERCASE env vars it actually reads via explicit secretKeyRef (see the Deployments):
-#   regs_api_key -> REGS_API_KEY (poller), docketclock_api_keys -> DOCKETCLOCK_API_KEYS (API).
+#   regs_api_key -> REGS_API_KEY (poller), docketclock_api_keys -> DOCKETCLOCK_API_KEYS (API),
+#   llm_api_key -> LLM_API_KEY (poller). ESO is all-or-nothing: every key here MUST be seeded in Vault
+# (infra/scripts/vault-seed.sh) or the whole sync fails.
 externalSecret:
   refreshInterval: 1h
   vaultPath: docketclock/external
   keys:
     - regs_api_key
     - docketclock_api_keys # comma-separated API keys the Delivery API accepts (X-Api-Key)
-    - anthropic_api_key
+    - llm_api_key # gemini key for the poller's chain-seam adjudicator (empty => null:abstain)
     - webhook_hmac_secret
 
 # Sized for a Node 24 + tsx process (the API / poller / migrate runner). The earlier 128Mi limit was
