@@ -48,13 +48,23 @@ kubectl -n vault exec vault-0 -- sh -c "
   vault secrets enable -version=2 -path=secret kv 2>/dev/null || true   # no-op if already mounted
 "
 
-echo "🌱 seeding secret/docketclock/external (dev placeholder values)..."
+echo "🌱 seeding secret/docketclock/external (regs_api_key, docketclock_api_keys, llm_api_key, webhook_hmac_secret)..."
+# These four keys MUST match charts/.../values.yaml externalSecret.keys — ESO is all-or-nothing, so a
+# missing key (previously docketclock_api_keys) fails the whole sync. Real values flow from the HOST
+# shell env (REGS_API_KEY etc.) with dev-* fallbacks so `task dev-up` stays reproducible. llm_api_key
+# defaults to EMPTY: ESO still finds the key (sync goes green) but the poller sees an empty LLM_API_KEY
+# and runs null:abstain — dormant until a real key is seeded.
+#
+# SHELL-QUOTING CONSTRAINT: the host string below is DOUBLE-quoted, so ${VAR:-default} expands on the
+# HOST before kubectl ships it; the single-quotes then wrap each value for the pod's `sh`. Correct ONLY
+# if values contain no single-quote (') char — fine for API keys / dev placeholders.
 kubectl -n vault exec vault-0 -- sh -c "
   export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
   vault kv put secret/docketclock/external \
-    regs_api_key='dev-regs-key' \
-    anthropic_api_key='dev-anthropic-key' \
-    webhook_hmac_secret='dev-hmac-secret'
+    regs_api_key='${REGS_API_KEY:-dev-regs-key}' \
+    docketclock_api_keys='${DOCKETCLOCK_API_KEYS:-dev-docketclock-key}' \
+    llm_api_key='${LLM_API_KEY:-}' \
+    webhook_hmac_secret='${WEBHOOK_HMAC_SECRET:-dev-hmac-secret}'
 "
 
 echo "🔑 wiring ESO → Vault token auth (external-secrets/vault-token)..."
