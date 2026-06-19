@@ -12,7 +12,11 @@
  *
  * Repo test style: hand-rolled assert, out[] accumulator, failures counter, process.exit.
  */
-import { chainReconcile, type ChainCandidate } from "../src/reconcile/chain.js";
+import {
+  chainAmbiguousPairs,
+  chainReconcile,
+  type ChainCandidate,
+} from "../src/reconcile/chain.js";
 
 let failures = 0;
 const out: string[] = [];
@@ -517,6 +521,153 @@ function amendment(over: Partial<ChainCandidate> = {}): ChainCandidate {
   assert(
     "10 determinism: shuffled input yields byte-identical output",
     JSON.stringify(set1) === JSON.stringify(set2),
+    `${set1.length} vs ${set2.length}`,
+  );
+}
+
+// ── PURE: AMBIGUOUS SURFACING (chainAmbiguousPairs, #31 Slice 3b) ─────────────────────────────────────
+// The ambiguous set = pairs the CONFIDENT path UNDER-LINKS: structural rules (1 docket + 3 ordering +
+// 4 recency + isAmendment + not-keyword-FP) PASS but rule 2 corroboration FAILS (no shared RIN AND no
+// explicit reference). These are exactly the borderline pairs the LLM is asked to settle.
+
+// A1. Shared docket, valid ordering+recency, DISJOINT rin arrays, NO reference → SURFACED as ambiguous
+//     (and NOT a confident link — the confident path drops it).
+{
+  const a = original({ rin: "2040-AA01", rins: ["2040-AA01"] });
+  const b = amendment({
+    rin: "2040-ZZ99",
+    rins: ["2040-ZZ99"], // disjoint with A
+    dates_text:
+      "The comment period is extended. Comments now due March 1, 2025.", // no doc-number reference
+  });
+  const conf = chainReconcile([a, b], NOW);
+  const amb = chainAmbiguousPairs([a, b], NOW);
+  assert(
+    "A1 ambiguous: docket+ordering+recency, no rin/reference → surfaced (and not a confident link)",
+    conf.length === 0 &&
+      amb.length === 1 &&
+      amb[0]!.a.ocd_id === a.ocd_id &&
+      amb[0]!.b.ocd_id === b.ocd_id,
+    `conf=${conf.length} amb=${amb.length}`,
+  );
+}
+
+// A2. Fully-corroborated (shared RIN) → NOT ambiguous (it is a CONFIDENT link instead).
+{
+  const amb = chainAmbiguousPairs([original(), amendment()], NOW);
+  assert(
+    "A2 corroborated (shared RIN): NOT ambiguous (it's a confident link)",
+    amb.length === 0,
+    String(amb.length),
+  );
+}
+
+// A2b. Explicit-reference path → also a confident link, NOT ambiguous.
+{
+  const a = original({ rin: null, rins: [], fr_document_number: "2024-30637" });
+  const b = amendment({
+    rin: "2040-ZZ99",
+    rins: ["2040-ZZ99"],
+    dates_text:
+      "The comment period for (FR 2024- 30637) is extended. Comments now due April 25, 2025.",
+  });
+  const amb = chainAmbiguousPairs([a, b], NOW);
+  assert(
+    "A2b explicit reference: NOT ambiguous (confident link)",
+    amb.length === 0,
+    String(amb.length),
+  );
+}
+
+// A3. Denied (BLM land-withdrawal) pair → NOT ambiguous (filtered out before rule-2 even applies).
+{
+  const b = amendment({
+    is_extension: false,
+    is_withdrawal: true,
+    rin: "2040-ZZ99",
+    rins: ["2040-ZZ99"], // disjoint, so it WOULD be ambiguous if not denied
+    title:
+      "Flathead National Forest; Montana; Mid-Swan Landscape Restoration & Wildland Urban Interface Fuels Project; Withdrawal",
+    dates_text: null,
+  });
+  const amb = chainAmbiguousPairs([original(), b], NOW);
+  assert(
+    "A3 denied land-withdrawal pair: NOT ambiguous (keyword FP filtered)",
+    amb.length === 0,
+    String(amb.length),
+  );
+}
+
+// A4. Wrong ordering (B before A) → NOT ambiguous (rule 3 is structural).
+{
+  const a = original({ publication_date: "2025-03-01" });
+  const b = amendment({
+    publication_date: "2025-02-01",
+    rin: "2040-ZZ99",
+    rins: ["2040-ZZ99"],
+  });
+  const amb = chainAmbiguousPairs([a, b], NOW);
+  assert(
+    "A4 wrong ordering (B before A): NOT ambiguous",
+    amb.length === 0,
+    String(amb.length),
+  );
+}
+
+// A5. Dead docket (rule 4 fails) → NOT ambiguous.
+{
+  const a = original({
+    status: "closed",
+    publication_date: "2023-01-01",
+    resolved_close_utc: "2023-02-02T04:59:59Z",
+    rin: "2040-AA01",
+    rins: ["2040-AA01"],
+  });
+  const b = amendment({
+    publication_date: "2025-02-01",
+    rin: "2040-ZZ99",
+    rins: ["2040-ZZ99"], // disjoint → no rule-2 corroboration
+  });
+  const amb = chainAmbiguousPairs([a, b], NOW);
+  assert(
+    "A5 dead docket (rule 4 fails): NOT ambiguous",
+    amb.length === 0,
+    String(amb.length),
+  );
+}
+
+// A6. Determinism: shuffled input → byte-identical ambiguous output, stably sorted.
+{
+  const a1 = original({
+    ocd_id: "ocd-participation-window/federal/2024-30637",
+    fr_observation_id: "obs-A1",
+    fr_document_number: "2024-30637",
+    docket_ids: ["D1"],
+    rin: "2040-RA01",
+    rins: ["2040-RA01"],
+    publication_date: "2024-12-26",
+  });
+  const a2 = original({
+    ocd_id: "ocd-participation-window/federal/2025-00734",
+    fr_observation_id: "obs-A2",
+    fr_document_number: "2025-00734",
+    docket_ids: ["D2"],
+    rin: "2040-RA02",
+    rins: ["2040-RA02"],
+    publication_date: "2025-01-15",
+  });
+  const b = amendment({
+    docket_ids: ["D1", "D2"],
+    rin: "2040-ZZ99",
+    rins: ["2040-ZZ99"], // disjoint with BOTH originals → both pairs ambiguous
+    publication_date: "2025-02-20",
+    dates_text: "The comment period is extended. Comments now due March 2025.",
+  });
+  const set1 = chainAmbiguousPairs([a1, a2, b], NOW);
+  const set2 = chainAmbiguousPairs([b, a2, a1], NOW); // shuffled
+  assert(
+    "A6 determinism: shuffled input → byte-identical ambiguous output (2 pairs, stable order)",
+    set1.length === 2 && JSON.stringify(set1) === JSON.stringify(set2),
     `${set1.length} vs ${set2.length}`,
   );
 }

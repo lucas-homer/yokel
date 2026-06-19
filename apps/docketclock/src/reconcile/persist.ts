@@ -26,12 +26,19 @@ import type { ChangeHistoryEntry, ParticipationWindow } from "@yokel/contracts";
 import type { ReconcileResult } from "./reconcile.js";
 import { RECONCILER_VERSION, reconcile } from "./reconcile.js";
 import {
+  chainAmbiguousPairs,
   chainReconcile,
   isAmendment,
   type ChainCandidate,
   type ChainConflict,
 } from "./chain.js";
 import { extractFr } from "./extract.js";
+import type { Adjudicator } from "../adjudicator/port.js";
+import { selectAdjudicator } from "../adjudicator/select.js";
+import {
+  adjudicateAmbiguousPairs,
+  chainMaxEscalations,
+} from "./chain-adjudicate.js";
 
 export interface PersistResult {
   inserted: boolean; // true if this was a first-time insert of the window
@@ -397,8 +404,28 @@ export interface ChainReconcileOnceResult extends ChainPersistResult {
   candidates: number;
   /** how many candidates carry an amendment signal (extension/correction/withdrawal). */
   amendments: number;
-  /** linked (A,B) pairs the pure engine emitted (== conflictsLive). */
+  /** CONFIDENT (A,B) links the deterministic engine emitted (rules 1–5). */
   linked: number;
+  /** ambiguous pairs surfaced (structural rules pass, rule-2 corroboration fails) — the escalation set. */
+  ambiguous: number;
+  /** ambiguous pairs actually CONSULTED this cycle (== min(ambiguous, cap)). */
+  escalated: number;
+  /** affirmed pairs promoted to a cross_window link (each carries `llm_corroborated`). */
+  llmLinked: number;
+  /** ambiguous pairs dropped by the per-cycle cap (surfaced but not consulted). */
+  escalationsCapped: number;
+}
+
+/** Optional knobs for chainReconcileOnce — both default to the prod-safe path (null adapter, env cap). */
+export interface ChainReconcileOnceOptions {
+  /**
+   * The adjudicator to escalate ambiguous pairs to. DEFAULTS to selectAdjudicator() — which is
+   * NullAdjudicator (abstain) until the integrator provisions a key (Slice 3c), so prod is a NO-OP and
+   * the persisted set is byte-identical to the confident-only set. Tests inject a spy / NullAdjudicator.
+   */
+  adjudicator?: Adjudicator;
+  /** Per-cycle escalation cap. Defaults to chainMaxEscalations() (env CHAIN_MAX_ESCALATIONS_PER_CYCLE / 25). */
+  cap?: number;
 }
 
 /**
@@ -416,7 +443,10 @@ export interface ChainReconcileOnceResult extends ChainPersistResult {
 export async function chainReconcileOnce(
   sql: Sql,
   now: Date = new Date(),
+  options: ChainReconcileOnceOptions = {},
 ): Promise<ChainReconcileOnceResult> {
+  const adjudicator = options.adjudicator ?? selectAdjudicator();
+  const cap = options.cap ?? chainMaxEscalations();
   // LATEST federal_register observation per window, joined to the window's status + resolved close +
   // govinfo anchor. distinct on (w.ocd_id) ordered by fetched_at desc gives the freshest FR doc.
   // INVARIANT (N1): this read THROWS on any DB failure (postgres.js rejects), so it can NEVER silently
@@ -475,13 +505,44 @@ export async function chainReconcileOnce(
   // Count amendments by the SAME predicate the engine links on (single source of truth — see chain.ts).
   const amendments = candidates.filter(isAmendment).length;
 
-  const conflicts = chainReconcile(candidates, now);
-  const persisted = await persistChainConflicts(sql, conflicts, now);
+  // CONFIDENT links — the deterministic engine (rules 1–5). Byte-identical to today's output. Under the
+  // null adapter the merged set below equals exactly this (Invariant 1).
+  const confident = chainReconcile(candidates, now);
+
+  // AMBIGUOUS tail — pairs the confident path UNDER-LINKS (structural rules pass, rule-2 corroboration
+  // fails). Escalate them to the adjudicator; only an `affirm` promotes a pair to a cross_window link
+  // (carrying `llm_corroborated`). A null adapter / outage / reject / uncertain → no promotion (worst case
+  // is today's confident-only output). Errors are isolated per-pair inside adjudicateAmbiguousPairs.
+  const ambiguousPairs = chainAmbiguousPairs(candidates, now);
+  const adjudicated = await adjudicateAmbiguousPairs(
+    sql,
+    adjudicator,
+    ambiguousPairs,
+    now,
+    cap,
+  );
+
+  // MERGE confident + LLM-affirmed, then RE-SORT with the SAME total order the engine uses so the persisted
+  // set is stable regardless of which links were LLM-promoted. (A confident and a promoted pair can never
+  // collide on the 4-tuple key: an ambiguous pair fails rule 2, so it is never also a confident link.)
+  const merged = [...confident, ...adjudicated.links].sort(
+    (x, y) =>
+      x.ocd_id.localeCompare(y.ocd_id) ||
+      x.ocd_id_b.localeCompare(y.ocd_id_b) ||
+      x.observation_a_id.localeCompare(y.observation_a_id) ||
+      x.observation_b_id.localeCompare(y.observation_b_id),
+  );
+
+  const persisted = await persistChainConflicts(sql, merged, now);
 
   return {
     candidates: candidates.length,
     amendments,
-    linked: conflicts.length,
+    linked: confident.length,
+    ambiguous: adjudicated.ambiguous,
+    escalated: adjudicated.escalated,
+    llmLinked: adjudicated.llmLinked,
+    escalationsCapped: adjudicated.escalationsCapped,
     ...persisted,
   };
 }
