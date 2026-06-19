@@ -338,8 +338,8 @@ try {
       25,
     );
     assert(
-      `I3 envelope: ${cls} ⇒ escalated=1 but llmLinked=0 (no link)`,
-      res.escalated === 1 && res.llmLinked === 0 && res.links.length === 0,
+      `I3 envelope: ${cls} ⇒ llmCalls=1 but llmLinked=0 (no link)`,
+      res.llmCalls === 1 && res.llmLinked === 0 && res.links.length === 0,
       JSON.stringify(res),
     );
   }
@@ -422,9 +422,9 @@ try {
       !rejected && !!res,
     );
     assert(
-      "I3 isolation: thrower drops its pair (no link) but the OTHER affirm still links (1 link, 2 escalated)",
+      "I3 isolation: thrower drops its pair (no link) but the OTHER affirm still links (1 link, 2 fresh llmCalls — throw spent its budget unit)",
       !!res &&
-        res.escalated === 2 &&
+        res.llmCalls === 2 &&
         res.llmLinked === 1 &&
         res.links.length === 1,
       JSON.stringify(res),
@@ -449,10 +449,11 @@ try {
     const pairs = nDistinctAmbiguousPairs(3);
     const res = await adjudicateAmbiguousPairs(sql, spy, pairs, NOW, 0);
     assert(
-      "I3/I5 cap=0: nobody consulted, all capped, zero links, spy NEVER called",
+      "I3/I5 cap=0: no fresh calls, all 3 uncached pairs deferred, zero links, spy NEVER called",
       res.ambiguous === 3 &&
-        res.escalated === 0 &&
-        res.escalationsCapped === 3 &&
+        res.llmCalls === 0 &&
+        res.deferred === 3 &&
+        res.cacheHits === 0 &&
         res.llmLinked === 0 &&
         spy.calls === 0,
       `${JSON.stringify(res)} calls=${spy.calls}`,
@@ -470,8 +471,8 @@ try {
     const pairs = nDistinctAmbiguousPairs(2);
     const res = await adjudicateAmbiguousPairs(sql, spy, pairs, NOW, -10);
     assert(
-      "I3 negative cap floors to 0 (never escalates everything): escalated=0, links=0, spy uncalled",
-      res.escalated === 0 && res.llmLinked === 0 && spy.calls === 0,
+      "I3 negative cap floors to 0 (never escalates everything): llmCalls=0, links=0, spy uncalled",
+      res.llmCalls === 0 && res.llmLinked === 0 && spy.calls === 0,
       `${JSON.stringify(res)} calls=${spy.calls}`,
     );
   }
@@ -486,10 +487,10 @@ try {
     const pairs = nDistinctAmbiguousPairs(2);
     const res = await adjudicateAmbiguousPairs(sql, spy, pairs, NOW, 100);
     assert(
-      "I5 cap>surfaced: escalated=all, capped=0 (counts honest)",
+      "I5 cap>surfaced: llmCalls=all, deferred=0 (counts honest)",
       res.ambiguous === 2 &&
-        res.escalated === 2 &&
-        res.escalationsCapped === 0 &&
+        res.llmCalls === 2 &&
+        res.deferred === 0 &&
         spy.calls === 2,
       `${JSON.stringify(res)} calls=${spy.calls}`,
     );
@@ -519,14 +520,17 @@ try {
     });
     const r2 = await adjudicateAmbiguousPairs(sql, spy2, pairs, NOW, 25);
     assert(
-      "I6 no hash collision: pair0 replays cached affirm (no call), pair1 is a FRESH reject (1 call, NOT linked)",
-      r2.escalated === 2 &&
+      "I6 no hash collision: pair0 is a cache HIT replaying its affirm (no call), pair1 is a FRESH reject (1 call, NOT linked)",
+      r2.cacheHits === 1 && // pair0 peek-hit (free, no budget)
+        r2.llmCalls === 1 && // only pair1 was a fresh call
+        r2.deferred === 0 &&
         r2.llmLinked === 1 && // only pair0 (cached affirm) links
         spy2.calls === 1 && // only pair1 reached the adjudicator (pair0 was a cache hit)
         r2.links.length === 1 &&
         r2.links[0]!.ocd_id_b === "ocd-participation-window/federal/B-0",
       JSON.stringify({
-        escalated: r2.escalated,
+        cacheHits: r2.cacheHits,
+        llmCalls: r2.llmCalls,
         llmLinked: r2.llmLinked,
         calls: spy2.calls,
       }),

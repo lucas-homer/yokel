@@ -11,8 +11,14 @@
  *   • NO PROMOTION (spy reject / uncertain) → no link; llmLinked=0.
  *   • ERROR ISOLATION: a spy that THROWS → the cycle completes, that pair is not linked, no exception
  *     escapes, and the confident links persist normally alongside.
- *   • CAP: more ambiguous pairs than the cap → only cap-many consulted, the remainder counted as capped.
- *   • COUNTS: the summary reflects ambiguous/escalated/llmLinked/escalationsCapped honestly.
+ *   • BUDGET (cap = max FRESH LLM calls): more UNCACHED pairs than the cap → exactly cap fresh calls this
+ *     cycle, the remainder DEFERRED (not consulted). cap bounds fresh calls, NOT pairs considered.
+ *   • NO STARVATION (the cap×cache fix): N uncached pairs, cap < N, re-run across cycles → every pair is
+ *     adjudicated exactly once (the backlog DRAINS — pairs beyond the first cap are NOT permanently starved);
+ *     steady state makes ZERO fresh calls (all cache hits) yet keeps every link live.
+ *   • CACHE HITS DON'T EAT BUDGET: a cycle with M cached + K new (M+K>cap, K≤cap) applies all M cache hits
+ *     for free AND spends the full budget on the K new pairs.
+ *   • COUNTS: the summary reflects ambiguous/cacheHits/llmCalls/deferred/llmLinked honestly.
  *
  * The whole file needs the DB; it is SKIPPED (with a notice) when DATABASE_URL is unset. Repo test style:
  * hand-rolled assert, out[] accumulator, failures counter, process.exit.
@@ -169,9 +175,10 @@ try {
       adjudicator: new NullAdjudicator(),
     });
     assert(
-      "I1 null adapter: ambiguous pair surfaced (ambiguous=1) but NOT escalated/linked (escalated=0, linked=0, llmLinked=0, conflictsLive=0)",
+      "I1 null adapter: ambiguous pair surfaced (ambiguous=1) but NO calls/links (llmCalls=0, linked=0, llmLinked=0, conflictsLive=0)",
       run.ambiguous === 1 &&
-        run.escalated === 0 &&
+        run.llmCalls === 0 &&
+        run.cacheHits === 0 &&
         run.linked === 0 &&
         run.llmLinked === 0 &&
         run.conflictsLive === 0,
@@ -208,9 +215,10 @@ try {
     });
     const run = await chainReconcileOnce(sql, NOW, { adjudicator: spy });
     assert(
-      "P1 affirm: counts honest (ambiguous=1, escalated=1, llmLinked=1, conflictsLive=1, linked=0)",
+      "P1 affirm: counts honest (ambiguous=1, llmCalls=1, cacheHits=0, llmLinked=1, conflictsLive=1, linked=0)",
       run.ambiguous === 1 &&
-        run.escalated === 1 &&
+        run.llmCalls === 1 &&
+        run.cacheHits === 0 &&
         run.llmLinked === 1 &&
         run.conflictsLive === 1 &&
         run.linked === 0,
@@ -262,8 +270,12 @@ try {
       },
     );
     assert(
-      "P1 affirm replay: second run does NOT re-call the spy (content-hash cache hit)",
-      spy.calls === 1 && run2.llmLinked === 1 && run2.conflictsLive === 1,
+      "P1 affirm replay: second run is a cache HIT — spy NOT re-called (llmCalls=0, cacheHits=1), link replayed",
+      spy.calls === 1 &&
+        run2.llmCalls === 0 &&
+        run2.cacheHits === 1 &&
+        run2.llmLinked === 1 &&
+        run2.conflictsLive === 1,
       `calls=${spy.calls} ${JSON.stringify(run2)}`,
     );
     const live2 = await listConflicts(sql, { ocdId: B });
@@ -288,9 +300,9 @@ try {
     });
     const run = await chainReconcileOnce(sql, NOW, { adjudicator: spy });
     assert(
-      `N1 ${cls}: ambiguous=1, escalated=1, but NO link (llmLinked=0, conflictsLive=0)`,
+      `N1 ${cls}: ambiguous=1, llmCalls=1, but NO link (llmLinked=0, conflictsLive=0)`,
       run.ambiguous === 1 &&
-        run.escalated === 1 &&
+        run.llmCalls === 1 &&
         run.llmLinked === 0 &&
         run.conflictsLive === 0,
       JSON.stringify(run),
@@ -346,11 +358,11 @@ try {
       !threw && !!run,
     );
     assert(
-      "E1 error isolation: confident link persisted; ambiguous (throwing) pair NOT linked",
+      "E1 error isolation: confident link persisted; ambiguous (throwing) pair NOT linked; throw spent its budget unit (llmCalls=1)",
       !!run &&
         run.linked === 1 &&
         run.ambiguous === 1 &&
-        run.escalated === 1 &&
+        run.llmCalls === 1 &&
         run.llmLinked === 0 &&
         run.conflictsLive === 1,
       JSON.stringify(run),
@@ -370,8 +382,9 @@ try {
     );
   }
 
-  // ── CAP: 3 ambiguous pairs, cap=2 → only 2 consulted, 1 counted capped, no crash. With an affirm spy
-  // the 2 escalated pairs link; the capped one does not.
+  // ── BUDGET BOUNDS FRESH CALLS: 3 ambiguous (all uncached), cap=2 → exactly 2 FRESH calls this cycle, the
+  // 3rd uncached pair DEFERRED (not consulted), no crash. With an affirm spy the 2 called pairs link; the
+  // deferred one does not (this cycle). cap now bounds fresh LLM CALLS, not pairs considered.
   {
     await reset();
     await seedAmbiguousPair("EPA-HQ-CAP-0001", "2026-33001", "2026-33002");
@@ -386,13 +399,157 @@ try {
       cap: 2,
     });
     assert(
-      "C1 cap=2 over 3 ambiguous: escalated=2, escalationsCapped=1, llmLinked=2 (only cap-many consulted)",
+      "C1 cap=2 over 3 uncached ambiguous: llmCalls=2, deferred=1, llmLinked=2 (budget bounds FRESH calls)",
       run.ambiguous === 3 &&
-        run.escalated === 2 &&
-        run.escalationsCapped === 1 &&
+        run.llmCalls === 2 &&
+        run.deferred === 1 &&
+        run.cacheHits === 0 &&
         run.llmLinked === 2 &&
         spy.calls === 2,
       `${JSON.stringify(run)} calls=${spy.calls}`,
+    );
+  }
+
+  // ── NO STARVATION ACROSS CYCLES (the headline cap×cache fix). N ambiguous pairs, cap < N. Re-run
+  // chainReconcileOnce repeatedly with an AFFIRM spy that counts calls. PROVE: the backlog DRAINS — every
+  // pair is adjudicated EXACTLY once (spy called N times total, ≤ cap per cycle), the pairs BEYOND the
+  // first `cap` (by sort order) eventually get a verdict (no permanent starvation), and ALL N pairs link.
+  {
+    await reset();
+    const N = 5;
+    const cap = 2;
+    const bDocs: string[] = [];
+    for (let i = 0; i < N; i++) {
+      // Distinct dockets so each is a distinct ambiguous pair / content hash. Ascending doc numbers so the
+      // deterministic sort order is stable and the "beyond the first cap" pairs are well-defined.
+      const aDoc = `2026-340${10 + i}`;
+      const bDoc = `2026-340${50 + i}`;
+      await seedAmbiguousPair(`EPA-HQ-STARVE-00${i}`, aDoc, bDoc);
+      bDocs.push(`ocd-participation-window/federal/${bDoc}`);
+    }
+    const spy = spyAdjudicator("spy:affirm", {
+      classification: "affirm",
+      rationale: "drain",
+    });
+
+    // Cycle until the backlog drains (deferred reaches 0), capped to a safe bound. ceil(N/cap)=3 cycles
+    // should suffice (2 fresh calls/cycle over 5 pairs: 2,2,1), but loop defensively.
+    let cycle = 0;
+    let lastRun: Awaited<ReturnType<typeof chainReconcileOnce>> | undefined;
+    const callsPerCycle: number[] = [];
+    do {
+      const before = spy.calls;
+      lastRun = await chainReconcileOnce(
+        sql,
+        new Date(`2026-06-${String(10 + cycle).padStart(2, "0")}T00:00:00Z`),
+        { adjudicator: spy, cap },
+      );
+      callsPerCycle.push(spy.calls - before);
+      cycle++;
+    } while (lastRun.deferred > 0 && cycle < 10);
+
+    assert(
+      `STARVE: backlog drained in ${cycle} cycles, NO pair starved (deferred=0 on the final cycle)`,
+      lastRun.deferred === 0 && cycle <= Math.ceil(N / cap) + 1,
+      `cycles=${cycle} finalDeferred=${lastRun.deferred}`,
+    );
+    assert(
+      `STARVE: each pair adjudicated EXACTLY once — spy called N=${N} times total (≤ cap=${cap} per cycle)`,
+      spy.calls === N && callsPerCycle.every((c) => c <= cap),
+      `totalCalls=${spy.calls} perCycle=${JSON.stringify(callsPerCycle)}`,
+    );
+    // The load-bearing proof: the pairs BEYOND the first `cap` (by sort order) DID eventually get a verdict
+    // and DID link. Assert ALL N pairs are live — none permanently starved past the cap.
+    let allLive = true;
+    for (const bOcd of bDocs) {
+      const live = await listConflicts(sql, { ocdId: bOcd });
+      if (live.total !== 1) allLive = false;
+    }
+    assert(
+      `STARVE: ALL N=${N} pairs link (incl. the ones beyond the first cap=${cap}) — steady state covers everything`,
+      allLive,
+      `bDocs=${bDocs.length}`,
+    );
+    // Steady state: one more cycle makes ZERO fresh calls (everything cached) yet keeps all N links live.
+    const steady = await chainReconcileOnce(
+      sql,
+      new Date("2026-06-25T00:00:00Z"),
+      { adjudicator: spy, cap },
+    );
+    assert(
+      "STARVE: steady-state cycle makes ZERO fresh calls (all cacheHits) and keeps all N links live",
+      steady.llmCalls === 0 &&
+        steady.deferred === 0 &&
+        steady.cacheHits === N &&
+        steady.llmLinked === N &&
+        steady.conflictsLive === N &&
+        spy.calls === N,
+      JSON.stringify(steady),
+    );
+  }
+
+  // ── CACHE HITS DON'T CONSUME BUDGET: M pairs already cached + K new (M+K > cap, K ≤ cap). All M cached
+  // applied for FREE AND all K new called — the cache hits did NOT eat the fresh-call budget. This is the
+  // other half of the fix: a cycle with a cached backlog still spends its full budget on genuinely-new pairs.
+  {
+    await reset();
+    const M = 3; // pre-cached
+    const K = 2; // new this cycle
+    const cap = 2; // M + K = 5 > cap; K === cap
+    const spy = spyAdjudicator("spy:affirm", {
+      classification: "affirm",
+      rationale: "mk",
+    });
+    // Seed + PRE-CACHE the M pairs over several cycles (cap=2 drains 3 over 2 cycles).
+    for (let i = 0; i < M; i++) {
+      await seedAmbiguousPair(
+        `EPA-HQ-MK-CACHED-0${i}`,
+        `2026-350${10 + i}`,
+        `2026-350${50 + i}`,
+      );
+    }
+    // Drain the M into the cache.
+    let drain: Awaited<ReturnType<typeof chainReconcileOnce>>;
+    let c = 0;
+    do {
+      drain = await chainReconcileOnce(
+        sql,
+        new Date(`2026-07-${String(1 + c).padStart(2, "0")}T00:00:00Z`),
+        { adjudicator: spy, cap },
+      );
+      c++;
+    } while (drain.deferred > 0 && c < 10);
+    const callsAfterDrain = spy.calls; // == M
+    assert(
+      "MK setup: the M pre-cached pairs are fully drained (spy called M times, no deferred)",
+      callsAfterDrain === M && drain.deferred === 0,
+      `calls=${callsAfterDrain} deferred=${drain.deferred}`,
+    );
+    // Now add K BRAND-NEW ambiguous pairs and run ONE cycle. Expect: M cache hits (free) + K fresh calls.
+    for (let i = 0; i < K; i++) {
+      await seedAmbiguousPair(
+        `EPA-HQ-MK-NEW-0${i}`,
+        `2026-351${10 + i}`,
+        `2026-351${50 + i}`,
+      );
+    }
+    const run = await chainReconcileOnce(
+      sql,
+      new Date("2026-07-20T00:00:00Z"),
+      {
+        adjudicator: spy,
+        cap,
+      },
+    );
+    assert(
+      `MK: cache hits don't eat budget — M=${M} cacheHits applied AND K=${K} fresh calls (this cycle's spy delta == K)`,
+      run.ambiguous === M + K &&
+        run.cacheHits === M &&
+        run.llmCalls === K &&
+        run.deferred === 0 &&
+        spy.calls - callsAfterDrain === K &&
+        run.llmLinked === M + K,
+      `${JSON.stringify(run)} spyDelta=${spy.calls - callsAfterDrain}`,
     );
   }
 } finally {

@@ -70,7 +70,9 @@ poller:
 adjudicator:
   provider: gemini # selectAdjudicator gate; "null"/unset disables regardless of key
   model: gemini-2.5-flash
-  maxEscalationsPerCycle: 25 # CHAIN_MAX_ESCALATIONS_PER_CYCLE — per-cycle escalation cap (tunable)
+  maxEscalationsPerCycle: 25 # CHAIN_MAX_ESCALATIONS_PER_CYCLE — max FRESH LLM calls (cache misses) per
+  # cycle; cache hits are free and uncapped, so a backlog of ambiguous pairs drains over cycles without
+  # starving any pair. Tunable: bound on per-cycle Gemini cost, not on coverage.
 
 # Vault backend for External Secrets (dev token auth locally; cloud uses the kubernetes auth method).
 vault:
