@@ -81,28 +81,36 @@ function buildPrompt(input: AdjudicationInput): string {
       'false-positive, or "uncertain" if you cannot tell.',
     ].join("\n");
   }
-  // chain
-  return [
-    "Does notice B genuinely AMEND notice A (e.g. extend/reopen/modify A's comment period or rule),",
-    "or are they merely two related-looking notices that do not actually form an amendment chain?",
-    "",
-    "Notice A (the original):",
-    `  title: ${input.a_title}`,
-    `  dates text: ${input.a_dates_text ?? "(none)"}`,
-    `  publication date: ${input.a_publication_date ?? "(none)"}`,
-    "",
-    "Notice B (the candidate amendment):",
-    `  title: ${input.b_title}`,
-    `  dates text: ${input.b_dates_text ?? "(none)"}`,
-    `  publication date: ${input.b_publication_date ?? "(none)"}`,
-    "",
-    "Corroboration signals (deterministically computed):",
-    `  shared docket: ${input.shared_docket}`,
-    `  shared RIN: ${input.shared_rin}`,
-    `  B explicitly references A: ${input.explicit_reference}`,
-    "",
-    'Answer "affirm" if B genuinely amends A, "reject" if it does not, or "uncertain" if you cannot tell.',
-  ].join("\n");
+  if (input.kind === "chain") {
+    return [
+      "Does notice B genuinely AMEND notice A (e.g. extend/reopen/modify A's comment period or rule),",
+      "or are they merely two related-looking notices that do not actually form an amendment chain?",
+      "",
+      "Notice A (the original):",
+      `  title: ${input.a_title}`,
+      `  dates text: ${input.a_dates_text ?? "(none)"}`,
+      `  publication date: ${input.a_publication_date ?? "(none)"}`,
+      "",
+      "Notice B (the candidate amendment):",
+      `  title: ${input.b_title}`,
+      `  dates text: ${input.b_dates_text ?? "(none)"}`,
+      `  publication date: ${input.b_publication_date ?? "(none)"}`,
+      "",
+      "Corroboration signals (deterministically computed):",
+      `  shared docket: ${input.shared_docket}`,
+      `  shared RIN: ${input.shared_rin}`,
+      `  B explicitly references A: ${input.explicit_reference}`,
+      "",
+      'Answer "affirm" if B genuinely amends A, "reject" if it does not, or "uncertain" if you cannot tell.',
+    ].join("\n");
+  }
+  // Exhaustiveness guard: AdjudicationInput is a discriminated union, so if a new `kind` is ever added
+  // the compiler flags this `never` assignment — and at runtime we throw rather than silently emit a
+  // prompt for the wrong shape (which would ask the model to decide blind).
+  const _exhaustive: never = input;
+  throw new Error(
+    `buildPrompt: unhandled AdjudicationInput kind: ${JSON.stringify(_exhaustive)}`,
+  );
 }
 
 /** Minimal shape we read off the generateContent response; everything else is ignored. */
@@ -124,11 +132,20 @@ export class GeminiAdjudicator implements Adjudicator {
   private readonly transport?: FetchLike;
 
   constructor(opts: GeminiAdjudicatorOpts) {
-    if (!opts.apiKey) {
+    // Validate AFTER trim: a whitespace-only key (e.g. a trailing-newline secret) is not usable, and an
+    // empty model would build an invalid endpoint (/models/:generateContent) + a bogus "gemini:" id. Fail
+    // loudly at construction rather than 400ing every cycle. selectAdjudicator already trims+degrades, so
+    // this is the last line of defense for a direct constructor caller.
+    const apiKey = opts.apiKey?.trim() ?? "";
+    if (!apiKey) {
       throw new Error("GeminiAdjudicator requires a non-empty apiKey");
     }
-    this.apiKey = opts.apiKey;
-    this.model = opts.model;
+    const model = opts.model?.trim() ?? "";
+    if (!model) {
+      throw new Error("GeminiAdjudicator requires a non-empty model");
+    }
+    this.apiKey = apiKey;
+    this.model = model;
     this.baseUrl = (opts.baseUrl ?? DEFAULT_BASE).replace(/\/+$/, "");
     this.timeoutMs = opts.timeoutMs ?? 15_000;
     this.retries = opts.retries ?? 4;

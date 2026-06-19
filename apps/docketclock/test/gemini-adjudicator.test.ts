@@ -451,6 +451,30 @@ function spyTransport(steps: Array<() => Response>): {
   );
 }
 
+// ── whitespace robustness (PR #42 review Ⓐ/Ⓑ: trailing-newline secrets must not bypass safe default) ──
+{
+  const wsKey = selectAdjudicator({
+    ADJUDICATOR: "gemini",
+    LLM_API_KEY: "  \n ",
+  } as NodeJS.ProcessEnv);
+  assert(
+    "select: whitespace-only key → NullAdjudicator (trimmed → treated as absent)",
+    wsKey.id === "null:abstain",
+    wsKey.id,
+  );
+
+  await rejects(
+    "ctor: whitespace-only apiKey throws (not a usable key)",
+    async () => new GeminiAdjudicator({ apiKey: " \n ", model: MODEL }),
+    /non-empty apiKey/,
+  );
+  await rejects(
+    "ctor: empty/whitespace model throws (no bogus gemini: id / invalid endpoint)",
+    async () => new GeminiAdjudicator({ apiKey: KEY, model: "  " }),
+    /non-empty model/,
+  );
+}
+
 console.log("\n=== gemini-adjudicator results ===");
 console.log(out.join("\n"));
 console.log(

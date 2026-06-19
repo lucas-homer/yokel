@@ -32,19 +32,23 @@ export function selectAdjudicator(
     return new NullAdjudicator();
   }
 
-  // generic LLM_API_KEY wins; fall back to the provider-specific GEMINI_API_KEY.
-  const apiKey = env.LLM_API_KEY || env.GEMINI_API_KEY || "";
+  // generic LLM_API_KEY wins; fall back to the provider-specific GEMINI_API_KEY. TRIM both: secret
+  // material from K8s/Vault/ESO commonly carries a trailing newline, and a whitespace-only value is NOT
+  // a usable key — treating it as present would construct a client that 400s every cycle instead of
+  // degrading. Trimming keeps the safe-default guard honest for mis-provisioned env.
+  const apiKey = (env.LLM_API_KEY || env.GEMINI_API_KEY || "").trim();
   if (!apiKey) {
-    // provider selected but no key → do NOT construct a keyless client; degrade to abstain.
+    // provider selected but no (usable) key → do NOT construct a keyless client; degrade to abstain.
     return new NullAdjudicator();
   }
 
-  const model = env.GEMINI_MODEL || DEFAULT_MODEL;
+  const model = (env.GEMINI_MODEL || "").trim() || DEFAULT_MODEL;
+  const baseUrl = (env.GEMINI_BASE_URL || "").trim();
   const timeoutMs = Number(env.LLM_TIMEOUT_MS);
   return new GeminiAdjudicator({
     apiKey,
     model,
-    ...(env.GEMINI_BASE_URL ? { baseUrl: env.GEMINI_BASE_URL } : {}),
+    ...(baseUrl ? { baseUrl } : {}),
     timeoutMs:
       Number.isFinite(timeoutMs) && timeoutMs > 0
         ? timeoutMs
