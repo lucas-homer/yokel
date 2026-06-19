@@ -388,11 +388,11 @@ await rejects(
   /non-empty apiKey/,
 );
 
-// ── ATTACK 11: selectAdjudicator case/whitespace + precedence ─────────────────────────────────────────
+// ── ATTACK 11: selectAdjudicator case/whitespace + provider-named credential ──────────────────────────
 {
   const cap = selectAdjudicator({
     ADJUDICATOR: "  GEMINI  ",
-    LLM_API_KEY: KEY,
+    GEMINI_API_KEY: KEY,
   } as NodeJS.ProcessEnv);
   assert(
     "select: '  GEMINI  ' (case+whitespace) normalizes to gemini",
@@ -400,20 +400,23 @@ await rejects(
     cap.id,
   );
 
-  const llmWins = selectAdjudicator({
+  // The credential is named for its provider: the gemini path reads GEMINI_API_KEY ONLY. A stray generic
+  // LLM_API_KEY is NOT a gemini credential and must be ignored — proving the abstraction lives in the
+  // ADJUDICATOR selector, not the key name.
+  const genericIgnored = selectAdjudicator({
     ADJUDICATOR: "gemini",
-    LLM_API_KEY: "llm-key",
-    GEMINI_API_KEY: "gem-key",
+    LLM_API_KEY: "some-generic-value",
   } as NodeJS.ProcessEnv);
   assert(
-    "select: LLM_API_KEY takes precedence over GEMINI_API_KEY (both present → constructs)",
-    llmWins instanceof GeminiAdjudicator,
-    llmWins.id,
+    "select: a generic LLM_API_KEY does NOT satisfy the gemini path (only GEMINI_API_KEY does) → null:abstain",
+    genericIgnored instanceof NullAdjudicator &&
+      genericIgnored.id === "null:abstain",
+    genericIgnored.id,
   );
 
   const defModel = selectAdjudicator({
     ADJUDICATOR: "gemini",
-    LLM_API_KEY: KEY,
+    GEMINI_API_KEY: KEY,
   } as NodeJS.ProcessEnv);
   assert(
     "select: default model is gemini-2.5-flash",
@@ -424,7 +427,7 @@ await rejects(
   for (const v of ["", "null", "anthropic", "openai", "GEMINIX", "gem"]) {
     const a = selectAdjudicator({
       ADJUDICATOR: v,
-      LLM_API_KEY: KEY,
+      GEMINI_API_KEY: KEY,
     } as NodeJS.ProcessEnv);
     assert(
       `select: ADJUDICATOR='${v}' (not exactly gemini) → NullAdjudicator even with a key`,
@@ -433,11 +436,12 @@ await rejects(
     );
   }
 
-  // bad LLM_TIMEOUT_MS values fall back to the default (still constructs a usable client).
+  // bad LLM_TIMEOUT_MS values fall back to the default (still constructs a usable client). LLM_TIMEOUT_MS
+  // stays GENERIC by design — a timeout is provider-agnostic behavior, not a credential.
   for (const tms of ["", "0", "-5", "not-a-number", "NaN"]) {
     const a = selectAdjudicator({
       ADJUDICATOR: "gemini",
-      LLM_API_KEY: KEY,
+      GEMINI_API_KEY: KEY,
       LLM_TIMEOUT_MS: tms,
     } as NodeJS.ProcessEnv);
     assert(

@@ -404,10 +404,10 @@ function spyTransport(steps: Array<() => Response>): {
 {
   const gem = selectAdjudicator({
     ADJUDICATOR: "gemini",
-    LLM_API_KEY: KEY,
+    GEMINI_API_KEY: KEY,
   } as NodeJS.ProcessEnv);
   assert(
-    "select: ADJUDICATOR=gemini + LLM_API_KEY → GeminiAdjudicator id gemini:<model>",
+    "select: ADJUDICATOR=gemini + GEMINI_API_KEY → GeminiAdjudicator id gemini:<model>",
     gem instanceof GeminiAdjudicator && gem.id === `gemini:${MODEL}`,
     gem.id,
   );
@@ -418,7 +418,7 @@ function spyTransport(steps: Array<() => Response>): {
     GEMINI_MODEL: "gemini-2.5-pro",
   } as NodeJS.ProcessEnv);
   assert(
-    "select: GEMINI_MODEL override is reflected in the id; GEMINI_API_KEY fallback works",
+    "select: GEMINI_MODEL override is reflected in the id",
     gemModel instanceof GeminiAdjudicator &&
       gemModel.id === "gemini:gemini-2.5-pro",
     gemModel.id,
@@ -442,7 +442,7 @@ function spyTransport(steps: Array<() => Response>): {
 
   const nullProvider = selectAdjudicator({
     ADJUDICATOR: "null",
-    LLM_API_KEY: KEY,
+    GEMINI_API_KEY: KEY,
   } as NodeJS.ProcessEnv);
   assert(
     "select: ADJUDICATOR=null → NullAdjudicator even with a key present",
@@ -455,7 +455,7 @@ function spyTransport(steps: Array<() => Response>): {
 {
   const wsKey = selectAdjudicator({
     ADJUDICATOR: "gemini",
-    LLM_API_KEY: "  \n ",
+    GEMINI_API_KEY: "  \n ",
   } as NodeJS.ProcessEnv);
   assert(
     "select: whitespace-only key → NullAdjudicator (trimmed → treated as absent)",
