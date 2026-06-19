@@ -51,6 +51,12 @@ spec:
                 secretKeyRef:
                   name: docketclock-external
                   key: llm_api_key
+                  # OPTIONAL by design — unlike REGS_API_KEY (a hard dependency), the LLM is an optional
+                  # enhancement that DEGRADES to null:abstain when absent. Without this, the poller would
+                  # CrashLoopBackOff in the window after this chart deploys but before the integrator
+                  # re-seeds llm_api_key into Vault (the synced Secret still lacks the key). optional:true
+                  # → LLM_API_KEY simply unset → deterministic-only, so polling never goes down for it.
+                  optional: true
             - name: GEMINI_MODEL
               value: {{ .Values.adjudicator.model | quote }}
             - name: CHAIN_MAX_ESCALATIONS_PER_CYCLE

@@ -63,7 +63,10 @@ poller:
 # LLM adjudicator (chain-seam escalation, Slice 3). Activation is gated by BOTH provider==gemini AND a
 # non-empty llm_api_key (from Vault via ESO). With the key empty (the seeded default) the poller runs
 # null:abstain — byte-identical to deterministic-only, so this chart is SAFE/dormant until a real key is
-# seeded. Dropping a real llm_api_key into Vault is then the ONLY step to activate (no redeploy of values).
+# seeded. ACTIVATION needs no Helm/values change, but is NOT automatic: (1) seed a real llm_api_key into
+# Vault, (2) let ESO refresh the docketclock-external Secret (its refreshInterval, ≤1h, or force it), then
+# (3) RESTART the poller pod — LLM_API_KEY is a secretKeyRef env read at pod start, so a running pod will
+# not pick up the new value until it rolls (`kubectl -n docketclock rollout restart deploy/docketclock-poller`).
 adjudicator:
   provider: gemini # selectAdjudicator gate; "null"/unset disables regardless of key
   model: gemini-2.5-flash
