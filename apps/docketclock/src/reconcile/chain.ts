@@ -92,6 +92,22 @@ export interface ChainConflict {
 }
 
 /**
+ * An AMBIGUOUS (A, B) candidate pair (#31 Slice 3b) — a pair the CONSERVATIVE engine deliberately DROPS:
+ * it passes the STRUCTURAL rules (rule 1 shared docket + rule 3 ordering + rule 4 recency + isAmendment +
+ * NOT a keyword false-positive) but FAILS rule 2 identity corroboration (NO shared RIN AND NO explicit
+ * doc-number reference). These are exactly the borderline pairs the LLM adjudicator is asked to settle.
+ *
+ * It carries BOTH full candidate sides (a/b) so the async orchestration can build the AdjudicationInput
+ * chain payload AND — on an `affirm` verdict — the promoted ChainConflict, via the SAME buildChainConflict
+ * builder the confident path uses. By definition, for every ambiguous pair: shared_docket=true,
+ * shared_rin=false, explicit_reference=false (those are the rule-2 signals that failed).
+ */
+export interface AmbiguousPair {
+  a: ChainCandidate; // side A — the candidate original
+  b: ChainCandidate; // side B — the candidate amendment
+}
+
+/**
  * Is this candidate an amendment of SOME original? (extension OR correction OR withdrawal OR reopening).
  * Exported so the chainReconcileOnce summary counts amendments by the SAME definition the engine links on
  * — a new notice type added here updates both the engine and the metric in ONE place (no divergence).
@@ -181,8 +197,16 @@ function explicitlyReferences(
   return re.test(text);
 }
 
-/** Classify the conflict_flags for a linked (A, B) pair from B's amendment signals. */
-function classify(b: ChainCandidate, multiTarget: boolean): ConflictFlag[] {
+/**
+ * classify — the conflict_flags for a linked (A, B) pair from B's amendment signals. EXPORTED (#31 Slice
+ * 3b) so the async promotion path builds an IDENTICAL flag set for an LLM-affirmed link, then appends the
+ * `llm_corroborated` provenance marker alongside (never folds it in here — the confident path must stay
+ * byte-identical).
+ */
+export function classify(
+  b: ChainCandidate,
+  multiTarget: boolean,
+): ConflictFlag[] {
   const flags: ConflictFlag[] = [];
   // B withdraws while A reads open.
   if (b.is_withdrawal) flags.push("withdrawn_vs_open");
@@ -197,19 +221,87 @@ function classify(b: ChainCandidate, multiTarget: boolean): ConflictFlag[] {
   return flags;
 }
 
-export function chainReconcile(
+/**
+ * buildChainConflict — the SINGLE record builder shared by the confident path (chainReconcile) AND the
+ * async promotion path (chain-adjudicate). Given the two sides, the already-computed flags, and `now`, it
+ * assembles the ChainConflict and VALIDATES it against the frozen ConflictRecord contract (the superRefine
+ * requires ocd_id_b present AND distinct from ocd_id) before returning. Factoring this guarantees a
+ * promoted LLM link is byte-structurally identical to a confident link (only its flags differ).
+ */
+export function buildChainConflict(
+  a: ChainCandidate,
+  b: ChainCandidate,
+  flags: ConflictFlag[],
+  now: Date,
+): ChainConflict {
+  // Distinct documents guarantee distinct ocd_ids (the superRefine requires A ≠ B); assert it.
+  if (a.ocd_id === b.ocd_id)
+    throw new Error(
+      `buildChainConflict: invariant violated — side A and side B share an ocd_id ("${a.ocd_id}")`,
+    );
+  const record: ChainConflict = {
+    ocd_id: a.ocd_id,
+    ocd_id_b: b.ocd_id,
+    observation_a_id: a.fr_observation_id,
+    observation_b_id: b.fr_observation_id,
+    source_a: "federal_register",
+    source_b: "federal_register",
+    conflict_scope: "cross_window",
+    conflict_flags: flags,
+    govinfo_url: a.govinfo_url,
+    govinfo_url_b: b.govinfo_url,
+    detected_at: now.toISOString(),
+  };
+  // VALIDATE against the frozen contract — never emit an illegal cross_window record.
+  const parsed = ConflictRecord.safeParse({
+    ...record,
+    ocd_id: record.ocd_id as OcdId,
+    ocd_id_b: record.ocd_id_b as OcdId,
+  });
+  if (!parsed.success)
+    throw new Error(
+      `buildChainConflict: derived cross_window conflict failed the ConflictRecord contract: ${JSON.stringify(
+        parsed.error.issues,
+      )}`,
+    );
+  return record;
+}
+
+/** The total order used for BOTH confident conflicts and ambiguous pairs (stable, byte-identical output). */
+function compareConflict(x: ChainConflict, y: ChainConflict): number {
+  return (
+    x.ocd_id.localeCompare(y.ocd_id) ||
+    x.ocd_id_b.localeCompare(y.ocd_id_b) ||
+    x.observation_a_id.localeCompare(y.observation_a_id) ||
+    x.observation_b_id.localeCompare(y.observation_b_id)
+  );
+}
+
+/**
+ * chainCore — the shared rule engine producing BOTH outcomes in one pass so the rule logic is never
+ * duplicated:
+ *   • confident — every (A, B) that passes ALL FIVE rules (the existing chainReconcile output, byte-
+ *     identical: same flags incl. multi_target_notice, same sort order, same contract validation).
+ *   • ambiguous — every (A, B) that passes the STRUCTURAL rules (1 docket + 3 ordering + 4 recency +
+ *     isAmendment + not-a-keyword-FP) but FAILS rule 2 corroboration (no shared RIN AND no explicit ref).
+ *     These are the borderline pairs the confident path DROPS — the LLM-escalation candidate set.
+ *
+ * The multi_target_notice flag is computed over the CONFIDENT targets ONLY (it always was), so surfacing
+ * the ambiguous set CANNOT change any confident record's flags. An ambiguous pair carries NO conflict
+ * record until/unless the async path promotes it (this function never builds an ambiguous ChainConflict).
+ */
+function chainCore(
   candidates: ChainCandidate[],
   now: Date,
-): ChainConflict[] {
-  const nowIso = now.toISOString();
-
+): { confident: ChainConflict[]; ambiguous: AmbiguousPair[] } {
   // Amendments are the right-hand side B; everything (including other amendments) can be a candidate
   // original A. We compute, for each amendment B, the set of originals A it legitimately targets.
   const amendments = candidates.filter(
     (c) => isAmendment(c) && !isKeywordFalsePositive(c),
   );
 
-  const conflicts: ChainConflict[] = [];
+  const confident: ChainConflict[] = [];
+  const ambiguous: AmbiguousPair[] = [];
 
   for (const b of amendments) {
     const bMs = pubMs(b.publication_date);
@@ -221,19 +313,14 @@ export function chainReconcile(
     // multi_target_notice. Ambiguity WITHOUT independent satisfaction is never guessed (we only ever
     // keep originals that PASS all rules; we never tie-break among "plausible" ones).
     const targets: ChainCandidate[] = [];
+    // Pairs that pass the STRUCTURAL rules (1+3+4) but FAIL rule 2 — the ambiguous tail for THIS b.
+    const ambiguousForB: ChainCandidate[] = [];
     for (const a of candidates) {
       if (a.ocd_id === b.ocd_id) continue; // B cannot amend itself
       if (a.fr_observation_id === b.fr_observation_id) continue;
 
       // Rule 1 — shared docket.
       if (!shareDocket(a, b)) continue;
-
-      // Rule 2 — identity corroboration (shared non-empty RIN [array intersection] OR explicit
-      // doc-number reference). RINs are FR's plural array; intersection links multi-RIN docs that a
-      // scalar first-element equality would miss, while empty arrays never corroborate.
-      const sharedRin = shareRin(a, b);
-      const referenced = explicitlyReferences(b, a.fr_document_number);
-      if (!sharedRin && !referenced) continue;
 
       // Rule 3 — amendment strictly AFTER the original (both publication dates present).
       const aMs = pubMs(a.publication_date);
@@ -250,56 +337,67 @@ export function chainReconcile(
       }
       if (!relevant) continue;
 
+      // Rule 2 — identity corroboration (shared non-empty RIN [array intersection] OR explicit
+      // doc-number reference). RINs are FR's plural array; intersection links multi-RIN docs that a
+      // scalar first-element equality would miss, while empty arrays never corroborate.
+      const sharedRin = shareRin(a, b);
+      const referenced = explicitlyReferences(b, a.fr_document_number);
+      if (!sharedRin && !referenced) {
+        // STRUCTURAL rules passed but rule 2 FAILED → this is an ambiguous pair (the confident path drops
+        // it). Surfaced for LLM escalation; never auto-linked here.
+        ambiguousForB.push(a);
+        continue;
+      }
+
       targets.push(a);
     }
 
-    if (targets.length === 0) continue;
+    // multi_target_notice is computed over the CONFIDENT targets only — exactly as before. (An ambiguous
+    // pair is NOT yet a link, so it never inflates multiTarget; this keeps confident flags byte-identical.)
     const multiTarget = targets.length > 1;
-
     for (const a of targets) {
-      // Distinct documents guarantee distinct ocd_ids (the superRefine requires A ≠ B); assert it.
-      if (a.ocd_id === b.ocd_id)
-        throw new Error(
-          `chainReconcile: invariant violated — side A and side B share an ocd_id ("${a.ocd_id}")`,
-        );
-      const flags = classify(b, multiTarget);
-      const record: ChainConflict = {
-        ocd_id: a.ocd_id,
-        ocd_id_b: b.ocd_id,
-        observation_a_id: a.fr_observation_id,
-        observation_b_id: b.fr_observation_id,
-        source_a: "federal_register",
-        source_b: "federal_register",
-        conflict_scope: "cross_window",
-        conflict_flags: flags,
-        govinfo_url: a.govinfo_url,
-        govinfo_url_b: b.govinfo_url,
-        detected_at: nowIso,
-      };
-      // VALIDATE against the frozen contract — never emit an illegal cross_window record.
-      const parsed = ConflictRecord.safeParse({
-        ...record,
-        ocd_id: record.ocd_id as OcdId,
-        ocd_id_b: record.ocd_id_b as OcdId,
-      });
-      if (!parsed.success)
-        throw new Error(
-          `chainReconcile: derived cross_window conflict failed the ConflictRecord contract: ${JSON.stringify(
-            parsed.error.issues,
-          )}`,
-        );
-      conflicts.push(record);
+      confident.push(buildChainConflict(a, b, classify(b, multiTarget), now));
+    }
+    for (const a of ambiguousForB) {
+      ambiguous.push({ a, b });
     }
   }
 
   // DETERMINISM: stable total order so identical input ⇒ identical output.
-  conflicts.sort(
+  confident.sort(compareConflict);
+  ambiguous.sort(
     (x, y) =>
-      x.ocd_id.localeCompare(y.ocd_id) ||
-      x.ocd_id_b.localeCompare(y.ocd_id_b) ||
-      x.observation_a_id.localeCompare(y.observation_a_id) ||
-      x.observation_b_id.localeCompare(y.observation_b_id),
+      x.a.ocd_id.localeCompare(y.a.ocd_id) ||
+      x.b.ocd_id.localeCompare(y.b.ocd_id) ||
+      x.a.fr_observation_id.localeCompare(y.a.fr_observation_id) ||
+      x.b.fr_observation_id.localeCompare(y.b.fr_observation_id),
   );
 
-  return conflicts;
+  return { confident, ambiguous };
+}
+
+/**
+ * chainReconcile — the CONFIDENT cross_window set (rules 1–5). Signature + output UNCHANGED (#31 Slice 3b
+ * surfaces the ambiguous tail via chainAmbiguousPairs WITHOUT touching this path, so the existing chain
+ * tests stay byte-identical). It is exactly `chainCore(...).confident`.
+ */
+export function chainReconcile(
+  candidates: ChainCandidate[],
+  now: Date,
+): ChainConflict[] {
+  return chainCore(candidates, now).confident;
+}
+
+/**
+ * chainAmbiguousPairs — the PURE, deterministic ambiguous candidate set (#31 Slice 3b): every (A, B) that
+ * passes the structural rules but fails rule 2 corroboration — precisely the pairs the confident path
+ * UNDER-LINKS. Sorted by (a.ocd_id, b.ocd_id, a.fr_observation_id, b.fr_observation_id). The async
+ * orchestration escalates these to the adjudicator; on `affirm` it promotes the pair to a cross_window link
+ * (with `llm_corroborated`). NO DB / clock / adjudicator here — this stays a pure function of its inputs.
+ */
+export function chainAmbiguousPairs(
+  candidates: ChainCandidate[],
+  now: Date,
+): AmbiguousPair[] {
+  return chainCore(candidates, now).ambiguous;
 }

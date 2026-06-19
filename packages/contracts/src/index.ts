@@ -3,7 +3,7 @@
  * (Watershed Watch). Verticals join on stable OCD-IDs, never internal UUIDs.
  *
  * ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
- * │ FROZEN @ 0.7.0 (2026-06-18)                                                                    │
+ * │ FROZEN @ 0.8.0 (2026-06-18)                                                                    │
  * │                                                                                               │
  * │ LOCKED (builders may propose changes; the contract-keeper adjudicates — nobody else edits):   │
  * │   • Confidence / ConflictFlag / WindowType / WindowStatus enums.                              │
@@ -52,6 +52,21 @@
  * └─────────────────────────────────────────────────────────────────────────────────────────────┘
  *
  * REVISIONS
+ *   • 0.8.0 (2026-06-18) — One additive ConflictFlag value: "llm_corroborated" (RuleBox/classifier
+ *       Slice 3b). Slice 3b wires the LLM adjudicator into the cross-window (chain) reconcile engine:
+ *       the deterministic engine CONSERVATIVELY under-links a pair that shares a docket, has valid
+ *       amendment-after-original ordering, and is recent, but LACKS identity corroboration (no shared
+ *       RIN AND no explicit doc-number reference) — that structurally-plausible-but-uncorroborated pair
+ *       is escalated to the LLM, and an `affirm` PROMOTES it to a cross_window conflict. Such a link
+ *       rests on LLM JUDGMENT of titles/dates, NOT a deterministic identity signal, so per "don't
+ *       publish fake certainty" the /conflicts feed must distinguish it from a deterministically-
+ *       corroborated link. "llm_corroborated" is a PROVENANCE / honesty marker (NOT a confidence score —
+ *       confidence is NEVER LLM-scored; that invariant is untouched) that rides ALONGSIDE the link's
+ *       type flag(s) (extension_chain_unresolved / correction_pending / withdrawn_vs_open / reopening),
+ *       exactly as multi_target_notice rides alongside today, and signals LOWER certainty than a
+ *       deterministically-corroborated link. APPENDED to the ConflictFlag enum — no existing value
+ *       reordered/renamed/removed (stored conflict_flags arrays keep their spelling). It flows through
+ *       ConflictRecord automatically (conflict_flags: z.array(ConflictFlag)); NO other schema changed.
  *   • 0.7.0 (2026-06-18) — Adjudication subsystem schemas (additive; no existing schema/enum/field changed).
  *       The AMBIGUOUS-tail escalation seam (RuleBox Slice 2): the deterministic RuleBox (0.6.0) classifies
  *       ~95%+ for free; a ClassifyRule's reserved `ambiguous` marker escalates the rest to a SINGLE LLM call
@@ -156,6 +171,7 @@ export const ConflictFlag = z.enum([
   "late_comment_ambiguous",
   "multi_target_notice",
   "keyword_false_positive", // e.g. the BLM "land-withdrawal extension" trap
+  "llm_corroborated", // PROVENANCE/honesty marker (NOT a confidence score — confidence is NEVER LLM-scored): a cross_window (chain) link the LLM adjudicator AFFIRMED for a pair that passed the structural rules (shared docket + amendment-after-original ordering + recency) but had NO deterministic identity corroboration (no shared RIN AND no explicit doc-number reference). Signals LOWER certainty than a deterministically-corroborated link; rides ALONGSIDE the link's type flag(s) (extension_chain_unresolved / correction_pending / withdrawn_vs_open / reopening), as multi_target_notice does.
 ]);
 export type ConflictFlag = z.infer<typeof ConflictFlag>;
 
