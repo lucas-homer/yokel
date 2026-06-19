@@ -408,12 +408,14 @@ export interface ChainReconcileOnceResult extends ChainPersistResult {
   linked: number;
   /** ambiguous pairs surfaced (structural rules pass, rule-2 corroboration fails) — the escalation set. */
   ambiguous: number;
-  /** ambiguous pairs actually CONSULTED this cycle (== min(ambiguous, cap)). */
-  escalated: number;
+  /** ambiguous pairs whose verdict was applied from the cache this cycle (free replays — no LLM call). */
+  cacheHits: number;
+  /** FRESH LLM calls made this cycle (cache misses that had budget). ≤ cap. A throw still counts. */
+  llmCalls: number;
   /** affirmed pairs promoted to a cross_window link (each carries `llm_corroborated`). */
   llmLinked: number;
-  /** ambiguous pairs dropped by the per-cycle cap (surfaced but not consulted). */
-  escalationsCapped: number;
+  /** uncached pairs DEFERRED this cycle because the per-cycle fresh-call budget was exhausted. */
+  deferred: number;
 }
 
 /** Optional knobs for chainReconcileOnce — both default to the prod-safe path (null adapter, env cap). */
@@ -540,9 +542,10 @@ export async function chainReconcileOnce(
     amendments,
     linked: confident.length,
     ambiguous: adjudicated.ambiguous,
-    escalated: adjudicated.escalated,
+    cacheHits: adjudicated.cacheHits,
+    llmCalls: adjudicated.llmCalls,
     llmLinked: adjudicated.llmLinked,
-    escalationsCapped: adjudicated.escalationsCapped,
+    deferred: adjudicated.deferred,
     ...persisted,
   };
 }

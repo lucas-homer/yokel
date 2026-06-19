@@ -59,6 +59,26 @@ async function selectByHash(
   return rows.length > 0 ? rowToRecord(rows[0]!) : null;
 }
 
+/**
+ * peekAdjudication — a READ-ONLY cache probe. Computes the SAME content_hash consultAdjudicator uses
+ * (reusing adjudicationContentHash, which parses the input canonically) and SELECTs by it, returning the
+ * stored verdict or null WITHOUT ever calling the adjudicator. This is the cap×cache fix's free "is this
+ * pair already decided?" check: a peek HIT applies a stored verdict for free (no LLM call, no budget
+ * spent); a peek MISS means a real consult is needed (and will write the row this peek will hit next time).
+ *
+ * KEY IDENTITY (load-bearing): peek and consult MUST key identically — same canonicalInput → same hash —
+ * so a peek-miss-then-consult writes exactly the row the next peek finds. Both go through
+ * adjudicationContentHash(AdjudicationInput.parse(...)), so the hashes are byte-identical by construction.
+ */
+export async function peekAdjudication(
+  sql: Sql,
+  input: AdjudicationInput,
+): Promise<AdjudicationVerdict | null> {
+  const contentHash = adjudicationContentHash(AdjudicationInput.parse(input));
+  const hit = await selectByHash(sql, contentHash);
+  return hit ? hit.verdict : null;
+}
+
 export async function consultAdjudicator(
   sql: Sql,
   adjudicator: Adjudicator,
