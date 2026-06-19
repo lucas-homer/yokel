@@ -74,7 +74,9 @@ export async function peekAdjudication(
   sql: Sql,
   input: AdjudicationInput,
 ): Promise<AdjudicationVerdict | null> {
-  const contentHash = adjudicationContentHash(AdjudicationInput.parse(input));
+  // adjudicationContentHash already parses+canonicalizes the input (same path consultAdjudicator uses),
+  // so we hash directly — no separate parse needed.
+  const contentHash = adjudicationContentHash(input);
   const hit = await selectByHash(sql, contentHash);
   return hit ? hit.verdict : null;
 }

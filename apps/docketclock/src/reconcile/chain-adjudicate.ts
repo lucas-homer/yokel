@@ -39,6 +39,7 @@
  *   budget unit (a fresh-call ATTEMPT consumes budget whether it returns or throws), so a flapping provider
  *   is not hammered across the entire surfaced set in a single cycle.
  */
+import type { AdjudicationVerdict } from "@yokel/contracts";
 import { RULEBOOK_VERSION } from "../rulebox/index.js";
 import {
   consultAdjudicator,
@@ -166,7 +167,7 @@ export async function adjudicateAmbiguousPairs(
     // PEEK the cache first — a SELECT, never an LLM call. A peek-and-consult key IDENTICALLY (same hash).
     const cached = await peekAdjudication(sql, input);
 
-    let verdict;
+    let verdict: AdjudicationVerdict;
     if (cached) {
       // CACHE HIT — apply the stored verdict for FREE. Does NOT consume the fresh-call budget, so ALL
       // previously-decided pairs are covered every cycle, uncapped. (This is the anti-starvation core: a
