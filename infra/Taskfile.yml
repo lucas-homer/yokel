@@ -46,20 +46,56 @@ tasks:
       # `kubectl` / `tilt` start failing with connection or x509 errors.
       - colima status >/dev/null 2>&1 || colima start --cpu 6 --memory 12 --disk 60 --dns 1.1.1.1 --dns 8.8.8.8
       - k3d cluster start {{.CLUSTER}}
-      # KUBELET CERT REPAIR (the load-bearing step). Across a colima restart the k3d node IPs can shift on
-      # the docker network, but each node's kubelet SERVING cert was issued for its OLD IP — so
-      # apiserver→kubelet (kubectl logs/exec/port-forward, and Tilt's log stream + port-forwards) fails
-      # with `x509: certificate is valid for <old-ip>, not <new-ip>`. Restarting the node containers makes
-      # k3s re-issue the serving cert for the node's CURRENT IP. (1 server + 1 agent per k3d/yokel.yaml.)
-      - docker restart k3d-{{.CLUSTER}}-server-0 k3d-{{.CLUSTER}}-agent-0
-      # Wait for both nodes Ready, tolerating the brief apiserver downtime from the server-node restart.
+      # KUBELET CERT REPAIR (the load-bearing step). Across a colima restart the k3d node IPs shift on the
+      # docker network, but each node's kubelet SERVING cert was issued for its OLD IP — so apiserver→kubelet
+      # (kubectl logs/exec/port-forward, Tilt's log stream + port-forwards) fails with
+      # `x509: certificate is valid for <old-ip>, not <new-ip>`. A plain `docker restart` of BOTH nodes at
+      # once does NOT fix it: k3s only regenerates the serving cert when it is missing, and bouncing both
+      # together lets them SWAP docker IPs mid-regeneration (cert ends up issued for the other node's IP).
+      # The deterministic repair: DELETE each node's serving cert+key, then restart that node ALONE so k3s
+      # regenerates a fresh cert for the node's CURRENT IP, one node at a time (no swap). Idempotent.
       - |
+        for node in server-0 agent-0; do
+          # Confirm the cert+key are actually GONE before restarting: a bare `... || true` would swallow a
+          # failed `docker exec` (e.g. the container is still coming up after `k3d cluster start`) and then
+          # restart a node whose STALE cert is still present — silently defeating the deterministic repair.
+          # Retry the delete until `docker exec` succeeds (bounded), so the regeneration is guaranteed.
+          for t in $(seq 1 15); do
+            docker exec k3d-{{.CLUSTER}}-$node rm -f \
+              /var/lib/rancher/k3s/agent/serving-kubelet.crt \
+              /var/lib/rancher/k3s/agent/serving-kubelet.key 2>/dev/null && break
+            sleep 2
+          done
+          docker restart k3d-{{.CLUSTER}}-$node
+          for i in $(seq 1 30); do
+            kubectl get node k3d-{{.CLUSTER}}-$node >/dev/null 2>&1 && break
+            sleep 2
+          done
+        done
+      # Wait for both nodes Ready, tolerating the brief apiserver downtime from the server-node restart.
+      # FAIL LOUDLY on timeout: a fall-through would print the ✅ below on a still-broken cluster AND run the
+      # Vault repair against a flaky API. Exit non-zero so the breakage surfaces instead of being masked.
+      - |
+        ready=0
         for i in $(seq 1 40); do
-          [ "$(kubectl get nodes --no-headers 2>/dev/null | grep -c ' Ready ')" = "2" ] && break
+          [ "$(kubectl get nodes --no-headers 2>/dev/null | grep -c ' Ready ')" = "2" ] && { ready=1; break; }
           sleep 3
         done
+        [ "$ready" = "1" ] || { echo "✗ nodes not Ready after 120s — aborting (cluster still broken)"; exit 1; }
       - kubectl get nodes
-      - echo "✅ cluster resumed; kubelet certs repaired. CNPG + app pods re-race the DB briefly, then settle ('task status')."
+      # Re-unseal the PERSISTENT transit Vault (it starts sealed on every restart), THEN bounce the main
+      # Vault so it auto-unseals against the now-online transit key instead of crashlooping on the 404.
+      # Gate on the vault-transit-keys Secret so we SKIP only a genuinely never-seeded cluster — a real
+      # unseal FAILURE on a seeded cluster must surface loudly (not be swallowed), so `set -e` aborts here.
+      - |
+        set -e
+        if kubectl -n vault get secret vault-transit-keys >/dev/null 2>&1; then
+          bash scripts/vault-transit-unseal.sh
+          kubectl -n vault delete pod vault-0 --ignore-not-found >/dev/null 2>&1 || true
+        else
+          echo "  ↳ transit Vault not initialized yet (no vault-transit-keys Secret) — skipping unseal."
+        fi
+      - echo "✅ cluster resumed; kubelet certs repaired; transit Vault re-unsealed. Pods re-race the DB briefly, then settle ('task status')."
 
   bootstrap-argocd:
     desc: Install Argo CD via Helm (the single imperative seam)
@@ -79,9 +115,14 @@ tasks:
       - kubectl apply -f argocd/apps/platform-cnpg.yaml -f argocd/apps/platform-eso.yaml -f argocd/apps/platform-vault-transit.yaml -f argocd/apps/platform-vault.yaml
 
   vault-transit-init:
-    desc: Enable the transit seal on the seal-provider Vault so the main Vault can auto-unseal (idempotent)
+    desc: Init + unseal the persistent seal-provider Vault and create the autounseal key (idempotent)
     cmds:
       - bash scripts/vault-transit-init.sh
+
+  vault-transit-unseal:
+    desc: Re-unseal the persistent transit Vault from its stored key (after a restart; idempotent)
+    cmds:
+      - bash scripts/vault-transit-unseal.sh
 
   wait-platform:
     desc: Wait for the platform Argo Applications to be Healthy, then their CRDs to be established

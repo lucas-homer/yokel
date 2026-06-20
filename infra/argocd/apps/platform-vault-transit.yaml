@@ -1,8 +1,14 @@
 # Transit Vault — the LOCAL seal provider (ADR 0009). It exists only to auto-unseal the main Vault,
-# standing in for the cloud KMS we'd use in prod. Dev-mode (in-memory, always unsealed); its sole job
-# is to hold the `autounseal` transit key. There is NO transit Vault in cloud — there the main Vault
-# seals against a real KMS. If this pod restarts the key is lost and the main Vault can't unseal:
-# recover with `task dev-down && task dev-up` (see infra/README.md). Seeded by vault-transit-init.sh.
+# standing in for the cloud KMS we'd use in prod. There is NO transit Vault in cloud — there the main
+# Vault seals against a real KMS. Its sole job is to hold the `autounseal` transit key.
+#
+# PERSISTENT (was dev-mode/in-memory). It runs `standalone` with a file-storage PVC so the `autounseal`
+# key SURVIVES pod restarts — the old in-memory dev-mode lost the key on every restart, which sealed the
+# main Vault against data it could no longer decrypt (unrecoverable → full re-bootstrap). The cost of
+# persistence is that a standalone Vault starts SEALED + uninitialized: vault-transit-init.sh inits it
+# once (storing the unseal key + root token in the `vault-transit-keys` Secret) and unseals it; a
+# colima/Docker restart re-unseals it via vault-transit-unseal.sh (wired into `task cluster-restart`).
+# Because transit is LOCAL-ONLY (prod has no transit Vault), this durability adds zero cloud divergence.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -19,11 +25,16 @@ spec:
     helm:
       values: |
         server:
+          # Persistent standalone (NOT dev-mode): the chart's default standalone config is exactly what a
+          # seal provider needs — a tls_disable tcp listener + `storage "file" { path = "/vault/data" }`.
+          # dataStorage mounts a PVC at /vault/data so the transit key persists across restarts.
           dev:
-            enabled: true
-            devRootToken: "transit-root"   # DEV ONLY — this Vault holds nothing but the seal key
-          standalone:
             enabled: false
+          standalone:
+            enabled: true
+          dataStorage:
+            enabled: true
+            size: 256Mi          # transit holds a single key — tiny; inherits the default (local-path) StorageClass
           resources:
             requests:
               cpu: 25m
