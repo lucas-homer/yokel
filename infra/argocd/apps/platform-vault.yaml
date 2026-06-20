@@ -20,6 +20,16 @@ spec:
         server:
           dev:
             enabled: false
+          # The transit seal authenticates to vault-transit with a token. vault-transit is now persistent
+          # + operator-init'd, so its root token is RANDOMLY GENERATED (no longer the static "transit-root").
+          # vault-transit-init.sh stores it in the `vault-transit-keys` Secret; inject it as VAULT_TOKEN so
+          # the `seal "transit"` stanza below (which reads VAULT_TOKEN when its `token` field is omitted)
+          # picks it up. NOTE: this couples the main Vault pod's start to that Secret existing — on first
+          # bring-up the pod waits in CreateContainerConfigError until vault-transit-init.sh creates it.
+          extraSecretEnvironmentVars:
+            - envName: VAULT_TOKEN
+              secretName: vault-transit-keys
+              secretKey: root_token
           ha:
             enabled: true
             replicas: 1                  # cloud overlay: 3
@@ -41,7 +51,9 @@ spec:
                 # `seal "awskms" { ... }` — KMS via workload identity, no static token.
                 seal "transit" {
                   address         = "http://vault-transit.vault.svc:8200"
-                  token           = "transit-root"   # DEV ONLY (the transit Vault's dev root token)
+                  # token is intentionally OMITTED — Vault reads it from the VAULT_TOKEN env var, injected
+                  # from the vault-transit-keys Secret (see server.extraSecretEnvironmentVars above). DEV
+                  # ONLY: prod replaces this whole stanza with gcpckms/awskms (workload identity, no token).
                   disable_renewal = "false"
                   key_name        = "autounseal"
                   mount_path      = "transit/"
