@@ -74,10 +74,16 @@ tasks:
       - kubectl get nodes
       # Re-unseal the PERSISTENT transit Vault (it starts sealed on every restart), THEN bounce the main
       # Vault so it auto-unseals against the now-online transit key instead of crashlooping on the 404.
-      # Tolerant: on a cluster that never seeded Vault the script exits 1 (no vault-transit-keys Secret) —
-      # `|| echo` swallows it so a pre-Vault `cluster-restart` still succeeds.
-      - bash scripts/vault-transit-unseal.sh || echo "  ↳ transit Vault not initialized yet — skipping unseal."
-      - kubectl -n vault delete pod vault-0 --ignore-not-found >/dev/null 2>&1 || true
+      # Gate on the vault-transit-keys Secret so we SKIP only a genuinely never-seeded cluster — a real
+      # unseal FAILURE on a seeded cluster must surface loudly (not be swallowed), so `set -e` aborts here.
+      - |
+        set -e
+        if kubectl -n vault get secret vault-transit-keys >/dev/null 2>&1; then
+          bash scripts/vault-transit-unseal.sh
+          kubectl -n vault delete pod vault-0 --ignore-not-found >/dev/null 2>&1 || true
+        else
+          echo "  ↳ transit Vault not initialized yet (no vault-transit-keys Secret) — skipping unseal."
+        fi
       - echo "✅ cluster resumed; kubelet certs repaired; transit Vault re-unsealed. Pods re-race the DB briefly, then settle ('task status')."
 
   bootstrap-argocd:

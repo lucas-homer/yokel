@@ -54,4 +54,12 @@ kubectl -n vault exec vault-transit-0 -- sh -c "
   vault secrets enable transit 2>/dev/null || true        # no-op if already enabled
   vault write -f transit/keys/autounseal 2>/dev/null || true   # no-op if the key already exists
 "
+
+# Bounce the main Vault so it re-evaluates its VAULT_TOKEN env NOW. On first bring-up `platform` applies
+# the main Vault BEFORE this script creates the vault-transit-keys Secret, so vault-0 sits in
+# CreateContainerConfigError until kubelet's slow resync notices the Secret — which can outlast vault-seed's
+# 240s poll on a slow box. Deleting the pod forces an immediate re-create that mounts the now-present token
+# and auto-unseals against the transit key we just provisioned. No-op if vault-0 doesn't exist yet.
+kubectl -n vault delete pod vault-0 --ignore-not-found >/dev/null 2>&1 || true
+
 echo "✅ transit seal ready (persistent — the autounseal key survives restarts)."

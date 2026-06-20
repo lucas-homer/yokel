@@ -9,8 +9,17 @@ set -euo pipefail
 
 VAULT_ADDR_IN_POD="http://127.0.0.1:8200"
 
+echo "⏳ waiting for the transit Vault pod to be Running..."
+# Wait for the pod phase to be Running, NOT merely to exist: after a one-at-a-time node restart the OLD
+# pod can linger Terminating, and exec-ing into it would fail until the timeout below and abort the unseal.
+attempts=0
+until [ "$(kubectl -n vault get pod vault-transit-0 -o jsonpath='{.status.phase}' 2>/dev/null)" = "Running" ]; do
+  attempts=$((attempts + 1))
+  if [ "$attempts" -ge 60 ]; then echo "✗ transit Vault pod never reached Running (120s)"; exit 1; fi
+  sleep 2
+done
+
 echo "⏳ waiting for the transit Vault API to respond..."
-until kubectl -n vault get pod vault-transit-0 >/dev/null 2>&1; do sleep 2; done
 # Poll the API, NOT pod-Ready: a sealed Vault is never Ready. `vault status` prints JSON (with a "sealed"
 # field) and exits 2 when sealed — capture to a var first so pipefail doesn't poison the loop (mirrors the
 # pattern in vault-seed.sh).

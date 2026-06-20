@@ -67,6 +67,11 @@ and `charts/docketclock/values-cloud.yaml`). There is **no** `vault-transit` in 
   `task vault-transit-unseal` then `kubectl -n vault delete pod vault-0` (both are folded into
   `task cluster-restart`). No re-bootstrap needed — the key persists on the transit PVC. (Only a *lost*
   transit PVC, or the legacy dev-mode Vault, makes the main Vault's raft data unrecoverable.)
+- **`vault-transit` Application stuck `OutOfSync`/Degraded after upgrading to the persistent transit Vault.**
+  Switching `vault-transit` from dev-mode to standalone adds a `volumeClaimTemplate` — an immutable
+  StatefulSet field — so Argo can't sync it over the old dev-mode StatefulSet. ONE-TIME fix (dev-mode held
+  no data worth keeping): `kubectl -n vault delete statefulset vault-transit --cascade=orphan`, then let
+  Argo recreate it (or `task vault-transit-init`). A clean `task dev-up` on a fresh cluster doesn't hit this.
 - **`wait-platform` hangs.** Argo syncs asynchronously; check `task status` and the Argo UI
   (`task argocd-ui`). A platform Application stuck `OutOfSync` usually means a pinned chart version or
   values key drifted — see `infra/argocd/apps/`.
