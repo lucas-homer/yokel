@@ -65,7 +65,7 @@ and `charts/docketclock/values-cloud.yaml`). There is **no** `vault-transit` in 
   `vault-transit` pod restarted and is sealed (it persists its key but starts sealed), so the main Vault
   can't reach `transit/encrypt/autounseal` (`404 route entry not found`) and crashloops. In-place fix:
   `task vault-transit-unseal` then `kubectl -n vault delete pod vault-0` (both are folded into
-  `task cluster-restart`). No re-bootstrap needed — the key persists on the transit PVC. (Only a *lost*
+  `task cluster-restart`). No re-bootstrap needed — the key persists on the transit PVC. (Only a _lost_
   transit PVC, or the legacy dev-mode Vault, makes the main Vault's raft data unrecoverable.)
 - **`vault-transit` Application stuck `OutOfSync`/Degraded after upgrading to the persistent transit Vault.**
   Switching `vault-transit` from dev-mode to standalone adds a `volumeClaimTemplate` — an immutable
