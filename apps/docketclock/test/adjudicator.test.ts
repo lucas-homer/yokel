@@ -11,12 +11,18 @@
  *     and passes PayloadHash.parse; adjudicator_id is NOT an input field so it cannot affect the hash.
  *   • CACHE MISS → call + persist — a SPY adapter is called once; the row persists with the right
  *     content_hash and `spy:...@<rulebook_version>` provenance.
- *   • CACHE HIT → NO re-call (replay determinism) — a second consult returns the STORED verdict and
- *     the spy call count stays at 1; swapping to a DIFFERENT spy still replays the ORIGINAL verdict
- *     and the new spy is NEVER called (provider swap does not re-adjudicate a cached input).
+ *   • CACHE HIT → NO re-call (replay determinism, PER ADJUDICATOR) — a second consult with the SAME
+ *     adjudicator returns the STORED verdict and the spy call count stays at 1.
+ *   • CACHE KEY = (content_hash, adjudicator_id) (migration 0009) — a DIFFERENT adjudicator on the SAME
+ *     input is a cache MISS and is consulted; both rows coexist; neither shadows the other.
+ *   • uncertain IS cached & replayed per-adjudicator — an abstaining real adjudicator's `uncertain` is
+ *     cached under its id and replayed on the 2nd consult (no re-call), exactly one row.
+ *   • REGRESSION (the live bug) — a pre-seeded `null:abstain@<rb>` uncertain row does NOT shadow a real
+ *     adjudicator: consult with a real spy on that same input CALLS it and returns its verdict.
  *   • NullAdjudicator — returns `uncertain` for BOTH a notice- and a chain-kind input; id="null:abstain".
- *   • WRITE-ONCE — a direct second INSERT of the same content_hash with a different verdict does NOT
- *     change the stored row (ON CONFLICT DO NOTHING); consult still returns the first verdict.
+ *   • WRITE-ONCE PER (content_hash, adjudicator_id) — a direct second INSERT of the same key with a
+ *     different verdict does NOT change the stored row (ON CONFLICT DO NOTHING); consult still returns first.
+ *   • peek keys by adjudicator — peek(A) returns A's verdict; peek(B) for the same input (no B row) is null.
  *   • BOTH KINDS — a notice input and a chain input both hash, persist, and round-trip AdjudicationRecord.parse.
  *
  * The pure-hashing assertions run WITHOUT postgres; the cache assertions need the throwaway container.
@@ -31,8 +37,14 @@ import {
 import { createClient } from "../src/db/client.js";
 import { runMigrations } from "../src/db/migrate.js";
 import { adjudicationContentHash } from "../src/adjudicator/content-hash.js";
-import { NullAdjudicator } from "../src/adjudicator/null-adjudicator.js";
-import { consultAdjudicator } from "../src/adjudicator/consult.js";
+import {
+  NullAdjudicator,
+  NULL_ADJUDICATOR_ID,
+} from "../src/adjudicator/null-adjudicator.js";
+import {
+  consultAdjudicator,
+  peekAdjudication,
+} from "../src/adjudicator/consult.js";
 import type { Adjudicator } from "../src/adjudicator/port.js";
 
 let failures = 0;
@@ -161,6 +173,11 @@ if (!process.env.DATABASE_URL) {
       applied.includes("0008_adjudications_cache.sql"),
       applied.join(", "),
     );
+    assert(
+      "migration 0009 applies (per-adjudicator composite PK)",
+      applied.includes("0009_adjudications_per_adjudicator_key.sql"),
+      applied.join(", "),
+    );
 
     // CACHE MISS → call + persist.
     const affirm: AdjudicationVerdict = {
@@ -220,7 +237,9 @@ if (!process.env.DATABASE_URL) {
       r2.verdict.classification === "affirm",
     );
 
-    // PROVIDER SWAP — a DIFFERENT spy (different id + verdict) must NOT re-adjudicate a cached input.
+    // DIFFERENT ADJUDICATOR, SAME content_hash — the cache key is (content_hash, adjudicator_id), so a
+    // distinct adjudicator is a cache MISS and is consulted; its verdict coexists under its own key and
+    // does NOT replay spy1's. (This is the core fix: spy1's verdict can never shadow spy2's.)
     const reject: AdjudicationVerdict = {
       classification: "reject",
       rationale: "spy2 says no",
@@ -228,35 +247,54 @@ if (!process.env.DATABASE_URL) {
     const spy2 = spyAdjudicator("spy:v2", reject);
     const r3 = await consultAdjudicator(sql, spy2, noticeInput);
     assert(
-      "provider swap on a cached input replays the ORIGINAL verdict (affirm, not reject)",
-      r3.cached === true && r3.verdict.classification === "affirm",
-      r3.verdict.classification,
+      "a DIFFERENT adjudicator on the same content_hash is a cache MISS (consulted, not shadowed)",
+      r3.cached === false && r3.verdict.classification === "reject",
+      `cached=${r3.cached} ${r3.verdict.classification}`,
     );
     assert(
-      "the swapped-in spy is NEVER called for a cached input",
-      spy2.calls === 0,
+      "the second adjudicator IS called (its verdict is not shadowed by spy:v1's affirm)",
+      spy2.calls === 1,
       String(spy2.calls),
     );
+    // Both rows coexist for the SAME content_hash, keyed by distinct adjudicator_id.
+    const bothRows = await sql<{ adjudicator_id: string }[]>`
+      select adjudicator_id from adjudications where content_hash = ${expectHash} order by adjudicator_id`;
+    assert(
+      "both adjudicators' rows coexist under the same content_hash (distinct adjudicator_id)",
+      bothRows.length === 2 &&
+        bothRows[0]!.adjudicator_id === `spy:v1@${RULEBOOK}` &&
+        bothRows[1]!.adjudicator_id === `spy:v2@${RULEBOOK}`,
+      bothRows.map((r) => r.adjudicator_id).join(", "),
+    );
+    // peek keys by adjudicator: peek(spy1) → affirm, peek(spy2) → reject; neither shadows the other.
+    const peek1 = await peekAdjudication(sql, spy, noticeInput);
+    const peek2 = await peekAdjudication(sql, spy2, noticeInput);
+    assert(
+      "peek(spy:v1) returns affirm; peek(spy:v2) returns reject (peek keys by adjudicator)",
+      peek1?.classification === "affirm" && peek2?.classification === "reject",
+      `peek1=${peek1?.classification} peek2=${peek2?.classification}`,
+    );
 
-    // WRITE-ONCE — a direct second INSERT of the same content_hash with a different verdict is ignored.
+    // WRITE-ONCE PER (content_hash, adjudicator_id) — a direct second INSERT of the SAME key (spy:v1) with a
+    // different verdict is ignored (ON CONFLICT (content_hash, adjudicator_id) DO NOTHING).
     await sql`
       insert into adjudications (content_hash, input, verdict, adjudicator_id)
       values (${expectHash}, ${sql.json(noticeInput as never)}::jsonb,
-              ${sql.json(reject as never)}::jsonb, ${"spy:v2@" + RULEBOOK})
-      on conflict (content_hash) do nothing
+              ${sql.json(reject as never)}::jsonb, ${"spy:v1@" + RULEBOOK})
+      on conflict (content_hash, adjudicator_id) do nothing
     `;
     const afterWriteOnce = await sql<
       { verdict: AdjudicationVerdict }[]
-    >`select verdict from adjudications where content_hash = ${expectHash}`;
+    >`select verdict from adjudications where content_hash = ${expectHash} and adjudicator_id = ${"spy:v1@" + RULEBOOK}`;
     assert(
-      "write-once: direct re-INSERT with a different verdict does NOT change the stored row",
+      "write-once: direct re-INSERT of the same (hash, adjudicator_id) with a different verdict does NOT change the row",
       afterWriteOnce[0]!.verdict.classification === "affirm",
       afterWriteOnce[0]?.verdict.classification,
     );
-    const r4 = await consultAdjudicator(sql, spy2, noticeInput);
+    const r4 = await consultAdjudicator(sql, spy, noticeInput);
     assert(
-      "consult still returns the FIRST verdict after a write-once collision",
-      r4.verdict.classification === "affirm",
+      "consult with spy:v1 still returns its FIRST verdict (affirm) after a write-once collision",
+      r4.cached === true && r4.verdict.classification === "affirm",
     );
 
     // BOTH KINDS — a chain input also hashes, persists, and round-trips AdjudicationRecord.parse.
@@ -289,10 +327,10 @@ if (!process.env.DATABASE_URL) {
       parsed.success && parsed.data.input.kind === "chain",
     );
 
-    // notice row also round-trips (BOTH KINDS).
+    // notice row also round-trips (BOTH KINDS). Scope to spy:v1's row (two adjudicators share this hash now).
     const noticeRow = await sql<
       Record<string, unknown>[]
-    >`select content_hash, input, verdict, adjudicator_id, created_at from adjudications where content_hash = ${expectHash}`;
+    >`select content_hash, input, verdict, adjudicator_id, created_at from adjudications where content_hash = ${expectHash} and adjudicator_id = ${"spy:v1@" + RULEBOOK}`;
     const parsedNotice = AdjudicationRecord.safeParse({
       ...noticeRow[0],
       created_at: (noticeRow[0]!.created_at as Date).toISOString(),
@@ -302,6 +340,166 @@ if (!process.env.DATABASE_URL) {
       parsedNotice.success,
       parsedNotice.success ? "" : JSON.stringify(parsedNotice.error.issues),
     );
+
+    // ── uncertain IS cached & replayed PER ADJUDICATOR (no special-casing, no eviction). A real adjudicator
+    // that abstains has its `uncertain` cached under ITS id; the 2nd consult is a HIT (adjudicator not
+    // re-called) and exactly one row exists. This is what makes an uncertain pair a free peek-hit (not a
+    // re-consult) on later cycles.
+    {
+      const uncInput: AdjudicationInput = {
+        kind: "notice",
+        rulebook_version: RULEBOOK,
+        flag_key: "withdrawal",
+        text: "an input a real adjudicator abstains on",
+      };
+      const uncSpy = spyAdjudicator("spy:uncertain", {
+        classification: "uncertain",
+        rationale: "real adjudicator could not decide",
+      });
+      const u1 = await consultAdjudicator(sql, uncSpy, uncInput);
+      assert(
+        "uncertain: first consult is a MISS that persists the uncertain verdict",
+        u1.cached === false &&
+          u1.verdict.classification === "uncertain" &&
+          uncSpy.calls === 1,
+        `${JSON.stringify(u1)} calls=${uncSpy.calls}`,
+      );
+      const u2 = await consultAdjudicator(sql, uncSpy, uncInput);
+      assert(
+        "uncertain IS cached & replayed: 2nd consult is a HIT, adjudicator NOT re-called (calls stays 1)",
+        u2.cached === true &&
+          u2.verdict.classification === "uncertain" &&
+          uncSpy.calls === 1,
+        `${JSON.stringify(u2)} calls=${uncSpy.calls}`,
+      );
+      const uncRows = await sql<{ count: string }[]>`
+        select count(*)::text as count from adjudications
+        where content_hash = ${adjudicationContentHash(uncInput)}`;
+      assert(
+        "uncertain: exactly ONE row persisted for (input, adjudicator)",
+        uncRows[0]!.count === "1",
+        uncRows[0]!.count,
+      );
+    }
+
+    // ── DIFFERENT ADJUDICATORS COEXIST for the SAME content_hash (the core fix). Adjudicator A (id "a:x",
+    // affirm) and B (id "b:y", reject) on the SAME input → BOTH rows persist; peek(A)=affirm, peek(B)=reject;
+    // neither shadows the other; peek(some-third-adjudicator) with no row is null.
+    {
+      const sharedInput: AdjudicationInput = {
+        kind: "notice",
+        rulebook_version: RULEBOOK,
+        flag_key: "extension",
+        text: "same input judged by two adjudicators",
+      };
+      const adjA = spyAdjudicator("a:x", {
+        classification: "affirm",
+        rationale: "A affirms",
+      });
+      const adjB = spyAdjudicator("b:y", {
+        classification: "reject",
+        rationale: "B rejects",
+      });
+      const ra = await consultAdjudicator(sql, adjA, sharedInput);
+      const rb = await consultAdjudicator(sql, adjB, sharedInput);
+      assert(
+        "coexist: A consulted → affirm (miss); B consulted → reject (miss); both fresh, neither shadowed",
+        ra.cached === false &&
+          ra.verdict.classification === "affirm" &&
+          rb.cached === false &&
+          rb.verdict.classification === "reject" &&
+          adjA.calls === 1 &&
+          adjB.calls === 1,
+        `${JSON.stringify({ ra, rb })} a=${adjA.calls} b=${adjB.calls}`,
+      );
+      const sharedHash = adjudicationContentHash(sharedInput);
+      const coRows = await sql<{ count: string }[]>`
+        select count(*)::text as count from adjudications where content_hash = ${sharedHash}`;
+      assert(
+        "coexist: BOTH rows persist under the one content_hash (two distinct adjudicator_ids)",
+        coRows[0]!.count === "2",
+        coRows[0]!.count,
+      );
+      const pA = await peekAdjudication(sql, adjA, sharedInput);
+      const pB = await peekAdjudication(sql, adjB, sharedInput);
+      const adjC = spyAdjudicator("c:z", {
+        classification: "affirm",
+        rationale: "C never consulted",
+      });
+      const pC = await peekAdjudication(sql, adjC, sharedInput);
+      assert(
+        "coexist: peek(A)=affirm, peek(B)=reject (each adjudicator sees its OWN verdict)",
+        pA?.classification === "affirm" && pB?.classification === "reject",
+        `pA=${pA?.classification} pB=${pB?.classification}`,
+      );
+      assert(
+        "peek keys by adjudicator: peek(C) for the same input (no C row) is null",
+        pC === null,
+        String(pC),
+      );
+    }
+
+    // ── REGRESSION (mirrors the live bug). Directly INSERT an `uncertain` row keyed by the NULL adapter's
+    // provenance ("null:abstain@<rulebook_version>") for a chain input. Then consult a REAL adjudicator
+    // (id "gemini:test", affirm) on that SAME input. Under the OLD content_hash-only key the stale abstention
+    // would replay and the real adjudicator would never be called (the silent-suppression bug). With the
+    // composite key it is a MISS for "gemini:test" → the adjudicator IS called and returns affirm; the
+    // null:abstain row still peeks as uncertain under its own id, isolated.
+    {
+      const regInput: AdjudicationInput = {
+        kind: "chain",
+        rulebook_version: RULEBOOK,
+        a_title: "Original Rule; Request for Comments",
+        a_dates_text: "Comments due 2026-08-01",
+        a_publication_date: "2026-05-01",
+        b_title: "Extension of Comment Period",
+        b_dates_text: "Comments now due 2026-09-15",
+        b_publication_date: "2026-05-20",
+        shared_docket: true,
+        shared_rin: false,
+        explicit_reference: false,
+      };
+      const regHash = adjudicationContentHash(regInput);
+      const nullAdjudicatorId = `${NULL_ADJUDICATOR_ID}@${RULEBOOK}`;
+      // Pre-seed the stale null:abstain uncertain row (the exact prod shape that had to be hand-deleted).
+      await sql`
+        insert into adjudications (content_hash, input, verdict, adjudicator_id)
+        values (${regHash}, ${sql.json(regInput as never)}::jsonb,
+                ${sql.json({ classification: "uncertain", rationale: "null adapter abstain" } as never)}::jsonb,
+                ${nullAdjudicatorId})
+        on conflict (content_hash, adjudicator_id) do nothing
+      `;
+      const realAdjudicator = spyAdjudicator("gemini:test", {
+        classification: "affirm",
+        rationale: "the extension genuinely amends the original",
+      });
+      const reg = await consultAdjudicator(sql, realAdjudicator, regInput);
+      assert(
+        "REGRESSION: a pre-seeded null:abstain uncertain does NOT shadow the real adjudicator — it IS called",
+        realAdjudicator.calls === 1,
+        String(realAdjudicator.calls),
+      );
+      assert(
+        "REGRESSION: consult returns the REAL adjudicator's affirm (cache MISS, not the stale uncertain)",
+        reg.cached === false && reg.verdict.classification === "affirm",
+        `${JSON.stringify(reg)}`,
+      );
+      // Build a stand-in for the null adjudicator to peek under its id (uses NULL_ADJUDICATOR_ID).
+      const nullStand: Adjudicator = {
+        id: NULL_ADJUDICATOR_ID,
+        async adjudicate() {
+          return { classification: "uncertain", rationale: "unused" };
+        },
+      };
+      const peekReal = await peekAdjudication(sql, realAdjudicator, regInput);
+      const peekNull = await peekAdjudication(sql, nullStand, regInput);
+      assert(
+        "REGRESSION: peek(realAdjudicator)=affirm AND peek(nullAdjudicator)=uncertain (both isolated under their ids)",
+        peekReal?.classification === "affirm" &&
+          peekNull?.classification === "uncertain",
+        `real=${peekReal?.classification} null=${peekNull?.classification}`,
+      );
+    }
   } finally {
     await sql.end();
   }

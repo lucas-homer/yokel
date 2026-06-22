@@ -7,7 +7,9 @@
  * so the substrate has ONE canonical-JSON definition, not two that can drift. The hash includes EVERY
  * field of the input — crucially `rulebook_version` (so a rulebook change re-keys and re-adjudicates) —
  * and excludes `adjudicator_id` BY CONSTRUCTION: adjudicator_id is not a field of AdjudicationInput, so it
- * cannot enter the hash. Two providers answering the "same" question collide on one key (first writer wins).
+ * cannot enter the hash. NOTE: this content_hash is only HALF the cache key — the `adjudications` table is
+ * keyed by the composite (content_hash, adjudicator_id) (migration 0009), so two providers answering the
+ * "same" question get SEPARATE rows (each adjudicator replays its own verdict); they do NOT collide.
  *
  * Returns a 64-hex digest that satisfies the contract's PayloadHash shape.
  *

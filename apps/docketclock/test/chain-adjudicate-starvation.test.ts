@@ -267,7 +267,7 @@ try {
       smuggled_extra: "should be ignored by AdjudicationInput.parse",
     } as unknown as AdjudicationInput;
 
-    const peekHit = await peekAdjudication(sql, peeked);
+    const peekHit = await peekAdjudication(sql, spy, peeked);
     assert(
       "H1 peek HITs the consult-written row despite shuffled key order + an unmodeled extra field (hash identity holds)",
       peekHit !== null && peekHit.classification === "affirm",

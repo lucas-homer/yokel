@@ -9,9 +9,10 @@ import type { Adjudicator } from "./port.js";
 
 /**
  * The null adapter's id. Exported so callers can detect the always-abstain sentinel WITHOUT a magic
- * string — an always-abstaining adjudicator must NOT be consulted through the cache, because persisting
- * its `uncertain` verdict (keyed by content_hash, which excludes adjudicator_id) would permanently
- * shadow a later real provider's adjudication of the same input.
+ * string and short-circuit it. Since the cache is keyed by (content_hash, adjudicator_id) (migration
+ * 0009), a persisted `null:abstain` row can NO LONGER shadow a real provider — its row lives under a
+ * different key. The short-circuit is retained purely as waste-avoidance: consulting an always-abstaining
+ * adapter would burn a DB round-trip to write a useless `uncertain` row that nothing will ever replay.
  */
 export const NULL_ADJUDICATOR_ID = "null:abstain";
 

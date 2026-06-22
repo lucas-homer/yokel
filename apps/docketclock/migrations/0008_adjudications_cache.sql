@@ -1,5 +1,11 @@
 -- 0008_adjudications_cache.sql — the adjudication read-through CACHE (LLM ambiguous-tail escalation).
 --
+-- ⚠️ KEYING SUPERSEDED BY 0009: this file's "content_hash ALONE is the PRIMARY KEY / adjudicator_id is NOT
+-- part of the cache key / first verdict wins forever regardless of provider" claims below are NO LONGER
+-- TRUE. 0009_adjudications_per_adjudicator_key.sql re-keys the cache to (content_hash, adjudicator_id) so a
+-- non-deciding adapter (null:abstain) can never shadow a real adjudicator. Read 0009 for the live model;
+-- the prose below is preserved as the original (now-historical) rationale.
+--
 -- WHAT THIS IS (Slice 2 of the RuleBox/classifier feature). The adjudication subsystem escalates an
 -- AMBIGUOUS deterministic match (a notice-type keyword that a deny rule can't settle, or a chain
 -- amends/doesn't-amend call) to a provider-neutral Adjudicator, OUT-OF-BAND from the parse hot path. This

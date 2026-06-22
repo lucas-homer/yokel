@@ -9,10 +9,11 @@
  *   chain pass or fabricate a link.
  *
  *   NULL-ADAPTER NO-OP — under the null adapter (prod until the integrator provisions a key) we SHORT-
- *   CIRCUIT before consulting: nothing is promoted AND nothing is written to the adjudications cache. This
- *   is load-bearing — caching the null adapter's `uncertain` (keyed by content_hash, which excludes the
- *   adjudicator id) would permanently shadow the real provider's later adjudication of the same pair. So
- *   the persisted set is byte-identical to today's confident-only set AND the cache stays pristine for 3c.
+ *   CIRCUIT before consulting: nothing is promoted AND nothing is written to the adjudications cache. The
+ *   cache key is now (content_hash, adjudicator_id) (migration 0009), so the null adapter's `uncertain`
+ *   could no longer SHADOW a real provider's verdict even if persisted (different adjudicator_id ⇒ different
+ *   key) — but we still skip the consult entirely: it would only ever return `uncertain`, so the call is a
+ *   pure waste, and a no-op keeps the persisted set byte-identical to today's confident-only set.
  *
  *   HONESTY — every promoted link carries the `llm_corroborated` ConflictFlag ALONGSIDE its deterministic
  *   type flag(s), so the feed never presents an LLM-judged link as deterministically certain.
@@ -31,8 +32,10 @@
  *   uncached pairs; next cycle those are free hits and the budget advances to the next uncached batch — the
  *   backlog DRAINS over cycles, steady-state ~0 calls/cycle (all cached) plus genuinely-new pairs.
  *
- *   CACHED / REPLAY — peek + consult key IDENTICALLY (same content_hash): a given (A, B) is adjudicated
- *   once (a fresh consult), then replayed for free on every later cycle via the peek.
+ *   CACHED / REPLAY — peek + consult key IDENTICALLY (same content_hash AND same adjudicator_id): a given
+ *   (A, B) is adjudicated once per adjudicator (a fresh consult), then replayed for free on every later
+ *   cycle via the peek. An `uncertain` verdict is cached too, so a non-affirmed pair is a FREE peek-hit on
+ *   later cycles (no re-spend) rather than a re-consult.
  *
  *   PER-PAIR ERROR ISOLATION — each fresh consult is wrapped in try/catch. A throw (gemini down / timeout /
  *   malformed) is logged and the pair SKIPPED (no link); the cycle continues. The throw STILL spent its
@@ -116,11 +119,11 @@ export async function adjudicateAmbiguousPairs(
 ): Promise<ChainAdjudicateResult> {
   const ambiguous = ambiguousPairs.length;
 
-  // NULL-ADAPTER SHORT-CIRCUIT: an always-abstaining adjudicator would only ever return `uncertain`, and
-  // consulting it would persist that `uncertain` into the content-hash cache — permanently shadowing the
-  // real provider's later adjudication of the same pair (the key excludes adjudicator_id). So when no real
-  // provider is configured we do ZERO consults and ZERO cache writes: a true no-op that keeps the cache
-  // pristine for Slice 3c. Ambiguous pairs are still counted/surfaced; nothing is escalated or linked.
+  // NULL-ADAPTER SHORT-CIRCUIT: an always-abstaining adjudicator would only ever return `uncertain`, so
+  // consulting it is pure waste. The cache key is now (content_hash, adjudicator_id) (migration 0009), so a
+  // persisted `null:abstain@<rb>` row can NO LONGER shadow a real provider's verdict (distinct adjudicator_id
+  // ⇒ distinct key) — but we still do ZERO consults and ZERO cache writes when no real provider is
+  // configured: a true no-op. Ambiguous pairs are still counted/surfaced; nothing is escalated or linked.
   if (adjudicator.id === NULL_ADJUDICATOR_ID) {
     if (ambiguous > 0) {
       console.info(
@@ -164,8 +167,9 @@ export async function adjudicateAmbiguousPairs(
       explicit_reference: false,
     };
 
-    // PEEK the cache first — a SELECT, never an LLM call. A peek-and-consult key IDENTICALLY (same hash).
-    const cached = await peekAdjudication(sql, input);
+    // PEEK the cache first — a SELECT, never an LLM call. peek and consult key IDENTICALLY: same content
+    // hash AND same adjudicator_id (peek now takes the adjudicator so it computes the SAME key consult does).
+    const cached = await peekAdjudication(sql, adjudicator, input);
 
     let verdict: AdjudicationVerdict;
     if (cached) {

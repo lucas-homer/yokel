@@ -499,11 +499,14 @@ try {
   // I6: two DIFFERENT ambiguous pairs must NOT collide on the content hash. Affirm pair0, then in a SECOND
   // call adjudicate BOTH pairs with a spy that REJECTS: if pair1 wrongly replayed pair0's cached AFFIRM it
   // would link (BUG); with distinct hashes pair1 is a FRESH reject ⇒ NOT linked, pair0 replays its affirm.
+  // NOTE: the cache key is (content_hash, adjudicator_id), so the peek-HIT for pair0 only replays when the
+  // SAME adjudicator id is used across rounds — both rounds use id "spy:p". The round-2 verdict (reject) only
+  // affects the FRESH pair1; pair0 replays its cached affirm without a call (proving distinct content hashes).
   {
     await reset();
     const pairs = nDistinctAmbiguousPairs(2);
-    // Round 1: only pair0, affirm and cache it.
-    const spy1 = spyAdjudicator("spy:affirm", {
+    // Round 1: only pair0, affirm and cache it under id "spy:p".
+    const spy1 = spyAdjudicator("spy:p", {
       classification: "affirm",
       rationale: "p0",
     });
@@ -513,8 +516,9 @@ try {
       r1.llmLinked === 1 && spy1.calls === 1,
     );
 
-    // Round 2: adjudicate BOTH. pair0 must REPLAY (no call); pair1 must be a FRESH call (distinct hash).
-    const spy2 = spyAdjudicator("spy:reject", {
+    // Round 2: adjudicate BOTH with the SAME id "spy:p" but a REJECT verdict. pair0 must REPLAY its cached
+    // affirm (no call, same key); pair1 must be a FRESH reject (distinct hash ⇒ no replay cross-talk).
+    const spy2 = spyAdjudicator("spy:p", {
       classification: "reject",
       rationale: "p1-fresh-reject",
     });

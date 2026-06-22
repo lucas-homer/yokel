@@ -10,8 +10,10 @@ import type { AdjudicationInput, AdjudicationVerdict } from "@yokel/contracts";
 export interface Adjudicator {
   /**
    * Provenance fragment recorded on the cache row as `${id}@${rulebook_version}` (e.g. "null:abstain",
-   * later "gemini:gemini-2.5-flash"). It identifies WHICH engine produced a verdict; it is NOT part of
-   * the content hash (the cache key), so swapping providers never re-adjudicates a cached input.
+   * later "gemini:gemini-2.5-flash"). It identifies WHICH engine produced a verdict AND is HALF the cache
+   * key: the `adjudications` cache is keyed by (content_hash, adjudicator_id) (migration 0009), so each
+   * engine's verdict is cached independently — a non-deciding adapter ("null:abstain@<rb>") can never
+   * shadow a real one, and a provider/model swap re-adjudicates (replay determinism is per-adjudicator).
    */
   readonly id: string;
   /** Answer the ambiguous question. May throw/time out — the caller degrades to the deterministic path. */
