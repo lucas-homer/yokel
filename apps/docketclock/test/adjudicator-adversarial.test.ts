@@ -9,10 +9,11 @@
  *      time, including a nullable→null transition) and assert the hash changes. A field whose change is
  *      NOT reflected in the hash is a cache-poisoning hole (two semantically-different ambiguities sharing
  *      one verdict). adjudicator_id is structurally absent from the input, so it cannot enter the hash.
- *   2. PROVIDER-SWAP NEVER RE-CALLS — a cached input consulted with a DIFFERENT adapter (different id +
- *      verdict) replays the ORIGINAL verdict and the new adapter's adjudicate() is NEVER invoked.
- *   3. WRITE-ONCE IMMUTABILITY — a direct second INSERT with the same content_hash + a different verdict
- *      is a no-op; the stored verdict is unchanged and consult still replays the first verdict.
+ *   2. PER-ADJUDICATOR ISOLATION — cache key is (content_hash, adjudicator_id). A DIFFERENT adapter on the
+ *      same input is a MISS: it IS consulted and gets its OWN row (it neither replays nor shadows the
+ *      first). A re-consult with the SAME adapter is a HIT (per-adjudicator replay determinism).
+ *   3. WRITE-ONCE IMMUTABILITY — a direct second INSERT with the same (content_hash, adjudicator_id) + a
+ *      different verdict is a no-op; the stored verdict is unchanged and consult still replays the first.
  *   4. CONCURRENT-MISS INVARIANT — two consults of the SAME input via Promise.all with two different
  *      spies: exactly one row persists and BOTH callers observe the SAME (winning) verdict, even when
  *      both spies actually got called (a true concurrent miss). Run many rounds to exercise the window.
@@ -135,7 +136,9 @@ if (!process.env.DATABASE_URL) {
     );
     await runMigrations(sql);
 
-    // 2. PROVIDER-SWAP NEVER RE-CALLS.
+    // 2. PER-ADJUDICATOR ISOLATION — a DIFFERENT adapter on the SAME input is a cache MISS (the key is now
+    // (content_hash, adjudicator_id)): it IS consulted and gets its OWN row; it neither replays nor is
+    // shadowed by the first adapter's verdict. A RE-consult with the SAME adapter is a HIT (no re-call).
     {
       const input: AdjudicationInput = {
         kind: "notice",
@@ -145,22 +148,31 @@ if (!process.env.DATABASE_URL) {
       };
       const a = spy("spy:A", { classification: "affirm", rationale: "A" });
       const b = spy("spy:B", { classification: "reject", rationale: "B" });
-      await consultAdjudicator(sql, a, input);
-      const r = await consultAdjudicator(sql, b, input);
+      const ra = await consultAdjudicator(sql, a, input);
+      const rb = await consultAdjudicator(sql, b, input);
       assert(
-        "provider swap replays the ORIGINAL verdict (affirm)",
-        r.cached === true && r.verdict.classification === "affirm",
-        r.verdict.classification,
+        "different adapter on same input is a MISS → consulted, gets its OWN reject verdict (not shadowed)",
+        rb.cached === false && rb.verdict.classification === "reject",
+        `cached=${rb.cached} ${rb.verdict.classification}`,
       );
       assert(
-        "swapped-in adapter is NEVER called",
-        b.calls === 0,
+        "the second adapter IS called (per-adjudicator key, no shadowing)",
+        b.calls === 1,
         String(b.calls),
       );
       assert(
-        "original adapter called exactly once",
-        a.calls === 1,
-        String(a.calls),
+        "first adapter's own verdict is intact (affirm) and was called exactly once",
+        ra.verdict.classification === "affirm" && a.calls === 1,
+        `${ra.verdict.classification} calls=${a.calls}`,
+      );
+      // A re-consult with the SAME adapter (a) is a HIT — replay determinism PER adjudicator.
+      const raAgain = await consultAdjudicator(sql, a, input);
+      assert(
+        "same adapter re-consult is a HIT (replay determinism per adjudicator, no re-call)",
+        raAgain.cached === true &&
+          raAgain.verdict.classification === "affirm" &&
+          a.calls === 1,
+        `cached=${raAgain.cached} calls=${a.calls}`,
       );
     }
 
@@ -178,34 +190,37 @@ if (!process.env.DATABASE_URL) {
       });
       await consultAdjudicator(sql, a, input);
       const h = adjudicationContentHash(input);
+      // Write-once is PER (content_hash, adjudicator_id) now — collide on the SAME key (spy:first@<rb>) to
+      // prove the second insert of that key is a no-op (a different adjudicator_id would be a NEW row, not a
+      // collision — that's tested separately as the coexist case).
+      const firstId = "spy:first@" + RULEBOOK;
       await sql`
         insert into adjudications (content_hash, input, verdict, adjudicator_id)
         values (${h}, ${sql.json(input as never)}::jsonb,
                 ${sql.json({ classification: "reject", rationale: "intruder" } as never)}::jsonb,
-                ${"spy:intruder@" + RULEBOOK})
-        on conflict (content_hash) do nothing
+                ${firstId})
+        on conflict (content_hash, adjudicator_id) do nothing
       `;
       const rows = await sql<{ verdict: AdjudicationVerdict }[]>`
-        select verdict from adjudications where content_hash = ${h}
+        select verdict from adjudications where content_hash = ${h} and adjudicator_id = ${firstId}
       `;
       assert(
-        "write-once: a second INSERT does NOT mutate the stored verdict",
+        "write-once: a second INSERT of the same (hash, adjudicator_id) does NOT mutate the stored verdict",
         rows.length === 1 && rows[0]!.verdict.classification === "affirm",
         rows[0]?.verdict.classification,
       );
-      const replay = await consultAdjudicator(
-        sql,
-        spy("spy:later", { classification: "reject", rationale: "later" }),
-        input,
-      );
+      const replay = await consultAdjudicator(sql, a, input);
       assert(
-        "consult still replays the FIRST verdict after a collision",
-        replay.verdict.classification === "affirm",
+        "consult with the SAME adjudicator still replays the FIRST verdict after a collision",
+        replay.cached === true && replay.verdict.classification === "affirm",
         replay.verdict.classification,
       );
     }
 
-    // 4. CONCURRENT-MISS INVARIANT — both callers observe the SAME winning verdict.
+    // 4. CONCURRENT-MISS INVARIANT — both callers observe the SAME winning verdict. The race window is
+    // write-once PER (content_hash, adjudicator_id), so to exercise it both concurrent consults must use the
+    // SAME adjudicator id (same key) but return DIFFERENT verdicts; the first writer wins and both readers
+    // observe that one verdict. (Distinct ids would be distinct keys — that's the coexist case, not a race.)
     {
       let trueConcurrentMisses = 0;
       let mismatches = 0;
@@ -218,8 +233,8 @@ if (!process.env.DATABASE_URL) {
           flag_key: "correction",
           text: `race-${i}`,
         };
-        const a = spy("spy:A", { classification: "affirm", rationale: "A" });
-        const b = spy("spy:B", { classification: "reject", rationale: "B" });
+        const a = spy("spy:race", { classification: "affirm", rationale: "A" });
+        const b = spy("spy:race", { classification: "reject", rationale: "B" });
         const [ra, rb] = await Promise.all([
           consultAdjudicator(sql, a, input),
           consultAdjudicator(sql, b, input),

@@ -782,22 +782,28 @@ export type AdjudicationVerdict = z.infer<typeof AdjudicationVerdict>;
 /**
  * AdjudicationRecord — the PERSISTED cache row (audit + deterministic replay), provider-neutral.
  *
- * content_hash is the CACHE KEY: sha256 of the CANONICAL serialization of `input` (which includes
- * rulebook_version, so a rulebook change re-keys). Reuses PayloadHash (64-hex) — the app computes it; the
- * contract only TYPES it. Same input ⇒ same hash ⇒ replay the stored verdict instead of calling the LLM.
+ * The CACHE KEY is the COMPOSITE (content_hash, adjudicator_id). content_hash is the sha256 of the
+ * CANONICAL serialization of `input` (which includes rulebook_version); adjudicator_id is the engine that
+ * produced the verdict (see below). Each adjudicator's verdict for a given input is cached and replayed
+ * independently under its own id: same input + same adjudicator ⇒ replay the stored verdict instead of
+ * calling the LLM. content_hash reuses PayloadHash (64-hex) — the app computes both key parts; the contract
+ * only TYPES them. (App-side keying: apps/docketclock/migrations/0009_adjudications_per_adjudicator_key.sql.)
  *
- * adjudicator_id is PROVENANCE, NOT part of the cache key. It records WHICH engine produced the verdict as
- * a "provider:model@rulebook_version" string (e.g. "null:abstain@rulebox-2026-06-18" or
- * "gemini:gemini-2.5-flash@rulebox-2026-06-18"). CRITICAL replay-determinism guarantee: the FIRST verdict
- * for a content_hash WINS and is stable FOREVER. Swapping providers changes only FUTURE (uncached) inputs;
- * it NEVER re-adjudicates a content_hash that already has a row. (Because adjudicator_id is excluded from
- * the hash, two providers answering the "same" question still collide on one cache key — first writer wins.)
+ * adjudicator_id is both PROVENANCE and HALF THE KEY. It records WHICH engine produced the verdict as a
+ * "provider:model@rulebook_version" string (e.g. "null:abstain@rulebox-2026-06-18" or
+ * "gemini:gemini-2.5-flash@rulebox-2026-06-18"). Because it is part of the key, a non-deciding adapter's
+ * verdict ("null:abstain@<rb>") lives under a DIFFERENT key than a real adjudicator's verdict
+ * ("gemini:...@<rb>") for the same input, so it can NEVER shadow it — the bug that motivated the per-
+ * adjudicator key (a null:abstain `uncertain` shadowing Gemini and silently suppressing chain links).
+ * Replay determinism is therefore PER-ADJUDICATOR, not global: a provider/model swap OR a rulebook change
+ * re-adjudicates (new adjudicator_id and/or content_hash), which is correct — a different engine or
+ * rulebook is a genuinely different question.
  */
 export const AdjudicationRecord = z.object({
-  content_hash: PayloadHash, // sha256 of canonical(input) — the cache key (app-computed; includes rulebook_version)
+  content_hash: PayloadHash, // sha256 of canonical(input) — key part 1 (app-computed; includes rulebook_version)
   input: AdjudicationInput, // the question that was adjudicated (the hashed payload)
   verdict: AdjudicationVerdict, // the advisory result
-  adjudicator_id: z.string().min(1), // PROVENANCE "provider:model@rulebook_version" — NOT part of content_hash
+  adjudicator_id: z.string().min(1), // PROVENANCE + key part 2: "provider:model@rulebook_version" (cache key = (content_hash, adjudicator_id))
   created_at: z.string().datetime(), // when this verdict was first persisted (ISO-8601)
 });
 export type AdjudicationRecord = z.infer<typeof AdjudicationRecord>;
