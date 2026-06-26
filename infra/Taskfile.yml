@@ -97,6 +97,57 @@ tasks:
         fi
       - echo "✅ cluster resumed; kubelet certs repaired; transit Vault re-unsealed. Pods re-race the DB briefly, then settle ('task status')."
 
+  install-boot-recovery:
+    desc: Install a LaunchAgent that auto-runs `cluster-restart` after colima starts on every login/boot
+    cmds:
+      # Makes a reboot self-heal: colima auto-starts (brew service) + this agent then runs cluster-restart
+      # (k3d start, kubelet-cert repair, transit-Vault unseal). The mini auto-logs-in as `home`, so the
+      # agent fires unattended. The plist is generated here (machine-specific absolute paths) rather than
+      # committed. NOTE: with RunAtLoad, a successful bootstrap also runs it ONCE right now — which does a
+      # real cluster-restart (brief node churn). Either way it's armed for the next boot.
+      - |
+        set -e
+        LABEL="cc.rostr.yokel.boot-recovery"
+        SCRIPT="$(pwd)/scripts/boot-cluster-restart.sh"
+        PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
+        LOG="$HOME/Library/Logs/yokel-boot-recovery.log"
+        chmod +x "$SCRIPT"
+        mkdir -p "$HOME/Library/LaunchAgents" "$HOME/Library/Logs"
+        cat > "$PLIST" <<PLISTEOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+          <key>Label</key><string>$LABEL</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>/bin/bash</string>
+            <string>$SCRIPT</string>
+          </array>
+          <key>RunAtLoad</key><true/>
+          <key>StandardOutPath</key><string>$LOG</string>
+          <key>StandardErrorPath</key><string>$LOG</string>
+        </dict>
+        </plist>
+        PLISTEOF
+        plutil -lint "$PLIST"
+        # Re-arm cleanly, then load into the logged-in GUI domain (same domain colima's brew service runs
+        # in). Best-effort over SSH: if bootstrap can't reach the GUI domain, the plist in ~/Library/
+        # LaunchAgents still auto-loads at the NEXT login — which is the case we actually care about.
+        launchctl bootout "gui/$(id -u)/$LABEL" 2>/dev/null || true
+        launchctl bootstrap "gui/$(id -u)" "$PLIST" 2>/dev/null \
+          && echo "✅ installed + armed now (RunAtLoad ran it once). Log: $LOG" \
+          || echo "✅ installed ($PLIST). launchctl bootstrap skipped over SSH — it will auto-load at next login. Log: $LOG"
+
+  uninstall-boot-recovery:
+    desc: Remove the boot-recovery LaunchAgent
+    cmds:
+      - |
+        LABEL="cc.rostr.yokel.boot-recovery"
+        launchctl bootout "gui/$(id -u)/$LABEL" 2>/dev/null || true
+        rm -f "$HOME/Library/LaunchAgents/$LABEL.plist"
+        echo "✅ removed boot-recovery LaunchAgent (running cluster unaffected)."
+
   bootstrap-argocd:
     desc: Install Argo CD via Helm (the single imperative seam)
     cmds:
