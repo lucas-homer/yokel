@@ -40,17 +40,23 @@
  */
 import { existsSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { createClient } from "../db/client.js";
-import { componentLogger } from "../log.js";
-import { regsApiKey } from "../sources/regulations-gov.js";
-import { chainReconcileOnce } from "../reconcile/persist.js";
-import { pollFrOnce } from "./fr-poll.js";
-import { pollRegsOnce } from "./poll.js";
 
-const log = componentLogger("poller");
-
+// Load the repo-root .env BEFORE importing anything that reads env at module-evaluation time — notably the
+// logger (LOG_LEVEL is locked in when log.ts is first imported) and the poll-core modules, each of which
+// binds a module-scope componentLogger. A static `import` evaluates before this file's body runs, so every
+// env/logger-touching module is imported DYNAMICALLY below, AFTER the env is loaded — this is what lets
+// LOG_LEVEL in .env take effect in local dev. In k8s LOG_LEVEL is a real pod env var, so it works anyway.
 const envPath = fileURLToPath(new URL("../../../../.env", import.meta.url));
 if (existsSync(envPath)) process.loadEnvFile(envPath);
+
+const { createClient } = await import("../db/client.js");
+const { componentLogger } = await import("../log.js");
+const { regsApiKey } = await import("../sources/regulations-gov.js");
+const { chainReconcileOnce } = await import("../reconcile/persist.js");
+const { pollFrOnce } = await import("./fr-poll.js");
+const { pollRegsOnce } = await import("./poll.js");
+
+const log = componentLogger("poller");
 
 const INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS) || 15 * 60_000;
 

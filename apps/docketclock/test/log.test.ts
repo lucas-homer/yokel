@@ -131,10 +131,29 @@ function capture(): {
   const prev = process.env.LOG_LEVEL;
   process.env.LOG_LEVEL = "warn";
   try {
-    const log = buildLogger();
+    const cap = capture();
+    const log = buildLogger({ destination: cap.stream }); // sink swapped — keep the assertion off real stdout
     assert(
       "buildLogger reads LOG_LEVEL from env",
       log.level === "warn",
+      log.level,
+    );
+  } finally {
+    if (prev === undefined) delete process.env.LOG_LEVEL;
+    else process.env.LOG_LEVEL = prev;
+  }
+}
+
+// ── empty/whitespace LOG_LEVEL is treated as unset (would otherwise crash pino at construction) ─────────
+{
+  const prev = process.env.LOG_LEVEL;
+  process.env.LOG_LEVEL = "   ";
+  try {
+    const cap = capture();
+    const log = buildLogger({ destination: cap.stream });
+    assert(
+      "blank LOG_LEVEL falls back to info (not passed through to pino)",
+      log.level === "info",
       log.level,
     );
   } finally {

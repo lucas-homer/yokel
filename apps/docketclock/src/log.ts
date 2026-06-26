@@ -26,7 +26,7 @@ import pino, { type DestinationStream, type Logger } from "pino";
 const DEFAULT_LEVEL = "info";
 
 export interface BuildLoggerOptions {
-  /** Explicit level override; falls back to LOG_LEVEL, then DEFAULT_LEVEL. Tests pin this directly. */
+  /** Explicit level override; falls back to LOG_LEVEL (empty/whitespace ignored), then DEFAULT_LEVEL. */
   level?: string;
   /** Where lines are written. Defaults to stdout (fd 1). Tests inject a capture stream for hermeticity. */
   destination?: DestinationStream;
@@ -36,9 +36,14 @@ export interface BuildLoggerOptions {
  * Build a configured pino logger: NDJSON, level from (opts.level ?? LOG_LEVEL ?? "info"), to stdout unless
  * a destination is injected. This is the single source of logger configuration — `rootLogger` is just its
  * default-argument call, and the test builds another over a capture stream to assert the same contract.
+ *
+ * LOG_LEVEL is trimmed and an empty value is treated as UNSET (falls through to the default) — `??` alone
+ * would pass `LOG_LEVEL=""` (common when an env var is templated but left blank) straight to pino, which
+ * rejects it as an unknown level and throws at construction. `||` over the trimmed value avoids that.
  */
 export function buildLogger(opts: BuildLoggerOptions = {}): Logger {
-  const level = opts.level ?? process.env.LOG_LEVEL ?? DEFAULT_LEVEL;
+  const envLevel = process.env.LOG_LEVEL?.trim();
+  const level = opts.level ?? (envLevel || DEFAULT_LEVEL);
   return opts.destination ? pino({ level }, opts.destination) : pino({ level });
 }
 

@@ -70,6 +70,7 @@ const res = spawnSync("pnpm", ["exec", "tsx", SELF, "--worker"], {
   cwd: fileURLToPath(new URL("..", import.meta.url)),
   env: process.env,
   encoding: "utf8",
+  timeout: 30_000, // the worker is in-memory inject() so this never trips — cheap guard against a hang
 });
 
 const stdout = res.stdout ?? "";

@@ -12,14 +12,20 @@
  */
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { createClient } from "../db/client.js";
-import { componentLogger } from "../log.js";
-import { buildServer } from "./server.js";
 
-const log = componentLogger("api");
-
+// Load the repo-root .env BEFORE importing anything that reads env at module-evaluation time — notably the
+// logger, whose level is locked in from LOG_LEVEL the moment log.ts is first imported. A static `import`
+// evaluates (and would build the logger) before this file's body runs, so the env-touching modules are
+// imported DYNAMICALLY below, AFTER the env is loaded — this is what lets LOG_LEVEL in .env take effect in
+// local dev. In k8s LOG_LEVEL is a real pod env var, so it works there regardless.
 const envPath = fileURLToPath(new URL("../../../../.env", import.meta.url));
 if (existsSync(envPath)) process.loadEnvFile(envPath);
+
+const { createClient } = await import("../db/client.js");
+const { componentLogger } = await import("../log.js");
+const { buildServer } = await import("./server.js");
+
+const log = componentLogger("api");
 
 async function main(): Promise<void> {
   const sql = createClient();
