@@ -9,12 +9,9 @@ kind: Application
 metadata:
   name: grafana
   namespace: argocd
-  annotations:
-    # after operators (ESO/CNPG at "0"). NOTE: the vault-backend ClusterSecretStore this app's
-    # grafana-admin ExternalSecret references currently ships in the docketclock chart (wave "2"), so on a
-    # cold app-of-apps bringup the secret is eventual-consistent (ESO retries until the store exists; not a
-    # hard failure). FOLLOW-UP: hoist vault-backend to a platform-tier app so observability doesn't depend
-    # on the app chart. On the live cluster the store already exists, so this is latent today.
+    # after operators (ESO/CNPG at "0") and after the vault-backend ClusterSecretStore (now its own
+    # platform-tier app, secretstore.yaml, wave "0" — #51), which this app's grafana-admin ExternalSecret
+    # references. The store therefore exists before this app's ExternalSecret is created.
     argocd.argoproj.io/sync-wave: "1"
 spec:
   project: default

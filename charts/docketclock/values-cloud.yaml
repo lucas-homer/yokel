@@ -10,9 +10,7 @@ ingress:
   className: nginx # TODO(phase-3): cloud ingress + cert-manager TLS
   host: docketclock.example.com
 
-vault:
-  # TODO(phase-3): switch ESO from the dev root token to the kubernetes auth method (no static token).
-  # The Vault *server* seal swap (transit → `seal "gcpckms"`/`"awskms"`, replicas → 3, drop vault-transit)
-  # lives in the cloud platform-vault Application, not here — see platform-vault.yaml comments.
-  tokenSecret:
-    name: ""
+# NOTE: the ClusterSecretStore's cloud auth swap (dev root token → kubernetes auth method, no static token)
+# now lives with the hoisted store manifest, not here — see infra/argocd/manifests/vault-backend/
+# clustersecretstore.yaml (#51). The Vault *server* seal swap (transit → gcpckms/awskms, replicas → 3, drop
+# vault-transit) lives in the cloud platform-vault Application — see platform-vault.yaml comments.

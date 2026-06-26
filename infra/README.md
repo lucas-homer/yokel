@@ -11,7 +11,8 @@ Toolchain rationale: ADR 0009.
 Taskfile.yml          # the runbook — `task dev-up`, `task dev-down`, `task status`, …
 k3d/yokel.yaml        # local cluster definition (codifies what was once `k3d cluster create …`)
 bootstrap/            # Argo CD Helm values + the app-of-apps root Applications (local + cloud stub)
-argocd/apps/          # one Argo Application per component (CNPG, ESO, Vault) + the app (from git)
+argocd/apps/          # one Argo Application per component (CNPG, ESO, Vault, observability) + the app
+argocd/manifests/     # raw manifests for git-sourced apps (e.g. the vault-backend ClusterSecretStore)
 scripts/vault-seed.sh # seed dev Vault + wire ESO token auth (idempotent)
 terraform/            # cloud provisioning — structure only, provider deferred (see its README)
 ../charts/docketclock # our first-party Helm chart (CNPG Cluster, ESO wiring, app)
