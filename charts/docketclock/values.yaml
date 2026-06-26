@@ -74,15 +74,10 @@ adjudicator:
   # cycle; cache hits are free and uncapped, so a backlog of ambiguous pairs drains over cycles without
   # starving any pair. Tunable: bound on per-cycle Gemini cost, not on coverage.
 
-# Vault backend for External Secrets (dev token auth locally; cloud uses the kubernetes auth method).
-vault:
-  server: http://vault.vault.svc:8200
-  path: secret # kv-v2 mount
-  version: v2
-  tokenSecret:
-    name: vault-token
-    namespace: external-secrets
-    key: token
+# NOTE: the `vault-backend` ClusterSecretStore (the ESO → Vault seam these ExternalSecrets reference) used
+# to live in this chart but was hoisted to a platform-tier Argo app (#51) — it's cluster-scoped and shared
+# with observability. See infra/argocd/manifests/vault-backend/clustersecretstore.yaml. This chart now only
+# declares the ExternalSecret that *consumes* the store (below).
 
 # External-origin secrets pulled Vault -> K8s Secret `docketclock-external`. The app maps the (lowercase)
 # secret keys to the UPPERCASE env vars it actually reads via explicit secretKeyRef (see the Deployments):
