@@ -135,3 +135,20 @@ A more specific query for the structured adjudicator cycle events:
 - **`wait-platform` hangs.** Argo syncs asynchronously; check `task status` and the Argo UI
   (`task argocd-ui`). A platform Application stuck `OutOfSync` usually means a pinned chart version or
   values key drifted — see `infra/argocd/apps/`.
+
+## Surviving a reboot (auto-recovery)
+
+The Mini reboots occasionally (power blips, or macOS updates if you leave auto-install on). A reboot stops
+colima and leaves the cluster broken: k3d nodes down, stale kubelet certs, sealed transit Vault. Two pieces
+make a reboot self-heal unattended:
+
+1. **colima auto-starts** — `brew services start colima` registers it as a launchd agent (one-time).
+   Combined with the Mini's auto-login, colima comes back on every boot.
+2. **`task install-boot-recovery`** — installs the `cc.rostr.yokel.boot-recovery` LaunchAgent, which on
+   each login waits for colima/docker to be ready and then runs `task cluster-restart`
+   (`infra/scripts/boot-cluster-restart.sh`). Output → `~/Library/Logs/yokel-boot-recovery.log`. Remove with
+   `task uninstall-boot-recovery`. Note: installing it runs `cluster-restart` once immediately (RunAtLoad).
+
+tmux sessions do **not** survive a reboot (they're in RAM) — so the real win is not rebooting unnecessarily:
+keep macOS auto-install off and update on your own schedule. Between reboots, tmux survives SSH disconnects
+fine — close the laptop, reopen, `ssh mini`, `tmux attach`, and the cluster is still running.
