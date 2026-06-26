@@ -40,14 +40,23 @@
  */
 import { existsSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { createClient } from "../db/client.js";
-import { regsApiKey } from "../sources/regulations-gov.js";
-import { chainReconcileOnce } from "../reconcile/persist.js";
-import { pollFrOnce } from "./fr-poll.js";
-import { pollRegsOnce } from "./poll.js";
 
+// Load the repo-root .env BEFORE importing anything that reads env at module-evaluation time — notably the
+// logger (LOG_LEVEL is locked in when log.ts is first imported) and the poll-core modules, each of which
+// binds a module-scope componentLogger. A static `import` evaluates before this file's body runs, so every
+// env/logger-touching module is imported DYNAMICALLY below, AFTER the env is loaded — this is what lets
+// LOG_LEVEL in .env take effect in local dev. In k8s LOG_LEVEL is a real pod env var, so it works anyway.
 const envPath = fileURLToPath(new URL("../../../../.env", import.meta.url));
 if (existsSync(envPath)) process.loadEnvFile(envPath);
+
+const { createClient } = await import("../db/client.js");
+const { componentLogger } = await import("../log.js");
+const { regsApiKey } = await import("../sources/regulations-gov.js");
+const { chainReconcileOnce } = await import("../reconcile/persist.js");
+const { pollFrOnce } = await import("./fr-poll.js");
+const { pollRegsOnce } = await import("./poll.js");
+
+const log = componentLogger("poller");
 
 const INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS) || 15 * 60_000;
 
@@ -64,7 +73,7 @@ function writeHeartbeat(): void {
   try {
     writeFileSync(HEARTBEAT_FILE, `${new Date().toISOString()}\n`);
   } catch (err) {
-    console.error(`[${new Date().toISOString()}] heartbeat write failed:`, err);
+    log.error({ err, file: HEARTBEAT_FILE }, "heartbeat write failed");
   }
 }
 
@@ -88,36 +97,27 @@ async function main(): Promise<void> {
       // detection pass that cycle, and vice-versa. Each summary is logged independently.
       try {
         const fr = await pollFrOnce(sql);
-        console.log(`[${new Date().toISOString()}] fr:`, JSON.stringify(fr));
+        log.info({ summary: fr }, "fr poll cycle");
       } catch (err) {
-        console.error(`[${new Date().toISOString()}] fr poll failed:`, err);
+        log.error({ err }, "fr poll failed");
       }
       try {
         const regs = await pollRegsOnce(sql);
-        console.log(
-          `[${new Date().toISOString()}] regs:`,
-          JSON.stringify(regs),
-        );
+        log.info({ summary: regs }, "regs poll cycle");
       } catch (err) {
-        console.error(`[${new Date().toISOString()}] regs poll failed:`, err);
+        log.error({ err }, "regs poll failed");
       }
       // 3rd pass — cross_window (chain) reconcile sweep. Runs LAST (derive-over-derived; see header) and
       // is INDEPENDENTLY try/caught so a chain failure cannot affect the FR/Regs passes (and vice-versa).
       try {
         const chain = await chainReconcileOnce(sql);
-        console.log(
-          `[${new Date().toISOString()}] chain:`,
-          JSON.stringify(chain),
-        );
+        log.info({ summary: chain }, "chain reconcile cycle");
       } catch (err) {
-        console.error(
-          `[${new Date().toISOString()}] chain reconcile failed:`,
-          err,
-        );
+        log.error({ err }, "chain reconcile failed");
       }
     } catch (err) {
       // Belt-and-braces: anything outside the two passes (should be nothing) must not kill the scheduler.
-      console.error(`[${new Date().toISOString()}] poll cycle failed:`, err);
+      log.error({ err }, "poll cycle failed");
     } finally {
       running = false;
       // Mark this cycle SETTLED (liveness #25). Written here in `finally`, not on full success: a pass-
@@ -134,9 +134,7 @@ async function main(): Promise<void> {
   async function shutdown(signal: string): Promise<void> {
     if (stopping) return;
     stopping = true;
-    console.log(
-      `[${new Date().toISOString()}] ${signal} — draining poll scheduler…`,
-    );
+    log.info({ signal }, "draining poll scheduler");
     if (timer) clearTimeout(timer);
     // Wait out an in-flight cycle (bounded poll — no unbounded work), then release the pool.
     while (running) await new Promise((r) => setTimeout(r, 100));
@@ -153,6 +151,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((err) => {
-  console.error("poll scheduler failed to start:", err);
+  log.error({ err }, "poll scheduler failed to start");
   process.exit(1);
 });

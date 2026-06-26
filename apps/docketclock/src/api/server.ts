@@ -38,6 +38,7 @@ import {
   ParticipationWindow,
 } from "@yokel/contracts";
 import type {
+  FastifyBaseLogger,
   FastifyError,
   FastifyInstance,
   FastifyReply,
@@ -52,6 +53,7 @@ import {
 } from "fastify-type-provider-zod";
 import { z } from "zod";
 import type { Sql } from "../db/client.js";
+import { componentLogger } from "../log.js";
 import { itemEnvelope, listEnvelope } from "./envelope.js";
 import {
   listConflicts,
@@ -63,7 +65,11 @@ import {
 export interface BuildServerOptions {
   /** The accepted API keys. Falls back to DOCKETCLOCK_API_KEYS (comma-separated) when omitted. */
   apiKeys?: string[];
-  /** Fastify logger toggle (off by default so tests stay quiet). */
+  /**
+   * Fastify logger toggle (off by default so tests stay quiet). When true, the configured pino instance
+   * (tagged component=api, the shared root logger's child) is attached via Fastify 5's `loggerInstance`;
+   * when false/omitted Fastify gets `logger: false` and stays SILENT — the test default is preserved.
+   */
   logger?: boolean;
 }
 
@@ -148,8 +154,18 @@ export function buildServer(
   sql: Sql,
   opts: BuildServerOptions = {},
 ): FastifyInstance {
+  // Fastify 5 takes a CONFIGURED logger via `loggerInstance` (NOT `logger:` — that option only accepts a
+  // boolean or pino OPTIONS, never an instance). Preserve the silent-test escape hatch: with logger off
+  // (the default) we pass `logger: false` so Fastify never constructs a logger; only when explicitly on do
+  // we attach our pino child (component=api), so every request line is structured + tagged.
+  // Cast the pino child to FastifyBaseLogger: a pino Logger satisfies it structurally, but passing the
+  // concrete pino type would over-narrow Fastify's logger generic (pino's Logger requires msgPrefix),
+  // making the returned instance not assignable to the declared FastifyInstance return type.
+  const loggerOpt = opts.logger
+    ? { loggerInstance: componentLogger("api") as FastifyBaseLogger }
+    : { logger: false as const };
   const app = Fastify({
-    logger: opts.logger ?? false,
+    ...loggerOpt,
     // genReqId mints req.id as a UUID — and that SAME id is reused for the envelope + x-request-id
     // header (see requestId()/the onRequest hook), so logs and responses share one correlatable id.
     genReqId: () => randomUUID(),
@@ -248,7 +264,9 @@ export function buildServer(
   // ── PUBLIC: health ─────────────────────────────────────────────────────────────────────────────────
   app.get(
     "/healthz",
-    { schema: { response: { 200: HealthResponse } } },
+    // logLevel:'silent' suppresses this route's per-request log lines — the liveness probe hits /healthz
+    // every few seconds and would otherwise drown the log. /readyz (below) keeps default logging.
+    { logLevel: "silent", schema: { response: { 200: HealthResponse } } },
     async () => {
       // A cheap DB ping — keep it fast; a down DB still returns 200 with db:"down" (liveness, not readiness).
       let db: "ok" | "down" = "ok";

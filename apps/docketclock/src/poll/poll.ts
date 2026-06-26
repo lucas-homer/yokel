@@ -13,7 +13,7 @@
  *      We PAGE TO COMPLETION: sort=lastModifiedDate is ASCENDING (issue #18 "Related"), so the NEWEST
  *      changes are on the LAST page. We loop pageNumber from 1, accumulating, until a page returns fewer
  *      than pageSize rows (the last page) or maxPages (the v4 20-page hard cap) is hit. Hitting maxPages
- *      with a still-full page means coverage was TRUNCATED — we surface it (summary.truncated + a console
+ *      with a still-full page means coverage was TRUNCATED — we surface it (summary.truncated + a log.warn
  *      note), never silently cap. Accumulated items are deduped by documentId (the 6h overlap re-fetches
  *      the boundary), sorted ASCENDING by lastModifiedDate, then each is fetched-in-detail → parsed →
  *      ingested → reconciled.
@@ -78,6 +78,7 @@ import {
   type RegsListItem,
 } from "../sources/regulations-gov.js";
 import { ingestObservation } from "../ingest/observe.js";
+import { componentLogger } from "../log.js";
 import { reconcileOcdId } from "../reconcile/persist.js";
 import {
   readCursor,
@@ -94,6 +95,8 @@ import {
 } from "./dead-letter.js";
 
 const SOURCE = "regulations_gov";
+
+const log = componentLogger("poller");
 
 export interface PollDeps {
   /** Fetch ONE list page of changed open-comment docs. Defaults to listChangedDocuments. */
@@ -210,9 +213,9 @@ export async function pollRegsOnce(
     if (pageNumber === o.maxPages && page.length === o.pageSize) {
       // Stopped at the hard cap with a still-full page: coverage is INCOMPLETE — surface, don't swallow.
       summary.truncated = true;
-      console.warn(
-        `pollRegsOnce: hit maxPages=${o.maxPages} with a full last page — coverage TRUNCATED ` +
-          `(newest changes may be unconsumed; cursor will NOT cover them). Narrow the cursor or raise budget.`,
+      log.warn(
+        { maxPages: o.maxPages },
+        "regs poll hit maxPages with a full last page — coverage TRUNCATED (newest changes may be unconsumed; cursor will not cover them)",
       );
     }
   }
@@ -234,8 +237,9 @@ export async function pollRegsOnce(
   const live = changed.filter((c) => !dead.has(c.documentId));
   const skippedDead = changed.length - live.length;
   if (skippedDead > 0) {
-    console.debug(
-      `pollRegsOnce: skipping ${skippedDead} dead-lettered docs on the differential path (draining via sweep)`,
+    log.debug(
+      { skipped: skippedDead },
+      "regs differential skipping dead-lettered docs (draining via sweep)",
     );
   }
 
@@ -288,14 +292,19 @@ export async function pollRegsOnce(
       );
       if (newlyDeadLettered) {
         summary.deadLettered++;
-        console.error(
-          `pollRegsOnce: DEAD-LETTER regs doc ${item.documentId} after ${attempts} consecutive ` +
-            `attempts — will skip on the hot path next cycle (cursor advances past it); recorded for retry sweep: ${msg}`,
+        log.error(
+          { err, documentId: item.documentId, attempts },
+          "regs differential doc DEAD-LETTERED — will skip on the hot path next cycle (cursor advances past it); recorded for retry sweep",
         );
       } else {
-        console.error(
-          `pollRegsOnce: differential doc ${item.documentId} failed (attempt ${attempts}/${o.maxFailAttempts}) ` +
-            `— skipping (HOLDS cursor, retried next cycle): ${msg}`,
+        log.warn(
+          {
+            err,
+            documentId: item.documentId,
+            attempts,
+            maxFailAttempts: o.maxFailAttempts,
+          },
+          "regs differential doc failed — skipping (HOLDS cursor, retried next cycle)",
         );
       }
     }
@@ -371,13 +380,19 @@ export async function pollRegsOnce(
       );
       if (newlyDeadLettered) {
         summary.deadLettered++;
-        console.error(
-          `pollRegsOnce: DEAD-LETTER regs re-poll doc ${win.regs_document_id} after ${attempts} ` +
-            `consecutive attempts — recorded for retry sweep: ${msg}`,
+        log.error(
+          { err, documentId: win.regs_document_id, attempts },
+          "regs re-poll doc DEAD-LETTERED — recorded for retry sweep",
         );
       } else {
-        console.error(
-          `pollRegsOnce: re-poll of ${win.regs_document_id} failed (attempt ${attempts}/${o.maxFailAttempts}) — skipping: ${msg}`,
+        log.warn(
+          {
+            err,
+            documentId: win.regs_document_id,
+            attempts,
+            maxFailAttempts: o.maxFailAttempts,
+          },
+          "regs re-poll failed — skipping",
         );
       }
     }
@@ -406,17 +421,18 @@ export async function pollRegsOnce(
       // Recovery: clear the dead-letter and count it. clearDeadLetter returns true (the row existed).
       if (await clearDeadLetter(sql, SOURCE, dl.document_key))
         summary.recovered++;
-      console.error(
-        `pollRegsOnce: RECOVERED dead-lettered regs doc ${dl.document_key} on retry sweep — cleared.`,
+      log.info(
+        { documentId: dl.document_key },
+        "regs dead-lettered doc RECOVERED on retry sweep — cleared",
       );
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       // Still failing: advance the drain throttle (last_retry_at) so it is not re-attempted until stale
       // again. Does NOT move dead_lettered_at (it was already dead-lettered).
       await markRetryAttempt(sql, SOURCE, dl.document_key, now, msg);
-      console.error(
-        `pollRegsOnce: dead-lettered regs doc ${dl.document_key} STILL failing on retry sweep — ` +
-          `re-throttled: ${msg}`,
+      log.warn(
+        { err, documentId: dl.document_key },
+        "regs dead-lettered doc STILL failing on retry sweep — re-throttled",
       );
     }
   }

@@ -53,7 +53,7 @@
  * rows (the last page) or maxPages is hit. FR enforces page * per_page <= 10,000 (page 11 at
  * per_page=1000 is an HTTP 400), so the defaults perPage=1000 / maxPages=10 make the cap REAL and
  * exactly FR's hard ceiling. Hitting maxPages with a still-full page means coverage is TRUNCATED —
- * surfaced (summary.truncated + a console.warn), never silently capped. Beyond 10k open docs FR requires
+ * surfaced (summary.truncated + a log.warn), never silently capped. Beyond 10k open docs FR requires
  * its search_after_cursor (a scale follow-up; the ~1,000-window design has ~10x headroom today).
  *
  * DEFENSIVE: a single document's fetch/parse/ingest/reconcile failure must NEVER abort the cycle — it is
@@ -84,6 +84,7 @@ import {
   type FrListItem,
 } from "../sources/federal-register.js";
 import { ingestObservation } from "../ingest/observe.js";
+import { componentLogger } from "../log.js";
 import { reconcileOcdId } from "../reconcile/persist.js";
 import { touchPolledAt } from "./cursor.js";
 import {
@@ -95,6 +96,8 @@ import {
 } from "./dead-letter.js";
 
 const SOURCE = "federal_register";
+
+const log = componentLogger("poller");
 
 export interface FrPollDeps {
   /** Fetch ONE list page of currently-open FR comment docs. Defaults to listOpenCommentDocuments. */
@@ -246,10 +249,9 @@ export async function pollFrOnce(
         if (page === o.maxPages && items.length === o.perPage) {
           // Stopped at the cap with a still-full page: coverage is INCOMPLETE — surface, don't swallow.
           summary.truncated = true;
-          console.warn(
-            `pollFrOnce: hit maxPages=${o.maxPages} (per_page=${o.perPage}) with a full last page on ` +
-              `${label} — coverage TRUNCATED. FR caps page * per_page at 10,000; beyond that switch to ` +
-              `search_after_cursor (#scale).`,
+          log.warn(
+            { maxPages: o.maxPages, perPage: o.perPage, query: label },
+            "fr poll hit maxPages with a full last page — coverage TRUNCATED (FR caps page * per_page at 10,000; beyond that switch to search_after_cursor)",
           );
         }
       }
@@ -374,14 +376,19 @@ export async function pollFrOnce(
         // hot path, so this is defensive consistency with the Regs path.
         if (newlyDeadLettered) {
           summary.deadLettered++;
-          console.error(
-            `pollFrOnce: DEAD-LETTER FR doc ${item.documentNumber} after ${attempts} consecutive ` +
-              `attempts — will NO LONGER be re-fetched on the hot path; recorded for retry sweep: ${msg}`,
+          log.error(
+            { err, documentNumber: item.documentNumber, attempts },
+            "fr doc DEAD-LETTERED — will NO LONGER be re-fetched on the hot path; recorded for retry sweep",
           );
         } else {
-          console.error(
-            `pollFrOnce: FR doc ${item.documentNumber} failed (attempt ${attempts}/${o.maxFailAttempts}) ` +
-              `— skipping (retried via re-list next cycle): ${msg}`,
+          log.warn(
+            {
+              err,
+              documentNumber: item.documentNumber,
+              attempts,
+              maxFailAttempts: o.maxFailAttempts,
+            },
+            "fr doc failed — skipping (retried via re-list next cycle)",
           );
         }
       }
@@ -413,15 +420,16 @@ export async function pollFrOnce(
         await reconcileOcdId(sql, ocdId, now);
         if (await clearDeadLetter(sql, SOURCE, dl.document_key))
           summary.recovered++;
-        console.error(
-          `pollFrOnce: RECOVERED dead-lettered FR doc ${dl.document_key} on retry sweep — cleared.`,
+        log.info(
+          { documentNumber: dl.document_key },
+          "fr dead-lettered doc RECOVERED on retry sweep — cleared",
         );
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         await markRetryAttempt(sql, SOURCE, dl.document_key, now, msg);
-        console.error(
-          `pollFrOnce: dead-lettered FR doc ${dl.document_key} STILL failing on retry sweep — ` +
-            `re-throttled: ${msg}`,
+        log.warn(
+          { err, documentNumber: dl.document_key },
+          "fr dead-lettered doc STILL failing on retry sweep — re-throttled",
         );
       }
     }
