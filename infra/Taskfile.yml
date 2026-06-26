@@ -114,8 +114,12 @@ tasks:
     cmds:
       # Glob EVERY platform-*.yaml so newly-added platform apps are picked up automatically — a hardcoded
       # list once silently omitted the observability stack (Loki/Alloy/Grafana). The glob deliberately
-      # excludes app-docketclock.yaml, which is Tilt-managed locally (not Argo).
-      - for f in argocd/apps/platform-*.yaml; do kubectl apply -f "$f"; done
+      # excludes app-docketclock.yaml, which is Tilt-managed locally (not Argo). Apply ORDER doesn't matter:
+      # these are Argo Application CRs, so kubectl just registers them — Argo orders the actual resource
+      # sync by sync-wave (ESO/Vault at "0", observability at "1"), not by apply order. `set -e` makes the
+      # loop fail-fast: without it the loop exits with the LAST iteration's status, masking an earlier
+      # failed apply.
+      - set -e; for f in argocd/apps/platform-*.yaml; do kubectl apply -f "$f"; done
 
   vault-transit-init:
     desc: Init + unseal the persistent seal-provider Vault and create the autounseal key (idempotent)
