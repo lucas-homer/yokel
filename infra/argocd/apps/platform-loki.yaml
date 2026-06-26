@@ -1,0 +1,93 @@
+# Grafana Loki — log store for the observability stack (Slice A / PR-A2). SingleBinary mode on
+# filesystem storage with 72h retention: the lean shape that fits the 12 GiB colima budget. The
+# chart's gateway/memcached caches/canary/self-monitoring/test footguns are all disabled below —
+# leaving them on blows the RAM budget. Reachable in-cluster at
+# http://loki.observability.svc.cluster.local:3100.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # after operators (ESO/CNPG at "0")
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: loki
+    targetRevision: "6.55.0"
+    helm:
+      values: |
+        deploymentMode: SingleBinary
+        loki:
+          auth_enabled: false
+          commonConfig:
+            replication_factor: 1
+          storage:
+            type: filesystem
+          # Recent charts REQUIRE a real schemaConfig — tsdb / v13 boilerplate.
+          schemaConfig:
+            configs:
+              - from: "2024-04-01"
+                store: tsdb
+                object_store: filesystem
+                schema: v13
+                index:
+                  prefix: index_
+                  period: 24h
+          limits_config:
+            retention_period: 72h
+          # Enable compactor-driven retention so 72h actually deletes (filesystem delete store).
+          compactor:
+            retention_enabled: true
+            delete_request_store: filesystem
+          # Keep the single binary frugal.
+          podAnnotations: {}
+        # SingleBinary target carries everything; the scalable targets stay at 0 replicas.
+        singleBinary:
+          replicas: 1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 512Mi
+          persistence:
+            enabled: true
+            size: 5Gi
+        read:
+          replicas: 0
+        write:
+          replicas: 0
+        backend:
+          replicas: 0
+        # --- Footgun disablers: everything below would otherwise spin extra pods / caches. ---
+        gateway:
+          enabled: false
+        chunksCache:
+          enabled: false
+        resultsCache:
+          enabled: false
+        lokiCanary:
+          enabled: false
+        test:
+          enabled: false
+        monitoring:
+          selfMonitoring:
+            enabled: false
+          serviceMonitor:
+            enabled: false
+          dashboards:
+            enabled: false
+          rules:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

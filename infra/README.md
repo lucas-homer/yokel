@@ -55,6 +55,66 @@ stanza becomes `seal "gcpckms"`/`"awskms"` (no static token — workload identit
 auth switches from the dev root token to the kubernetes auth method (see `platform-vault.yaml` comments
 and `charts/docketclock/values-cloud.yaml`). There is **no** `vault-transit` in cloud.
 
+## Observability
+
+Logs-first stack (Slice A / PR-A2), three platform Argo Applications in the `observability`
+namespace, all pinned lean for the 12 GiB colima budget:
+
+- **Loki** (`platform-loki.yaml`, chart `grafana/loki`) — SingleBinary mode, filesystem storage, 72h
+  retention. The store; reachable in-cluster at `http://loki.observability.svc.cluster.local:3100`.
+  The chart's gateway / memcached caches / canary / self-monitoring / test pods are all disabled.
+- **Alloy** (`platform-alloy.yaml`, chart `grafana/alloy`) — single-replica Deployment log shipper.
+  Discovers pods via the Kubernetes API, relabels to `namespace` / `pod` / `container` / `app`, drops its
+  own noise, and pushes to Loki. (Promtail is EOL; Alloy is the supported agent.) It's a Deployment, not
+  a DaemonSet, because the API-based source reads cluster-wide — a DaemonSet would tail every pod once
+  per node and duplicate every line.
+- **Grafana** (`platform-grafana.yaml`, chart `grafana-community/grafana`) — Loki pre-provisioned as the
+  default datasource. Ephemeral (no PVC); ClusterIP service, reached via port-forward. (Uses the
+  `grafana-community` chart — the old `grafana/grafana` chart is deprecated upstream.)
+
+### Vault seed
+
+Grafana's admin credentials come from Vault via ESO (never inline) — the `grafana-admin`
+`ExternalSecret` ships inside `platform-grafana.yaml` and reads `secret/observability/grafana` through
+the existing `vault-backend` ClusterSecretStore. **`task vault-seed` seeds this automatically** (defaults
+`admin`/`admin`; override with `GRAFANA_ADMIN_USER` / `GRAFANA_ADMIN_PASSWORD` in your shell env before
+running it). ESO then materializes the `grafana-admin` Secret (keys `admin_user` / `admin_password`).
+
+To change the password later without a full reseed:
+
+```bash
+# VAULT_ADDR + VAULT_TOKEN are required inside the pod — Vault listens on http (not the CLI's https
+# default) and the put needs the root token (stashed by vault-seed in the vault/vault-root-token Secret).
+ROOT_TOKEN=$(kubectl -n vault get secret vault-root-token -o jsonpath='{.data.token}' | base64 -d)
+kubectl -n vault exec -it vault-0 -- sh -c "
+  export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+  vault kv put secret/observability/grafana admin_user=admin admin_password='<choose-a-strong-password>'
+"
+```
+
+If the path is missing entirely the Grafana sync stays unhealthy until it's seeded (ESO is
+all-or-nothing, same as `secret/docketclock/external`).
+
+### Use it
+
+```bash
+task grafana   # port-forward svc/grafana :80 → localhost:3000 (log in with the seeded admin creds)
+```
+
+Then **Explore → Loki**. Start with a generic stream selector to confirm logs are flowing (works
+before docketclock is even running) — the labels Alloy sets are `namespace` / `pod` / `container` / `app`:
+
+```logql
+{namespace="observability"}          # platform logs — Loki/Alloy/Grafana themselves
+{namespace="docketclock"}            # the app, once it's deployed
+```
+
+A more specific query for the structured adjudicator cycle events:
+
+```logql
+{namespace="docketclock"} |= "chain adjudicate cycle"
+```
+
 ## Troubleshooting
 
 - **Image pulls fail inside k3d nodes (`EAI_AGAIN` / `lookup registry-1.docker.io: Try again`).** On a
