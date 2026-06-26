@@ -67,6 +67,20 @@ kubectl -n vault exec vault-0 -- sh -c "
     webhook_hmac_secret='${WEBHOOK_HMAC_SECRET:-dev-hmac-secret}'
 "
 
+echo "🌱 seeding secret/observability/grafana (admin_user, admin_password) for the Grafana ESO secret..."
+# Grafana's grafana-admin ExternalSecret (infra/argocd/apps/platform-grafana.yaml) reads these two keys;
+# without them the Grafana pod stalls in CreateContainerConfigError and its Argo app reports Degraded.
+# Seeded here (symmetry with the docketclock block) so the observability stack comes up healthy with no
+# manual step. Local-dev default is admin/admin (Grafana forces a password change on first login);
+# override via GRAFANA_ADMIN_USER / GRAFANA_ADMIN_PASSWORD. Same host-side ${VAR:-default} expansion +
+# single-quote wrapping as the docketclock block above.
+kubectl -n vault exec vault-0 -- sh -c "
+  export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+  vault kv put secret/observability/grafana \
+    admin_user='${GRAFANA_ADMIN_USER:-admin}' \
+    admin_password='${GRAFANA_ADMIN_PASSWORD:-admin}'
+"
+
 echo "🔑 wiring ESO → Vault token auth (external-secrets/vault-token)..."
 kubectl create namespace external-secrets --dry-run=client -o yaml | kubectl apply -f -
 kubectl -n external-secrets create secret generic vault-token \

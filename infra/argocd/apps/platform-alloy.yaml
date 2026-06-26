@@ -1,0 +1,98 @@
+# Grafana Alloy — the log shipper (Slice A / PR-A2). Runs as a SINGLE Deployment replica that discovers
+# every pod via the Kubernetes API, tails container logs, relabels to the labels we query on (namespace /
+# pod / container / app), and pushes to Loki's push API. Promtail is EOL; Alloy is the supported agent
+# (see plans/observability-logs.md). Uses the API-based loki.source.kubernetes pipeline, so no hostPath
+# /var/log mounts are needed.
+#
+# WHY A DEPLOYMENT, NOT A DAEMONSET: the API-based source reads logs cluster-wide through the apiserver,
+# not from node-local files — so a DaemonSet would have EVERY node's Alloy independently tail EVERY pod,
+# duplicating each line N× (N = node count; this cluster has 2). One replica collects everything exactly
+# once. (File-tailing /var/log/pods would be the DaemonSet case; we deliberately don't do that.)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: alloy
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # after operators (ESO/CNPG at "0")
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: alloy
+    targetRevision: "1.10.0"
+    helm:
+      values: |
+        controller:
+          type: deployment
+          replicas: 1
+        alloy:
+          # API-based tailing — no node hostPath mounts required.
+          mounts:
+            varlog: false
+            dockercontainers: false
+          clustering:
+            enabled: false
+          resources:
+            requests:
+              cpu: 50m
+              memory: 96Mi
+            limits:
+              memory: 192Mi
+          configMap:
+            create: true
+            content: |-
+              // Discover all pods in the cluster.
+              discovery.kubernetes "pods" {
+                role = "pod"
+              }
+
+              // Relabel to the small, queryable label set; drop Alloy's own noisy logs.
+              discovery.relabel "pods" {
+                targets = discovery.kubernetes.pods.targets
+
+                rule {
+                  source_labels = ["__meta_kubernetes_namespace"]
+                  target_label  = "namespace"
+                }
+                rule {
+                  source_labels = ["__meta_kubernetes_pod_name"]
+                  target_label  = "pod"
+                }
+                rule {
+                  source_labels = ["__meta_kubernetes_pod_container_name"]
+                  target_label  = "container"
+                }
+                rule {
+                  source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+                  target_label  = "app"
+                }
+                // Keep app + platform namespaces; drop only Alloy's own log spam.
+                rule {
+                  source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+                  regex         = "alloy"
+                  action        = "drop"
+                }
+              }
+
+              // Tail container logs via the Kubernetes API and forward to Loki.
+              loki.source.kubernetes "pods" {
+                targets    = discovery.relabel.pods.output
+                forward_to = [loki.write.default.receiver]
+              }
+
+              loki.write "default" {
+                endpoint {
+                  url = "http://loki.observability.svc.cluster.local:3100/loki/api/v1/push"
+                }
+              }
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
