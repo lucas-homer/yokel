@@ -67,7 +67,8 @@ spec:
                   source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
                   target_label  = "app"
                 }
-                // Keep app + platform namespaces; drop only Alloy's own log spam.
+                // No namespace filtering — every namespace is ingested. The one drop below removes only
+                // Alloy's own log spam (matched by its app.kubernetes.io/name label).
                 rule {
                   source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
                   regex         = "alloy"

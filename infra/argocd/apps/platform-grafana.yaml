@@ -58,7 +58,9 @@ spec:
                 isDefault: true
                 jsonData:
                   maxLines: 1000
-        # Ship the ESO ExternalSecret with this same Argo app so the admin Secret exists pre-sync.
+        # Ship the ESO ExternalSecret with this same Argo app. Note: only the ExternalSecret is applied
+        # during sync — ESO then materializes the grafana-admin Secret ASYNCHRONOUSLY once it reads Vault,
+        # so Grafana may briefly wait on the Secret on a first/cold sync.
         extraObjects:
           - apiVersion: external-secrets.io/v1
             kind: ExternalSecret

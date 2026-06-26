@@ -174,5 +174,6 @@ tasks:
     desc: Port-forward Grafana to http://localhost:3000 (admin creds from the grafana-admin Secret / Vault)
     cmds:
       # Grafana service listens on :80 → container :3000. Admin user/pass come from Vault via ESO
-      # (secret/observability/grafana); seed it before first sync — see infra/README.md Observability.
+      # (secret/observability/grafana); `task vault-seed` seeds it (default admin/admin) — see the
+      # Observability section in infra/README.md to override or update the password.
       - kubectl -n observability port-forward svc/grafana 3000:80

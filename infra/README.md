@@ -83,8 +83,13 @@ running it). ESO then materializes the `grafana-admin` Secret (keys `admin_user`
 To change the password later without a full reseed:
 
 ```bash
-kubectl -n vault exec -it vault-0 -- vault kv put secret/observability/grafana \
-  admin_user=admin admin_password='<choose-a-strong-password>'
+# VAULT_ADDR + VAULT_TOKEN are required inside the pod — Vault listens on http (not the CLI's https
+# default) and the put needs the root token (stashed by vault-seed in the vault/vault-root-token Secret).
+ROOT_TOKEN=$(kubectl -n vault get secret vault-root-token -o jsonpath='{.data.token}' | base64 -d)
+kubectl -n vault exec -it vault-0 -- sh -c "
+  export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+  vault kv put secret/observability/grafana admin_user=admin admin_password='<choose-a-strong-password>'
+"
 ```
 
 If the path is missing entirely the Grafana sync stays unhealthy until it's seeded (ESO is
@@ -96,7 +101,15 @@ all-or-nothing, same as `secret/docketclock/external`).
 task grafana   # port-forward svc/grafana :80 → localhost:3000 (log in with the seeded admin creds)
 ```
 
-Then **Explore → Loki**. Example query for the structured adjudicator cycle events:
+Then **Explore → Loki**. Start with a generic stream selector to confirm logs are flowing (works
+before docketclock is even running) — the labels Alloy sets are `namespace` / `pod` / `container` / `app`:
+
+```logql
+{namespace="observability"}          # platform logs — Loki/Alloy/Grafana themselves
+{namespace="docketclock"}            # the app, once it's deployed
+```
+
+A more specific query for the structured adjudicator cycle events:
 
 ```logql
 {namespace="docketclock"} |= "chain adjudicate cycle"
