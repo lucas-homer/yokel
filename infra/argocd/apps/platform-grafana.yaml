@@ -9,10 +9,11 @@ kind: Application
 metadata:
   name: grafana
   namespace: argocd
+  annotations:
     # after operators (ESO/CNPG at "0") and after the vault-backend ClusterSecretStore (now its own
-    # platform-tier app, secretstore.yaml, wave "0" — #51), which this app's grafana-admin ExternalSecret
-    # references. The store therefore exists before this app's ExternalSecret is created.
-    argocd.argoproj.io/sync-wave: "1"
+    # platform-tier app, platform-secretstore.yaml, wave "1" — #51), which this app's grafana-admin
+    # ExternalSecret references. The store therefore exists before this app's ExternalSecret is created.
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   project: default
   source:
