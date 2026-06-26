@@ -13,7 +13,10 @@
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { createClient } from "../db/client.js";
+import { componentLogger } from "../log.js";
 import { buildServer } from "./server.js";
+
+const log = componentLogger("api");
 
 const envPath = fileURLToPath(new URL("../../../../.env", import.meta.url));
 if (existsSync(envPath)) process.loadEnvFile(envPath);
@@ -39,6 +42,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((err) => {
-  console.error("API server failed to start:", err);
+  log.error({ err }, "API server failed to start");
   process.exit(1);
 });

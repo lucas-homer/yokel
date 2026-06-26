@@ -51,12 +51,15 @@ import {
 import { NULL_ADJUDICATOR_ID } from "../adjudicator/null-adjudicator.js";
 import type { Adjudicator } from "../adjudicator/port.js";
 import type { Sql } from "../db/client.js";
+import { componentLogger } from "../log.js";
 import {
   buildChainConflict,
   classify,
   type AmbiguousPair,
   type ChainConflict,
 } from "./chain.js";
+
+const log = componentLogger("adjudicator");
 
 /**
  * CHAIN_DEFAULT_MAX_ESCALATIONS — the per-cycle cap default (overridable via
@@ -102,7 +105,7 @@ export interface ChainAdjudicateResult {
  *                  throws (per-pair try/catch isolates a throw → log + skip + no link, but budget is spent).
  * Returns the pairs it AFFIRMED, promoted to cross_window ChainConflicts (each carrying classify(b) flags
  * PLUS `llm_corroborated`). Pure-ish: the ONLY side effects are the cache reads/writes inside
- * peekAdjudication / consultAdjudicator and console logging. Never throws on a per-pair failure.
+ * peekAdjudication / consultAdjudicator and structured logging. Never throws on a per-pair failure.
  *
  * MULTI_TARGET CHOICE (documented): a promoted link is built with multiTarget=FALSE — it carries its type
  * flag(s) + `llm_corroborated` and does NOT retro-add `multi_target_notice` to itself OR to any confident
@@ -126,8 +129,9 @@ export async function adjudicateAmbiguousPairs(
   // configured: a true no-op. Ambiguous pairs are still counted/surfaced; nothing is escalated or linked.
   if (adjudicator.id === NULL_ADJUDICATOR_ID) {
     if (ambiguous > 0) {
-      console.info(
-        `[chain-adjudicate] surfaced=${ambiguous} but no real adjudicator configured (null:abstain) — skipping escalation`,
+      log.info(
+        { surfaced: ambiguous },
+        "chain adjudicate skipped — no real adjudicator configured (null:abstain)",
       );
     }
     return {
@@ -195,10 +199,9 @@ export async function adjudicateAmbiguousPairs(
         // PER-PAIR ERROR ISOLATION: a thrown adjudication (down/timeout/malformed) is logged and SKIPPED
         // (no link). One bad call must not abort the cycle or the other pairs — worst case is today's
         // output. The budget unit was already spent above (deliberate — see the flapping-provider note).
-        console.warn(
-          `[chain-adjudicate] consult failed for ${a.ocd_id} → ${b.ocd_id}; skipping (no link): ${
-            err instanceof Error ? err.message : String(err)
-          }`,
+        log.warn(
+          { err, from: a.ocd_id, to: b.ocd_id },
+          "chain adjudicate consult failed; skipping (no link)",
         );
         continue;
       }
@@ -214,8 +217,16 @@ export async function adjudicateAmbiguousPairs(
   // Only log when something actually happened — poll/run.ts already logs the per-cycle chain summary, so
   // an unconditional line here would just add steady-state noise on every (mostly-empty) reconcile.
   if (ambiguous > 0) {
-    console.info(
-      `[chain-adjudicate] surfaced=${ambiguous} cacheHits=${cacheHits} llmCalls=${llmCalls} deferred=${deferred} llmLinked=${links.length} (cap=${cap})`,
+    log.info(
+      {
+        surfaced: ambiguous,
+        cacheHits,
+        llmCalls,
+        deferred,
+        llmLinked: links.length,
+        cap,
+      },
+      "chain adjudicate cycle",
     );
   }
 
