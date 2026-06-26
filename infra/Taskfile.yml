@@ -110,9 +110,12 @@ tasks:
         --wait --timeout 6m
 
   platform:
-    desc: Apply the platform Argo Applications (CNPG, ESO, Vault + transit) — Argo syncs them from charts
+    desc: Apply the platform Argo Applications (CNPG, ESO, Vault + transit, observability) — Argo syncs them from charts
     cmds:
-      - kubectl apply -f argocd/apps/platform-cnpg.yaml -f argocd/apps/platform-eso.yaml -f argocd/apps/platform-vault-transit.yaml -f argocd/apps/platform-vault.yaml
+      # Glob EVERY platform-*.yaml so newly-added platform apps are picked up automatically — a hardcoded
+      # list once silently omitted the observability stack (Loki/Alloy/Grafana). The glob deliberately
+      # excludes app-docketclock.yaml, which is Tilt-managed locally (not Argo).
+      - for f in argocd/apps/platform-*.yaml; do kubectl apply -f "$f"; done
 
   vault-transit-init:
     desc: Init + unseal the persistent seal-provider Vault and create the autounseal key (idempotent)

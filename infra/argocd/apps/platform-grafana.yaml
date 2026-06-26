@@ -87,6 +87,20 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: observability
+  # The ExternalSecret CRD/ESO server-default several fields our grafana-admin manifest doesn't set
+  # (remoteRef conversionStrategy / decodingStrategy / metadataPolicy / nullBytePolicy, and
+  # target.deletionPolicy). Argo otherwise reports these server-owned defaults as permanent drift, leaving
+  # this app forever OutOfSync and masking REAL drift. Ignore exactly those fields.
+  ignoreDifferences:
+    - group: external-secrets.io
+      kind: ExternalSecret
+      name: grafana-admin
+      jqPathExpressions:
+        - .spec.target.deletionPolicy
+        - .spec.data[].remoteRef.conversionStrategy
+        - .spec.data[].remoteRef.decodingStrategy
+        - .spec.data[].remoteRef.metadataPolicy
+        - .spec.data[].remoteRef.nullBytePolicy
   syncPolicy:
     automated:
       prune: true
