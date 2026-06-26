@@ -95,7 +95,29 @@ tasks:
         else
           echo "  ↳ transit Vault not initialized yet (no vault-transit-keys Secret) — skipping unseal."
         fi
-      - echo "✅ cluster resumed; kubelet certs repaired; transit Vault re-unsealed. Pods re-race the DB briefly, then settle ('task status')."
+      # During the outage every ExternalSecret flipped its Ready condition to SecretSyncedError (ESO couldn't
+      # reach the sealed/down Vault). The materialized Secrets persist (creationPolicy Owner), so pods keep
+      # running — but that stale error lingers until the next refreshInterval (1h), surfacing as a Degraded
+      # Argo app (e.g. grafana) despite a healthy pod. Once vault-0 is back Ready (its readiness probe only
+      # passes when UNSEALED), force an immediate ESO re-reconcile so secrets + their apps go green now, not
+      # in ~1h. Gated on the vault StatefulSet existing, so a never-seeded cluster skips cleanly. (#53)
+      - |
+        if kubectl -n vault get statefulset vault >/dev/null 2>&1; then
+          echo "  ↳ waiting for vault-0 to be Ready (unsealed) before re-syncing ExternalSecrets…"
+          ready=0
+          for i in $(seq 1 40); do
+            [ "$(kubectl -n vault get pod vault-0 -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}' 2>/dev/null)" = "True" ] && { ready=1; break; }
+            sleep 3
+          done
+          [ "$ready" = "1" ] || echo "  ↳ WARN: vault-0 not Ready after 120s — force-syncing anyway (ESO will keep retrying)."
+          # Bounce every ExternalSecret's force-sync annotation to trigger an immediate reconcile (the same
+          # annotation we used by hand for grafana — confirmed to work on the installed ESO version). With no
+          # ExternalSecrets present `--all` is a clean no-op.
+          if kubectl annotate externalsecret -A --all "force-sync=$(date +%s)" --overwrite 2>/dev/null; then
+            echo "  ↳ ExternalSecrets re-synced (skips the ~1h refreshInterval wait)."
+          fi
+        fi
+      - echo "✅ cluster resumed; kubelet certs repaired; transit Vault re-unsealed; ExternalSecrets re-synced. Pods re-race the DB briefly, then settle ('task status')."
 
   install-boot-recovery:
     desc: Install a LaunchAgent that auto-runs `cluster-restart` after colima starts on every login/boot
