@@ -132,7 +132,24 @@ user — no manual UI bootstrap.
 task langfuse   # port-forward svc/langfuse :3000 → localhost:3001 (login admin@docketclock.local)
 ```
 
-The poller is wired to send traces in PR-C2; until then the project is empty but the UI is live.
+The poller sends adjudicator traces (PR-C2): with `ADJUDICATOR=gemini`, a `GEMINI_API_KEY`, and the three
+`LANGFUSE_*` vars set, each chain-adjudicate cycle opens a trace with a `generation` per real LLM call
+(model, input/output, token usage, latency). `pnpm --filter @yokel/docketclock smoke:langfuse` lands one
+trace on demand (synthetic ambiguous pair) to prove the wiring.
+
+**Eval-dataset seed (PR-C3).** Seed a Langfuse dataset of representative adjudication inputs from the
+`adjudications` cache, each historical verdict attached as a _provisional_ expected-output for human
+labeling in Slice D:
+
+```bash
+# DATABASE_URL → the docketclock Postgres (port-forward svc/docketclock-pg-rw locally); LANGFUSE_* from .env
+pnpm --filter @yokel/docketclock seed:langfuse-dataset --dry-run   # print the stratification plan
+pnpm --filter @yokel/docketclock seed:langfuse-dataset            # upsert into "docketclock-adjudications"
+```
+
+Stratifies by `kind × classification`, caps `SEED_CAP` (default 25) per stratum, dedupes by `content_hash`
+(= the item id, so re-runs upsert — no duplicates), and selects oldest-first so the seeded corpus is stable
+and reproducible across cache growth. Read-only on Postgres; writes only to Langfuse.
 
 ## Troubleshooting
 
