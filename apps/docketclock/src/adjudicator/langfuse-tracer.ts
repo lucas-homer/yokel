@@ -99,7 +99,13 @@ export class LangfuseTracer implements LlmTracer {
   }
 
   /** The trace generations/spans attach to: the open cycle trace, or a fresh standalone trace (e.g. a
-   * notice-kind adjudication run outside a chain cycle, or a direct adjudicate() call). */
+   * notice-kind adjudication run outside a chain cycle, or a direct adjudicate() call).
+   *
+   * NOTE on the standalone path: a caller that invokes adjudicate() OUTSIDE adjudicateAmbiguousPairs (which
+   * is the only caller today, and always opens a cycle via startCycle first) gets a standalone trace per
+   * call that is NEVER explicitly flush()ed — it drains only via the SDK's background batching and the
+   * shutdown() on process exit. That's fine for the poller, but a future direct caller wanting prompt
+   * delivery should bracket its calls with startCycle()/flush() (or call flush() itself). */
   private parent(kind: "notice" | "chain"): LangfuseTraceLike | null {
     if (this.currentTrace) return this.currentTrace;
     try {

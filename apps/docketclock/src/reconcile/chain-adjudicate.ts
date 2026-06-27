@@ -51,7 +51,7 @@ import {
 import { adjudicationContentHash } from "../adjudicator/content-hash.js";
 import { NULL_ADJUDICATOR_ID } from "../adjudicator/null-adjudicator.js";
 import type { Adjudicator } from "../adjudicator/port.js";
-import { NOOP_TRACER } from "../adjudicator/tracer.js";
+import { NOOP_TRACER, safeTracer } from "../adjudicator/tracer.js";
 import type { Sql } from "../db/client.js";
 import { componentLogger } from "../log.js";
 import {
@@ -153,7 +153,11 @@ export async function adjudicateAmbiguousPairs(
   // Observability (PR-C2): open ONE trace per cycle. The tracer rides on the adjudicator (injected in
   // select.ts) and is the SAME instance the adapter records generations on, so a real call's generation
   // lands under this cycle's trace. With no LANGFUSE_* env this is the NoopTracer — a true no-op.
-  const tracer = adjudicator.tracer ?? NOOP_TRACER;
+  // safeTracer at the POINT OF USE (not just in select.ts): chainReconcileOnce accepts an injected
+  // adjudicator (options.adjudicator — tests/future callers), whose .tracer we did NOT construct, so the
+  // wrap here makes the "tracing is a side channel, never throws into the deterministic cycle" invariant
+  // structural for EVERY injection path — a misbehaving tracer can't abort this cycle's confident links.
+  const tracer = safeTracer(adjudicator.tracer ?? NOOP_TRACER);
   tracer.startCycle({ kind: "chain", surfaced: ambiguous, cap });
 
   const links: ChainConflict[] = [];
