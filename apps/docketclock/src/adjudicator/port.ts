@@ -6,6 +6,7 @@
  * is out-of-band, async, with its own DB cache; a later slice invokes it from the poller/reconcile layer.
  */
 import type { AdjudicationInput, AdjudicationVerdict } from "@yokel/contracts";
+import type { LlmTracer } from "./tracer.js";
 
 export interface Adjudicator {
   /**
@@ -18,4 +19,12 @@ export interface Adjudicator {
   readonly id: string;
   /** Answer the ambiguous question. May throw/time out — the caller degrades to the deterministic path. */
   adjudicate(input: AdjudicationInput): Promise<AdjudicationVerdict>;
+  /**
+   * OPTIONAL observability side channel (PR-C2). When an adjudicator makes real LLM calls it records each as
+   * a `generation` here; the chain orchestrator reads it off the adjudicator to open a per-cycle trace,
+   * record cache hits, and flush(). This does NOT change the verdict contract — it is injected at
+   * construction (select.ts) and defaults to a NoopTracer. Adapters that never call an LLM (NullAdjudicator)
+   * leave it undefined; the orchestrator falls back to a no-op tracer.
+   */
+  readonly tracer?: LlmTracer;
 }

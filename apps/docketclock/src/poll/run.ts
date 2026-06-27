@@ -53,6 +53,7 @@ const { createClient } = await import("../db/client.js");
 const { componentLogger } = await import("../log.js");
 const { regsApiKey } = await import("../sources/regulations-gov.js");
 const { chainReconcileOnce } = await import("../reconcile/persist.js");
+const { selectAdjudicator } = await import("../adjudicator/select.js");
 const { pollFrOnce } = await import("./fr-poll.js");
 const { pollRegsOnce } = await import("./poll.js");
 
@@ -80,6 +81,10 @@ function writeHeartbeat(): void {
 async function main(): Promise<void> {
   regsApiKey(); // fail loudly on a missing key before we enter the loop
   const sql = createClient();
+  // Construct the adjudicator ONCE (not per cycle) so its observability tracer — and, when Langfuse is
+  // configured, the long-lived Langfuse client — is reused across cycles and drained on shutdown (below).
+  // No LANGFUSE_* env → the tracer is a NoopTracer (true no-op); ADJUDICATOR≠gemini → NullAdjudicator.
+  const adjudicator = selectAdjudicator();
 
   let timer: NodeJS.Timeout | null = null;
   let running = false; // re-entrancy guard (belt-and-braces alongside the self-reschedule)
@@ -110,7 +115,9 @@ async function main(): Promise<void> {
       // 3rd pass — cross_window (chain) reconcile sweep. Runs LAST (derive-over-derived; see header) and
       // is INDEPENDENTLY try/caught so a chain failure cannot affect the FR/Regs passes (and vice-versa).
       try {
-        const chain = await chainReconcileOnce(sql);
+        const chain = await chainReconcileOnce(sql, new Date(), {
+          adjudicator,
+        });
         log.info({ summary: chain }, "chain reconcile cycle");
       } catch (err) {
         log.error({ err }, "chain reconcile failed");
@@ -138,6 +145,9 @@ async function main(): Promise<void> {
     if (timer) clearTimeout(timer);
     // Wait out an in-flight cycle (bounded poll — no unbounded work), then release the pool.
     while (running) await new Promise((r) => setTimeout(r, 100));
+    // Flush + release the observability tracer (best-effort; no-op for the NoopTracer) so the last cycle's
+    // Langfuse events are not lost on a container restart. shutdown() swallows its own errors.
+    await adjudicator.tracer?.shutdown();
     await sql.end({ timeout: 5 });
     process.exit(0);
   }

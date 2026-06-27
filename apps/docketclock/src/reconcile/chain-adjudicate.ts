@@ -48,8 +48,10 @@ import {
   consultAdjudicator,
   peekAdjudication,
 } from "../adjudicator/consult.js";
+import { adjudicationContentHash } from "../adjudicator/content-hash.js";
 import { NULL_ADJUDICATOR_ID } from "../adjudicator/null-adjudicator.js";
 import type { Adjudicator } from "../adjudicator/port.js";
+import { NOOP_TRACER } from "../adjudicator/tracer.js";
 import type { Sql } from "../db/client.js";
 import { componentLogger } from "../log.js";
 import {
@@ -148,6 +150,12 @@ export async function adjudicateAmbiguousPairs(
   // depth: even if a caller bypasses chainMaxEscalations and passes a negative, we never escalate-everything).
   let callBudget = Math.max(0, cap);
 
+  // Observability (PR-C2): open ONE trace per cycle. The tracer rides on the adjudicator (injected in
+  // select.ts) and is the SAME instance the adapter records generations on, so a real call's generation
+  // lands under this cycle's trace. With no LANGFUSE_* env this is the NoopTracer — a true no-op.
+  const tracer = adjudicator.tracer ?? NOOP_TRACER;
+  tracer.startCycle({ kind: "chain", surfaced: ambiguous, cap });
+
   const links: ChainConflict[] = [];
   let cacheHits = 0;
   let llmCalls = 0;
@@ -171,6 +179,10 @@ export async function adjudicateAmbiguousPairs(
       explicit_reference: false,
     };
 
+    // Tag the active pair so a fresh call's generation (which the adapter records without knowing the
+    // OCD-ids) cross-references this pair in the trace. Cheap; the NoopTracer ignores it.
+    tracer.setActivePair({ fromOcdId: a.ocd_id, toOcdId: b.ocd_id });
+
     // PEEK the cache first — a SELECT, never an LLM call. peek and consult key IDENTICALLY: same content
     // hash AND same adjudicator_id (peek now takes the adjudicator so it computes the SAME key consult does).
     const cached = await peekAdjudication(sql, adjudicator, input);
@@ -182,6 +194,16 @@ export async function adjudicateAmbiguousPairs(
       // pair adjudicated last cycle is replayed here without spending budget, freeing it for new pairs.)
       cacheHits++;
       verdict = cached;
+      // Record the hit as a cheap cached span (no LLM call was made) so the trace shows hit-vs-call.
+      tracer.recordCacheHit({
+        contentHash: adjudicationContentHash(input),
+        adjudicatorId: `${adjudicator.id}@${input.rulebook_version}`,
+        rulebookVersion: input.rulebook_version,
+        kind: "chain",
+        classification: cached.classification,
+        fromOcdId: a.ocd_id,
+        toOcdId: b.ocd_id,
+      });
     } else {
       // CACHE MISS — needs a real call. Only spend it if the budget remains; else DEFER (no verdict this
       // cycle; the pair surfaces again next cycle and gets adjudicated once the cap-many ahead of it cache).
@@ -213,6 +235,11 @@ export async function adjudicateAmbiguousPairs(
     const flags = [...classify(b, false), "llm_corroborated" as const];
     links.push(buildChainConflict(a, b, flags, now));
   }
+
+  // FLUSH the per-cycle trace (PR-C2): the poller is long-lived and the SDK batches in the background, so we
+  // push this cycle's events now rather than waiting for the buffer to fill. Best-effort + awaited next to
+  // the existing log — flush() swallows its own errors, so a tracing hiccup never breaks the cycle.
+  await tracer.flush();
 
   // Only log when something actually happened — poll/run.ts already logs the per-cycle chain summary, so
   // an unconditional line here would just add steady-state noise on every (mostly-empty) reconcile.
