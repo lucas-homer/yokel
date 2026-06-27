@@ -1,0 +1,42 @@
+# Langfuse v2 — LLM observability for the chain-seam adjudicator (Slice C / PR-C1). A directory-type Argo
+# app applying the raw manifests in infra/argocd/manifests/langfuse (CNPG Cluster + ESO secret + Deployment
+# + Service), same git-sourced raw-manifest pattern as the vault-backend store (#51). Reached via the
+# `task langfuse` port-forward; the poller ingests traces in-cluster (wired in PR-C2).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: langfuse
+  namespace: argocd
+  annotations:
+    # wave "2" (consumer tier, with grafana/docketclock): needs the CNPG operator (wave "0") for its
+    # Cluster and the vault-backend store (wave "1") for its ESO secret. Intra-app ordering (DB+secret
+    # before the Deployment) is handled by per-manifest sync-waves inside the manifests dir.
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/lucas-homer/yokel.git
+    targetRevision: main
+    path: infra/argocd/manifests/langfuse
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: langfuse
+  # ESO/the CRD server-default several fields our langfuse-secrets ExternalSecret doesn't set; without this
+  # Argo reports them as permanent drift and the app sits forever OutOfSync (same fix as platform-grafana).
+  ignoreDifferences:
+    - group: external-secrets.io
+      kind: ExternalSecret
+      name: langfuse-secrets
+      jqPathExpressions:
+        - .spec.target.deletionPolicy
+        - .spec.data[].remoteRef.conversionStrategy
+        - .spec.data[].remoteRef.decodingStrategy
+        - .spec.data[].remoteRef.metadataPolicy
+        - .spec.data[].remoteRef.nullBytePolicy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

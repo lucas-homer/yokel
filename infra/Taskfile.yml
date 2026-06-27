@@ -257,3 +257,12 @@ tasks:
       # (secret/observability/grafana); `task vault-seed` seeds it (default admin/admin) — see the
       # Observability section in infra/README.md to override or update the password.
       - kubectl -n observability port-forward svc/grafana 3000:80
+
+  langfuse:
+    desc: Port-forward Langfuse to http://localhost:3001 (LLM-obs UI; login admin@docketclock.local)
+    cmds:
+      # Langfuse listens on :3000; mapped to localhost:3001 to avoid colliding with `task grafana` (3000).
+      # NEXTAUTH_URL in the Deployment is set to http://localhost:3001 to match — keep them in sync. Login
+      # is admin@docketclock.local + the seeded init_user_password (default docketclock-dev; from Vault via
+      # ESO — `task vault-seed` seeds secret/langfuse/config). See the Observability section in the README.
+      - kubectl -n langfuse port-forward svc/langfuse 3001:3000

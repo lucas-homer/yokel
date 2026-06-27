@@ -1,0 +1,15 @@
+# Langfuse Service — Slice C / PR-C1. ClusterIP; reached two ways:
+#   - the poller (PR-C2) ingests traces in-cluster at http://langfuse.langfuse.svc:3000
+#   - a human opens the UI via `task langfuse` (port-forward localhost:3001 → :3000)
+apiVersion: v1
+kind: Service
+metadata:
+  name: langfuse
+spec:
+  type: ClusterIP
+  selector:
+    app: langfuse
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000

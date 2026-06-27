@@ -1,0 +1,97 @@
+# Langfuse v2 server — Slice C / PR-C1. Single container (web + API), the lean Postgres-only architecture
+# (v3's ClickHouse/Redis/S3 would blow the 12 GiB colima budget). Image pinned to the `2` major: v2 is
+# security-EOL upstream (updates ended Q1 2025), accepted deliberately for a LOCAL, non-internet-exposed
+# dev tool holding public Federal Register text + LLM traces. Revisit on any cloud/exposed deploy.
+#
+# DB migrations run automatically on container startup, so no init Job. Secrets come from Vault via ESO
+# (langfuse-secrets) and from CNPG (langfuse-db-app, the generated DB creds). HOSTNAME=0.0.0.0 is REQUIRED
+# for the pod to be reachable (the image defaults to localhost). LANGFUSE_INIT_* headlessly creates the
+# org/project/user and pins the API keypair on first boot, so there is no manual UI bootstrap step.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: langfuse
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # after the DB Cluster + ESO secret (wave "0")
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: langfuse
+  template:
+    metadata:
+      labels:
+        app: langfuse
+    spec:
+      containers:
+        - name: langfuse
+          image: langfuse/langfuse:2
+          ports:
+            - containerPort: 3000
+          env:
+            # --- Postgres (CNPG-generated `uri` = full postgres:// connection string) ---
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef: { name: langfuse-db-app, key: uri }
+            # --- server crypto (Vault → ESO) ---
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef: { name: langfuse-secrets, key: nextauth_secret }
+            - name: SALT
+              valueFrom:
+                secretKeyRef: { name: langfuse-secrets, key: salt }
+            - name: ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef: { name: langfuse-secrets, key: encryption_key }
+            # NEXTAUTH_URL must match how a human reaches the UI — the `task langfuse` port-forward maps
+            # localhost:3001 → svc:3000. Change both together if you expose Langfuse via ingress later.
+            - name: NEXTAUTH_URL
+              value: http://localhost:3001
+            - name: HOSTNAME
+              value: 0.0.0.0
+            - name: TELEMETRY_ENABLED
+              value: "false"
+            # --- headless bootstrap: org/project/user + a PINNED API keypair (first boot only) ---
+            - name: LANGFUSE_INIT_ORG_ID
+              value: docketclock
+            - name: LANGFUSE_INIT_ORG_NAME
+              value: DocketClock
+            - name: LANGFUSE_INIT_PROJECT_ID
+              value: docketclock
+            - name: LANGFUSE_INIT_PROJECT_NAME
+              value: DocketClock
+            - name: LANGFUSE_INIT_PROJECT_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  { name: langfuse-secrets, key: init_project_public_key }
+            - name: LANGFUSE_INIT_PROJECT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  { name: langfuse-secrets, key: init_project_secret_key }
+            - name: LANGFUSE_INIT_USER_EMAIL
+              value: admin@docketclock.local
+            - name: LANGFUSE_INIT_USER_NAME
+              value: Admin
+            - name: LANGFUSE_INIT_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  { name: langfuse-secrets, key: init_user_password }
+          # Startup can take a while (migrations on first boot) — a generous startupProbe gates liveness.
+          startupProbe:
+            httpGet: { path: /api/public/health, port: 3000 }
+            periodSeconds: 5
+            failureThreshold: 60 # ~5 min for migrations + boot
+          readinessProbe:
+            httpGet: { path: /api/public/ready, port: 3000 }
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /api/public/health, port: 3000 }
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              # 1Gi (not 512–768Mi): a migrations-on-boot spike inside the startup window can OOMKill a
+              # tighter cap and crashloop. Still lean enough for the 12 GiB colima budget (+256Mi for the DB).
+              memory: 1Gi
