@@ -11,6 +11,10 @@ metadata:
     argocd.argoproj.io/sync-wave: "0" # DB before the Langfuse Deployment (wave "1") that depends on it
 spec:
   instances: 1 # local single-instance; a cloud overlay would scale to 3 like the app DB
+  # PINNED (repo standard — see charts/docketclock/values.yaml): an unset imageName lets the operator
+  # silently track the latest Postgres major, which won't start against this cluster's existing PVC without
+  # a pg_upgrade. Same image the app DB + CI (postgres:18) use, so there's one Postgres major in the repo.
+  imageName: "ghcr.io/cloudnative-pg/postgresql:18.3-system-trixie"
   storage:
     size: 1Gi # Langfuse trace volume is modest on a dev cluster; default (local-path) StorageClass
   # Pinned lean for the 12 GiB colima budget (Loki/Alloy/Grafana already spend some headroom).

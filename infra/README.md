@@ -154,6 +154,11 @@ The poller is wired to send traces in PR-C2; until then the project is empty but
 - **`wait-platform` hangs.** Argo syncs asynchronously; check `task status` and the Argo UI
   (`task argocd-ui`). A platform Application stuck `OutOfSync` usually means a pinned chart version or
   values key drifted — see `infra/argocd/apps/`.
+- **Langfuse login redirects fail / "callback" auth errors.** Langfuse's `NEXTAUTH_URL` is pinned to
+  `http://localhost:3001` to match the `task langfuse` port-forward. Reaching the UI any other way (a LAN
+  IP, or an ingress host you added without updating the env) breaks the OAuth callback. Access it via the
+  port-forward, or update `NEXTAUTH_URL` in `infra/argocd/manifests/langfuse/deployment.yaml` to the real
+  URL.
 
 ## Surviving a reboot (auto-recovery)
 
