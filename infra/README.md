@@ -116,6 +116,24 @@ A more specific query for the structured adjudicator cycle events:
 {namespace="docketclock"} |= "chain adjudicate cycle"
 ```
 
+### LLM observability (Langfuse)
+
+Per-call traces of the chain-seam adjudicator's LLM calls — input/output, model, latency, tokens — and
+the seed for an eval dataset (Slice C; `plans/observability-llm.md`). **Langfuse v2** (Postgres-only) runs
+as a platform Argo app (`platform-langfuse.yaml`) in the `langfuse` namespace: a single
+`langfuse/langfuse:2` container backed by a dedicated CloudNativePG `langfuse-db`. v2 is the deliberate
+lean choice — v3 (ClickHouse/Redis/S3) would blow the colima budget; v2 is security-EOL upstream but this
+is a local, non-internet-exposed dev tool. Secrets (server crypto + the pinned API keypair) come from
+Vault via ESO; **`task vault-seed` seeds `secret/langfuse/config`** (dev defaults; override via `LANGFUSE_*`
+env). DB migrations run on container startup, and `LANGFUSE_INIT_*` headlessly creates the org/project/
+user — no manual UI bootstrap.
+
+```bash
+task langfuse   # port-forward svc/langfuse :3000 → localhost:3001 (login admin@docketclock.local)
+```
+
+The poller is wired to send traces in PR-C2; until then the project is empty but the UI is live.
+
 ## Troubleshooting
 
 - **Image pulls fail inside k3d nodes (`EAI_AGAIN` / `lookup registry-1.docker.io: Try again`).** On a

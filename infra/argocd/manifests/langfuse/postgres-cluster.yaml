@@ -1,0 +1,26 @@
+# Langfuse's dedicated Postgres (CloudNativePG) — Slice C / PR-C1. Separate from the docketclock app DB:
+# Langfuse owns and migrates its own schema (Prisma migrations run on the app container's startup), so it
+# gets its own 1-instance Cluster. The operator generates the app credentials as the Secret
+# `langfuse-db-app` (keys incl. `uri`, a ready-made postgres:// connection string) — the Deployment reads
+# DATABASE_URL straight from it. Langfuse v2 needs ONLY Postgres (>= v12); no ClickHouse/Redis/S3 (v3).
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: langfuse-db
+  annotations:
+    argocd.argoproj.io/sync-wave: "0" # DB before the Langfuse Deployment (wave "1") that depends on it
+spec:
+  instances: 1 # local single-instance; a cloud overlay would scale to 3 like the app DB
+  storage:
+    size: 1Gi # Langfuse trace volume is modest on a dev cluster; default (local-path) StorageClass
+  # Pinned lean for the 12 GiB colima budget (Loki/Alloy/Grafana already spend some headroom).
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+  bootstrap:
+    initdb:
+      database: langfuse
+      owner: langfuse

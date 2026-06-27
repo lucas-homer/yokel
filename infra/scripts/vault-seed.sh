@@ -81,6 +81,24 @@ kubectl -n vault exec vault-0 -- sh -c "
     admin_password='${GRAFANA_ADMIN_PASSWORD:-admin}'
 "
 
+echo "🌱 seeding secret/langfuse/config (Langfuse v2 server crypto + headless-init keypair)..."
+# Langfuse's langfuse-secrets ExternalSecret (infra/argocd/manifests/langfuse/externalsecret.yaml) reads
+# these six keys; missing any one fails the whole ESO sync (all-or-nothing). DEV DEFAULTS are FIXED (not
+# randomized) on purpose: re-running vault-seed must NOT rotate encryption_key, or Langfuse can no longer
+# decrypt previously-stored data. encryption_key MUST be exactly 64 hex chars (ENCRYPTION_KEY contract).
+# The init_project_*_key pair is pinned here so the SAME keypair flows to BOTH Langfuse (LANGFUSE_INIT_*)
+# and the poller (PR-C2) with no manual UI step. Override any of them via the LANGFUSE_* host env.
+kubectl -n vault exec vault-0 -- sh -c "
+  export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+  vault kv put secret/langfuse/config \
+    nextauth_secret='${LANGFUSE_NEXTAUTH_SECRET:-dev-langfuse-nextauth-secret}' \
+    salt='${LANGFUSE_SALT:-dev-langfuse-salt}' \
+    encryption_key='${LANGFUSE_ENCRYPTION_KEY:-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef}' \
+    init_project_public_key='${LANGFUSE_PUBLIC_KEY:-pk-lf-dev-docketclock}' \
+    init_project_secret_key='${LANGFUSE_SECRET_KEY:-sk-lf-dev-docketclock}' \
+    init_user_password='${LANGFUSE_USER_PASSWORD:-docketclock-dev}'
+"
+
 echo "🔑 wiring ESO → Vault token auth (external-secrets/vault-token)..."
 kubectl create namespace external-secrets --dry-run=client -o yaml | kubectl apply -f -
 kubectl -n external-secrets create secret generic vault-token \
