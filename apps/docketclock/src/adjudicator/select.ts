@@ -21,9 +21,34 @@
 import type { Adjudicator } from "./port.js";
 import { NullAdjudicator } from "./null-adjudicator.js";
 import { GeminiAdjudicator } from "./gemini-adjudicator.js";
+import { NOOP_TRACER, safeTracer, type LlmTracer } from "./tracer.js";
+import { LangfuseTracer } from "./langfuse-tracer.js";
 
 const DEFAULT_MODEL = "gemini-2.5-flash";
 const DEFAULT_TIMEOUT_MS = 15_000;
+
+/**
+ * selectTracer — pick the LLM observability tracer (PR-C2). ALL-OR-NOTHING: a Langfuse-backed tracer is
+ * returned ONLY when LANGFUSE_HOST, LANGFUSE_PUBLIC_KEY and LANGFUSE_SECRET_KEY are ALL present (trimmed —
+ * ESO/Vault secrets commonly carry a trailing newline). Otherwise a NoopTracer is returned and the
+ * `langfuse` client is NEVER constructed, so a deploy without Langfuse (and every test) is a true no-op with
+ * byte-for-byte unchanged adjudication behavior. Reads env LAZILY (at call time), so the entrypoints'
+ * `process.loadEnvFile()`-then-import ordering is respected.
+ */
+export function selectTracer(env: NodeJS.ProcessEnv = process.env): LlmTracer {
+  const host = (env.LANGFUSE_HOST || "").trim();
+  const publicKey = (env.LANGFUSE_PUBLIC_KEY || "").trim();
+  const secretKey = (env.LANGFUSE_SECRET_KEY || "").trim();
+  if (!host || !publicKey || !secretKey) return NOOP_TRACER;
+  // Guard construction (defense-in-depth): `new Langfuse()` is lazy today, but a future SDK/bad config that
+  // threw here would otherwise break the poll cycle on the DETERMINISTIC path. Fall back to a true no-op.
+  // safeTracer wraps every method so no tracer call can ever throw into the adjudication/reconcile path.
+  try {
+    return safeTracer(new LangfuseTracer({ host, publicKey, secretKey }));
+  } catch {
+    return NOOP_TRACER;
+  }
+}
 
 export function selectAdjudicator(
   env: NodeJS.ProcessEnv = process.env,
@@ -48,6 +73,9 @@ export function selectAdjudicator(
   const model = (env.GEMINI_MODEL || "").trim() || DEFAULT_MODEL;
   const baseUrl = (env.GEMINI_BASE_URL || "").trim();
   const timeoutMs = Number(env.LLM_TIMEOUT_MS);
+  // Construct the observability tracer ONCE here and inject it: the SAME instance is shared between the
+  // adapter (which records each real call as a generation) and the chain orchestrator (which reads it off
+  // `adjudicator.tracer` to open the per-cycle trace + flush). No LANGFUSE_* env → NoopTracer (true no-op).
   return new GeminiAdjudicator({
     apiKey,
     model,
@@ -56,5 +84,6 @@ export function selectAdjudicator(
       Number.isFinite(timeoutMs) && timeoutMs > 0
         ? timeoutMs
         : DEFAULT_TIMEOUT_MS,
+    tracer: selectTracer(env),
   });
 }
