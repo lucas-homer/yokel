@@ -38,6 +38,8 @@
  * Run:  pnpm --filter @yokel/docketclock seed:langfuse-dataset            # writes to Langfuse
  *       pnpm --filter @yokel/docketclock seed:langfuse-dataset --dry-run  # prints the plan, writes nothing
  */
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { Langfuse } from "langfuse";
 import {
   AdjudicationInput,
@@ -47,9 +49,14 @@ import {
 import { createClient } from "../src/db/client.js";
 
 // Load the repo-root .env (scripts/ → 2 levels up) BEFORE reading env, mirroring the smoke/entrypoints.
-process.loadEnvFile(new URL("../../../.env", import.meta.url));
+// GUARDED: skip if absent so a shell/CI that exports the vars directly still runs (unconditional
+// loadEnvFile throws ERR_MISSING_DOTENV_FILE on a fresh checkout).
+const envPath = fileURLToPath(new URL("../../../.env", import.meta.url));
+if (existsSync(envPath)) process.loadEnvFile(envPath);
 
-const DATASET_NAME = (process.env.DATASET_NAME || "docketclock-adjudications").trim();
+const DATASET_NAME = (
+  process.env.DATASET_NAME || "docketclock-adjudications"
+).trim();
 const SEED_CAP = (() => {
   const n = Number(process.env.SEED_CAP);
   return Number.isFinite(n) && n > 0 ? Math.floor(n) : 25;
@@ -127,8 +134,14 @@ async function main(): Promise<void> {
         classification: verdict.classification,
       });
     }
-    if (skippedNull) console.log(`skipped ${skippedNull} null:* abstention row(s) (SEED_INCLUDE_NULL=1 to keep)`);
-    if (skippedInvalid) console.log(`skipped ${skippedInvalid} row(s) that failed contract validation`);
+    if (skippedNull)
+      console.log(
+        `skipped ${skippedNull} null:* abstention row(s) (SEED_INCLUDE_NULL=1 to keep)`,
+      );
+    if (skippedInvalid)
+      console.log(
+        `skipped ${skippedInvalid} row(s) that failed contract validation`,
+      );
 
     // Stratify by kind × classification, cap per stratum (stable: candidates are already oldest-first).
     const strata = new Map<string, Candidate[]>();
@@ -149,14 +162,18 @@ async function main(): Promise<void> {
         selected.push(...bucket);
       }
     }
-    console.log(`\nselected ${selected.length} item(s) for dataset "${DATASET_NAME}"`);
+    console.log(
+      `\nselected ${selected.length} item(s) for dataset "${DATASET_NAME}"`,
+    );
 
     if (DRY_RUN) {
       console.log("--dry-run: no Langfuse writes.");
       return;
     }
     if (selected.length === 0) {
-      console.log("nothing to seed (no deciding adjudications yet); dataset left untouched.");
+      console.log(
+        "nothing to seed (no deciding adjudications yet); dataset left untouched.",
+      );
       return;
     }
 
