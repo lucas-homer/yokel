@@ -1,6 +1,7 @@
 # Observability Slice C — LLM-obs (Langfuse v2 + adjudicator tracing + eval-dataset seed)
 
-> Status: **Ready to build** — decisions locked. Awaiting go on PR-C1.
+> Status: **Done** — PR-C1 (#56), PR-C2 (#57) merged; PR-C3 (this PR) seeds the eval dataset. Langfuse v2
+> is deployed/healthy on k3d and verified end-to-end (live trace + 50-item seeded dataset).
 > Target: local k3d only (no cloud cluster yet; see memory `deploy-target-k3d-first`).
 > Constraint: colima 12 GiB, ~5–6 GiB safe headroom — Slice A (Loki/Alloy/Grafana) already
 > spends some of that, so Langfuse + its Postgres must be pinned lean and RAM checked
