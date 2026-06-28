@@ -10,12 +10,17 @@
  *
  * Run:  pnpm --filter @yokel/docketclock smoke:langfuse
  */
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import type { AdjudicationInput } from "@yokel/contracts";
 import { selectAdjudicator } from "./select.js";
 
 // Load the repo-root .env (this file is apps/docketclock/src/adjudicator/ → 4 levels up to the root) BEFORE
-// selectAdjudicator() reads process.env. Mirrors the entrypoints' loadEnvFile()-then-select ordering.
-process.loadEnvFile(new URL("../../../../.env", import.meta.url));
+// selectAdjudicator() reads process.env. Mirrors the entrypoints' loadEnvFile()-then-select ordering, and
+// is GUARDED like poll.smoke.ts: skip if the file is absent so a shell that exports the vars directly still
+// runs (unconditional loadEnvFile throws ERR_MISSING_DOTENV_FILE on a fresh checkout/CI).
+const envPath = fileURLToPath(new URL("../../../../.env", import.meta.url));
+if (existsSync(envPath)) process.loadEnvFile(envPath);
 
 // A synthetic, deliberately AMBIGUOUS amendment chain: B looks like it could extend A's comment period and
 // shares a docket, but does not explicitly reference A — exactly the "is this really an amendment?" call the
@@ -45,7 +50,28 @@ async function main(): Promise<void> {
       "selectAdjudicator() returned the null adjudicator — set ADJUDICATOR=gemini and a real GEMINI_API_KEY in .env",
     );
   }
+  // This is a LIVE proof — it must trace to a REAL Langfuse, not silently no-op. selectAdjudicator() →
+  // selectTracer() falls back to NOOP_TRACER when any LANGFUSE_* is unset, which would let this smoke "pass"
+  // while sending nothing. Assert all three are present and fail loudly instead.
+  const missing = [
+    "LANGFUSE_HOST",
+    "LANGFUSE_PUBLIC_KEY",
+    "LANGFUSE_SECRET_KEY",
+  ].filter((k) => !(process.env[k] || "").trim());
+  if (missing.length > 0) {
+    throw new Error(
+      `missing ${missing.join(", ")} — this live smoke needs a real Langfuse to trace to ` +
+        "(set them in .env and run `task langfuse`)",
+    );
+  }
+  // GeminiAdjudicator always carries a tracer, but the Adjudicator port types it `tracer?` — narrow it for
+  // TS (strict) and as a last-line guard.
   const tracer = adjudicator.tracer;
+  if (!tracer) {
+    throw new Error(
+      "adjudicator exposes no tracer — expected a LangfuseTracer injected by selectAdjudicator()",
+    );
+  }
   // Bracket the call the way the chain orchestrator does: open a per-cycle trace, name the active pair so the
   // generation carries from/to OCD-ids, run the real call, then flush so the trace is delivered promptly.
   tracer.startCycle({ kind: "chain", surfaced: 1, cap: 1 });
