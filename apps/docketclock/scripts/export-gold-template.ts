@@ -42,11 +42,11 @@ const TEMPLATE_PATH = fileURLToPath(
 async function main(): Promise<void> {
   const sql = createClient();
   try {
-    const rows = (await sql<AdjudicationRow[]>`
+    const rows: AdjudicationRow[] = await sql<AdjudicationRow[]>`
       select content_hash, input, verdict, adjudicator_id, created_at
       from adjudications
       order by created_at asc, content_hash asc
-    `) as unknown as AdjudicationRow[];
+    `;
     console.log(`read ${rows.length} adjudications row(s)`);
 
     const { selected, grid, skippedNull, skippedInvalid } = selectDatasetItems(

@@ -24,6 +24,10 @@ function assert(name: string, cond: boolean, detail = "") {
   if (!cond) failures++;
 }
 
+// Realistic 64-hex sha256 content_hashes (validated as PayloadHash) — match production corpus keys.
+const HASH_A = "a".repeat(64);
+const HASH_B = "b".repeat(64);
+
 const dir = mkdtempSync(join(tmpdir(), "gold-"));
 const path = join(dir, "g.json");
 function write(value: unknown): void {
@@ -35,7 +39,7 @@ function write(value: unknown): void {
 /** A valid chain entry; pass overrides to break a specific field. */
 function entry(over: Record<string, unknown> = {}): Record<string, unknown> {
   return {
-    content_hash: "abc123",
+    content_hash: HASH_A,
     gold: "reject",
     note: "different docket",
     model_verdict: { classification: "reject", rationale: "because" },
@@ -69,7 +73,7 @@ function rejects(name: string, value: unknown): void {
 
 try {
   // happy path
-  write([entry(), entry({ content_hash: "def456", gold: "affirm" })]);
+  write([entry(), entry({ content_hash: HASH_B, gold: "affirm" })]);
   const loaded = loadGold(path);
   assert(
     "valid fully-labeled file parses to typed entries",
@@ -88,6 +92,9 @@ try {
   rejects("rejects null gold (unlabeled template)", [entry({ gold: null })]);
   rejects("rejects missing gold", [entry({ gold: undefined })]);
   rejects("rejects an out-of-enum gold value", [entry({ gold: "maybe" })]);
+  rejects("rejects a non-64-hex content_hash (not a PayloadHash)", [
+    entry({ content_hash: "abc123" }),
+  ]);
   rejects("rejects an input that violates the contract", [
     entry({ input: { kind: "chain", rulebook_version: "rb" } }),
   ]);
@@ -95,6 +102,17 @@ try {
   rejects("rejects an empty corpus", []);
   rejects("rejects non-array JSON", { not: "an array" });
   rejects("rejects malformed JSON", "{ not json");
+
+  // file-not-found: loadGold throws its custom "could not read" message, never reaches parsing.
+  {
+    let threw = false;
+    try {
+      loadGold(join(dir, "does-not-exist.json"));
+    } catch {
+      threw = true;
+    }
+    assert("rejects a missing file with a clear read error", threw);
+  }
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

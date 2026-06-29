@@ -18,13 +18,20 @@ import {
   AdjudicationInput,
   AdjudicationClassification,
   AdjudicationVerdict,
+  PayloadHash,
 } from "@yokel/contracts";
 import { z } from "zod";
 
+/** Safely turn an unknown thrown value into a message (a non-Error throw must not itself throw here). */
+function errMessage(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
+}
+
 /** One labeled corpus entry. `gold` is REQUIRED (a template's null/missing gold fails validation). */
 export const GoldEntry = z.object({
-  /** sha256 cache key — ties this entry to the `adjudications` row and the Langfuse dataset item id. */
-  content_hash: z.string().min(1),
+  /** sha256 cache key — the `adjudications` row's content_hash and the Langfuse dataset item id. Validated
+   *  as a 64-hex PayloadHash (same shape as AdjudicationRecord.content_hash) so a malformed key is caught. */
+  content_hash: PayloadHash,
   /** the human's authoritative label. */
   gold: AdjudicationClassification,
   /** optional free-text rationale for the label (why a human called it this way). */
@@ -64,7 +71,7 @@ export function loadGold(path: string): GoldEntry[] {
     raw = readFileSync(path, "utf8");
   } catch (err) {
     throw new Error(
-      `could not read gold file at ${path} (export+label it first): ${(err as Error).message}`,
+      `could not read gold file at ${path} (export+label it first): ${errMessage(err)}`,
     );
   }
   let parsed: unknown;
@@ -72,7 +79,7 @@ export function loadGold(path: string): GoldEntry[] {
     parsed = JSON.parse(raw);
   } catch (err) {
     throw new Error(
-      `gold file at ${path} is not valid JSON: ${(err as Error).message}`,
+      `gold file at ${path} is not valid JSON: ${errMessage(err)}`,
     );
   }
   const result = GoldFile.safeParse(parsed);
