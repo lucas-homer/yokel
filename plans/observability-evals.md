@@ -1,8 +1,10 @@
 # Observability Slice D — Evals (human gold labels + scoring run + nightly regression gate)
 
-> Status: **PR-D1 built** — gold tooling + a 50-item human-labeled corpus
-> (`eval/chain-gold.json`, 23 affirm / 26 reject / 1 uncertain) committed on `feat/eval-gold-labels`.
-> Awaiting go on PR-D2 (eval runner + scoring).
+> Status: **PR-D1 merged (#60); PR-D2 built** — `pnpm eval:chain` runner + pure `scoreEval` + 12-test suite
+> on `feat/eval-chain-runner`. BASELINE on the 50-item corpus (gemini-2.5-flash @ temp 0): **amends accuracy
+> 94%** (precision 88.5%, recall 100%, F1 0.939; TP 23 / FP 3 / FN 0 / TN 24; exact 3-way 94%). The 3 errors
+> are all FALSE POSITIVES (over-linking — the conservative system's worst error), incl. the two borderline
+> items relabeled in D1 (#7 reject, #10 uncertain). Use this to set the D3 threshold with temp-0 margin.
 > Target: local k3d for the Langfuse enrichment; the eval CORE is Langfuse-independent and runs anywhere
 > (incl. GitHub Actions). Builds directly on Slice C (`observability-llm.md`, shipped): the seeded
 > `docketclock-adjudications` Langfuse dataset, the pure `selectDatasetItems()` selection, the injected
@@ -135,8 +137,10 @@ former; an event-based trigger catches the latter at its source. (Cost is a non-
      server is unreachable from Actions), so it runs the Langfuse-independent core: gold → adjudicate →
      score → threshold. On failure the red job IS the alert (optionally open/update a tracking issue).
 2. **Threshold** committed (in the workflow or `eval/threshold.json`) with margin below the observed
-   baseline for temp-0 wobble; document how to bump it when the prompt/model intentionally changes (an
-   intentional change rides in on a `main` push, so the on-merge run is also where you re-baseline).
+   baseline for temp-0 wobble — the D2 baseline is **94%** amends accuracy, so `--min-accuracy 0.85` leaves
+   ~9pts of headroom (catches a real regression without flapping on a single borderline flip on a 50-item
+   corpus). Document how to bump it when the prompt/model intentionally changes (an intentional change rides
+   in on a `main` push, so the on-merge run is also where you re-baseline).
 3. **Verify:** `workflow_dispatch` a manual run green against the current corpus; a touch-test that a commit
    under the filtered paths triggers the on-merge run while an unrelated change does NOT; confirm a
    deliberately low threshold fails the job (alert path works); confirm no `LANGFUSE_*`/DB is required.
