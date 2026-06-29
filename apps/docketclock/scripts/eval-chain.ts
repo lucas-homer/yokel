@@ -165,6 +165,9 @@ async function pushLangfuseRun(
   try {
     const langfuse = new Langfuse({ publicKey, secretKey, baseUrl: host });
     const dataset = await langfuse.getDataset(DATASET_NAME);
+    // CONVENTION: the seed (seed-langfuse-dataset.ts) sets each dataset item's id = content_hash, the same
+    // key the gold corpus carries. So we link by content_hash. If the dataset were ever recreated with
+    // different ids, no item would match — we warn below rather than silently report "linked 0".
     const itemByHash = new Map(dataset.items.map((it) => [it.id, it]));
     let linked = 0;
     for (const { entry, verdict } of predictions) {
@@ -201,6 +204,12 @@ async function pushLangfuseRun(
     console.log(
       `\nLangfuse run "${runName}": linked ${linked}/${predictions.length} item(s) to dataset "${DATASET_NAME}".`,
     );
+    if (linked === 0 && predictions.length > 0) {
+      console.warn(
+        `  ! linked 0 items — no dataset item id matched a gold content_hash. Is "${DATASET_NAME}" seeded ` +
+          "(pnpm seed:langfuse-dataset), and do its item ids still equal content_hash? Scores still pushed.",
+      );
+    }
   } catch (err) {
     // best-effort: the enrichment must never fail the eval/gate.
     console.error(

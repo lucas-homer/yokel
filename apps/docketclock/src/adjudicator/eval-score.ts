@@ -75,8 +75,9 @@ export function scoreEval(results: EvalResult[]): ScoreSummary {
   }
 
   for (const r of results) {
-    confusion[r.gold]![r.predicted] =
-      (confusion[r.gold]![r.predicted] ?? 0) + 1;
+    // gold/predicted are Classification (∈ CLASSES) and the grid is fully zero-initialized above, so the
+    // cell always exists — the non-null assertion is safe and no `?? 0` fallback is needed.
+    confusion[r.gold]![r.predicted] = confusion[r.gold]![r.predicted]! + 1;
     if (r.predicted === r.gold) exact++;
     const goldAmends = isAmends(r.gold);
     const predAmends = isAmends(r.predicted);
