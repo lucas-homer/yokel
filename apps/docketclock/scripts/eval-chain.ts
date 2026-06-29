@@ -15,7 +15,9 @@
  * `docketclock-adjudications` — a trace per item linked to the run, with `amends_match` / `exact_match`
  * scores — so the accuracy shows up in the Langfuse experiments view. Absent LANGFUSE_* ⇒ skipped cleanly.
  *
- * GATE: `--min-accuracy <x>` exits non-zero when the binary amends-accuracy < x (default: no gate).
+ * GATE: `--min-accuracy <x>` exits non-zero when the binary amends-accuracy < x, computed over the FULL
+ * item set so errored adjudications count as failures (a run that couldn't complete can't go falsely green).
+ * Default: no gate.
  */
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -122,14 +124,24 @@ async function main(): Promise<void> {
   await pushLangfuseRun(adjudicator.id, predictions);
 
   if (MIN_ACCURACY !== undefined) {
-    if (summary.amendsAccuracy < MIN_ACCURACY) {
+    // Gate over the FULL set: an errored adjudication counts as a FAILURE, not a silent drop — so a CI run
+    // that couldn't complete (provider down, key revoked, etc.) can't go falsely green on the survivors.
+    // Equals the printed amendsAccuracy when errors === 0; otherwise it's diluted by the errored items, so
+    // a transient blip still passes on a healthy corpus but a broadly-broken run correctly fails.
+    const gateAccuracy =
+      entries.length === 0 ? 0 : (c.tp + c.tn) / entries.length;
+    const detail =
+      errors > 0
+        ? `${pct(gateAccuracy)} over ${entries.length} (incl. ${errors} errored as failures)`
+        : pct(gateAccuracy);
+    if (gateAccuracy < MIN_ACCURACY) {
       console.error(
-        `\nGATE FAILED: amends accuracy ${pct(summary.amendsAccuracy)} < threshold ${pct(MIN_ACCURACY)}`,
+        `\nGATE FAILED: amends accuracy ${detail} < threshold ${pct(MIN_ACCURACY)}`,
       );
       process.exit(1);
     }
     console.log(
-      `\nGATE PASSED: amends accuracy ${pct(summary.amendsAccuracy)} ≥ ${pct(MIN_ACCURACY)}`,
+      `\nGATE PASSED: amends accuracy ${detail} ≥ ${pct(MIN_ACCURACY)}`,
     );
   }
 }
