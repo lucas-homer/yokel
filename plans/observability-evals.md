@@ -1,6 +1,8 @@
 # Observability Slice D — Evals (human gold labels + scoring run + nightly regression gate)
 
-> Status: **Ready to build** — decisions locked. Awaiting go on PR-D1.
+> Status: **PR-D1 built** — gold tooling + a 50-item human-labeled corpus
+> (`eval/chain-gold.json`, 23 affirm / 26 reject / 1 uncertain) committed on `feat/eval-gold-labels`.
+> Awaiting go on PR-D2 (eval runner + scoring).
 > Target: local k3d for the Langfuse enrichment; the eval CORE is Langfuse-independent and runs anywhere
 > (incl. GitHub Actions). Builds directly on Slice C (`observability-llm.md`, shipped): the seeded
 > `docketclock-adjudications` Langfuse dataset, the pure `selectDatasetItems()` selection, the injected
@@ -55,9 +57,15 @@ call — then watch that number over time so a prompt/model/rulebook change that
   than any single cadence.
 - **Bypass the cache.** The eval calls `adjudicate(input)` directly; it must NOT go through
   `consultAdjudicator` (which would replay the cached verdict and measure history, not the live model).
-- **Metric.** Exact-match classification accuracy over {affirm, reject, uncertain} + a 3×3 confusion matrix.
-  Report accuracy both INCLUDING and EXCLUDING `gold = uncertain` items (a human "can't tell" is low signal;
-  a model abstaining when the human was decisive is still surfaced in the matrix). Pure + unit-tested.
+- **Metric — binary primary, 3-way secondary.** Downstream, ONLY `affirm` promotes a cross_window link;
+  `reject`, `uncertain`, and any error are downstream-IDENTICAL (no link — see
+  `chain-adjudicate.ts:236`). So the operationally-meaningful decision is **affirm vs not-affirm**, and the
+  PRIMARY metric is that BINARY "amends?" accuracy (collapse reject+uncertain → "not-affirm" on BOTH gold
+  and prediction). This also means a gold label of `reject` vs `uncertain` does NOT move the headline number
+  — so the corpus can be labeled by what's most truthful without gaming the metric, and a model that
+  conservatively abstains (`uncertain`) is not punished for the operationally-correct no-link outcome. The
+  full 3×3 confusion matrix over {affirm, reject, uncertain} is reported as SECONDARY detail (it surfaces
+  reject↔uncertain disagreement for inspection). Pure + unit-tested.
 - **No contract change.** `AdjudicationVerdict` stays frozen; no contract-keeper involvement. A small local
   zod schema validates the gold file shape.
 
@@ -83,9 +91,11 @@ The one PR with a human-in-the-loop step. Independently useful: produces the lab
 ## PR-D2 — Eval runner + scoring (app code)
 
 1. **`src/adjudicator/eval-score.ts`** — PURE scoring: `scoreEval(results)` where each result is
-   `{ contentHash, kind, gold, predicted }` → `{ accuracy, accuracyExclUncertain, n, confusion: 3×3,
-   perClass: {affirm,reject,uncertain}: {correct,total} }`. No I/O. Unit-tested (`test/eval-score.test.ts`):
-   exact-match counting, the uncertain inclusion/exclusion split, confusion-matrix totals, empty input.
+   `{ contentHash, kind, gold, predicted }` → `{ amendsAccuracy /* PRIMARY: affirm-vs-not binary */,
+amendsConfusion /* 2×2: TP/FP/FN/TN on "amends" */, exactAccuracy /* 3-way, secondary */, confusion: 3×3,
+n }`. The binary collapses {reject, uncertain} → "not-amends" on both gold and prediction (they are
+   downstream-identical). No I/O. Unit-tested (`test/eval-score.test.ts`): binary collapse, the 2×2 and 3×3
+   matrices, that reject↔uncertain disagreement moves only the 3-way number (not the headline), empty input.
 2. **`scripts/eval-chain.ts`** (`pnpm eval:chain`) — orchestration:
    - `loadGold("eval/chain-gold.json")`; build `selectAdjudicator()` (must resolve to the Gemini adapter,
      else fail loudly — mirror the smoke's guard).
@@ -93,9 +103,9 @@ The one PR with a human-in-the-loop step. Independently useful: produces the lab
      (≤ a few hundred items); a small concurrency cap is a later optimization.
    - `scoreEval(...)` → print accuracy / accuracyExclUncertain / confusion matrix.
    - **Langfuse enrichment (optional, all-or-nothing on `LANGFUSE_*`):** `getDataset("docketclock-
-     adjudications")`, and for each item `item.link(trace, runName)` + `langfuse.score({ traceId, name:
-     "classification_match", value: predicted===gold ? 1 : 0, comment })`. `runName =
-     "<adjudicator.id>@<short-sha|ISO-ts>"`. `flush()`/`shutdown()` at the end. Absent `LANGFUSE_*` ⇒ skip
+adjudications")`, and for each item `item.link(trace, runName)` + `langfuse.score({ traceId, name:
+"classification_match", value: predicted===gold ? 1 : 0, comment })`. `runName =
+"<adjudicator.id>@<short-sha|ISO-ts>"`. `flush()`/`shutdown()` at the end. Absent `LANGFUSE_*` ⇒ skip
      cleanly (the printed summary + exit code are unaffected).
    - `--min-accuracy <x>`: exit non-zero when accuracy < x (default: no gate locally). `--limit N` for a
      quick subset.
@@ -121,7 +131,7 @@ former; an event-based trigger catches the latter at its source. (Cost is a non-
      change could affect the verdict, at the source, immediately, and POST-merge so it never blocks or
      flakes a PR (same spirit as the `smoke`). Add **`workflow_dispatch`** for manual runs.
    - Steps (shared): checkout, pnpm install, `pnpm --filter @yokel/docketclock eval:chain --min-accuracy
-     <THRESHOLD>` with `ADJUDICATOR=gemini` + `GEMINI_API_KEY` from repo secrets. NO `LANGFUSE_*` (the local
+<THRESHOLD>` with `ADJUDICATOR=gemini` + `GEMINI_API_KEY` from repo secrets. NO `LANGFUSE_*` (the local
      server is unreachable from Actions), so it runs the Langfuse-independent core: gold → adjudicate →
      score → threshold. On failure the red job IS the alert (optionally open/update a tracking issue).
 2. **Threshold** committed (in the workflow or `eval/threshold.json`) with margin below the observed
@@ -151,4 +161,7 @@ former; an event-based trigger catches the latter at its source. (Cost is a non-
 - PR-D2: revert; `eval-score.ts`/`eval-chain.ts` are additive and call nothing in the live pipeline. Any
   Langfuse runs/scores already pushed are inert history in the UI.
 - PR-D3: delete the workflow; it only ever read the corpus + called Gemini on a schedule.
+
+```
+
 ```
