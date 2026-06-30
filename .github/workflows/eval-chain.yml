@@ -1,0 +1,61 @@
+name: Eval — chain adjudicator
+
+# Regression gate for the chain adjudicator's amends/doesn't-amend quality (Slice D, PR-D3).
+# The gold corpus (apps/docketclock/eval/chain-gold.json) is STATIC, so the only inputs that move
+# the score are (a) Gemini's slow provider drift and (b) OUR changes at a commit. Two triggers,
+# matched to those two sources:
+#   • schedule  — a WEEKLY canary for provider drift (low noise; ~4 runs/mo).
+#   • push:main — path-filtered to the files that can actually change the verdict, so a regression
+#     is caught at the commit that introduces it, immediately, and POST-merge (never blocks a PR).
+# Plus workflow_dispatch for manual runs. The red job IS the alert.
+#
+# The eval CORE is Langfuse-independent: gold -> adjudicate -> score -> threshold. The local
+# Langfuse server is unreachable from Actions, so NO LANGFUSE_* is set here (the run skips the
+# optional dataset-run push cleanly). It needs only GEMINI_API_KEY. ~50 small gemini-2.5-flash
+# calls per run (~$0.10-0.15).
+
+on:
+  schedule:
+    # Mondays 07:00 UTC — the provider-drift canary.
+    - cron: "0 7 * * 1"
+  push:
+    branches: [main]
+    paths:
+      - "apps/docketclock/src/adjudicator/**"
+      - "apps/docketclock/src/rulebox/**"
+      - "apps/docketclock/eval/chain-gold.json"
+      - ".github/workflows/eval-chain.yml"
+  workflow_dispatch:
+    inputs:
+      min_accuracy:
+        description: "Min amends-accuracy gate (0-1). Lower it to test the alert path; raise it to re-baseline."
+        required: false
+        default: "0.85"
+
+# Serialize on main so two near-simultaneous merges don't double-bill Gemini; let the newest win.
+concurrency:
+  group: eval-chain-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4 # version comes from root package.json "packageManager"
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Baseline (D2) is 94% amends accuracy; the committed 0.85 default leaves ~9pts of headroom
+      # for temp-0 wobble on the 50-item corpus. An intentional prompt/model change rides in on a
+      # main push — that on-merge run is also where you re-baseline (bump this, or dispatch with a
+      # higher min_accuracy to confirm the new floor first).
+      - name: Run chain eval (gate)
+        env:
+          ADJUDICATOR: gemini
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: >-
+          pnpm --filter @yokel/docketclock eval:chain
+          --min-accuracy ${{ github.event.inputs.min_accuracy || '0.85' }}
