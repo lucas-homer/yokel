@@ -56,6 +56,15 @@ const { chainReconcileOnce } = await import("../reconcile/persist.js");
 const { selectAdjudicator } = await import("../adjudicator/select.js");
 const { pollFrOnce } = await import("./fr-poll.js");
 const { pollRegsOnce } = await import("./poll.js");
+const {
+  recordFrPoll,
+  recordRegsPoll,
+  recordChainCycle,
+  recordPollPassFailure,
+  observePollCycle,
+  setHeartbeat,
+} = await import("../metrics.js");
+const { startMetricsServer } = await import("../metrics-server.js");
 
 const log = componentLogger("poller");
 
@@ -70,6 +79,9 @@ const INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS) || 15 * 60_000;
 const HEARTBEAT_FILE = process.env.POLLER_HEARTBEAT_FILE ?? "";
 
 function writeHeartbeat(): void {
+  // Metrics gauge is always set (a settled-cycle liveness signal Prometheus can alert on), independent of
+  // the k8s heartbeat FILE — which is opt-in via POLLER_HEARTBEAT_FILE and drives the exec livenessProbe.
+  setHeartbeat(Date.now() / 1000);
   if (!HEARTBEAT_FILE) return;
   try {
     writeFileSync(HEARTBEAT_FILE, `${new Date().toISOString()}\n`);
@@ -81,6 +93,9 @@ function writeHeartbeat(): void {
 async function main(): Promise<void> {
   regsApiKey(); // fail loudly on a missing key before we enter the loop
   const sql = createClient();
+  // Expose /metrics so an in-cluster Prometheus can scrape the poller (which serves no other HTTP). Started
+  // before the loop so metrics are available the instant the container is up; closed on drain (below).
+  const metricsServer = startMetricsServer();
   // Construct the adjudicator ONCE (not per cycle) so its observability tracer — and, when Langfuse is
   // configured, the long-lived Langfuse client — is reused across cycles and drained on shutdown (below).
   // No LANGFUSE_* env → the tracer is a NoopTracer (true no-op); ADJUDICATOR≠gemini → NullAdjudicator.
@@ -93,6 +108,7 @@ async function main(): Promise<void> {
   async function tick(): Promise<void> {
     if (running) return; // never overlap a still-running cycle
     running = true;
+    const cycleStart = Date.now();
     try {
       // SEQUENTIAL single-writer cycle: FR discovery FIRST (so its regs_document_id handoff is visible
       // to the SAME cycle's Regs re-poll pass), then the Regs differential + re-poll pass.
@@ -103,13 +119,17 @@ async function main(): Promise<void> {
       try {
         const fr = await pollFrOnce(sql);
         log.info({ summary: fr }, "fr poll cycle");
+        recordFrPoll(fr);
       } catch (err) {
+        recordPollPassFailure("fr");
         log.error({ err }, "fr poll failed");
       }
       try {
         const regs = await pollRegsOnce(sql);
         log.info({ summary: regs }, "regs poll cycle");
+        recordRegsPoll(regs);
       } catch (err) {
+        recordPollPassFailure("regs");
         log.error({ err }, "regs poll failed");
       }
       // 3rd pass — cross_window (chain) reconcile sweep. Runs LAST (derive-over-derived; see header) and
@@ -119,7 +139,9 @@ async function main(): Promise<void> {
           adjudicator,
         });
         log.info({ summary: chain }, "chain reconcile cycle");
+        recordChainCycle(chain);
       } catch (err) {
+        recordPollPassFailure("chain");
         log.error({ err }, "chain reconcile failed");
       }
     } catch (err) {
@@ -127,6 +149,7 @@ async function main(): Promise<void> {
       log.error({ err }, "poll cycle failed");
     } finally {
       running = false;
+      observePollCycle((Date.now() - cycleStart) / 1000);
       // Mark this cycle SETTLED (liveness #25). Written here in `finally`, not on full success: a pass-
       // level failure (FR down, Regs 4xx) is already isolated above and must NOT restart the pod — the
       // loop is still healthily cycling. Only a loop that never reaches this point (hung inside a pass,
@@ -148,6 +171,7 @@ async function main(): Promise<void> {
     // Flush + release the observability tracer (best-effort; no-op for the NoopTracer) so the last cycle's
     // Langfuse events are not lost on a container restart. shutdown() swallows its own errors.
     await adjudicator.tracer?.shutdown();
+    await new Promise<void>((resolve) => metricsServer.close(() => resolve()));
     await sql.end({ timeout: 5 });
     process.exit(0);
   }

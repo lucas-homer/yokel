@@ -21,8 +21,14 @@
 import type { Adjudicator } from "./port.js";
 import { NullAdjudicator } from "./null-adjudicator.js";
 import { GeminiAdjudicator } from "./gemini-adjudicator.js";
-import { NOOP_TRACER, safeTracer, type LlmTracer } from "./tracer.js";
+import {
+  NOOP_TRACER,
+  safeTracer,
+  composeTracers,
+  type LlmTracer,
+} from "./tracer.js";
 import { LangfuseTracer } from "./langfuse-tracer.js";
+import { getMetricsTracer } from "./metrics-tracer.js";
 
 const DEFAULT_MODEL = "gemini-2.5-flash";
 const DEFAULT_TIMEOUT_MS = 15_000;
@@ -75,7 +81,9 @@ export function selectAdjudicator(
   const timeoutMs = Number(env.LLM_TIMEOUT_MS);
   // Construct the observability tracer ONCE here and inject it: the SAME instance is shared between the
   // adapter (which records each real call as a generation) and the chain orchestrator (which reads it off
-  // `adjudicator.tracer` to open the per-cycle trace + flush). No LANGFUSE_* env → NoopTracer (true no-op).
+  // `adjudicator.tracer` to open the per-cycle trace + flush). Compose two sinks: the ALWAYS-ON MetricsTracer
+  // (Prometheus, Langfuse-independent) and the ALL-OR-NOTHING Langfuse tracer (a NoopTracer, dropped by
+  // composeTracers, when LANGFUSE_* is unset). So metrics always populate; the Langfuse push stays gated.
   return new GeminiAdjudicator({
     apiKey,
     model,
@@ -84,6 +92,6 @@ export function selectAdjudicator(
       Number.isFinite(timeoutMs) && timeoutMs > 0
         ? timeoutMs
         : DEFAULT_TIMEOUT_MS,
-    tracer: selectTracer(env),
+    tracer: composeTracers(getMetricsTracer(), selectTracer(env)),
   });
 }

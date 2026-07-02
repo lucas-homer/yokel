@@ -18,6 +18,7 @@
 import type { AdjudicationInput } from "@yokel/contracts";
 import { GeminiAdjudicator } from "../src/adjudicator/gemini-adjudicator.js";
 import { selectAdjudicator, selectTracer } from "../src/adjudicator/select.js";
+import { MetricsTracer } from "../src/adjudicator/metrics-tracer.js";
 import {
   NoopTracer,
   NOOP_TRACER,
@@ -182,14 +183,18 @@ function onceTransport(res: Response): FetchLike {
     lf !== NOOP_TRACER && !(lf instanceof NoopTracer),
   );
 
-  // selectAdjudicator wires the SAME tracer onto the adapter it injects.
+  // selectAdjudicator wires the SAME tracer onto the adapter it injects. Since PR-B1 that tracer is a
+  // COMPOSITE of the always-on MetricsTracer (Prometheus, Langfuse-independent) + the all-or-nothing Langfuse
+  // tracer. With no LANGFUSE_*, composeTracers drops the NoopTracer and the metrics tracer stands alone —
+  // so the adapter still traces to metrics but never constructs a Langfuse client (the invariant that
+  // matters is preserved: no LANGFUSE_* ⇒ no Langfuse push).
   const gemNoop = selectAdjudicator({
     ADJUDICATOR: "gemini",
     GEMINI_API_KEY: KEY,
   } as NodeJS.ProcessEnv) as GeminiAdjudicator;
   assert(
-    "selectAdjudicator: gemini + no LANGFUSE → adapter.tracer is NoopTracer",
-    gemNoop.tracer instanceof NoopTracer,
+    "selectAdjudicator: gemini + no LANGFUSE → adapter.tracer is the always-on MetricsTracer (no Langfuse)",
+    gemNoop.tracer instanceof MetricsTracer,
   );
   const gemLf = selectAdjudicator({
     ADJUDICATOR: "gemini",
@@ -199,8 +204,10 @@ function onceTransport(res: Response): FetchLike {
     LANGFUSE_SECRET_KEY: "sk-lf-dev-docketclock",
   } as NodeJS.ProcessEnv) as GeminiAdjudicator;
   assert(
-    "selectAdjudicator: gemini + all LANGFUSE → adapter.tracer is a configured (non-noop) tracer",
-    gemLf.tracer !== NOOP_TRACER && !(gemLf.tracer instanceof NoopTracer),
+    "selectAdjudicator: gemini + all LANGFUSE → adapter.tracer composes metrics + a configured Langfuse tracer",
+    gemLf.tracer !== NOOP_TRACER &&
+      !(gemLf.tracer instanceof NoopTracer) &&
+      !(gemLf.tracer instanceof MetricsTracer),
   );
 }
 
