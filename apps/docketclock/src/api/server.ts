@@ -54,6 +54,12 @@ import {
 import { z } from "zod";
 import type { Sql } from "../db/client.js";
 import { componentLogger } from "../log.js";
+import {
+  observeHttp,
+  setDbUp,
+  renderMetrics,
+  metricsContentType,
+} from "../metrics.js";
 import { itemEnvelope, listEnvelope } from "./envelope.js";
 import {
   listConflicts,
@@ -202,6 +208,21 @@ export function buildServer(
     reply.header("x-request-id", req.id);
   });
 
+  // ── HTTP metrics (every response) ──────────────────────────────────────────────────────────────────
+  // Label by the ROUTE PATTERN (req.routeOptions.url), never the raw path, so `/v1/windows/*` is one series
+  // rather than one per OCD-id (unbounded cardinality). Skip the probe/metrics routes — self-scrape noise.
+  const METRICS_SKIP = new Set(["/metrics", "/healthz", "/readyz"]);
+  app.addHook("onResponse", async (req, reply) => {
+    const route = req.routeOptions?.url;
+    if (!route || METRICS_SKIP.has(route)) return;
+    observeHttp({
+      method: req.method,
+      route,
+      status: reply.statusCode,
+      seconds: reply.elapsedTime / 1000,
+    });
+  });
+
   // ── enveloped error handler (never leak a stack trace in the body) ─────────────────────────────────
   app.setErrorHandler((err: FastifyError, req, reply) => {
     const id = requestId(req);
@@ -275,6 +296,7 @@ export function buildServer(
       } catch {
         db = "down";
       }
+      setDbUp(db === "ok");
       return { status: "ok" as const, db };
     },
   );
@@ -292,6 +314,7 @@ export function buildServer(
       } catch {
         db = "down";
       }
+      setDbUp(db === "ok");
       void reply.code(db === "ok" ? 200 : 503);
       return {
         status: db === "ok" ? ("ok" as const) : ("unavailable" as const),
@@ -305,6 +328,18 @@ export function buildServer(
     void reply.header("content-type", "application/json");
     return app.swagger();
   });
+
+  // ── PUBLIC: Prometheus metrics ─────────────────────────────────────────────────────────────────────
+  // Unauthenticated (scraped in-cluster, never via Ingress), silent (scrape frequency would drown logs),
+  // and envelope-bypassed (raw prom text, like /openapi.json) — NOT the Zod contract envelope.
+  app.get(
+    "/metrics",
+    { logLevel: "silent", schema: { hide: true } },
+    async (_req, reply) => {
+      void reply.header("content-type", metricsContentType);
+      return renderMetrics();
+    },
+  );
 
   // ── DATA routes (auth required) ────────────────────────────────────────────────────────────────────
   void app.register(async (api) => {

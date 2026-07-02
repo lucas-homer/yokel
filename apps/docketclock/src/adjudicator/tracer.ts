@@ -113,6 +113,39 @@ export class NoopTracer implements LlmTracer {
 export const NOOP_TRACER: LlmTracer = new NoopTracer();
 
 /**
+ * composeTracers — fan one adjudicator's tracing out to SEVERAL sinks (e.g. metrics + Langfuse). Each method
+ * is invoked on every member; flush()/shutdown() await all in parallel. Pure no-ops (NOOP_TRACER) are dropped
+ * so a single real sink is returned unwrapped and an all-noop compose collapses back to NOOP_TRACER. Members
+ * are expected to be individually safe (the MetricsTracer self-guards; the Langfuse tracer is safeTracer-
+ * wrapped by selectTracer), so composing them keeps the never-throw-into-the-path invariant.
+ */
+export function composeTracers(...tracers: LlmTracer[]): LlmTracer {
+  const active = tracers.filter((t) => t !== NOOP_TRACER);
+  if (active.length === 0) return NOOP_TRACER;
+  if (active.length === 1) return active[0]!;
+  return {
+    startCycle(ctx) {
+      for (const t of active) t.startCycle(ctx);
+    },
+    setActivePair(pair) {
+      for (const t of active) t.setActivePair(pair);
+    },
+    recordGeneration(gen) {
+      for (const t of active) t.recordGeneration(gen);
+    },
+    recordCacheHit(hit) {
+      for (const t of active) t.recordCacheHit(hit);
+    },
+    async flush() {
+      await Promise.all(active.map((t) => t.flush()));
+    },
+    async shutdown() {
+      await Promise.all(active.map((t) => t.shutdown()));
+    },
+  };
+}
+
+/**
  * safeTracer — wrap a tracer so EVERY method swallows its own errors at the boundary. The shipped
  * LangfuseTracer already self-guards, but this makes the side-channel invariant STRUCTURAL: no tracer impl
  * (present or FUTURE/partial) can throw into the deterministic adjudication/reconcile path or abort a chain
