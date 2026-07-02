@@ -23,6 +23,12 @@ spec:
       labels:
         app.kubernetes.io/name: docketclock
         app.kubernetes.io/component: poller
+      # Annotation-based Prometheus scraping (Slice B / PR-B2). The poller serves no API HTTP, so it runs
+      # a standalone /metrics listener (src/metrics-server.ts) on metricsPort — point the scrape job at it.
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: {{ .Values.poller.metricsPort | quote }}
+        prometheus.io/path: /metrics
     spec:
       containers:
         - name: poller
@@ -30,7 +36,14 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           # Values-driven so the local overlay can swap plain `tsx` for `tsx watch` (#28 hot-reload).
           command: {{ .Values.poller.command | toJson }}
+          # The standalone Prometheus /metrics listener (src/metrics-server.ts). Declared so the port is
+          # visible on the pod; the scrape target is set by the prometheus.io/port annotation above.
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.poller.metricsPort }}
           env:
+            - name: METRICS_PORT
+              value: {{ .Values.poller.metricsPort | quote }}
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:

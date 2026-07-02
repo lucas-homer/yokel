@@ -19,6 +19,13 @@ spec:
       labels:
         app.kubernetes.io/name: docketclock
         app.kubernetes.io/component: api
+      # Annotation-based Prometheus scraping (Slice B / PR-B2): the observability-stack Prometheus'
+      # bundled `kubernetes-pods` job scrapes any pod carrying these. The API exposes /metrics on its
+      # Fastify server (same targetPort as the HTTP surface); no operator / ServiceMonitor needed.
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: {{ .Values.service.targetPort | quote }}
+        prometheus.io/path: /metrics
     spec:
       containers:
         - name: api
