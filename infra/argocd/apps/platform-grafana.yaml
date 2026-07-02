@@ -1,5 +1,6 @@
-# Grafana — the visualization layer (Slice A / PR-A2). Loki is pre-provisioned as the default
-# datasource so Explore works the moment the pod is up. Admin creds come from Vault via ESO (never
+# Grafana — the visualization layer (Slice A / PR-A2). Prometheus is pre-provisioned as the default
+# datasource (metrics, Slice B / PR-B2) with Loki alongside it (logs), so Explore works the moment the
+# pod is up. Admin creds come from Vault via ESO (never
 # inline): the ExternalSecret in extraObjects materializes the `grafana-admin` Secret from
 # secret/observability/grafana, mirroring the docketclock ExternalSecret pattern. Ephemeral
 # (persistence off) — dashboards arrive via provisioning later. Exposed by `task grafana`
@@ -43,17 +44,26 @@ spec:
           existingSecret: grafana-admin
           userKey: admin_user
           passwordKey: admin_password
-        # Pre-provision Loki as the default datasource.
+        # Pre-provision datasources: Prometheus (metrics, DEFAULT — Slice B / PR-B2) + Loki (logs).
         datasources:
           datasources.yaml:
             apiVersion: 1
             datasources:
+              - name: Prometheus
+                type: prometheus
+                uid: prometheus
+                access: proxy
+                # The prometheus chart's server Service (release `prometheus` -> `prometheus-server`),
+                # ClusterIP :80. Default datasource so ad-hoc PromQL + dashboards resolve here.
+                url: http://prometheus-server.observability.svc.cluster.local
+                isDefault: true
               - name: Loki
                 type: loki
                 uid: loki
                 access: proxy
                 url: http://loki.observability.svc.cluster.local:3100
-                isDefault: true
+                # No longer default (Prometheus is) — still the log datasource for Explore + log panels.
+                isDefault: false
                 jsonData:
                   maxLines: 1000
         # Ship the ESO ExternalSecret with this same Argo app. Note: only the ExternalSecret is applied

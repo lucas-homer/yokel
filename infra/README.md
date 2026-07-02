@@ -58,20 +58,26 @@ and `charts/docketclock/values-cloud.yaml`). There is **no** `vault-transit` in 
 
 ## Observability
 
-Logs-first stack (Slice A / PR-A2), three platform Argo Applications in the `observability`
-namespace, all pinned lean for the 12 GiB colima budget:
+Logs + metrics stack (Slice A / PR-A2 for logs, Slice B / PR-B2 for metrics), platform Argo
+Applications in the `observability` namespace, all pinned lean for the 12 GiB colima budget:
 
 - **Loki** (`platform-loki.yaml`, chart `grafana/loki`) — SingleBinary mode, filesystem storage, 72h
-  retention. The store; reachable in-cluster at `http://loki.observability.svc.cluster.local:3100`.
+  retention. The log store; reachable in-cluster at `http://loki.observability.svc.cluster.local:3100`.
   The chart's gateway / memcached caches / canary / self-monitoring / test pods are all disabled.
 - **Alloy** (`platform-alloy.yaml`, chart `grafana/alloy`) — single-replica Deployment log shipper.
   Discovers pods via the Kubernetes API, relabels to `namespace` / `pod` / `container` / `app`, drops its
   own noise, and pushes to Loki. (Promtail is EOL; Alloy is the supported agent.) It's a Deployment, not
   a DaemonSet, because the API-based source reads cluster-wide — a DaemonSet would tail every pod once
   per node and duplicate every line.
-- **Grafana** (`platform-grafana.yaml`, chart `grafana-community/grafana`) — Loki pre-provisioned as the
-  default datasource. Ephemeral (no PVC); ClusterIP service, reached via port-forward. (Uses the
-  `grafana-community` chart — the old `grafana/grafana` chart is deprecated upstream.)
+- **Prometheus** (`platform-prometheus.yaml`, chart `prometheus-community/prometheus`) — the metrics
+  store: server (5Gi PVC, 7d retention) + kube-state-metrics + node-exporter; alertmanager + pushgateway
+  disabled (alerting is Grafana-managed). Scraping is **annotation-based** (no operator): the bundled
+  `kubernetes-pods` job scrapes any pod with `prometheus.io/scrape: "true"` — the docketclock API (:8080)
+  and poller (:9464) carry those. Reachable at `http://prometheus-server.observability.svc.cluster.local`.
+- **Grafana** (`platform-grafana.yaml`, chart `grafana-community/grafana`) — Prometheus pre-provisioned as
+  the **default** datasource (metrics), Loki alongside it (logs). Ephemeral (no PVC); ClusterIP service,
+  reached via port-forward. (Uses the `grafana-community` chart — the old `grafana/grafana` chart is
+  deprecated upstream.)
 
 ### Vault seed
 
@@ -99,8 +105,13 @@ all-or-nothing, same as `secret/docketclock/external`).
 ### Use it
 
 ```bash
-task grafana   # port-forward svc/grafana :80 → localhost:3000 (log in with the seeded admin creds)
+task grafana      # port-forward svc/grafana :80 → localhost:3000 (log in with the seeded admin creds)
+task prometheus   # port-forward svc/prometheus-server :80 → localhost:9090 (raw Targets/Graph UI)
 ```
+
+Grafana is the day-to-day view (**Explore → Prometheus** for metrics, **→ Loki** for logs); `task
+prometheus` opens the raw store — its **/targets** page is the quickest way to confirm the docketclock
+API/poller pods are `UP` and kube-state-metrics/node-exporter are scraping.
 
 Then **Explore → Loki**. Start with a generic stream selector to confirm logs are flowing (works
 before docketclock is even running) — the labels Alloy sets are `namespace` / `pod` / `container` / `app`:

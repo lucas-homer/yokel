@@ -258,6 +258,15 @@ tasks:
       # Observability section in infra/README.md to override or update the password.
       - kubectl -n observability port-forward svc/grafana 3000:80
 
+  prometheus:
+    desc: Port-forward Prometheus to http://localhost:9090 (metrics store; Targets/Graph UI)
+    cmds:
+      # The prometheus chart's server Service listens on :80 (release `prometheus` -> `prometheus-server`);
+      # mapped to localhost:9090 (Prometheus' conventional port). Use the /targets page to confirm the
+      # docketclock API/poller pods are UP and kube-state-metrics/node-exporter are scraping. Grafana
+      # (`task grafana`) is the day-to-day view; this is the raw store for target debugging + ad-hoc PromQL.
+      - kubectl -n observability port-forward svc/prometheus-server 9090:80
+
   langfuse:
     desc: Port-forward Langfuse to http://localhost:3001 (LLM-obs UI; login admin@docketclock.local)
     cmds:
