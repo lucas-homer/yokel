@@ -171,6 +171,10 @@ async function main(): Promise<void> {
     // Flush + release the observability tracer (best-effort; no-op for the NoopTracer) so the last cycle's
     // Langfuse events are not lost on a container restart. shutdown() swallows its own errors.
     await adjudicator.tracer?.shutdown();
+    // Bound the metrics-server drain like the DB drain beside it: close() alone waits for open sockets to
+    // end, so a keep-alive Prometheus scrape held at shutdown could hang past the grace period. Terminate
+    // idle/active connections first (Node ≥18) so the close() callback fires promptly.
+    metricsServer.closeAllConnections();
     await new Promise<void>((resolve) => metricsServer.close(() => resolve()));
     await sql.end({ timeout: 5 });
     process.exit(0);

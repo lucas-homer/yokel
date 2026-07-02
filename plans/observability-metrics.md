@@ -120,24 +120,29 @@ Independently mergeable and useful before Prometheus exists (metrics visible via
 metrics` / `kubectl exec`), exactly as A1 shipped structured logging before Loki. **No infra in this PR.**
 
 1. **`src/metrics.ts`** — one `prom-client` `Registry` (+ `collectDefaultMetrics()` for Node process/GC/
-   heap). Declare the app metrics (names below) and export typed recorder helpers
-   (`recordPollSummary(summary, source)`, `recordChainCycle(counts)`, `observeHttp(route,status,seconds)`,
-   `setHeartbeat(ts)`, `setDbUp(bool)`). Pure module, no I/O. Unit-tested (`test/metrics.test.ts`): a metric
-   increments/observes as expected and `registry.metrics()` renders the prom text exposition format.
+   heap). Declare the app metrics (names below) and export typed recorder helpers. **As shipped** the
+   summary recorders are split per source (`recordFrPoll(FrPollSummary)`, `recordRegsPoll(PollSummary)`) so
+   each maps its own fields onto `poll_items_total{source,outcome}`, plus `recordChainCycle(result)`,
+   `recordPollPassFailure(pass)`, `observePollCycle(seconds)`, `observeHttp({method,route,status,seconds})`,
+   `setHeartbeat(unixSeconds)`, `setDbUp(bool)`, and `recordLlmGeneration`/`recordLlmCacheHit` (fed by the
+   MetricsTracer). Pure module, no I/O. Unit-tested (`test/metrics.test.ts`).
 2. **`/metrics` route** — PUBLIC, mounted before the auth scope in `server.ts` (alongside `/openapi.json`):
    `schema:{hide:true}`, `logLevel:"silent"`, returns `registry.metrics()` with `registry.contentType`,
    NOT the contract envelope. Add an `onResponse` hook (paired with the existing `onRequest` at `:200`) to
    feed `docketclock_http_request_duration_seconds{route,method,status}` + `_http_requests_total`. Exclude
    the probe/metrics routes from the histogram (self-noise).
-3. **Poll + chain instrumentation** — at `run.ts:105/111/121` call `recordPollSummary(summary, "fr"|"regs")`
-   next to each `log.info`; wrap `tick()` (`:93`) for `docketclock_poll_cycle_duration_seconds` +
-   `_poll_cycles_total{result}`; set `docketclock_poller_last_heartbeat_seconds` in `writeHeartbeat`. At
-   `run.ts:118` call `recordChainCycle(counts)` off `chainReconcileOnce`'s return.
+3. **Poll + chain instrumentation** — at each `log.info({summary})` site call `recordFrPoll(fr)` /
+   `recordRegsPoll(regs)`; in each pass's catch call `recordPollPassFailure("fr"|"regs"|"chain")`; wrap
+   `tick()` for `docketclock_poll_cycle_duration_seconds` (a duration histogram — no `_poll_cycles_total`
+   counter shipped; per-pass failures carry the error signal); set
+   `docketclock_poller_last_heartbeat_seconds` in `writeHeartbeat`. Call `recordChainCycle(chain)` off
+   `chainReconcileOnce`'s return. **The poller runs no HTTP server**, so it also starts its own standalone
+   `/metrics` listener (`src/metrics-server.ts`, `METRICS_PORT` default 9464), drained on shutdown.
 4. **LLM `MetricsTracer`** — `src/adjudicator/metrics-tracer.ts` implementing `LlmTracer`:
    `recordGeneration` → `docketclock_llm_tokens_total{model,kind=input|output}`,
    `_llm_call_latency_seconds{model}`, `_llm_calls_total{model,verdict}`; `recordCacheHit` →
-   `_llm_cache_hits_total` (ratio derivable vs calls). Compose it with the existing tracer in `select.ts`
-   (a small `CompositeTracer`, or accept an array) so it runs **whether or not Langfuse is configured**.
+   `_llm_cache_hits_total{kind}` (ratio derivable vs calls). Compose it with the existing tracer in
+   `select.ts` via a `composeTracers()` combinator so it runs **whether or not Langfuse is configured**.
    Unit-tested against the `LlmTracer` contract.
 5. **DB up** — set `docketclock_db_up` from the `select 1` in `/healthz`/`/readyz`.
 6. **Verify:** `pnpm test` green (incl. new tests); `pnpm typecheck`/`lint`/`build` green; run the app and
@@ -146,22 +151,28 @@ metrics` / `kubectl exec`), exactly as A1 shipped structured logging before Loki
 
 ### Metric inventory (B1)
 
-| Metric                                                                                                                  | Type              | Seam                                  |
-| ----------------------------------------------------------------------------------------------------------------------- | ----------------- | ------------------------------------- |
-| `docketclock_http_requests_total{route,method,status}`                                                                  | counter           | `onResponse` hook                     |
-| `docketclock_http_request_duration_seconds{route,method,status}`                                                        | histogram         | `onResponse` hook                     |
-| `docketclock_poll_cycles_total{result}` / `_poll_cycle_duration_seconds`                                                | counter/histogram | wrap `tick()`                         |
-| `docketclock_poll_items_total{source,outcome}` (listed/ingested/deduped/skipped/transitions/recovered)                  | counter           | `recordPollSummary`                   |
-| `docketclock_poll_dead_lettered_total{source}`                                                                          | counter           | `recordPollSummary`                   |
-| `docketclock_poller_last_heartbeat_seconds`                                                                             | gauge             | `writeHeartbeat`                      |
-| `docketclock_chain_surfaced_total` / `_cache_hits_total` / `_llm_calls_total` / `_deferred_total` / `_llm_linked_total` | counter           | `recordChainCycle`                    |
-| `docketclock_chain_budget_cap`                                                                                          | gauge             | `recordChainCycle`                    |
-| `docketclock_llm_tokens_total{model,kind}`                                                                              | counter           | `MetricsTracer.recordGeneration`      |
-| `docketclock_llm_call_latency_seconds{model}`                                                                           | histogram         | `MetricsTracer.recordGeneration`      |
-| `docketclock_llm_calls_total{model,verdict}` / `_llm_errors_total`                                                      | counter           | `MetricsTracer` / consult-fail `:228` |
-| `docketclock_llm_cache_hits_total`                                                                                      | counter           | `MetricsTracer.recordCacheHit`        |
-| `docketclock_db_up`                                                                                                     | gauge             | `/healthz` `select 1`                 |
-| `process_*` / `nodejs_*` (default)                                                                                      | —                 | `collectDefaultMetrics()`             |
+| Metric                                                                                                                                                                 | Type      | Seam                              |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------------------------------- |
+| `docketclock_http_requests_total{route,method,status}`                                                                                                                 | counter   | `onResponse` hook                 |
+| `docketclock_http_request_duration_seconds{route,method,status}`                                                                                                       | histogram | `onResponse` hook                 |
+| `docketclock_poll_cycle_duration_seconds`                                                                                                                              | histogram | wrap `tick()`                     |
+| `docketclock_poll_pass_failures_total{pass}`                                                                                                                           | counter   | per-pass catch                    |
+| `docketclock_poll_items_total{source,outcome}` (listed/fetched/ingested/deduped/skipped/repolled/transitions/recovered/dead_lettered)                                  | counter   | `recordFrPoll`/`recordRegsPoll`   |
+| `docketclock_poll_pages_fetched_total{source}`                                                                                                                         | counter   | `recordFrPoll`/`recordRegsPoll`   |
+| `docketclock_poll_truncated{source}`                                                                                                                                   | gauge     | `recordFrPoll`/`recordRegsPoll`   |
+| `docketclock_poller_last_heartbeat_seconds`                                                                                                                            | gauge     | `writeHeartbeat`                  |
+| `docketclock_chain_candidates` / `_amendments` / `_conflicts_live`                                                                                                     | gauge     | `recordChainCycle`                |
+| `docketclock_chain_confident_links_total` / `_ambiguous_total` / `_cache_hits_total` / `_llm_calls_total` / `_llm_linked_total` / `_deferred_total` / `_retired_total` | counter   | `recordChainCycle`                |
+| `docketclock_llm_tokens_total{model,kind}`                                                                                                                             | counter   | `MetricsTracer.recordGeneration`  |
+| `docketclock_llm_call_latency_seconds{model}`                                                                                                                          | histogram | `MetricsTracer.recordGeneration`  |
+| `docketclock_llm_calls_total{model,verdict}`                                                                                                                           | counter   | `MetricsTracer.recordGeneration`  |
+| `docketclock_llm_cache_hits_total{kind}`                                                                                                                               | counter   | `MetricsTracer.recordCacheHit`    |
+| `docketclock_db_up`                                                                                                                                                    | gauge     | `/healthz` + `/readyz` `select 1` |
+| `process_*` / `nodejs_*` (default)                                                                                                                                     | —         | `collectDefaultMetrics()`         |
+
+> LLM **error rate** is not a dedicated series: it's derivable as `chain_llm_calls_total`
+> (attempts, incl. throws) − `llm_calls_total` (successful generations recorded by the tracer). A dedicated
+> `llm_errors_total` at the consult-fail site can be added later if a direct series proves more convenient.
 
 ## PR-B2 — Prometheus deploy + scrape wiring (infra)
 

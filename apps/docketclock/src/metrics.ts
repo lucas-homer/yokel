@@ -92,7 +92,7 @@ const pollTruncated = new Gauge({
 });
 const pollPassFailures = new Counter({
   name: "docketclock_poll_pass_failures_total",
-  help: "Poll passes that threw (were isolated) this cycle, by pass.",
+  help: "Cumulative poll passes that threw and were isolated (since process start), by pass.",
   labelNames: ["pass"],
   registers: [registry],
 });
@@ -185,6 +185,11 @@ const chainDeferred = new Counter({
   help: "Uncached pairs deferred because the per-cycle fresh-call budget was exhausted.",
   registers: [registry],
 });
+const chainRetired = new Counter({
+  name: "docketclock_chain_retired_total",
+  help: "Open cross_window conflict records retired (no longer a live pair) by the chain cycle.",
+  registers: [registry],
+});
 export function recordChainCycle(s: ChainReconcileOnceResult): void {
   chainCandidates.set(s.candidates);
   chainAmendments.set(s.amendments);
@@ -195,6 +200,7 @@ export function recordChainCycle(s: ChainReconcileOnceResult): void {
   chainLlmCalls.inc(s.llmCalls);
   chainLlmLinked.inc(s.llmLinked);
   chainDeferred.inc(s.deferred);
+  chainRetired.inc(s.retired);
 }
 
 // ── LLM per-call (fed by MetricsTracer, independent of Langfuse) ──────────────────────────────────────
@@ -237,6 +243,6 @@ export function recordLlmGeneration(o: {
   if (typeof o.output === "number")
     llmTokens.inc({ model: o.model, kind: "output" }, o.output);
 }
-export function recordLlmCacheHit(kind: string): void {
+export function recordLlmCacheHit(kind: "notice" | "chain"): void {
   llmCacheHits.inc({ kind });
 }
