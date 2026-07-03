@@ -113,6 +113,16 @@ Grafana is the day-to-day view (**Explore → Prometheus** for metrics, **→ Lo
 prometheus` opens the raw store — its **/targets** page is the quickest way to confirm the docketclock
 API/poller pods are `UP` and kube-state-metrics/node-exporter are scraping.
 
+**Dashboards + alerts (Slice B / PR-B3)** are provisioned into Grafana from `platform-grafana.yaml`
+(no manual import). Under **Dashboards** you'll find _DocketClock — App_ (poll/chain cycles, adjudicator
+LLM latency/tokens/verdicts/cache-hit, HTTP p95/5xx, `db_up`) and _Cluster — Overview_ (node
+CPU/mem/disk, plus pod restarts/memory by namespace). Under **Alerting → Alert rules**: _Poller stalled_
+(heartbeat age > 3× interval), _LLM adjudicator error spike_, and _API readiness down_ (`db_up == 0`).
+Each rule scopes by `app_kubernetes_io_component` so the cross-process gauge leaks (`db_up=0` on the
+poller, `heartbeat=0` on the API) never false-fire. Notifications route to a placeholder `local-noop`
+**webhook** contact point — swap its URL in `alerting.contactpoints.yaml` (or add a Slack receiver + its
+ESO secret) to deliver for real; alert _state_ is visible in the UI regardless.
+
 Then **Explore → Loki**. Start with a generic stream selector to confirm logs are flowing (works
 before docketclock is even running) — the labels Alloy sets are `namespace` / `pod` / `container` / `app`:
 
