@@ -59,6 +59,10 @@ poller:
   pollIntervalMs: 900000 # 15 min
   heartbeat:
     file: /tmp/poller-heartbeat
+  # The poller serves no API HTTP, so it runs a standalone /metrics listener (src/metrics-server.ts) on
+  # this port for Prometheus to scrape (Slice B / PR-B2). 9464 is the OpenMetrics convention and the code
+  # default (METRICS_PORT); kept in values so the chart annotation, env, and containerPort stay in lockstep.
+  metricsPort: 9464
 
 # LLM adjudicator (chain-seam escalation, Slice 3). Activation is gated by BOTH provider==gemini AND a
 # non-empty gemini_api_key (from Vault via ESO). With the key empty (the seeded default) the poller runs

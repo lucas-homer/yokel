@@ -1,0 +1,78 @@
+# Prometheus — the metrics store for the observability stack (Slice B / PR-B2). A LEAN standalone
+# prometheus-community/prometheus deploy (NOT kube-prometheus-stack, which bundles its own Grafana +
+# operator and would collide with our Grafana / blow the 12 GiB colima budget). Just: the server
+# (5Gi PVC, 7d retention) + kube-state-metrics (pod/deploy/restart metrics) + node-exporter (node
+# CPU/mem/disk). Alertmanager + pushgateway are DISABLED — alerting is Grafana unified alerting
+# (Slice B / PR-B3), no standalone Alertmanager. Memory limits pinned on every workload, same RAM
+# discipline as Loki/Alloy.
+#
+# SCRAPING IS ANNOTATION-BASED, no prometheus-operator (no CRDs, no extra wave-0 app). The chart's
+# bundled `kubernetes-pods` scrape job honors `prometheus.io/{scrape,port,path}` pod annotations —
+# docketclock's chart Deployments carry those (API :8080, poller :9464). Reachable in-cluster at
+# http://prometheus-server.observability.svc.cluster.local; exposed locally by `task prometheus`.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # after operators (ESO/CNPG at "0"), alongside Loki/Alloy
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: prometheus
+    targetRevision: "29.14.0"
+    helm:
+      values: |
+        # --- Prometheus server: lean, persistent, short retention. ---
+        server:
+          # 7d local TSDB: enough for local trend/alerting, not long-term capacity planning. Survives a
+          # pod restart via the PVC (like Loki's 5Gi; Grafana stays ephemeral).
+          retention: "7d"
+          persistentVolume:
+            enabled: true
+            size: 5Gi
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 512Mi
+          # No web ingress — reached in-cluster / via `task prometheus` port-forward, never exposed.
+          service:
+            type: ClusterIP
+            servicePort: 80
+        # --- kube-state-metrics: "see the cluster" (pods/deployments/restarts). Keep, pin the limit. ---
+        kube-state-metrics:
+          enabled: true
+          resources:
+            requests:
+              cpu: 20m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+        # --- node-exporter: node CPU/mem/disk (a DaemonSet, one per node). Keep, pin the limit. ---
+        prometheus-node-exporter:
+          enabled: true
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              memory: 64Mi
+        # --- Footgun disablers: alerting is Grafana-managed, and we don't push metrics. ---
+        alertmanager:
+          enabled: false
+        prometheus-pushgateway:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
