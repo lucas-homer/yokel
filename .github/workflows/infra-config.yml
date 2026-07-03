@@ -1,0 +1,79 @@
+name: Infra config
+
+# Static guard over the ArgoCD Application manifests (issue #66). Argo syncs infra/argocd/apps/*.yaml
+# straight from git, so a malformed inlined Helm `values` block — a bad indent, a broken dashboard JSON
+# string, an alert rule whose `condition` points at a missing refId — is otherwise only caught when Argo
+# tries to sync it LIVE, after merge. This runs on the PR (no cluster, no secrets, all-public charts):
+#   1. structural validation (infra/scripts/validate-argocd-apps.py) — app shape, inlined values YAML,
+#      Grafana dashboards/alerts (JSON validity, datasource-uid + condition-refId consistency);
+#   2. `helm template` every inlined-values app against its real chart — catches values a chart rejects;
+#   3. `promtool check rules` over the extracted Prometheus exprs — an offline PromQL SYNTAX check
+#      (Grafana's own alerting schema isn't promtool-checkable, so the exprs are wrapped as recording rules).
+on:
+  pull_request:
+    paths:
+      - "infra/argocd/apps/**"
+      - "infra/scripts/validate-argocd-apps.py"
+      - ".github/workflows/infra-config.yml"
+  push:
+    branches: [main]
+    paths:
+      - "infra/argocd/apps/**"
+      - "infra/scripts/validate-argocd-apps.py"
+      - ".github/workflows/infra-config.yml"
+
+concurrency:
+  group: infra-config-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # promtool ships in the prometheus image; pin an LTS tag (stable PromQL parser, reliably-existing tag).
+  PROMETHEUS_IMAGE: prom/prometheus:v2.53.2
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+
+      - name: Validator self-test (its own negative cases)
+        run: python3 infra/scripts/validate-argocd-apps.py --self-test
+
+      - name: Structural validation (+ emit promql / values for the steps below)
+        run: |
+          python3 infra/scripts/validate-argocd-apps.py \
+            --emit-promql _ci/ci-promql.yaml \
+            --emit-values _ci/values
+
+      - uses: azure/setup-helm@v4
+
+      - name: helm template every inlined-values app
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, pathlib, sys
+          idx = json.load(open("_ci/values/_index.json"))
+          failed = False
+          for name, m in idx.items():
+              cmd = ["helm", "template", name, m["chart"], "--repo", m["repoURL"],
+                     "-f", f"_ci/values/{m['valuesFile']}"]
+              # Only pin --version when the app does (an empty --version is unpinned/latest — avoid it).
+              if m.get("targetRevision"):
+                  cmd += ["--version", m["targetRevision"]]
+              r = subprocess.run(cmd, capture_output=True, text=True)
+              ok = r.returncode == 0
+              print(f"  {name:18} -> {'OK' if ok else 'FAIL'}")
+              if not ok:
+                  failed = True
+                  print(r.stderr.strip())
+          sys.exit(1 if failed else 0)
+          PY
+
+      - name: promtool — PromQL syntax check
+        run: |
+          docker run --rm -v "$PWD/_ci:/w" --entrypoint promtool "$PROMETHEUS_IMAGE" \
+            check rules /w/ci-promql.yaml
