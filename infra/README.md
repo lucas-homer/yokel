@@ -120,8 +120,9 @@ CPU/mem/disk, plus pod restarts/memory by namespace). Under **Alerting → Alert
 (heartbeat age > 3× interval), _LLM adjudicator error spike_, and _API readiness down_ (`db_up == 0`).
 Each rule scopes by `app_kubernetes_io_component` so the cross-process gauge leaks (`db_up=0` on the
 poller, `heartbeat=0` on the API) never false-fire. Notifications route to a placeholder `local-noop`
-**webhook** contact point — swap its URL in `alerting.contactpoints.yaml` (or add a Slack receiver + its
-ESO secret) to deliver for real; alert _state_ is visible in the UI regardless.
+**webhook** contact point — swap its URL in the `alerting.contactpoints.yaml` block of
+`platform-grafana.yaml` (or add a Slack receiver + its ESO secret) to deliver for real; alert _state_ is
+visible in the UI regardless.
 
 Then **Explore → Loki**. Start with a generic stream selector to confirm logs are flowing (works
 before docketclock is even running) — the labels Alloy sets are `namespace` / `pod` / `container` / `app`:

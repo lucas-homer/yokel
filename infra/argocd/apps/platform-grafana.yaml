@@ -1454,7 +1454,7 @@ spec:
                             "uid": "prometheus"
                           },
                           "editorMode": "code",
-                          "expr": "sum by (namespace) (kube_pod_container_status_restarts_total)",
+                          "expr": "sum by (namespace) (increase(kube_pod_container_status_restarts_total[1h]))",
                           "legendFormat": "{{namespace}}",
                           "range": true,
                           "instant": false,
@@ -1608,7 +1608,7 @@ spec:
                       type: prometheus
                       uid: prometheus
                     editorMode: code
-                    expr: time() - max(docketclock_poller_last_heartbeat_seconds{app_kubernetes_io_component="poller"})
+                    expr: time() - (max(docketclock_poller_last_heartbeat_seconds{app_kubernetes_io_component="poller"}) or vector(0))
                     instant: true
                     intervalMs: 1000
                     maxDataPoints: 43200
@@ -1645,6 +1645,12 @@ spec:
                   severity: warning
                 annotations:
                   summary: "The poller has not settled a cycle in >45m (3x the 15m interval) \u2014 the loop is hung or the pod is down."
+              # ASSUMPTION (revisit when notice-kind adjudication ships): errors = attempts − successes =
+              # chain_llm_calls_total − llm_calls_total. This holds ONLY while chain adjudication is the sole
+              # caller of the shared MetricsTracer. llm_calls_total has no `kind` label, so once notice-kind
+              # adjudication feeds the same tracer, its successes inflate llm_calls_total and this subtraction
+              # skews low (may stop crossing >3). Fix then: add a `kind` label to llm_calls_total and scope
+              # this to kind="chain". Tracked as a follow-up to the metrics inventory in observability-metrics.md.
               - uid: llm-error-spike
                 title: LLM adjudicator error spike
                 condition: C
@@ -1710,7 +1716,7 @@ spec:
                       type: prometheus
                       uid: prometheus
                     editorMode: code
-                    expr: min(docketclock_db_up{app_kubernetes_io_component="api"})
+                    expr: min(docketclock_db_up{app_kubernetes_io_component="api"}) or vector(0)
                     instant: true
                     intervalMs: 1000
                     maxDataPoints: 43200
