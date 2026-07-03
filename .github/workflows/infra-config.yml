@@ -10,11 +10,12 @@ name: Infra config
 #   3. `promtool check rules` over the extracted Prometheus exprs — an offline PromQL SYNTAX check
 #      (Grafana's own alerting schema isn't promtool-checkable, so the exprs are wrapped as recording rules).
 on:
+  # Runs on EVERY PR (no path filter) so it can be a REQUIRED status check without deadlocking non-infra
+  # PRs — a path-filtered required check never reports on unrelated PRs and blocks them forever. It's cheap
+  # (~20s): on a PR that touches no infra, the validator scans the (unchanged) manifests, helm-templates
+  # the same charts, and promtool-checks the same exprs — all green, fast, no secrets. The push:main run
+  # stays path-filtered (post-merge, only when infra actually changed).
   pull_request:
-    paths:
-      - "infra/argocd/apps/**"
-      - "infra/scripts/validate-argocd-apps.py"
-      - ".github/workflows/infra-config.yml"
   push:
     branches: [main]
     paths:
