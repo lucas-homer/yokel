@@ -66,6 +66,1712 @@ spec:
                 isDefault: false
                 jsonData:
                   maxLines: 1000
+
+        # Dashboards + unified alerting (Slice B / PR-B3). Provisioned via the chart's file provider;
+        # dashboards are self-contained JSON (no gnetId/url fetch — the init container's -skf curl would
+        # fail-fast and block Grafana boot). Alert rules scope by app_kubernetes_io_component so the
+        # cross-process gauge leaks (db_up=0 on the poller, heartbeat=0 on the API) never false-fire.
+        dashboardProviders:
+          dashboardproviders.yaml:
+            apiVersion: 1
+            providers:
+            - name: docketclock
+              orgId: 1
+              folder: DocketClock
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/docketclock
+        dashboards:
+          docketclock:
+            docketclock-app:
+              json: |-
+                {
+                  "uid": "docketclock-app",
+                  "title": "DocketClock \u2014 App",
+                  "tags": [
+                    "docketclock",
+                    "observability"
+                  ],
+                  "schemaVersion": 39,
+                  "editable": true,
+                  "graphTooltip": 1,
+                  "time": {
+                    "from": "now-6h",
+                    "to": "now"
+                  },
+                  "timezone": "browser",
+                  "refresh": "30s",
+                  "templating": {
+                    "list": []
+                  },
+                  "annotations": {
+                    "list": []
+                  },
+                  "panels": [
+                    {
+                      "id": 1,
+                      "type": "row",
+                      "title": "Health",
+                      "collapsed": false,
+                      "gridPos": {
+                        "h": 1,
+                        "w": 24,
+                        "x": 0,
+                        "y": 0
+                      },
+                      "panels": []
+                    },
+                    {
+                      "id": 2,
+                      "type": "stat",
+                      "title": "Poller heartbeat age",
+                      "description": "Seconds since the poller last settled a cycle. >2700s (3x the 15m interval) = stalled.",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 4,
+                        "w": 6,
+                        "x": 0,
+                        "y": 1
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "s",
+                          "mappings": [],
+                          "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                              {
+                                "color": "green",
+                                "value": null
+                              },
+                              {
+                                "color": "yellow",
+                                "value": 1800
+                              },
+                              {
+                                "color": "red",
+                                "value": 2700
+                              }
+                            ]
+                          },
+                          "color": {
+                            "mode": "thresholds"
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "colorMode": "background",
+                        "graphMode": "area",
+                        "reduceOptions": {
+                          "calcs": [
+                            "lastNotNull"
+                          ],
+                          "fields": "",
+                          "values": false
+                        },
+                        "textMode": "auto"
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "time() - max(docketclock_poller_last_heartbeat_seconds{app_kubernetes_io_component=\"poller\"})",
+                          "legendFormat": "__auto",
+                          "range": false,
+                          "instant": true,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 3,
+                      "type": "stat",
+                      "title": "DB up (API)",
+                      "description": "db_up is an API concept (/healthz select 1); scoped to the API pod.",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 4,
+                        "w": 6,
+                        "x": 6,
+                        "y": 1
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "mappings": [
+                            {
+                              "type": "value",
+                              "options": {
+                                "0": {
+                                  "text": "DOWN",
+                                  "color": "red"
+                                },
+                                "1": {
+                                  "text": "UP",
+                                  "color": "green"
+                                }
+                              }
+                            }
+                          ],
+                          "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                              {
+                                "color": "red",
+                                "value": null
+                              },
+                              {
+                                "color": "green",
+                                "value": 1
+                              }
+                            ]
+                          },
+                          "color": {
+                            "mode": "thresholds"
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "colorMode": "background",
+                        "graphMode": "area",
+                        "reduceOptions": {
+                          "calcs": [
+                            "lastNotNull"
+                          ],
+                          "fields": "",
+                          "values": false
+                        },
+                        "textMode": "auto"
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "min(docketclock_db_up{app_kubernetes_io_component=\"api\"})",
+                          "legendFormat": "__auto",
+                          "range": false,
+                          "instant": true,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 4,
+                      "type": "stat",
+                      "title": "Live cross-window conflicts",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 4,
+                        "w": 6,
+                        "x": 12,
+                        "y": 1
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "mappings": [],
+                          "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                              {
+                                "color": "green",
+                                "value": null
+                              }
+                            ]
+                          },
+                          "color": {
+                            "mode": "thresholds"
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "colorMode": "background",
+                        "graphMode": "area",
+                        "reduceOptions": {
+                          "calcs": [
+                            "lastNotNull"
+                          ],
+                          "fields": "",
+                          "values": false
+                        },
+                        "textMode": "auto"
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "max(docketclock_chain_conflicts_live{app_kubernetes_io_component=\"poller\"})",
+                          "legendFormat": "__auto",
+                          "range": false,
+                          "instant": true,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 5,
+                      "type": "stat",
+                      "title": "Chain candidates (last cycle)",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 4,
+                        "w": 6,
+                        "x": 18,
+                        "y": 1
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "mappings": [],
+                          "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                              {
+                                "color": "green",
+                                "value": null
+                              }
+                            ]
+                          },
+                          "color": {
+                            "mode": "thresholds"
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "colorMode": "background",
+                        "graphMode": "area",
+                        "reduceOptions": {
+                          "calcs": [
+                            "lastNotNull"
+                          ],
+                          "fields": "",
+                          "values": false
+                        },
+                        "textMode": "auto"
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "max(docketclock_chain_candidates{app_kubernetes_io_component=\"poller\"})",
+                          "legendFormat": "__auto",
+                          "range": false,
+                          "instant": true,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 6,
+                      "type": "row",
+                      "title": "Poller",
+                      "collapsed": false,
+                      "gridPos": {
+                        "h": 1,
+                        "w": 24,
+                        "x": 0,
+                        "y": 5
+                      },
+                      "panels": []
+                    },
+                    {
+                      "id": 7,
+                      "type": "timeseries",
+                      "title": "Poll cycle duration",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 0,
+                        "y": 6
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "s",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "histogram_quantile(0.5, sum(rate(docketclock_poll_cycle_duration_seconds_bucket{app_kubernetes_io_component=\"poller\"}[1h])) by (le))",
+                          "legendFormat": "p50",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        },
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "histogram_quantile(0.95, sum(rate(docketclock_poll_cycle_duration_seconds_bucket{app_kubernetes_io_component=\"poller\"}[1h])) by (le))",
+                          "legendFormat": "p95",
+                          "range": true,
+                          "instant": false,
+                          "refId": "B"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 8,
+                      "type": "timeseries",
+                      "title": "Poll items /1h by source+outcome",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 8,
+                        "y": 6
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum by (source, outcome) (increase(docketclock_poll_items_total[1h]))",
+                          "legendFormat": "{{source}}/{{outcome}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 9,
+                      "type": "timeseries",
+                      "title": "Dead-letter rate by source",
+                      "description": "Dead-letters/sec (1h window). A sustained non-zero rate = an upstream source is failing to parse/ingest.",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 16,
+                        "y": 6
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum by (source) (rate(docketclock_poll_items_total{outcome=\"dead_lettered\"}[1h]))",
+                          "legendFormat": "{{source}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 10,
+                      "type": "timeseries",
+                      "title": "Poll pass failures /1h",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 0,
+                        "y": 14
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum by (pass) (increase(docketclock_poll_pass_failures_total[1h]))",
+                          "legendFormat": "{{pass}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 11,
+                      "type": "timeseries",
+                      "title": "Chain activity /1h",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 8,
+                        "y": 14
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum(increase(docketclock_chain_confident_links_total[1h]))",
+                          "legendFormat": "confident links",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        },
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum(increase(docketclock_chain_ambiguous_total[1h]))",
+                          "legendFormat": "ambiguous",
+                          "range": true,
+                          "instant": false,
+                          "refId": "B"
+                        },
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum(increase(docketclock_chain_llm_linked_total[1h]))",
+                          "legendFormat": "llm linked",
+                          "range": true,
+                          "instant": false,
+                          "refId": "C"
+                        },
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum(increase(docketclock_chain_deferred_total[1h]))",
+                          "legendFormat": "deferred",
+                          "range": true,
+                          "instant": false,
+                          "refId": "D"
+                        },
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum(increase(docketclock_chain_retired_total[1h]))",
+                          "legendFormat": "retired",
+                          "range": true,
+                          "instant": false,
+                          "refId": "E"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 12,
+                      "type": "timeseries",
+                      "title": "Chain amendments (last cycle)",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 16,
+                        "y": 14
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "max(docketclock_chain_amendments{app_kubernetes_io_component=\"poller\"})",
+                          "legendFormat": "amendments",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 13,
+                      "type": "row",
+                      "title": "Adjudicator (LLM)",
+                      "collapsed": false,
+                      "gridPos": {
+                        "h": 1,
+                        "w": 24,
+                        "x": 0,
+                        "y": 22
+                      },
+                      "panels": []
+                    },
+                    {
+                      "id": 14,
+                      "type": "timeseries",
+                      "title": "LLM calls/min by verdict",
+                      "description": "Empty until a real gemini_api_key is seeded (adjudicator runs null:abstain when dormant).",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 0,
+                        "y": 23
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum by (verdict) (rate(docketclock_llm_calls_total[15m])) * 60",
+                          "legendFormat": "{{verdict}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 15,
+                      "type": "timeseries",
+                      "title": "LLM latency",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 8,
+                        "y": 23
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "s",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "histogram_quantile(0.5, sum(rate(docketclock_llm_call_latency_seconds_bucket[1h])) by (le))",
+                          "legendFormat": "p50",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        },
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "histogram_quantile(0.95, sum(rate(docketclock_llm_call_latency_seconds_bucket[1h])) by (le))",
+                          "legendFormat": "p95",
+                          "range": true,
+                          "instant": false,
+                          "refId": "B"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 16,
+                      "type": "timeseries",
+                      "title": "LLM token rate by kind",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 16,
+                        "y": 23
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum by (kind) (rate(docketclock_llm_tokens_total[1h]))",
+                          "legendFormat": "{{kind}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 17,
+                      "type": "timeseries",
+                      "title": "Cache-hit ratio",
+                      "description": "Cached verdicts / (cached + fresh LLM calls). A drop can signal a prompt/dedup regression.",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 0,
+                        "y": 31
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "percentunit",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum(rate(docketclock_llm_cache_hits_total[1h])) / (sum(rate(docketclock_llm_cache_hits_total[1h])) + sum(rate(docketclock_llm_calls_total[1h])))",
+                          "legendFormat": "cache-hit ratio",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 18,
+                      "type": "row",
+                      "title": "HTTP (API)",
+                      "collapsed": false,
+                      "gridPos": {
+                        "h": 1,
+                        "w": 24,
+                        "x": 0,
+                        "y": 39
+                      },
+                      "panels": []
+                    },
+                    {
+                      "id": 19,
+                      "type": "timeseries",
+                      "title": "HTTP req rate by route",
+                      "description": "Empty until real /v1 traffic arrives; probe + /metrics routes are excluded by the hook.",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 0,
+                        "y": 40
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "reqps",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum by (route) (rate(docketclock_http_requests_total{app_kubernetes_io_component=\"api\"}[5m]))",
+                          "legendFormat": "{{route}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 20,
+                      "type": "timeseries",
+                      "title": "HTTP p95 by route",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 8,
+                        "y": 40
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "s",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "histogram_quantile(0.95, sum by (le, route) (rate(docketclock_http_request_duration_seconds_bucket{app_kubernetes_io_component=\"api\"}[5m])))",
+                          "legendFormat": "{{route}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 21,
+                      "type": "timeseries",
+                      "title": "HTTP 5xx ratio",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 8,
+                        "x": 16,
+                        "y": 40
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "percentunit",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum(rate(docketclock_http_requests_total{app_kubernetes_io_component=\"api\", status=~\"5..\"}[5m])) / sum(rate(docketclock_http_requests_total{app_kubernetes_io_component=\"api\"}[5m]))",
+                          "legendFormat": "5xx ratio",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    }
+                  ]
+                }
+            cluster-overview:
+              json: |-
+                {
+                  "uid": "cluster-overview",
+                  "title": "Cluster \u2014 Overview",
+                  "tags": [
+                    "cluster",
+                    "observability"
+                  ],
+                  "schemaVersion": 39,
+                  "editable": true,
+                  "graphTooltip": 1,
+                  "time": {
+                    "from": "now-6h",
+                    "to": "now"
+                  },
+                  "timezone": "browser",
+                  "refresh": "30s",
+                  "templating": {
+                    "list": []
+                  },
+                  "annotations": {
+                    "list": []
+                  },
+                  "panels": [
+                    {
+                      "id": 22,
+                      "type": "row",
+                      "title": "Nodes",
+                      "collapsed": false,
+                      "gridPos": {
+                        "h": 1,
+                        "w": 24,
+                        "x": 0,
+                        "y": 0
+                      },
+                      "panels": []
+                    },
+                    {
+                      "id": 23,
+                      "type": "timeseries",
+                      "title": "Node CPU utilisation",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 12,
+                        "x": 0,
+                        "y": 1
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "percent",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "100 * (1 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))",
+                          "legendFormat": "{{instance}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 24,
+                      "type": "timeseries",
+                      "title": "Node memory utilisation",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 12,
+                        "x": 12,
+                        "y": 1
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "percent",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "100 * (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
+                          "legendFormat": "{{instance}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 25,
+                      "type": "timeseries",
+                      "title": "Node disk used (root fs)",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 12,
+                        "x": 0,
+                        "y": 9
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "percent",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "100 * (1 - node_filesystem_avail_bytes{mountpoint=\"/\"} / node_filesystem_size_bytes{mountpoint=\"/\"})",
+                          "legendFormat": "{{instance}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 26,
+                      "type": "timeseries",
+                      "title": "Pod restarts by namespace",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 12,
+                        "x": 12,
+                        "y": 9
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum by (namespace) (increase(kube_pod_container_status_restarts_total[1h]))",
+                          "legendFormat": "{{namespace}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 27,
+                      "type": "row",
+                      "title": "Workloads",
+                      "collapsed": false,
+                      "gridPos": {
+                        "h": 1,
+                        "w": 24,
+                        "x": 0,
+                        "y": 17
+                      },
+                      "panels": []
+                    },
+                    {
+                      "id": 28,
+                      "type": "timeseries",
+                      "title": "Pod memory (working set) by namespace",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 12,
+                        "x": 0,
+                        "y": 18
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "bytes",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum by (namespace) (container_memory_working_set_bytes{namespace!=\"\"})",
+                          "legendFormat": "{{namespace}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 29,
+                      "type": "timeseries",
+                      "title": "Pods by phase",
+                      "description": "",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 8,
+                        "w": 12,
+                        "x": 12,
+                        "y": 18
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "custom": {
+                            "drawStyle": "line",
+                            "lineInterpolation": "linear",
+                            "fillOpacity": 10,
+                            "showPoints": "never",
+                            "spanNulls": true
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "legend": {
+                          "displayMode": "list",
+                          "placement": "bottom",
+                          "showLegend": true
+                        },
+                        "tooltip": {
+                          "mode": "multi",
+                          "sort": "desc"
+                        }
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum by (phase) (kube_pod_status_phase)",
+                          "legendFormat": "{{phase}}",
+                          "range": true,
+                          "instant": false,
+                          "refId": "A"
+                        }
+                      ]
+                    }
+                  ]
+                }
+        alerting:
+          rules.yaml:
+            apiVersion: 1
+            groups:
+            - orgId: 1
+              name: docketclock
+              folder: DocketClock
+              interval: 1m
+              rules:
+              - uid: poller-stalled
+                title: Poller stalled
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: time() - (max(docketclock_poller_last_heartbeat_seconds{app_kubernetes_io_component="poller"}) or vector(0))
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: gt
+                        params:
+                        - 2700
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: NoData
+                execErrState: Error
+                for: 10m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "The poller has not settled a cycle in >45m (3x the 15m interval) \u2014 the loop is hung or the pod is down."
+              # ASSUMPTION (revisit when notice-kind adjudication ships): errors = attempts − successes =
+              # chain_llm_calls_total − llm_calls_total. This holds ONLY while chain adjudication is the sole
+              # caller of the shared MetricsTracer. llm_calls_total has no `kind` label, so once notice-kind
+              # adjudication feeds the same tracer, its successes inflate llm_calls_total and this subtraction
+              # skews low (may stop crossing >3). Fix then: add a `kind` label to llm_calls_total and scope
+              # this to kind="chain". Tracked as a follow-up to the metrics inventory in observability-metrics.md.
+              - uid: llm-error-spike
+                title: LLM adjudicator error spike
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: (sum(increase(docketclock_chain_llm_calls_total{app_kubernetes_io_component="poller"}[15m])) or vector(0)) - (sum(increase(docketclock_llm_calls_total{app_kubernetes_io_component="poller"}[15m])) or vector(0))
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: gt
+                        params:
+                        - 3
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: NoData
+                execErrState: Error
+                for: 5m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "LLM attempts (chain_llm_calls) minus successful generations (llm_calls) exceeded 3 over 15m \u2014 the provider is erroring."
+              - uid: readiness-down
+                title: API readiness down (DB unreachable)
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: min(docketclock_db_up{app_kubernetes_io_component="api"}) or vector(0)
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: lt
+                        params:
+                        - 1
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: NoData
+                execErrState: Error
+                for: 5m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "The API's DB ping (db_up) has read 0 for 5m \u2014 /readyz is failing and the pod is out of the Service rotation."
+          contactpoints.yaml:
+            apiVersion: 1
+            contactPoints:
+            - orgId: 1
+              name: local-noop
+              receivers:
+              - uid: local-noop
+                type: webhook
+                settings:
+                  url: http://127.0.0.1:9999/alerts
+                disableResolveMessage: false
+          policies.yaml:
+            apiVersion: 1
+            policies:
+            - orgId: 1
+              receiver: local-noop
+              group_by:
+              - grafana_folder
+              - alertname
         # Ship the ESO ExternalSecret with this same Argo app. Note: only the ExternalSecret is applied
         # during sync — ESO then materializes the grafana-admin Secret ASYNCHRONOUSLY once it reads Vault,
         # so Grafana may briefly wait on the Secret on a first/cold sync.
