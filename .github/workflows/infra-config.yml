@@ -41,6 +41,9 @@ jobs:
           python-version: "3.12"
       - run: pip install pyyaml
 
+      - name: Validator self-test (its own negative cases)
+        run: python3 infra/scripts/validate-argocd-apps.py --self-test
+
       - name: Structural validation (+ emit promql / values for the steps below)
         run: |
           python3 infra/scripts/validate-argocd-apps.py \
@@ -57,7 +60,10 @@ jobs:
           failed = False
           for name, m in idx.items():
               cmd = ["helm", "template", name, m["chart"], "--repo", m["repoURL"],
-                     "--version", m["targetRevision"], "-f", f"_ci/values/{m['valuesFile']}"]
+                     "-f", f"_ci/values/{m['valuesFile']}"]
+              # Only pin --version when the app does (an empty --version is unpinned/latest — avoid it).
+              if m.get("targetRevision"):
+                  cmd += ["--version", m["targetRevision"]]
               r = subprocess.run(cmd, capture_output=True, text=True)
               ok = r.returncode == 0
               print(f"  {name:18} -> {'OK' if ok else 'FAIL'}")

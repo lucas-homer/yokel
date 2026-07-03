@@ -33,10 +33,6 @@ import yaml
 REPO = pathlib.Path(__file__).resolve().parents[2]
 APPS_DIR = REPO / "infra" / "argocd" / "apps"
 
-# Datasource uids that provisioned dashboards / alert queries are allowed to reference. `__expr__` is
-# Grafana's built-in server-side expression datasource (threshold/math nodes in alert rules).
-PROVISIONED_DS_UIDS = {"prometheus", "loki", "__expr__"}
-
 errors: list[str] = []
 
 
@@ -59,7 +55,15 @@ def load_apps() -> list[tuple[pathlib.Path, dict]]:
 
 def inlined_values(app: dict) -> dict | None:
     """Parse spec.source.helm.values (a YAML string) into a dict, or None if the app has none."""
-    source = (app.get("spec") or {}).get("source") or {}
+    spec = app.get("spec") or {}
+    name = (app.get("metadata") or {}).get("name", "?")
+    # Multi-source apps (spec.sources, a list) would have their inlined values silently skipped by the
+    # singular read below. None exist today — fail LOUDLY if one is added so it isn't unvalidated by accident.
+    if spec.get("sources"):
+        err(f"{name}: uses spec.sources (multi-source) — inlined-values validation is not supported yet; "
+            f"extend this script before adding a sources: app")
+        return None
+    source = spec.get("source") or {}
     raw = (source.get("helm") or {}).get("values")
     if raw is None:
         return None
@@ -86,10 +90,24 @@ def check_app_shape(path: pathlib.Path, app: dict) -> None:
         err(f"{path.name}: spec has neither source nor sources")
 
 
+def _ds_uid(obj: dict) -> str | None:
+    """The datasource uid on a panel/target, or None (a bare string datasource has no uid to check)."""
+    ds = obj.get("datasource") if isinstance(obj, dict) else None
+    return ds.get("uid") if isinstance(ds, dict) else None
+
+
+def _effective_ds_uid(target: dict, panel: dict) -> str | None:
+    """A target's datasource wins; else it inherits the panel's."""
+    return _ds_uid(target) or _ds_uid(panel)
+
+
 def collect_prometheus_exprs(values: dict) -> list[str]:
-    """Every Prometheus-datasource expr in the Grafana values (dashboard targets + alert queries)."""
+    """Every PROMETHEUS-datasource expr in the Grafana values (dashboard targets + alert queries).
+
+    Filters by the target's EFFECTIVE datasource so a future Loki/LogQL (or __expr__) target is never
+    fed to the promtool PromQL check — which would fail on non-PromQL.
+    """
     exprs: list[str] = []
-    # Dashboard panel targets — all use the prometheus datasource.
     for provider in (values.get("dashboards") or {}).values():
         for dash in provider.values():
             raw = dash.get("json")
@@ -101,8 +119,9 @@ def collect_prometheus_exprs(values: dict) -> list[str]:
                 continue  # reported separately in check_grafana
             for panel in d.get("panels", []):
                 for tgt in panel.get("targets", []):
-                    if tgt.get("expr"):
-                        exprs.append(tgt["expr"])
+                    expr = tgt.get("expr")
+                    if expr and _effective_ds_uid(tgt, panel) == "prometheus":
+                        exprs.append(expr)
     # Alert rule queries whose datasource is prometheus (skip __expr__ threshold/math models).
     for fname, block in (values.get("alerting") or {}).items():
         if not fname.startswith("rules"):
@@ -143,11 +162,14 @@ def check_grafana(values: dict) -> None:
             panels = [p for p in d.get("panels", []) if p.get("type") != "row"]
             if not panels:
                 err(f"grafana dashboard {provider}/{dname}: no (non-row) panels")
+            # Validate datasource uids at BOTH the panel and per-target level (a target can override).
             for panel in d.get("panels", []):
-                ds = panel.get("datasource")
-                if isinstance(ds, dict) and ds.get("uid") and ds["uid"] not in provisioned:
-                    err(f"grafana dashboard {provider}/{dname}: panel {panel.get('title')!r} "
-                        f"references unprovisioned datasource uid {ds['uid']!r}")
+                checkables = [(panel, "panel")] + [(t, "target") for t in panel.get("targets", [])]
+                for obj, where in checkables:
+                    uid = _ds_uid(obj)
+                    if uid and uid not in provisioned:
+                        err(f"grafana dashboard {provider}/{dname}: {where} in panel "
+                            f"{panel.get('title')!r} references unprovisioned datasource uid {uid!r}")
 
     # Alerting: rules ↔ data refIds, datasource uids, contactpoint/policy receiver consistency.
     alerting = values.get("alerting") or {}
@@ -161,15 +183,27 @@ def check_grafana(values: dict) -> None:
             for group in block.get("groups", []):
                 for rule in group.get("rules", []):
                     rid = rule.get("uid") or rule.get("title")
-                    refids = {d.get("refId") for d in rule.get("data", [])}
-                    if rule.get("condition") not in refids:
-                        err(f"grafana alert {rid!r}: condition {rule.get('condition')!r} "
-                            f"is not a refId in data {sorted(refids)}")
+                    # Collect refIds, flagging any query that lacks one (a None refId must NOT silently
+                    # satisfy a missing condition below).
+                    refids: set[str] = set()
                     for datum in rule.get("data", []):
+                        rf = datum.get("refId")
+                        if rf is None:
+                            err(f"grafana alert {rid!r}: a query in `data` is missing refId")
+                        else:
+                            refids.add(rf)
                         uid = datum.get("datasourceUid")
-                        if uid and uid not in provisioned:
-                            err(f"grafana alert {rid!r}: query {datum.get('refId')!r} "
+                        if uid is None:
+                            err(f"grafana alert {rid!r}: query {rf!r} is missing datasourceUid")
+                        elif uid not in provisioned:
+                            err(f"grafana alert {rid!r}: query {rf!r} "
                                 f"references unprovisioned datasource uid {uid!r}")
+                    cond = rule.get("condition")
+                    if not cond:
+                        err(f"grafana alert {rid!r}: missing `condition`")
+                    elif cond not in refids:
+                        err(f"grafana alert {rid!r}: condition {cond!r} "
+                            f"is not a refId in data {sorted(refids)}")
     # Every policy receiver must be a provisioned contact point.
     for fname, block in alerting.items():
         if fname.startswith("policies"):
@@ -194,13 +228,116 @@ def emit_values(name: str, values: dict, outdir: pathlib.Path) -> None:
     (outdir / f"{name}.values.yaml").write_text(yaml.safe_dump(values, width=100000, sort_keys=False))
 
 
+def _minimal_grafana_values() -> dict:
+    """A minimal VALID Grafana values dict — the fixture the self-test mutates to prove each check bites."""
+    dash = {"uid": "d", "panels": [{
+        "type": "timeseries", "title": "p", "datasource": {"uid": "prometheus"},
+        "targets": [{"refId": "A", "expr": "up", "datasource": {"uid": "prometheus"}}],
+    }]}
+    return {
+        "datasources": {"datasources.yaml": {"datasources": [{"uid": "prometheus"}, {"uid": "loki"}]}},
+        "dashboards": {"prov": {"d": {"json": json.dumps(dash)}}},
+        "alerting": {
+            "rules.yaml": {"groups": [{"rules": [{"uid": "r", "title": "R", "condition": "C", "data": [
+                {"refId": "A", "datasourceUid": "prometheus", "model": {"expr": "up"}},
+                {"refId": "C", "datasourceUid": "__expr__", "model": {}}]}]}]},
+            "contactpoints.yaml": {"contactPoints": [{"name": "cp"}]},
+            "policies.yaml": {"policies": [{"receiver": "cp"}]},
+        },
+    }
+
+
+def _isolated(fn) -> list[str]:
+    """Run a check with a clean global error list; return the errors it produced."""
+    errors.clear()
+    fn()
+    produced = list(errors)
+    errors.clear()
+    return produced
+
+
+def self_test() -> int:
+    """Exercise the checks against known-bad fixtures so the guard's own logic can't silently rot.
+
+    No pytest — this repo has no Python test convention; the workflow runs `--self-test` as a fast first
+    step so the C1–C4 datasource/refId fixes stay enforced as the real Grafana values grow.
+    """
+    import copy
+    fails: list[str] = []
+
+    def case(label: str, produced: list[str], needle: str | None, want_error: bool = True) -> None:
+        ok = (bool(produced) == want_error) and (needle is None or any(needle in e for e in produced))
+        if not ok:
+            fails.append(f"{label} — got {produced}")
+        print(f"  [{'ok ' if ok else 'FAIL'}] {label}")
+
+    def mutated(fn) -> dict:
+        v = copy.deepcopy(_minimal_grafana_values())
+        fn(v)
+        return v
+
+    def set_dash(v: dict, dash: dict) -> None:
+        v["dashboards"]["prov"]["d"]["json"] = json.dumps(dash)
+
+    base = _minimal_grafana_values()
+    case("valid config → no errors", _isolated(lambda: check_grafana(copy.deepcopy(base))), None, want_error=False)
+    case("broken dashboard JSON",
+         _isolated(lambda: check_grafana(mutated(lambda v: v["dashboards"]["prov"]["d"].__setitem__("json", "{not json")))),
+         "JSON invalid")
+    case("dashboard with no panels",
+         _isolated(lambda: check_grafana(mutated(lambda v: set_dash(v, {"uid": "d", "panels": []})))),
+         "no (non-row) panels")
+    case("panel-level unprovisioned datasource",
+         _isolated(lambda: check_grafana(mutated(lambda v: set_dash(v, {"uid": "d", "panels": [
+             {"type": "timeseries", "title": "p", "datasource": {"uid": "bogus"}, "targets": []}]})))),
+         "unprovisioned datasource uid 'bogus'")
+    case("target-level unprovisioned datasource",
+         _isolated(lambda: check_grafana(mutated(lambda v: set_dash(v, {"uid": "d", "panels": [
+             {"type": "timeseries", "title": "p", "targets": [
+                 {"refId": "A", "expr": "up", "datasource": {"uid": "bogus"}}]}]})))),
+         "unprovisioned datasource uid 'bogus'")
+    case("alert condition not a refId",
+         _isolated(lambda: check_grafana(mutated(lambda v: v["alerting"]["rules.yaml"]["groups"][0]["rules"][0].__setitem__("condition", "Z")))),
+         "is not a refId")
+    case("alert missing condition",
+         _isolated(lambda: check_grafana(mutated(lambda v: v["alerting"]["rules.yaml"]["groups"][0]["rules"][0].__setitem__("condition", None)))),
+         "missing `condition`")
+    case("alert query missing refId",
+         _isolated(lambda: check_grafana(mutated(lambda v: v["alerting"]["rules.yaml"]["groups"][0]["rules"][0]["data"][0].pop("refId")))),
+         "missing refId")
+    case("alert query missing datasourceUid",
+         _isolated(lambda: check_grafana(mutated(lambda v: v["alerting"]["rules.yaml"]["groups"][0]["rules"][0]["data"][0].pop("datasourceUid")))),
+         "missing datasourceUid")
+    case("policy receiver with no contact point",
+         _isolated(lambda: check_grafana(mutated(lambda v: v["alerting"]["policies.yaml"]["policies"][0].__setitem__("receiver", "ghost")))),
+         "no matching contact point")
+    case("multi-source app fails loudly",
+         _isolated(lambda: inlined_values({"metadata": {"name": "x"}, "spec": {"sources": [{"chart": "c"}]}})),
+         "multi-source")
+
+    # collect_prometheus_exprs must EXCLUDE non-prometheus targets (so promtool never sees LogQL).
+    mixed = {"uid": "d", "panels": [{"type": "timeseries", "title": "p", "targets": [
+        {"refId": "A", "expr": "up", "datasource": {"uid": "prometheus"}},
+        {"refId": "B", "expr": '{job="x"}', "datasource": {"uid": "loki"}}]}]}
+    exprs = collect_prometheus_exprs({"dashboards": {"prov": {"d": {"json": json.dumps(mixed)}}}})
+    case("collect_prometheus_exprs excludes loki targets", ["ok"] if exprs == ["up"] else [], "ok")
+
+    print(f"\n{'✓ self-test passed' if not fails else f'✗ {len(fails)} self-test case(s) FAILED'}")
+    return 1 if fails else 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
+    ap.add_argument("--self-test", action="store_true",
+                    help="run the validator's own negative-case checks and exit (no cluster, no repo scan)")
     ap.add_argument("--emit-promql", type=pathlib.Path, default=None,
                     help="write a synthetic promtool rules file of all Prometheus exprs to this path")
     ap.add_argument("--emit-values", type=pathlib.Path, default=None,
                     help="dump each app's inlined helm values into this dir (for `helm template`)")
     args = ap.parse_args()
+
+    if args.self_test:
+        return self_test()
 
     apps = load_apps()
     if not apps:
