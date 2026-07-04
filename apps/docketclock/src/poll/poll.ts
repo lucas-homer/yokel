@@ -154,9 +154,19 @@ export interface PollOptions {
  */
 export const REGS_DEFAULT_MAX_REPOLLS = 200;
 
-/** Resolve the per-cycle re-poll budget from env (sane positive-integer default). */
-export function regsMaxRepolls(env: NodeJS.ProcessEnv = process.env): number {
-  const raw = Number(env.REGS_MAX_REPOLLS_PER_CYCLE);
+/**
+ * Resolve the per-cycle re-poll budget, sane positive-integer default. Both an explicit `override` (the
+ * PollOptions.maxRepollsPerCycle caller/test path) and REGS_MAX_REPOLLS_PER_CYCLE (the env path) funnel
+ * through the SAME guard: a 0 / negative / NaN / non-integer value from EITHER source falls back to the
+ * default rather than silently wedging the drain (a budget of 0 would slice to zero re-polls forever).
+ * `override` wins when present and valid; an invalid override does NOT fall through to env (it's a caller
+ * bug, not a config source), it falls straight to the default.
+ */
+export function regsMaxRepolls(
+  env: NodeJS.ProcessEnv = process.env,
+  override?: number,
+): number {
+  const raw = override ?? Number(env.REGS_MAX_REPOLLS_PER_CYCLE);
   return Number.isInteger(raw) && raw > 0 ? raw : REGS_DEFAULT_MAX_REPOLLS;
 }
 
@@ -362,7 +372,7 @@ export async function pollRegsOnce(
   // this cycle and defer the tail (they stay stale → picked up next cycle). This caps per-cycle request
   // volume so a backlog burst can't blow regulations.gov's ~1,000 req/hr quota and stall the cycle on a
   // 429 back-off. Draining stalest-first guarantees forward progress with no starvation.
-  const maxRepolls = opts?.maxRepollsPerCycle ?? regsMaxRepolls();
+  const maxRepolls = regsMaxRepolls(process.env, opts?.maxRepollsPerCycle);
   const eligible = await selectStaleOpenWindows(
     sql,
     observedDocIds,
@@ -508,30 +518,21 @@ async function selectStaleOpenWindows(
   deadKeys: Set<string>,
   staleBefore: Date,
 ): Promise<StaleOpenWindow[]> {
-  // ORDER stalest-first (never-checked = 'epoch' sorts first), doc_id as a stable tiebreak, so the caller's
-  // per-cycle budget slice drains the oldest windows first and covers the whole backlog over cycles with no
-  // starvation — a deferred window stays maximally stale and is drained on a subsequent cycle.
+  // LEFT JOIN (not a correlated subquery) so last_checked_at is computed ONCE and reused for both the
+  // staleness filter and the ordering — regs_document_id is the PK on regs_poll_watch, so the join is a
+  // strict 1:1 index lookup (no row fan-out). coalesce(pw.last_checked_at, 'epoch') maps a never-checked
+  // window (no watch row → NULL) to maximally stale. ORDER stalest-first (epoch sorts first) with doc_id as
+  // a stable tiebreak, so the caller's per-cycle budget slice drains the oldest windows first and covers the
+  // whole backlog over cycles with no starvation — a deferred window stays maximally stale and is drained on
+  // a subsequent cycle.
   const rows = await sql<StaleOpenWindow[]>`
     select w.ocd_id, w.regs_document_id
     from participation_windows w
+    left join regs_poll_watch pw on pw.regs_document_id = w.regs_document_id
     where w.status = 'open'
       and w.regs_document_id is not null
-      and coalesce(
-        (
-          select pw.last_checked_at
-          from regs_poll_watch pw
-          where pw.regs_document_id = w.regs_document_id
-        ),
-        'epoch'
-      ) < ${staleBefore.toISOString()}
-    order by coalesce(
-        (
-          select pw.last_checked_at
-          from regs_poll_watch pw
-          where pw.regs_document_id = w.regs_document_id
-        ),
-        'epoch'
-      ) asc, w.regs_document_id asc
+      and coalesce(pw.last_checked_at, 'epoch') < ${staleBefore.toISOString()}
+    order by coalesce(pw.last_checked_at, 'epoch') asc, w.regs_document_id asc
   `;
   return rows.filter(
     (r) =>

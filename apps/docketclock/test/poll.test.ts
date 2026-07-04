@@ -943,6 +943,35 @@ try {
       bAll.repolled === N && bAll.repollDeferred === 0,
       `repolled=${bAll.repolled} deferred=${bAll.repollDeferred}`,
     );
+
+    // GUARD (PR #69 review): a BOGUS opts.maxRepollsPerCycle (0) must NOT wedge the drain to zero re-polls —
+    // it falls back to the sane default (via regsMaxRepolls), exactly like a bad env value. Re-seed (bAll
+    // just stamped all 5 fresh → not stale) and run with a 0 budget; it must re-poll all N, not none.
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    for (let i = 0; i < N; i++) {
+      const frnum = `2025-BUD${i}`;
+      const detail = details[`BUDGET-000${i}`];
+      await ingestObservation(sql, {
+        ...parseRegsObservation(detail),
+        fetched_at: "2026-05-01T00:00:00Z",
+      });
+      await reconcileOcdId(
+        sql,
+        `ocd-participation-window/federal/${frnum}`,
+        new Date("2026-05-01T00:00:00Z"),
+      );
+    }
+    const bBogus = await pollRegsOnce(sql, budgetDeps(), {
+      maxRepollsPerCycle: 0,
+    });
+    assert(
+      "BUDGET: a bogus opts budget (0) falls back to the default — re-polls all N, does NOT wedge to zero",
+      bBogus.repolled === N && bBogus.repollDeferred === 0,
+      `repolled=${bBogus.repolled} deferred=${bBogus.repollDeferred}`,
+    );
   }
 
   // ════════════════════════════════════════════════════════════════════════════════════════════════════
