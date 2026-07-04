@@ -123,6 +123,10 @@ export function recordRegsPoll(s: PollSummary): void {
   pollItems.inc({ source: "regs", outcome: "ingested" }, s.ingested);
   pollItems.inc({ source: "regs", outcome: "deduped" }, s.deduped);
   pollItems.inc({ source: "regs", outcome: "repolled" }, s.repolled);
+  pollItems.inc(
+    { source: "regs", outcome: "repoll_deferred" },
+    s.repollDeferred,
+  );
   pollItems.inc({ source: "regs", outcome: "transitions" }, s.transitions);
   pollItems.inc({ source: "regs", outcome: "dead_lettered" }, s.deadLettered);
   pollItems.inc({ source: "regs", outcome: "recovered" }, s.recovered);

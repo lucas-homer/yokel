@@ -11,6 +11,31 @@ const sleep = (ms: number): Promise<void> =>
   new Promise((r) => setTimeout(r, ms));
 
 /**
+ * Ceiling for a server-provided Retry-After sleep. regulations.gov answers a burst over its ~1,000 req/hr
+ * quota with a 429 + a LARGE Retry-After (often the seconds remaining to the top of the hour — minutes).
+ * Honored verbatim, a single retry could sleep for many minutes, freezing the whole sequential poll cycle;
+ * with the poller's 2x-interval liveness probe (30m) a long enough sleep drifts toward a mid-fetch pod
+ * restart, and even short of that it silently wedges withdrawal detection. We still HONOR Retry-After (back
+ * off politely rather than hammering) but CAP the wait: 60s rides out a transient 429 while staying well
+ * under any per-pass timeout, and a source still limited after the cap just fails the pass (isolated,
+ * retried next cycle) instead of stalling it. The per-cycle re-poll budget (poll.ts) is the upstream fix
+ * that keeps us from tripping the 429 in the first place; this cap bounds the blast radius when we do.
+ */
+export const MAX_RETRY_AFTER_MS = 60_000;
+
+/**
+ * Back-off for a retriable 429/5xx: HONOR Retry-After when present (capped at MAX_RETRY_AFTER_MS), else
+ * exponential (500ms · 2^attempt, itself capped at 30s). Exported for direct unit testing of the cap —
+ * the load-bearing branch (memory: fetch-retry-scope-gotcha).
+ */
+export const retriableBackoffMs = (res: Response, attempt: number): number => {
+  const retryAfter = Number(res.headers.get("retry-after"));
+  return Number.isFinite(retryAfter) && retryAfter > 0
+    ? Math.min(retryAfter * 1000, MAX_RETRY_AFTER_MS)
+    : Math.min(30_000, 500 * 2 ** attempt);
+};
+
+/**
  * A `fetch`-like function. Defaults to the global `fetch`, but is injectable so callers (and tests)
  * can substitute a transport with zero network. Mirrors the parts of `fetch` we depend on.
  */
@@ -73,12 +98,8 @@ export async function fetchJsonWithRetry(
       );
     }
 
-    // Retriable (429 / 5xx): back off, honoring Retry-After when present.
-    const retryAfter = Number(res.headers.get("retry-after"));
-    const backoff =
-      Number.isFinite(retryAfter) && retryAfter > 0
-        ? retryAfter * 1000
-        : Math.min(30_000, 500 * 2 ** attempt);
+    // Retriable (429 / 5xx): back off, honoring (a capped) Retry-After when present.
+    const backoff = retriableBackoffMs(res, attempt);
     attempt++;
     await sleep(backoff);
   }
@@ -148,12 +169,8 @@ export async function postJsonWithRetry(
       );
     }
 
-    // Retriable (429 / 5xx): back off, honoring Retry-After when present.
-    const retryAfter = Number(res.headers.get("retry-after"));
-    const backoff =
-      Number.isFinite(retryAfter) && retryAfter > 0
-        ? retryAfter * 1000
-        : Math.min(30_000, 500 * 2 ** attempt);
+    // Retriable (429 / 5xx): back off, honoring (a capped) Retry-After when present.
+    const backoff = retriableBackoffMs(res, attempt);
     attempt++;
     await sleep(backoff);
   }
