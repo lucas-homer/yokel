@@ -31,7 +31,10 @@ task dev-down      # delete the cluster (colima keeps running)
 The only imperative step is installing Argo CD; Argo reconciles the rest. The platform Applications
 source straight from upstream Helm repos, so they sync without pushing this repo. Our app chart is
 `helm`-installed locally by `task app-local` and is managed by Argo from git (`app-docketclock.yaml`)
-once the repo is pushed — that's the GitOps path. The Tilt inner-loop (`../Tiltfile`) lands in Phase 1.
+once the repo is pushed — that's the GitOps path. For active development the Tilt inner-loop
+(`../Tiltfile`) is the day-to-day path: `tilt up` builds the image, deploys the chart with local
+values, and live-updates the running container on source changes (Argo keeps managing the platform +
+the committed app; Tilt overrides the app workload while it's running).
 
 ## Secrets
 
