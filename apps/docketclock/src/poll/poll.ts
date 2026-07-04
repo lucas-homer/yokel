@@ -118,6 +118,7 @@ export interface PollSummary {
   deduped: number; // differential docs whose payload matched the latest (idempotent skip)
   // #18 re-poll pass
   repolled: number; // seen-open windows re-polled by documentId this cycle
+  repollDeferred: number; // stale windows SKIPPED this cycle because the re-poll budget was exhausted
   transitions: number; // re-polls that produced a NEW observation (e.g. the withdrawal)
   // cursor + coverage
   cursorAdvancedTo: string | null; // the UTC-ISO max LIST lastModifiedDate written, or null if unchanged
@@ -136,6 +137,27 @@ export interface PollOptions {
   initialLookbackMs?: number;
   maxFailAttempts?: number;
   deadLetterRetryStaleAfterMs?: number;
+  /** Max seen-open windows re-polled per cycle (default regsMaxRepolls() / env REGS_MAX_REPOLLS_PER_CYCLE). */
+  maxRepollsPerCycle?: number;
+}
+
+/**
+ * REGS_DEFAULT_MAX_REPOLLS — the per-cycle re-poll budget default (overridable via
+ * REGS_MAX_REPOLLS_PER_CYCLE). The re-poll pass re-fetches EVERY seen-open window whose 6h throttle has
+ * gone stale; when regs is first enabled (or after a long outage) that set is the entire open backlog at
+ * once — ~760 windows in one cycle here — which blew regulations.gov's ~1,000 req/hr quota, drew a 429 with
+ * a multi-minute Retry-After, and (pre-cap) stalled the cycle for ~22 min. The budget bounds the burst:
+ * stalest-first, we re-poll at most this many per cycle and DEFER the rest to the next one, so a backlog
+ * drains over cycles instead of in one quota-busting spike (no starvation — deferred windows stay stalest).
+ * 200/cycle at the 15m cadence is ~800 re-polls/hr, comfortably under quota with headroom for the
+ * differential + drain passes. Tunable: a bound on per-cycle request volume, not on eventual coverage.
+ */
+export const REGS_DEFAULT_MAX_REPOLLS = 200;
+
+/** Resolve the per-cycle re-poll budget from env (sane positive-integer default). */
+export function regsMaxRepolls(env: NodeJS.ProcessEnv = process.env): number {
+  const raw = Number(env.REGS_MAX_REPOLLS_PER_CYCLE);
+  return Number.isInteger(raw) && raw > 0 ? raw : REGS_DEFAULT_MAX_REPOLLS;
 }
 
 const DEFAULTS = {
@@ -185,6 +207,7 @@ export async function pollRegsOnce(
     ingested: 0,
     deduped: 0,
     repolled: 0,
+    repollDeferred: 0,
     transitions: 0,
     cursorAdvancedTo: null,
     pagesFetched: 0,
@@ -335,12 +358,29 @@ export async function pollRegsOnce(
   }
 
   // ── 2. RE-POLL PASS (#18) — re-fetch seen-open windows that dropped out of the list and are stale ──
-  const stale = await selectStaleOpenWindows(
+  // BUDGETED (rate-limit fix): the eligible set is returned stalest-first; we re-poll at most maxRepolls
+  // this cycle and defer the tail (they stay stale → picked up next cycle). This caps per-cycle request
+  // volume so a backlog burst can't blow regulations.gov's ~1,000 req/hr quota and stall the cycle on a
+  // 429 back-off. Draining stalest-first guarantees forward progress with no starvation.
+  const maxRepolls = opts?.maxRepollsPerCycle ?? regsMaxRepolls();
+  const eligible = await selectStaleOpenWindows(
     sql,
     observedDocIds,
     dead,
     new Date(now.getTime() - o.repollStaleAfterMs),
   );
+  const stale = eligible.slice(0, maxRepolls);
+  summary.repollDeferred = eligible.length - stale.length;
+  if (summary.repollDeferred > 0) {
+    log.info(
+      {
+        budget: maxRepolls,
+        eligible: eligible.length,
+        deferred: summary.repollDeferred,
+      },
+      "regs re-poll budget hit — deferring stalest tail to next cycle",
+    );
+  }
   for (const win of stale) {
     summary.repolled++;
     try {
@@ -468,6 +508,9 @@ async function selectStaleOpenWindows(
   deadKeys: Set<string>,
   staleBefore: Date,
 ): Promise<StaleOpenWindow[]> {
+  // ORDER stalest-first (never-checked = 'epoch' sorts first), doc_id as a stable tiebreak, so the caller's
+  // per-cycle budget slice drains the oldest windows first and covers the whole backlog over cycles with no
+  // starvation — a deferred window stays maximally stale and is drained on a subsequent cycle.
   const rows = await sql<StaleOpenWindow[]>`
     select w.ocd_id, w.regs_document_id
     from participation_windows w
@@ -481,6 +524,14 @@ async function selectStaleOpenWindows(
         ),
         'epoch'
       ) < ${staleBefore.toISOString()}
+    order by coalesce(
+        (
+          select pw.last_checked_at
+          from regs_poll_watch pw
+          where pw.regs_document_id = w.regs_document_id
+        ),
+        'epoch'
+      ) asc, w.regs_document_id asc
   `;
   return rows.filter(
     (r) =>

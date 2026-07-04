@@ -136,6 +136,7 @@ function agg(
     ingested: 3,
     deduped: 2,
     repolled: 1,
+    repollDeferred: 2,
     transitions: 1,
     cursorAdvancedTo: null,
     pagesFetched: 1,
@@ -176,6 +177,13 @@ function agg(
       source: "regs",
       outcome: "dead_lettered",
     }) === 1,
+  );
+  assert(
+    "recordRegsPoll: poll_items_total{regs,repoll_deferred} = 2 (budget-deferred re-polls surfaced)",
+    val(s, "docketclock_poll_items_total", {
+      source: "regs",
+      outcome: "repoll_deferred",
+    }) === 2,
   );
 }
 

@@ -57,6 +57,12 @@ migrations:
 poller:
   command: ["pnpm", "exec", "tsx", "src/poll/run.ts"]
   pollIntervalMs: 900000 # 15 min
+  # REGS_MAX_REPOLLS_PER_CYCLE — max seen-open windows the Regs re-poll pass re-fetches per cycle. The
+  # eligible set is the whole stale open backlog (worst case ~all open windows at once when regs is first
+  # enabled / after an outage); this budget bounds the per-cycle request burst so it can't blow regs.gov's
+  # ~1,000 req/hr quota and stall the cycle on a 429 back-off. Stalest-first, the tail defers to next cycle
+  # (drains over cycles, no starvation). 200/cycle at the 15m cadence ≈ 800/hr, under quota with headroom.
+  maxRepollsPerCycle: 200
   heartbeat:
     file: /tmp/poller-heartbeat
   # The poller serves no API HTTP, so it runs a standalone /metrics listener (src/metrics-server.ts) on

@@ -826,6 +826,125 @@ try {
     );
   }
 
+  // ── RE-POLL BUDGET — a stale-open backlog larger than the per-cycle budget drains over cycles ─────────
+  // The rate-limit fix: the re-poll pass re-fetches at most maxRepollsPerCycle seen-open windows per cycle
+  // (STALEST-FIRST) and DEFERS the rest, so a big backlog cannot fire hundreds of requests in one cycle and
+  // blow regulations.gov's ~1,000 req/hr quota. Seed 5 stale-open windows, budget 2/cycle: cycle1 does 2
+  // (defers 3), cycle2 does 2 (defers 1) — the cycle-1 two are now watch-stamped fresh, so excluded —
+  // cycle3 drains the last 1 (defers 0). Full coverage across cycles, NO starvation.
+  {
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+
+    const N = 5;
+    const budget = 2;
+    const details: Record<string, unknown> = {};
+    for (let i = 0; i < N; i++) {
+      const doc = `BUDGET-000${i}`;
+      const frnum = `2025-BUD${i}`;
+      const detail = regsDetail(doc, frnum, {
+        commentEndDate: "2026-09-15T12:00:00Z",
+        withinCommentPeriod: true,
+        openForComment: true,
+        withdrawn: false,
+      });
+      details[doc] = detail;
+      // Seed each as an OPEN window with a STALE observation and NO watch stamp (→ epoch → all eligible).
+      await ingestObservation(sql, {
+        ...parseRegsObservation(detail),
+        fetched_at: "2026-05-01T00:00:00Z",
+      });
+      await reconcileOcdId(
+        sql,
+        `ocd-participation-window/federal/${frnum}`,
+        new Date("2026-05-01T00:00:00Z"),
+      );
+    }
+
+    // Same fixed clock every cycle: the throttle can't intervene except via the fresh stamp a re-poll writes
+    // — which is exactly the mechanism that lets the backlog drain instead of re-doing the same windows.
+    const budgetDeps = (): Partial<PollDeps> => ({
+      now: () => NOW,
+      listPage: async () => [],
+      fetchDetail: async (documentId: string) => {
+        const d = details[documentId];
+        if (d === undefined)
+          throw new Error(`budget test: no detail for ${documentId}`);
+        return d;
+      },
+    });
+
+    const b1 = await pollRegsOnce(sql, budgetDeps(), {
+      maxRepollsPerCycle: budget,
+    });
+    assert(
+      "BUDGET: cycle1 re-polls EXACTLY the budget",
+      b1.repolled === budget,
+      String(b1.repolled),
+    );
+    assert(
+      "BUDGET: cycle1 DEFERS the over-budget tail",
+      b1.repollDeferred === N - budget,
+      String(b1.repollDeferred),
+    );
+
+    const b2 = await pollRegsOnce(sql, budgetDeps(), {
+      maxRepollsPerCycle: budget,
+    });
+    assert(
+      "BUDGET: cycle2 re-polls the next budget (cycle-1 windows now fresh-stamped, excluded)",
+      b2.repolled === budget,
+      String(b2.repolled),
+    );
+    assert(
+      "BUDGET: cycle2 defers the remaining one",
+      b2.repollDeferred === N - 2 * budget,
+      String(b2.repollDeferred),
+    );
+
+    const b3 = await pollRegsOnce(sql, budgetDeps(), {
+      maxRepollsPerCycle: budget,
+    });
+    assert(
+      "BUDGET: cycle3 drains the LAST window (no starvation — the whole backlog got covered)",
+      b3.repolled === 1,
+      String(b3.repolled),
+    );
+    assert(
+      "BUDGET: cycle3 has nothing left to defer",
+      b3.repollDeferred === 0,
+      String(b3.repollDeferred),
+    );
+
+    // A generous DEFAULT budget (no override) would have done all 5 at once — assert the eligible set really
+    // was 5 by re-seeding and running unbudgeted, so the test can't silently pass on an empty eligible set.
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    for (let i = 0; i < N; i++) {
+      const frnum = `2025-BUD${i}`;
+      const detail = details[`BUDGET-000${i}`];
+      await ingestObservation(sql, {
+        ...parseRegsObservation(detail),
+        fetched_at: "2026-05-01T00:00:00Z",
+      });
+      await reconcileOcdId(
+        sql,
+        `ocd-participation-window/federal/${frnum}`,
+        new Date("2026-05-01T00:00:00Z"),
+      );
+    }
+    const bAll = await pollRegsOnce(sql, budgetDeps(), {});
+    assert(
+      "BUDGET: the default (generous) budget re-polls the whole eligible set in one cycle",
+      bAll.repolled === N && bAll.repollDeferred === 0,
+      `repolled=${bAll.repolled} deferred=${bAll.repollDeferred}`,
+    );
+  }
+
   // ════════════════════════════════════════════════════════════════════════════════════════════════════
   // #21 BOUNDED-RETRY / DEAD-LETTER (Regs)
   // ════════════════════════════════════════════════════════════════════════════════════════════════════
