@@ -14,6 +14,7 @@ bootstrap/            # Argo CD Helm values + the app-of-apps root Applications 
 argocd/apps/          # one Argo Application per component (CNPG, ESO, Vault, observability) + the app
 argocd/manifests/     # raw manifests for git-sourced apps (e.g. the vault-backend ClusterSecretStore)
 scripts/vault-seed.sh # seed dev Vault + wire ESO token auth (idempotent)
+scripts/seed-docketclock-secrets.sh # patch individual docketclock-external keys (regs/gemini/…) + roll
 terraform/            # cloud provisioning — structure only, provider deferred (see its README)
 ../charts/docketclock # our first-party Helm chart (CNPG Cluster, ESO wiring, app)
 ```
