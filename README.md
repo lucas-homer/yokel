@@ -102,6 +102,8 @@ REGS_API_KEY=xxx bash infra/scripts/seed-docketclock-secrets.sh
   the Federal Register API needs no key
 - `GEMINI_API_KEY` (with `ADJUDICATOR=gemini`) — optional LLM adjudication of borderline chain links
 - `DOCKETCLOCK_API_KEYS` — keys for the delivery API's `x-api-key` auth (fails closed)
+- `WEBHOOK_HMAC_SECRET` — signing secret for the webhook delivery surface (seeded now; consumed
+  once webhooks land)
 
 For host-side scripts and smokes, copy `.env.example` → `.env`.
 

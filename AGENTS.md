@@ -15,6 +15,7 @@ hearings and take meaningful action. Architecture is a layered "house":
   rule until a paying customer funds a jurisdiction tranche.
 - **Watershed Watch** (`apps/watershed-watch`) — the first **vertical wedge**. Rents DocketClock
   (partial build-on); OWNS EPA EIS ingestion, HUC geo-recall, and the action/receipt loop.
+  **Shelved** at the W3 value-density gate (stub only) — revival paths in the go/no-go memo.
 - **`packages/contracts`** — the shared seam both consume (schemas, OCD-IDs, confidence enums).
   Verticals join on **stable OCD-IDs**, never internal UUIDs. Never fork the schema, only the deployment.
 
@@ -24,7 +25,8 @@ Full designs: `docs/architecture/docketclock.md` and `docs/architecture/watershe
 ## Where things live
 
 - **Decisions / the "why":** `docs/decisions/` (ADRs). Add an ADR for any consequential call.
-- **Plans:** `docs/plans/` — the immediate work is `week1-validation-spikes.md`. How we build with
+- **Plans:** `docs/plans/` — the Week-1 spikes are **done**; outcomes in `week1-go-no-go-memo.md`.
+  Phase plans (observability slices, rename) live in `plans/` at the repo root. How we build with
   agent teams (roles, phases, gating): `docs/plans/agent-orchestration.md`; the team lives in `.claude/agents/`.
 - **Heavy reference:** `docs/research/` (100KB+ HTML reports, foundry JSON). **Do NOT read these
   routinely** — they're large and burn context. The markdown in `docs/architecture/` is the
@@ -35,8 +37,9 @@ Full designs: `docs/architecture/docketclock.md` and `docs/architecture/watershe
 - **Two machines.** Authoring/organizing/git happens on the **MacBook Air**. **All installs, local
   env, Postgres, and builds happen on the Mac Mini** (see `SETUP.md`). Do NOT run `pnpm install`,
   start databases, or create `node_modules`/`.env` on the Air. GitHub is the transport.
-- **Validate before building.** Don't write DocketClock pipeline code until the Week-1 spikes pass —
-  especially D1 (frDocNum join hit-rate) and W3 (in-basin value density). A measured "no" is a win.
+- **Validate before building.** The Week-1 gates are decided (D1 join hit-rate passed → DocketClock
+  BUILD; W3 value density → Watershed Watch shelved), but the norm stands: measure before building —
+  e.g. run a value-density spike before any new wedge gets code. A measured "no" is a win.
 - **Don't publish fake certainty.** This is the product's core principle AND a working norm: surface
   unknown/conflicting states honestly; never assert an API field/endpoint exists without verifying.
 - **Stack:** TypeScript (Node 24), pnpm workspaces, Fastify + Zod, Postgres 18 (+ PostGIS for

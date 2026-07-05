@@ -6,14 +6,14 @@
 
 ## Blast radius (confirmed by scan)
 
-| Area                               | Refs                                                                                      | Risk                                     |
-| ---------------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------- |
-| GitHub repo name + `origin` remote | 1                                                                                         | Safe, auto-redirects                     |
-| npm scope `@yokel/*`               | 4 pkg names + 2 deps + ~13 imports + lockfile                                             | Safe, covered by tests                   |
-| GitOps repo URLs                   | 3 ArgoCD/bootstrap manifests                                                              | Safe                                     |
-| Docs / prose                       | README, SETUP, AGENTS, infra/README, Tiltfile                                             | Safe                                     |
-| **k3d local cluster**              | `k3d/yokel.yaml` (name, registry, filename), Taskfile `CLUSTER`, Tiltfile context comment | **Destructive — local cluster recreate** |
-| **Terraform `yokel-prod`**         | 1 default in `variables.tf`                                                               | **Conditional** — see Phase 7            |
+| Area                               | Refs                                                                                            | Risk                                     |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| GitHub repo name + `origin` remote | 1                                                                                               | Safe, auto-redirects                     |
+| npm scope `@yokel/*`               | 4 pkg names + 2 deps + ~13 imports + lockfile                                                   | Safe, covered by tests                   |
+| GitOps repo URLs                   | 3 ArgoCD/bootstrap manifests                                                                    | Safe                                     |
+| Docs / prose                       | README, SETUP, AGENTS, infra/README, Tiltfile                                                   | Safe                                     |
+| **k3d local cluster**              | `infra/k3d/yokel.yaml` (name, registry, filename), Taskfile `CLUSTER`, Tiltfile context comment | **Destructive — local cluster recreate** |
+| **Terraform `yokel-prod`**         | 1 default in `variables.tf`                                                                     | **Conditional** — see Phase 7            |
 
 Decisions locked: npm scope → `@civic-tools/*`.
 
