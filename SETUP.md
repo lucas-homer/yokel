@@ -45,7 +45,7 @@ cp spikes/.env.example spikes/.env
 
 Never commit `.env` (it's gitignored). Only `.env.example` is tracked.
 
-## 5. Bring up the platform (when you start building; not required for spikes)
+## 5. Bring up the platform
 
 DocketClock runs on Kubernetes (ADR 0008/0009). The local cluster + Postgres (CloudNativePG), Argo CD,
 and External Secrets + Vault all come up from code:
@@ -56,14 +56,24 @@ task status                    # Argo Applications + key pods
 ```
 
 See `infra/README.md` for the full runbook. The `docketclock` database is provisioned by the
-CloudNativePG Cluster — there is no `createdb`.
+CloudNativePG Cluster — there is no `createdb`. After bring-up, patch real secrets into Vault:
+
+```bash
+REGS_API_KEY=xxx bash infra/scripts/seed-docketclock-secrets.sh
+```
+
+For the day-to-day inner loop, run `tilt up` from the repo root (hot-reload; API on
+http://localhost:8088).
 
 ## 6. Where to start
 
-1. Read `docs/architecture/docketclock.md` and `docs/architecture/watershed-watch.md`.
-2. Read `docs/plans/week1-validation-spikes.md` — the immediate next work.
-3. Run the Week-1 spikes from `spikes/` (the harness is scaffolded; fill in / run D1, D2, D3, W3).
-4. Only after the spikes pass: build DocketClock per its build sequence.
+1. Read the [root README](README.md) for current status, then `docs/architecture/docketclock.md`
+   and `docs/architecture/watershed-watch.md` for the designs.
+2. The Week-1 spikes are **done** — outcomes in `docs/plans/week1-go-no-go-memo.md`
+   (DocketClock: BUILD; Watershed Watch: shelved). The `spikes/` harness stays for
+   re-measurement (e.g. the Watershed revival paths).
+3. DocketClock is built through the observability phase; see the root README status list and
+   `plans/` for the phase plans.
 
 ## Notes
 
