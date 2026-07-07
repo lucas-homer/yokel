@@ -1,6 +1,9 @@
 # Verification Slice V — the accuracy loop (post-close verification + AccuracyRecord + independent cross-check + a real alert path)
 
-> Status: **Draft — not started.** Follows the observability epic (slices A–D, shipped #49–#65).
+> Status: **Draft — not started.** Follows the observability epic (slices A–D, shipped #49–#65)
+> AND the backups + restore-drill phase (`plans/backups-restore-drill.md`, #73). Backups-first is
+> deliberate: PR-V1 adds a new irreplaceable append-only table (`accuracy_records`), and landing
+> backups first means WAL archiving covers it from its first row.
 > This is the "Week 9-10 — Follow-up + proof" stage of the architecture build sequence, pulled
 > forward: the product's net-new value is reconciliation + confidence + provenance, so **measuring
 > whether the published deadlines were actually right IS product work, not QA**. Its output —
@@ -93,6 +96,13 @@ slice builds it.
 - **No public surface.** `GET /accuracy` and any partner-facing dashboard stay deferred — the
   architecture gates them on design partners (D5). This slice produces the number and the
   internal panel; publishing it is Phase 3+ work.
+- **Execution order: V3 → V1 → V2.** Both this plan and the backups plan name a real alert
+  receiver as the prerequisite for trusting unattended alerts, and the backups phase ships its
+  backup-staleness rules (PR-5 there) against `local-noop`. V3 has no dependency on V1/V2, so it
+  lands FIRST — one small PR that retroactively wires every existing alert (poller stalled,
+  db_up, backup age) to a human. The one item that DOES depend on V1 — the _Accuracy degraded_
+  alert — moves into V1's scope (its threshold can only be committed after the gauge has a
+  baseline, which V3-first makes unambiguous).
 
 ## PR-V1 — AccuracyRecord: contract + table + the post-close verification pass
 
@@ -119,7 +129,12 @@ slice builds it.
    `docketclock_accuracy_high_correct_ratio_90d` (gauge, SQL rollup per cycle),
    `docketclock_accuracy_unverified_total` (the starvation signal), and a
    _DocketClock — App_ dashboard row (ratio stat + misses table via Loki).
-5. **Verify:** unit tests green; on live k3d, windows that closed ≥7d ago accrue AccuracyRecords
+5. **_Accuracy degraded_ alert (moved here from V3 — it needs this PR's gauge)**: once the gauge
+   has a few weeks of baseline, commit the rule — `docketclock_accuracy_high_correct_ratio_90d`
+   below a committed threshold (the architecture's credibility bar is 95% on HIGH) with a
+   min-sample guard so an empty/young window set can't page. Lands as a fast-follow commit/PR
+   inside V1's scope; V3's receiver (already live, per execution order) delivers it.
+6. **Verify:** unit tests green; on live k3d, windows that closed ≥7d ago accrue AccuracyRecords
    over a few cycles; the gauge appears in Prometheus/Grafana; a hand-crafted late-correction
    fixture produces `was_correct=false` with the right contradicting observation ids; re-poll
    budget metrics show closed-window checks deferring under pressure, never starving discovery.
@@ -145,21 +160,25 @@ slice builds it.
    correctly as agreements; one seeded disagreement exports to a fixture and the replay test
    fails before / passes after a deliberate fix.
 
-## PR-V3 — A real alert path + the accuracy alert + the fire drill
+## PR-V3 — A real alert path + the dead-man's switch + the fire drill (lands FIRST — see execution order)
 
 1. **Receiver** — ntfy topic (or Slack webhook if preferred at build time); the URL/token lands
    in Vault (`secret/observability/alerting`), flows ESO → the Grafana contact-point secret;
-   replace `local-noop` in the provisioned alerting config. Everything stays git-defined.
-2. **New alert** — _Accuracy degraded_: `docketclock_accuracy_high_correct_ratio_90d` below a
-   committed threshold (set after V1 produces a real baseline; the architecture's credibility
-   bar is 95% on HIGH) with a min-sample guard so an empty/young window set can't page.
+   replace `local-noop` in the provisioned alerting config. Everything stays git-defined. All
+   EXISTING alerts (poller stalled, db_up, and the backups phase's backup-age/WAL/CronJob rules)
+   start reaching a human with this one change.
+2. **External dead-man's switch** — everything above still lives INSIDE the cluster: if colima /
+   k3d / the Mini dies entirely, Grafana can't page anyone. A healthchecks.io check (free tier)
+   pinged by an in-cluster CronJob (hourly `curl`; URL via the same Vault → ESO secret) pages on
+   ABSENCE — pings stop → phone buzzes. Closes the "silent total outage" hole from the progress
+   review, which no in-cluster component can cover by definition.
 3. **Fire drill** — `task alert-drill` in `infra/Taskfile.yml`: scale the poller to 0, wait for
-   _Poller stalled_ to fire and REACH THE PHONE, scale back, confirm resolve notification;
-   document the drill + a quarterly cadence note in `infra/README.md`. An alert path is untested
-   until it has paged someone.
+   _Poller stalled_ to fire and REACH THE PHONE, scale back, confirm resolve notification; also
+   pause the dead-man CronJob once and confirm the absence page. Document the drill + a quarterly
+   cadence note in `infra/README.md`. An alert path is untested until it has paged someone.
 4. **Verify:** drill executed once for real (screenshot-level confidence: notification received);
-   `db_up` and accuracy alerts route to the same receiver; secret never appears in git or
-   `kubectl get cm` output.
+   `db_up` and the backup alerts route to the same receiver; the dead-man check pages on the
+   paused CronJob; secret never appears in git or `kubectl get cm` output.
 
 ## Out of scope (later)
 
@@ -174,11 +193,18 @@ slice builds it.
   restart, 429 storms) but a separate reliability track; this slice stays accuracy-shaped.
 - **LLM-as-judge / notice-kind evals** — still deferred from slice D; the accuracy-miss fixtures
   will feed that corpus when it happens.
+- **The human review/resolve path** (`human_review` observations closing out `PENDING_REVIEW` /
+  `CONFLICTING` windows — gap #4 in the progress review). Deliberately NOT folded in: this slice
+  measures correctness; resolving flagged windows is operator-workflow with its own design (even
+  the minimal `docketclock resolve <ocd-id>` CLI). Named here explicitly so it stays on the
+  roadmap rather than vanishing — candidate for its own small slice right after V1, whose miss
+  verdicts are exactly what a reviewer wants in front of them.
 
 ## Rollback
 
 - **PR-V1:** revert; stage 4 is additive in the cycle, the migration adds one table nothing else
   reads, the contract bump is additive. Accrued `accuracy_records` are inert history.
 - **PR-V2:** revert; xcheck is host-side/offline and read-only, fixtures are test-only data.
-- **PR-V3:** restore the `local-noop` contact point (one values change); the Vault secret can
-  stay (unreferenced) or be deleted.
+- **PR-V3:** restore the `local-noop` contact point (one values change); delete the dead-man
+  CronJob and pause the healthchecks.io check (else it pages on the absence it was built to
+  catch); the Vault secret can stay (unreferenced) or be deleted.
