@@ -32,6 +32,12 @@
 - **Belt-and-suspenders logical dumps**: nightly `pg_dump -Fc` alongside physical PITR. At ~1 GiB
   it costs nothing and restores anywhere (a laptop Postgres, no CNPG needed) — the "everything
   else failed" tier.
+- **Offsite encryption**: R2's default server-side encryption at rest is the accepted baseline for
+  the DB backups/WAL/dumps. docketclock's content is public-source regulatory data (FR/regs.gov
+  observations + adjudications derived from them — no PII, no customer data); Langfuse traces
+  (prompts/LLM output) are a step more sensitive but derive from the same public pipeline. Revisit
+  (barman-cloud client-side encryption, or age on the dumps) the moment tenant or customer data
+  enters either DB. The Vault seal-chain export (above) is the exception — always age-encrypted.
 - **Retention**: 14 days of base backups + WAL (barman `retentionPolicy`), 14 nightly dumps,
   14 daily Vault snapshots. R2 mirrors MinIO 1:1 via `rclone sync` (retention enforced once, at
   the source). RPO targets: ≤5 min local (continuous WAL), ≤1 h offsite (hourly sync). RTO
@@ -44,7 +50,7 @@
 Raw manifests in `infra/argocd/manifests/minio/` (the Langfuse pattern — no heavyweight
 operator/chart), one `platform-minio.yaml` Application, platform sync-wave.
 
-1. Single-node MinIO: StatefulSet (or Deployment + PVC), 10 Gi, ~256 Mi memory limit, namespace
+1. Single-node MinIO: StatefulSet (or Deployment + PVC), 10Gi, ~256Mi memory limit, namespace
    `backups`. Root creds from Vault via ESO (`secret/backups/minio`).
 2. Bucket-init Job (`mc mb --ignore-existing`): `cnpg-docketclock`, `cnpg-langfuse`, `pgdump`,
    `vault-snapshots`.
@@ -80,14 +86,16 @@ operator/chart), one `platform-minio.yaml` Application, platform sync-wave.
 4. One-time `scripts/backup-vault-keys.sh`: age-encrypt `vault-root-token` +
    `vault-transit-keys` Secret manifests → R2. The age identity lives OFF the Mini (password
    manager / printed) — documented in the runbook.
-5. **Verify:** objects visible in R2; `rclone check` clean; a dump restores into a scratch local
-   Postgres (`pg_restore --list` at minimum).
+5. **Verify:** objects visible in R2; `rclone check` clean; a dump ACTUALLY restores into a
+   scratch local Postgres at least once this phase (a full `pg_restore`, not just `--list` — the
+   TOC listing won't catch a corrupt dump body; `--list` stays as the cheap repeatable check).
 
 ## PR-4 — Vault raft snapshots
 
 1. Daily CronJob in `vault`: `vault operator raft snapshot save` against `vault-0` authenticated
    with the `vault-root-token` Secret (dev-acceptable; the prod path is k8s-auth + a snapshot
-   policy — note it), upload to MinIO `vault-snapshots`, keep 14. Mirrored to R2 by PR-3's sync.
+   policy — tracked as issue #75 so it survives this phase being marked done), upload to MinIO
+   `vault-snapshots`, keep 14. Mirrored to R2 by PR-3's sync.
 2. **Verify:** snapshot object lands; size sane; job green two consecutive days.
 
 ## PR-5 — Backup observability
@@ -106,7 +114,7 @@ operator/chart), one `platform-minio.yaml` Application, platform sync-wave.
 ## PR-6 — Restore drills (runbooks + automation) — the acceptance gate
 
 1. **Drill A, scratch PITR (automated, repeatable, non-destructive)** — `task drill-pitr`:
-   spins a `docketclock-pg-drill` Cluster (namespace `dr`, 256 Mi) bootstrapping `recovery` from
+   spins a `docketclock-pg-drill` Cluster (namespace `dr`, 256Mi) bootstrapping `recovery` from
    the ObjectStore at `targetTime = now - 5m`, then a verify script asserts: row counts for
    `observations` / `participation_windows` / adjudications within tolerance of live, the
    append-only trigger still rejects an UPDATE, `max(observed_at)` consistent with the target
