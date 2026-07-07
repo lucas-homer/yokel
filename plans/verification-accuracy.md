@@ -100,7 +100,7 @@ slice builds it.
   receiver as the prerequisite for trusting unattended alerts, and the backups phase ships its
   backup-staleness rules (PR-5 there) against `local-noop`. V3 has no dependency on V1/V2, so it
   lands FIRST — one small PR that retroactively wires every existing alert (poller stalled,
-  db_up, backup age) to a human. The one item that DOES depend on V1 — the _Accuracy degraded_
+  db*up, backup age) to a human. The one item that DOES depend on V1 — the \_Accuracy degraded*
   alert — moves into V1's scope (its threshold can only be committed after the gauge has a
   baseline, which V3-first makes unambiguous).
 
