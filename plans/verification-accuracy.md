@@ -22,7 +22,7 @@ slice builds it.
 
 ## What exists today (the seams this slice hooks into)
 
-- **The poll cycle** — `src/poll/run.ts`: a single-writer, self-rescheduling cycle running
+- **The poll cycle** — `apps/docketclock/src/poll/run.ts`: a single-writer, self-rescheduling cycle running
   `pollFrOnce` → `pollRegsOnce` → `chainReconcileOnce` sequentially, with graceful drain and a
   heartbeat file. A verification pass slots in as **stage 4** of the same cycle — no new
   Deployment, single-writer preserved.
@@ -55,14 +55,23 @@ slice builds it.
   single-writer invariant, zero RAM cost, and the re-poll machinery/budget already live there.
 - **Verification horizon = 7 days past `resolved_close_utc`** (per the architecture). While a
   closed window is inside the horizon, its source docs stay in the re-poll set (budgeted,
-  deferrable). At horizon exit, write ONE final `AccuracyRecord` verdict per window. Interim
-  re-polls write ordinary observations through the existing ingest path — no new write path.
+  deferrable). Interim re-polls write ordinary observations through the existing ingest path —
+  no new write path; the final `AccuracyRecord` verdict is written per the next bullet.
+- **A verdict requires a confirmed check — never correctness-by-default.** Because the re-poll
+  is deferrable, a window could exit the horizon with ZERO post-close checks actually executed;
+  writing `was_correct=true` on the mere absence of a contradicting observation would quietly
+  inflate the headline number. So: the final verdict is written only once ≥1 successful
+  post-close re-poll of the window's sources has landed. If budget pressure defers every
+  re-poll, the horizon extends until one lands — hard-capped at 14 days; a window that lapses
+  the cap gets `basis: unverified_lapsed`, is EXCLUDED from the headline gauge, and increments
+  `docketclock_accuracy_unverified_total`, so re-poll starvation is visible instead of being
+  silently blended into "correct".
 - **`was_correct` semantics: judge the claim as of close time.** Correct ⇔ no post-close
   observation contradicts the published close (no late correction moving the date, no revealed
   withdrawal, no reopening that shows the close was wrong when published). An extension we linked
   BEFORE close doesn't make the superseded window wrong — the chain already re-derived it; the
   verdict attaches to the window version that was live at close. Basis enum:
-  `post_close_repoll | late_amendment | manual`.
+  `post_close_repoll | late_amendment | manual | unverified_lapsed`.
 - **`accuracy_records` is append-only** (same trigger discipline as the observation log — the
   track record is a trust primitive; it must be as tamper-evident as the observations).
 - **The headline metric is HIGH-only, trailing 90d**: share of HIGH-confidence windows whose
@@ -87,20 +96,28 @@ slice builds it.
 
 ## PR-V1 — AccuracyRecord: contract + table + the post-close verification pass
 
-1. **Contracts (contract-keeper, minor bump)** — `AccuracyRecord`: `{ ocd_id, window_version,
-confidence_at_close, published_close_utc, published_close_display, verdict: { was_correct,
-basis, contradicting_observation_ids }, horizon: { closed_at_utc, verified_at_utc } }`.
-   Additive; nothing else changes.
+1. **Contracts (contract-keeper, minor bump)** — `AccuracyRecord`, additive; nothing else changes:
+
+   ```
+   { ocd_id, window_version, confidence_at_close,
+     published_close_utc, published_close_display,
+     verdict: { was_correct, basis, contradicting_observation_ids },
+     horizon: { closed_at_utc, verified_at_utc } }
+   ```
+
 2. **Migration `0010_accuracy_records.sql`** — the table + the append-only enforcement trigger
    (mirror `0001`'s discipline) + indexes for the 90d rollup query.
-3. **`src/verify/`** — `select.ts` (pure: which windows are inside/exiting the horizon),
-   `verdict.ts` (pure: observations-since-close → `was_correct` + basis; unit-tested against
-   fixture chains incl. the late-correction, revealed-withdrawal, and linked-extension cases),
-   `run.ts` (`verifyOnce(sql, opts)`: keep closed-in-horizon docs in the budgeted re-poll set,
-   write final records at horizon exit).
+3. **`apps/docketclock/src/verify/`** — `select.ts` (pure: which windows are inside/exiting the
+   horizon, incl. the extend-until-confirmed-check and 14-day-lapse rules), `verdict.ts` (pure:
+   observations-since-close + did-a-confirmed-check-land → verdict; unit-tested against fixture
+   chains incl. the late-correction, revealed-withdrawal, linked-extension, deferred-re-poll
+   [no verdict before a confirmed check], and lapse [`unverified_lapsed`] cases), `run.ts`
+   (`verifyOnce(sql, opts)`: keep closed-in-horizon docs in the budgeted re-poll set, write
+   final records per the verdict rules).
 4. **Wire stage 4** into the poll cycle + metrics: `docketclock_accuracy_checks_total{result}`,
    `docketclock_accuracy_records_total{was_correct}`,
-   `docketclock_accuracy_high_correct_ratio_90d` (gauge, SQL rollup per cycle), and a
+   `docketclock_accuracy_high_correct_ratio_90d` (gauge, SQL rollup per cycle),
+   `docketclock_accuracy_unverified_total` (the starvation signal), and a
    _DocketClock — App_ dashboard row (ratio stat + misses table via Loki).
 5. **Verify:** unit tests green; on live k3d, windows that closed ≥7d ago accrue AccuracyRecords
    over a few cycles; the gauge appears in Prometheus/Grafana; a hand-crafted late-correction
@@ -115,7 +132,10 @@ basis, contradicting_observation_ids }, horizon: { closed_at_utc, verified_at_ut
    closes + status, writes `spikes/out/XCHECK_diff.md` (counts + per-disagreement detail).
 2. **Triage doc** — `spikes/out/XCHECK_diff.md` gets a hand-filled `triage` column per
    disagreement: `our_bug | bulk_stale | source_drift`; the README documents the pass and the
-   expectation (bulk staleness dominates; anything in `our_bug` is a find).
+   expectation (bulk staleness dominates; anything in `our_bug` is a find). **Cadence:** re-run
+   on every fresh parquet snapshot, at least monthly while calibrating; a pass is not done until
+   every disagreement carries a triage value (the diff file with an unfilled column is the
+   reminder — it's checked in `spikes/out/` alongside the spike outputs).
 3. **Fixture exporter** — `apps/docketclock/scripts/export-accuracy-miss.ts`: given an ocd_id
    (from a V1 miss or a V2 `our_bug` triage), snapshot window-at-close + observations into
    `eval/accuracy-misses/<frDocNum>.json`; `test/accuracy-misses.test.ts` replays every committed
