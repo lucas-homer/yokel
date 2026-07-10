@@ -50,13 +50,14 @@ incident on fresh hardware you may name it `yokel` directly.
 
 ## Step 1 — cluster + platform bring-up (the normal bootstrap, minus the app)
 
+All commands in this runbook run from the **repo root** (`task` invocations use `-d infra`).
+
 ```sh
 k3d cluster create yokel-dr --k3s-arg "--disable=traefik@server:0"   # match k3d-default.yaml sizing
-cd infra
-task argocd            # install Argo CD
-task platform          # apply all platform-*.yaml Applications
-bash scripts/vault-transit-init.sh
-task vault-seed        # re-seed Vault: NEW random MinIO root creds, app secrets from your vault
+task -d infra argocd     # install Argo CD
+task -d infra platform   # apply all platform-*.yaml Applications
+bash infra/scripts/vault-transit-init.sh
+task -d infra vault-seed # re-seed Vault: NEW random MinIO root creds, app secrets from your vault
 ```
 
 Wait for the platform tier: `kubectl get applications -n argocd` — everything Synced/Healthy except
@@ -103,9 +104,9 @@ kubectl -n backups wait --for=condition=complete job/r2-restore --timeout=1800s
 kubectl -n backups logs job/r2-restore
 ```
 
-Sanity: `task backup-status` — the ObjectStore section will still be empty (no clusters yet), but
+Sanity: `task -d infra backup-status` — the ObjectStore section will still be empty (no clusters yet), but
 MinIO now holds the base backups + WAL. Optionally verify a bucket listing via the MinIO console
-(`task minio`).
+(`task -d infra minio`).
 
 ## Step 4 — recover the DocketClock Postgres (the recovery seam)
 
@@ -172,7 +173,7 @@ is fresh in Prometheus (or just watch the Grafana poller-stalled rule stay Norma
 
 ## Step 6 — verify the backup pipeline is whole again
 
-`task backup-status`: recovery window present for `docketclock-pg`, WAL archiving current, dump +
+`task -d infra backup-status`: recovery window present for `docketclock-pg`, WAL archiving current, dump +
 snapshot CronJobs will populate at the next 08:xx window. The `Backups` Grafana alerts (PR-5) go
 Normal as each leg reports.
 
@@ -190,7 +191,7 @@ kubectl -n backups logs -f job/r2-mirror-postdrill   # clean sync, no mass delet
 
 ```sh
 k3d cluster delete yokel-dr
-# if the live cluster was stopped for headroom: k3d cluster start yokel, then task cluster-restart
+# if the live cluster was stopped for headroom: k3d cluster start yokel, then task -d infra cluster-restart
 ```
 
 At a REAL incident there is no teardown — instead: rotate anything the incident may have exposed,

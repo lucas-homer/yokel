@@ -164,7 +164,13 @@ for t in observations participation_windows adjudications schema_migrations; do
   drill_n=$(psql_drill "SELECT count(*) FROM $t")
   # Recovered-at-(now-5m) counts must not EXCEED live, and must be within tolerance below it
   # (live keeps growing; 5% or 10 rows, whichever is larger, covers a busy poller window).
-  tol=$(( live_n / 20 )); [ "$tol" -lt 10 ] && tol=10
+  # schema_migrations is EXACT: it only changes on deploys, and a tolerant check would wave
+  # through a restore that lost migrations entirely (review catch on #85).
+  if [ "$t" = "schema_migrations" ]; then
+    tol=0
+  else
+    tol=$(( live_n / 20 )); [ "$tol" -lt 10 ] && tol=10
+  fi
   if [ "$drill_n" -le "$live_n" ] && [ $(( live_n - drill_n )) -le "$tol" ]; then
     echo "PASS  $t: drill=$drill_n live=$live_n (tol $tol)"
   else
