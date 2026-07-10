@@ -12,6 +12,12 @@ poller:
 postgres:
   instances: 1
   storageClass: "" # local-path (k3d default)
+  # PITR to the in-cluster MinIO (backups PR-2). Creds/cadence/retention come from values.yaml
+  # (the MinIO defaults there ARE the local seam); this overlay just picks the target + enables.
+  backup:
+    enabled: true
+    endpointURL: http://minio.backups.svc:9000
+    destinationPath: s3://cnpg-docketclock/
 
 ingress:
   enabled: true

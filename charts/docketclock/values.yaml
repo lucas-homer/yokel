@@ -39,6 +39,26 @@ postgres:
   imageName: "ghcr.io/cloudnative-pg/postgresql:18.3-system-trixie"
   storageSize: 1Gi
   storageClass: "" # "" = cluster default (local-path on k3d); cloud sets a CSI class
+  # PITR backups via the Barman Cloud Plugin (backups PR-2, plans/backups-restore-drill.md): WAL
+  # archiving + a nightly base backup to an S3-compatible ObjectStore. The ENGINE + cadence live here
+  # (shared shape); the TARGET is a per-overlay seam — values-local points at in-cluster MinIO,
+  # values-cloud at Cloudflare R2. enabled=false in this base so a bare `helm template` (and any future
+  # overlay that hasn't chosen a target) renders no backup resources. HEADS-UP: flipping enabled rolls
+  # the single-instance Cluster once (the plugin injects a sidecar) — brief DB downtime, absorbed by
+  # the poller's next cycle + API restart.
+  backup:
+    enabled: false
+    endpointURL: "" # per-overlay: MinIO svc URL locally, R2 endpoint in cloud
+    destinationPath: "" # per-overlay: s3://<bucket>/ (buckets created by minio's bucket-init / PR-3)
+    retention: "14d" # barman recovery window; enforced at the SOURCE store (R2 mirrors 1:1, PR-3)
+    schedule: "0 0 8 * * *" # nightly base backup 08:00 UTC — CNPG cron format INCLUDES seconds
+    # Vault path + property names for the store credentials (ESO → the cnpg-backup-creds Secret).
+    # Local = the generated MinIO root creds; cloud = the R2 token (different property names — the
+    # template maps whatever is named here onto fixed ACCESS_KEY_ID / ACCESS_SECRET_KEY target keys).
+    creds:
+      vaultPath: backups/minio
+      accessKeyProperty: root_user
+      secretKeyProperty: root_password
 
 # Schema migrations — run as a CNPG-aware Job (Argo PreSync hook) that applies migrations/*.sql before
 # the app rolls out (integrator discipline: migrations are a Job, never `kubectl exec` by hand). Enabled

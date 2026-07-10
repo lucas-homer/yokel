@@ -3,7 +3,16 @@ postgres:
   instances: 3 # HA
   imageName: "" # TODO(phase-3): pin exact 16.x
   storageClass: "" # TODO(phase-3): cloud CSI class (e.g. gp3 / pd-ssd)
-  # TODO(phase-3): backup to object storage (S3/GCS) for PITR
+  # PITR to Cloudflare R2 (the backups phase gave phase-3 a concrete provider candidate — R2 is
+  # already the offsite mirror target locally, so cutover is endpoint + creds, same shapes).
+  backup:
+    enabled: true
+    endpointURL: "" # TODO(phase-3): https://<account-id>.r2.cloudflarestorage.com
+    destinationPath: "" # TODO(phase-3): s3://yokel-backups/cnpg-docketclock/
+    creds:
+      vaultPath: backups/r2
+      accessKeyProperty: access_key_id
+      secretKeyProperty: secret_access_key
 
 ingress:
   enabled: true

@@ -1,0 +1,70 @@
+# PITR backups for the Langfuse Postgres (backups PR-2) — same shape as the docketclock chart's
+# postgres-objectstore/scheduledbackup templates, inlined here since the langfuse app is raw manifests.
+# Traces + eval datasets are only PARTIALLY re-derivable (human labels aren't), hence in scope.
+# ESO maps the MinIO property names onto fixed ACCESS_KEY_ID / ACCESS_SECRET_KEY target keys so the
+# ObjectStore reference matches the docketclock pattern exactly.
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: cnpg-backup-creds
+  annotations:
+    argocd.argoproj.io/sync-wave: "0" # alongside the Cluster; CNPG retries until the store resolves
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: cnpg-backup-creds
+    creationPolicy: Owner
+  data:
+    - secretKey: ACCESS_KEY_ID
+      remoteRef: { key: backups/minio, property: root_user }
+    - secretKey: ACCESS_SECRET_KEY
+      remoteRef: { key: backups/minio, property: root_password }
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: langfuse-db-store
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  configuration:
+    destinationPath: "s3://cnpg-langfuse/"
+    endpointURL: "http://minio.backups.svc:9000"
+    s3Credentials:
+      accessKeyId:
+        name: cnpg-backup-creds
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: cnpg-backup-creds
+        key: ACCESS_SECRET_KEY
+    wal:
+      compression: gzip
+  retentionPolicy: "14d" # keep in lockstep with the docketclock chart's postgres.backup.retention
+  instanceSidecarConfiguration:
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        memory: 256Mi
+---
+# Nightly base backup — 08:10 UTC, staggered 10 min after docketclock's (08:00) so the two barman
+# uploads don't compete on the Mini. `immediate: true` = first backup on land (the PR-2 verify step).
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: langfuse-db-nightly
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # after the Cluster (wave "0") it targets
+spec:
+  schedule: "0 10 8 * * *" # CNPG cron format INCLUDES a leading seconds field
+  immediate: true
+  backupOwnerReference: self
+  cluster:
+    name: langfuse-db
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
