@@ -1,0 +1,54 @@
+# External dead-man's switch (Slice V / PR-V3, plans/verification-accuracy.md). Everything else in
+# the alert path lives INSIDE the cluster — if colima / k3d / the Mini dies entirely, Grafana can't
+# page anyone. This CronJob pings a healthchecks.io check every hour; healthchecks pages on ABSENCE
+# (configure the check: period 1h, grace 1h → a total outage pages within ~2h). The one alert no
+# in-cluster component can deliver by definition.
+#
+# Placeholder-guarded: until scripts/seed-alerting-secrets.sh writes a real ping URL, the job
+# exits 0 without pinging — no failing-Job noise, and no check to page (it doesn't exist yet).
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: deadman-ping
+  namespace: observability
+spec:
+  # Hourly at :11 — offset from the :00 r2-mirror and the 08:00-09:00 backup window so the ping
+  # never queues behind heavier jobs (a late ping is indistinguishable from a dying cluster).
+  schedule: "11 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 120
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: ping
+              image: curlimages/curl:8.21.0
+              env:
+                - name: PING_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: deadman-ping
+                      key: PING_URL
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  case "$PING_URL" in
+                    *PLACEHOLDER*) echo "ping URL is the vault-seed placeholder — skipping (seed-alerting-secrets.sh to arm)"; exit 0;;
+                  esac
+                  # -f: HTTP errors fail the job (visible); --retry covers transient blips inside
+                  # the run — persistent failure is the point (pings stop -> healthchecks pages).
+                  curl -fsS -m 10 --retry 3 -o /dev/null "$PING_URL"
+                  echo "pinged"
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  memory: 32Mi
