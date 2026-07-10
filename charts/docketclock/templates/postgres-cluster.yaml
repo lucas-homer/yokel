@@ -16,6 +16,7 @@ spec:
   # injection) — brief single-instance downtime; the poller's next cycle + API restart absorb it.
   plugins:
     - name: barman-cloud.cloudnative-pg.io
+      enabled: true # API-server default — pinned so Argo's git-vs-live diff stays clean (#77 class)
       isWALArchiver: true
       parameters:
         barmanObjectName: docketclock-pg-store

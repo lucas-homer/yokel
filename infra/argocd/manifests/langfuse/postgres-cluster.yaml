@@ -33,6 +33,7 @@ spec:
   # brief single-instance downtime; Langfuse's probes ride it out and traces buffer client-side.
   plugins:
     - name: barman-cloud.cloudnative-pg.io
+      enabled: true # API-server default — pinned so Argo's git-vs-live diff stays clean (#77 class)
       isWALArchiver: true
       parameters:
         barmanObjectName: langfuse-db-store
