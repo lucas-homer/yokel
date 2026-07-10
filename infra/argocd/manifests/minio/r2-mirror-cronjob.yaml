@@ -1,0 +1,99 @@
+# R2 offsite mirror — backups PR-3. Hourly one-way `rclone sync` of every MinIO bucket to the
+# Terraform-managed Cloudflare R2 bucket (infra/terraform/envs/backups). MinIO is the retention
+# authority (barman retentionPolicy + the ILM rules in the bucket-init Job); the mirror inherits
+# deletions, so R2 stays a 1:1 copy — the copy that survives the colima VM and the Mini.
+#
+# Until `terraform apply` + seed-r2-secrets.sh replace the seeded placeholders in secret/backups/r2,
+# every run fails fast on the placeholder endpoint — loud-by-design, and PR-5's CronJob-staleness
+# alert is the durable watchdog for it.
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: r2-creds
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: r2-creds
+    creationPolicy: Owner
+  data:
+    - secretKey: access_key_id
+      remoteRef: { key: backups/r2, property: access_key_id }
+    - secretKey: secret_access_key
+      remoteRef: { key: backups/r2, property: secret_access_key }
+    - secretKey: endpoint
+      remoteRef: { key: backups/r2, property: endpoint }
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: r2-mirror
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  schedule: "0 * * * *" # hourly — the plan's offsite RPO (≤1h)
+  concurrencyPolicy: Forbid # a slow sync must not overlap the next tick
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 3000 # < the hourly cadence, so a hung sync can't pile up
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: rclone
+              image: rclone/rclone:1.74.4
+              # Remotes are declared entirely via env (no config file): `minio:` reads the local
+              # source with the root creds; `r2:` writes the offsite copy with the bucket-scoped
+              # Terraform token. CronJob pods re-read Secrets at every tick, so a re-seed needs no
+              # restart — the next hourly run just picks the new creds up.
+              env:
+                - name: RCLONE_CONFIG_MINIO_TYPE
+                  value: s3
+                - name: RCLONE_CONFIG_MINIO_PROVIDER
+                  value: Minio
+                - name: RCLONE_CONFIG_MINIO_ENDPOINT
+                  value: http://minio:9000
+                - name: RCLONE_CONFIG_MINIO_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef: { name: minio-root, key: root_user }
+                - name: RCLONE_CONFIG_MINIO_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef: { name: minio-root, key: root_password }
+                - name: RCLONE_CONFIG_R2_TYPE
+                  value: s3
+                - name: RCLONE_CONFIG_R2_PROVIDER
+                  value: Cloudflare
+                - name: RCLONE_CONFIG_R2_ENDPOINT
+                  valueFrom:
+                    secretKeyRef: { name: r2-creds, key: endpoint }
+                - name: RCLONE_CONFIG_R2_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef: { name: r2-creds, key: access_key_id }
+                - name: RCLONE_CONFIG_R2_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef: { name: r2-creds, key: secret_access_key }
+              command:
+                - sh
+                - -c
+                # Attempt every bucket even if one fails (partial offsite coverage beats none),
+                # then exit non-zero so the failure is visible on the Job.
+                - |
+                  fail=0
+                  for b in cnpg-docketclock cnpg-langfuse pgdump vault-snapshots; do
+                    echo "--- syncing $b"
+                    rclone sync "minio:$b" "r2:yokel-backups/$b" --fast-list --stats-one-line || fail=1
+                  done
+                  exit $fail
+              resources:
+                requests:
+                  cpu: 25m
+                  memory: 64Mi
+                limits:
+                  memory: 256Mi

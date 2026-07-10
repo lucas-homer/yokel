@@ -34,6 +34,15 @@ spec:
         - .spec.data[].remoteRef.decodingStrategy
         - .spec.data[].remoteRef.metadataPolicy
         - .spec.data[].remoteRef.nullBytePolicy
+    - group: external-secrets.io
+      kind: ExternalSecret
+      name: r2-creds
+      jqPathExpressions:
+        - .spec.target.deletionPolicy
+        - .spec.data[].remoteRef.conversionStrategy
+        - .spec.data[].remoteRef.decodingStrategy
+        - .spec.data[].remoteRef.metadataPolicy
+        - .spec.data[].remoteRef.nullBytePolicy
     # The API server injects TypeMeta + a status stub INSIDE volumeClaimTemplates entries — unlike the
     # fields #77 pinned in the manifest, `status` cannot be authored away, so these need the diff-level
     # ignore (the known Argo StatefulSet-VCT drift).

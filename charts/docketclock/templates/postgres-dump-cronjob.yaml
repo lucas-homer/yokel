@@ -1,0 +1,74 @@
+{{- if .Values.postgres.backup.enabled }}
+# Nightly logical dump (backups PR-3) — the belt-and-suspenders tier under the barman PITR: a plain
+# `pg_dump -Fc` that restores ANYWHERE (a laptop Postgres, no CNPG/barman needed), shipped to the
+# shared `pgdump` MinIO bucket and mirrored offsite by the r2-mirror CronJob. Retention = the 14d ILM
+# rule on the bucket (no prune logic here). 08:30 UTC — after the 08:00/08:10 base backups.
+#
+# Two containers: pg_dump runs in the SAME image as the database server (exact version match — a
+# newer pg_dump against an older server is the classic silent-incompat trap), then mc uploads with
+# the cnpg-backup-creds this chart already materializes for the ObjectStore.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: docketclock-pg-dump
+spec:
+  schedule: "30 8 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 1800
+      template:
+        spec:
+          restartPolicy: Never
+          volumes:
+            - name: dump
+              emptyDir: {}
+          initContainers:
+            - name: pg-dump
+              image: {{ .Values.postgres.imageName | quote }}
+              env:
+                - name: DATABASE_URL
+                  valueFrom:
+                    secretKeyRef: { name: docketclock-pg-app, key: uri }
+              command:
+                - sh
+                - -c
+                - pg_dump "$DATABASE_URL" -Fc -f "/dump/docketclock-$(date -u +%Y%m%dT%H%M%SZ).dump"
+              volumeMounts:
+                - name: dump
+                  mountPath: /dump
+              resources:
+                requests:
+                  cpu: 25m
+                  memory: 64Mi
+                limits:
+                  memory: 256Mi
+          containers:
+            - name: upload
+              image: minio/mc:RELEASE.2025-08-13T08-35-41Z
+              env:
+                - name: ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef: { name: cnpg-backup-creds, key: ACCESS_KEY_ID }
+                - name: ACCESS_SECRET_KEY
+                  valueFrom:
+                    secretKeyRef: { name: cnpg-backup-creds, key: ACCESS_SECRET_KEY }
+              command:
+                - sh
+                - -c
+                - |
+                  mc alias set backups {{ .Values.postgres.backup.endpointURL | quote }} "$ACCESS_KEY_ID" "$ACCESS_SECRET_KEY"
+                  mc cp /dump/*.dump backups/pgdump/docketclock/
+              volumeMounts:
+                - name: dump
+                  mountPath: /dump
+              resources:
+                requests:
+                  cpu: 25m
+                  memory: 64Mi
+                limits:
+                  memory: 128Mi
+{{- end }}

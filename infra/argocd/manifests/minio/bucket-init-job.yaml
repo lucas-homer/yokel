@@ -44,4 +44,13 @@ spec:
               mc alias list local >/dev/null || { echo "minio never became reachable"; exit 1; }
               mc mb --ignore-existing \
                 local/cnpg-docketclock local/cnpg-langfuse local/pgdump local/vault-snapshots
+              # Retention for the NON-barman buckets (PR-3/PR-4): ILM expires objects past 14d, so
+              # the dump/snapshot CronJobs never need prune logic and the R2 mirror inherits the
+              # deletions (retention enforced once, at the source). The cnpg-* buckets are NOT ILM'd
+              # — barman's own retentionPolicy owns those, and ILM would fight it. Guarded because
+              # this hook re-runs every sync and `mc ilm rule add` isn't idempotent.
+              for b in pgdump vault-snapshots; do
+                mc ilm rule ls "local/$b" 2>/dev/null | grep -q . \
+                  || mc ilm rule add "local/$b" --expire-days 14
+              done
               mc ls local

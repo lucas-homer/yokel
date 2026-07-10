@@ -15,7 +15,9 @@ argocd/apps/          # one Argo Application per component (CNPG, ESO, Vault, ob
 argocd/manifests/     # raw manifests for git-sourced apps (e.g. the vault-backend ClusterSecretStore)
 scripts/vault-seed.sh # seed dev Vault + wire ESO token auth (idempotent)
 scripts/seed-docketclock-secrets.sh # patch individual docketclock-external keys (regs/gemini/…) + roll
-terraform/            # cloud provisioning — structure only, provider deferred (see its README)
+scripts/seed-r2-secrets.sh # push terraform R2 outputs → Vault secret/backups/r2 (after terraform apply)
+scripts/backup-vault-keys.sh # one-time age-encrypted Vault seal-chain export → R2 (identity OFF the Mini)
+terraform/            # envs/backups: LIVE Cloudflare R2 (backups PR-3); envs/cloud: phase-3 stub
 ../charts/docketclock # our first-party Helm chart (CNPG Cluster, ESO wiring, app)
 ```
 
@@ -186,6 +188,17 @@ barman PITR (PR-2), nightly `pg_dump`s + the Cloudflare R2 offsite mirror (PR-3)
 snapshots (PR-4) land in. MinIO alone is NOT a backup — its 10Gi PVC lives on the same colima VM disk
 as Postgres; R2 is the copy that survives the VM/Mini. A bucket-init sync-hook Job creates the four
 fixed buckets: `cnpg-docketclock`, `cnpg-langfuse`, `pgdump`, `vault-snapshots`.
+
+**Offsite (PR-3)** is **Cloudflare R2, Terraform-managed — no dashboard clickops**
+(`terraform/envs/backups`: the bucket + a bucket-scoped API token whose S3 keypair is derived in
+outputs; run `terraform apply` with a bootstrap `CLOUDFLARE_API_TOKEN` in env, then
+`scripts/seed-r2-secrets.sh` pushes the outputs into Vault, stdin-only). An hourly `r2-mirror`
+CronJob (`argocd/manifests/minio/`) rclone-syncs every MinIO bucket to R2 1:1 — retention decisions
+happen ONLY in MinIO (barman `retentionPolicy` for the `cnpg-*` buckets, 14d ILM rules for
+`pgdump`/`vault-snapshots`) and the mirror inherits them. Nightly `pg_dump -Fc` CronJobs (08:30/08:40
+UTC, version-matched to the server image) drop restore-anywhere logical dumps into `pgdump` — the
+"everything else failed" tier. One-time `scripts/backup-vault-keys.sh` streams the Vault seal-chain
+Secrets age-ENCRYPTED to R2 (the age identity lives OFF the Mini — password manager or paper).
 
 **PITR (PR-2)** runs through the **Barman Cloud Plugin** (`platform-barman-plugin.yaml`, a vendored
 upstream release manifest in `argocd/manifests/barman-cloud-plugin/` — in-tree `barmanObjectStore` is

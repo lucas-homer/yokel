@@ -1,17 +1,26 @@
-# Terraform — cloud provisioning (Phase 3 stub)
+# Terraform — cloud provisioning
 
-Provisions the **production** Kubernetes cluster + the object storage for CloudNativePG PITR backups,
-then bootstraps Argo CD (after which GitOps reconciles everything from git). See ADR 0008 / 0009.
+Two environments with very different maturity:
 
-**Status: structure only.** The modules are provider-agnostic interfaces with no resources yet, so the
-cloud provider stays deferred. `terraform init && terraform validate` works offline today.
+- **`envs/backups` — LIVE (backups PR-3).** The Cloudflare R2 offsite-mirror bucket + a
+  bucket-scoped API token, IaC-not-clickops. Operator loop is documented in its `main.tf` header:
+  `terraform apply` with a bootstrap `CLOUDFLARE_API_TOKEN` in env, then
+  `../../scripts/seed-r2-secrets.sh` feeds the outputs into Vault. State is local + gitignored and
+  contains the derived S3 secret — treat the state file like a credential.
+- **`envs/cloud` — Phase 3 stub.** The **production** Kubernetes cluster + PITR object storage,
+  then Argo CD bootstrap (after which GitOps reconciles everything from git). See ADR 0008 / 0009.
+  The modules are provider-agnostic interfaces with no resources yet; `terraform init && terraform
+validate` works offline today. Note the `r2-offsite` module doubles as the concrete candidate for
+  the `cnpg-backups` interface (R2 already speaks the S3-compatible barman seam).
 
 ```
 modules/
   k8s-cluster/    # interface for the managed-control-plane cluster (vars in, kubeconfig/endpoint out)
-  cnpg-backups/   # interface for the PITR backup bucket
+  cnpg-backups/   # interface for the PITR backup bucket (stub)
+  r2-offsite/     # IMPLEMENTED: Cloudflare R2 bucket + scoped token (backups PR-3)
 envs/
-  cloud/          # root module wiring the two; provider block intentionally unfilled
+  cloud/          # phase-3 root module; provider block intentionally unfilled
+  backups/        # LIVE root module for the R2 offsite target (cloudflare provider)
 ```
 
 ## At Phase 3 (choosing the provider)
