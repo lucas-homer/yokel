@@ -140,6 +140,25 @@ else
   echo "  ↳ secret/backups/r2 already seeded — leaving as-is (patched values preserved)."
 fi
 
+echo "🌱 seeding secret/observability/alerting (alert receiver seams — Slice V PR-V3)..."
+# Seed-once like backups/r2: placeholders here, real values patched by seed-alerting-secrets.sh —
+# an unguarded re-seed would clobber the patched ntfy topic / healthchecks ping URL.
+#  - ntfy_url placeholder = the old local-noop URL, so Grafana's ntfy contact point no-ops instead
+#    of publishing alert text to a guessable public ntfy topic.
+#  - healthchecks_ping_url placeholder contains "PLACEHOLDER" — the deadman CronJob greps for it
+#    and exits 0 (no failing-Job noise before the healthchecks.io check exists).
+if kv_missing secret/observability/alerting; then
+  kubectl -n vault exec vault-0 -- sh -c "
+    export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+    vault kv put secret/observability/alerting \
+      ntfy_url='http://127.0.0.1:9999/alerts' \
+      healthchecks_ping_url='PLACEHOLDER-run-seed-alerting-secrets'
+  " >/dev/null
+  echo "  ↳ seeded secret/observability/alerting (placeholders — patch via seed-alerting-secrets.sh)."
+else
+  echo "  ↳ secret/observability/alerting already seeded — leaving as-is (patched values preserved)."
+fi
+
 echo "🔑 wiring ESO → Vault token auth (external-secrets/vault-token)..."
 kubectl create namespace external-secrets --dry-run=client -o yaml | kubectl apply -f -
 kubectl -n external-secrets create secret generic vault-token \

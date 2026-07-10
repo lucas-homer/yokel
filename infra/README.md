@@ -125,10 +125,33 @@ LLM latency/tokens/verdicts/cache-hit, HTTP p95/5xx, `db_up`) and _Cluster — O
 CPU/mem/disk, plus pod restarts/memory by namespace). Under **Alerting → Alert rules**: _Poller stalled_
 (heartbeat age > 3× interval), _LLM adjudicator error spike_, and _API readiness down_ (`db_up == 0`).
 Each rule scopes by `app_kubernetes_io_component` so the cross-process gauge leaks (`db_up=0` on the
-poller, `heartbeat=0` on the API) never false-fire. Notifications route to a placeholder `local-noop`
-**webhook** contact point — swap its URL in the `alerting.contactpoints.yaml` block of
-`platform-grafana.yaml` (or add a Slack receiver + its ESO secret) to deliver for real; alert _state_ is
-visible in the UI regardless.
+poller, `heartbeat=0` on the API) never false-fire.
+
+**Alert delivery (Slice V / PR-V3)** — every rule (the three above + the `Backups` folder) routes to
+the **ntfy** contact point: a hosted-push topic your phone subscribes to via the ntfy app, formatted by
+ntfy's built-in `?template=grafana`. The topic URL is a _secret_ (whoever knows the topic can read and
+spoof alerts): it lives at Vault `secret/observability/alerting`, flows ESO → the `grafana-alerting`
+Secret → pod env (`envFromSecret`) → `${ALERTING_NTFY_URL}` interpolation in the provisioned contact
+point — never git. Arm it with `scripts/seed-alerting-secrets.sh` (generates + prints a topic if you
+don't pass `NTFY_TOPIC`; subscribe on the phone, then keep the topic somewhere safe). Until then the
+Vault placeholder is the old `local-noop` URL, so delivery no-ops; `local-noop` also stays defined as
+the one-line rollback (flip `policies.yaml`'s `receiver` back). Grafana reads env at pod start — the
+seed script rolls the Deployment for you after a rotation.
+
+**Dead-man's switch (`platform-deadman.yaml`)** — all of the above lives _inside_ the cluster; if
+colima/k3d/the Mini dies outright, Grafana can't page anyone. The `deadman-ping` CronJob
+(`observability` ns, hourly at :11) curls a [healthchecks.io](https://healthchecks.io) check that pages
+on ping _absence_ (configure the check by hand: period 1h, grace 1h → a total outage pages within
+~2h). The ping URL rides the same Vault path (`healthchecks_ping_url`, seeded via
+`HEALTHCHECKS_PING_URL=... scripts/seed-alerting-secrets.sh`); while it's still the placeholder the
+CronJob exits 0 without pinging, so nothing fails and nothing pages.
+
+**Fire drill — `task alert-drill` (quarterly, ~90m).** An alert path is untested until it has paged
+someone: the drill pauses docketclock's auto-sync (git pins the poller at `replicas: 1`; selfHeal would
+revert the outage), scales the poller to 0, waits for _Poller stalled_ to fire **with its real
+thresholds** (~55–60m), asks you to confirm the page reached your phone, restores, and confirms the
+resolve notification too. It then prints the manual dead-man half (suspend the CronJob once, wait for
+the absence page, restore). Drill log: <!-- add PASS dates here --> not yet run.
 
 Then **Explore → Loki**. Start with a generic stream selector to confirm logs are flowing (works
 before docketclock is even running) — the labels Alloy sets are `namespace` / `pod` / `container` / `app`:
@@ -219,8 +242,8 @@ authenticates with the root token for now; the k8s-auth + snapshot-policy harden
 `backup-vault-keys.sh` — re-seeding (`vault-seed.sh`) stays the primary local Vault DR path.
 
 **Observability (PR-5)**: `task backup-status` prints a one-shot freshness report (PITR windows,
-newest WAL, dump/snapshot/mirror CronJobs). Grafana alerts (folder `Backups`, routed to
-`local-noop` until Slice V's V3 lands a real receiver): base-backup age >26h, WAL archiving
+newest WAL, dump/snapshot/mirror CronJobs). Grafana alerts (folder `Backups`, delivered via the
+ntfy contact point since Slice V's PR-V3): base-backup age >26h, WAL archiving
 failing, nightly CronJobs stale >26h, r2-mirror stale >3h. Metric plumbing lives in
 `platform-prometheus.yaml`: a `cnpg-pods` scrape job (the DB pods' :9187 exporters carry no
 `prometheus.io` annotations) and kube-state-metrics `customResourceState` over the barman

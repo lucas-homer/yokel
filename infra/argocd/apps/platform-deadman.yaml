@@ -1,0 +1,41 @@
+# External dead-man's switch — Slice V / PR-V3 (plans/verification-accuracy.md). A directory-type
+# Argo app (the vault-snapshot pattern) deploying the hourly healthchecks.io ping CronJob + its
+# ping-URL ExternalSecret into `observability`. Grafana's ntfy receiver (platform-grafana.yaml)
+# covers every in-cluster alert; this covers the cluster itself being gone — healthchecks pages on
+# the ABSENCE of pings, which no in-cluster component can deliver.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: deadman
+  namespace: argocd
+  annotations:
+    # wave "2" (consumer tier): needs the vault-backend ClusterSecretStore (wave "1") for its ESO
+    # secret; nothing depends on it.
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/lucas-homer/yokel.git
+    targetRevision: main
+    path: infra/argocd/manifests/deadman
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  # ESO/the CRD server-default several fields our ExternalSecret doesn't set; without this Argo
+  # reports them as permanent drift and the app sits forever OutOfSync (same fix as minio/langfuse).
+  ignoreDifferences:
+    - group: external-secrets.io
+      kind: ExternalSecret
+      name: deadman-ping
+      jqPathExpressions:
+        - .spec.target.deletionPolicy
+        - .spec.data[].remoteRef.conversionStrategy
+        - .spec.data[].remoteRef.decodingStrategy
+        - .spec.data[].remoteRef.metadataPolicy
+        - .spec.data[].remoteRef.nullBytePolicy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true

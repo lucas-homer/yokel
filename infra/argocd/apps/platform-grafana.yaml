@@ -44,6 +44,14 @@ spec:
           existingSecret: grafana-admin
           userKey: admin_user
           passwordKey: admin_password
+        # Alerting receiver secret (Slice V / PR-V3): every key of the ESO-materialized
+        # grafana-alerting Secret becomes a pod env var (ALERTING_NTFY_URL), which the provisioned
+        # contact point below consumes via ${ALERTING_NTFY_URL} — Grafana interpolates $VAR in
+        # provisioning files at read time, so the ntfy topic URL (secret: whoever knows the topic
+        # can read AND spoof alerts) never appears in git or a ConfigMap. Env is read at pod START:
+        # after rotating the Vault value, force-sync the ExternalSecret and roll this Deployment
+        # (scripts/seed-alerting-secrets.sh does both).
+        envFromSecret: grafana-alerting
         # Pre-provision datasources: Prometheus (metrics, DEFAULT — Slice B / PR-B2) + Loki (logs).
         datasources:
           datasources.yaml:
@@ -1978,6 +1986,23 @@ spec:
           contactpoints.yaml:
             apiVersion: 1
             contactPoints:
+            # ntfy (Slice V / PR-V3): hosted push to a phone. The URL is the full publish endpoint
+            # https://ntfy.sh/<topic>?template=grafana — ntfy's built-in `grafana` template turns the
+            # webhook JSON into a readable title/message. It arrives via env (see envFromSecret above);
+            # until a real topic is seeded, the Vault placeholder is the old local-noop URL, so alerts
+            # keep no-op'ing instead of publishing to a guessable public topic.
+            - orgId: 1
+              name: ntfy
+              receivers:
+              - uid: ntfy
+                type: webhook
+                settings:
+                  url: ${ALERTING_NTFY_URL}
+                  httpMethod: POST
+                disableResolveMessage: false
+            # Kept as the documented rollback target (plans/verification-accuracy.md): flip the policy
+            # receiver back to local-noop to silence delivery without touching rules or secrets.
+            # (Grafana is ephemeral — persistence off — so provisioning is the whole state; nothing leaks.)
             - orgId: 1
               name: local-noop
               receivers:
@@ -1990,7 +2015,7 @@ spec:
             apiVersion: 1
             policies:
             - orgId: 1
-              receiver: local-noop
+              receiver: ntfy
               group_by:
               - grafana_folder
               - alertname
@@ -2020,6 +2045,27 @@ spec:
                   remoteRef:
                     key: observability/grafana
                     property: admin_password
+          # Alerting receiver URL (PR-V3) — secretKey doubles as the pod ENV VAR name via
+          # envFromSecret, hence the UPPERCASE. Vault path seeded by vault-seed.sh (placeholder)
+          # and patched to a real topic by scripts/seed-alerting-secrets.sh.
+          - apiVersion: external-secrets.io/v1
+            kind: ExternalSecret
+            metadata:
+              name: grafana-alerting
+              namespace: observability
+            spec:
+              refreshInterval: 1h
+              secretStoreRef:
+                name: vault-backend
+                kind: ClusterSecretStore
+              target:
+                name: grafana-alerting
+                creationPolicy: Owner
+              data:
+                - secretKey: ALERTING_NTFY_URL
+                  remoteRef:
+                    key: observability/alerting
+                    property: ntfy_url
   destination:
     server: https://kubernetes.default.svc
     namespace: observability
@@ -2031,6 +2077,15 @@ spec:
     - group: external-secrets.io
       kind: ExternalSecret
       name: grafana-admin
+      jqPathExpressions:
+        - .spec.target.deletionPolicy
+        - .spec.data[].remoteRef.conversionStrategy
+        - .spec.data[].remoteRef.decodingStrategy
+        - .spec.data[].remoteRef.metadataPolicy
+        - .spec.data[].remoteRef.nullBytePolicy
+    - group: external-secrets.io
+      kind: ExternalSecret
+      name: grafana-alerting
       jqPathExpressions:
         - .spec.target.deletionPolicy
         - .spec.data[].remoteRef.conversionStrategy
