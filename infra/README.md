@@ -182,7 +182,7 @@ and reproducible across cache growth. Read-only on Postgres; writes only to Lang
 ## Backups
 
 The in-cluster half of the backups + restore-drill phase (`plans/backups-restore-drill.md`; PR-1
-through PR-4 of 6 so far). **MinIO** (`platform-minio.yaml`, raw manifests in `argocd/manifests/minio/` — the
+through PR-5 of 6 so far). **MinIO** (`platform-minio.yaml`, raw manifests in `argocd/manifests/minio/` — the
 langfuse pattern) runs single-node in the `backups` namespace as the S3-compatible target that CNPG
 barman PITR (PR-2), nightly `pg_dump`s + the Cloudflare R2 offsite mirror (PR-3), and Vault raft
 snapshots (PR-4) land in. MinIO alone is NOT a backup — its 10Gi PVC lives on the same colima VM disk
@@ -217,6 +217,15 @@ window) saves a raft snapshot from the leader (`vault-active`) and uploads it to
 authenticates with the root token for now; the k8s-auth + snapshot-policy hardening is issue #75
 (hard requirement at cloud cutover). A snapshot restore needs the seal chain from
 `backup-vault-keys.sh` — re-seeding (`vault-seed.sh`) stays the primary local Vault DR path.
+
+**Observability (PR-5)**: `task backup-status` prints a one-shot freshness report (PITR windows,
+newest WAL, dump/snapshot/mirror CronJobs). Grafana alerts (folder `Backups`, routed to
+`local-noop` until Slice V's V3 lands a real receiver): base-backup age >26h, WAL archiving
+failing, nightly CronJobs stale >26h, r2-mirror stale >3h. Metric plumbing lives in
+`platform-prometheus.yaml`: a `cnpg-pods` scrape job (the DB pods' :9187 exporters carry no
+`prometheus.io` annotations) and kube-state-metrics `customResourceState` over the barman
+**ObjectStore CR** — with plugin backups the Cluster-status backup fields stay empty, so
+recoverability truth is `.status.serverRecoveryWindow` (exported as `cnpg_objectstore_*`).
 
 Root creds come from Vault via ESO (`secret/backups/minio`); **`task vault-seed` seeds them** —
 GENERATED on first seed and never rotated by a re-run (every backup producer reads them; see the
