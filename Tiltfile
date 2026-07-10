@@ -38,3 +38,6 @@ k8s_yaml(helm(
 k8s_resource('docketclock', port_forwards=['8088:8080'])
 # Background poller workload (no port-forward — it serves no HTTP).
 k8s_resource('docketclock-poller')
+# Nightly pg_dump CronJob (backups PR-3) — a CronJob has no pods until its schedule fires, so the
+# default runtime-readiness gate can never pass and `tilt ci` times out (30m). Gate on apply only.
+k8s_resource('docketclock-pg-dump', pod_readiness='ignore')
