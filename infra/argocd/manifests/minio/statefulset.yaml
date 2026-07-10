@@ -39,10 +39,17 @@ spec:
             - name: MINIO_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef: { name: minio-root, key: root_password }
-          # /minio/health/live = process up (no auth). Used for BOTH probes: single-node MinIO is ready
-          # when it's alive, and the cluster-health endpoint adds nothing for one node.
-          readinessProbe:
+          # Probes (all unauthenticated): /minio/health/live = process up (liveness);
+          # /minio/health/cluster = write quorum online (readiness — on single-node that means "storage
+          # initialized and S3 servable", strictly better than marking Ready on process-up). The
+          # startupProbe gates liveness through slow first boots (colima PVC provisioning) so a cold
+          # start can't be restart-looped — same startup-gates-liveness pattern as langfuse.
+          startupProbe:
             httpGet: { path: /minio/health/live, port: 9000 }
+            periodSeconds: 2
+            failureThreshold: 60 # up to ~2 min for first-boot volume init
+          readinessProbe:
+            httpGet: { path: /minio/health/cluster, port: 9000 }
             periodSeconds: 10
           livenessProbe:
             httpGet: { path: /minio/health/live, port: 9000 }
@@ -61,8 +68,8 @@ spec:
         name: data
       spec:
         accessModes: ["ReadWriteOnce"]
-        # "" = cluster default (local-path on k3d). 10Gi covers 14d of base backups + WAL + dumps at
-        # our ~GiB DB scale with headroom; barman retention (PR-2) is what keeps it bounded.
+        # storageClassName omitted → the cluster-default StorageClass (local-path on k3d). 10Gi covers
+        # 14d of base backups + WAL + dumps at our ~GiB DB scale; barman retention (PR-2) bounds it.
         resources:
           requests:
             storage: 10Gi

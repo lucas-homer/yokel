@@ -111,12 +111,16 @@ kv_missing() { # true iff the kv path has no live version yet (so we only ever s
     "export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN; vault kv get $1" >/dev/null 2>&1
 }
 if kv_missing secret/backups/minio; then
+  # The password flows STDIN-ONLY (vault's `key=-` reads the value from stdin) — never argv, never
+  # shell-parsed in the pod, so a user-supplied MINIO_ROOT_PASSWORD with quotes/metachars can't break
+  # quoting or inject (the seed-docketclock-secrets.sh pattern). root_user keeps the script's documented
+  # single-quote constraint — it's a fixed dev default, not arbitrary secret material.
   MINIO_PW="${MINIO_ROOT_PASSWORD:-$(openssl rand -hex 24)}"
-  kubectl -n vault exec vault-0 -- sh -c "
+  printf '%s' "$MINIO_PW" | kubectl -n vault exec -i vault-0 -- sh -c "
     export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
     vault kv put secret/backups/minio \
       root_user='${MINIO_ROOT_USER:-minio-root}' \
-      root_password='$MINIO_PW'
+      root_password=-
   " >/dev/null # suppress vault's echo of written metadata (never print secret material)
   unset MINIO_PW
   echo "  ↳ seeded secret/backups/minio (generated root credentials)."
