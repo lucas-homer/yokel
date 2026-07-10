@@ -36,7 +36,8 @@ spec:
               emptyDir: {}
           initContainers:
             - name: snapshot
-              # Keep in lockstep with the vault chart's server image (platform-vault.yaml, chart 0.33.0).
+              # LOCKSTEP: matches the server.image pin in platform-vault.yaml / platform-vault-transit.yaml
+              # (review fix — the pin is what makes this greppable; bump all three together).
               image: hashicorp/vault:2.0.2
               env:
                 - name: VAULT_ADDR
