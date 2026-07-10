@@ -25,6 +25,12 @@ spec:
     helm:
       values: |
         server:
+          # LOCKSTEP: pin the server image explicitly (it matches chart 0.33.0's default) so the
+          # snapshot CronJob's vault CLI (manifests/vault-snapshot/snapshot-cronjob.yaml) and the
+          # main Vault (platform-vault.yaml) are greppably the same version — bump all three together.
+          image:
+            repository: hashicorp/vault
+            tag: 2.0.2
           # Persistent standalone (NOT dev-mode): the chart's default standalone config is exactly what a
           # seal provider needs — a tls_disable tcp listener + `storage "file" { path = "/vault/data" }`.
           # dataStorage mounts a PVC at /vault/data so the transit key persists across restarts.
