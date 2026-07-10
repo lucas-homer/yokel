@@ -15,6 +15,12 @@ metadata:
 spec:
   replicas: 1 # single-node by design (dev backup target); scaling implies distributed mode — don't
   serviceName: minio
+  # SET EXPLICITLY (the API server defaults this on every StatefulSet; left implicit in git, Argo's
+  # git-vs-live diff reports it as permanent OutOfSync drift — the #52 grafana class). Retain is also
+  # the RIGHT policy on the merits: this PVC holds the backups — deleting the app must not delete them.
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
   selector:
     matchLabels:
       app: minio
@@ -68,6 +74,7 @@ spec:
         name: data
       spec:
         accessModes: ["ReadWriteOnce"]
+        volumeMode: Filesystem # server default, set explicitly for a clean Argo diff (see above)
         # storageClassName omitted → the cluster-default StorageClass (local-path on k3d). 10Gi covers
         # 14d of base backups + WAL + dumps at our ~GiB DB scale; barman retention (PR-2) bounds it.
         resources:
