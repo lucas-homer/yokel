@@ -99,6 +99,47 @@ kubectl -n vault exec vault-0 -- sh -c "
     init_user_password='${LANGFUSE_USER_PASSWORD:-docketclock-dev}'
 "
 
+echo "🌱 seeding secret/backups/minio + secret/backups/r2 (backup seams — backups PR-1)..."
+# UNLIKE the fixed-default blocks above, these two are seeded ONCE and then left alone on re-runs:
+#  - backups/minio: the root password is GENERATED (host-side openssl, never printed). The MinIO
+#    StatefulSet, the CNPG ObjectStores (PR-2), and the rclone/pg_dump/vault-snapshot CronJobs (PR-3/4)
+#    all read these creds — a re-seed that rotated them would strand every consumer at once.
+#  - backups/r2: placeholders now; the REAL Cloudflare R2 token is patched in at PR-3 via the
+#    seed-docketclock-secrets.sh pattern — an unguarded re-seed would clobber the patched values.
+kv_missing() { # true iff the kv path has no live version yet (so we only ever seed it once)
+  ! kubectl -n vault exec vault-0 -- sh -c \
+    "export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN; vault kv get $1" >/dev/null 2>&1
+}
+if kv_missing secret/backups/minio; then
+  # The password flows STDIN-ONLY (vault's `key=-` reads the value from stdin) — never argv, never
+  # shell-parsed in the pod, so a user-supplied MINIO_ROOT_PASSWORD with quotes/metachars can't break
+  # quoting or inject (the seed-docketclock-secrets.sh pattern). root_user keeps the script's documented
+  # single-quote constraint — it's a fixed dev default, not arbitrary secret material.
+  MINIO_PW="${MINIO_ROOT_PASSWORD:-$(openssl rand -hex 24)}"
+  printf '%s' "$MINIO_PW" | kubectl -n vault exec -i vault-0 -- sh -c "
+    export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+    vault kv put secret/backups/minio \
+      root_user='${MINIO_ROOT_USER:-minio-root}' \
+      root_password=-
+  " >/dev/null # suppress vault's echo of written metadata (never print secret material)
+  unset MINIO_PW
+  echo "  ↳ seeded secret/backups/minio (generated root credentials)."
+else
+  echo "  ↳ secret/backups/minio already seeded — leaving as-is (no rotation on re-run)."
+fi
+if kv_missing secret/backups/r2; then
+  kubectl -n vault exec vault-0 -- sh -c "
+    export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+    vault kv put secret/backups/r2 \
+      access_key_id='placeholder' \
+      secret_access_key='placeholder' \
+      endpoint='https://PLACEHOLDER-ACCOUNT-ID.r2.cloudflarestorage.com'
+  " >/dev/null
+  echo "  ↳ seeded secret/backups/r2 (placeholders — patch real values at PR-3)."
+else
+  echo "  ↳ secret/backups/r2 already seeded — leaving as-is (patched values preserved)."
+fi
+
 echo "🔑 wiring ESO → Vault token auth (external-secrets/vault-token)..."
 kubectl create namespace external-secrets --dry-run=client -o yaml | kubectl apply -f -
 kubectl -n external-secrets create secret generic vault-token \

@@ -1,0 +1,21 @@
+# MinIO Service — backups PR-1. ClusterIP; reached three ways:
+#   - CNPG barman ObjectStores (PR-2) + backup CronJobs (PR-3/4) at http://minio.backups.svc:9000
+#   - a human eyeballs backup objects via `task minio` (port-forward localhost:9001 → console :9001)
+#   - the bucket-init Job (this dir) at http://minio:9000
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  type: ClusterIP
+  selector:
+    app: minio
+  ports:
+    - name: s3
+      port: 9000
+      targetPort: 9000
+    - name: console
+      port: 9001
+      targetPort: 9001

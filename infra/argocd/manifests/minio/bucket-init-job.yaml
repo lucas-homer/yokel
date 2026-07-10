@@ -1,0 +1,47 @@
+# Bucket-init Job — backups PR-1. Creates the four backup buckets idempotently (`mc mb
+# --ignore-existing`). An Argo SYNC HOOK (not a plain resource): Job specs are immutable, so a tracked
+# Job would wedge the app OutOfSync on any change — BeforeHookCreation deletes + recreates it each sync
+# instead, and idempotency makes the re-run free. Wave "2": runs after the StatefulSet/Service (wave
+# "1") are healthy, but the alias-set retry loop below still tolerates MinIO accepting connections late.
+#
+# Buckets (the plan's fixed set — PR-2/3/4 reference these names):
+#   cnpg-docketclock / cnpg-langfuse — barman PITR (base backups + WAL) per cluster (PR-2)
+#   pgdump                          — nightly logical dumps, both DBs (PR-3)
+#   vault-snapshots                 — daily raft snapshots (PR-4)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-bucket-init
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  backoffLimit: 6
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: mc
+          image: minio/mc:RELEASE.2025-08-13T08-35-41Z
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef: { name: minio-root, key: root_user }
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: minio-root, key: root_password }
+          command:
+            - sh
+            - -c
+            # Retry the alias (MinIO may still be settling), then create the buckets. Creds flow via
+            # env → argv of `mc alias set` INSIDE the pod (never logged; mc redacts them in output).
+            - |
+              for i in $(seq 1 30); do
+                mc alias set local http://minio:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" && break
+                echo "minio not ready yet ($i/30)"; sleep 5
+              done
+              mc alias list local >/dev/null || { echo "minio never became reachable"; exit 1; }
+              mc mb --ignore-existing \
+                local/cnpg-docketclock local/cnpg-langfuse local/pgdump local/vault-snapshots
+              mc ls local

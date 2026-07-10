@@ -1,0 +1,43 @@
+# MinIO — backups PR-1 (plans/backups-restore-drill.md). The in-cluster S3-compatible backup target
+# for CNPG barman PITR (PR-2), nightly pg_dumps + the R2 offsite mirror (PR-3), and Vault raft
+# snapshots (PR-4). A directory-type Argo app applying the raw manifests in
+# infra/argocd/manifests/minio (ESO secret + StatefulSet + Service + bucket-init hook Job) — the same
+# git-sourced raw-manifest pattern as langfuse. Reached via the `task minio` console port-forward;
+# backup producers talk to it in-cluster at http://minio.backups.svc:9000.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+  namespace: argocd
+  annotations:
+    # wave "2" (consumer tier): needs the vault-backend ClusterSecretStore (wave "1") for its ESO
+    # secret. Intra-app ordering (secret → StatefulSet → bucket-init) is per-manifest sync-waves.
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/lucas-homer/yokel.git
+    targetRevision: main
+    path: infra/argocd/manifests/minio
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: backups
+  # ESO/the CRD server-default several fields our minio-root ExternalSecret doesn't set; without this
+  # Argo reports them as permanent drift and the app sits forever OutOfSync (same fix as langfuse).
+  ignoreDifferences:
+    - group: external-secrets.io
+      kind: ExternalSecret
+      name: minio-root
+      jqPathExpressions:
+        - .spec.target.deletionPolicy
+        - .spec.data[].remoteRef.conversionStrategy
+        - .spec.data[].remoteRef.decodingStrategy
+        - .spec.data[].remoteRef.metadataPolicy
+        - .spec.data[].remoteRef.nullBytePolicy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
