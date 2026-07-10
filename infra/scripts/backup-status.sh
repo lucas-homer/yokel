@@ -40,16 +40,22 @@ for os_ in items:
 
 echo
 echo "--- WAL archiving (pg_stat_archiver on each current primary) ---"
+# Per-row degradation, not set -e aborts: this report is exactly what gets run DURING an incident,
+# when a missing primary or unreachable cluster is plausible — one broken row must not kill the rest.
 for ns_cluster in docketclock/docketclock-pg langfuse/langfuse-db; do
   ns=${ns_cluster%/*} cluster=${ns_cluster#*/}
-  primary=$(kubectl -n "$ns" get cluster "$cluster" -o jsonpath='{.status.currentPrimary}')
+  primary=$(kubectl -n "$ns" get cluster "$cluster" -o jsonpath='{.status.currentPrimary}' 2>/dev/null) || primary=""
+  if [ -z "$primary" ]; then
+    echo "$ns/$cluster: NO current primary (cluster missing or not ready)"
+    continue
+  fi
   kubectl -n "$ns" exec "$primary" -c postgres -- psql -U postgres -Atc \
     "SELECT '$ns/$cluster: last WAL ' || COALESCE(last_archived_wal, 'NONE')
          || ' at ' || COALESCE(last_archived_time::text, 'NEVER')
          || CASE WHEN last_failed_time > last_archived_time
                  THEN '  ** LAST ATTEMPT FAILED at ' || last_failed_time || ' **'
                  ELSE '' END
-     FROM pg_stat_archiver"
+     FROM pg_stat_archiver" || echo "$ns/$cluster: pg_stat_archiver query FAILED on $primary"
 done
 
 echo
@@ -57,9 +63,13 @@ echo "--- CronJobs (last successful run) ---"
 printf "%-32s %-12s %s\n" "CRONJOB" "SCHEDULE" "LAST SUCCESS"
 for ns_job in docketclock/docketclock-pg-dump langfuse/langfuse-db-dump vault/vault-snapshot backups/r2-mirror; do
   ns=${ns_job%/*} job=${ns_job#*/}
-  IFS=$'\t' read -r sched last < <(kubectl -n "$ns" get cronjob "$job" \
-    -o jsonpath='{.spec.schedule}{"\t"}{.status.lastSuccessfulTime}{"\n"}')
-  printf "%-32s %-12s %s\n" "$ns/$job" "$sched" "${last:-NEVER}"
+  if out=$(kubectl -n "$ns" get cronjob "$job" \
+    -o jsonpath='{.spec.schedule}{"\t"}{.status.lastSuccessfulTime}{"\n"}' 2>/dev/null); then
+    IFS=$'\t' read -r sched last <<<"$out"
+    printf "%-32s %-12s %s\n" "$ns/$job" "$sched" "${last:-NEVER}"
+  else
+    printf "%-32s %s\n" "$ns/$job" "MISSING (cronjob not found)"
+  fi
 done
 
 echo

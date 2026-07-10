@@ -1833,7 +1833,7 @@ spec:
                       type: prometheus
                       uid: prometheus
                     editorMode: code
-                    expr: max by (cluster) (cnpg_pg_stat_archiver_last_failed_time{job="cnpg-pods"} - cnpg_pg_stat_archiver_last_archived_time{job="cnpg-pods"})
+                    expr: max by (namespace, cluster) (cnpg_pg_stat_archiver_last_failed_time{job="cnpg-pods"} - cnpg_pg_stat_archiver_last_archived_time{job="cnpg-pods"})
                     instant: true
                     intervalMs: 1000
                     maxDataPoints: 43200
@@ -1887,7 +1887,7 @@ spec:
                       type: prometheus
                       uid: prometheus
                     editorMode: code
-                    expr: time() - kube_cronjob_status_last_successful_time{cronjob=~"docketclock-pg-dump|langfuse-db-dump|vault-snapshot"}
+                    expr: time() - kube_cronjob_status_last_successful_time{namespace=~"docketclock|langfuse|vault", cronjob=~"docketclock-pg-dump|langfuse-db-dump|vault-snapshot"}
                     instant: true
                     intervalMs: 1000
                     maxDataPoints: 43200
@@ -1938,7 +1938,7 @@ spec:
                       type: prometheus
                       uid: prometheus
                     editorMode: code
-                    expr: time() - kube_cronjob_status_last_successful_time{cronjob="r2-mirror"}
+                    expr: time() - kube_cronjob_status_last_successful_time{namespace="backups", cronjob="r2-mirror"}
                     instant: true
                     intervalMs: 1000
                     maxDataPoints: 43200
