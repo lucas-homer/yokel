@@ -5,8 +5,12 @@ postgres:
   storageClass: "" # TODO(phase-3): cloud CSI class (e.g. gp3 / pd-ssd)
   # PITR to Cloudflare R2 (the backups phase gave phase-3 a concrete provider candidate — R2 is
   # already the offsite mirror target locally, so cutover is endpoint + creds, same shapes).
+  # enabled stays FALSE until the endpoint/path below are real: unlike this file's other ""-defaults,
+  # enabled=true actively renders an ObjectStore, and destinationPath="" fails the CRD's minLength=1
+  # at apply time (a prematurely-applied overlay would ship a broken backup target). The creds seam
+  # below is already correct for R2 — TODO(phase-3): fill the two targets, then flip enabled.
   backup:
-    enabled: true
+    enabled: false
     endpointURL: "" # TODO(phase-3): https://<account-id>.r2.cloudflarestorage.com
     destinationPath: "" # TODO(phase-3): s3://yokel-backups/cnpg-docketclock/
     creds:
