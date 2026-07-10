@@ -57,13 +57,23 @@ GF_USER=$(kubectl -n "$GRAFANA_NS" get secret grafana-admin -o jsonpath='{.data.
 GF_PASS=$(kubectl -n "$GRAFANA_NS" get secret grafana-admin -o jsonpath='{.data.admin_password}' | base64 -d)
 kubectl -n "$GRAFANA_NS" port-forward svc/grafana "$PF_PORT:80" >/dev/null 2>&1 &
 PF_PID=$!
+pf_ok=0
 for _ in $(seq 1 20); do
-  curl -fsS -m 2 "http://127.0.0.1:$PF_PORT/api/health" >/dev/null 2>&1 && break
+  curl -fsS -m 2 "http://127.0.0.1:$PF_PORT/api/health" >/dev/null 2>&1 && { pf_ok=1; break; }
   sleep 1
 done
+if [ "$pf_ok" != "1" ]; then
+  echo "ABORT: Grafana never answered /api/health via the port-forward (port $PF_PORT busy? pod not"
+  echo "Ready?) — fix that before drilling. Override the local port with PF_PORT=<n>."
+  exit 1
+fi
 
-# Returns the current state of the "Poller stalled" alert: Alerting / Pending / Normal.
-# The alerts endpoint only lists ACTIVE (pending/firing) instances — absence means Normal.
+# Returns the current state of the "Poller stalled" alert, NORMALIZED to: Alerting / Pending /
+# Normal / api-error. The alerts endpoint only lists ACTIVE (pending/firing) instances — absence
+# means Normal — and Grafana versions vary between its own capitalized enum ("Alerting") and
+# Prometheus-style lowercase ("firing"), so both vocabularies are folded in here (review catch
+# on #86: a casing mismatch would spin the drill through the full timeout with the alert visibly
+# firing).
 poller_alert_state() {
   curl -fsS -m 10 -u "$GF_USER:$GF_PASS" \
     "http://127.0.0.1:$PF_PORT/api/prometheus/grafana/api/v1/alerts" 2>/dev/null | python3 -c '
@@ -72,8 +82,14 @@ try:
     alerts = json.load(sys.stdin)["data"]["alerts"]
 except Exception:
     print("api-error"); sys.exit(0)
-states = [a.get("state", "?") for a in alerts if a.get("labels", {}).get("alertname") == "Poller stalled"]
-print(states[0] if states else "Normal")'
+states = [str(a.get("state", "")).lower() for a in alerts
+          if a.get("labels", {}).get("alertname") == "Poller stalled"]
+if any(s in ("alerting", "firing") for s in states):
+    print("Alerting")
+elif any(s == "pending" for s in states):
+    print("Pending")
+else:
+    print("Normal")'
 }
 
 state=$(poller_alert_state)

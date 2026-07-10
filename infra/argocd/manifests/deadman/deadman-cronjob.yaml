@@ -6,6 +6,9 @@
 #
 # Placeholder-guarded: until scripts/seed-alerting-secrets.sh writes a real ping URL, the job
 # exits 0 without pinging — no failing-Job noise, and no check to page (it doesn't exist yet).
+# The secretKeyRef is `optional` and the script tolerates unset/empty for the same reason: if the
+# app syncs before ESO materializes the Secret (fresh bring-up race, or an unseeded Vault path),
+# the pod must still start and no-op rather than sit in CreateContainerConfigError.
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -34,13 +37,14 @@ spec:
                     secretKeyRef:
                       name: deadman-ping
                       key: PING_URL
+                      optional: true
               command:
                 - sh
                 - -c
                 - |
                   set -eu
-                  case "$PING_URL" in
-                    *PLACEHOLDER*) echo "ping URL is the vault-seed placeholder — skipping (seed-alerting-secrets.sh to arm)"; exit 0;;
+                  case "${PING_URL:-}" in
+                    ""|*PLACEHOLDER*) echo "ping URL missing or still the vault-seed placeholder — skipping (seed-alerting-secrets.sh to arm)"; exit 0;;
                   esac
                   # -f: HTTP errors fail the job (visible); --retry covers transient blips inside
                   # the run — persistent failure is the point (pings stop -> healthchecks pages).
