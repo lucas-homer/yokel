@@ -22,18 +22,20 @@ resource "cloudflare_r2_bucket" "offsite" {
 }
 
 # Look the R2 permission-group IDs up by name instead of hardcoding magic IDs — they differ per
-# Cloudflare deployment era and the data source is the stable seam.
-data "cloudflare_account_api_token_permission_groups" "all" {
+# Cloudflare deployment era and the data source is the stable seam. NOTE: the `_list` variant is
+# the enumerator (items under `.result`); the non-list twin is a single-item lookup that returns
+# null without a name filter.
+data "cloudflare_account_api_token_permission_groups_list" "all" {
   account_id = var.account_id
 }
 
 locals {
   r2_item_read = one([
-    for g in data.cloudflare_account_api_token_permission_groups.all.permission_groups :
+    for g in data.cloudflare_account_api_token_permission_groups_list.all.result :
     g.id if g.name == "Workers R2 Storage Bucket Item Read"
   ])
   r2_item_write = one([
-    for g in data.cloudflare_account_api_token_permission_groups.all.permission_groups :
+    for g in data.cloudflare_account_api_token_permission_groups_list.all.result :
     g.id if g.name == "Workers R2 Storage Bucket Item Write"
   ])
   # R2 bucket resource id in token policies: <account>_<jurisdiction>_<bucket>; ours is default-jurisdiction.
