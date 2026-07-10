@@ -1,0 +1,48 @@
+# cert-manager — backups PR-2. Installed as the Barman Cloud Plugin's hard prerequisite (the plugin's
+# manifest ships an Issuer + Certificates for its CNPG-I gRPC TLS chain; see platform-barman-plugin.yaml).
+# Broadly useful later (ingress TLS at cloud cutover — values-cloud.yaml already names it), but the
+# plugin is why it lands NOW. Pinned lean for the colima budget: three small pods (controller, webhook,
+# cainjector), ~90Mi total requests; startupapicheck (a one-shot Helm-hook Job) disabled — it fights
+# Argo's sync loop and the plugin app's own retry/health covers the "is cert-manager up" question.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0" # operator tier, with cnpg/eso — the plugin (wave "1") needs it
+spec:
+  project: default
+  source:
+    repoURL: https://charts.jetstack.io
+    chart: cert-manager
+    targetRevision: v1.21.0
+    helm:
+      values: |
+        crds:
+          enabled: true
+        resources:
+          requests: { cpu: 25m, memory: 32Mi }
+          limits: { memory: 128Mi }
+        webhook:
+          resources:
+            requests: { cpu: 25m, memory: 32Mi }
+            limits: { memory: 128Mi }
+        cainjector:
+          resources:
+            requests: { cpu: 25m, memory: 32Mi }
+            limits: { memory: 128Mi }
+        startupapicheck:
+          enabled: false
+        prometheus:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

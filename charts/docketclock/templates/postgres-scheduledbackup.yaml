@@ -1,0 +1,20 @@
+{{- if .Values.postgres.backup.enabled }}
+# Nightly base backup (backups PR-2). WAL archiving (continuous, the ≤5 min RPO) is enabled by the
+# Cluster's plugin stanza; this adds the nightly full base backup that WAL replays on top of.
+# `immediate: true` takes one backup as soon as this lands — the Cluster's firstRecoverabilityPoint
+# exists from day one instead of waiting for the first 08:00 UTC tick (also the PR-2 verify step).
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: docketclock-pg-nightly
+spec:
+  # CNPG cron format INCLUDES a leading seconds field (six fields, not five).
+  schedule: {{ .Values.postgres.backup.schedule | quote }}
+  immediate: true
+  backupOwnerReference: self
+  cluster:
+    name: docketclock-pg
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+{{- end }}

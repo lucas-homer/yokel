@@ -1,0 +1,44 @@
+# Barman Cloud Plugin (CNPG-I) — backups PR-2 (plans/backups-restore-drill.md). The backup engine for
+# both CNPG Clusters: in-tree `barmanObjectStore` is deprecated since CNPG 1.26 (we run 1.29), so WAL
+# archiving + base backups go through this plugin and its ObjectStore CRD instead. A directory-type app
+# over a VENDORED upstream release manifest (see the header in manifests/barman-cloud-plugin/) — Argo
+# can't source arbitrary release URLs, and vendoring pins the version with reviewable upgrade diffs.
+#
+# Consumers: the docketclock chart (postgres-objectstore/scheduledbackup templates) and the langfuse
+# manifests reference plugin name `barman-cloud.cloudnative-pg.io` on their Clusters.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: barman-plugin
+  namespace: argocd
+  annotations:
+    # wave "1": the vendored manifest ships an Issuer + Certificates, so cert-manager (wave "0") must
+    # exist first. Waves only order syncs INSIDE one parent sync — `task platform` applies these apps
+    # independently, so the retry below is what actually absorbs a cert-manager-not-ready-yet race.
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/lucas-homer/yokel.git
+    targetRevision: main
+    path: infra/argocd/manifests/barman-cloud-plugin
+  destination:
+    server: https://kubernetes.default.svc
+    # The plugin MUST live in the operator's namespace (upstream requirement); the vendored manifest
+    # also hardcodes cnpg-system in its namespaced resources.
+    namespace: cnpg-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      # The Issuer/Certificate kinds don't exist until cert-manager's CRDs land — skip the dry-run
+      # failure for them so the rest applies, and let retry converge the stragglers.
+      - SkipDryRunOnMissingResource=true
+    retry:
+      limit: 12
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m

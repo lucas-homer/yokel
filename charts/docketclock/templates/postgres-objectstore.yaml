@@ -1,0 +1,59 @@
+{{- if .Values.postgres.backup.enabled }}
+# PITR backup target (backups PR-2): the Barman Cloud Plugin's ObjectStore CR + the ESO secret feeding
+# it. The plugin (platform-barman-plugin.yaml) watches ObjectStores and injects a barman sidecar into
+# the Cluster pods (see the plugins stanza in postgres-cluster.yaml). Retention is enforced HERE (the
+# source store); the R2 offsite mirror (PR-3) copies 1:1 and inherits it.
+#
+# Credentials: ESO maps whatever property names the overlay's Vault path uses (MinIO root_user/…,
+# R2 access_key_id/…) onto the FIXED target keys ACCESS_KEY_ID / ACCESS_SECRET_KEY, so the ObjectStore
+# reference below never changes across overlays — same shapes, different seams.
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: cnpg-backup-creds
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: cnpg-backup-creds
+    creationPolicy: Owner
+  data:
+    - secretKey: ACCESS_KEY_ID
+      remoteRef:
+        key: {{ .Values.postgres.backup.creds.vaultPath }}
+        property: {{ .Values.postgres.backup.creds.accessKeyProperty }}
+    - secretKey: ACCESS_SECRET_KEY
+      remoteRef:
+        key: {{ .Values.postgres.backup.creds.vaultPath }}
+        property: {{ .Values.postgres.backup.creds.secretKeyProperty }}
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: docketclock-pg-store
+spec:
+  configuration:
+    destinationPath: {{ .Values.postgres.backup.destinationPath | quote }}
+    endpointURL: {{ .Values.postgres.backup.endpointURL | quote }}
+    s3Credentials:
+      accessKeyId:
+        name: cnpg-backup-creds
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: cnpg-backup-creds
+        key: ACCESS_SECRET_KEY
+    wal:
+      compression: gzip
+  # Barman recovery window — backups older than this are pruned after each new base backup lands.
+  retentionPolicy: {{ .Values.postgres.backup.retention | quote }}
+  # The per-instance barman sidecar the plugin injects — pinned lean for the colima budget.
+  instanceSidecarConfiguration:
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        memory: 256Mi
+{{- end }}

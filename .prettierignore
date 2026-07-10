@@ -21,3 +21,7 @@ spikes/out/
 # YAML parser errors on them. Chart.yaml / values*.yaml ARE formatted (they're plain YAML).
 charts/**/templates/
 
+# Vendored upstream release manifest (Barman Cloud Plugin) — kept byte-identical to upstream so
+# version-bump diffs stay clean; see the file's header for the upgrade procedure.
+infra/argocd/manifests/barman-cloud-plugin/manifest.yaml
+

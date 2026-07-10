@@ -28,3 +28,11 @@ spec:
     initdb:
       database: langfuse
       owner: langfuse
+  # WAL archiving + base backups via the Barman Cloud Plugin (backups PR-2) to the ObjectStore in
+  # backup.yaml. HEADS-UP: adding/removing this stanza rolls the Cluster once (sidecar injection) —
+  # brief single-instance downtime; Langfuse's probes ride it out and traces buffer client-side.
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: langfuse-db-store

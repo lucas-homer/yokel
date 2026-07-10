@@ -179,13 +179,23 @@ and reproducible across cache growth. Read-only on Postgres; writes only to Lang
 
 ## Backups
 
-The in-cluster half of the backups + restore-drill phase (`plans/backups-restore-drill.md`; PR-1 of 6
-so far). **MinIO** (`platform-minio.yaml`, raw manifests in `argocd/manifests/minio/` — the langfuse
-pattern) runs single-node in the `backups` namespace as the S3-compatible target that CNPG barman PITR
-(PR-2), nightly `pg_dump`s + the Cloudflare R2 offsite mirror (PR-3), and Vault raft snapshots (PR-4)
-will land in. MinIO alone is NOT a backup — its 10Gi PVC lives on the same colima VM disk as Postgres;
-R2 is the copy that survives the VM/Mini. A bucket-init sync-hook Job creates the four fixed buckets:
-`cnpg-docketclock`, `cnpg-langfuse`, `pgdump`, `vault-snapshots`.
+The in-cluster half of the backups + restore-drill phase (`plans/backups-restore-drill.md`; PR-1/PR-2
+of 6 so far). **MinIO** (`platform-minio.yaml`, raw manifests in `argocd/manifests/minio/` — the
+langfuse pattern) runs single-node in the `backups` namespace as the S3-compatible target that CNPG
+barman PITR (PR-2), nightly `pg_dump`s + the Cloudflare R2 offsite mirror (PR-3), and Vault raft
+snapshots (PR-4) land in. MinIO alone is NOT a backup — its 10Gi PVC lives on the same colima VM disk
+as Postgres; R2 is the copy that survives the VM/Mini. A bucket-init sync-hook Job creates the four
+fixed buckets: `cnpg-docketclock`, `cnpg-langfuse`, `pgdump`, `vault-snapshots`.
+
+**PITR (PR-2)** runs through the **Barman Cloud Plugin** (`platform-barman-plugin.yaml`, a vendored
+upstream release manifest in `argocd/manifests/barman-cloud-plugin/` — in-tree `barmanObjectStore` is
+deprecated since CNPG 1.26), which requires **cert-manager** (`platform-cert-manager.yaml`, pinned
+lean) for its TLS chain. Both CNPG Clusters archive WAL continuously (RPO ≤5 min) and take a nightly
+base backup (08:00/08:10 UTC, `immediate: true` on first land) with a 14d recovery window enforced at
+the source store: the docketclock chart templates an `ObjectStore` + `ScheduledBackup` from
+`postgres.backup.*` values (local → MinIO, cloud → the R2 seam), and the langfuse app inlines the same
+shapes (`langfuse/backup.yaml`). Enabling/disabling the plugin stanza rolls a Cluster ONCE (sidecar
+injection). Check `kubectl get backup -A` and each Cluster's `firstRecoverabilityPoint` for state.
 
 Root creds come from Vault via ESO (`secret/backups/minio`); **`task vault-seed` seeds them** —
 GENERATED on first seed and never rotated by a re-run (every backup producer reads them; see the

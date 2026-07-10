@@ -10,6 +10,16 @@ spec:
   {{- if .Values.postgres.imageName }}
   imageName: {{ .Values.postgres.imageName }}
   {{- end }}
+  {{- if .Values.postgres.backup.enabled }}
+  # WAL archiving + base backups via the Barman Cloud Plugin (backups PR-2) to the ObjectStore in
+  # postgres-objectstore.yaml. HEADS-UP: adding/removing this stanza rolls the Cluster once (sidecar
+  # injection) — brief single-instance downtime; the poller's next cycle + API restart absorb it.
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: docketclock-pg-store
+  {{- end }}
   storage:
     size: {{ .Values.postgres.storageSize }}
     {{- if .Values.postgres.storageClass }}
