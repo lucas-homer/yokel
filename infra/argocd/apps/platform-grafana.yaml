@@ -1753,6 +1753,228 @@ spec:
                   severity: critical
                 annotations:
                   summary: "The API's DB ping (db_up) has read 0 for 5m \u2014 /readyz is failing and the pod is out of the Service rotation."
+            # --- Backups (PR-5, plans/backups-restore-drill.md). Routes to local-noop like everything
+            # else until Slice V's V3 lands a real receiver. Metric sources: cnpg_objectstore_* comes
+            # from kube-state-metrics customResourceState over the barman ObjectStore CR (with plugin
+            # backups the Cluster status backup fields are EMPTY \u2014 the PR-2 discovery), and
+            # cnpg_pg_stat_archiver_* from the cnpg-pods scrape job (both in platform-prometheus.yaml).
+            - orgId: 1
+              name: backups
+              folder: Backups
+              interval: 5m
+              rules:
+              # noDataState Alerting: if the ObjectStore metric disappears (KSM broken, CRS config
+              # regressed, CRD moved), backup-recoverability reporting is DOWN and that IS the alert.
+              - uid: backup-base-stale
+                title: Base backup stale (>26h)
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: time() - cnpg_objectstore_last_successful_backup_time
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: gt
+                        params:
+                        - 93600
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: Alerting
+                execErrState: Error
+                for: 30m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "A CNPG ObjectStore's lastSuccessfulBackupTime is older than 26h (nightly cadence + slack) \u2014 base backups have stopped landing, the PITR window has stopped advancing."
+              # last_failed_time > last_archived_time == the MOST RECENT archive attempt failed and no
+              # success since. Both are -1 sentinels when null, so never-failed stays negative (quiet)
+              # and failed-before-first-success goes positive (fires). WAL is the RPO backbone (\u22645min).
+              - uid: backup-wal-archiving-failing
+                title: WAL archiving failing
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: max by (cluster) (cnpg_pg_stat_archiver_last_failed_time{job="cnpg-pods"} - cnpg_pg_stat_archiver_last_archived_time{job="cnpg-pods"})
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: gt
+                        params:
+                        - 0
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: NoData
+                execErrState: Error
+                for: 15m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "pg_stat_archiver's last archive attempt failed with no success since (15m sustained) \u2014 WAL is not reaching MinIO and the \u22645min RPO is eroding."
+              # One rule per cadence tier; a job that has SUCCEEDED before and then stops advancing
+              # fires here. (Fresh-install edge: a job that has NEVER succeeded has no series \u2014 only
+              # full-query NoData alerts, so per-job absence before first success is a drill concern.)
+              - uid: backup-cronjob-stale-daily
+                title: Nightly backup CronJob stale (>26h)
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: time() - kube_cronjob_status_last_successful_time{cronjob=~"docketclock-pg-dump|langfuse-db-dump|vault-snapshot"}
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: gt
+                        params:
+                        - 93600
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: Alerting
+                execErrState: Error
+                for: 30m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "A nightly backup CronJob (pg_dump docketclock/langfuse, vault-snapshot) has not succeeded in >26h \u2014 the restore-anywhere tier is going stale."
+              - uid: backup-cronjob-stale-hourly
+                title: R2 mirror CronJob stale (>3h)
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: time() - kube_cronjob_status_last_successful_time{cronjob="r2-mirror"}
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: gt
+                        params:
+                        - 10800
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: Alerting
+                execErrState: Error
+                for: 30m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "The hourly r2-mirror CronJob has not succeeded in >3h (3 missed runs) \u2014 the offsite copy is falling behind and the \u22641h offsite RPO is blown."
           contactpoints.yaml:
             apiVersion: 1
             contactPoints:

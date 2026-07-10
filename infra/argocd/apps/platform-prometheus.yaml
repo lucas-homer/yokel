@@ -43,6 +43,27 @@ spec:
           service:
             type: ClusterIP
             servicePort: 80
+        # --- CNPG instance metrics (backups PR-5): the DB pods expose :9187 but carry no prometheus.io
+        # annotations, and adding them via inheritedMetadata would also annotate the Services (double
+        # scrape via the kubernetes-service-endpoints job). Instead: a dedicated pod-SD job keyed on the
+        # operator's own cnpg.io/cluster label. Feeds the WAL-archiver alert rules in platform-grafana.
+        extraScrapeConfigs: |
+          - job_name: cnpg-pods
+            kubernetes_sd_configs:
+              - role: pod
+            relabel_configs:
+              - source_labels: [__meta_kubernetes_pod_label_cnpg_io_cluster]
+                action: keep
+                regex: .+
+              - source_labels: [__meta_kubernetes_pod_container_port_name]
+                action: keep
+                regex: metrics
+              - source_labels: [__meta_kubernetes_pod_label_cnpg_io_cluster]
+                target_label: cluster
+              - source_labels: [__meta_kubernetes_namespace]
+                target_label: namespace
+              - source_labels: [__meta_kubernetes_pod_name]
+                target_label: pod
         # --- kube-state-metrics: "see the cluster" (pods/deployments/restarts). Keep, pin the limit. ---
         kube-state-metrics:
           enabled: true
@@ -52,6 +73,47 @@ spec:
               memory: 64Mi
             limits:
               memory: 128Mi
+          # Backups PR-5: with plugin-based backups CNPG leaves Cluster.status backup fields EMPTY —
+          # recoverability truth lives on the barman ObjectStore CR (.status.serverRecoveryWindow, the
+          # PR-2 discovery). customResourceState turns those RFC3339 fields into epoch gauges
+          # (cnpg_objectstore_*) that the base-backup-age alert can read. KSM needs explicit RBAC for
+          # the CRD group.
+          rbac:
+            extraRules:
+              - apiGroups: ["barmancloud.cnpg.io"]
+                resources: ["objectstores"]
+                verbs: ["list", "watch"]
+          customResourceState:
+            enabled: true
+            config:
+              kind: CustomResourceStateMetrics
+              spec:
+                resources:
+                  - groupVersionKind:
+                      group: barmancloud.cnpg.io
+                      version: v1
+                      kind: ObjectStore
+                    metricNamePrefix: cnpg_objectstore
+                    labelsFromPath:
+                      namespace: [metadata, namespace]
+                      name: [metadata, name]
+                    metrics:
+                      - name: last_successful_backup_time
+                        help: Last successful base backup per barman server (epoch seconds)
+                        each:
+                          type: Gauge
+                          gauge:
+                            path: [status, serverRecoveryWindow]
+                            labelFromKey: server
+                            valueFrom: [lastSuccessfulBackupTime]
+                      - name: first_recoverability_point
+                        help: Start of the PITR recovery window per barman server (epoch seconds)
+                        each:
+                          type: Gauge
+                          gauge:
+                            path: [status, serverRecoveryWindow]
+                            labelFromKey: server
+                            valueFrom: [firstRecoverabilityPoint]
         # --- node-exporter: node CPU/mem/disk (a DaemonSet, one per node). Keep, pin the limit. ---
         prometheus-node-exporter:
           enabled: true
