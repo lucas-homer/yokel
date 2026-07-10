@@ -181,8 +181,8 @@ and reproducible across cache growth. Read-only on Postgres; writes only to Lang
 
 ## Backups
 
-The in-cluster half of the backups + restore-drill phase (`plans/backups-restore-drill.md`; PR-1
-through PR-5 of 6 so far). **MinIO** (`platform-minio.yaml`, raw manifests in `argocd/manifests/minio/` — the
+The in-cluster half of the backups + restore-drill phase (`plans/backups-restore-drill.md`; all six
+PRs landed). **MinIO** (`platform-minio.yaml`, raw manifests in `argocd/manifests/minio/` — the
 langfuse pattern) runs single-node in the `backups` namespace as the S3-compatible target that CNPG
 barman PITR (PR-2), nightly `pg_dump`s + the Cloudflare R2 offsite mirror (PR-3), and Vault raft
 snapshots (PR-4) land in. MinIO alone is NOT a backup — its 10Gi PVC lives on the same colima VM disk
@@ -226,6 +226,14 @@ failing, nightly CronJobs stale >26h, r2-mirror stale >3h. Metric plumbing lives
 `prometheus.io` annotations) and kube-state-metrics `customResourceState` over the barman
 **ObjectStore CR** — with plugin backups the Cluster-status backup fields stay empty, so
 recoverability truth is `.status.serverRecoveryWindow` (exported as `cnpg_objectstore_*`).
+
+**Drills (PR-6)** — backups you haven't restored are a hypothesis, not a capability. `task
+drill-pitr` (Drill A, **monthly**) spins a scratch `docketclock-pg-drill` Cluster in namespace `dr`
+recovering from the live store at `now-5m`, asserts row-count tolerance / the append-only trigger /
+the PITR target, and tears itself down — non-destructive by construction (the drill Cluster never
+archives). Drill B (**semi-annually + before cloud cutover**) is the full "Mini died" cold restore
+from R2: `docs/runbooks/restore-from-offsite.md`, using the chart's `postgres.recovery.*` seam —
+read its step-2 warning about suspending `r2-mirror` before touching an empty MinIO.
 
 Root creds come from Vault via ESO (`secret/backups/minio`); **`task vault-seed` seeds them** —
 GENERATED on first seed and never rotated by a re-run (every backup producer reads them; see the

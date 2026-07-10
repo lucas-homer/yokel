@@ -224,6 +224,11 @@ tasks:
     cmds:
       - bash scripts/backup-status.sh
 
+  drill-pitr:
+    desc: "Drill A: scratch PITR restore of docketclock-pg into namespace dr, assert, tear down (backups PR-6; monthly)"
+    cmds:
+      - bash scripts/drill-pitr.sh
+
   app-local:
     desc: Install the docketclock chart locally (Argo manages it from git once pushed)
     dir: ..
