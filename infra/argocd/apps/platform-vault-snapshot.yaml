@@ -1,0 +1,41 @@
+# Vault raft snapshots — backups PR-4 (plans/backups-restore-drill.md). A directory-type Argo app
+# (the minio/langfuse raw-manifest pattern) deploying the daily snapshot CronJob + its MinIO-creds
+# ExternalSecret into the `vault` namespace. Retention lives at the source (MinIO ILM, 14d) and the
+# offsite copy rides PR-3's hourly r2-mirror — this app only produces the snapshots.
+# Auth hardening (root token → k8s-auth + snapshot policy) is tracked as issue #75.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault-snapshot
+  namespace: argocd
+  annotations:
+    # wave "2" (consumer tier): needs the vault-backend ClusterSecretStore (wave "1") for its ESO
+    # secret, and MinIO (wave "2") only at run time — the CronJob schedule tolerates bootstrap order.
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/lucas-homer/yokel.git
+    targetRevision: main
+    path: infra/argocd/manifests/vault-snapshot
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+  # ESO/the CRD server-default several fields our ExternalSecret doesn't set; without this Argo
+  # reports them as permanent drift and the app sits forever OutOfSync (same fix as minio/langfuse).
+  ignoreDifferences:
+    - group: external-secrets.io
+      kind: ExternalSecret
+      name: minio-backup-creds
+      jqPathExpressions:
+        - .spec.target.deletionPolicy
+        - .spec.data[].remoteRef.conversionStrategy
+        - .spec.data[].remoteRef.decodingStrategy
+        - .spec.data[].remoteRef.metadataPolicy
+        - .spec.data[].remoteRef.nullBytePolicy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true

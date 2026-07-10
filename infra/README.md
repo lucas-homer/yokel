@@ -181,8 +181,8 @@ and reproducible across cache growth. Read-only on Postgres; writes only to Lang
 
 ## Backups
 
-The in-cluster half of the backups + restore-drill phase (`plans/backups-restore-drill.md`; PR-1/PR-2
-of 6 so far). **MinIO** (`platform-minio.yaml`, raw manifests in `argocd/manifests/minio/` — the
+The in-cluster half of the backups + restore-drill phase (`plans/backups-restore-drill.md`; PR-1
+through PR-4 of 6 so far). **MinIO** (`platform-minio.yaml`, raw manifests in `argocd/manifests/minio/` — the
 langfuse pattern) runs single-node in the `backups` namespace as the S3-compatible target that CNPG
 barman PITR (PR-2), nightly `pg_dump`s + the Cloudflare R2 offsite mirror (PR-3), and Vault raft
 snapshots (PR-4) land in. MinIO alone is NOT a backup — its 10Gi PVC lives on the same colima VM disk
@@ -209,6 +209,14 @@ the source store: the docketclock chart templates an `ObjectStore` + `ScheduledB
 `postgres.backup.*` values (local → MinIO, cloud → the R2 seam), and the langfuse app inlines the same
 shapes (`langfuse/backup.yaml`). Enabling/disabling the plugin stanza rolls a Cluster ONCE (sidecar
 injection). Check `kubectl get backup -A` and each Cluster's `firstRecoverabilityPoint` for state.
+
+**Vault raft snapshots (PR-4)** (`platform-vault-snapshot.yaml`, raw manifests in
+`argocd/manifests/vault-snapshot/`): a daily CronJob (08:20 UTC, staggered inside the nightly
+window) saves a raft snapshot from the leader (`vault-active`) and uploads it to the
+`vault-snapshots` bucket — 14d ILM retention, mirrored to R2 hourly like everything else. It
+authenticates with the root token for now; the k8s-auth + snapshot-policy hardening is issue #75
+(hard requirement at cloud cutover). A snapshot restore needs the seal chain from
+`backup-vault-keys.sh` — re-seeding (`vault-seed.sh`) stays the primary local Vault DR path.
 
 Root creds come from Vault via ESO (`secret/backups/minio`); **`task vault-seed` seeds them** —
 GENERATED on first seed and never rotated by a re-run (every backup producer reads them; see the

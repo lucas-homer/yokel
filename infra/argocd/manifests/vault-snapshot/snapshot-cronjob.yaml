@@ -1,0 +1,93 @@
+# Daily Vault raft snapshot — backups PR-4 (plans/backups-restore-drill.md). Two-container shape
+# (the pg-dump pattern): snapshot → emptyDir → mc upload to MinIO `vault-snapshots` (14d ILM
+# retention at the source — see bucket-init-job.yaml — and mirrored offsite to R2 hourly by
+# r2-mirror). 08:20 UTC — staggered inside the nightly window (08:00/08:10 CNPG base backups,
+# 08:30/08:40 pg_dumps), so everything is in MinIO before the 09:00 mirror pass.
+#
+# AUTH (issue #75): authenticates with the root token from the `vault-root-token` Secret —
+# dev-acceptable on the local cluster. The prod path is k8s-auth + a policy scoped to
+# `sys/storage/raft/snapshot`; hard requirement at cloud cutover. Snapshots must be taken from
+# the raft LEADER, hence the `vault-active` Service (with 1 replica that's vault-0; with 3 it
+# still resolves to the leader).
+#
+# A raft snapshot alone is NOT a full Vault DR story: restoring it needs the transit seal chain
+# (vault-transit-keys + vault-root-token Secrets) — backed up out-of-band, age-encrypted, by
+# infra/scripts/backup-vault-keys.sh. Primary local DR path remains re-seeding (vault-seed.sh).
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vault-snapshot
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  schedule: "20 8 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 600
+      template:
+        spec:
+          restartPolicy: Never
+          volumes:
+            - name: snap
+              emptyDir: {}
+          initContainers:
+            - name: snapshot
+              # Keep in lockstep with the vault chart's server image (platform-vault.yaml, chart 0.33.0).
+              image: hashicorp/vault:2.0.2
+              env:
+                - name: VAULT_ADDR
+                  value: http://vault-active.vault.svc:8200
+                - name: VAULT_TOKEN
+                  valueFrom:
+                    secretKeyRef: { name: vault-root-token, key: token }
+              command:
+                - sh
+                - -c
+                # `-s` guard: `snapshot save` can exit 0 in odd states; an empty artifact must fail
+                # the Job (PR-5 alerts on CronJob staleness, so a red Job is the signal we want).
+                - |
+                  set -e
+                  f="/snap/vault-$(date -u +%Y%m%dT%H%M%SZ).snap"
+                  vault operator raft snapshot save "$f"
+                  [ -s "$f" ] || { echo "snapshot is empty"; exit 1; }
+                  ls -l /snap
+              volumeMounts:
+                - name: snap
+                  mountPath: /snap
+              resources:
+                requests:
+                  cpu: 25m
+                  memory: 64Mi
+                limits:
+                  memory: 256Mi
+          containers:
+            - name: upload
+              image: minio/mc:RELEASE.2025-08-13T08-35-41Z
+              env:
+                - name: ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      { name: minio-backup-creds, key: ACCESS_KEY_ID }
+                - name: ACCESS_SECRET_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      { name: minio-backup-creds, key: ACCESS_SECRET_KEY }
+              command:
+                - sh
+                - -c
+                - |
+                  mc alias set backups http://minio.backups.svc:9000 "$ACCESS_KEY_ID" "$ACCESS_SECRET_KEY"
+                  mc cp /snap/*.snap backups/vault-snapshots/
+              volumeMounts:
+                - name: snap
+                  mountPath: /snap
+              resources:
+                requests:
+                  cpu: 25m
+                  memory: 64Mi
+                limits:
+                  memory: 128Mi
