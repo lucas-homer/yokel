@@ -177,6 +177,26 @@ Stratifies by `kind × classification`, caps `SEED_CAP` (default 25) per stratum
 (= the item id, so re-runs upsert — no duplicates), and selects oldest-first so the seeded corpus is stable
 and reproducible across cache growth. Read-only on Postgres; writes only to Langfuse.
 
+## Backups
+
+The in-cluster half of the backups + restore-drill phase (`plans/backups-restore-drill.md`; PR-1 of 6
+so far). **MinIO** (`platform-minio.yaml`, raw manifests in `argocd/manifests/minio/` — the langfuse
+pattern) runs single-node in the `backups` namespace as the S3-compatible target that CNPG barman PITR
+(PR-2), nightly `pg_dump`s + the Cloudflare R2 offsite mirror (PR-3), and Vault raft snapshots (PR-4)
+will land in. MinIO alone is NOT a backup — its 10Gi PVC lives on the same colima VM disk as Postgres;
+R2 is the copy that survives the VM/Mini. A bucket-init sync-hook Job creates the four fixed buckets:
+`cnpg-docketclock`, `cnpg-langfuse`, `pgdump`, `vault-snapshots`.
+
+Root creds come from Vault via ESO (`secret/backups/minio`); **`task vault-seed` seeds them** —
+GENERATED on first seed and never rotated by a re-run (every backup producer reads them; see the
+comments in `vault-seed.sh`). The seed also stubs `secret/backups/r2` with placeholders; the real
+bucket-scoped R2 token is patched in at PR-3 (create the bucket + token in the Cloudflare dashboard
+first — the one manual step of the phase).
+
+```bash
+task minio   # port-forward the MinIO console :9001 → localhost:9001 (creds from the minio-root Secret)
+```
+
 ## Troubleshooting
 
 - **Image pulls fail inside k3d nodes (`EAI_AGAIN` / `lookup registry-1.docker.io: Try again`).** On a

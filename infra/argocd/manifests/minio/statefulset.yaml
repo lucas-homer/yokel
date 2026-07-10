@@ -1,0 +1,68 @@
+# MinIO — backups PR-1. The in-cluster S3-compatible backup target: CNPG barman PITR (PR-2), nightly
+# pg_dumps + the R2 offsite mirror source (PR-3), and Vault raft snapshots (PR-4) all land here.
+# NOT itself a backup — the PVC sits on the same colima VM disk as Postgres; R2 (PR-3) is the copy that
+# survives the VM/Mini. Single-node, pinned lean for the 12 GiB colima budget (256Mi limit).
+#
+# Image pinned to the latest MinIO COMMUNITY release (upstream community cadence has slowed and the
+# bundled console is slimmed to an object browser post-2025-04 — fine here: `mc` does the admin work,
+# the console is just for eyeballing backup objects via `task minio`). Bump deliberately.
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # after the minio-root ExternalSecret (wave "0")
+spec:
+  replicas: 1 # single-node by design (dev backup target); scaling implies distributed mode — don't
+  serviceName: minio
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+          args: ["server", "/data", "--console-address", ":9001"]
+          ports:
+            - name: s3
+              containerPort: 9000
+            - name: console
+              containerPort: 9001
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef: { name: minio-root, key: root_user }
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: minio-root, key: root_password }
+          # /minio/health/live = process up (no auth). Used for BOTH probes: single-node MinIO is ready
+          # when it's alive, and the cluster-health endpoint adds nothing for one node.
+          readinessProbe:
+            httpGet: { path: /minio/health/live, port: 9000 }
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /minio/health/live, port: 9000 }
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        # "" = cluster default (local-path on k3d). 10Gi covers 14d of base backups + WAL + dumps at
+        # our ~GiB DB scale with headroom; barman retention (PR-2) is what keeps it bounded.
+        resources:
+          requests:
+            storage: 10Gi

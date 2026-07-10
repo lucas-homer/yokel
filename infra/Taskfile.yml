@@ -267,6 +267,16 @@ tasks:
       # (`task grafana`) is the day-to-day view; this is the raw store for target debugging + ad-hoc PromQL.
       - kubectl -n observability port-forward svc/prometheus-server 9090:80
 
+  minio:
+    desc: Port-forward the MinIO console to http://localhost:9001 (backup target; creds from Vault via ESO)
+    cmds:
+      # MinIO (backups namespace) is the in-cluster S3 backup target (backups PR-1). Post-2025-04
+      # community images ship a slimmed object-browser console — enough to eyeball backup objects;
+      # admin ops go through `mc` (see the bucket-init Job). Login = the minio-root Secret:
+      #   kubectl -n backups get secret minio-root -o jsonpath='{.data.root_user}' | base64 -d
+      # (and the same with root_password). Port 9001 avoids grafana (3000) / langfuse (3001).
+      - kubectl -n backups port-forward svc/minio 9001:9001
+
   langfuse:
     desc: Port-forward Langfuse to http://localhost:3001 (LLM-obs UI; login admin@docketclock.local)
     cmds:
