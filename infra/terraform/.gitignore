@@ -3,6 +3,8 @@
 *.tfstate
 *.tfstate.*
 crash.log
-*.tfvars        # may hold secrets; commit *.tfvars.example instead
+# *.tfvars may hold secrets; commit *.tfvars.example instead. (Comment on its OWN line: gitignore
+# has no inline comments — a trailing "# ..." becomes part of the pattern and silently matches NOTHING.)
+*.tfvars
 !*.tfvars.example
 # .terraform.lock.hcl IS committed once providers are pinned (Phase 3).
