@@ -4,7 +4,9 @@
 # instead, and idempotency makes the re-run free. Wave "2": runs after the StatefulSet/Service (wave
 # "1") are healthy, but the alias-set retry loop below still tolerates MinIO accepting connections late.
 #
-# Buckets (the plan's fixed set — PR-2/3/4 reference these names):
+# Buckets (the plan's fixed set — PR-2/3/4 reference these names). LOCKSTEP: the same four-name
+# list appears in the ILM loop below and in r2-mirror-cronjob.yaml's sync loop — a fifth bucket
+# must touch all three sites.
 #   cnpg-docketclock / cnpg-langfuse — barman PITR (base backups + WAL) per cluster (PR-2)
 #   pgdump                          — nightly logical dumps, both DBs (PR-3)
 #   vault-snapshots                 — daily raft snapshots (PR-4)

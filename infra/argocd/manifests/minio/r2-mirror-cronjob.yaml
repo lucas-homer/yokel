@@ -85,6 +85,7 @@ spec:
                 # Attempt every bucket even if one fails (partial offsite coverage beats none),
                 # then exit non-zero so the failure is visible on the Job.
                 - |
+                  # LOCKSTEP: this bucket list mirrors bucket-init-job.yaml (mc mb + ILM loop).
                   fail=0
                   for b in cnpg-docketclock cnpg-langfuse pgdump vault-snapshots; do
                     echo "--- syncing $b"

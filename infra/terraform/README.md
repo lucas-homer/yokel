@@ -9,9 +9,9 @@ Two environments with very different maturity:
   contains the derived S3 secret — treat the state file like a credential.
 - **`envs/cloud` — Phase 3 stub.** The **production** Kubernetes cluster + PITR object storage,
   then Argo CD bootstrap (after which GitOps reconciles everything from git). See ADR 0008 / 0009.
-  The modules are provider-agnostic interfaces with no resources yet; `terraform init && terraform
-validate` works offline today. Note the `r2-offsite` module doubles as the concrete candidate for
-  the `cnpg-backups` interface (R2 already speaks the S3-compatible barman seam).
+  The modules are provider-agnostic interfaces with no resources yet; init + validate work offline
+  today. Note the `r2-offsite` module doubles as the concrete candidate for the `cnpg-backups`
+  interface (R2 already speaks the S3-compatible barman seam).
 
 ```
 modules/
