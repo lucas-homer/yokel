@@ -26,7 +26,29 @@ spec:
     {{- if .Values.postgres.storageClass }}
     storageClass: {{ .Values.postgres.storageClass }}
     {{- end }}
+  {{- if .Values.postgres.recovery.enabled }}
+  # DR seam (backups PR-6, docs/runbooks/restore-from-offsite.md): bootstrap by PITR recovery from
+  # the backup ObjectStore instead of initdb. CNPG reads `bootstrap` ONLY at Cluster creation — this
+  # is for standing up a REPLACEMENT cluster (Drill B / cloud cutover), never for an existing one.
+  bootstrap:
+    recovery:
+      source: origin
+      database: docketclock
+      owner: docketclock
+      {{- if .Values.postgres.recovery.targetTime }}
+      recoveryTarget:
+        targetTime: {{ .Values.postgres.recovery.targetTime | quote }}
+      {{- end }}
+  externalClusters:
+    - name: origin
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: docketclock-pg-store
+          serverName: {{ .Values.postgres.recovery.sourceServerName | quote }}
+  {{- else }}
   bootstrap:
     initdb:
       database: docketclock
       owner: docketclock
+  {{- end }}

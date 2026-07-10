@@ -59,6 +59,15 @@ postgres:
       vaultPath: backups/minio
       accessKeyProperty: root_user
       secretKeyProperty: root_password
+  # DR bootstrap seam (backups PR-6): when enabled, the Cluster bootstraps by PITR `recovery` from
+  # the docketclock-pg-store ObjectStore instead of `initdb` — for standing up a REPLACEMENT cluster
+  # from backups (Drill B / restore-from-offsite runbook / cloud cutover). CNPG only reads bootstrap
+  # at creation, so flipping this on an EXISTING cluster is a no-op; never enable it in an overlay
+  # that manages a live cluster. targetTime "" = end of the archived WAL (latest recoverable point).
+  recovery:
+    enabled: false
+    targetTime: "" # optional PITR target, RFC3339; "" = recover to the newest archived WAL
+    sourceServerName: docketclock-pg # serverName whose WAL/base files to read from the store
 
 # Schema migrations — run as a CNPG-aware Job (Argo PreSync hook) that applies migrations/*.sql before
 # the app rolls out (integrator discipline: migrations are a Job, never `kubectl exec` by hand). Enabled
