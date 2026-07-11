@@ -4,11 +4,14 @@ set -euo pipefail
 # Cadence: QUARTERLY. An alert path is untested until it has actually paged someone, so this drill
 # manufactures a REAL failure and requires a human to confirm the phone buzzed:
 #
-#   1. pause docketclock's Argo auto-sync — git pins the poller at replicas:1, so selfHeal would
-#      quietly "fix" the outage we're staging
-#   2. scale the poller to 0 and wait for the *Poller stalled* rule to fire
-#      (heartbeat age >45m + for:10m — the wait is ~55-60m; that latency IS the drill: it proves
-#      the real rule fires with its real thresholds, not a lowered test copy)
+#   1. pause docketclock's Argo auto-sync IF Argo manages it — git pins the poller at replicas:1,
+#      so selfHeal would quietly "fix" the outage we're staging. (Locally the app is a plain Helm
+#      release / Tilt — nothing to pause, and the guard degrades to a WARN.)
+#   2. scale the poller to 0 and wait for the *Poller stalled* rule to fire with its REAL
+#      thresholds, not a lowered test copy. Timing (first-run finding, 2026-07-11): scale-to-0
+#      fires in ~13m, not 45m+10m — the dead pod's heartbeat series goes stale and the rule's
+#      `or vector(0)` fallback treats the ABSENT metric as infinitely stale (by design: pod-gone
+#      pages faster). Only a hung-but-still-running poller takes the full ~55-60m aging path.
 #   3. you confirm the ntfy notification REACHED YOUR PHONE
 #   4. restore (scale back, re-enable auto-sync), wait for resolve, confirm the resolve notification
 #
@@ -39,7 +42,8 @@ AUTOMATION_PAUSED=0
 PF_PID=""
 cleanup() {
   code=$?
-  [ -n "$PF_PID" ] && kill "$PF_PID" >/dev/null 2>&1 || true
+  # kill + wait so the shell reaps the port-forward quietly (else bash prints "Terminated: 15").
+  if [ -n "$PF_PID" ]; then kill "$PF_PID" >/dev/null 2>&1 || true; wait "$PF_PID" 2>/dev/null || true; fi
   echo "restoring: poller replicas -> 1..."
   kubectl -n "$NS_APP" scale deploy "$POLLER" --replicas=1 >/dev/null || true
   if [ "$AUTOMATION_PAUSED" = "1" ]; then
@@ -98,16 +102,18 @@ if [ "$state" != "Normal" ]; then
   exit 1
 fi
 
-echo "=== Alert fire drill: staging a real poller outage (expect ~55-60m to fire) ==="
+echo "=== Alert fire drill: staging a real poller outage (expect ~10-15m to fire; see header) ==="
 
 # ── 1. pause auto-sync, 2. stage the outage ─────────────────────────────────────────────────────
-if [ -n "$(kubectl -n argocd get application docketclock -o jsonpath='{.spec.syncPolicy.automated}')" ]; then
+# 2>/dev/null: on a cluster where docketclock is Helm/Tilt-managed the Argo app doesn't exist —
+# that's the same "nothing to pause" case as auto-sync being off, not an error.
+if [ -n "$(kubectl -n argocd get application docketclock -o jsonpath='{.spec.syncPolicy.automated}' 2>/dev/null)" ]; then
   kubectl -n argocd patch application docketclock --type=json \
     -p '[{"op":"remove","path":"/spec/syncPolicy/automated"}]' >/dev/null
   AUTOMATION_PAUSED=1
   echo "docketclock auto-sync paused (selfHeal would revert the outage)."
 else
-  echo "WARN: docketclock auto-sync already disabled — leaving it as found."
+  echo "no Argo-managed docketclock auto-sync to pause (Helm/Tilt-managed, or already off) — proceeding."
 fi
 kubectl -n "$NS_APP" scale deploy "$POLLER" --replicas=0 >/dev/null
 echo "poller scaled to 0 at $(date '+%H:%M:%S'). Waiting for 'Poller stalled' to fire..."
@@ -118,7 +124,7 @@ for i in $(seq 1 $((FIRE_TIMEOUT_MIN))); do
   sleep 60
   state=$(poller_alert_state)
   if [ "$state" = "Alerting" ]; then fired=1; break; fi
-  [ $((i % 5)) -eq 0 ] && echo "  t+${i}m: alert state = $state (fires around t+55-60m)"
+  [ $((i % 5)) -eq 0 ] && echo "  t+${i}m: alert state = $state (scale-to-0 fires ~t+13m; hung-poller path would be ~t+55-60m)"
 done
 if [ "$fired" != "1" ]; then
   echo "FAIL: 'Poller stalled' did not fire within ${FIRE_TIMEOUT_MIN}m — rule or datasource broken."

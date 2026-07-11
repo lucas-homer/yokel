@@ -146,12 +146,20 @@ on ping _absence_ (configure the check by hand: period 1h, grace 1h → a total 
 `HEALTHCHECKS_PING_URL=... scripts/seed-alerting-secrets.sh`); while it's still the placeholder the
 CronJob exits 0 without pinging, so nothing fails and nothing pages.
 
-**Fire drill — `task alert-drill` (quarterly, ~90m).** An alert path is untested until it has paged
-someone: the drill pauses docketclock's auto-sync (git pins the poller at `replicas: 1`; selfHeal would
-revert the outage), scales the poller to 0, waits for _Poller stalled_ to fire **with its real
-thresholds** (~55–60m), asks you to confirm the page reached your phone, restores, and confirms the
-resolve notification too. It then prints the manual dead-man half (suspend the CronJob once, wait for
-the absence page, restore). Drill log: <!-- add PASS dates here --> not yet run.
+**Fire drill — `task alert-drill` (quarterly, ~30m).** An alert path is untested until it has paged
+someone: the drill pauses docketclock's auto-sync if Argo manages it (git pins the poller at
+`replicas: 1`; selfHeal would revert the outage — locally the app is a plain Helm release and there's
+nothing to pause), scales the poller to 0, waits for _Poller stalled_ to fire **with its real
+thresholds**, asks you to confirm the page reached your phone, restores, and confirms the resolve
+notification too. Timing note from the first run: scale-to-0 fires in **~13m**, not the naive
+45m+10m — the dead pod's heartbeat series goes stale in Prometheus and the rule's `or vector(0)`
+fallback treats an absent metric as infinitely stale (by design: pod-gone pages _faster_). The
+~55–60m path is what a hung-but-still-running poller would take. It then prints the manual dead-man
+half (suspend the CronJob once, wait for the absence page, restore). Drill log:
+
+<!-- add PASS dates here --> **2026-07-11 PASS** (fired t+13m, resolved t+3m after restore; page +
+
+resolve both reached the phone).
 
 Then **Explore → Loki**. Start with a generic stream selector to confirm logs are flowing (works
 before docketclock is even running) — the labels Alloy sets are `namespace` / `pod` / `container` / `app`:
