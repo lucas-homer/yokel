@@ -264,7 +264,13 @@ recovering from the live store at `now-5m`, asserts row-count tolerance / the ap
 the PITR target, and tears itself down — non-destructive by construction (the drill Cluster never
 archives). Drill B (**semi-annually + before cloud cutover**) is the full "Mini died" cold restore
 from R2: `docs/runbooks/restore-from-offsite.md`, using the chart's `postgres.recovery.*` seam —
-read its step-2 warning about suspending `r2-mirror` before touching an empty MinIO.
+read its step-2 warning about suspending `r2-mirror` before touching an empty MinIO. **Executed
+2026-07-11 (~2h): byte-perfect recovery, poller resumed with zero duplicates; 9 runbook corrections
+folded back in.** Key operational fact it established: a cluster recovered into the store it reads
+from must archive under a NEW serverName (`postgres.backup.serverName`, generation-suffixed
+`-r1, -r2, …`) — the next restore sources FROM that name, and the previous generation's prefix
+must be hand-pruned after a ≥14d confidence window (retention no longer targets it). Drill log:
+2026-07-11 PASS.
 
 Root creds come from Vault via ESO (`secret/backups/minio`); **`task vault-seed` seeds them** —
 GENERATED on first seed and never rotated by a re-run (every backup producer reads them; see the

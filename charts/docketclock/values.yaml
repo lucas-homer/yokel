@@ -59,6 +59,12 @@ postgres:
       vaultPath: backups/minio
       accessKeyProperty: root_user
       secretKeyProperty: root_password
+    # Archive-side serverName override; "" = the CNPG default (the cluster name). ONLY needed when a
+    # RECOVERED cluster archives into the same store it recovered from (Drill B finding): barman
+    # refuses to archive a "new" server into a non-empty prefix (`Expected empty archive`), so the
+    # replacement generation bumps this (docketclock-pg-r1, -r2, ...) while recovery.sourceServerName
+    # keeps reading the previous generation. The next recovery then sources FROM this name.
+    serverName: ""
   # DR bootstrap seam (backups PR-6): when enabled, the Cluster bootstraps by PITR `recovery` from
   # the docketclock-pg-store ObjectStore instead of `initdb` — for standing up a REPLACEMENT cluster
   # from backups (Drill B / restore-from-offsite runbook / cloud cutover). CNPG only reads bootstrap
