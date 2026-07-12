@@ -63,9 +63,10 @@ bash infra/scripts/vault-transit-init.sh
 task -d infra vault-seed # re-seed Vault: NEW random MinIO root creds, app secrets from your host env
 ```
 
-(2026-07-11 drill: on a brand-new machine, build the image first — `docker build -t docketclock:local
-apps/docketclock` — or point `image.repository` at a real registry; without the import every app pod
-is `ImagePullBackOff`.)
+(2026-07-11 drill: on a brand-new machine, build the image first, from the repo ROOT — the
+Dockerfile needs the workspace root as its build context:
+`docker build -f apps/docketclock/Dockerfile -t docketclock:local .` — or point `image.repository`
+at a real registry. Without the import every app pod is `ImagePullBackOff`.)
 
 Wait for the platform tier: `kubectl get applications -n argocd` — everything Synced/Healthy except
 the CNPG clusters' backups (empty MinIO) and langfuse (restored below). `vault-seed` regenerating
@@ -151,10 +152,10 @@ findings:
    `failed` with NOTHING installed. (It never bites day-to-day because the live release predates the
    hook — `pre-upgrade` always has a running DB.)
 2. **The recovered cluster must archive under a NEW serverName.** Barman's pre-restore check
-   demands an EMPTY archive for the archiving server (`ERROR: WAL archive check failed for server
-docketclock-pg: Expected empty archive`) — same-name "continuity" into the store you are reading
-   from is refused by design. Bump a generation suffix: first recovery archives as
-   `docketclock-pg-r1` (reading `docketclock-pg`); a later recovery archives `-r2` reading `-r1`.
+   demands an EMPTY archive for the archiving server — it fails with `Expected empty archive` —
+   so same-name "continuity" into the store you are reading from is refused by design. Bump a
+   generation suffix: first recovery archives as `docketclock-pg-r1` (reading `docketclock-pg`);
+   a later recovery archives `-r2` reading `-r1`.
 
 ```sh
 # Step A — recover, migrations off:
