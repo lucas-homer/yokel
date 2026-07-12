@@ -20,6 +20,12 @@ spec:
       isWALArchiver: true
       parameters:
         barmanObjectName: docketclock-pg-store
+        {{- if .Values.postgres.backup.serverName }}
+        # DR seam (Drill B finding): a cluster recovered INTO the store it reads from must archive
+        # under a NEW serverName — barman's pre-restore check demands an EMPTY archive for the
+        # archiving server and refuses to write into the source's history (`Expected empty archive`).
+        serverName: {{ .Values.postgres.backup.serverName | quote }}
+        {{- end }}
   {{- end }}
   storage:
     size: {{ .Values.postgres.storageSize }}
