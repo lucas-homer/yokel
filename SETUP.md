@@ -38,9 +38,10 @@ pnpm install                        # installs the whole workspace
 ## 4. Secrets
 
 ```bash
-cp spikes/.env.example spikes/.env
+cp .env.example .env
 # Get a free Regulations.gov key (instant) at https://api.data.gov/signup/
-# then put it in spikes/.env as REGS_KEY=...
+# then put it in .env as REGS_API_KEY=... — the repo-root .env is the SINGLE local secrets
+# file: the app tooling, the spikes, and infra/scripts/vault-seed.sh all read this one.
 ```
 
 Never commit `.env` (it's gitignored). Only `.env.example` is tracked.
@@ -56,10 +57,12 @@ task status                    # Argo Applications + key pods
 ```
 
 See `infra/README.md` for the full runbook. The `docketclock` database is provisioned by the
-CloudNativePG Cluster — there is no `createdb`. After bring-up, patch real secrets into Vault:
+CloudNativePG Cluster — there is no `createdb`. `task dev-up` seeds Vault from the repo-root
+`.env` (it refuses to run without `REGS_API_KEY` — no silent placeholder). To rotate keys later:
 
 ```bash
-REGS_API_KEY=xxx bash infra/scripts/seed-docketclock-secrets.sh
+task -d infra regs-key                                              # re-seed the regs key from .env
+GEMINI_API_KEY=xxx bash infra/scripts/seed-docketclock-secrets.sh   # patch any other key
 ```
 
 For the day-to-day inner loop, run `tilt up` from the repo root (hot-reload; API on

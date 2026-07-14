@@ -11,7 +11,8 @@ the Go/No-Go memo populated with measured numbers from the implemented spikes.
 
 ```bash
 pnpm install                 # from repo root
-cp .env.example .env         # add REGS_KEY from https://api.data.gov/signup/
+# Secrets come from the REPO-ROOT .env (cp .env.example .env at the root) — set REGS_API_KEY
+# there (free instant key: https://api.data.gov/signup/). There is no spikes-local .env.
 ```
 
 ## The spikes
@@ -75,9 +76,10 @@ freshness source; this stays a batch differential, not a third adapter.
 
 ### Env / flags
 
-- `REGS_KEY` — **required for an authoritative D1 run.** Without it D1 falls back to `DEMO_KEY`
-  (free key: <https://api.data.gov/signup/>). DEMO_KEY works only while the open set fits in one
-  cursor window (~5k docs) before its hourly cap bites.
+- `REGS_API_KEY` — **required for an authoritative D1 run.** Lives in the repo-root `.env` (the
+  same key vault-seed puts in the cluster). Without it D1 falls back to `DEMO_KEY` (free key:
+  <https://api.data.gov/signup/>). DEMO_KEY works only while the open set fits in one cursor
+  window (~5k docs) before its hourly cap bites.
 - `D1_USE_CACHE=1` / `D3_USE_CACHE=1` — re-run the analysis over the last `data/` pull with **no API
   calls** (iterate on the report, or when an API budget is spent).
 - `HUC8=02060005` — which HUC-8 W3 measures (default Choptank). Add a keyword seed in `BASIN_SEED`

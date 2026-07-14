@@ -54,7 +54,10 @@ prod, which auto-unseals via cloud KMS. Two Vaults locally:
 - `vault` (main) — raft storage, `seal "transit"` pointing at `vault-transit`. `vault-seed` runs
   `operator init` once (recovery keys — there are no Shamir unseal keys under auto-unseal), stashes the
   root token + recovery keys in the `vault/vault-root-token` Secret (dev convenience), then writes the
-  placeholder external secrets (Regs.gov / Anthropic keys, webhook HMAC) to `secret/docketclock/external`.
+  external secrets (Regs.gov / Gemini keys, API keys, webhook HMAC) to `secret/docketclock/external`.
+  Values resolve host env → **repo-root `.env`** → dev-\* placeholder — EXCEPT `regs_api_key`, which has
+  no placeholder: a fake external key once left the poller 403ing for days behind green heartbeats, so
+  the seed refuses to run without a real `REGS_API_KEY`. Rotate it later with `task regs-key`.
 
 ESO syncs those into the `docketclock-external` K8s Secret. Postgres credentials are **not** here —
 CloudNativePG generates and rotates those itself. Prod differs only by overlay: the `seal "transit"`

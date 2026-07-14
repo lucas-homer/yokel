@@ -9,6 +9,21 @@ set -euo pipefail
 # That stored root token is a dev convenience; prod uses the Kubernetes auth method, not a root token
 # in a Secret (see charts/docketclock/values-cloud.yaml). Run vault-transit-init.sh FIRST.
 
+# --- Resolve external-origin values BEFORE touching the cluster -----------------------------------------
+# Host shell env wins; the repo-root .env (the canonical local secrets file — the same one the app
+# tooling reads) is the fallback, so seeded values can't silently diverge from local dev. REGS_API_KEY
+# gets NO placeholder: seeding a fake key once left the poller 403ing on every regulations.gov call for
+# days while every heartbeat stayed green (the dev-regs-key incident) — refuse loudly instead.
+REPO_ROOT=$(cd "$(dirname "$0")/../.." && pwd)
+dotenv_get() { grep "^$1=" "$REPO_ROOT/.env" 2>/dev/null | head -1 | cut -d= -f2-; }
+REGS_API_KEY="${REGS_API_KEY:-$(dotenv_get REGS_API_KEY)}"
+GEMINI_API_KEY="${GEMINI_API_KEY:-$(dotenv_get GEMINI_API_KEY)}"
+if [ -z "$REGS_API_KEY" ]; then
+  echo "✗ REGS_API_KEY is not set (host env or $REPO_ROOT/.env) — refusing to seed a placeholder" >&2
+  echo "  for the regulations.gov key. Free instant key: https://api.data.gov/signup/" >&2
+  exit 1
+fi
+
 echo "⏳ waiting for the main Vault API to respond..."
 # Poll the API, NOT pod phase/Ready: an uninitialized Vault never becomes Ready (we init it below), and
 # pod-phase=Running can flip before the `vault` container is execable (→ "container not found"). Once
@@ -50,9 +65,10 @@ kubectl -n vault exec vault-0 -- sh -c "
 
 echo "🌱 seeding secret/docketclock/external (regs_api_key, docketclock_api_keys, gemini_api_key, webhook_hmac_secret)..."
 # These four keys MUST match charts/.../values.yaml externalSecret.keys — ESO is all-or-nothing, so a
-# missing key (previously docketclock_api_keys) fails the whole sync. Real values flow from the HOST
-# shell env (REGS_API_KEY etc.) with dev-* fallbacks so `task dev-up` stays reproducible. gemini_api_key
-# defaults to EMPTY: ESO still finds the key (sync goes green) but the poller sees an empty GEMINI_API_KEY
+# missing key (previously docketclock_api_keys) fails the whole sync. regs_api_key + gemini_api_key were
+# resolved above (host env → repo-root .env; regs REQUIRED, no placeholder). The internal-seam keys keep
+# dev-* fallbacks (placeholders WORK for them — they're both sides of our own seam). gemini_api_key may
+# still be empty: ESO still finds the key (sync goes green) but the poller sees an empty GEMINI_API_KEY
 # and runs null:abstain — dormant until a real key is seeded.
 #
 # SHELL-QUOTING CONSTRAINT: the host string below is DOUBLE-quoted, so ${VAR:-default} expands on the
@@ -61,7 +77,7 @@ echo "🌱 seeding secret/docketclock/external (regs_api_key, docketclock_api_ke
 kubectl -n vault exec vault-0 -- sh -c "
   export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
   vault kv put secret/docketclock/external \
-    regs_api_key='${REGS_API_KEY:-dev-regs-key}' \
+    regs_api_key='${REGS_API_KEY}' \
     docketclock_api_keys='${DOCKETCLOCK_API_KEYS:-dev-docketclock-key}' \
     gemini_api_key='${GEMINI_API_KEY:-}' \
     webhook_hmac_secret='${WEBHOOK_HMAC_SECRET:-dev-hmac-secret}'

@@ -20,7 +20,7 @@
  */
 import { today, writeOut } from "./_shared.js";
 
-const REGS_KEY = process.env.REGS_KEY || process.env.REGS_API_KEY || "DEMO_KEY";
+const REGS_API_KEY = process.env.REGS_API_KEY || "DEMO_KEY";
 
 interface Probe {
   label: string;
@@ -42,7 +42,7 @@ async function probe(
     const res = await fetch(url, {
       method,
       headers: {
-        "X-Api-Key": REGS_KEY,
+        "X-Api-Key": REGS_API_KEY,
         "Content-Type": "application/vnd.api+json",
         Accept: "application/vnd.api+json",
       },
@@ -78,9 +78,9 @@ async function probe(
 }
 
 async function main(): Promise<void> {
-  if (!process.env.REGS_KEY) {
+  if (!process.env.REGS_API_KEY) {
     console.warn(
-      "WARNING: REGS_KEY not set — probing with DEMO_KEY; result reflects DEMO_KEY's tier.\n",
+      "WARNING: REGS_API_KEY not set — probing with DEMO_KEY; result reflects DEMO_KEY's tier.\n",
     );
   }
   const base = "https://api.regulations.gov/v4";
@@ -139,7 +139,7 @@ async function main(): Promise<void> {
 
   const md = `# W1 — Regulations.gov POST /comments availability
 
-**Run:** ${today()} (Eastern) · key tier: ${process.env.REGS_KEY ? "standard non-gov REGS_KEY" : "DEMO_KEY"}
+**Run:** ${today()} (Eastern) · key tier: ${process.env.REGS_API_KEY ? "standard non-gov REGS_API_KEY" : "DEMO_KEY"}
 **Method:** non-destructive POST probes — the \`/comments\` probe sends an **empty body**, so it can only
 4xx, never persist a comment (the auth-handshake test the plan sanctions).
 
