@@ -175,7 +175,7 @@ async function main(): Promise<void> {
   if ((process.env.REGS_API_KEY ?? "") === "") {
     console.warn(
       "WARNING: REGS_API_KEY not set; using DEMO_KEY (heavily rate-limited — pagination will likely stall).\n" +
-        "         Get a free key at https://api.data.gov/signup/ and put it in spikes/.env",
+        "         Get a free key at https://api.data.gov/signup/ and put it in the repo-root .env",
     );
   }
   console.log(`D1: open-comment cutoff = ${FROM} (Eastern)\n`);
@@ -212,7 +212,7 @@ async function main(): Promise<void> {
   if (regs.length === 0) {
     throw new Error(
       "Regs.gov returned 0 docs — almost certainly a missing/invalid REGS_API_KEY or rate-limit. " +
-        "Set a real key in spikes/.env and re-run.",
+        "Set a real key in the repo-root .env and re-run.",
     );
   }
 
