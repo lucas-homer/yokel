@@ -1987,6 +1987,71 @@ spec:
                   severity: critical
                 annotations:
                   summary: "The API's DB ping (db_up) has read 0 for 5m \u2014 /readyz is failing and the pod is out of the Service rotation."
+              # Per-pass ingest-freshness (#91): the regs.gov key outage of 2026-07-09..14 never paged
+              # because only the CYCLE heartbeat was watched \u2014 the regs pass threw every cycle for five
+              # days while fr kept the heartbeat green. pass_failures_total increments once per pass
+              # that throws and is isolated, so ">2.5 over 1h" = 3+ failed cycles at the 15m cadence:
+              # one transient API blip (a single failure) never pages, a sustained outage pages ~50m in.
+              # One alert INSTANCE per `pass` label (fr / regs / chain / verify \u2014 a repeatedly-failing
+              # chain or verify pass is the same silent single-stage blindness).
+              #
+              # noDataState OK \u2014 deliberately OPPOSITE of the siblings: the counter series only exists
+              # once a pass has failed at least once since pod start, so "no data" here MEANS zero
+              # failures (healthy), not a broken pipeline. (Pipeline breakage is covered by the
+              # poller-stalled rule's vector(0) fallback and the dead-man switch.) Resolve after
+              # recovery is NOT instant: the [1h] range still sees the outage-era increments until they
+              # age out, so expect the resolve notification ~30-60m after the fix lands (drill timing).
+              - uid: pass-failing
+                title: Poll pass failing
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: sum by (pass) (increase(docketclock_poll_pass_failures_total{app_kubernetes_io_component="poller"}[1h]))
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: gt
+                        params:
+                        - 2.5
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: OK
+                execErrState: Error
+                for: 5m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "Poll pass '{{ $labels.pass }}' threw in 3+ cycles over the last hour while the cycle heartbeat stayed green \u2014 single-pass blindness (fr/regs: that source's ingest is dark; chain/verify: that stage is down). For regs, first suspect the API key (403 API_KEY_INVALID in poller logs) \u2014 rotate with 'task -d infra regs-key'. (#91)"
             # --- Backups (PR-5, plans/backups-restore-drill.md). Routes to local-noop like everything
             # else until Slice V's V3 lands a real receiver. Metric sources: cnpg_objectstore_* comes
             # from kube-state-metrics customResourceState over the barman ObjectStore CR (with plugin

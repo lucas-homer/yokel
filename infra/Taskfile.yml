@@ -245,9 +245,9 @@ tasks:
       - bash scripts/drill-pitr.sh
 
   alert-drill:
-    desc: "Alert fire drill: stage a real poller outage, confirm the ntfy page + resolve reach a phone (Slice V PR-V3; quarterly, ~30m)"
+    desc: "Alert fire drill: stage a real outage, confirm the ntfy page + resolve reach a phone (quarterly). Modes: `task alert-drill` (poller stalled, ~30m) or `task alert-drill -- ingest` (invalid regs key → Poll pass failing, ~90m; #91)"
     cmds:
-      - bash scripts/alert-drill.sh
+      - bash scripts/alert-drill.sh {{.CLI_ARGS}}
 
   app-local:
     desc: Install the docketclock chart locally (Argo manages it from git once pushed)

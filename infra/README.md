@@ -126,9 +126,19 @@ API/poller pods are `UP` and kube-state-metrics/node-exporter are scraping.
 (no manual import). Under **Dashboards** you'll find _DocketClock — App_ (poll/chain cycles, adjudicator
 LLM latency/tokens/verdicts/cache-hit, HTTP p95/5xx, `db_up`) and _Cluster — Overview_ (node
 CPU/mem/disk, plus pod restarts/memory by namespace). Under **Alerting → Alert rules**: _Poller stalled_
-(heartbeat age > 3× interval), _LLM adjudicator error spike_, and _API readiness down_ (`db_up == 0`).
-Each rule scopes by `app_kubernetes_io_component` so the cross-process gauge leaks (`db_up=0` on the
-poller, `heartbeat=0` on the API) never false-fire.
+(heartbeat age > 3× interval), _LLM adjudicator error spike_, _API readiness down_ (`db_up == 0`), and
+_Poll pass failing_ (#91: ≥3 poll-pass throws in 1h, one alert instance per pass — catches a single
+source going dark while the cycle heartbeat stays green, the regs-key incident of 2026-07). Each rule
+scopes by `app_kubernetes_io_component` so the cross-process gauge leaks (`db_up=0` on the poller,
+`heartbeat=0` on the API) never false-fire.
+
+**Runbook — _Poll pass failing_ with `pass=regs`:** check the poller logs for
+`403 API_KEY_INVALID` (`kubectl -n docketclock logs deploy/docketclock-poller | grep -i api_key`).
+That means the regulations.gov key in Vault is invalid/revoked — rotate it with **`task regs-key`**
+(re-seeds from the repo-root `.env`, force-syncs ESO, rolls the poller; get a fresh key at
+<https://api.data.gov/signup/> if the local one also 403s). Re-polls then catch the backlog up over
+the next few cycles (200 windows/cycle budget). Other passes: read the pass's thrown error in the
+poller logs — the counter only increments when a pass throws and is isolated.
 
 **Alert delivery (Slice V / PR-V3)** — every rule (the three above + the `Backups` folder) routes to
 the **ntfy** contact point: a hosted-push topic your phone subscribes to via the ntfy app, formatted by
@@ -149,16 +159,25 @@ on ping _absence_ (configure the check by hand: period 1h, grace 1h → a total 
 `HEALTHCHECKS_PING_URL=... scripts/seed-alerting-secrets.sh`); while it's still the placeholder the
 CronJob exits 0 without pinging, so nothing fails and nothing pages.
 
-**Fire drill — `task alert-drill` (quarterly, ~30m).** An alert path is untested until it has paged
-someone: the drill pauses docketclock's auto-sync if Argo manages it (git pins the poller at
-`replicas: 1`; selfHeal would revert the outage — locally the app is a plain Helm release and there's
-nothing to pause), scales the poller to 0, waits for _Poller stalled_ to fire **with its real
-thresholds**, asks you to confirm the page reached your phone, restores, and confirms the resolve
-notification too. Timing note from the first run: scale-to-0 fires in **~13m**, not the naive
-45m+10m — the dead pod's heartbeat series goes stale in Prometheus and the rule's `or vector(0)`
-fallback treats an absent metric as infinitely stale (by design: pod-gone pages _faster_). The
-~55–60m path is what a hung-but-still-running poller would take. It then prints the manual dead-man
-half (suspend the CronJob once, wait for the absence page, restore). Drill log:
+**Fire drill — `task alert-drill` (quarterly).** An alert path is untested until it has paged
+someone. Two modes, both firing the REAL rule with its real thresholds and requiring a human to
+confirm the page + resolve reached a phone:
+
+- **`task alert-drill`** (_Poller stalled_, ~30m): pauses docketclock's auto-sync if Argo manages it
+  (git pins the poller at `replicas: 1`; selfHeal would revert the outage — locally the app is a
+  plain Helm release and there's nothing to pause), scales the poller to 0, waits for FIRING,
+  restores, waits for resolve. Timing note from the first run: scale-to-0 fires in **~13m**, not the
+  naive 45m+10m — the dead pod's heartbeat series goes stale in Prometheus and the rule's
+  `or vector(0)` fallback treats an absent metric as infinitely stale (by design: pod-gone pages
+  _faster_). The ~55–60m path is what a hung-but-still-running poller would take. It then prints the
+  manual dead-man half (suspend the CronJob once, wait for the absence page, restore).
+- **`task alert-drill -- ingest`** (_Poll pass failing_, ~90m; #91): re-stages the 2026-07 incident
+  for real — seeds an INVALID regs key into Vault (so the whole Vault → ESO → Secret → poller chain
+  is exercised and no Deployment spec drifts), waits ~36m for three failed 15m cycles to cross the
+  threshold, then restores the real key from the repo-root `.env` (verified present _before_
+  breaking anything) and waits the ~30–60m it takes the failures to age out of the rule's 1h window.
+
+Drill log:
 
 <!-- add PASS dates here --> **2026-07-11 PASS** (fired t+13m, resolved t+3m after restore; page +
 
