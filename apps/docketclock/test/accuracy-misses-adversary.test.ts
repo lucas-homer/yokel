@@ -31,10 +31,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import {
-  computeVerdict,
-  type VerdictInput,
-} from "../src/verify/verdict.js";
+import { computeVerdict, type VerdictInput } from "../src/verify/verdict.js";
 
 let failures = 0;
 const out: string[] = [];
@@ -74,7 +71,9 @@ for (const file of files) {
   const inp = fixture.input;
   if (inp === undefined || fixture.expected === undefined) {
     // The official replay already fails this fixture; don't double-count here.
-    out.push(`  SKIP  ${file}: missing input/expected (official replay owns this failure)`);
+    out.push(
+      `  SKIP  ${file}: missing input/expected (official replay owns this failure)`,
+    );
     continue;
   }
 
@@ -153,11 +152,7 @@ for (const file of files) {
   assert(
     `${file}: expected carries exactly the three verdict keys`,
     JSON.stringify(Object.keys(fixture.expected).sort()) ===
-      JSON.stringify([
-        "basis",
-        "contradicting_observation_ids",
-        "was_correct",
-      ]),
+      JSON.stringify(["basis", "contradicting_observation_ids", "was_correct"]),
     `got [${Object.keys(fixture.expected).sort().join(", ")}]`,
   );
 }
