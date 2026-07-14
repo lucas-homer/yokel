@@ -11,7 +11,9 @@
     "w1": "tsx src/w1_comment_post.ts",
     "w2": "tsx src/w2_eis_source.ts",
     "w3": "tsx src/w3_value_density.ts",
-    "xcheck": "tsx src/xcheck.ts"
+    "xcheck": "tsx src/xcheck.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "tsx src/xcheck.test.ts"
   },
   "dependencies": {
     "@duckdb/node-api": "1.5.3-r.3",

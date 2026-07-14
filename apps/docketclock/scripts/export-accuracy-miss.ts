@@ -58,10 +58,19 @@ if (!ocdId) {
 // (adversary RB-2): silently exporting the latest could snapshot a different claim than the miss
 // the operator meant to pin — so when several exist the version must be chosen explicitly.
 const versionFlag = process.argv.indexOf("--version");
-const requestedVersion =
-  versionFlag !== -1 && process.argv[versionFlag + 1] !== undefined
-    ? Number(process.argv[versionFlag + 1])
-    : null;
+let requestedVersion: number | null = null;
+if (versionFlag !== -1) {
+  const raw = process.argv[versionFlag + 1];
+  // Strict integer check (Copilot #4): `--version --force` would otherwise coerce "--force" to
+  // NaN and surface as a baffling "no verification_watch vNaN" error.
+  if (raw === undefined || !/^\d+$/.test(raw)) {
+    console.error(
+      `--version requires a non-negative integer, got ${raw === undefined ? "nothing" : `"${raw}"`}`,
+    );
+    process.exit(1);
+  }
+  requestedVersion = Number(raw);
+}
 const FORCE = process.argv.includes("--force");
 
 async function main(): Promise<void> {
@@ -180,8 +189,10 @@ async function main(): Promise<void> {
     // (computeVerdict({lapsed:true}) abstains unconditionally, so no hand-corrected gold could
     // ever pass).
     let lapsed: boolean;
+    let horizonStateAtExport: string;
     if (record) {
       lapsed = record.basis === "unverified_lapsed";
+      horizonStateAtExport = "verdict_already_recorded";
     } else {
       const closeMs = watch.published_close_utc.getTime();
       let confirmedCheckAt: string | null = null;
@@ -199,13 +210,25 @@ async function main(): Promise<void> {
       }
       const snapshotBornLapsed =
         watch.snapshotted_at.getTime() > closeMs + DEFAULT_HORIZON_POLICY.capMs;
-      lapsed =
-        snapshotBornLapsed ||
-        classifyHorizon(
-          { publishedCloseUtc: publishedCloseIso, confirmedCheckAt },
-          new Date(),
-          DEFAULT_HORIZON_POLICY,
-        ) === "due_lapsed";
+      horizonStateAtExport = snapshotBornLapsed
+        ? "due_lapsed"
+        : classifyHorizon(
+            { publishedCloseUtc: publishedCloseIso, confirmedCheckAt },
+            new Date(),
+            DEFAULT_HORIZON_POLICY,
+          );
+      lapsed = horizonStateAtExport === "due_lapsed";
+      // A window that is NOT yet due a verdict can still be exported (pinning a live bug demo is a
+      // legit workflow) — but the auto-initialized gold below comes from the SAME computeVerdict
+      // call it asserts against, so it is trivially green while the claim is still provisional
+      // (Claude review #1). Say so loudly, and stamp the state into the fixture.
+      if (
+        horizonStateAtExport !== "due_verdict" &&
+        horizonStateAtExport !== "due_lapsed"
+      )
+        console.warn(
+          `WARN ${ocdId} is "${horizonStateAtExport}" — the verifier would NOT write a verdict yet; the auto-initialized \`expected\` is provisional, not gold. Hand-review it before committing this fixture.`,
+        );
     }
 
     const replayInput = {
@@ -228,6 +251,10 @@ async function main(): Promise<void> {
         published_close_display: watch.published_close_display,
         snapshotted_at: watch.snapshotted_at.toISOString(),
         last_checked_at: win.last_checked_at?.toISOString() ?? null,
+        // The horizon state the window was in when exported: "verdict_already_recorded", or the
+        // classifyHorizon state on the no-record path. Anything other than due_verdict/due_lapsed
+        // means the auto-initialized `expected` was provisional at export time.
+        horizon_state_at_export: horizonStateAtExport,
         live_accuracy_record: record
           ? {
               was_correct: record.was_correct,
@@ -242,7 +269,7 @@ async function main(): Promise<void> {
       // computeVerdict input, verbatim (src/verify/verdict.ts VerdictInput)
       input: replayInput,
       // GOLD — hand-correct this block when the fixture pins a bug; the replay test asserts
-      // computeVerdict(input) deep-equals it.
+      // computeVerdict(input) matches it on every Verdict field.
       expected: record
         ? {
             was_correct: record.was_correct,

@@ -1,26 +1,27 @@
 # XCHECK — live windows vs spicy-regs Parquet (offline differential)
 
-Generated: 2026-07-14T17:48:56.658Z
+Generated: 2026-07-14T18:50:50.730Z
 Windows export: `spikes/data/windows.jsonl` (4244 windows)
-Parquet: `https://r2.spicy-regs.dev/documents.parquet` (1981722 documents, freshest modify_date 2026-07-14T17:34:30Z)
+Parquet: `https://r2.spicy-regs.dev/documents.parquet` (1981727 documents, freshest modify_date 2026-07-14T17:34:30Z)
 
 A pass is NOT DONE until every disagreement below carries a `triage` value:
 `our_bug` (live projection wrong — export a fixture with `export:accuracy-miss`),
 `bulk_stale` (mirror lags live), `source_drift` (the sources themselves changed).
-Re-runs carry forward filled triage for persisting disagreements (keyed by ocd_id).
+Re-runs carry forward filled triage for persisting disagreements (keyed by ocd_id + category —
+a finding that changes category re-triages from scratch). In notes, spell a literal pipe `\|`.
 
 ## Counts
 
 | category | count | meaning |
 | --- | ---: | --- |
-| agree | 1930 | same Eastern close date (and no withdrawn signal against us) |
-| **date_mismatch** | **28** | joined rows disagree on the Eastern close date — TRIAGE |
+| agree | 1927 | same Eastern close date (and no withdrawn signal against us) |
+| **date_mismatch** | **35** | joined rows disagree on the Eastern close date — TRIAGE |
 | **withdrawn_mismatch** | **1** | mirror says withdrawn, our status doesn't — TRIAGE |
 | we_abstain | 14 | our close is null (honest abstention); mirror carries a date |
 | parquet_no_close | 1359 | joined, but no mirror row carries a comment_end_date |
-| unmatched | 912 | window not present in the mirror at all |
+| unmatched | 908 | window not present in the mirror at all |
 
-## Disagreements (29)
+## Disagreements (36)
 
 | ocd_id | category | ours (Eastern) | parquet (Eastern) | status | confidence | join | parquet docs | derived_at | parquet_modified | triage | note |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -44,6 +45,13 @@ Re-runs carry forward filled triage for persisting disagreements (keyed by ocd_i
 | ocd-participation-window/federal/2026-07203 | date_mismatch | 2026-04-10 | 2026-06-09 | closed | low | regs_id | CMS-2026-1256-0002 | 2026-06-17T21:16:58.792Z | 2026-06-17T09:00:14Z | our_bug | FR-only close (regs detail never fetched; closed pre-V1 so it left the re-poll set); live regs.gov = 2026-06-09 agrees with mirror |
 | ocd-participation-window/federal/2026-07634 | date_mismatch | 2026-05-20 | 2026-04-20 | closed | low | regs_id | CMS-2026-0629-0002 | 2026-06-17T21:16:58.792Z | 2026-04-20T19:14:04Z | our_bug | FR-only close (regs detail never fetched; closed pre-V1 so it left the re-poll set); live regs.gov = 2026-04-20 agrees with mirror |
 | ocd-participation-window/federal/2026-08025 | date_mismatch | 2026-05-26 | 2026-04-24 | closed | low | regs_id | CMS-2026-0530-0002 | 2026-06-17T21:16:58.792Z | 2026-04-24T18:28:10Z | our_bug | FR-only close (regs detail never fetched; closed pre-V1 so it left the re-poll set); live regs.gov = 2026-04-24 agrees with mirror |
+| ocd-participation-window/federal/2026-08067 | date_mismatch | 2026-06-23 | 2026-09-03 | closed | medium | regs_id | PHMSA-2026-1549-0001 | 2026-06-24T06:25:20.184Z | 2026-07-13T21:52:26Z | our_bug | live regs.gov = 2026-09-03 agrees with mirror; change invisible during the key outage (403 since 07-09) |
+| ocd-participation-window/federal/2026-08076 | date_mismatch | 2026-06-23 | 2026-09-03 | closed | medium | regs_id | PHMSA-2026-1553-0002 | 2026-06-24T06:25:20.184Z | 2026-07-13T21:47:08Z | our_bug | live regs.gov = 2026-09-03 agrees with mirror; change invisible during the key outage (403 since 07-09) |
+| ocd-participation-window/federal/2026-08079 | date_mismatch | 2026-06-23 | 2026-09-03 | closed | medium | regs_id | PHMSA-2025-0109-0008 | 2026-06-24T06:25:20.184Z | 2026-07-13T22:22:58Z | our_bug | live regs.gov = 2026-09-03 agrees with mirror; change invisible during the key outage (403 since 07-09) |
+| ocd-participation-window/federal/2026-08080 | date_mismatch | 2026-06-23 | 2026-09-03 | closed | medium | regs_id | PHMSA-2025-0118-0011 | 2026-06-24T06:41:49.771Z | 2026-07-13T22:22:40Z | our_bug | live regs.gov = 2026-09-03 agrees with mirror; change invisible during the key outage (403 since 07-09) |
+| ocd-participation-window/federal/2026-08081 | date_mismatch | 2026-06-23 | 2026-09-03 | closed | medium | regs_id | PHMSA-2025-0108-0007 | 2026-06-24T06:25:20.184Z | 2026-07-13T22:23:40Z | our_bug | live regs.gov = 2026-09-03 agrees with mirror; change invisible during the key outage (403 since 07-09) |
+| ocd-participation-window/federal/2026-08082 | date_mismatch | 2026-06-23 | 2026-09-03 | closed | medium | regs_id | PHMSA-2026-1551-0002 | 2026-06-24T06:25:20.184Z | 2026-07-13T22:23:20Z | our_bug | live regs.gov = 2026-09-03 agrees with mirror; change invisible during the key outage (403 since 07-09) |
+| ocd-participation-window/federal/2026-08083 | date_mismatch | 2026-06-23 | 2026-09-03 | closed | medium | regs_id | PHMSA-2026-1552-0001 | 2026-06-24T07:12:36.147Z | 2026-07-13T21:51:44Z | our_bug | live regs.gov = 2026-09-03 agrees with mirror; change invisible during the key outage (403 since 07-09) |
 | ocd-participation-window/federal/2026-08421 | date_mismatch | 2026-06-01 | 2026-04-30 | closed | low | regs_id | CMS-2026-0793-0001 | 2026-06-17T21:16:58.792Z | 2026-05-04T17:49:02Z | our_bug | FR-only close (regs detail never fetched; closed pre-V1 so it left the re-poll set); live regs.gov = 2026-04-30 agrees with mirror |
 | ocd-participation-window/federal/2026-08542 | date_mismatch | 2026-06-01 | 2026-05-01 | closed | low | regs_id | CMS-2026-0431-0004 | 2026-06-17T21:16:58.792Z | 2026-05-01T16:25:15Z | our_bug | FR-only close (regs detail never fetched; closed pre-V1 so it left the re-poll set); live regs.gov = 2026-05-01 agrees with mirror |
 | ocd-participation-window/federal/2026-09330 | date_mismatch | 2026-06-11 | 2026-05-12 | closed | low | regs_id | CMS-2026-0529-0063 | 2026-06-17T21:16:58.792Z | 2026-05-13T18:23:07Z | our_bug | FR-only close (regs detail never fetched; closed pre-V1 so it left the re-poll set); live regs.gov = 2026-05-12 agrees with mirror |

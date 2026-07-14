@@ -63,7 +63,10 @@ Every disagreement gets a hand-filled triage value: `our_bug` (the live projecti
 FIND: export it with `export:accuracy-miss` so it becomes a committed replay fixture),
 `bulk_stale` (the mirror lags live Regs.gov — the EXPECTED dominant bucket), or `source_drift`
 (the sources themselves changed). Re-runs carry filled triage forward for persisting
-disagreements, so re-running never clobbers finished work.
+disagreements — keyed by (ocd_id, category), so a finding that changes category re-triages from
+scratch — and never clobber finished work. When hand-editing a note, spell a literal pipe as
+`\|` (markdown-standard): a raw `|` breaks the table row and costs that row its triage on the
+next re-run.
 
 **Cadence:** re-run on every fresh parquet snapshot, at least monthly while calibrating. A pass is
 NOT done until every disagreement carries a triage value — an unfilled column in the committed

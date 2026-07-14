@@ -20,8 +20,14 @@
  *
  * The diff file is CHECKED IN (`spikes/out/XCHECK_diff.md` is un-gitignored): an unfilled triage
  * column in the committed file IS the reminder that a pass is not done. Re-runs carry forward the
- * hand-filled triage of any disagreement that persists (keyed by ocd_id), so a monthly re-run never
- * clobbers finished triage work.
+ * hand-filled triage of any disagreement that persists — keyed by (ocd_id, category), so a finding
+ * that CHANGES category is treated as new, never silently inheriting a stale triage — and a
+ * monthly re-run never clobbers finished triage work. When hand-editing notes, spell a literal
+ * pipe as `\|` (markdown-standard): a raw `|` breaks the table AND shifts this parser's cells on
+ * the next run (self-heals after — the writer re-escapes — but that one row's triage is lost).
+ *
+ * Pure logic (classification, triage parsing, Eastern dates) lives in xcheck-lib.ts and is
+ * unit-tested in CI via xcheck.test.ts; this file is the side-effectful pass.
  *
  * Run:  pnpm --filter @yokel/docketclock export:windows   # → data/windows.jsonl (live export)
  *       pnpm --filter @yokel/spikes xcheck                # → out/XCHECK_diff.md
@@ -32,6 +38,16 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { DATA_DIR, OUT_DIR, withDuckDB, rows, writeOut } from "./_shared.js";
+import {
+  type Category,
+  type Finding,
+  type JoinedRow,
+  classify,
+  easternDate,
+  parseTriage,
+  sqlLit,
+  triageKey,
+} from "./xcheck-lib.js";
 
 const PARQUET =
   process.env.SPICY_REGS_PARQUET ??
@@ -39,157 +55,6 @@ const PARQUET =
 const WINDOWS_JSONL =
   process.env.WINDOWS_JSONL ?? resolve(DATA_DIR, "windows.jsonl");
 const OUT_NAME = "XCHECK_diff.md";
-
-/** "YYYY-MM-DD" in America/New_York for a UTC instant string (DST-correct; mirrors the reconcile
- *  engine's easternCalendarDate — duplicated here because spikes never import app code). Requires
- *  an EXPLICIT-OFFSET instant: a date-only or naive string would parse machine-TZ-dependently and
- *  misclassify SILENTLY (adversary #4 — false "agree" included), so it throws instead. Today's
- *  mirror is 100% "…T…Z" (verified over all 525k comment_end_date values); this guard exists for
- *  the day a mirror format regression breaks that. */
-function easternDate(utcIso: string): string {
-  if (
-    !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:?\d{2})$/.test(
-      utcIso,
-    )
-  )
-    throw new Error(
-      `easternDate: refusing non-explicit-offset instant "${utcIso}" (naive/date-only strings parse machine-TZ-dependently)`,
-    );
-  const instant = new Date(utcIso);
-  if (Number.isNaN(instant.getTime()))
-    throw new Error(`easternDate: invalid instant "${utcIso}"`);
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/New_York",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(instant);
-  const p = (t: string) => parts.find((x) => x.type === t)?.value ?? "";
-  return `${p("year")}-${p("month")}-${p("day")}`;
-}
-
-interface JoinedRow {
-  ocd_id: string;
-  fr_document_number: string | null;
-  regs_document_id: string | null;
-  resolved_close_utc: string | null;
-  confidence: string;
-  status: string;
-  derived_at: string;
-  join_via: string; // 'regs_id' | 'fr_doc_num'
-  // aggregated over every matched parquet row (EPA multi-docket: one fr_doc_num, many documents)
-  parquet_doc_ids: string;
-  parquet_end_dates: string | null; // distinct non-null comment_end_date values, '||'-joined
-  parquet_withdrawn_any: boolean;
-  parquet_modified_max: string | null;
-}
-
-type Category =
-  | "agree"
-  | "date_mismatch"
-  | "withdrawn_mismatch"
-  | "we_abstain"
-  | "parquet_no_close"
-  | "unmatched";
-
-interface Finding {
-  category: Category;
-  row: JoinedRow;
-  oursEastern: string | null;
-  parquetEastern: string[]; // distinct Eastern dates carried by the matched parquet rows
-}
-
-const TRIAGE_ENUM = ["our_bug", "bulk_stale", "source_drift"];
-
-/** Carry forward hand-filled triage/note values from a previous committed diff (keyed by ocd_id).
- *  Detail rows end `… | <triage> | <note> |`: after splitting on UNESCAPED pipes (markdown table
- *  cells spell a literal pipe `\|` — adversary RB-1: a note quoting a federal title with a pipe
- *  must not shift the cells and eat the triage) the trailing `|` yields a final '' element, so
- *  note is at length-2 and triage at length-3. Triage carries ONLY when it is a recognized enum
- *  value — anything else is warned about loudly instead of silently perpetuated; the note carries
- *  verbatim either way. */
-function previousTriage(
-  path: string,
-): Map<string, { triage: string; note: string }> {
-  const out = new Map<string, { triage: string; note: string }>();
-  if (!existsSync(path)) return out;
-  for (const line of readFileSync(path, "utf8").split("\n")) {
-    const cells = line.split(/(?<!\\)\|/).map((c) => c.trim());
-    if (cells.length < 5 || !cells[1]?.startsWith("ocd-participation-window/"))
-      continue;
-    // Only the DISAGREEMENTS table carries triage/note columns; the abstention table's rows share
-    // the ocd_id prefix but their trailing cells are join metadata — anchoring on the category
-    // cell keeps them from being slurped in as bogus "notes".
-    if (!["date_mismatch", "withdrawn_mismatch"].includes(cells[2] ?? ""))
-      continue;
-    const rawTriage = cells[cells.length - 3] ?? "";
-    const note = cells[cells.length - 2] ?? "";
-    const triage = TRIAGE_ENUM.includes(rawTriage) ? rawTriage : "";
-    if (rawTriage && !triage)
-      console.warn(
-        `WARN unrecognized triage "${rawTriage}" on ${cells[1]} — NOT carried (fix it by hand: ${TRIAGE_ENUM.join("|")})`,
-      );
-    if (triage || note) out.set(cells[1], { triage, note });
-  }
-  return out;
-}
-
-function classify(r: JoinedRow): Finding {
-  const parquetDates = [
-    ...new Set(
-      (r.parquet_end_dates ?? "")
-        .split("||")
-        .filter((d) => d !== "")
-        .map(easternDate),
-    ),
-  ].sort();
-  const oursEastern = r.resolved_close_utc
-    ? easternDate(r.resolved_close_utc)
-    : null;
-
-  // Status first: the mirror explicitly says withdrawn but our projection doesn't. (The reverse —
-  // we say withdrawn, mirror says nothing — is NOT flagged: `withdrawn` is null on 99% of mirror
-  // rows, so absence carries no signal.)
-  if (r.parquet_withdrawn_any && r.status !== "withdrawn")
-    return {
-      category: "withdrawn_mismatch",
-      row: r,
-      oursEastern,
-      parquetEastern: parquetDates,
-    };
-
-  if (parquetDates.length === 0)
-    return {
-      category: "parquet_no_close",
-      row: r,
-      oursEastern,
-      parquetEastern: [],
-    };
-  if (oursEastern === null)
-    return {
-      category: "we_abstain",
-      row: r,
-      oursEastern,
-      parquetEastern: parquetDates,
-    };
-
-  // Agreement = every matched parquet row that carries a close lands on OUR Eastern date. A single
-  // matched row on a different Eastern date is a disagreement — "any row agrees" would let the
-  // multi-docket case hide exactly the drift this pass exists to surface.
-  if (parquetDates.length === 1 && parquetDates[0] === oursEastern)
-    return {
-      category: "agree",
-      row: r,
-      oursEastern,
-      parquetEastern: parquetDates,
-    };
-  return {
-    category: "date_mismatch",
-    row: r,
-    oursEastern,
-    parquetEastern: parquetDates,
-  };
-}
 
 async function main(): Promise<void> {
   if (!existsSync(WINDOWS_JSONL))
@@ -205,7 +70,7 @@ async function main(): Promise<void> {
     // re-serialize them without the Z, which JS Date then parses as LOCAL time: every close would
     // drift one calendar day and the whole diff would be false mismatches.
     await conn.run(`
-      create view win as select * from read_json('${WINDOWS_JSONL}',
+      create view win as select * from read_json('${sqlLit(WINDOWS_JSONL)}',
         format='newline_delimited', records=true,
         columns={ocd_id:'VARCHAR', fr_document_number:'VARCHAR', regs_document_id:'VARCHAR',
                  docket_id:'JSON', window_type:'VARCHAR',
@@ -217,7 +82,7 @@ async function main(): Promise<void> {
     // the heavy column, never leaves the bucket).
     await conn.run(`
       create view docs as select document_id, fr_doc_num, comment_end_date, withdrawn, modify_date
-      from read_parquet('${PARQUET}');
+      from read_parquet('${sqlLit(PARQUET)}');
     `);
     // Join preference: exact Regs document id first; fr_doc_num as the FALLBACK — both for
     // FR-only windows (no regs id at all) and for windows whose regs id is simply ABSENT from the
@@ -281,7 +146,10 @@ async function main(): Promise<void> {
 
   const count = (c: Category) =>
     findings.filter((f) => f.category === c).length;
-  const carried = previousTriage(resolve(OUT_DIR, OUT_NAME));
+  const diffPath = resolve(OUT_DIR, OUT_NAME);
+  const carried = existsSync(diffPath)
+    ? parseTriage(readFileSync(diffPath, "utf8"))
+    : new Map<string, { triage: string; note: string }>();
   const disagreements = findings.filter(
     (f) =>
       f.category === "date_mismatch" || f.category === "withdrawn_mismatch",
@@ -289,7 +157,7 @@ async function main(): Promise<void> {
 
   const detailRow = (f: Finding): string => {
     const r = f.row;
-    const prev = carried.get(r.ocd_id);
+    const prev = carried.get(triageKey(r.ocd_id, f.category));
     // Escape any raw pipe an operator typed into a note — an unescaped `|` would both break the
     // markdown table and shift the parser's cells on the NEXT run (the RB-1 corruption).
     const note = (prev?.note ?? "").replace(/(?<!\\)\|/g, "\\|");
@@ -306,12 +174,13 @@ async function main(): Promise<void> {
 
 Generated: ${new Date().toISOString()}
 Windows export: \`${WINDOWS_JSONL.replace(/^.*\/(spikes\/)/, "$1")}\` (${joined.length} windows)
-Parquet: \`${PARQUET}\` (${totals[0].n} documents, freshest modify_date ${totals[0].max_modify})
+Parquet: \`${PARQUET}\` (${totals[0]?.n ?? "?"} documents, freshest modify_date ${totals[0]?.max_modify ?? "?"})
 
 A pass is NOT DONE until every disagreement below carries a \`triage\` value:
 \`our_bug\` (live projection wrong — export a fixture with \`export:accuracy-miss\`),
 \`bulk_stale\` (mirror lags live), \`source_drift\` (the sources themselves changed).
-Re-runs carry forward filled triage for persisting disagreements (keyed by ocd_id).
+Re-runs carry forward filled triage for persisting disagreements (keyed by ocd_id + category —
+a finding that changes category re-triages from scratch). In notes, spell a literal pipe \`\\|\`.
 
 ## Counts
 
@@ -361,11 +230,13 @@ ${count("we_abstain") > 50 ? `\n_…and ${count("we_abstain") - 50} more (first 
   // A previously-triaged disagreement that is ABSENT this run is dropped from the rewritten file —
   // usually it genuinely resolved, but a one-run mirror flap would silently lose the triage
   // (adversary #6), so name the drops: recover them from `git diff` if the row comes back.
-  const present = new Set(disagreements.map((f) => f.row.ocd_id));
+  const present = new Set(
+    disagreements.map((f) => triageKey(f.row.ocd_id, f.category)),
+  );
   const dropped = [...carried.keys()].filter((k) => !present.has(k));
   if (dropped.length)
     console.log(
-      `NOTE ${dropped.length} previously-triaged disagreement(s) no longer present (resolved or flapped) — triage dropped from the file, recoverable via git diff:\n  ${dropped.join("\n  ")}`,
+      `NOTE ${dropped.length} previously-triaged disagreement(s) no longer present (resolved, flapped, or changed category) — triage dropped from the file, recoverable via git diff:\n  ${dropped.join("\n  ")}`,
     );
   console.log(`wrote ${path}`);
 }

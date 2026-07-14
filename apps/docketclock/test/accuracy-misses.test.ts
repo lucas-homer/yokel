@@ -6,7 +6,9 @@
  * holds the EXACT computeVerdict input the verifier assembled for one real window (the at-close
  * claim, the drifted current close/status, every post-close observation via both linkage paths)
  * plus an `expected` GOLD verdict block — initialized from the live record and HAND-CORRECTED when
- * the fixture pins a bug. The replay asserts computeVerdict(input) deep-equals `expected`, so:
+ * the fixture pins a bug. The replay asserts computeVerdict(input) matches `expected` on every
+ * Verdict field (was_correct, basis, contradicting_observation_ids — the full shape; stray extra
+ * keys in a gold block are ignored, not compared), so:
  *   • a fixture whose `expected` was corrected FAILS here until the verdict/reconcile fix lands
  *     (the fail-before / pass-after loop the plan requires), and
  *   • once green, every future rule change is regression-guarded by the real-world chain that
