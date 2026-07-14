@@ -98,7 +98,7 @@ const pollPassFailures = new Counter({
 });
 const pollCycleDuration = new Histogram({
   name: "docketclock_poll_cycle_duration_seconds",
-  help: "Wall-clock duration of a full settled poll cycle (fr + regs + chain).",
+  help: "Wall-clock duration of a full settled poll cycle (fr + regs + chain + verify).",
   buckets: [0.5, 1, 2, 5, 10, 30, 60, 120, 300],
   registers: [registry],
 });
@@ -133,7 +133,9 @@ export function recordRegsPoll(s: PollSummary): void {
   pollPages.inc({ source: "regs" }, s.pagesFetched);
   pollTruncated.set({ source: "regs" }, s.truncated ? 1 : 0);
 }
-export function recordPollPassFailure(pass: "fr" | "regs" | "chain"): void {
+export function recordPollPassFailure(
+  pass: "fr" | "regs" | "chain" | "verify",
+): void {
   pollPassFailures.inc({ pass });
 }
 export function observePollCycle(seconds: number): void {
@@ -205,6 +207,55 @@ export function recordChainCycle(s: ChainReconcileOnceResult): void {
   chainLlmLinked.inc(s.llmLinked);
   chainDeferred.inc(s.deferred);
   chainRetired.inc(s.retired);
+}
+
+// ── Post-close verification (stage 4, slice V) ────────────────────────────────────────────────────────
+const accuracyChecks = new Counter({
+  name: "docketclock_accuracy_checks_total",
+  help: "Per-cycle verification evaluations of watched windows, by result (snapshotted | in_horizon | awaiting_check | verdict | lapsed).",
+  labelNames: ["result"],
+  registers: [registry],
+});
+const accuracyRecords = new Counter({
+  name: "docketclock_accuracy_records_total",
+  help: "FINAL AccuracyRecords written, by verdict (was_correct true|false). Lapsed abstentions count on docketclock_accuracy_unverified_total instead.",
+  labelNames: ["was_correct"],
+  registers: [registry],
+});
+const accuracyUnverified = new Counter({
+  name: "docketclock_accuracy_unverified_total",
+  help: "unverified_lapsed records written — windows whose 14d verification cap passed with ZERO confirmed post-close checks. The re-poll starvation signal.",
+  registers: [registry],
+});
+const accuracyHighRatio = new Gauge({
+  name: "docketclock_accuracy_high_correct_ratio_90d",
+  help: "Share of HIGH-at-close windows judged was_correct=true, trailing 90d by close date, EXCLUDING unverified_lapsed. NaN when there is no sample (never a fake 0 or 1).",
+  registers: [registry],
+});
+export function recordVerifyCycle(s: {
+  snapshotted: number;
+  inHorizon: number;
+  awaitingCheck: number;
+  verdictsCorrect: number;
+  verdictsIncorrect: number;
+  lapsed: number;
+}): void {
+  accuracyChecks.inc({ result: "snapshotted" }, s.snapshotted);
+  accuracyChecks.inc({ result: "in_horizon" }, s.inHorizon);
+  accuracyChecks.inc({ result: "awaiting_check" }, s.awaitingCheck);
+  accuracyChecks.inc(
+    { result: "verdict" },
+    s.verdictsCorrect + s.verdictsIncorrect,
+  );
+  accuracyChecks.inc({ result: "lapsed" }, s.lapsed);
+  accuracyRecords.inc({ was_correct: "true" }, s.verdictsCorrect);
+  accuracyRecords.inc({ was_correct: "false" }, s.verdictsIncorrect);
+  accuracyUnverified.inc(s.lapsed);
+}
+/** Set the headline gauge from the per-cycle SQL rollup. null (no sample) exports NaN — an absent
+ *  baseline must never read as 0% (a page) or 100% (fake perfection), and NaN satisfies no threshold. */
+export function setAccuracyHighRatio(ratio: number | null): void {
+  accuracyHighRatio.set(ratio ?? NaN);
 }
 
 // ── LLM per-call (fed by MetricsTracer, independent of Langfuse) ──────────────────────────────────────

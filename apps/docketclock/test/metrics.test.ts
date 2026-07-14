@@ -17,6 +17,8 @@ import {
   setHeartbeat,
   recordLlmGeneration,
   recordLlmCacheHit,
+  recordVerifyCycle,
+  setAccuracyHighRatio,
 } from "../src/metrics.js";
 
 let failures = 0;
@@ -289,7 +291,54 @@ function agg(
   );
 }
 
-// 7. renderMetrics produces prom text with content type + default Node metrics.
+// 7. verify-cycle recorders (stage 4, slice V).
+{
+  recordVerifyCycle({
+    snapshotted: 3,
+    inHorizon: 5,
+    awaitingCheck: 2,
+    verdictsCorrect: 4,
+    verdictsIncorrect: 1,
+    lapsed: 1,
+  });
+  setAccuracyHighRatio(0.95);
+  const s = await snap();
+  assert(
+    "recordVerifyCycle: checks_total{verdict} = correct + incorrect = 5",
+    val(s, "docketclock_accuracy_checks_total", { result: "verdict" }) === 5,
+  );
+  assert(
+    "recordVerifyCycle: checks_total{awaiting_check} = 2 (the extended-horizon signal)",
+    val(s, "docketclock_accuracy_checks_total", {
+      result: "awaiting_check",
+    }) === 2,
+  );
+  assert(
+    "recordVerifyCycle: records_total{was_correct} split 4 true / 1 false",
+    val(s, "docketclock_accuracy_records_total", { was_correct: "true" }) ===
+      4 &&
+      val(s, "docketclock_accuracy_records_total", { was_correct: "false" }) ===
+        1,
+  );
+  assert(
+    "recordVerifyCycle: unverified_total counts the lapse (starvation signal)",
+    val(s, "docketclock_accuracy_unverified_total") === 1,
+  );
+  assert(
+    "setAccuracyHighRatio sets the headline gauge",
+    val(s, "docketclock_accuracy_high_correct_ratio_90d") === 0.95,
+  );
+  setAccuracyHighRatio(null);
+  const s2 = await snap();
+  const nanVal = val(s2, "docketclock_accuracy_high_correct_ratio_90d");
+  assert(
+    "setAccuracyHighRatio(null) exports NaN — an absent baseline never reads as 0% or 100%",
+    typeof nanVal === "number" && Number.isNaN(nanVal),
+    String(nanVal),
+  );
+}
+
+// 8. renderMetrics produces prom text with content type + default Node metrics.
 {
   const text = await renderMetrics();
   assert(

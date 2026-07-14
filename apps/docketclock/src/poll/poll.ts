@@ -191,7 +191,11 @@ function resolveDeps(deps?: Partial<PollDeps>): PollDeps {
   };
 }
 
-/** A window we've seen OPEN whose Regs detail is stale enough to re-poll for a withdrawal transition. */
+/**
+ * A window whose Regs detail is stale enough to re-poll — seen-OPEN (the #18 withdrawal-transition
+ * sweep) or CLOSED-IN-VERIFICATION-HORIZON (slice V: a closed window with an unresolved
+ * verification_watch row stays in this set so a confirmed post-close check can land).
+ */
 interface StaleOpenWindow {
   ocd_id: string;
   regs_document_id: string;
@@ -290,9 +294,6 @@ export async function pollRegsOnce(
     let success = false;
     try {
       const detail = await d.fetchDetail(item.documentId);
-      // The fetch landed — stamp the per-document throttle (fix #5/#2) before ingest, so even a
-      // dedupe-skip or a downstream parse hiccup still records "we checked this document's detail".
-      await stampChecked(sql, item.documentId, now);
       const candidate = parseRegsObservation(detail);
       const { inserted, ocdId } = await ingestObservation(sql, candidate);
       if (inserted) {
@@ -302,6 +303,13 @@ export async function pollRegsOnce(
       }
       // RECONCILE-ALWAYS (fix #7): re-derive from the log regardless of inserted — idempotent + self-heal.
       await reconcileOcdId(sql, ocdId, now);
+      // Stamp the per-document throttle (fix #5/#2) only now, on FULL success — a dedupe-skip still
+      // stamps (the payload was read and matched: "we checked and nothing changed"), but a fetch whose
+      // payload failed to parse/ingest must NOT read as a completed check (adversary RB-2: the verify
+      // pass treats this stamp as a confirmed post-close check, and a schema-drifted payload is exactly
+      // the kind that carries the change we failed to read). The failure path is bounded by the
+      // dead-letter ledger, not by this throttle.
+      await stampChecked(sql, item.documentId, now);
       success = true;
       // SUCCESS clears any accumulated failures (#21 consecutive-failure semantics). Count a recovery
       // only if a ledger row actually existed (the doc HAD been failing).
@@ -395,10 +403,6 @@ export async function pollRegsOnce(
     summary.repolled++;
     try {
       const detail = await d.fetchDetail(win.regs_document_id);
-      // Stamp the per-document throttle on a successful detail fetch (fix #5/#2) — this advances the
-      // re-poll throttle even when the payload is unchanged (dedupe-skips), so a re-checked-but-unchanged
-      // window stops being re-polled until it goes stale again.
-      await stampChecked(sql, win.regs_document_id, now);
       const candidate = parseRegsObservation(detail);
       const { inserted, ocdId } = await ingestObservation(sql, candidate);
       if (inserted) {
@@ -409,6 +413,11 @@ export async function pollRegsOnce(
       // crash window — an observation appended on a prior cycle but never reconciled is repaired here even
       // though THIS re-fetch dedupe-skips (inserted=false), flipping a still-open-but-withdrawn window.
       await reconcileOcdId(sql, ocdId, now);
+      // Stamp the throttle on FULL success only (fix #5/#2 + adversary RB-2): a dedupe-skip stamps
+      // (payload read, unchanged — the check completed), a parse/ingest failure does not — the verify
+      // pass counts this stamp as a confirmed post-close check, so it must never assert "checked" for
+      // content that was never read. Failures drain via the dead-letter ledger instead.
+      await stampChecked(sql, win.regs_document_id, now);
       // #21: a successful re-poll clears any accumulated failures for this doc (consecutive-failure reset).
       if (await clearDeadLetter(sql, SOURCE, win.regs_document_id))
         summary.recovered++;
@@ -463,11 +472,12 @@ export async function pollRegsOnce(
     summary.deadLetterRetried++;
     try {
       const detail = await d.fetchDetail(dl.document_key);
-      await stampChecked(sql, dl.document_key, now);
       const candidate = parseRegsObservation(detail);
       const { inserted, ocdId } = await ingestObservation(sql, candidate);
       if (inserted) summary.transitions++;
       await reconcileOcdId(sql, ocdId, now);
+      // FULL-success stamp only (adversary RB-2, same as both passes above).
+      await stampChecked(sql, dl.document_key, now);
       // Recovery: clear the dead-letter and count it. clearDeadLetter returns true (the row existed).
       if (await clearDeadLetter(sql, SOURCE, dl.document_key))
         summary.recovered++;
@@ -491,9 +501,11 @@ export async function pollRegsOnce(
 }
 
 /**
- * The seen-OPEN windows to re-poll: status='open', a non-null regs_document_id, NOT observed in this
- * cycle's differential list, AND whose per-document re-poll throttle (regs_poll_watch.last_checked_at) is
- * older than `staleBefore`.
+ * The windows to re-poll: a non-null regs_document_id, NOT observed in this cycle's differential
+ * list, whose per-document re-poll throttle (regs_poll_watch.last_checked_at) is older than
+ * `staleBefore`, and EITHER seen-OPEN (status='open' — the #18 withdrawal-transition sweep) OR
+ * closed-in-verification-horizon (slice V — an unresolved verification_watch row; see the widening
+ * note inside).
  *
  * THROTTLE SOURCE (adversary fixes #5 + #2): staleness is read from the MUTABLE regs_poll_watch stamp, NOT
  * from max(observations.fetched_at). The observation log dedupe-skips an unchanged re-poll, so its
@@ -525,12 +537,33 @@ async function selectStaleOpenWindows(
   // a stable tiebreak, so the caller's per-cycle budget slice drains the oldest windows first and covers the
   // whole backlog over cycles with no starvation — a deferred window stays maximally stale and is drained on
   // a subsequent cycle.
+  // SLICE-V WIDENING (post-close verification, PR-V1): a CLOSED window inside its verification
+  // horizon must keep getting post-close source checks — that's what a verdict rests on (never
+  // correctness-by-default). "Inside the horizon" is expressed as "has an UNRESOLVED
+  // verification_watch row" (snapshotted by verifyOnce, resolved the moment its final
+  // accuracy_record lands — which drops the window back OUT of this set with zero extra
+  // bookkeeping; a lapse record does the same, so nothing lingers past the 14d cap). Closed-window
+  // checks share the ONE budget and the SAME stalest-first ordering: a just-closed window carries a
+  // fresh stamp so it naturally sorts behind stale open windows — deferrable by construction, and a
+  // deferred check stays maximally stale, so it drains without starving (or being starved by)
+  // discovery re-polls.
   const rows = await sql<StaleOpenWindow[]>`
     select w.ocd_id, w.regs_document_id
     from participation_windows w
     left join regs_poll_watch pw on pw.regs_document_id = w.regs_document_id
-    where w.status = 'open'
-      and w.regs_document_id is not null
+    where w.regs_document_id is not null
+      and (
+        w.status = 'open'
+        or exists (
+          select 1
+          from verification_watch vw
+          where vw.ocd_id = w.ocd_id
+            and not exists (
+              select 1 from accuracy_records ar
+              where ar.ocd_id = vw.ocd_id and ar.window_version = vw.window_version
+            )
+        )
+      )
       and coalesce(pw.last_checked_at, 'epoch') < ${staleBefore.toISOString()}
     order by coalesce(pw.last_checked_at, 'epoch') asc, w.regs_document_id asc
   `;

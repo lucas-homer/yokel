@@ -12,6 +12,7 @@ import {
   ConflictRecord,
   Observation,
   ObservationTarget,
+  AccuracyRecord,
   makeOcdId,
   DISCLAIMER,
   API_VERSION,
@@ -517,6 +518,288 @@ function baseWindow(over: Record<string, unknown> = {}) {
       r.success
         ? `conflict_scope=${r.data.conflict_scope} ocd_id_b=${String(r.data.ocd_id_b)}`
         : "record did not parse",
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+// EDGE 9 — AccuracyRecord (@0.9.0, verification slice V). The track record must obey the same
+// "don't publish fake certainty" rule as the windows it grades: NEVER correctness-by-default
+// (a lapse abstains with was_correct null), a miss must NAME its evidence, a "correct" verdict
+// cannot carry contradictions, and verification is post-close by definition.
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+{
+  /** A valid HIGH-confidence "correct" record we can spread + mutate per attack. */
+  const baseAccuracy = (over: Record<string, unknown> = {}) => ({
+    ocd_id: makeOcdId({ frDocNum: "2025-03547" }),
+    window_version: 3,
+    confidence_at_close: "high",
+    published_close_utc: "2026-05-01T03:59:00.000Z",
+    published_close_display: "11:59 p.m. ET",
+    verdict: {
+      was_correct: true,
+      basis: "post_close_repoll",
+      contradicting_observation_ids: [],
+    },
+    horizon: {
+      closed_at_utc: "2026-05-01T03:59:00.000Z",
+      verified_at_utc: "2026-05-08T04:00:00.000Z",
+    },
+    ...over,
+  });
+
+  // 9a — the normal path: HIGH + confirmed re-poll + correct. MUST PASS.
+  {
+    const r = AccuracyRecord.safeParse(baseAccuracy());
+    assert(
+      "EDGE 9: a confirmed-repoll 'correct' AccuracyRecord parses",
+      r.success,
+      r.success ? "" : JSON.stringify(r.error.issues),
+    );
+  }
+
+  // 9b — an evidenced MISS (late correction moved the date) naming its contradiction. MUST PASS.
+  {
+    const r = AccuracyRecord.safeParse(
+      baseAccuracy({
+        verdict: {
+          was_correct: false,
+          basis: "late_amendment",
+          contradicting_observation_ids: ["obs-late-correction-1"],
+        },
+      }),
+    );
+    assert(
+      "EDGE 9: a late_amendment MISS naming its contradicting observation parses",
+      r.success,
+      r.success ? "" : JSON.stringify(r.error.issues),
+    );
+  }
+
+  // 9c — the honest lapse: no confirmed check landed inside the 14-day cap => ABSTAIN. MUST PASS.
+  {
+    const r = AccuracyRecord.safeParse(
+      baseAccuracy({
+        verdict: {
+          was_correct: null,
+          basis: "unverified_lapsed",
+          contradicting_observation_ids: [],
+        },
+        horizon: {
+          closed_at_utc: "2026-05-01T03:59:00.000Z",
+          verified_at_utc: "2026-05-15T04:00:00.000Z", // the 14-day lapse cap
+        },
+      }),
+    );
+    assert(
+      "EDGE 9: an unverified_lapsed abstention (was_correct null) parses",
+      r.success,
+      r.success ? "" : JSON.stringify(r.error.issues),
+    );
+  }
+
+  // 9d — ATTACK (correctness-by-default): a LAPSED record claiming a boolean verdict. MUST FAIL
+  // in BOTH directions — a lapse must not inflate the gauge (true) nor smear it (false).
+  {
+    const rTrue = AccuracyRecord.safeParse(
+      baseAccuracy({
+        verdict: {
+          was_correct: true,
+          basis: "unverified_lapsed",
+          contradicting_observation_ids: [],
+        },
+      }),
+    );
+    const rFalse = AccuracyRecord.safeParse(
+      baseAccuracy({
+        verdict: {
+          was_correct: false,
+          basis: "unverified_lapsed",
+          contradicting_observation_ids: ["obs-x"],
+        },
+      }),
+    );
+    assert(
+      "EDGE 9 ATTACK: unverified_lapsed + was_correct true is REJECTED (no correctness-by-default)",
+      !rTrue.success,
+      rTrue.success
+        ? "schema let a lapse inflate the headline gauge!"
+        : "lapsed ⇔ null caught it",
+    );
+    assert(
+      "EDGE 9 ATTACK: unverified_lapsed + was_correct false is REJECTED (a lapse is not a miss)",
+      !rFalse.success,
+      rFalse.success
+        ? "schema let a lapse masquerade as an evidenced miss!"
+        : "lapsed ⇔ null caught it",
+    );
+  }
+
+  // 9e — ATTACK: an evidenced basis abstaining with null (an unfinished row posing as a verdict).
+  // MUST FAIL — only unverified_lapsed may carry null.
+  {
+    const r = AccuracyRecord.safeParse(
+      baseAccuracy({
+        verdict: {
+          was_correct: null,
+          basis: "post_close_repoll",
+          contradicting_observation_ids: [],
+        },
+      }),
+    );
+    assert(
+      "EDGE 9 ATTACK: post_close_repoll + was_correct null is REJECTED (an evidenced basis must commit)",
+      !r.success,
+      r.success
+        ? "schema accepted a null verdict on a confirmed check!"
+        : "lapsed ⇔ null (reverse direction) caught it",
+    );
+  }
+
+  // 9f — ATTACK: an evidence-free MISS on a repoll/amendment basis. MUST FAIL — every miss becomes
+  // a replayable regression fixture; a miss that names no contradicting observation can't be replayed.
+  {
+    const r = AccuracyRecord.safeParse(
+      baseAccuracy({
+        verdict: {
+          was_correct: false,
+          basis: "post_close_repoll",
+          contradicting_observation_ids: [],
+        },
+      }),
+    );
+    assert(
+      "EDGE 9 ATTACK: a post_close_repoll MISS with NO contradicting ids is REJECTED (a miss must name its evidence)",
+      !r.success,
+      r.success
+        ? "schema accepted an unreplayable, evidence-free miss!"
+        : "miss-needs-evidence caught it",
+    );
+  }
+
+  // 9g — ALLOWED: a MANUAL miss with no log-row evidence (operator adjudication may rest on
+  // off-log evidence — an agency call, a docket page the ingesters don't cover). MUST PASS.
+  {
+    const r = AccuracyRecord.safeParse(
+      baseAccuracy({
+        verdict: {
+          was_correct: false,
+          basis: "manual",
+          contradicting_observation_ids: [],
+        },
+      }),
+    );
+    assert(
+      "EDGE 9 ALLOWED: a manual MISS with empty contradicting ids parses (off-log operator evidence)",
+      r.success,
+      r.success ? "" : JSON.stringify(r.error.issues),
+    );
+  }
+
+  // 9h — ATTACK: a "correct" verdict carrying contradicting observations. MUST FAIL — correct
+  // MEANS no post-close observation contradicts the close.
+  {
+    const r = AccuracyRecord.safeParse(
+      baseAccuracy({
+        verdict: {
+          was_correct: true,
+          basis: "post_close_repoll",
+          contradicting_observation_ids: ["obs-contradiction-1"],
+        },
+      }),
+    );
+    assert(
+      "EDGE 9 ATTACK: was_correct true + non-empty contradicting ids is REJECTED",
+      !r.success,
+      r.success
+        ? "schema accepted a 'correct' verdict that names its own contradiction!"
+        : "only-a-miss-carries-contradictions caught it",
+    );
+  }
+
+  // 9i — ATTACK: a lapsed record naming contradictions. MUST FAIL — a contradiction in hand IS a
+  // late_amendment miss, not a lapse.
+  {
+    const r = AccuracyRecord.safeParse(
+      baseAccuracy({
+        verdict: {
+          was_correct: null,
+          basis: "unverified_lapsed",
+          contradicting_observation_ids: ["obs-contradiction-1"],
+        },
+      }),
+    );
+    assert(
+      "EDGE 9 ATTACK: unverified_lapsed + contradicting ids is REJECTED (a contradiction is a verdict, not a lapse)",
+      !r.success,
+      r.success
+        ? "schema accepted an abstention that names contradicting evidence!"
+        : "lapse-carries-no-contradictions caught it",
+    );
+  }
+
+  // 9j — ATTACK: confidence_at_close 'unknown'. MUST FAIL — an UNKNOWN window force-nulls its
+  // close (ParticipationWindow refinement), so it can never have PUBLISHED the close under judgment.
+  // 'conflicting' IS allowed: such a window may surface a disputed-but-operative close.
+  {
+    const rUnknown = AccuracyRecord.safeParse(
+      baseAccuracy({ confidence_at_close: "unknown" }),
+    );
+    const rConflicting = AccuracyRecord.safeParse(
+      baseAccuracy({ confidence_at_close: "conflicting" }),
+    );
+    assert(
+      "EDGE 9 ATTACK: confidence_at_close 'unknown' is REJECTED (an unknown window never published a close)",
+      !rUnknown.success,
+      rUnknown.success
+        ? "schema graded a close an UNKNOWN window could never have published!"
+        : "the unknown-forbidden refine caught it",
+    );
+    assert(
+      "EDGE 9 ALLOWED: confidence_at_close 'conflicting' parses (a disputed-but-published close is gradable)",
+      rConflicting.success,
+      rConflicting.success ? "" : JSON.stringify(rConflicting.error.issues),
+    );
+  }
+
+  // 9k — ATTACK: verified_at_utc BEFORE closed_at_utc. MUST FAIL — verification is post-close by
+  // definition.
+  {
+    const r = AccuracyRecord.safeParse(
+      baseAccuracy({
+        horizon: {
+          closed_at_utc: "2026-05-01T03:59:00.000Z",
+          verified_at_utc: "2026-04-30T00:00:00.000Z",
+        },
+      }),
+    );
+    assert(
+      "EDGE 9 ATTACK: horizon.verified_at_utc < closed_at_utc is REJECTED (verification is post-close)",
+      !r.success,
+      r.success
+        ? "schema accepted a verdict written before the close it judges!"
+        : "the horizon-ordering refine caught it",
+    );
+  }
+
+  // 9l — PRECISION TRAP: verified "…00.500Z" vs closed "…00Z" is temporally AFTER but sorts
+  // lexicographically BEFORE ("." < "Z"). The refine compares via Date.parse, so this MUST PASS —
+  // a naive string compare would wrongly reject it.
+  {
+    const r = AccuracyRecord.safeParse(
+      baseAccuracy({
+        horizon: {
+          closed_at_utc: "2026-05-01T00:00:00Z",
+          verified_at_utc: "2026-05-01T00:00:00.500Z",
+        },
+      }),
+    );
+    assert(
+      "EDGE 9: mixed fractional-second precision (temporally-after, lexicographically-before) parses",
+      r.success,
+      r.success
+        ? "Date.parse comparison, not lexicographic"
+        : JSON.stringify(r.error.issues),
     );
   }
 }
