@@ -2051,7 +2051,12 @@ spec:
                 labels:
                   severity: critical
                 annotations:
-                  summary: "Poll pass '{{ $labels.pass }}' threw in 3+ cycles over the last hour while the cycle heartbeat stayed green \u2014 single-pass blindness (fr/regs: that source's ingest is dark; chain/verify: that stage is down). For regs, first suspect the API key (403 API_KEY_INVALID in poller logs) \u2014 rotate with 'task -d infra regs-key'. (#91)"
+                  # {{ "{{ \u2026 }}" }} \u2014 the grafana chart runs alerting values through Helm `tpl`, so a
+                  # bare {{ $labels.pass }} is parsed as a HELM variable and breaks `helm template`
+                  # (CI's inlined-values render). The outer Go-template emits the braces literally;
+                  # Grafana then expands $labels at notification time. Siblings never hit this \u2014 this
+                  # is the first rule to template a label into its summary.
+                  summary: "Poll pass '{{ \"{{ $labels.pass }}\" }}' threw in 3+ cycles over the last hour while the cycle heartbeat stayed green \u2014 single-pass blindness (fr/regs: that source's ingest is dark; chain/verify: that stage is down). For regs, first suspect the API key (403 API_KEY_INVALID in poller logs) \u2014 rotate with 'task -d infra regs-key'. (#91)"
             # --- Backups (PR-5, plans/backups-restore-drill.md). Routes to local-noop like everything
             # else until Slice V's V3 lands a real receiver. Metric sources: cnpg_objectstore_* comes
             # from kube-state-metrics customResourceState over the barman ObjectStore CR (with plugin
