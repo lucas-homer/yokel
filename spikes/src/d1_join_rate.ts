@@ -9,7 +9,7 @@
  *   1. FR open set (keyless): GET federalregister.gov/api/v1/documents.json
  *      ?conditions[comment_date][gte]=<today> with fields document_number, comments_close_on,
  *      docket_ids, regulations_dot_gov_info, type, action, title  -> data/fr_open.json
- *   2. Regs.gov open set (REGS_KEY, paged, <=1000/hr): GET api.regulations.gov/v4/documents
+ *   2. Regs.gov open set (REGS_API_KEY, paged, <=1000/hr): GET api.regulations.gov/v4/documents
  *      filter[commentEndDate][ge]=today (VERIFIED against live OpenAPI: [ge], not [gte]) -> data/regs_open.json
  *   3. DuckDB LEFT JOIN regs_open.frDocNum = fr_open.document_number; compute hit_pct.
  *   4. For misses, measure fallback join on docket_id-array overlap.
@@ -35,7 +35,7 @@ import {
   writeOut,
 } from "./_shared.js";
 
-const REGS_KEY = process.env.REGS_KEY || process.env.REGS_API_KEY || "DEMO_KEY";
+const REGS_API_KEY = process.env.REGS_API_KEY || "DEMO_KEY";
 const FROM = today(); // Eastern calendar date; open = comment window not yet closed
 
 // ---- FR open-comment set (keyless) ---------------------------------------
@@ -87,7 +87,7 @@ async function pullFr(): Promise<FrDoc[]> {
   return out;
 }
 
-// ---- Regs.gov open-comment set (REGS_KEY, lastModifiedDate cursor) -------
+// ---- Regs.gov open-comment set (REGS_API_KEY, lastModifiedDate cursor) -------
 
 interface RegsDocRaw {
   id: string;
@@ -132,7 +132,7 @@ async function pullRegs(): Promise<RegsDoc[]> {
       const res = await fetchJson<{
         data?: RegsDocRaw[];
         meta?: { totalElements?: number };
-      }>(url, { headers: { "X-Api-Key": REGS_KEY }, limiter });
+      }>(url, { headers: { "X-Api-Key": REGS_API_KEY }, limiter });
       const data = res.data ?? [];
       if (round === 0 && pageNum === 1) {
         console.log(
@@ -172,10 +172,10 @@ async function pullRegs(): Promise<RegsDoc[]> {
 // ---- Join + report --------------------------------------------------------
 
 async function main(): Promise<void> {
-  if ((process.env.REGS_KEY ?? "") === "") {
+  if ((process.env.REGS_API_KEY ?? "") === "") {
     console.warn(
-      "WARNING: REGS_KEY not set; using DEMO_KEY (heavily rate-limited — pagination will likely stall).\n" +
-        "         Get a free key at https://api.data.gov/signup/ and put it in spikes/.env",
+      "WARNING: REGS_API_KEY not set; using DEMO_KEY (heavily rate-limited — pagination will likely stall).\n" +
+        "         Get a free key at https://api.data.gov/signup/ and put it in the repo-root .env",
     );
   }
   console.log(`D1: open-comment cutoff = ${FROM} (Eastern)\n`);
@@ -211,8 +211,8 @@ async function main(): Promise<void> {
 
   if (regs.length === 0) {
     throw new Error(
-      "Regs.gov returned 0 docs — almost certainly a missing/invalid REGS_KEY or rate-limit. " +
-        "Set a real key in spikes/.env and re-run.",
+      "Regs.gov returned 0 docs — almost certainly a missing/invalid REGS_API_KEY or rate-limit. " +
+        "Set a real key in the repo-root .env and re-run.",
     );
   }
 
@@ -288,7 +288,7 @@ async function main(): Promise<void> {
   const md = `# D1 — frDocNum join hit-rate
 
 **Run:** ${today()} (Eastern) · open-comment cutoff \`commentEndDate / comment_date >= ${FROM}\`
-**Regs key:** ${process.env.REGS_KEY ? "real REGS_KEY" : "DEMO_KEY (smoke test only)"}
+**Regs key:** ${process.env.REGS_API_KEY ? "real REGS_API_KEY" : "DEMO_KEY (smoke test only)"}
 
 ## Primary join (regs.frDocNum = fr.document_number)
 

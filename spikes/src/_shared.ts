@@ -1,6 +1,6 @@
 /**
  * Shared helpers for the Week-1 validation spikes.
- *   - env loading (.env via dotenv)
+ *   - env loading (repo-root .env via dotenv — the single local secrets file)
  *   - data/ + out/ paths and writers (both gitignored)
  *   - fetchJson with retry/backoff + a simple rate limiter (Regs.gov is 1,000/hr)
  *   - DuckDB convenience wrappers
@@ -16,7 +16,10 @@ export const SPIKES_ROOT = resolve(HERE, "..");
 export const DATA_DIR = resolve(SPIKES_ROOT, "data");
 export const OUT_DIR = resolve(SPIKES_ROOT, "out");
 
-dotenvConfig({ path: resolve(SPIKES_ROOT, ".env") });
+// The repo-root .env is the ONE local secrets file (REGS_API_KEY etc.) — vault-seed reads the same
+// file, so the key the spikes use is by construction the key the cluster runs on. spikes/.env
+// (spike-era REGS_KEY) is retired.
+dotenvConfig({ path: resolve(SPIKES_ROOT, "..", ".env") });
 
 function ensureDirs(): void {
   mkdirSync(DATA_DIR, { recursive: true });

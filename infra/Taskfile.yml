@@ -219,6 +219,21 @@ tasks:
     cmds:
       - bash scripts/vault-seed.sh
 
+  regs-key:
+    desc: Re-seed the poller's regs.gov API key into Vault from the repo-root .env (REGS_API_KEY) — value never printed
+    dir: ..
+    cmds:
+      # Wraps scripts/seed-docketclock-secrets.sh (stdin-only Vault patch + ESO force-sync + poller
+      # restart). Reads the key from the repo-root .env — the canonical local secrets file — so
+      # nothing sensitive ever hits the shell history or argv. To seed a DIFFERENT key, call the
+      # script directly with REGS_API_KEY set.
+      - |
+        set -euo pipefail
+        REGS_API_KEY=$(grep '^REGS_API_KEY=' .env | cut -d= -f2- | tr -d '\r\n')
+        [ -n "$REGS_API_KEY" ] || { echo "✗ REGS_API_KEY not set in .env (repo root)" >&2; exit 1; }
+        export REGS_API_KEY
+        bash infra/scripts/seed-docketclock-secrets.sh
+
   backup-status:
     desc: One-shot backup freshness report — PITR windows, newest WAL, dump/snapshot/mirror CronJobs (backups PR-5)
     cmds:
