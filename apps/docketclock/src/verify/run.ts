@@ -13,7 +13,9 @@
  *      (±1 poll interval, ~15 min) — otherwise a post-close correction that flips a HIGH window to
  *      CONFLICTING would silently remove that window from the HIGH gauge, hiding exactly the miss the
  *      metric exists to count. Scope: non-null close (an abstaining window never published a claim to
- *      judge), status ≠ withdrawn. RE-SNAPSHOT GUARD: a window with an UNRESOLVED watch row (no final
+ *      judge); withdrawn windows are scoped by EVIDENCE, not status — withdrawn-before-close never had
+ *      an operative close to judge, but a POST-close withdrawal observation is the revealed-withdrawal
+ *      miss itself and must be snapshotted (adversary RB-4). RE-SNAPSHOT GUARD: a window with an UNRESOLVED watch row (no final
  *      record yet) is never re-snapshotted — post-close drift belongs to the pending verdict, not a
  *      new snapshot. A window whose watches are all resolved re-snapshots ONLY when its current close
  *      moved LATER than every watched close (the reopened-and-closed-again lifecycle: a genuinely new
@@ -69,6 +71,7 @@ interface WatchRow {
   confidence_at_close: string;
   published_close_utc: Date;
   published_close_display: string | null;
+  snapshotted_at: Date;
   current_close: Date | null;
   current_status: string;
   last_checked_at: Date | null;
@@ -105,7 +108,23 @@ export async function verifyOnce(
     from participation_windows w
     where w.resolved_close_utc is not null
       and w.resolved_close_utc <= ${nowIso}
-      and w.status <> 'withdrawn'
+      and (
+        -- WITHDRAWN scoping is evidence-based, not status-based (adversary RB-4): a window withdrawn
+        -- BEFORE close never had an operative close to judge (out of scope) — but a withdrawal we
+        -- learn of POST-close is the revealed-withdrawal MISS itself, and reconcile flips status to
+        -- 'withdrawn' the moment the withdrawal ingests (stage 2, BEFORE this stage-4 snapshot), so a
+        -- bare status filter would suppress exactly the misses the gauge exists to count. Include a
+        -- withdrawn-status window iff a post-close withdrawal observation exists for it.
+        w.status <> 'withdrawn'
+        or exists (
+          select 1
+          from observations o
+          left join observation_targets t on t.observation_id = o.observation_id
+          where (o.ocd_id = w.ocd_id or t.ocd_id = w.ocd_id)
+            and o.is_withdrawal
+            and o.fetched_at > w.resolved_close_utc
+        )
+      )
       and not exists (
         select 1
         from verification_watch vw
@@ -126,7 +145,7 @@ export async function verifyOnce(
   // ── 2. EVALUATE — classify every unresolved watch; write due verdicts ────────────────────────────
   const watches = await sql<WatchRow[]>`
     select vw.ocd_id, vw.window_version, vw.confidence_at_close,
-           vw.published_close_utc, vw.published_close_display,
+           vw.published_close_utc, vw.published_close_display, vw.snapshotted_at,
            w.resolved_close_utc as current_close, w.status as current_status,
            pw.last_checked_at
     from verification_watch vw
@@ -203,11 +222,24 @@ async function evaluateWatch(
     }
   }
 
-  const state = classifyHorizon(
-    { publishedCloseUtc: publishedCloseIso, confirmedCheckAt },
-    now,
-    policy,
-  );
+  // COLD-START / STALE-SNAPSHOT GUARD (adversary spec-gap 4): the snapshot is the verdict's ground
+  // truth for "the window as published at close", accurate to ±1 poll interval in normal operation.
+  // A snapshot taken AFTER close+cap (first deploy over historical windows; extended poller downtime)
+  // has no such guarantee — it captured the CURRENT, possibly amendment-drifted projection, and
+  // judging from it biases exactly one way: a late amendment folded into the snapshot makes the
+  // published close look correct. So a watch born past the cap is never judged — it abstains as
+  // unverified_lapsed (honest, gauge-excluded, visible on the starvation counter). Windows whose
+  // snapshot landed INSIDE the cap are judged normally; their drift is bounded by capMs.
+  const snapshotBornLapsed =
+    watch.snapshotted_at.getTime() > closeMs + policy.capMs;
+
+  const state = snapshotBornLapsed
+    ? "due_lapsed"
+    : classifyHorizon(
+        { publishedCloseUtc: publishedCloseIso, confirmedCheckAt },
+        now,
+        policy,
+      );
 
   if (state === "not_due") return; // defensive: a snapshot exists only once the close has passed
   if (state === "in_horizon") {

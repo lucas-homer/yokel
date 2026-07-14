@@ -64,10 +64,20 @@ create table if not exists accuracy_records (
     or basis = 'manual'
     or jsonb_array_length(contradicting_observation_ids) > 0
   ),
+  -- …and ONLY a miss may carry contradictions (contract refinements 3+4, adversary RB-3): 'correct'
+  -- means none exist, and a lapsed abstention never reached a verdict. The documented `manual`
+  -- operator path is direct SQL, where the DB is the only validator — and the table is append-only,
+  -- so an incoherent row accepted today is permanent.
+  check (
+    was_correct is not distinct from false
+    or jsonb_array_length(contradicting_observation_ids) = 0
+  ),
 
   -- horizon bookkeeping
   closed_at_utc           timestamptz not null,   -- the close instant the horizon anchored on
   verified_at_utc         timestamptz not null default now(),
+  -- verification is post-close by definition (mirrors the AccuracyHorizon contract refinement)
+  check (verified_at_utc >= closed_at_utc),
 
   -- one FINAL verdict per window version: a reopened window that closes again gets a NEW record at its
   -- new version; re-running the verify stage over the same version is an idempotent no-op, never a dupe.

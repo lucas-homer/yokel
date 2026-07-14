@@ -8,7 +8,9 @@
  * window wrong (its observations are pre-close, so they never reach this function — the chain already
  * re-derived the window and the verdict attaches to the window VERSION live at close). A REOPENING is
  * NOT a contradiction: a previously-closed period re-opened after a gap is a FRESH reliance window —
- * the original close was right when published.
+ * the original close was right when published. That excuse is DIRECTION-SENSITIVE (adversary RB-1):
+ * a reopening only ever explains a LATER close; a close that retro-moved EARLIER is a miss no
+ * reopening story can launder.
  *
  * The contradiction rules, in order (each names its evidence — a miss must cite observation ids):
  *   1. `is_withdrawal` post-close → REVEALED WITHDRAWAL. We learn after close that the action was
@@ -88,10 +90,14 @@ export function computeVerdict(input: VerdictInput): Verdict {
     new Date(input.currentCloseUtc).getTime() >
       new Date(input.publishedCloseUtc).getTime();
   // A reopening (flag or already-flipped status) explains a post-close date movement WITHOUT making
-  // the original close wrong — a fresh reliance window after a gap, per the locked decision.
-  const reopened =
-    input.currentStatus === "reopened" ||
-    input.observationsSinceClose.some((o) => o.is_reopening);
+  // the original close wrong — a fresh reliance window after a gap, per the locked decision. But a
+  // reopening can only ever explain a LATER close (adversary RB-1): a close that retro-moved EARLIER
+  // means anyone relying on the published date had LESS time than we told them — no reopening story
+  // makes that claim right, so the suppression below is direction-sensitive.
+  const reopenedLater =
+    movedLater &&
+    (input.currentStatus === "reopened" ||
+      input.observationsSinceClose.some((o) => o.is_reopening));
 
   const contradicting = new Set<string>();
   for (const o of input.observationsSinceClose) {
@@ -106,12 +112,16 @@ export function computeVerdict(input: VerdictInput): Verdict {
       contradicting.add(o.observation_id);
   }
 
-  // Rule 4 — unexplained post-close close movement (no flagged notice, not a reopening): a changed
-  // source payload re-derived a different close. Attribute the full post-close set (see header).
+  // Rule 4 — unexplained post-close close movement (no flagged notice, not a later-close reopening):
+  // a changed source payload re-derived a different close. Attribute the full post-close set (see
+  // header). NOTE the `length > 0` gate: a close that drifts with a stamp-only confirmed check and
+  // ZERO post-close observations is judged correct — only reachable if the projection is re-derived
+  // without a new observation landing (a crash-window replay), where the movement has no post-close
+  // evidence to cite and convicting would fabricate an evidence-free miss the contract forbids.
   if (
     contradicting.size === 0 &&
     closeMoved &&
-    !reopened &&
+    !reopenedLater &&
     input.observationsSinceClose.length > 0
   ) {
     for (const o of input.observationsSinceClose)
