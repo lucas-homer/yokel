@@ -542,9 +542,10 @@ export type ConflictRecord = z.infer<typeof ConflictRecord>;
 
 // ───────────────────────────────────────────────────────────────────────────────────────────────
 // ACCURACY — the post-close verification verdict (verification slice V, PR-V1;
-// plans/verification-accuracy.md). The pipeline's stage 6 ("Verify + follow-up") re-polls a window's
-// sources after resolved_close_utc passes and writes ONE final AccuracyRecord per (ocd_id,
-// window_version). The track record it accumulates — "% of HIGH-confidence deadlines correct,
+// plans/verification-accuracy.md). The architecture's PIPELINE stage "6. Verify + follow-up"
+// (docs/architecture/docketclock.md numbering) — implemented as stage 4 of the POLL CYCLE
+// (apps/docketclock/src/poll/run.ts, after chainReconcileOnce) — re-polls a window's sources after
+// resolved_close_utc passes and writes ONE final AccuracyRecord per (ocd_id, window_version). The track record it accumulates — "% of HIGH-confidence deadlines correct,
 // trailing 90d" — is the product's claim about ITSELF, so it obeys the same "don't publish fake
 // certainty" invariant as the windows it grades: never correctness-by-default, abstentions are
 // explicit and excluded, and every miss names its evidence.
