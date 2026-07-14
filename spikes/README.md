@@ -45,6 +45,31 @@ All six code spikes are implemented. D4/D5 and W4–W6 are non-code action/inter
 
 Outputs go to `out/` (gitignored); pulled API data to `data/` (gitignored).
 
+## xcheck — the offline accuracy cross-check (verification slice V, PR-V2)
+
+Not a Week-1 spike: a RECURRING differential that reuses this package's DuckDB harness. It joins
+the [spicy-regs](https://github.com/civictechdc/spicy-regs) Parquet mirror of Regulations.gov
+(public R2 bucket, read in place over `httpfs` — nothing downloaded) against a read-only export of
+the live `participation_windows`, compares **Eastern-calendar-date** closes + the `withdrawn`
+signal, and writes [`out/XCHECK_diff.md`](out/XCHECK_diff.md) — the one `out/` artifact that is
+**checked in**, because its hand-filled `triage` column is the work product.
+
+```bash
+pnpm --filter @yokel/docketclock export:windows   # live export → data/windows.jsonl
+pnpm --filter @yokel/spikes xcheck                # differential → out/XCHECK_diff.md
+```
+
+Every disagreement gets a hand-filled triage value: `our_bug` (the live projection is wrong — a
+FIND: export it with `export:accuracy-miss` so it becomes a committed replay fixture),
+`bulk_stale` (the mirror lags live Regs.gov — the EXPECTED dominant bucket), or `source_drift`
+(the sources themselves changed). Re-runs carry filled triage forward for persisting
+disagreements, so re-running never clobbers finished work.
+
+**Cadence:** re-run on every fresh parquet snapshot, at least monthly while calibrating. A pass is
+NOT done until every disagreement carries a triage value — an unfilled column in the committed
+diff is the reminder. Architecture rule: the mirror is offline eval/seed only, **never** a live
+freshness source; this stays a batch differential, not a third adapter.
+
 ### Env / flags
 
 - `REGS_KEY` — **required for an authoritative D1 run.** Without it D1 falls back to `DEMO_KEY`
@@ -54,8 +79,12 @@ Outputs go to `out/` (gitignored); pulled API data to `data/` (gitignored).
   calls** (iterate on the report, or when an API budget is spent).
 - `HUC8=02060005` — which HUC-8 W3 measures (default Choptank). Add a keyword seed in `BASIN_SEED`
   for new basins, or pass `W3_KEYWORDS="term1,term2,..."` to extend the search/filter terms.
-- `SPICY_REGS_PARQUET` — (future) glob for the spicy-regs/Mirrulations Parquet so W3 can cross-check
-  the Regs.gov-rulemaking count via DuckDB httpfs.
+- `SPICY_REGS_PARQUET` — URL/glob for the spicy-regs Parquet `documents` table, read via DuckDB
+  httpfs. Default `https://r2.spicy-regs.dev/documents.parquet` (the civictechdc/spicy-regs public
+  R2 bucket; also `dockets.parquet` / `comments.parquet` there). Used by `pnpm xcheck`; point it at
+  a local snapshot to pin a pass to a fixed dataset.
+- `WINDOWS_JSONL` — xcheck's live-windows export path (default `data/windows.jsonl`, written by
+  `pnpm --filter @yokel/docketclock export:windows`).
 
 ### Verified API facts (cost us a debug cycle — don't relearn)
 
