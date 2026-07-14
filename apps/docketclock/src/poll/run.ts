@@ -5,9 +5,17 @@
  *
  *   1. pollFrOnce  — FR open-comment discovery (FIRST), then
  *   2. pollRegsOnce — Regs.gov differential + re-poll pass, then
- *   3. chainReconcileOnce — the cross_window (chain) reconcile sweep (#31),
+ *   3. chainReconcileOnce — the cross_window (chain) reconcile sweep (#31), then
+ *   4. verifyOnce — the post-close verification pass (slice V, PR-V1),
  *
- * logging ALL THREE summaries (labelled `fr:`, `regs:`, `chain:`).
+ * logging ALL FOUR summaries (labelled `fr:`, `regs:`, `chain:`, `verify:`).
+ *
+ * WHY VERIFY RUNS LAST (slice V): the verify pass reads the projections + observations the first
+ * three passes just wrote — it snapshots newly-closed windows and judges windows whose horizon the
+ * cycle's fresh checks may just have satisfied. Its watch rows feed BACK into pass 2's re-poll set
+ * (closed-in-horizon windows stay checked) starting the NEXT cycle — deferrable by design, budgeted
+ * like every other re-poll. Same single-writer discipline: it UPSERTs watch rows and INSERTs final
+ * accuracy_records, so it must never overlap another writer.
  *
  * WHY CHAIN RUNS LAST (a derive-over-derived pass): the chain pass reads the participation_windows +
  * federal_register observations the FR and Regs passes just wrote — it derives cross_window conflicts
@@ -56,10 +64,13 @@ const { chainReconcileOnce } = await import("../reconcile/persist.js");
 const { selectAdjudicator } = await import("../adjudicator/select.js");
 const { pollFrOnce } = await import("./fr-poll.js");
 const { pollRegsOnce } = await import("./poll.js");
+const { verifyOnce, highCorrectRatio90d } = await import("../verify/run.js");
 const {
   recordFrPoll,
   recordRegsPoll,
   recordChainCycle,
+  recordVerifyCycle,
+  setAccuracyHighRatio,
   recordPollPassFailure,
   observePollCycle,
   setHeartbeat,
@@ -143,6 +154,21 @@ async function main(): Promise<void> {
       } catch (err) {
         recordPollPassFailure("chain");
         log.error({ err }, "chain reconcile failed");
+      }
+      // 4th pass — post-close verification (slice V). Runs LAST (it reads what the first three just
+      // wrote; see header) and is INDEPENDENTLY try/caught like every pass: a verify failure must
+      // never affect discovery/reconcile (and vice-versa). The headline gauge is recomputed from SQL
+      // each cycle so a restart never leaves it stale-at-zero.
+      try {
+        const verify = await verifyOnce(sql);
+        log.info({ summary: verify }, "verify cycle");
+        recordVerifyCycle(verify);
+        const { ratio, sample } = await highCorrectRatio90d(sql);
+        setAccuracyHighRatio(ratio);
+        log.debug({ ratio, sample }, "accuracy high-ratio 90d rollup");
+      } catch (err) {
+        recordPollPassFailure("verify");
+        log.error({ err }, "verify pass failed");
       }
     } catch (err) {
       // Belt-and-braces: anything outside the two passes (should be nothing) must not kill the scheduler.

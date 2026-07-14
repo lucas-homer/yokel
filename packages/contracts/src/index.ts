@@ -3,7 +3,7 @@
  * (Watershed Watch). Verticals join on stable OCD-IDs, never internal UUIDs.
  *
  * ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
- * │ FROZEN @ 0.8.0 (2026-06-18)                                                                    │
+ * │ FROZEN @ 0.9.0 (2026-07-13)                                                                    │
  * │                                                                                               │
  * │ LOCKED (builders may propose changes; the contract-keeper adjudicates — nobody else edits):   │
  * │   • Confidence / ConflictFlag / WindowType / WindowStatus enums.                              │
@@ -13,7 +13,14 @@
  * │   • Observation (append-only log row) + ObservationTarget (M:N: one notice -> many windows).  │
  * │   • ParticipationWindow as a DERIVED, versioned projection over the Observation log, with      │
  * │       provenance summary + append-only change_history.                                         │
- * │   • ConflictRecord (published /conflicts proof feed) + AccuracyRecord (track-record metric).   │
+ * │   • ConflictRecord (published /conflicts proof feed).                                          │
+ * │   • AccuracyRecord (post-close track-record verdict; verification slice V) + AccuracyBasis /   │
+ * │       AccuracyVerdict / AccuracyHorizon: an append-only trust primitive (peer of the observation │
+ * │       log; migration 0010) judging the published close AS OF CLOSE TIME, pinned to window_version.│
+ * │       NEVER correctness-by-default — a verdict requires a confirmed post-close check, else basis  │
+ * │       'unverified_lapsed' with was_correct NULL (excluded from the headline gauge; feeds the      │
+ * │       starvation counter). A miss must NAME its contradicting observations ('manual' exempt).     │
+ * │       [2026-07-13]                                                                               │
  * │   • REST response envelope: DISCLAIMER + API_VERSION constants, EnvelopeMeta, Pagination, and  │
  * │       the apiItemEnvelope / apiListEnvelope factories (the single source for response shape so  │
  * │       the published OpenAPI and actual responses can never diverge).                            │
@@ -52,6 +59,36 @@
  * └─────────────────────────────────────────────────────────────────────────────────────────────┘
  *
  * REVISIONS
+ *   • 0.9.0 (2026-07-13) — AccuracyRecord reshaped from placeholder to the verification-slice shape
+ *       (plans/verification-accuracy.md, PR-V1). Reshaping a LOCKED-listed name inside a MINOR bump is
+ *       legitimate here and only here: the prior AccuracyRecord was an explicit PLACEHOLDER with ZERO
+ *       producers or consumers anywhere in apps/ or packages/ (verified; only stale dist/ artifacts
+ *       referenced it), and the package README listed it as "Still TODO … lands with the post-close
+ *       verification phase" — no wire data and no emit site exist to break. New shape: { ocd_id,
+ *       window_version, confidence_at_close, published_close_utc, published_close_display,
+ *       verdict: { was_correct, basis, contradicting_observation_ids }, horizon: { closed_at_utc,
+ *       verified_at_utc } }; three new exports: AccuracyBasis (post_close_repoll | late_amendment |
+ *       manual | unverified_lapsed), AccuracyVerdict, AccuracyHorizon. Invariants encoded as
+ *       refinements: (1) NEVER correctness-by-default — basis 'unverified_lapsed' ⇔ was_correct null
+ *       (the system ABSTAINS when no confirmed post-close check landed inside the hard 14-day cap;
+ *       lapsed records are EXCLUDED from the headline gauge and feed the starvation counter); every
+ *       other basis rests on a confirmed check and must commit to a real boolean. (2) A MISS must NAME
+ *       its evidence — was_correct false with basis post_close_repoll | late_amendment requires
+ *       non-empty contradicting_observation_ids (every miss becomes a committed, replayable regression
+ *       fixture); basis 'manual' is EXEMPT (operator adjudication may rest on off-log evidence).
+ *       (3) was_correct true AND lapsed records require EMPTY contradicting_observation_ids (a
+ *       contradiction in hand IS a false verdict — not a "correct", not an abstention). (4)
+ *       confidence_at_close forbids 'unknown' (an UNKNOWN window force-nulls its close per the
+ *       ParticipationWindow refinement, so it can never have PUBLISHED the close this record judges);
+ *       published_close_utc is NON-nullable — verification judges a PUBLISHED claim; windows that
+ *       honestly abstained (null close) are out of scope. (5) horizon.verified_at_utc >=
+ *       horizon.closed_at_utc, compared via Date.parse — NOT lexicographically, since .datetime()
+ *       admits variable fractional-second precision which a string compare misorders. The verdict
+ *       judges the claim AS OF CLOSE TIME, pinned to window_version: a pre-close linked extension does
+ *       NOT make the superseded version wrong (the chain already re-derived it). The DB row is
+ *       append-only (migration 0010, same trigger discipline as observations — the track record is a
+ *       trust primitive). NO other schema, enum, or field changed; the reshape touches only the
+ *       never-consumed placeholder.
  *   • 0.8.0 (2026-06-18) — One additive ConflictFlag value: "llm_corroborated" (RuleBox/classifier
  *       Slice 3b). Slice 3b wires the LLM adjudicator into the cross-window (chain) reconcile engine:
  *       the deterministic engine CONSERVATIVELY under-links a pair that shares a docket, has valid
@@ -503,18 +540,187 @@ export const ConflictRecord = z
   });
 export type ConflictRecord = z.infer<typeof ConflictRecord>;
 
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// ACCURACY — the post-close verification verdict (verification slice V, PR-V1;
+// plans/verification-accuracy.md). The pipeline's stage 6 ("Verify + follow-up") re-polls a window's
+// sources after resolved_close_utc passes and writes ONE final AccuracyRecord per (ocd_id,
+// window_version). The track record it accumulates — "% of HIGH-confidence deadlines correct,
+// trailing 90d" — is the product's claim about ITSELF, so it obeys the same "don't publish fake
+// certainty" invariant as the windows it grades: never correctness-by-default, abstentions are
+// explicit and excluded, and every miss names its evidence.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
 /**
- * AccuracyRecord — the post-close track-record metric (% of HIGH-confidence deadlines correct,
- * trailing 90d). Written by the verification worker after resolved_close_utc passes; every
- * was_correct=false becomes a labeled regression test.
+ * AccuracyBasis — HOW a final accuracy verdict was reached. Categorical, never a score — the basis is
+ * the honesty axis of the track record, distinguishing an evidenced verdict from an abstention.
+ *
+ *   • "post_close_repoll"  — ≥1 successful post-close re-poll of the window's sources landed and the
+ *     verdict rests on what it showed (the normal verification path).
+ *   • "late_amendment"     — a post-close observation (late correction / revealed withdrawal /
+ *     reopening) arrived through ordinary ingest and settled the verdict by itself.
+ *   • "manual"             — an operator adjudicated the verdict. May rest on OFF-LOG evidence (an
+ *     agency call, a docket page the ingesters don't cover), which is why 'manual' is the one basis
+ *     exempt from the miss-must-name-evidence refinement on AccuracyVerdict.
+ *   • "unverified_lapsed"  — NO confirmed post-close check landed before the hard 14-day cap (the
+ *     re-poll is budgeted + deferrable; under pressure every check for this window was deferred).
+ *     The system ABSTAINS: was_correct is null (never a guess), the record is EXCLUDED from the
+ *     headline gauge, and it feeds the starvation counter (docketclock_accuracy_unverified_total)
+ *     so re-poll starvation is VISIBLE instead of being silently blended into "correct".
+ */
+export const AccuracyBasis = z.enum([
+  "post_close_repoll",
+  "late_amendment",
+  "manual",
+  "unverified_lapsed",
+]);
+export type AccuracyBasis = z.infer<typeof AccuracyBasis>;
+
+/**
+ * AccuracyVerdict — the judgment itself. The core rule is NEVER correctness-by-default: because the
+ * post-close re-poll is budgeted + deferrable, a window can exit its horizon with ZERO checks
+ * actually executed, and writing was_correct=true on the mere ABSENCE of a contradicting observation
+ * would quietly inflate the headline number. A verdict must rest on a confirmed check (the basis);
+ * when none landed, the record ABSTAINS (basis 'unverified_lapsed', was_correct null) rather than
+ * guessing in either direction.
+ *
+ * was_correct judges the published claim AS OF CLOSE TIME: correct ⇔ no post-close observation
+ * contradicts the close that was published (no late correction moving the date, no revealed
+ * withdrawal, no reopening showing the close was wrong when published). A pre-close linked extension
+ * does NOT make the superseded window wrong — the chain already re-derived it; the verdict attaches
+ * to the window VERSION live at close (AccuracyRecord.window_version).
+ *
+ * Refinements (illegal states unrepresentable):
+ *   (1) basis 'unverified_lapsed' ⇔ was_correct === null. A lapsed record must not claim a boolean
+ *       (fake certainty in either direction); every OTHER basis rests on a confirmed check and must
+ *       commit to a real boolean (a null verdict on an evidenced basis is an unfinished row, not an
+ *       honest abstention).
+ *   (2) a MISS must NAME its evidence: was_correct === false with basis 'post_close_repoll' or
+ *       'late_amendment' requires non-empty contradicting_observation_ids — every miss becomes a
+ *       committed regression fixture (eval/accuracy-misses/), and an evidence-free miss cannot be
+ *       replayed. 'manual' is exempt (off-log operator evidence; see AccuracyBasis).
+ *   (3) was_correct === true requires EMPTY contradicting_observation_ids: correct MEANS no
+ *       post-close observation contradicts the close, so a "correct" verdict naming contradictions
+ *       is lying in one direction or the other.
+ *   (4) 'unverified_lapsed' requires EMPTY contradicting_observation_ids: a contradiction in hand IS
+ *       a verdict (a late_amendment miss), not an abstention — an abstaining record that names
+ *       contradicting evidence is incoherent.
+ */
+export const AccuracyVerdict = z
+  .object({
+    was_correct: z.boolean().nullable(), // null ⇔ basis 'unverified_lapsed' (the explicit abstention)
+    basis: AccuracyBasis,
+    contradicting_observation_ids: z.array(z.string()).default([]), // log-row ids proving a miss
+  })
+  .superRefine((v, ctx) => {
+    // (1) lapsed ⇔ null — both directions.
+    if (v.basis === "unverified_lapsed" && v.was_correct !== null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["was_correct"],
+        message:
+          "basis 'unverified_lapsed' means NO confirmed post-close check landed — was_correct MUST be null (the system abstains; a boolean here is fake certainty).",
+      });
+    }
+    if (v.basis !== "unverified_lapsed" && v.was_correct === null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["was_correct"],
+        message:
+          "a verdict with an evidenced basis (post_close_repoll / late_amendment / manual) rests on a confirmed check and MUST commit to a boolean; only 'unverified_lapsed' abstains with null.",
+      });
+    }
+
+    // (2) a miss must name its evidence (manual exempt — operator adjudication may rest on off-log
+    // evidence, so requiring a log-row id there would force fabricating a reference).
+    if (
+      v.was_correct === false &&
+      (v.basis === "post_close_repoll" || v.basis === "late_amendment") &&
+      v.contradicting_observation_ids.length === 0
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["contradicting_observation_ids"],
+        message:
+          "a miss (was_correct false) with basis 'post_close_repoll' or 'late_amendment' must name ≥1 contradicting observation id — every miss becomes a replayable regression fixture; an evidence-free miss cannot be replayed ('manual' is the only exempt basis).",
+      });
+    }
+
+    // (3) + (4) only a FALSE verdict may carry contradictions: 'correct' means none exist, and a
+    // lapsed record never reached a verdict (a contradiction in hand would BE a late_amendment miss).
+    if (v.was_correct !== false && v.contradicting_observation_ids.length > 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["contradicting_observation_ids"],
+        message:
+          v.was_correct === true
+            ? "was_correct true MEANS no post-close observation contradicts the published close — contradicting_observation_ids must be empty."
+            : "an abstaining (unverified_lapsed) record cannot name contradicting observations — a contradiction in hand is a late_amendment MISS, not a lapse.",
+      });
+    }
+  });
+export type AccuracyVerdict = z.infer<typeof AccuracyVerdict>;
+
+/**
+ * AccuracyHorizon — the two instants bounding one window's verification.
+ *   • closed_at_utc   — the close instant the verification horizon anchored on (normally equal to
+ *     published_close_utc; kept as its own field because the horizon is the OPERATIONAL anchor the
+ *     verifier actually waited from, while published_close_utc is the CLAIM under judgment).
+ *   • verified_at_utc — when the FINAL verdict row was written (after the ≥7-day horizon, extended
+ *     until a confirmed check landed, hard-capped at 14 days on the lapse path).
+ *
+ * Refinement: verified_at_utc >= closed_at_utc — verification is post-close by definition (the claim
+ * being judged is about the close). Compared via Date.parse, NOT lexicographically: .datetime()
+ * admits variable fractional-second precision ("…T00:00:00Z" vs "…T00:00:00.500Z") and a plain
+ * string compare misorders those; Date.parse over Zod-validated UTC datetimes is total and exact.
+ */
+export const AccuracyHorizon = z
+  .object({
+    closed_at_utc: z.string().datetime(),
+    verified_at_utc: z.string().datetime(),
+  })
+  .refine((h) => Date.parse(h.verified_at_utc) >= Date.parse(h.closed_at_utc), {
+    message:
+      "verified_at_utc must be >= closed_at_utc — verification is post-close by definition (the verdict judges a claim about the close).",
+    path: ["verified_at_utc"],
+  });
+export type AccuracyHorizon = z.infer<typeof AccuracyHorizon>;
+
+/**
+ * AccuracyRecord — one FINAL post-close verdict on one published window version: "was the close we
+ * published correct, and how do we know?" Written by the verification pass (poll-cycle stage 4) once
+ * per (ocd_id, window_version) after the post-close horizon resolves.
+ *
+ * A TRUST PRIMITIVE, peer of the observation log: the DB table (migration 0010) is append-only under
+ * the same trigger discipline — the track record must be as tamper-evident as the observations it
+ * grades, because it IS the product's claim about itself.
+ *
+ * The headline gauge is: share of confidence_at_close === 'high' records with was_correct === true,
+ * trailing 90d, EXCLUDING basis 'unverified_lapsed' (abstentions are surfaced by the starvation
+ * counter, never blended into the ratio in either direction).
+ *
+ * Scope: verification judges a PUBLISHED close, so published_close_utc is NON-nullable — the verify
+ * stage only selects windows that ASSERTED a close. Windows that honestly abstained (a null close)
+ * are out of scope for a date verdict: there is no claim to grade. Correspondingly,
+ * confidence_at_close forbids 'unknown' (an UNKNOWN window force-nulls its close per the
+ * ParticipationWindow refinement, so it can never have published the close this record judges);
+ * 'conflicting' IS allowed — such a window may surface a disputed-but-operative close, and that
+ * published value is gradable.
+ *
+ * window_version pins the AS-OF-CLOSE rule structurally: the verdict judges the projection version
+ * that was live at close, so a pre-close linked extension (which minted a later version) never marks
+ * the superseded version wrong.
  */
 export const AccuracyRecord = z.object({
   ocd_id: OcdId,
-  published_close: z.string().datetime().nullable(), // what we published (may be null if we abstained)
-  actual_close: z.string().datetime().nullable(), // observed truth after follow-up
-  published_confidence: Confidence,
-  was_correct: z.boolean(),
-  evaluated_at: z.string().datetime(),
+  window_version: z.number().int().nonnegative(), // the projection version LIVE AT CLOSE — what the verdict judges
+  confidence_at_close: Confidence.refine((c) => c !== "unknown", {
+    message:
+      "confidence_at_close 'unknown' is unrepresentable: an UNKNOWN window force-nulls resolved_close_utc (ParticipationWindow refinement), so it can never have PUBLISHED the close this record judges.",
+  }),
+  published_close_utc: z.string().datetime(), // the CLAIM under judgment — non-null by scope (abstaining windows are never selected)
+  published_close_display: z.string().nullable(), // verbatim legal language as published; may be absent
+  verdict: AccuracyVerdict,
+  horizon: AccuracyHorizon,
 });
 export type AccuracyRecord = z.infer<typeof AccuracyRecord>;
 

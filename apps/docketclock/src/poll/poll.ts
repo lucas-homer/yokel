@@ -191,7 +191,11 @@ function resolveDeps(deps?: Partial<PollDeps>): PollDeps {
   };
 }
 
-/** A window we've seen OPEN whose Regs detail is stale enough to re-poll for a withdrawal transition. */
+/**
+ * A window whose Regs detail is stale enough to re-poll — seen-OPEN (the #18 withdrawal-transition
+ * sweep) or CLOSED-IN-VERIFICATION-HORIZON (slice V: a closed window with an unresolved
+ * verification_watch row stays in this set so a confirmed post-close check can land).
+ */
 interface StaleOpenWindow {
   ocd_id: string;
   regs_document_id: string;
@@ -491,9 +495,11 @@ export async function pollRegsOnce(
 }
 
 /**
- * The seen-OPEN windows to re-poll: status='open', a non-null regs_document_id, NOT observed in this
- * cycle's differential list, AND whose per-document re-poll throttle (regs_poll_watch.last_checked_at) is
- * older than `staleBefore`.
+ * The windows to re-poll: a non-null regs_document_id, NOT observed in this cycle's differential
+ * list, whose per-document re-poll throttle (regs_poll_watch.last_checked_at) is older than
+ * `staleBefore`, and EITHER seen-OPEN (status='open' — the #18 withdrawal-transition sweep) OR
+ * closed-in-verification-horizon (slice V — an unresolved verification_watch row; see the widening
+ * note inside).
  *
  * THROTTLE SOURCE (adversary fixes #5 + #2): staleness is read from the MUTABLE regs_poll_watch stamp, NOT
  * from max(observations.fetched_at). The observation log dedupe-skips an unchanged re-poll, so its
@@ -525,12 +531,33 @@ async function selectStaleOpenWindows(
   // a stable tiebreak, so the caller's per-cycle budget slice drains the oldest windows first and covers the
   // whole backlog over cycles with no starvation — a deferred window stays maximally stale and is drained on
   // a subsequent cycle.
+  // SLICE-V WIDENING (post-close verification, PR-V1): a CLOSED window inside its verification
+  // horizon must keep getting post-close source checks — that's what a verdict rests on (never
+  // correctness-by-default). "Inside the horizon" is expressed as "has an UNRESOLVED
+  // verification_watch row" (snapshotted by verifyOnce, resolved the moment its final
+  // accuracy_record lands — which drops the window back OUT of this set with zero extra
+  // bookkeeping; a lapse record does the same, so nothing lingers past the 14d cap). Closed-window
+  // checks share the ONE budget and the SAME stalest-first ordering: a just-closed window carries a
+  // fresh stamp so it naturally sorts behind stale open windows — deferrable by construction, and a
+  // deferred check stays maximally stale, so it drains without starving (or being starved by)
+  // discovery re-polls.
   const rows = await sql<StaleOpenWindow[]>`
     select w.ocd_id, w.regs_document_id
     from participation_windows w
     left join regs_poll_watch pw on pw.regs_document_id = w.regs_document_id
-    where w.status = 'open'
-      and w.regs_document_id is not null
+    where w.regs_document_id is not null
+      and (
+        w.status = 'open'
+        or exists (
+          select 1
+          from verification_watch vw
+          where vw.ocd_id = w.ocd_id
+            and not exists (
+              select 1 from accuracy_records ar
+              where ar.ocd_id = vw.ocd_id and ar.window_version = vw.window_version
+            )
+        )
+      )
       and coalesce(pw.last_checked_at, 'epoch') < ${staleBefore.toISOString()}
     order by coalesce(pw.last_checked_at, 'epoch') asc, w.regs_document_id asc
   `;
