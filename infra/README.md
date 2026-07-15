@@ -101,11 +101,13 @@ To change the password later without a full reseed:
 ```bash
 # VAULT_ADDR + VAULT_TOKEN are required inside the pod — Vault listens on http (not the CLI's https
 # default) and the put needs the root token (stashed by vault-seed in the vault/vault-root-token Secret).
+# The token rides stdin, NOT the command string (#75): an exec's command lands in apiserver audit logs.
 ROOT_TOKEN=$(kubectl -n vault get secret vault-root-token -o jsonpath='{.data.token}' | base64 -d)
-kubectl -n vault exec -it vault-0 -- sh -c "
-  export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+kubectl -n vault exec -i vault-0 -- sh -c "
+  export VAULT_ADDR=http://127.0.0.1:8200
+  IFS= read -r VAULT_TOKEN; export VAULT_TOKEN
   vault kv put secret/observability/grafana admin_user=admin admin_password='<choose-a-strong-password>'
-"
+" <<<"$ROOT_TOKEN"
 ```
 
 If the path is missing entirely the Grafana sync stays unhealthy until it's seeded (ESO is

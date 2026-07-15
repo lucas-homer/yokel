@@ -50,20 +50,28 @@ else
     'export VAULT_ADDR=http://127.0.0.1:8200; vault operator init -recovery-shares=1 -recovery-threshold=1 -format=json')
   ROOT_TOKEN=$(printf '%s' "$INIT_JSON" | python3 -c 'import sys,json; print(json.load(sys.stdin)["root_token"])')
   # Stash root token + full init output (recovery keys) — dev recovery aid; never do this in prod.
+  # `--from-file=<(...)`: process substitution puts a /dev/fd path on kubectl's argv, not the values
+  # themselves (#75 hygiene — `--from-literal` exposes them to host `ps` while kubectl runs).
   kubectl -n vault create secret generic vault-root-token \
-    --from-literal=token="$ROOT_TOKEN" \
-    --from-literal=init.json="$INIT_JSON" \
+    --from-file=token=<(printf '%s' "$ROOT_TOKEN") \
+    --from-file=init.json=<(printf '%s' "$INIT_JSON") \
     --dry-run=client -o yaml | kubectl apply -f -
 fi
 
 echo "⏳ waiting for Vault to finish auto-unsealing..."
 kubectl -n vault wait --for=condition=Ready pod/vault-0 --timeout=180s
 
+# TOKEN HYGIENE (#75, from the #86 review): every pod-side vault call below receives the root token
+# on STDIN line 1 (`IFS= read -r VAULT_TOKEN`), never interpolated into the `sh -c` command string —
+# an exec's command is recorded verbatim in apiserver audit logs and visible to in-container `ps`.
+# The exec strings stay DOUBLE-quoted so host-side ${VAR:-default} value expansion (see the
+# SHELL-QUOTING CONSTRAINT below) keeps working; only the token moves off argv.
 echo "🗄  ensuring kv-v2 engine at secret/ (dev mode auto-mounts this; HA-raft does not)..."
-kubectl -n vault exec vault-0 -- sh -c "
-  export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+kubectl -n vault exec -i vault-0 -- sh -c "
+  export VAULT_ADDR=http://127.0.0.1:8200
+  IFS= read -r VAULT_TOKEN; export VAULT_TOKEN
   vault secrets enable -version=2 -path=secret kv 2>/dev/null || true   # no-op if already mounted
-"
+" <<<"$ROOT_TOKEN"
 
 echo "🌱 seeding secret/docketclock/external (regs_api_key, docketclock_api_keys, gemini_api_key, webhook_hmac_secret)..."
 # These four keys MUST match charts/.../values.yaml externalSecret.keys — ESO is all-or-nothing, so a
@@ -76,14 +84,15 @@ echo "🌱 seeding secret/docketclock/external (regs_api_key, docketclock_api_ke
 # SHELL-QUOTING CONSTRAINT: the host string below is DOUBLE-quoted, so ${VAR:-default} expands on the
 # HOST before kubectl ships it; the single-quotes then wrap each value for the pod's `sh`. Correct ONLY
 # if values contain no single-quote (') char — fine for API keys / dev placeholders.
-kubectl -n vault exec vault-0 -- sh -c "
-  export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+kubectl -n vault exec -i vault-0 -- sh -c "
+  export VAULT_ADDR=http://127.0.0.1:8200
+  IFS= read -r VAULT_TOKEN; export VAULT_TOKEN
   vault kv put secret/docketclock/external \
     regs_api_key='${REGS_API_KEY}' \
     docketclock_api_keys='${DOCKETCLOCK_API_KEYS:-dev-docketclock-key}' \
     gemini_api_key='${GEMINI_API_KEY:-}' \
     webhook_hmac_secret='${WEBHOOK_HMAC_SECRET:-dev-hmac-secret}'
-"
+" <<<"$ROOT_TOKEN"
 
 echo "🌱 seeding secret/observability/grafana (admin_user, admin_password) for the Grafana ESO secret..."
 # Grafana's grafana-admin ExternalSecret (infra/argocd/apps/platform-grafana.yaml) reads these two keys;
@@ -92,12 +101,13 @@ echo "🌱 seeding secret/observability/grafana (admin_user, admin_password) for
 # manual step. Local-dev default is admin/admin (Grafana forces a password change on first login);
 # override via GRAFANA_ADMIN_USER / GRAFANA_ADMIN_PASSWORD. Same host-side ${VAR:-default} expansion +
 # single-quote wrapping as the docketclock block above.
-kubectl -n vault exec vault-0 -- sh -c "
-  export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+kubectl -n vault exec -i vault-0 -- sh -c "
+  export VAULT_ADDR=http://127.0.0.1:8200
+  IFS= read -r VAULT_TOKEN; export VAULT_TOKEN
   vault kv put secret/observability/grafana \
     admin_user='${GRAFANA_ADMIN_USER:-admin}' \
     admin_password='${GRAFANA_ADMIN_PASSWORD:-admin}'
-"
+" <<<"$ROOT_TOKEN"
 
 echo "🌱 seeding secret/langfuse/config (Langfuse v2 server crypto + headless-init keypair)..."
 # Langfuse's langfuse-secrets ExternalSecret (infra/argocd/manifests/langfuse/externalsecret.yaml) reads
@@ -106,8 +116,9 @@ echo "🌱 seeding secret/langfuse/config (Langfuse v2 server crypto + headless-
 # decrypt previously-stored data. encryption_key MUST be exactly 64 hex chars (ENCRYPTION_KEY contract).
 # The init_project_*_key pair is pinned here so the SAME keypair flows to BOTH Langfuse (LANGFUSE_INIT_*)
 # and the poller (PR-C2) with no manual UI step. Override any of them via the LANGFUSE_* host env.
-kubectl -n vault exec vault-0 -- sh -c "
-  export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+kubectl -n vault exec -i vault-0 -- sh -c "
+  export VAULT_ADDR=http://127.0.0.1:8200
+  IFS= read -r VAULT_TOKEN; export VAULT_TOKEN
   vault kv put secret/langfuse/config \
     nextauth_secret='${LANGFUSE_NEXTAUTH_SECRET:-dev-langfuse-nextauth-secret}' \
     salt='${LANGFUSE_SALT:-dev-langfuse-salt}' \
@@ -115,7 +126,7 @@ kubectl -n vault exec vault-0 -- sh -c "
     init_project_public_key='${LANGFUSE_PUBLIC_KEY:-pk-lf-dev-docketclock}' \
     init_project_secret_key='${LANGFUSE_SECRET_KEY:-sk-lf-dev-docketclock}' \
     init_user_password='${LANGFUSE_USER_PASSWORD:-docketclock-dev}'
-"
+" <<<"$ROOT_TOKEN"
 
 echo "🌱 seeding secret/backups/minio + secret/backups/r2 (backup seams — backups PR-1)..."
 # UNLIKE the fixed-default blocks above, these two are seeded ONCE and then left alone on re-runs:
@@ -125,34 +136,43 @@ echo "🌱 seeding secret/backups/minio + secret/backups/r2 (backup seams — ba
 #  - backups/r2: placeholders now; the REAL Cloudflare R2 token is patched in at PR-3 via the
 #    seed-docketclock-secrets.sh pattern — an unguarded re-seed would clobber the patched values.
 kv_missing() { # true iff the kv path has no live version yet (so we only ever seed it once)
-  ! kubectl -n vault exec vault-0 -- sh -c \
-    "export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN; vault kv get $1" >/dev/null 2>&1
+  ! kubectl -n vault exec -i vault-0 -- sh -c \
+    "export VAULT_ADDR=http://127.0.0.1:8200; IFS= read -r VAULT_TOKEN; export VAULT_TOKEN; vault kv get $1" \
+    <<<"$ROOT_TOKEN" >/dev/null 2>&1
 }
 if kv_missing secret/backups/minio; then
-  # The password flows STDIN-ONLY (vault's `key=-` reads the value from stdin) — never argv, never
-  # shell-parsed in the pod, so a user-supplied MINIO_ROOT_PASSWORD with quotes/metachars can't break
-  # quoting or inject (the seed-docketclock-secrets.sh pattern). root_user keeps the script's documented
-  # single-quote constraint — it's a fixed dev default, not arbitrary secret material.
+  # The password flows STDIN-ONLY — never argv, never shell-parsed in the pod, so a user-supplied
+  # MINIO_ROOT_PASSWORD with quotes/metachars can't break quoting or inject (the
+  # seed-docketclock-secrets.sh pattern): stdin line 1 is the token, line 2 the password (read strips
+  # the newline; printf re-emits the exact value into `root_password=-`). root_user keeps the script's
+  # documented single-quote constraint — it's a fixed dev default, not arbitrary secret material.
   MINIO_PW="${MINIO_ROOT_PASSWORD:-$(openssl rand -hex 24)}"
-  printf '%s' "$MINIO_PW" | kubectl -n vault exec -i vault-0 -- sh -c "
-    export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
-    vault kv put secret/backups/minio \
+  kubectl -n vault exec -i vault-0 -- sh -c "
+    export VAULT_ADDR=http://127.0.0.1:8200
+    IFS= read -r VAULT_TOKEN; export VAULT_TOKEN
+    IFS= read -r MINIO_PW
+    printf '%s' \"\$MINIO_PW\" | vault kv put secret/backups/minio \
       root_user='${MINIO_ROOT_USER:-minio-root}' \
       root_password=-
-  " >/dev/null # suppress vault's echo of written metadata (never print secret material)
+  " >/dev/null <<EOF
+$ROOT_TOKEN
+$MINIO_PW
+EOF
+  # (>/dev/null: suppress vault's echo of written metadata — never print secret material)
   unset MINIO_PW
   echo "  ↳ seeded secret/backups/minio (generated root credentials)."
 else
   echo "  ↳ secret/backups/minio already seeded — leaving as-is (no rotation on re-run)."
 fi
 if kv_missing secret/backups/r2; then
-  kubectl -n vault exec vault-0 -- sh -c "
-    export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+  kubectl -n vault exec -i vault-0 -- sh -c "
+    export VAULT_ADDR=http://127.0.0.1:8200
+    IFS= read -r VAULT_TOKEN; export VAULT_TOKEN
     vault kv put secret/backups/r2 \
       access_key_id='placeholder' \
       secret_access_key='placeholder' \
       endpoint='https://PLACEHOLDER-ACCOUNT-ID.r2.cloudflarestorage.com'
-  " >/dev/null
+  " <<<"$ROOT_TOKEN" >/dev/null
   echo "  ↳ seeded secret/backups/r2 (placeholders — patch real values at PR-3)."
 else
   echo "  ↳ secret/backups/r2 already seeded — leaving as-is (patched values preserved)."
@@ -166,12 +186,13 @@ echo "🌱 seeding secret/observability/alerting (alert receiver seams — Slice
 #  - healthchecks_ping_url placeholder contains "PLACEHOLDER" — the deadman CronJob greps for it
 #    and exits 0 (no failing-Job noise before the healthchecks.io check exists).
 if kv_missing secret/observability/alerting; then
-  kubectl -n vault exec vault-0 -- sh -c "
-    export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN
+  kubectl -n vault exec -i vault-0 -- sh -c "
+    export VAULT_ADDR=http://127.0.0.1:8200
+    IFS= read -r VAULT_TOKEN; export VAULT_TOKEN
     vault kv put secret/observability/alerting \
       ntfy_url='http://127.0.0.1:9999/alerts' \
       healthchecks_ping_url='PLACEHOLDER-run-seed-alerting-secrets'
-  " >/dev/null
+  " <<<"$ROOT_TOKEN" >/dev/null
   echo "  ↳ seeded secret/observability/alerting (placeholders — patch via seed-alerting-secrets.sh)."
 else
   echo "  ↳ secret/observability/alerting already seeded — leaving as-is (patched values preserved)."
@@ -203,7 +224,7 @@ kubectl -n vault exec -i vault-0 -- sh -c '
 echo "🔑 wiring ESO → Vault token auth (external-secrets/vault-token)..."
 kubectl create namespace external-secrets --dry-run=client -o yaml | kubectl apply -f -
 kubectl -n external-secrets create secret generic vault-token \
-  --from-literal=token="$ROOT_TOKEN" \
+  --from-file=token=<(printf '%s' "$ROOT_TOKEN") \
   --dry-run=client -o yaml | kubectl apply -f -
 
 echo "✅ vault-seed complete."
