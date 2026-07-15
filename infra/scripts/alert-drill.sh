@@ -51,7 +51,11 @@ REPO_ROOT=$(cd "$HERE/../.." && pwd)
 
 # ── ingest-mode preflight: the RESTORE path must exist before we break anything ─────────────────
 if [ "$MODE" = "ingest" ]; then
-  REAL_KEY=$(grep '^REGS_API_KEY=' "$REPO_ROOT/.env" 2>/dev/null | head -1 | cut -d= -f2- | tr -d '\r\n')
+  # `|| true`: under set -e a failing grep pipeline in a STANDALONE assignment kills the script
+  # before the friendly ABORT below ever prints (review catch on #94) — let the -z check do the
+  # failing. (The prefix-assignment form in restore_outage is NOT affected: substitution failure
+  # there doesn't trigger -e, and the seed script's own preflight + `||` guard degrade it to a WARN.)
+  REAL_KEY=$(grep '^REGS_API_KEY=' "$REPO_ROOT/.env" 2>/dev/null | head -1 | cut -d= -f2- | tr -d '\r\n' || true)
   if [ -z "$REAL_KEY" ]; then
     echo "ABORT: REGS_API_KEY not found in $REPO_ROOT/.env — the drill breaks the in-cluster key and"
     echo "restores it from there. Refusing to stage a fault with no rollback."

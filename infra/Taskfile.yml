@@ -229,7 +229,8 @@ tasks:
       # script directly with REGS_API_KEY set.
       - |
         set -euo pipefail
-        REGS_API_KEY=$(grep '^REGS_API_KEY=' .env | cut -d= -f2- | tr -d '\r\n')
+        # `|| true`: a failing grep would kill the shell before the friendly error prints (#94 review).
+        REGS_API_KEY=$(grep '^REGS_API_KEY=' .env 2>/dev/null | cut -d= -f2- | tr -d '\r\n' || true)
         [ -n "$REGS_API_KEY" ] || { echo "✗ REGS_API_KEY not set in .env (repo root)" >&2; exit 1; }
         export REGS_API_KEY
         bash infra/scripts/seed-docketclock-secrets.sh
