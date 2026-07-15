@@ -293,6 +293,21 @@ function agg(
 
 // 7. verify-cycle recorders (stage 4, slice V).
 {
+  // Registration state, BEFORE any rollup runs: both accuracy gauges must read NaN, not prom-client's
+  // default 0 — a process that never computes the rollup (the api) must not export "0% on 0 sample" (#90).
+  const s0 = await snap();
+  const ratioAtBoot = val(s0, "docketclock_accuracy_high_correct_ratio_90d");
+  const sampleAtBoot = val(s0, "docketclock_accuracy_high_sample_90d");
+  assert(
+    "accuracy ratio gauge is NaN at registration (never a fake 0%)",
+    typeof ratioAtBoot === "number" && Number.isNaN(ratioAtBoot),
+    String(ratioAtBoot),
+  );
+  assert(
+    "accuracy sample gauge is NaN at registration (never a fake 0 sample)",
+    typeof sampleAtBoot === "number" && Number.isNaN(sampleAtBoot),
+    String(sampleAtBoot),
+  );
   recordVerifyCycle({
     snapshotted: 3,
     inHorizon: 5,
@@ -301,7 +316,7 @@ function agg(
     verdictsIncorrect: 1,
     lapsed: 1,
   });
-  setAccuracyHighRatio(0.95);
+  setAccuracyHighRatio(0.95, 20);
   const s = await snap();
   assert(
     "recordVerifyCycle: checks_total{verdict} = correct + incorrect = 5",
@@ -328,13 +343,21 @@ function agg(
     "setAccuracyHighRatio sets the headline gauge",
     val(s, "docketclock_accuracy_high_correct_ratio_90d") === 0.95,
   );
-  setAccuracyHighRatio(null);
+  assert(
+    "setAccuracyHighRatio publishes the sample denominator (min-sample guard, #90)",
+    val(s, "docketclock_accuracy_high_sample_90d") === 20,
+  );
+  setAccuracyHighRatio(null, 0);
   const s2 = await snap();
   const nanVal = val(s2, "docketclock_accuracy_high_correct_ratio_90d");
   assert(
     "setAccuracyHighRatio(null) exports NaN — an absent baseline never reads as 0% or 100%",
     typeof nanVal === "number" && Number.isNaN(nanVal),
     String(nanVal),
+  );
+  assert(
+    "a COMPUTED sample of 0 is published as a real 0, not NaN",
+    val(s2, "docketclock_accuracy_high_sample_90d") === 0,
   );
 }
 
