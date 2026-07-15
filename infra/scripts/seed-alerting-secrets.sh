@@ -19,13 +19,16 @@ set -euo pipefail
 # argv on the pod side, never echoed (the generated topic is deliberately printed ONCE, see above).
 
 ROOT_TOKEN=$(kubectl -n vault get secret vault-root-token -o jsonpath='{.data.token}' | base64 -d)
-vault_exec() {
-  kubectl -n vault exec -i vault-0 -- sh -c \
-    "export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN; $1"
+vault_exec() { # $1: pod-side command. The root token rides stdin LINE 1 (never argv — #75: exec
+  # command strings land in apiserver audit logs and in-container `ps`); any `kv put -` payload
+  # follows on the function's own stdin. Call sites with NO payload MUST redirect `</dev/null`
+  # so `cat` sees EOF instead of waiting on the terminal.
+  { printf '%s\n' "$ROOT_TOKEN"; cat; } | kubectl -n vault exec -i vault-0 -- sh -c \
+    "export VAULT_ADDR=http://127.0.0.1:8200; IFS= read -r VAULT_TOKEN; export VAULT_TOKEN; $1"
 }
 
 echo "⏳ reading current secret/observability/alerting (preserve-unless-overridden)..."
-EXISTING_JSON=$(vault_exec "vault kv get -format=json secret/observability/alerting" 2>/dev/null || echo '{}')
+EXISTING_JSON=$(vault_exec "vault kv get -format=json secret/observability/alerting" </dev/null 2>/dev/null || echo '{}')
 
 # Remember the pre-write Secret value so we can wait for ESO to propagate the change below.
 PRE=$(kubectl -n observability get secret grafana-alerting -o jsonpath='{.data.ALERTING_NTFY_URL}' 2>/dev/null || true)

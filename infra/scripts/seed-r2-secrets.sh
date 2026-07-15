@@ -5,7 +5,9 @@ set -euo pipefail
 # in envs/backups. Idempotent; safe to re-run after a token rotation (taint + re-apply in TF).
 #
 # SECRET HYGIENE: values flow terraform → python (in-process) → stdin of `vault kv put -` (which
-# reads ALL fields as JSON from stdin) — never argv, never echoed, never on disk.
+# reads ALL fields as JSON from stdin) — never argv, never echoed, never on disk. The root token
+# rides stdin LINE 1 ahead of the JSON (#75): interpolating it into the `sh -c` string would land
+# it in apiserver audit logs and in-container `ps`.
 
 TF_DIR="$(cd "$(dirname "$0")/../terraform/envs/backups" && pwd)"
 
@@ -20,12 +22,15 @@ echo "🔑 fetching the Vault root token (dev convenience Secret)..."
 ROOT_TOKEN=$(kubectl -n vault get secret vault-root-token -o jsonpath='{.data.token}' | base64 -d)
 
 echo "🌱 writing secret/backups/r2 (endpoint + bucket-scoped S3 keypair; values via stdin only)..."
-printf '%s' "$TF_JSON" | python3 -c "
+{
+  printf '%s\n' "$ROOT_TOKEN" # stdin line 1: the token (never argv)
+  printf '%s' "$TF_JSON" | python3 -c "
 import sys, json
 d = json.load(sys.stdin)
 print(json.dumps({k: d[k]['value'] for k in ('endpoint', 'access_key_id', 'secret_access_key')}))
-" | kubectl -n vault exec -i vault-0 -- sh -c \
-  "export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$ROOT_TOKEN; vault kv put secret/backups/r2 -" \
+"
+} | kubectl -n vault exec -i vault-0 -- sh -c \
+  "export VAULT_ADDR=http://127.0.0.1:8200; IFS= read -r VAULT_TOKEN; export VAULT_TOKEN; vault kv put secret/backups/r2 -" \
   >/dev/null # suppress vault's written-metadata echo
 
 echo "🔄 force-syncing the r2-creds ExternalSecret (skips the ~1h refreshInterval)..."

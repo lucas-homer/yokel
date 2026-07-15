@@ -4,9 +4,11 @@
 # r2-mirror). 08:20 UTC — staggered inside the nightly window (08:00/08:10 CNPG base backups,
 # 08:30/08:40 pg_dumps), so everything is in MinIO before the 09:00 mirror pass.
 #
-# AUTH (issue #75): authenticates with the root token from the `vault-root-token` Secret —
-# dev-acceptable on the local cluster. The prod path is k8s-auth + a policy scoped to
-# `sys/storage/raft/snapshot`; hard requirement at cloud cutover. Snapshots must be taken from
+# AUTH (#75): k8s-auth, NOT the root token. The pod runs as the `vault-snapshot` ServiceAccount
+# (serviceaccount.yaml) and logs in with its projected JWT; vault-seed.sh binds that identity to
+# the `raft-snapshot` policy — read on `sys/storage/raft/snapshot` and nothing else, 10m TTL.
+# If the Job fails at "vault write auth/kubernetes/login", re-run vault-seed (the auth method,
+# policy, and role live in Vault state, which a re-init wipes). Snapshots must be taken from
 # the raft LEADER, hence the `vault-active` Service (with 1 replica that's vault-0; with 3 it
 # still resolves to the leader).
 #
@@ -31,6 +33,7 @@ spec:
       template:
         spec:
           restartPolicy: Never
+          serviceAccountName: vault-snapshot
           volumes:
             - name: snap
               emptyDir: {}
@@ -42,16 +45,18 @@ spec:
               env:
                 - name: VAULT_ADDR
                   value: http://vault-active.vault.svc:8200
-                - name: VAULT_TOKEN
-                  valueFrom:
-                    secretKeyRef: { name: vault-root-token, key: token }
               command:
                 - sh
                 - -c
                 # `-s` guard: `snapshot save` can exit 0 in odd states; an empty artifact must fail
                 # the Job (PR-5 alerts on CronJob staleness, so a red Job is the signal we want).
+                # `jwt=@…` keeps the JWT off argv (vault reads the file); the minted token lives
+                # only in this shell's env for the seconds the snapshot takes.
                 - |
                   set -e
+                  VAULT_TOKEN="$(vault write -field=token auth/kubernetes/login \
+                    role=vault-snapshot jwt=@/var/run/secrets/kubernetes.io/serviceaccount/token)"
+                  export VAULT_TOKEN
                   f="/snap/vault-$(date -u +%Y%m%dT%H%M%SZ).snap"
                   vault operator raft snapshot save "$f"
                   [ -s "$f" ] || { echo "snapshot is empty"; exit 1; }
