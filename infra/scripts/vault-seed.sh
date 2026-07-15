@@ -177,6 +177,29 @@ else
   echo "  ↳ secret/observability/alerting already seeded — leaving as-is (patched values preserved)."
 fi
 
+echo "🔐 wiring k8s-auth for the raft-snapshot CronJob (#75)..."
+# The DAILY vault-snapshot CronJob must not hold the root token — it needs exactly ONE capability
+# (read on sys/storage/raft/snapshot), so it gets a policy scoped to exactly that, bound to its
+# ServiceAccount (argocd/manifests/vault-snapshot/serviceaccount.yaml). No reviewer JWT is
+# configured: Vault reviews login tokens with its OWN ServiceAccount, which the helm chart's
+# authDelegator default already binds to system:auth-delegator (the vault-server-binding
+# ClusterRoleBinding). Idempotent: `auth enable` no-ops when mounted; config/policy/role are
+# upserts. The root token rides stdin (never argv — see the seed scripts' hygiene note).
+kubectl -n vault exec -i vault-0 -- sh -c '
+  set -e
+  export VAULT_ADDR=http://127.0.0.1:8200
+  IFS= read -r VAULT_TOKEN; export VAULT_TOKEN
+  vault auth enable kubernetes 2>/dev/null || true
+  vault write auth/kubernetes/config kubernetes_host=https://kubernetes.default.svc
+  printf "%s" "path \"sys/storage/raft/snapshot\" { capabilities = [\"read\"] }" \
+    | vault policy write raft-snapshot -
+  vault write auth/kubernetes/role/vault-snapshot \
+    bound_service_account_names=vault-snapshot \
+    bound_service_account_namespaces=vault \
+    token_policies=raft-snapshot \
+    token_ttl=10m token_max_ttl=10m
+' <<<"$ROOT_TOKEN"
+
 echo "🔑 wiring ESO → Vault token auth (external-secrets/vault-token)..."
 kubectl create namespace external-secrets --dry-run=client -o yaml | kubectl apply -f -
 kubectl -n external-secrets create secret generic vault-token \

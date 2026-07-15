@@ -270,8 +270,9 @@ injection). Check `kubectl get backup -A` and each Cluster's `firstRecoverabilit
 `argocd/manifests/vault-snapshot/`): a daily CronJob (08:20 UTC, staggered inside the nightly
 window) saves a raft snapshot from the leader (`vault-active`) and uploads it to the
 `vault-snapshots` bucket — 14d ILM retention, mirrored to R2 hourly like everything else. It
-authenticates with the root token for now; the k8s-auth + snapshot-policy hardening is issue #75
-(hard requirement at cloud cutover). A snapshot restore needs the seal chain from
+authenticates via **k8s-auth** (#75): the Job's `vault-snapshot` ServiceAccount logs in against a
+policy scoped to `read` on `sys/storage/raft/snapshot` only (role/policy wired by `vault-seed.sh`,
+so a Vault re-init needs a re-seed before the next snapshot). A snapshot restore needs the seal chain from
 `backup-vault-keys.sh` — re-seeding (`vault-seed.sh`) stays the primary local Vault DR path.
 
 **Observability (PR-5)**: `task backup-status` prints a one-shot freshness report (PITR windows,
