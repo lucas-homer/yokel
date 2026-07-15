@@ -164,7 +164,7 @@ async function main(): Promise<void> {
         log.info({ summary: verify }, "verify cycle");
         recordVerifyCycle(verify);
         const { ratio, sample } = await highCorrectRatio90d(sql);
-        setAccuracyHighRatio(ratio);
+        setAccuracyHighRatio(ratio, sample);
         log.debug({ ratio, sample }, "accuracy high-ratio 90d rollup");
       } catch (err) {
         recordPollPassFailure("verify");
