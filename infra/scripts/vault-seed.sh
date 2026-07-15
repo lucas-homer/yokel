@@ -15,7 +15,9 @@ set -euo pipefail
 # gets NO placeholder: seeding a fake key once left the poller 403ing on every regulations.gov call for
 # days while every heartbeat stayed green (the dev-regs-key incident) — refuse loudly instead.
 REPO_ROOT=$(cd "$(dirname "$0")/../.." && pwd)
-dotenv_get() { grep "^$1=" "$REPO_ROOT/.env" 2>/dev/null | head -1 | cut -d= -f2-; }
+# `|| true`: under set -e a failing grep (no .env / key absent) in the assignments below would kill
+# the script BEFORE the friendly refusal message prints — the refusal held, but mutely (#94 review).
+dotenv_get() { grep "^$1=" "$REPO_ROOT/.env" 2>/dev/null | head -1 | cut -d= -f2- || true; }
 REGS_API_KEY="${REGS_API_KEY:-$(dotenv_get REGS_API_KEY)}"
 GEMINI_API_KEY="${GEMINI_API_KEY:-$(dotenv_get GEMINI_API_KEY)}"
 if [ -z "$REGS_API_KEY" ]; then
