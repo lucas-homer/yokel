@@ -232,6 +232,17 @@ const accuracyHighRatio = new Gauge({
   help: "Share of HIGH-at-close windows judged was_correct=true, trailing 90d by close date, EXCLUDING unverified_lapsed. NaN when there is no sample (never a fake 0 or 1).",
   registers: [registry],
 });
+const accuracyHighSample = new Gauge({
+  name: "docketclock_accuracy_high_sample_90d",
+  help: "Denominator behind the headline ratio — HIGH-at-close windows with a FINAL verdict in the trailing 90d. The min-sample guard for the accuracy alert (#90). NaN until the first rollup runs.",
+  registers: [registry],
+});
+// prom-client default-initializes unlabeled gauges to 0 at registration, and only the poller ever
+// runs the rollup — so in any other process (the api) these would export a fake "0% accuracy on a
+// 0 sample", exactly the lie the NaN contract above forbids. Start both at NaN: only a computed
+// rollup may publish a number.
+accuracyHighRatio.set(NaN);
+accuracyHighSample.set(NaN);
 export function recordVerifyCycle(s: {
   snapshotted: number;
   inHorizon: number;
@@ -252,10 +263,16 @@ export function recordVerifyCycle(s: {
   accuracyRecords.inc({ was_correct: "false" }, s.verdictsIncorrect);
   accuracyUnverified.inc(s.lapsed);
 }
-/** Set the headline gauge from the per-cycle SQL rollup. null (no sample) exports NaN — an absent
- *  baseline must never read as 0% (a page) or 100% (fake perfection), and NaN satisfies no threshold. */
-export function setAccuracyHighRatio(ratio: number | null): void {
+/** Set the headline gauge + its denominator from the per-cycle SQL rollup. null ratio (no sample)
+ *  exports NaN — an absent baseline must never read as 0% (a page) or 100% (fake perfection), and
+ *  NaN satisfies no threshold. A computed sample of 0 IS published as 0: that zero is a real
+ *  measurement, and the min-sample guard is what keeps it from arming the ratio alert. */
+export function setAccuracyHighRatio(
+  ratio: number | null,
+  sample: number,
+): void {
   accuracyHighRatio.set(ratio ?? NaN);
+  accuracyHighSample.set(sample);
 }
 
 // ── LLM per-call (fed by MetricsTracer, independent of Langfuse) ──────────────────────────────────────
