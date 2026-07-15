@@ -179,9 +179,12 @@ confirm the page + resolve reached a phone:
 
 Drill log:
 
-<!-- add PASS dates here --> **2026-07-11 PASS** (fired t+13m, resolved t+3m after restore; page +
+<!-- add PASS dates here -->
 
-resolve both reached the phone).
+**2026-07-11 PASS** (stall: fired t+13m, resolved t+3m after restore; page + resolve both reached
+the phone). **2026-07-15 PASS** (ingest, first run: invalid-key fault staged through Vault → ESO →
+Secret → poller, page + resolve both reached the phone, real key auto-restored from the repo-root
+`.env`; regs cycles confirmed green post-restore — closed #91).
 
 Then **Explore → Loki**. Start with a generic stream selector to confirm logs are flowing (works
 before docketclock is even running) — the labels Alloy sets are `namespace` / `pod` / `container` / `app`:
