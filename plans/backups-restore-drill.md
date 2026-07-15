@@ -1,10 +1,12 @@
 # Backups + Restore Drill — CNPG PITR, offsite copy, Vault snapshots, drills
 
-> Status: **Ready to build** — decisions locked, awaiting go on PR-1.
+> Status: **Shipped** — PR-1 through PR-6 merged (#76, #78, #80, #83, #84, #85) and Drill B
+> executed (#88 close-out). The snapshot CronJob's root-token → k8s-auth hardening landed later
+> as #98 (issue #75).
 > Target: local k3d (colima 12 GiB, ~5–6 GiB safe headroom — every component pinned lean).
-> Why now: the append-only observation log is the irreplaceable asset (current state is re-pollable;
-> the historical observation chains + adjudication history are not), and today there are **zero
-> backups** — every PVC lives on the colima VM disk. This phase also folds into verification:
+> Why (at the time): the append-only observation log is the irreplaceable asset (current state is
+> re-pollable; the historical observation chains + adjudication history are not), and there were
+> **zero backups** — every PVC lived on the colima VM disk. This phase also folds into verification:
 > a restore drill that has never run is not a backup system.
 
 ## Decisions locked
