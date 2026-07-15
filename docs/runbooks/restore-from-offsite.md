@@ -15,6 +15,12 @@ exercises (`postgres.recovery.*` chart values) is the same one a MinIO→R2 prov
 scratch Vault) is a stretch goal — re-seeding is the primary Vault DR path and is what this runbook
 uses.
 
+The cadence is **enforced, not just documented**: `task install-drill-cadence` (from `infra/`)
+installs a LaunchAgent that fires monthly on the Mini — it RUNS Drill A and pushes PASS/FAIL to
+the ntfy alert topic (FAIL pages at high priority), and on the due months pushes reminders for
+the quarterly alert drill and this runbook's semi-annual Drill B (those two need a human by
+design). See `infra/scripts/drill-cadence.sh`.
+
 ## What you must have OFF the Mini (check these NOW, not during the incident)
 
 | Item                                                                                                      | Where it lives                                | Used for                                                                      |

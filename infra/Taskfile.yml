@@ -170,6 +170,61 @@ tasks:
         rm -f "$HOME/Library/LaunchAgents/$LABEL.plist"
         echo "✅ removed boot-recovery LaunchAgent (running cluster unaffected)."
 
+  install-drill-cadence:
+    desc: Install a LaunchAgent that enforces the drill cadence monthly (runs Drill A, pushes reminders via ntfy)
+    cmds:
+      # Same idiom as install-boot-recovery: machine-specific plist generated here, never committed.
+      # Fires on the 1st of every month at 09:15 local — the Mini is an always-on server, so the tick
+      # is not missed to sleep; drill-cadence.sh runs `task drill-pitr` and pushes PASS/FAIL to the
+      # ntfy alert topic, plus quarterly (alert-drill) and semi-annual (Drill B) reminders on the
+      # months they're due. NO RunAtLoad: a login must not trigger a drill — the calendar does.
+      # Deliberately a LaunchAgent + ntfy, not an external scheduler: the cadence has to survive on
+      # the Mini alone, with no dependency beyond launchd and the alert topic that already pages.
+      - |
+        set -e
+        LABEL="cc.rostr.yokel.drill-cadence"
+        SCRIPT="$(pwd)/scripts/drill-cadence.sh"
+        PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
+        LOG="$HOME/Library/Logs/yokel-drill-cadence.log"
+        chmod +x "$SCRIPT"
+        mkdir -p "$HOME/Library/LaunchAgents" "$HOME/Library/Logs"
+        cat > "$PLIST" <<PLISTEOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+          <key>Label</key><string>$LABEL</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>/bin/bash</string>
+            <string>$SCRIPT</string>
+          </array>
+          <key>StartCalendarInterval</key>
+          <dict>
+            <key>Day</key><integer>1</integer>
+            <key>Hour</key><integer>9</integer>
+            <key>Minute</key><integer>15</integer>
+          </dict>
+          <key>StandardOutPath</key><string>$LOG</string>
+          <key>StandardErrorPath</key><string>$LOG</string>
+        </dict>
+        </plist>
+        PLISTEOF
+        plutil -lint "$PLIST"
+        launchctl bootout "gui/$(id -u)/$LABEL" 2>/dev/null || true
+        launchctl bootstrap "gui/$(id -u)" "$PLIST" 2>/dev/null \
+          && echo "✅ installed — fires monthly (1st, 09:15). Dry-run now: bash scripts/drill-cadence.sh. Log: $LOG" \
+          || echo "✅ installed ($PLIST). launchctl bootstrap skipped over SSH — it will auto-load at next login. Log: $LOG"
+
+  uninstall-drill-cadence:
+    desc: Remove the drill-cadence LaunchAgent
+    cmds:
+      - |
+        LABEL="cc.rostr.yokel.drill-cadence"
+        launchctl bootout "gui/$(id -u)/$LABEL" 2>/dev/null || true
+        rm -f "$HOME/Library/LaunchAgents/$LABEL.plist"
+        echo "✅ removed drill-cadence LaunchAgent (drills return to manual cadence — see the runbook)."
+
   bootstrap-argocd:
     desc: Install Argo CD via Helm (the single imperative seam)
     cmds:

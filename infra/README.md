@@ -300,6 +300,17 @@ from must archive under a NEW serverName (`postgres.backup.serverName`, generati
 must be hand-pruned after a ≥14d confidence window (retention no longer targets it). Drill log:
 2026-07-11 PASS.
 
+**Cadence enforcement — `task install-drill-cadence`.** The cadence above is enforced by a
+LaunchAgent (same idiom as `install-boot-recovery`; label `cc.rostr.yokel.drill-cadence`), firing
+the 1st of every month at 09:15: `scripts/drill-cadence.sh` runs Drill A and pushes the PASS/FAIL
+to the ntfy alert topic (FAIL at high priority with the output tail; the quiet PASS note doubles as
+proof the scheduler is alive), and pushes reminders for the quarterly `alert-drill` (Jan/Apr/Jul/Oct)
+and semi-annual Drill B (Jan/Jul) — the two drills that need a human by design. The ntfy URL is read
+from the `grafana-alerting` Secret and cached to `~/.config/yokel/ntfy-url` (0600) so a broken
+cluster can still page "drill could not run"; if both are unavailable it logs to
+`~/Library/Logs/yokel-drill-cadence.log` and exits 1 (a cluster down that long has already paged via
+the dead-man's switch). Remove with `task uninstall-drill-cadence`.
+
 Root creds come from Vault via ESO (`secret/backups/minio`); **`task vault-seed` seeds them** —
 GENERATED on first seed and never rotated by a re-run (every backup producer reads them; see the
 comments in `vault-seed.sh`). The seed also stubs `secret/backups/r2` with placeholders; the real
