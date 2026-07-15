@@ -2,9 +2,11 @@
 # datasource (metrics, Slice B / PR-B2) with Loki alongside it (logs), so Explore works the moment the
 # pod is up. Admin creds come from Vault via ESO (never
 # inline): the ExternalSecret in extraObjects materializes the `grafana-admin` Secret from
-# secret/observability/grafana, mirroring the docketclock ExternalSecret pattern. Ephemeral
-# (persistence off) — dashboards arrive via provisioning later. Exposed by `task grafana`
-# port-forward (svc/grafana :80 -> container :3000).
+# secret/observability/grafana, mirroring the docketclock ExternalSecret pattern. PERSISTENT
+# (2Gi PVC): grafana.db (sessions, UI password changes, silences, starred boards) survives pod
+# rolls — before this, every roll wiped sessions and reverted a UI-set password to the seeded
+# creds. Dashboards/rules/datasources still come from the provisioning below (git wins on those).
+# Exposed by `task grafana` port-forward (svc/grafana :80 -> container :3000).
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -25,8 +27,20 @@ spec:
     targetRevision: "12.7.1"
     helm:
       values: |
+        # Persist grafana.db so sessions + UI password changes survive pod rolls (they didn't on
+        # emptyDir: every platform apply → fresh pod → logged out + password reset to the seeded
+        # value). local-path (k3d default SC) provisions it. Provisioned dashboards/rules are NOT
+        # in scope of this claim — they re-apply from these values each start either way.
         persistence:
-          enabled: false
+          enabled: true
+          size: 2Gi
+        # local-path PVCs are ReadWriteOnce and the chart's default RollingUpdate would deadlock a
+        # roll: the NEW pod can't mount the volume while the OLD one still holds it (Pending until
+        # progressDeadline). Recreate kills the old pod first — brief Grafana downtime per roll,
+        # which alert evaluation tolerates (rules resume on start; the dead-man CronJob covers the
+        # gap the other way).
+        deploymentStrategy:
+          type: Recreate
         # No Helm test pod — keep the namespace lean.
         testFramework:
           enabled: false
@@ -2298,7 +2312,8 @@ spec:
                 disableResolveMessage: false
             # Kept as the documented rollback target (plans/verification-accuracy.md): flip the policy
             # receiver back to local-noop to silence delivery without touching rules or secrets.
-            # (Grafana is ephemeral — persistence off — so provisioning is the whole state; nothing leaks.)
+            # (Provisioned alerting is re-applied from these values each start — git wins over any
+            # UI edit here even now that grafana.db persists.)
             - orgId: 1
               name: local-noop
               receivers:
