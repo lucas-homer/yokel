@@ -1,6 +1,7 @@
 # Observability Slice A — Logs (Grafana + Loki + structured app logs)
 
-> Status: **Ready to build** — decisions locked, awaiting go on PR-A1.
+> Status: **Shipped** — PR-A1 (#49) and PR-A2 (#50) merged, plus the #52 follow-up (Grafana
+> OutOfSync fix + platform-app globbing).
 > Target: local k3d only (no cloud cluster yet; see memory `deploy-target-k3d-first`).
 > Constraint: colima 12 GiB, ~5–6 GiB safe headroom — every component pinned lean.
 

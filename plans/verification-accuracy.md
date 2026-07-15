@@ -1,6 +1,10 @@
 # Verification Slice V — the accuracy loop (post-close verification + AccuracyRecord + independent cross-check + a real alert path)
 
-> Status: **Draft — not started.** Follows the observability epic (slices A–D, shipped #49–#65)
+> Status: **Shipped except item 5** — PR-V1 (#89), PR-V2 (#92), PR-V3 (#86) merged; both fire
+> drills PASSED (stall 2026-07-11, ingest 2026-07-15 — closed #91). Item 5 (the accuracy-degraded
+> alert) is issue #90: waiting on a HIGH-sample baseline (~early Aug 2026); the sample-size gauge
+> and NaN-at-registration prep merged as #97.
+> Followed the observability epic (slices A–D, shipped #49–#65)
 > AND the backups + restore-drill phase (`plans/backups-restore-drill.md`, #73). Backups-first is
 > deliberate: PR-V1 adds a new irreplaceable append-only table (`accuracy_records`), and landing
 > backups first means WAL archiving covers it from its first row.
