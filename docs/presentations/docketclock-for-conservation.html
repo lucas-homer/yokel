@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DocketClock — a briefing for conservation partners</title>
+<style>*,*::before,*::after{box-sizing:border-box}</style>
+</head>
+<body>
+<style>
+  :root {
+    --paper: #F5F6F2;
+    --card: #FDFDFB;
+    --card-edge: #E3E8E1;
+    --ink: #1F2A27;
+    --ink-soft: #55635D;
+    --line: #D6DDD6;
+    --accent: #106B5D;
+    --accent-soft: #E2EFEB;
+    --rust: #A64833;
+    --rust-soft: #F4E6E0;
+    --amber: #96701C;
+    --amber-soft: #F3ECDA;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #121D1B;
+      --card: #1A2624;
+      --card-edge: #263431;
+      --ink: #E5EBE7;
+      --ink-soft: #9FAFA8;
+      --line: #2B3936;
+      --accent: #52C2AC;
+      --accent-soft: #16302B;
+      --rust: #D68166;
+      --rust-soft: #33221C;
+      --amber: #CFA84D;
+      --amber-soft: #2E2817;
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #F5F6F2;
+    --card: #FDFDFB;
+    --card-edge: #E3E8E1;
+    --ink: #1F2A27;
+    --ink-soft: #55635D;
+    --line: #D6DDD6;
+    --accent: #106B5D;
+    --accent-soft: #E2EFEB;
+    --rust: #A64833;
+    --rust-soft: #F4E6E0;
+    --amber: #96701C;
+    --amber-soft: #F3ECDA;
+  }
+  :root[data-theme="dark"] {
+    --paper: #121D1B;
+    --card: #1A2624;
+    --card-edge: #263431;
+    --ink: #E5EBE7;
+    --ink-soft: #9FAFA8;
+    --line: #2B3936;
+    --accent: #52C2AC;
+    --accent-soft: #16302B;
+    --rust: #D68166;
+    --rust-soft: #33221C;
+    --amber: #CFA84D;
+    --amber-soft: #2E2817;
+  }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.06rem;
+    line-height: 1.68;
+    margin: 0;
+  }
+
+  .wrap {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  a { color: var(--accent); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ----- section scaffolding ----- */
+  section { padding: 4.5rem 0 1.5rem; }
+  .rule {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin: 3rem 0 0;
+  }
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1rem;
+  }
+  .eyebrow .num {
+    font-family: var(--mono);
+    font-weight: 400;
+    color: var(--ink-soft);
+    margin-right: 0.75em;
+  }
+  h1, h2, h3 { line-height: 1.2; text-wrap: balance; margin: 0 0 1rem; font-weight: 700; }
+  h1 { font-size: clamp(2.1rem, 5.5vw, 3.3rem); letter-spacing: -0.015em; }
+  h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); letter-spacing: -0.01em; }
+  h3 { font-size: 1.12rem; }
+  p, ul, ol { max-width: 42rem; }
+  p.lede { font-size: 1.22rem; line-height: 1.6; color: var(--ink-soft); max-width: 40rem; }
+  strong { color: var(--ink); }
+  .soft { color: var(--ink-soft); }
+  li { margin-bottom: 0.5rem; }
+
+  /* ----- hero ----- */
+  header.hero { padding: 5rem 0 2rem; }
+  .hero-kicker {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .hero-kicker .mark {
+    color: var(--accent);
+  }
+  .timeline-figure {
+    margin: 3rem 0 0;
+    background: var(--card);
+    border: 1px solid var(--card-edge);
+    border-radius: 6px;
+    padding: 1.5rem 1.5rem 1rem;
+    overflow-x: auto;
+  }
+  .timeline-figure svg { display: block; min-width: 620px; width: 100%; height: auto; }
+  figcaption {
+    font-family: var(--sans);
+    font-size: 0.83rem;
+    color: var(--ink-soft);
+    max-width: 44rem;
+    margin-top: 1rem;
+    line-height: 1.55;
+  }
+
+  /* ----- verb grid (what it does) ----- */
+  .verbs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem;
+    margin: 2rem 0 1rem;
+  }
+  .verb {
+    background: var(--card);
+    border: 1px solid var(--card-edge);
+    border-radius: 6px;
+    padding: 1.25rem 1.25rem 1rem;
+  }
+  .verb h3 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+  }
+  .verb h3 .vnum {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .verb p { font-size: 0.95rem; line-height: 1.6; color: var(--ink-soft); margin: 0; }
+
+  /* ----- confidence table ----- */
+  .table-scroll { overflow-x: auto; margin: 2rem 0; }
+  table.confidence {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 560px;
+    font-size: 0.95rem;
+  }
+  table.confidence th {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-align: left;
+    padding: 0 1rem 0.6rem 0;
+    border-bottom: 1px solid var(--ink);
+    font-weight: 600;
+  }
+  table.confidence td {
+    padding: 0.8rem 1rem 0.8rem 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  table.confidence td:last-child, table.confidence th:last-child { padding-right: 0; }
+  .pill {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .pill.ok   { background: var(--accent-soft); color: var(--accent); }
+  .pill.warn { background: var(--amber-soft);  color: var(--amber); }
+  .pill.bad  { background: var(--rust-soft);   color: var(--rust); }
+  .pill.mute { background: transparent; color: var(--ink-soft); border: 1px solid var(--line); }
+
+  .principle {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 6px 6px 0;
+    padding: 1.1rem 1.4rem;
+    max-width: 42rem;
+    margin: 2rem 0;
+  }
+  .principle p { margin: 0; }
+
+  /* ----- stats ----- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--card-edge);
+    border-radius: 6px;
+    padding: 1.2rem 1.25rem 1.1rem;
+  }
+  .stat .n {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 2rem;
+    line-height: 1.1;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .stat .n.rust { color: var(--rust); }
+  .stat p { font-family: var(--sans); font-size: 0.85rem; line-height: 1.5; color: var(--ink-soft); margin: 0; }
+
+  /* ----- watershed watch story ----- */
+  .ledger {
+    background: var(--card);
+    border: 1px solid var(--card-edge);
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    max-width: 44rem;
+  }
+  .ledger dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1.5rem; }
+  .ledger dt {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .ledger dt.rust { color: var(--rust); }
+  .ledger dd { margin: 0; font-size: 0.97rem; }
+  .lesson {
+    border-left: 3px solid var(--rust);
+    background: var(--rust-soft);
+    border-radius: 0 6px 6px 0;
+    padding: 1.1rem 1.4rem;
+    max-width: 42rem;
+    margin: 2rem 0;
+  }
+  .lesson p { margin: 0; }
+
+  /* ----- idea cards ----- */
+  .ideas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .idea {
+    background: var(--card);
+    border: 1px solid var(--card-edge);
+    border-radius: 6px;
+    padding: 1.3rem 1.3rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .idea .tag {
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .idea h3 { margin: 0; }
+  .idea p { font-size: 0.94rem; line-height: 1.6; color: var(--ink-soft); margin: 0; }
+
+  /* ----- ask list ----- */
+  ol.ask { counter-reset: ask; list-style: none; padding: 0; margin: 2rem 0; max-width: 42rem; }
+  ol.ask li {
+    counter-increment: ask;
+    padding: 1.1rem 0 1.1rem 3.2rem;
+    border-top: 1px solid var(--line);
+    position: relative;
+    margin: 0;
+  }
+  ol.ask li:last-child { border-bottom: 1px solid var(--line); }
+  ol.ask li::before {
+    content: counter(ask, decimal-leading-zero);
+    font-family: var(--mono);
+    color: var(--accent);
+    position: absolute;
+    left: 0;
+    top: 1.2rem;
+    font-size: 0.9rem;
+  }
+  ol.ask strong { display: block; margin-bottom: 0.15rem; }
+  ol.ask span { font-size: 0.95rem; color: var(--ink-soft); }
+
+  footer {
+    margin-top: 4rem;
+    border-top: 1px solid var(--line);
+    padding: 2.5rem 0 4rem;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  footer p { max-width: 44rem; margin: 0 0 0.75rem; }
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="hero-kicker">
+      <span class="mark">DocketClock</span>
+      <span>·</span>
+      <span>A briefing for conservation partners</span>
+      <span>·</span>
+      <span>July 2026</span>
+    </div>
+    <h1>Public participation runs on deadlines. DocketClock makes them trustworthy.</h1>
+    <p class="lede">Every year, federal agencies make thousands of decisions about water, land, wildlife, and health — and nearly every one opens a short window when anyone can weigh in. DocketClock is a working system that watches those windows around the clock, catches them when they move, and is honest about what it doesn&rsquo;t know.</p>
+
+    <figure class="timeline-figure">
+      <svg viewBox="0 0 760 190" role="img" aria-label="Timeline of a comment deadline that moved: a proposed rule published March 3, an original deadline of May 4 that was superseded, an extension notice published April 20 as a separate document, and the actual deadline of June 18.">
+        <line x1="30" y1="120" x2="730" y2="120" stroke="var(--line)" stroke-width="2"/>
+        <line x1="30" y1="120" x2="640" y2="120" stroke="var(--accent)" stroke-width="2"/>
+
+        <!-- event: published -->
+        <circle cx="60" cy="120" r="6" fill="var(--accent)"/>
+        <text x="60" y="150" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink)">Mar 3</text>
+        <text x="60" y="167" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-soft)">Proposed rule</text>
+        <text x="60" y="181" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-soft)">published</text>
+
+        <!-- event: original deadline, superseded -->
+        <circle cx="330" cy="120" r="6" fill="none" stroke="var(--rust)" stroke-width="2"/>
+        <line x1="316" y1="106" x2="344" y2="134" stroke="var(--rust)" stroke-width="2"/>
+        <text x="330" y="150" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--rust)" text-decoration="line-through">May 4</text>
+        <text x="330" y="167" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-soft)">Original deadline —</text>
+        <text x="330" y="181" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-soft)">no longer true</text>
+
+        <!-- event: extension notice -->
+        <circle cx="250" cy="120" r="6" fill="var(--amber)"/>
+        <line x1="250" y1="112" x2="250" y2="62" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <text x="250" y="34" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink)">Apr 20 · Extension notice</text>
+        <text x="250" y="50" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-soft)">published as a separate document</text>
+
+        <!-- event: actual deadline -->
+        <circle cx="640" cy="120" r="7" fill="var(--accent)"/>
+        <circle cx="640" cy="120" r="12" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.45"/>
+        <text x="640" y="150" text-anchor="middle" font-family="var(--sans)" font-size="12" font-weight="bold" fill="var(--accent)">Jun 18</text>
+        <text x="640" y="167" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-soft)">The deadline that</text>
+        <text x="640" y="181" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-soft)">actually counts</text>
+      </svg>
+      <figcaption>A pattern that happens constantly: the deadline you found in March quietly moved in April — announced in a <em>different document</em> than the one you bookmarked. Nothing on the original notice changes. If no one on your team happens to see the second document, you plan around a date that is no longer real.</figcaption>
+    </figure>
+  </header>
+
+  <hr class="rule">
+
+  <section id="why">
+    <p class="eyebrow"><span class="num">01</span>Why this exists</p>
+    <h2>Comment windows are where policy is still open — and they are surprisingly hard to trust</h2>
+    <p>When a federal agency proposes a rule — protecting a wetland, permitting a pipeline, revising water-quality standards — it is legally required to ask the public first. A comment period isn&rsquo;t a petition or a vote: a single well-evidenced comment from someone who knows the ground truth can change the final rule, and comments in the record are what later court challenges stand on. But only if the comment arrives <strong>before the window closes</strong>.</p>
+    <p>Here&rsquo;s the catch. The deadline itself lives in <strong>two separate government systems</strong>:</p>
+    <ul>
+      <li><strong>The Federal Register</strong> — the government&rsquo;s official daily journal. The legal record of what was proposed and when comments are due.</li>
+      <li><strong>Regulations.gov</strong> — the website where you actually read the docket and file your comment.</li>
+    </ul>
+    <p>They are maintained separately, and they don&rsquo;t always agree. On top of that:</p>
+    <ul>
+      <li><strong>Extensions are published as separate documents</strong> that never update the original notice.</li>
+      <li><strong>Corrections</strong> sometimes move a deadline <em>earlier</em>, not later.</li>
+      <li><strong>One notice can change several proceedings at once</strong> — each with a different new date.</li>
+      <li>Headlines mislead: a &ldquo;land withdrawal extension&rdquo; from the Bureau of Land Management is about land, not about extending your comment period.</li>
+    </ul>
+    <p>For a conservation organization, a missed window means silence in the legal record. And a <em>wrong</em> date is worse than no date at all — it manufactures false confidence.</p>
+  </section>
+
+  <hr class="rule">
+
+  <section id="what">
+    <p class="eyebrow"><span class="num">02</span>What DocketClock does</p>
+    <h2>Four verbs: watch, remember, reconcile, admit</h2>
+    <div class="verbs">
+      <div class="verb">
+        <h3><span class="vnum">1</span>Watch</h3>
+        <p>It checks both government systems continuously — every fifteen minutes — across every open federal comment window, over a thousand at any given time.</p>
+      </div>
+      <div class="verb">
+        <h3><span class="vnum">2</span>Remember</h3>
+        <p>Every observation goes into a permanent logbook that can never be edited or erased. Any deadline it publishes can be traced back to exactly what the government said, word for word, and when.</p>
+      </div>
+      <div class="verb">
+        <h3><span class="vnum">3</span>Reconcile</h3>
+        <p>It merges what both systems claim into a single answer, following the whole chain of extensions, corrections, and reopenings — and labels that answer with how much it should be trusted.</p>
+      </div>
+      <div class="verb">
+        <h3><span class="vnum">4</span>Admit</h3>
+        <p>When the sources disagree, it doesn&rsquo;t guess. It says so, shows both dates side by side, links the official record — and after every deadline passes, it goes back and grades its own answer.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="honesty">
+    <p class="eyebrow"><span class="num">03</span>The honesty principle</p>
+    <h2>Every deadline carries a confidence label. None of them bluff.</h2>
+    <p>Most trackers hand you a date and imply certainty they don&rsquo;t have. DocketClock treats the confidence label as part of the product:</p>
+    <div class="table-scroll">
+      <table class="confidence">
+        <thead>
+          <tr><th>Label</th><th>What it means</th><th>What you can do with it</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pill ok">High</span></td>
+            <td>Both systems agree, the information is fresh, and no extension or correction is unresolved.</td>
+            <td>Plan around it.</td>
+          </tr>
+          <tr>
+            <td><span class="pill ok">Medium</span></td>
+            <td>Only one source has spoken, or there&rsquo;s a minor wrinkle (say, the agency accepts late comments).</td>
+            <td>Usable, with the wrinkle spelled out.</td>
+          </tr>
+          <tr>
+            <td><span class="pill warn">Low</span></td>
+            <td>Signals are thin — for example, a docket marked &ldquo;open for comment&rdquo; with no date given.</td>
+            <td>Worth watching, not worth scheduling around.</td>
+          </tr>
+          <tr>
+            <td><span class="pill bad">Conflicting</span></td>
+            <td>The two systems genuinely disagree, or an extension is in flight and unresolved.</td>
+            <td>You get the disagreement itself: both dates, side by side, with the official source linked.</td>
+          </tr>
+          <tr>
+            <td><span class="pill warn">Stale</span></td>
+            <td>It hasn&rsquo;t been possible to re-confirm recently enough, relative to how soon the window closes.</td>
+            <td>Verify before relying on it — and it tells you that.</td>
+          </tr>
+          <tr>
+            <td><span class="pill mute">Unknown</span></td>
+            <td>No deadline has been published anywhere.</td>
+            <td>An honest &ldquo;we don&rsquo;t know&rdquo; instead of a guess.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="principle">
+      <p><strong>Silence is never the failure mode.</strong> When confidence drops, DocketClock withholds the confident &ldquo;closing soon&rdquo; alert — but simultaneously sends a &ldquo;needs verification&rdquo; alert with the conflicting evidence attached. You are never left unaware because the system was unsure.</p>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="proof">
+    <p class="eyebrow"><span class="num">04</span>It&rsquo;s real, and it&rsquo;s measured</p>
+    <h2>Built and running today — with its accuracy measured, not asserted</h2>
+    <p>DocketClock isn&rsquo;t a slide-deck idea. It runs continuously against the live government systems. Before a line of the pipeline was written, the core assumptions were measured against the full set of open federal comment windows — and the measuring never stopped:</p>
+    <div class="stats">
+      <div class="stat"><span class="n">1,184</span><p>open federal comment windows in the first full measurement (June 2026) — the live population the system tracks.</p></div>
+      <div class="stat"><span class="n">78.7%</span><p>could be matched across both government systems, enabling the two-source cross-check that single-source tools can&rsquo;t do.</p></div>
+      <div class="stat"><span class="n rust">12</span><p>true conflicts found — real cases where the two systems disagreed about the same deadline. Rare, which is exactly why each one matters.</p></div>
+      <div class="stat"><span class="n">920</span><p>false alarms avoided in that same measurement. A naive comparison would have cried wolf on 920 windows over a timezone artifact; DocketClock&rsquo;s rules suppress every one.</p></div>
+      <div class="stat"><span class="n">~5<span style="font-size:1rem">/day</span></span><p>documents flagged as possible extensions, corrections, or withdrawals that need a closer look — the moving parts the system exists to catch.</p></div>
+      <div class="stat"><span class="n">94%</span><p>accuracy of the automated classifier on a hand-graded test set, with genuinely ambiguous cases escalated rather than guessed. Re-tested on every change.</p></div>
+    </div>
+    <p>And it&rsquo;s built like infrastructure people will rely on: after every deadline passes, the system goes back and <strong>grades the answer it had published</strong>, keeping a running accuracy record. It cross-checks itself against an independent archive of the government data. It pages a phone if ingestion stalls. Its backups are not just taken but <em>rehearsed</em> — full restores from offsite copies, run as drills.</p>
+  </section>
+
+  <hr class="rule">
+
+  <section id="watershed">
+    <p class="eyebrow"><span class="num">05</span>A story about discipline</p>
+    <h2>We already designed a conservation app — and killed it with data</h2>
+    <p>The first idea built on DocketClock was <strong>Watershed Watch</strong>: a deadline-and-action radar scoped to a single watershed, designed for volunteer conservation coalitions. The pilot geography was the Choptank River basin on the Delmarva Peninsula.</p>
+    <p>Before building it, we asked the question that kills most civic tools too late: <em>is there enough real signal here to matter?</em> We measured four quarters of federal activity mentioning the basin, its tributaries, and its counties — then hand-checked every candidate:</p>
+    <div class="ledger">
+      <dl>
+        <dt>16</dt><dd>candidate matches over four quarters — the optimistic upper bound.</dd>
+        <dt>11</dt><dd>were national rules that merely <em>mention</em> &ldquo;Chesapeake Bay&rdquo; — nothing to do with the Choptank.</dd>
+        <dt>3</dt><dd>matched &ldquo;Talbot County&rdquo;&hellip; the one in <strong>Georgia</strong>.</dd>
+        <dt>2</dt><dd>were the Bay Bridge crossing study — high-profile, out of basin, and already known to everyone.</dd>
+        <dt class="rust">0</dt><dd><strong>confirmed novel in-basin windows.</strong> Zero, across a full year.</dd>
+      </dl>
+    </div>
+    <p>The bar for a viable product was two to three genuinely new, in-basin comment windows per quarter. The measured answer was zero per year. So Watershed Watch was shelved — before it consumed months of anyone&rsquo;s life or a partner&rsquo;s trust.</p>
+    <div class="lesson">
+      <p><strong>The lesson isn&rsquo;t that conservation tools don&rsquo;t work.</strong> It&rsquo;s that a single small watershed doesn&rsquo;t generate enough federal decisions on its own. The idea fails or succeeds on <em>where you point it</em> — a region, a topic, a species, a program. And choosing where the signal lives is a policy question, not a software question. That&rsquo;s exactly where a domain expert changes the outcome.</p>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="primitive">
+    <p class="eyebrow"><span class="num">06</span>The primitive</p>
+    <h2>DocketClock is a foundation. New apps rent it — they don&rsquo;t rebuild it.</h2>
+    <p>Everything hard about the deadline problem is solved once, underneath. Any new application built on DocketClock inherits, on day one:</p>
+    <ul>
+      <li><strong>The full live stream</strong> of every open federal comment window, hearing notice, and environmental-review clock — with deadlines that have been cross-checked, not copied.</li>
+      <li><strong>A confidence label and a complete paper trail</strong> on every date, back to the government&rsquo;s own words.</li>
+      <li><strong>Stable identifiers</strong>, so records can be joined with maps, watershed boundaries, species ranges, or membership lists.</li>
+      <li><strong>A tagging layer</strong>: each app adds its own lens — watershed codes, species, land units — without touching the core engine.</li>
+      <li><strong>Honest alerting</strong>: conflicts fire loudly, and uncertainty is never silent.</li>
+    </ul>
+    <p>Which means building a new app is mostly three decisions: <strong>who it&rsquo;s for</strong>, <strong>what lens it applies</strong> (a geography, a topic, an agency), and <strong>what action it supports</strong> once a window is found.</p>
+  </section>
+
+  <hr class="rule">
+
+  <section id="ideas">
+    <p class="eyebrow"><span class="num">07</span>What could be built on it</p>
+    <h2>Ideas for conservation — some are Watershed Watch with the lens fixed</h2>
+    <div class="ideas">
+      <div class="idea">
+        <span class="tag">Watch · Geography</span>
+        <h3>Regional Watershed Radar</h3>
+        <p>Watershed Watch, widened to where the signal density actually is: an entire basin like the Chesapeake or Delaware, or a multi-basin coalition footprint. Every window tagged to the watersheds it touches, delivered as plain-language briefs.</p>
+      </div>
+      <div class="idea">
+        <span class="tag">Watch · Process</span>
+        <h3>Environmental Review Clock</h3>
+        <p>Environmental impact statements run on their own rhythm — a 45-day review window for drafts, 30 for finals, and no one system that tracks them well. A radar for EIS review windows by region or sector.</p>
+      </div>
+      <div class="idea">
+        <span class="tag">Watch · Species</span>
+        <h3>Species &amp; Habitat Docket Desk</h3>
+        <p>Endangered-species listings, critical-habitat designations, take permits — every open window touching a species list an organization actually works on, instead of scanning the whole Federal Register.</p>
+      </div>
+      <div class="idea">
+        <span class="tag">Watch · Land</span>
+        <h3>Public Lands Watch</h3>
+        <p>Forest plan revisions, BLM land-use amendments, withdrawals, and leasing decisions — comment windows organized by the forests and districts a group cares about.</p>
+      </div>
+      <div class="idea">
+        <span class="tag">Watch · Water</span>
+        <h3>Water Rule Watch</h3>
+        <p>The recurring heavyweights: &ldquo;waters of the United States&rdquo; definitions, water-quality standards, discharge and dredge-and-fill permitting. Rules where the same fight returns every few years and the window is everything.</p>
+      </div>
+      <div class="idea">
+        <span class="tag">Act · Quality</span>
+        <h3>Comment Quality Room</h3>
+        <p>Agencies discount thousands of identical form letters. A tool that helps a coalition turn many member voices into a few distinct, evidence-backed comments that actually enter the record with weight.</p>
+      </div>
+      <div class="idea">
+        <span class="tag">Act · Accountability</span>
+        <h3>Outcome Tracker</h3>
+        <p>The neglected other half: after the window closes, did the final rule respond? What changed? Receipts an organization can show members and funders — &ldquo;here&rsquo;s what our participation did.&rdquo;</p>
+      </div>
+      <div class="idea">
+        <span class="tag">Act · Routing</span>
+        <h3>Concern Router</h3>
+        <p>Someone raises an alarm about a place or an issue. Which live proceeding is the actual lever — and when does it close? A bridge from ambient concern to the venue where input legally counts.</p>
+      </div>
+    </div>
+    <p class="soft">The first five are lenses on the watching problem; the last three use the same foundation to support the <em>acting</em> — which is where conservation organizations live.</p>
+  </section>
+
+  <hr class="rule">
+
+  <section id="ask">
+    <p class="eyebrow"><span class="num">08</span>Where you come in</p>
+    <h2>The software exists. The open questions are policy questions.</h2>
+    <p>What killed Watershed Watch wasn&rsquo;t engineering — it was pointing the instrument at too small a target. Every question that decides what gets built next is one a domain expert answers better than a developer:</p>
+    <ol class="ask">
+      <li><strong>Where is the density?</strong><span>Which geographies, topics, or programs generate enough real comment windows to be worth watching? Any candidate can be measured in days — the same way the Choptank was.</span></li>
+      <li><strong>What counts as actionable?</strong><span>Of the windows a lens would surface, which would an organization genuinely act on — and which are noise it already knows about?</span></li>
+      <li><strong>What&rsquo;s the workflow?</strong><span>Who inside a conservation org would use this — and what form helps them: a weekly brief, a phone alert, a calendar feed, a spreadsheet?</span></li>
+      <li><strong>Who else should see this?</strong><span>Which organizations or people in the conservation world feel this pain sharply enough to shape — or pilot — a first version?</span></li>
+    </ol>
+    <p><strong>A concrete first step:</strong> pick two or three candidate lenses — a region, a rule topic, a species list. We run the same value-density measurement that was run for the Choptank. The numbers, not enthusiasm, decide what gets built.</p>
+  </section>
+
+  <footer>
+    <p><strong>Honest limits.</strong> DocketClock covers federal proceedings today; state and local sources are deliberately out of scope until a specific need justifies them. It is an aid to participation, not legal advice — every record links directly to the official government publication, which is always the authority.</p>
+    <p>Prepared July 2026 · DocketClock is a working system, currently in private development.</p>
+  </footer>
+
+</div>
+</body>
+</html>
