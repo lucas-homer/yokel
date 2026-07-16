@@ -39,14 +39,15 @@ spec:
         # progressDeadline). Recreate kills the old pod first — brief Grafana downtime per roll,
         # which alert evaluation tolerates (rules resume on start; the dead-man CronJob covers the
         # gap the other way).
-        # rollingUpdate MUST be explicitly nulled: the live Deployment carries a materialized
-        # spec.strategy.rollingUpdate block from its RollingUpdate days, apply-merge KEEPS fields
-        # the manifest merely omits, and the apiserver rejects type=Recreate alongside
-        # rollingUpdate ("Forbidden: may not be specified") — the #100 rollout stuck on exactly
-        # this. null in the rendered YAML = delete-on-merge.
+        # HISTORY (#100/#101): switching an EXISTING Deployment to Recreate stuck the sync — the
+        # live object carried a materialized spec.strategy.rollingUpdate, apply keeps omitted
+        # fields, and the apiserver forbids rollingUpdate alongside type=Recreate. The kubectl
+        # idiom `rollingUpdate: null` does NOT work through Argo (it strips null-valued fields
+        # from rendered manifests); the unblock was a ONE-TIME `kubectl patch --type=json`
+        # removing the live field, after which this omitting manifest applies cleanly. Fresh
+        # clusters never hit this — it's an apply-over-existing failure class only.
         deploymentStrategy:
           type: Recreate
-          rollingUpdate: null
         # No Helm test pod — keep the namespace lean.
         testFramework:
           enabled: false
