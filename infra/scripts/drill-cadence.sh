@@ -36,7 +36,9 @@ log() { printf '%s %s\n' "$(date '+%Y-%m-%dT%H:%M:%S')" "$*"; }
 NTFY_URL=$(kubectl -n observability get secret grafana-alerting \
   -o jsonpath='{.data.ALERTING_NTFY_URL}' 2>/dev/null | base64 -d || true)
 case "$NTFY_URL" in
-  *127.0.0.1*) NTFY_URL="" ;; # local-noop placeholder — do not cache, do not "page" a black hole
+  # Both placeholder shapes seed-alerting-secrets.sh's is_placeholder() knows — do not cache,
+  # do not "page" a black hole.
+  *127.0.0.1*|*PLACEHOLDER*) NTFY_URL="" ;;
 esac
 if [ -n "$NTFY_URL" ]; then
   mkdir -p "$CACHE_DIR"
@@ -55,8 +57,10 @@ fi
 
 push() { # $1 priority ($NTFY_URL never on argv beyond curl itself; topic == secret)
   local priority=$1 title=$2 body=$3
+  # The seeded URL carries ?template=grafana (Grafana's contact point POSTs JSON webhooks);
+  # ntfy 400s a plain-text body when templating is enabled, so publish to the bare topic URL.
   curl -fsS -m 15 -H "Title: $title" -H "Priority: $priority" -H "Tags: stopwatch" \
-    -d "$body" "$NTFY_URL" >/dev/null 2>&1 || log "WARN: ntfy push failed ($title)"
+    -d "$body" "${NTFY_URL%%\?*}" >/dev/null 2>&1 || log "WARN: ntfy push failed ($title)"
 }
 
 # ── monthly: actually RUN Drill A ────────────────────────────────────────────────────────────────

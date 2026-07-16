@@ -2,8 +2,8 @@
 
 > Status: **Ready to build** — decisions locked, awaiting go on PR-R1.
 > Follows Slice V (`plans/verification-accuracy.md`), which named this exact slice in its
-> out-of-scope list ("candidate for its own small slice right after V1"). Gap #4 of the
-> 2026-07 progress review.
+> out-of-scope list ("candidate for its own small slice right after V1"). Gap #3 of the
+> 2026-07 progress review (per the PR #103 body; #1 = README drift, #4 = drill cadence).
 > Target: local k3d; no new platform services, no new RAM (a CLI + one contract bump + a
 > reconciler rule + one gauge).
 
