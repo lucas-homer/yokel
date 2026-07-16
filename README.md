@@ -22,7 +22,9 @@ notices from the Federal Register and Regulations.gov APIs, reconciles them into
 optional LLM adjudication for borderline cases — and serves them through an authenticated Fastify
 REST API. The stack deploys via GitOps (ADRs [0008](docs/decisions/0008-kubernetes-self-host-postgres-cloudnativepg.md),
 [0009](docs/decisions/0009-gitops-iac-toolchain.md)) and ships with structured logs, metrics,
-dashboards, alerts, LLM tracing, and a gold-corpus eval suite gated in CI.
+dashboards, alerts that actually page a phone (ntfy + a dead-man's switch), LLM tracing, a
+gold-corpus eval suite gated in CI, PITR backups with an offsite mirror and rehearsed restore
+drills, and a post-close accuracy loop that grades every published deadline after the fact.
 
 ```
 yokel/
@@ -31,19 +33,20 @@ yokel/
 │  │                        (RuleBox + optional Gemini adjudicator) → delivery API. BUILT.
 │  └─ watershed-watch/   ← first vertical wedge. Stub (shelved at the W3 spike gate).
 ├─ packages/
-│  └─ contracts/         ← THE SEAM: shared Zod schemas (ParticipationWindow, OCD-IDs,
-│                           confidence/conflict enums, REST envelope). Currently 0.8.0.
-├─ charts/docketclock/   ← first-party Helm chart (API + poller + CNPG Postgres)
+│  └─ contracts/         ← THE SEAM: shared Zod schemas (ParticipationWindow, AccuracyRecord,
+│                           OCD-IDs, confidence/conflict enums, REST envelope). Currently 0.9.0.
+├─ charts/docketclock/   ← first-party Helm chart (API + poller + CNPG Postgres + backup/recovery seams)
 ├─ infra/                ← GitOps platform: Argo CD app-of-apps, CNPG, ESO + self-hosted Vault
 │                           (transit auto-unseal), Prometheus/Grafana/Loki/Alloy/Langfuse,
-│                           go-task entrypoints, Terraform structure (provider deferred)
+│                           MinIO backups → R2 offsite, go-task entrypoints, Terraform
+│                           (R2 offsite managed; cloud cluster provider deferred)
 ├─ docs/
 │  ├─ architecture/      ← canonical, agent-readable designs (hosting section superseded by ADR 0008)
 │  ├─ decisions/         ← ADRs: the durable "why" behind every big call
 │  ├─ design/            ← ratified feature designs (e.g. cross-window conflicts)
 │  ├─ plans/             ← week1 spikes + go/no-go memo, agent orchestration
 │  └─ research/          ← heavy reference (HTML reports, foundry JSON). NOT loaded routinely.
-├─ plans/                ← phase plans (observability slices A–D, rename)
+├─ plans/                ← phase plans (observability A–D, backups + restore drill, verification V, rename)
 ├─ spikes/               ← Week-1 validation harness (done; results in the go/no-go memo)
 └─ tools/                ← doc generators
 ```
@@ -61,9 +64,16 @@ yokel/
   with a Gemini adapter, content-hash verdict cache, call budgets
 - ✅ Observability (slices A–D): pino → Loki/Alloy logs, Prometheus metrics + Grafana
   dashboards/alerts, Langfuse LLM tracing, gold-corpus adjudicator evals with a CI regression gate
-- ⏭️ **Next:** deeper verification (post-close accuracy tracking) and hardening; the
-  customer-facing "Phase 3+" surface (webhooks, onboarding) is held on D5 buyer discovery,
-  and cloud cutover is deferred until the stack is validated locally (provider undecided)
+- ✅ Backups + restore drills: CNPG PITR (barman plugin → MinIO, RPO ≤5 min), hourly Cloudflare R2
+  offsite mirror, nightly `pg_dump`s, daily Vault raft snapshots — with Drill A (scratch PITR,
+  monthly) automated and Drill B (cold restore from R2) executed for real (2026-07-11)
+- ✅ Verification (slice V): post-close accuracy loop — append-only `AccuracyRecord`s graded 7d
+  after close, offline Mirrulations cross-check with a miss-to-regression-fixture loop, and a
+  real alert path (ntfy pages + healthchecks.io dead-man's switch, fire-drilled twice)
+- ⏭️ **Next:** image supply chain (registry + CI-built tags — the last local-only seam) and the
+  human review/resolve path (`human_review` observations); the customer-facing "Phase 3+"
+  surface (webhooks, onboarding) is held on D5 buyer discovery, and cloud cutover is deferred
+  until the stack is validated locally (provider undecided)
 
 ## Getting up and running locally
 
@@ -105,6 +115,11 @@ REGS_API_KEY=xxx bash infra/scripts/seed-docketclock-secrets.sh
 - `WEBHOOK_HMAC_SECRET` — signing secret for the webhook delivery surface (seeded now; consumed
   once webhooks land)
 
+Alert delivery (ntfy topic + healthchecks.io dead-man URL) is seeded via
+`infra/scripts/seed-alerting-secrets.sh`, and the R2 offsite credentials flow from Terraform via
+`infra/scripts/seed-r2-secrets.sh` — see the Alerting and Backups sections of
+[infra/README.md](infra/README.md).
+
 For host-side scripts and smokes, copy `.env.example` → `.env`.
 
 ### Inner loop
@@ -122,6 +137,7 @@ tilt up          # from repo root: builds the image, deploys the chart, hot-relo
 | Grafana    | `task grafana`          | http://localhost:3000  |
 | Prometheus | `task prometheus`       | http://localhost:9090  |
 | Langfuse   | `task langfuse`         | http://localhost:3001  |
+| MinIO      | `task minio`            | http://localhost:9001  |
 
 Tear down with `task dev-down` (deletes the cluster; colima keeps running).
 
@@ -131,6 +147,14 @@ Tear down with `task dev-down` (deletes the cluster; colima keeps running).
 pnpm test                                      # workspace-wide
 pnpm --filter @yokel/docketclock test          # docketclock suite (incl. adversarial variants)
 pnpm --filter @yokel/docketclock eval:chain    # adjudicator gold-corpus eval
+```
+
+### Ops drills & backup state (from `infra/`)
+
+```bash
+task backup-status    # one-shot freshness report: PITR windows, WAL, dumps, snapshots, R2 mirror
+task drill-pitr       # Drill A: scratch PITR restore + assertions (monthly; automatable — see infra/README)
+task alert-drill      # quarterly fire drill: stage a real outage, confirm the page reaches a phone
 ```
 
 ## Working setup
