@@ -17,7 +17,7 @@ Concretely, today:
   is no way to record "a human read both notices; the close is X" — the architecture's
   human-review console concept (corrections flow as `human_review` observations, preserving the
   audit chain) has zero code behind it: `ObservationSource` is three live sources, the DB CHECK
-  (migration 0001) matches, and `grep -ri review src/` comes back empty.
+  (migration 0001) matches, and `grep -ri review apps/docketclock/src/` comes back empty.
 - xcheck triage (`spikes/out/XCHECK_diff.md`) writes `our_bug` / `bulk_stale` / `source_drift`
   verdicts into a **markdown table** — human judgment about live data, recorded outside the
   audit chain the product sells. Closed-window misses flow to regression fixtures (V2); open-window
@@ -29,9 +29,10 @@ Concretely, today:
 ## What exists today (the seams this slice hooks into)
 
 - **The append-only observation log** — DB-trigger-enforced; `ingestObservation`
-  (`src/ingest/observe.ts`) is the single write path with payload-hash idempotency. A human
+  (`apps/docketclock/src/ingest/observe.ts`) is the single write path with payload-hash idempotency. A human
   resolution can ride this exact machinery.
-- **The pure reconciler** (`src/reconcile/reconcile.ts`, `RECONCILER_VERSION = reconcile-v1`) —
+- **The pure reconciler** (`apps/docketclock/src/reconcile/reconcile.ts`,
+  `RECONCILER_VERSION = reconcile-v1`) —
   derives a window from the observation chain for one ocd_id via latest-per-source; validates
   output against the frozen contract. A supersedence rule slots in as one more deterministic rule.
 - **Contracts @ 0.9.0** — `ObservationSource` (3 live sources), `ConflictFlag` already carries a
@@ -68,7 +69,7 @@ Concretely, today:
   (e.g. `pin_close` → that close, confidence `high`) and stamps a new `human_resolved`
   provenance `ConflictFlag` (riding alongside other flags, the `llm_corroborated` pattern), so
   every consumer can see a human is in the loop. The rulebook remains a fixed rulebook — the
-  human is an *input* to versioned rules (`reconcile-v2`), not an override around them.
+  human is an _input_ to versioned rules (`reconcile-v2`), not an override around them.
 - **CLI-first, operator-only; the API stays read-only.** The interface is a `review` CLI in the
   app workspace (`pnpm --filter @yokel/docketclock review …`), host-side against the CNPG DB
   like the existing scripts/smokes. No API write route: delivery API keys must never be able to
@@ -122,8 +123,8 @@ the conflict resurface.
 ## PR-R4 — Queue observability
 
 `docketclock_review_queue_depth{reason}` gauge computed per poll cycle (rides the existing metrics
-conventions), a Grafana queue panel, and one provisioned alert: oldest unresolved queue item
-> 7d → ntfy. `validate-argocd-apps.py` stays green.
+conventions), a Grafana queue panel, and one provisioned alert: oldest unresolved queue
+item > 7d → ntfy. `validate-argocd-apps.py` stays green.
 
 **Verify:** gauge visible in Prometheus; stage a stale queue item (or lower the threshold) →
 alert fires and resolves through the drilled path.
