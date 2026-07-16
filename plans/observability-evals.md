@@ -1,10 +1,11 @@
 # Observability Slice D — Evals (human gold labels + scoring run + nightly regression gate)
 
-> Status: **PR-D1 merged (#60); PR-D2 built** — `pnpm eval:chain` runner + pure `scoreEval` + 12-test suite
-> on `feat/eval-chain-runner`. BASELINE on the 50-item corpus (gemini-2.5-flash @ temp 0): **amends accuracy
-> 94%** (precision 88.5%, recall 100%, F1 0.939; TP 23 / FP 3 / FN 0 / TN 24; exact 3-way 94%). The 3 errors
-> are all FALSE POSITIVES (over-linking — the conservative system's worst error), incl. the two borderline
-> items relabeled in D1 (#7 reject, #10 uncertain). Use this to set the D3 threshold with temp-0 margin.
+> Status: **Shipped** — PR-D1 (#60), PR-D2 (#61), PR-D3 (#62) merged.
+> BASELINE on the 50-item corpus (gemini-2.5-flash @ temp 0): **amends accuracy 94%** (precision
+> 88.5%, recall 100%, F1 0.939; TP 23 / FP 3 / FN 0 / TN 24; exact 3-way 94%). The 3 errors are all
+> FALSE POSITIVES (over-linking — the conservative system's worst error), incl. the two borderline
+> items relabeled in D1 (#7 reject, #10 uncertain). The D3 gate threshold was set from this
+> baseline with temp-0 margin.
 > Target: local k3d for the Langfuse enrichment; the eval CORE is Langfuse-independent and runs anywhere
 > (incl. GitHub Actions). Builds directly on Slice C (`observability-llm.md`, shipped): the seeded
 > `docketclock-adjudications` Langfuse dataset, the pure `selectDatasetItems()` selection, the injected

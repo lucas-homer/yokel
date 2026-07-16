@@ -1,7 +1,7 @@
 # Observability Slice B — Metrics (Prometheus + app instrumentation + Grafana dashboards/alerts)
 
-> Status: **Scoped — awaiting go on PR-B1.** Closes the observability epic: A (logs, shipped),
-> C (LLM-obs, shipped), D (evals, shipped) — B (metrics) is the missing middle.
+> Status: **Shipped** — PR-B1 (#63), PR-B2 (#64), PR-B3 (#65) merged. Closed the observability
+> epic: A (logs, #49–#50), C (LLM-obs, #56–#59), D (evals, #60–#62), B (metrics, #63–#65).
 > Target: local k3d only (no cloud cluster yet; see memory `deploy-target-k3d-first`).
 > Constraint: colima 12 GiB. Live headroom is healthy — both nodes ~18% mem (~2.1 GiB each of 12),
 > so a lean Prometheus + kube-state-metrics + node-exporter fits; still pin every limit and disable
