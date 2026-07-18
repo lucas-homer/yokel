@@ -652,7 +652,19 @@
       let i = 0;
       slides.forEach((_, n) => {
         const d = document.createElement("span");
+        d.setAttribute("role", "button");
+        d.setAttribute(
+          "aria-label",
+          `Go to slide ${n + 1} of ${slides.length}`,
+        );
+        d.tabIndex = 0;
         d.onclick = () => show(n);
+        d.onkeydown = (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            show(n);
+          }
+        };
         dots.appendChild(d);
       });
       function show(n) {

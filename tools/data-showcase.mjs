@@ -42,6 +42,34 @@ const ENV_RE_SRC =
   "environmental protection|interior|fish and wildlife|oceanic|forest|land management|engineers|agriculture|energy|reclamation|national park|geological|surface mining|council on environmental";
 const ENV_RE = new RegExp(ENV_RE_SRC, "i");
 
+// CNPG mints new pod ordinals on failover/reprovision (a post-drill cluster can be pg-2), so
+// resolve the CURRENT primary like the runbooks do rather than hardcoding pg-1. Cached for the
+// process lifetime; falls back to pg-1 if the Cluster resource is unreadable.
+let PG_POD = null;
+function pgPod() {
+  if (!PG_POD) {
+    try {
+      PG_POD =
+        execFileSync(
+          "kubectl",
+          [
+            "-n",
+            "docketclock",
+            "get",
+            "cluster",
+            "docketclock-pg",
+            "-o",
+            "jsonpath={.status.currentPrimary}",
+          ],
+          { encoding: "utf8" },
+        ).trim() || "docketclock-pg-1";
+    } catch {
+      PG_POD = "docketclock-pg-1";
+    }
+  }
+  return PG_POD;
+}
+
 function sql(query) {
   const out = execFileSync(
     "kubectl",
@@ -50,7 +78,7 @@ function sql(query) {
       "docketclock",
       "exec",
       "-i",
-      "docketclock-pg-1",
+      pgPod(),
       "-c",
       "postgres",
       "--",
@@ -88,8 +116,9 @@ function collectData() {
     'verified_ok',  (select count(*) from accuracy_records where was_correct is true),
     'verified_bad', (select count(*) from accuracy_records where was_correct is false),
     'unverified',   (select count(*) from accuracy_records where was_correct is null),
-    'agencies',     (select count(distinct raw->'agencies'->0->>'name')
-                       from observations where source='federal_register'))`);
+    'agencies',     (select count(distinct a->>'name')
+                       from observations, jsonb_array_elements(raw->'agencies') a
+                       where source='federal_register'))`);
 
   const closing = sql(`${FR_CTE}
     select coalesce(json_agg(r), '[]'::json) from (
