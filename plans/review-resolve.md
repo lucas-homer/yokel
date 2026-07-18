@@ -32,7 +32,7 @@ Concretely, today:
   (`apps/docketclock/src/ingest/observe.ts`) is the single write path with payload-hash idempotency. A human
   resolution can ride this exact machinery.
 - **The pure reconciler** (`apps/docketclock/src/reconcile/reconcile.ts`,
-  `RECONCILER_VERSION = reconcile-v1`) —
+  `RECONCILER_VERSION = reconcile-v1.1`) —
   derives a window from the observation chain for one ocd_id via latest-per-source; validates
   output against the frozen contract. A supersedence rule slots in as one more deterministic rule.
 - **Contracts @ 0.9.0** — `ObservationSource` (3 live sources), `ConflictFlag` already carries a
@@ -141,7 +141,7 @@ alert fires and resolves through the drilled path.
 
 - PR-R1: revert; contract minor bumps are additive, migration 0011 only widens a CHECK (existing
   rows unaffected either way).
-- PR-R2: revert to `reconcile-v1` — human_review rows become inert data in the log (harmless,
+- PR-R2: revert to `reconcile-v1.1` — human_review rows become inert data in the log (harmless,
   still auditable).
 - PR-R3/R4: revert; no state beyond ordinary observations already governed by the log's
   append-only discipline.

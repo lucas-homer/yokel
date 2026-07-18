@@ -29,7 +29,7 @@ import { runMigrations } from "../src/db/migrate.js";
 import { parseFrObservation } from "../src/sources/federal-register.js";
 import { parseRegsObservation } from "../src/sources/regulations-gov.js";
 import { ingestObservation } from "../src/ingest/observe.js";
-import { reconcile } from "../src/reconcile/reconcile.js";
+import { RECONCILER_VERSION, reconcile } from "../src/reconcile/reconcile.js";
 import {
   easternCalendarDate,
   utcCalendarDate,
@@ -391,6 +391,12 @@ function parses(name: string, w: unknown): void {
     window.resolved_close_utc === frCloseDateToUtcInstant("2026-07-20"),
     String(window.resolved_close_utc),
   );
+  assert(
+    "FR+LATE-DATELESS-REGS: display carries the date + inference note",
+    window.resolved_close_display ===
+      "closes 2026-07-20 at 11:59 p.m. ET (inferred from FR date-only value)",
+    String(window.resolved_close_display),
+  );
   parses("FR+LATE-DATELESS-REGS", window);
 }
 
@@ -450,6 +456,12 @@ function parses(name: string, w: unknown): void {
     window.resolved_close_utc === frCloseDateToUtcInstant("2026-07-20"),
     String(window.resolved_close_utc),
   );
+  assert(
+    "NULL-END-DATE: display carries the date + inference note",
+    window.resolved_close_display ===
+      "closes 2026-07-20 at 11:59 p.m. ET (inferred from FR date-only value)",
+    String(window.resolved_close_display),
+  );
   parses("NULL-END-DATE", window);
 }
 
@@ -470,9 +482,9 @@ function parses(name: string, w: unknown): void {
     String(window.resolved_close_utc),
   );
   assert(
-    "FR-ONLY: display notes date-only inference",
+    "FR-ONLY: display carries the calendar date AND notes date-only inference",
     window.resolved_close_display ===
-      "11:59 p.m. ET (inferred from FR date-only value)",
+      "closes 2026-09-10 at 11:59 p.m. ET (inferred from FR date-only value)",
     String(window.resolved_close_display),
   );
   assert(
@@ -785,8 +797,8 @@ try {
     select reconciler_version from participation_windows where ocd_id = ${OCD}
   `;
   assert(
-    "persisted window carries reconciler_version = 'reconcile-v1'",
-    verRow?.reconciler_version === "reconcile-v1",
+    "persisted window carries the current RECONCILER_VERSION",
+    verRow?.reconciler_version === RECONCILER_VERSION,
     String(verRow?.reconciler_version),
   );
 
