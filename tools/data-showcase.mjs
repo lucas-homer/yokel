@@ -342,7 +342,12 @@ ${live ? `<div class="livebar" id="livebar"><span class="pulse"></span><span>LIV
 <script>
 const LIVE = ${live};
 const ENV_RE = new RegExp(${JSON.stringify(ENV_RE_SRC)}, "i");
-let DATA = ${JSON.stringify(data)};
+let DATA = ${
+    // Upstream FR/Regs content is embedded inside a <script> block; a literal "</script>" in any
+    // title/DATES text would break out of it. <-escape "<" — JSON.parse-identical, XSS-inert.
+    // (This page is deliberately funnel-exposed, so harden even the unlikely case.)
+    JSON.stringify(data).replace(/</g, "\\u003c")
+  };
 let lastFetch = Date.now();
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
