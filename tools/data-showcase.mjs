@@ -30,7 +30,10 @@ const PRESENTATIONS_DIR = join(
   "docs/presentations",
 );
 const EXPORT_PATH = join(PRESENTATIONS_DIR, "docketclock-data-showcase.html");
-const DECK_PATH = join(PRESENTATIONS_DIR, "docketclock-conservation-brief.html");
+const DECK_PATH = join(
+  PRESENTATIONS_DIR,
+  "docketclock-conservation-brief.html",
+);
 const PORT = 8090;
 
 // Environment-and-lands agencies — used server-side to pick the deep-dive exhibit and client-side
@@ -42,8 +45,22 @@ const ENV_RE = new RegExp(ENV_RE_SRC, "i");
 function sql(query) {
   const out = execFileSync(
     "kubectl",
-    ["-n", "docketclock", "exec", "-i", "docketclock-pg-1", "-c", "postgres", "--",
-     "psql", "-U", "postgres", "-d", "docketclock", "-At"],
+    [
+      "-n",
+      "docketclock",
+      "exec",
+      "-i",
+      "docketclock-pg-1",
+      "-c",
+      "postgres",
+      "--",
+      "psql",
+      "-U",
+      "postgres",
+      "-d",
+      "docketclock",
+      "-At",
+    ],
     { input: query, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 },
   ).trim();
   return out ? JSON.parse(out) : null;
@@ -110,7 +127,10 @@ function collectData() {
       group by fr.agency order by n desc limit 12) r`);
 
   // Deep-dive exhibit: prefer an open, environment-adjacent window whose deadline moved.
-  const pick = (moved || []).find((m) => ENV_RE.test(m.agency || "")) || (moved || [])[0] || null;
+  const pick =
+    (moved || []).find((m) => ENV_RE.test(m.agency || "")) ||
+    (moved || [])[0] ||
+    null;
   let dive = null;
   if (pick) {
     const obs = sql(`select coalesce(json_agg(r), '[]'::json) from (
@@ -121,7 +141,15 @@ function collectData() {
     dive = { ...pick, obs };
   }
 
-  return { generatedAt: new Date().toISOString(), stats, closing, moved, conflicts, agencyCounts, dive };
+  return {
+    generatedAt: new Date().toISOString(),
+    stats,
+    closing,
+    moved,
+    conflicts,
+    agencyCounts,
+    dive,
+  };
 }
 
 // Per-record drill-down for the click-a-row paper trail (serve mode only).
@@ -593,9 +621,12 @@ if (mode === "export") {
         // the dashboard link is injected only when SERVED, so the shared funnel link covers both.
         const backLink =
           '<a href="/" style="position:fixed;top:1rem;right:1.2rem;z-index:20;font-size:.85rem;' +
-          'color:#1f6f54;background:#fff;border:1px solid #e2ddd3;border-radius:99px;' +
+          "color:#1f6f54;background:#fff;border:1px solid #e2ddd3;border-radius:99px;" +
           'padding:.35rem .95rem;text-decoration:none">live dashboard ↗</a>';
-        const deck = readFileSync(DECK_PATH, "utf8").replace("</body>", `${backLink}</body>`);
+        const deck = readFileSync(DECK_PATH, "utf8").replace(
+          "</body>",
+          `${backLink}</body>`,
+        );
         res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
         res.end(deck);
       } else if (req.url.startsWith("/window.json")) {
@@ -616,13 +647,25 @@ if (mode === "export") {
     } catch (e) {
       // Serve stale data if we have it (kubectl hiccup mid-demo shouldn't blank the screen).
       if (cache) {
-        res.writeHead(200, { "content-type": req.url.startsWith("/data.json") ? "application/json" : "text/html; charset=utf-8" });
-        res.end(req.url.startsWith("/data.json") ? JSON.stringify(cache.data) : renderPage(cache.data, { live: true }));
+        res.writeHead(200, {
+          "content-type": req.url.startsWith("/data.json")
+            ? "application/json"
+            : "text/html; charset=utf-8",
+        });
+        res.end(
+          req.url.startsWith("/data.json")
+            ? JSON.stringify(cache.data)
+            : renderPage(cache.data, { live: true }),
+        );
       } else {
         res.writeHead(500).end(`database unreachable: ${e.message}`);
       }
     }
-  }).listen(PORT, () => console.error(`dashboard live → http://localhost:${PORT}  (Ctrl-C to stop)`));
+  }).listen(PORT, () =>
+    console.error(
+      `dashboard live → http://localhost:${PORT}  (Ctrl-C to stop)`,
+    ),
+  );
 } else {
   console.error("usage: node tools/data-showcase.mjs [serve|export]");
   process.exit(1);
