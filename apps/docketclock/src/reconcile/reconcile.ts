@@ -33,7 +33,7 @@ import {
 } from "./eastern-date.js";
 
 /** Pins the rulebook version — bump on any rule change (mirrors PARSER_VERSION in the adapters). */
-export const RECONCILER_VERSION = "reconcile-v1";
+export const RECONCILER_VERSION = "reconcile-v1.1";
 
 export interface ReconcileResult {
   window: ParticipationWindow;
@@ -191,7 +191,11 @@ export function reconcile(
 
   // The FR date-only close, resolved to its 11:59:59 p.m. ET operative instant (the convention).
   const frResolvedUtc = frEastern ? frCloseDateToUtcInstant(frEastern) : null;
-  const frDisplay = "11:59 p.m. ET (inferred from FR date-only value)";
+  // Like regsDisplay, the display MUST carry the calendar date — this string is the human-readable
+  // close, and a reader gets no second field to consult (v1 omitted the date; every FR-only row
+  // rendered as a time with no day. reconcile-v1.1).
+  const frDisplay = (d: string) =>
+    `closes ${d} at 11:59 p.m. ET (inferred from FR date-only value)`;
   const regsDisplay = (d: string) => `closes ${d} (per Regulations.gov)`;
 
   if (regsWithdrawn && frReadsOpen) {
@@ -211,7 +215,7 @@ export function reconcile(
     resolvedCloseDisplay = regsCloseUtcInstant
       ? regsDisplay(regsEastern!)
       : frHasDate
-        ? frDisplay
+        ? frDisplay(frEastern!)
         : null;
   } else if (regsWithdrawn) {
     // ── WITHDRAWN — Regs-only / internally-contradictory withdrawal (NOT a cross-source conflict) ────
@@ -227,7 +231,7 @@ export function reconcile(
       resolvedCloseUtc = withdrawnClose;
       resolvedCloseDisplay = regsCloseUtcInstant
         ? regsDisplay(regsEastern!)
-        : frDisplay;
+        : frDisplay(frEastern!);
     } else {
       confidence = "unknown";
       resolvedCloseUtc = null;
@@ -287,7 +291,7 @@ export function reconcile(
       confidence = "low";
       conflictFlags = ["null_end_date_open_status"];
       resolvedCloseUtc = frResolvedUtc;
-      resolvedCloseDisplay = frDisplay;
+      resolvedCloseDisplay = frDisplay(frEastern!);
     } else {
       confidence = "unknown";
       conflictFlags = ["null_end_date_open_status"];
@@ -300,7 +304,7 @@ export function reconcile(
     // an FR-only date-only value with no cross-source / timezone resolution from the authority source
     // => LOW (docketclock.md LOW row).
     resolvedCloseUtc = frResolvedUtc;
-    resolvedCloseDisplay = frDisplay;
+    resolvedCloseDisplay = frDisplay(frEastern!);
     if (regs !== null) {
       confidence = "medium";
       if (regsFields?.allowLateComments === true)
