@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DocketClock — never miss a public-comment window</title>
+<style>
+  :root {
+    --ink: #1a2332;
+    --ink-soft: #4a5568;
+    --paper: #faf8f4;
+    --card: #ffffff;
+    --accent: #1f6f54;      /* conservation green */
+    --accent-soft: #e6f2ec;
+    --warn: #b45309;
+    --warn-soft: #fdf3e3;
+    --rule: #e2ddd3;
+    --mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  /* ── deck mechanics ─────────────────────────────────────────── */
+  .slide {
+    display: none;
+    min-height: 100vh;
+    padding: 6vh 8vw 12vh;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+  .slide.active { display: flex; }
+
+  .kicker {
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 0.9rem;
+  }
+  h1 { font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.12; letter-spacing: -0.01em; }
+  h2 { font-size: clamp(1.5rem, 3.6vw, 2.4rem); line-height: 1.18; margin-bottom: 1.4rem; letter-spacing: -0.01em; }
+  h3 { font-size: 1.05rem; margin-bottom: 0.35rem; }
+  p.lede { font-size: clamp(1.05rem, 2vw, 1.3rem); color: var(--ink-soft); max-width: 44em; }
+  .slide p + p { margin-top: 0.8rem; }
+
+  .cards { display: grid; gap: 1rem; margin-top: 1.6rem; }
+  .cards.two { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .cards.three { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    box-shadow: 0 1px 3px rgba(26,35,50,0.05);
+  }
+  .card p { font-size: 0.95rem; color: var(--ink-soft); }
+  .card.accent { border-left: 4px solid var(--accent); }
+  .card.warn { border-left: 4px solid var(--warn); background: var(--warn-soft); }
+
+  .stat { font-size: clamp(1.9rem, 4vw, 2.8rem); font-weight: 800; color: var(--accent); line-height: 1.05; }
+  .stat.bad { color: var(--warn); }
+  .stat-label { font-size: 0.9rem; color: var(--ink-soft); margin-top: 0.3rem; }
+
+  ul.clean { list-style: none; margin-top: 1.2rem; }
+  ul.clean li {
+    padding: 0.55rem 0 0.55rem 1.9rem;
+    position: relative;
+    font-size: 1.02rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  ul.clean li:last-child { border-bottom: none; }
+  ul.clean li::before {
+    content: "→";
+    position: absolute; left: 0.2rem;
+    color: var(--accent); font-weight: 700;
+  }
+  ul.clean li.no::before { content: "✕"; color: var(--warn); }
+  ul.clean li strong { color: var(--ink); }
+  ul.clean small { color: var(--ink-soft); display: block; font-size: 0.88rem; }
+
+  .pill {
+    display: inline-block;
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    background: var(--accent-soft); color: var(--accent);
+    border-radius: 99px; padding: 0.2rem 0.7rem;
+    margin-bottom: 0.6rem;
+  }
+  .pill.amber { background: var(--warn-soft); color: var(--warn); }
+
+  .flow {
+    display: flex; align-items: stretch; gap: 0.6rem;
+    margin-top: 1.8rem; flex-wrap: wrap;
+  }
+  .flow .node {
+    background: var(--card); border: 1.5px solid var(--rule);
+    border-radius: 10px; padding: 0.85rem 1rem;
+    flex: 1 1 150px; text-align: center;
+  }
+  .flow .node b { display: block; font-size: 0.95rem; }
+  .flow .node span { font-size: 0.8rem; color: var(--ink-soft); }
+  .flow .node.hot { border-color: var(--accent); background: var(--accent-soft); }
+  .flow .arrow { align-self: center; color: var(--accent); font-size: 1.4rem; font-weight: 700; }
+
+  footer.deck-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.8rem 1.4rem;
+    background: linear-gradient(transparent, var(--paper) 40%);
+    font-size: 0.85rem; color: var(--ink-soft);
+  }
+  .dots { display: flex; gap: 0.45rem; }
+  .dots span {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--rule); cursor: pointer; transition: background 0.15s;
+  }
+  .dots span.on { background: var(--accent); }
+  .nav-hint b { color: var(--ink); }
+  button.navbtn {
+    font: inherit; border: 1px solid var(--rule); background: var(--card);
+    border-radius: 8px; padding: 0.35rem 0.9rem; cursor: pointer; color: var(--ink);
+  }
+  button.navbtn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .foot-note { margin-top: 2rem; font-size: 0.82rem; color: var(--ink-soft); }
+  .foot-note code { font-family: var(--mono); font-size: 0.8rem; }
+
+  /* ── print / scroll mode: show everything ───────────────────── */
+  @media print {
+    .slide { display: flex !important; min-height: auto; page-break-after: always; padding: 2rem 1rem; }
+    footer.deck-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 1 ─ title -->
+<section class="slide active">
+  <div class="kicker">DocketClock · a briefing for conservation partners</div>
+  <h1>Never miss a public-comment window again.</h1>
+  <p class="lede" style="margin-top:1.2rem">
+    Public participation in federal environmental decisions runs on deadlines.
+    DocketClock is a system that watches those deadlines continuously, catches them when they
+    move, and tells you — with a paper trail — exactly how long you have left to be heard.
+  </p>
+  <p class="foot-note">Prepared July 2026 · all statistics measured against the live government APIs, June&nbsp;2026</p>
+</section>
+
+<!-- 2 ─ why deadlines are the whole game -->
+<section class="slide">
+  <div class="kicker">The problem</div>
+  <h2>The comment window is where the public's power lives — and it's easy to lose.</h2>
+  <p class="lede">
+    When an agency proposes a rule, permits a project, or publishes an environmental impact
+    statement, the law gives the public a window — often 30 to 60 days — to comment on the record.
+  </p>
+  <ul class="clean">
+    <li><strong>Comments filed in the window shape the final decision</strong> — agencies must respond to substantive ones.</li>
+    <li><strong>Missing the window can mean losing standing later</strong> — courts ask whether you raised the issue when you could.</li>
+    <li><strong>The deadlines are scattered and unstable</strong> — published in two different government systems, extended, reopened, corrected, and withdrawn, often with little fanfare.</li>
+  </ul>
+  <p style="margin-top:1.4rem">For a volunteer coalition or a small staffed org, just <em>knowing what's open and when it truly closes</em> is a part-time job nobody has.</p>
+</section>
+
+<!-- 3 ─ the data really is messy (measured) -->
+<section class="slide">
+  <div class="kicker">We measured it</div>
+  <h2>The government's own two systems disagree about deadlines — constantly.</h2>
+  <p class="lede">Every comment window is published twice: in the <b>Federal Register</b> (the legal document) and on <b>Regulations.gov</b> (where you file). We compared them, live:</p>
+  <div class="cards three">
+    <div class="card"><div class="stat bad">100%</div><div class="stat-label">of paired records <em>look</em> like the dates conflict, if you compare them naively — a timezone quirk makes every deadline appear a day off.</div></div>
+    <div class="card"><div class="stat">920 vs 12</div><div class="stat-label">after careful normalization: 920 of those alarms were false, and 12 were <em>genuine</em> disagreements between the two systems.</div></div>
+    <div class="card"><div class="stat bad">~3/day</div><div class="stat-label">comment deadlines genuinely <em>move</em> — extended, reopened, corrected, or withdrawn — every single day, government-wide.</div></div>
+  </div>
+  <p style="margin-top:1.4rem">A tool that isn't built for this either <b>cries wolf on everything</b> or <b>goes quiet and lets a real deadline slip</b>. Both destroy trust.</p>
+</section>
+
+<!-- 4 ─ what docketclock does -->
+<section class="slide">
+  <div class="kicker">What DocketClock does</div>
+  <h2>One verified record per comment window, watched until it closes.</h2>
+  <div class="flow">
+    <div class="node"><b>Federal Register</b><span>the legal notice</span></div>
+    <div class="node"><b>Regulations.gov</b><span>where you file</span></div>
+    <div class="arrow">→</div>
+    <div class="node hot"><b>Reconcile &amp; verify</b><span>one record, one true deadline, a confidence grade</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Watch &amp; alert</b><span>extensions, reopenings, withdrawals — caught daily</span></div>
+  </div>
+  <ul class="clean" style="margin-top:1.8rem">
+    <li><strong>Every window gets a confidence grade.</strong> When the two systems agree, you get a verified deadline. When they disagree, DocketClock says <em>"these conflict — here are both dates and both official notices"</em> instead of guessing.</li>
+    <li><strong>Deadline changes are first-class events.</strong> Extension and reopening notices are linked back to the original window, so "you have 30 more days" reaches you as news, not luck.</li>
+    <li><strong>Everything is traceable.</strong> Every claim links to the official government notice, and every change is kept in a permanent audit log — nothing is ever silently overwritten.</li>
+  </ul>
+</section>
+
+<!-- 5 ─ why trust it -->
+<section class="slide">
+  <div class="kicker">Why trust it</div>
+  <h2>It grades its own homework.</h2>
+  <p class="lede">A deadline tool is only useful if it's right. DocketClock is built to prove that, not assert it:</p>
+  <div class="cards two">
+    <div class="card accent"><h3>It checks itself after the fact</h3><p>After every window closes, the system goes back and verifies whether the deadline it published was correct — building a running, public accuracy record instead of a marketing claim.</p></div>
+    <div class="card accent"><h3>It's checked from the outside too</h3><p>An independent archive of Regulations.gov data is used to cross-examine the system's records. Every disagreement gets investigated and classified.</p></div>
+    <div class="card accent"><h3>Uncertainty is shown, never hidden</h3><p>A conflicting record is flagged as conflicting, with both sources side by side. The rule inside the system: <em>suppression is never silence</em>.</p></div>
+    <div class="card accent"><h3>Run like infrastructure</h3><p>Continuous monitoring with alerts that page a phone, tested backups, and monthly restore drills that run automatically. Boring on purpose.</p></div>
+  </div>
+</section>
+
+<!-- 6 ─ honest limits -->
+<section class="slide">
+  <div class="kicker">Honest limits</div>
+  <h2>What it does <em>not</em> do (yet).</h2>
+  <ul class="clean">
+    <li class="no"><strong>Federal only, today.</strong> State agency permit comment periods (state DEQ/DEP water permits, stormwater, wetlands) and local planning boards are <em>not</em> covered — and honestly, that's where many watershed fights actually live. Extending coverage is possible, but it's real work we'd scope with a partner.</li>
+    <li class="no"><strong>It can't file your comment for you.</strong> Since 2025 the government blocks automated comment submission by outside tools (we verified this directly). The honest workflow is: DocketClock drafts and reminds, a human files, one click away.</li>
+    <li class="no"><strong>It's an alert system, not legal advice.</strong> Every record carries a link to the official notice. Verify there before you rely on a deadline for anything with legal consequence.</li>
+  </ul>
+  <p style="margin-top:1.4rem">We lead with the limits deliberately: the coverage promise you <em>can</em> rely on — <b>"you will not miss a federal comment window on the dockets you watch"</b> — is bounded and testable.</p>
+</section>
+
+<!-- 7 ─ the primitive -->
+<section class="slide">
+  <div class="kicker">The bigger idea</div>
+  <h2>Under the hood is a reusable primitive: a verified registry of participation windows.</h2>
+  <p class="lede">
+    DocketClock's real product isn't a website — it's a continuously verified answer to the question
+    <em>"where can the public act right now, and until when?"</em> Anything that needs that answer can
+    be built on top: a watershed radar, a regional digest, a coalition calendar, a policy tracker.
+  </p>
+  <div class="flow" style="margin-top:2rem">
+    <div class="node hot" style="flex:1.4 1 220px"><b>The participation-window registry</b><span>verified deadlines · confidence grades · change history · official-source links</span></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>Radar apps</b><span>scoped by place or topic</span></div>
+    <div class="node"><b>Digests &amp; calendars</b><span>for coalitions</span></div>
+    <div class="node"><b>Trackers</b><span>NEPA/EIS, permits, agency behavior</span></div>
+  </div>
+</section>
+
+<!-- 8 ─ ideas for conservation -->
+<section class="slide">
+  <div class="kicker">What this could become for conservation</div>
+  <h2>Four ideas we'd love your reaction to.</h2>
+  <div class="cards two">
+    <div class="card"><span class="pill">Regional deadline radar</span>
+      <p>Every open federal comment window and EIS touching your region — with reminders at 14 days, 7 days, 48 hours. <b>The honest lesson from our own testing:</b> a single small watershed had essentially <em>zero</em> novel federal windows per quarter. The signal shows up at the scale of a region, a coalition, or a topic — which is why your network matters more than any one basin.</p></div>
+    <div class="card"><span class="pill">NEPA / EIS tracker</span>
+      <p>The Federal Register publishes ~50 environmental-impact-statement notices a month, each starting a 45- or 30-day statutory clock. A tracker that reconciles those clocks with later extension notices — nationally or by state — is a natural first build on the registry.</p></div>
+    <div class="card"><span class="pill">Coalition digest</span>
+      <p>A weekly "what opened, what moved, what closes soon" email for a coalition's chosen geographies and topics — with the audit trail one click away so organizers can forward it with confidence.</p></div>
+    <div class="card"><span class="pill">Accountability lens</span>
+      <p>The change history is data: which agencies extend most, which dockets get reopened, where deadlines quietly shrink. A watchdog view for journalists and policy shops — nobody has this today because nobody keeps the history.</p></div>
+  </div>
+</section>
+
+<!-- 9 ─ the ask -->
+<section class="slide">
+  <div class="kicker">What we'd love from you</div>
+  <h2>You know the terrain. Help us aim.</h2>
+  <p class="lede">This is the part where the domain expert matters more than the software. Honest answers — including "nobody needs this" — are genuinely valuable:</p>
+  <ul class="clean">
+    <li><strong>How do you and your network hear about comment windows today?</strong> Email lists, a colleague, luck?</li>
+    <li><strong>Have you ever missed one that mattered?</strong> What did it cost?</li>
+    <li><strong>What's the right scope?</strong> One basin, a multi-state region, or a topic (water quality, wetlands, ESA) regardless of geography?</li>
+    <li><strong>Federal vs. state:</strong> would federal-only coverage be useful on day one, or is state permit coverage the make-or-break?</li>
+    <li><strong>Who would use it — and what's it worth?</strong> A volunteer coalition, a staffed org, a funder? A free tool, a paid seat, a grant-funded service?</li>
+    <li><strong>Who else should see this?</strong> Three introductions would teach us more than three months of building.</li>
+  </ul>
+</section>
+
+<!-- 10 ─ close -->
+<section class="slide">
+  <div class="kicker">In one sentence</div>
+  <h2 style="max-width:20em">DocketClock makes sure the public's window to act never closes unnoticed — and we want to point it where it helps conservation most.</h2>
+  <p class="lede" style="margin-top:1rem">Thanks for taking a look. Every number in this deck is measured, every limit is stated, and every idea is up for revision by someone who knows the field better than we do.</p>
+  <p class="foot-note">Lucas Homer · lucas.homer@gmail.com · DocketClock, July 2026</p>
+</section>
+
+<footer class="deck-nav">
+  <button class="navbtn" onclick="go(-1)">← Back</button>
+  <div class="dots" id="dots"></div>
+  <div class="nav-hint"><b>←/→</b> or click dots · <b>Ctrl/Cmd-P</b> prints the whole deck</div>
+  <button class="navbtn" onclick="go(1)">Next →</button>
+</footer>
+
+<script>
+  const slides = [...document.querySelectorAll(".slide")];
+  const dots = document.getElementById("dots");
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement("span");
+    d.onclick = () => show(n);
+    dots.appendChild(d);
+  });
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle("active", k === i));
+    [...dots.children].forEach((d, k) => d.classList.toggle("on", k === i));
+    window.scrollTo(0, 0);
+  }
+  function go(step) { show(i + step); }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") go(1);
+    if (e.key === "ArrowLeft" || e.key === "PageUp") go(-1);
+    if (e.key === "Home") show(0);
+    if (e.key === "End") show(slides.length - 1);
+  });
+  show(0);
+</script>
+</body>
+</html>
