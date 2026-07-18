@@ -391,6 +391,12 @@ function parses(name: string, w: unknown): void {
     window.resolved_close_utc === frCloseDateToUtcInstant("2026-07-20"),
     String(window.resolved_close_utc),
   );
+  assert(
+    "FR+LATE-DATELESS-REGS: display carries the date + inference note",
+    window.resolved_close_display ===
+      "closes 2026-07-20 at 11:59 p.m. ET (inferred from FR date-only value)",
+    String(window.resolved_close_display),
+  );
   parses("FR+LATE-DATELESS-REGS", window);
 }
 
@@ -449,6 +455,12 @@ function parses(name: string, w: unknown): void {
     "NULL-END-DATE: resolved_close non-null (LOW requires it) via FR 11:59pm ET",
     window.resolved_close_utc === frCloseDateToUtcInstant("2026-07-20"),
     String(window.resolved_close_utc),
+  );
+  assert(
+    "NULL-END-DATE: display carries the date + inference note",
+    window.resolved_close_display ===
+      "closes 2026-07-20 at 11:59 p.m. ET (inferred from FR date-only value)",
+    String(window.resolved_close_display),
   );
   parses("NULL-END-DATE", window);
 }
