@@ -107,8 +107,8 @@ at-least-monthly bulletin (§ 201), and web publication defined only as "a searc
 database" — **no format mandate and no API/feed requirement**. That explains both the convergence
 (30 days is the modal floor; nearly every state has *some* bulletin) and the heterogeneity
 (HTML vs PDF vs paywalled print all satisfy the model act). States enacted it selectively, so
-per-state statutory verification stays necessary. *(Source: MSAPA 2010 text; extracted by the
-research harness but not adversarially verified — see verification note below.)*
+per-state statutory verification stays necessary. *(MSAPA §§ 201/304/306 verified verbatim 3-0
+against three independent mirrors of the act's text by the adversarial-verification harness.)*
 
 One timeliness caveat surfaced by aggregator marketing and worth testing empirically: **registers
 lag agency activity** — agencies often post rulemaking material on their own sites weeks before
@@ -117,15 +117,19 @@ monitoring (or agency email lists) is the early-warning layer where latency matt
 
 ## Cross-cutting aggregators & prior art
 
-- **Commercial trackers own this space today:** LexisNexis **State Net** and **StateScape** both
-  advertise full 50-state regulatory tracking (StateScape claims monitoring of 150+ register
-  publications/month across all states + territories; its RegsTrack product structures comment
-  deadlines and hearing dates as searchable fields, delivered via analyst-curated email alerts and
-  a proprietary platform — **no public API**, so not ingestible without a partnership).
-  **FiscalNote/CQ** plays in the same market. These are expensive enterprise tools aimed at
-  lobbyists and compliance teams — none serve citizens or small orgs, which is DocketClock's
-  wedge. Their existence *validates* that the scraping problem is tractable at 50-state scale, and
-  that comment-period metadata can be systematically extracted from state notices.
+- **Commercial trackers own this space today — and prove the pipeline is buildable.** LexisNexis
+  **State Net** covers regulations and rulemaking across all 50 states + Congress + territories
+  and offers genuinely machine-readable delivery under paid contract: customizable **XML data
+  feeds** (nightly updates) and **REST APIs (JSON + OAuth 2.0)**, with most information published
+  within ~24 hours of collection *(coverage/XML/API verified 3-0 from vendor docs; the 24-hour
+  cadence 2-1)*. **StateScape** monitors 150+ register publications/month; its RegsTrack product
+  structures comment deadlines and hearing dates as searchable fields delivered via
+  analyst-curated alerts and a proprietary platform. **FiscalNote/CQ** plays in the same market.
+  None of these has a public or free API — they aggregate without solving open ingestion — and
+  all target lobbyists and compliance teams, not citizens or small orgs, which is DocketClock's
+  wedge. Their existence is an **existence proof that near-real-time, machine-readable 50-state
+  rulemaking monitoring is operationally achievable**, including systematic comment-deadline
+  extraction.
 - **LexisNexis is also a publisher**, not just an aggregator: it publishes the official NJ Register,
   prints the VA Register, and sells the unofficial GA Government Register. Vendor-hosted registers
   (NJ, GA/Fastcase-vLex, AR/NIC, VT/NIC-Tyler, PA/Fry Communications, MN comments/Granicus) are a
@@ -136,8 +140,13 @@ monitoring (or agency email lists) is the early-warning layer where latency matt
   administrative rulemaking. There is no "Open States for regulations." That gap is the
   civic-tech opportunity this research keeps confirming.
 - **NASS Administrative Codes & Registers (ACR) section** — the professional association of
-  register editors (many SOS offices). Useful as a directory of who runs each register and as a
-  standards venue; publishes a periodic Administrative Rules directory/survey.
+  register editors (many SOS offices) — maintains **administrativerules.org**, a per-state index
+  linking, for all 50 states + territories, the responsible agency, the Register, the
+  Administrative Code, and the rulewriting manual (which typically documents each state's
+  notice/comment procedures). **The best starting index for per-state register discovery**
+  *(verified 3-0 via multiple independent law-library guides)* — though the site itself
+  bot-blocks non-browser clients (HTTP 403), so it's human-usable rather than scrapeable, and not
+  every state posts a manual online.
 - **Third-party single-state efforts exist where officials fail hardest:** nh-rulemaking.app
   (NH Register search + alerts), flrules.elaws.us (FL mirror). Nothing found for CA (open niche).
 - **Law-library research guides** (Cornell LII state listings, law-school libguides) are the best
@@ -183,10 +192,16 @@ monitoring (or agency email lists) is the early-warning layer where latency matt
 
 - **Method:** five parallel regional research agents (each verifying against official .gov sources
   via web search) produced the per-state findings; a separate deep-research workflow ran a
-  search→fetch→adversarial-verify pipeline for the cross-cutting claims. The workflow's
-  verification phase failed on API rate limits, so its claims (MSAPA details, StateScape
-  mechanics, register-lag) are extracted-but-unverified; where they overlap the regional agents'
-  findings they are independently corroborated.
+  search→fetch→adversarial-verify pipeline (3 independent refutation votes per claim) for the
+  cross-cutting claims. **14 of 19 cross-cutting claims received full panels and all survived —
+  zero refuted** — most 3-0, with two 2-1 splits (the OAL PDF URL pattern; State Net's 24-hour
+  cadence). Five claims' panels hit API rate limits both runs and remain extracted-but-unverified:
+  StateScape RegsTrack field structuring, StateScape delivery mechanics, the MSAPA "Internet
+  website" definition, the MSAPA 2010 approval history, and the register-lag timeliness claim.
+- One prior claim was **refuted 1-2**: that oal.ca.gov categorically blocks automated fetching.
+  Verifiers did observe 403s in practice, so treat OAL bot-blocking as plausible but unconfirmed
+  (and possibly a sandbox-proxy artifact) — same caveat as the other bot-blocking observations
+  below.
 - Statutory citations were verified to search-snippet level, not always full-text; cite-level
   flags are inline in [`state-by-state.md`](state-by-state.md). Highest-value re-checks: WV
   § 29A-3-5, NC 150B-21.2(f), AL § 41-22-5, TN § 4-5-203/204.

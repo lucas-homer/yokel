@@ -28,15 +28,21 @@ calendar days before** the intended publication date.
 - PDF URL pattern (WordPress uploads):
   `https://oal.ca.gov/wp-content/uploads/sites/166/{YYYY}/{MM}/{YYYY}-Notice-Register-No.-{N}-Z-{Month}-{D}-{YYYY}.pdf`
   — **but filenames are hand-typed and inconsistent** (observed: stray `-1` suffixes, "Volume
-  Number N-Z" variants, two issues metadata-dated the same day). URLs are stable once posted but
-  **not reliably constructible in advance** → enumerate by scraping the monthly TOC pages for
-  anchor links, never by URL construction.
+  Number N-Z" variants, two issues metadata-dated the same day; the naming convention also
+  changed between 2023 and 2024). URLs are stable once posted but **not reliably constructible in
+  advance** → enumerate by scraping the monthly TOC pages for anchor links, never by URL
+  construction. *(Pattern verified 2-1 against 10+ independently indexed OAL PDFs spanning
+  2020–2025.)*
+- OAL publishes a **Notice Register Publication Schedule** (currently covering Jan 2026–Jul 2027)
+  listing every weekly publication date and the 10-day submission deadline — a free lookahead
+  calendar for poller scheduling.
 - **History cliff:** online back-issues exist **from January 1, 2018 only**. In 2019 OAL deleted
   all pre-2018 Notice Registers from its site for accessibility compliance (Gov. Code § 11546.7).
   2002–2017 issues survive only in the California State Web Archive (Archive-It collection 5763).
-- **Anti-bot friction:** direct HTTP fetches of oal.ca.gov returned 403 in our environment; expect
-  to need realistic browser headers (also re-test outside the sandbox proxy, which itself blocked
-  many .gov hosts).
+- **Anti-bot friction — plausible but unconfirmed:** direct HTTP fetches of oal.ca.gov returned
+  403 in our environment, but the adversarial-verification panel refuted (1-2) the claim that OAL
+  categorically blocks automated clients — the observed 403s may be a sandbox-proxy artifact.
+  Budget for realistic browser headers, but test from a normal network first.
 - Print subscription is commercial via Thomson Reuters (~$409/yr) — irrelevant to ingestion but a
   signal that the state has outsourced distribution rather than invested in digital.
 
