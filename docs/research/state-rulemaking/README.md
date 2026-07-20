@@ -1,9 +1,9 @@
 # State Rulemaking Landscape: How the 50 States Publish Regulations & Comment Periods
 
-> **Why this exists:** a CARB (California Air Resources Board) staffer's first reaction to
-> DocketClock was *"this is great — do you have this for state level?"* This research answers
-> whether a state-level DocketClock is feasible: how every state publishes rulemaking notices and
-> comment periods, what's machine-readable, and which states are easy or hard to ingest.
+> **Why this exists:** the recurring first reaction to DocketClock from state-policy people is
+> *"do you have this for state level?"* This research answers whether a state-level DocketClock is
+> feasible: how every state publishes rulemaking notices and comment periods, what's
+> machine-readable, and which states are easy or hard to ingest.
 >
 > **Files:** this synthesis · [`state-by-state.md`](state-by-state.md) (51-jurisdiction reference
 > table + full per-state findings) · [`california-deep-dive.md`](california-deep-dive.md)
@@ -39,11 +39,12 @@
    (MI, WI, NE, HI, CO, NH, VT), so the *notice text* — not the statute — is the source of truth
    for any given deadline. DocketClock's observation-log + confidence model transfers cleanly; the
    state statutes just change the priors.
-6. **California specifically:** weekly PDF-only "Z Register" from OAL, no feed, no index, no
-   central portal, 45-day statutory minimum — but **CARB itself is EASY** (HTML rulemaking
-   listings, a comment-docket app with a deadline column, GovDelivery bulletins). A CARB-only
-   adapter is a shippable first answer to the contact's question. See
-   [`california-deep-dive.md`](california-deep-dive.md).
+6. **A general pattern, clearest in California:** a state's register can be much worse than its
+   big agencies' own systems. CA's weekly PDF-only "Z Register" has no feed, no index, and no
+   central portal — while a major agency like CARB runs HTML rulemaking listings, a comment-docket
+   app with a deadline column, and GovDelivery bulletins. Agency-level streams are often the
+   cheaper, fresher source in register-weak states. See
+   [`california-deep-dive.md`](california-deep-dive.md) for the worked example.
 
 ## The landscape in one view
 
@@ -178,11 +179,13 @@ monitoring (or agency email lists) is the early-warning layer where latency matt
 5. **Volume is manageable.** State registers are weekly/biweekly/monthly documents with dozens
    (not thousands) of notices per issue; 51 jurisdictions at full coverage is plausibly a few
    hundred notices/week — of the same order as the federal stream DocketClock already handles.
-6. **Sequencing suggestion from the data:** (a) **CARB-only adapter** — answers the actual
-   prospect, EASY-rated, days not weeks; (b) **CA Z Register** — generalizes to all CA agencies,
-   MODERATE; (c) **the EASY tier** (WA, TX, UT, KS, PA, VA, DE, RI, ME, IN, WI) — 11 states that
-   are mostly HTML with stable URLs, several with RSS/portals to cross-check; (d) the MODERATE
-   PDF tier by demand; defer GA/HI/NE/NV/TN/MS/MA/NJ until there's a paying reason.
+6. **Sequencing suggestion from the data:** (a) **the EASY tier** (WA, TX, UT, KS, PA, VA, DE,
+   RI, ME, IN, WI) — 11 states that are mostly HTML with stable URLs, several with RSS/portals to
+   cross-check; (b) **high-value MODERATE states by demand** (CA, NY, IL, OH…), where the shared
+   pdftotext-plus-template pipeline does the work and OCR covers the scan cases; (c) in
+   register-weak states, consider **agency-level adapters** for the highest-volume agencies as a
+   cheaper wedge than the register (the CA/CARB pattern); (d) defer GA/HI/NE/NV/TN/MS/MA/NJ until
+   there's a paying reason — see the hard-states deep dive.
 7. **Two-source reconciliation has state analogues.** Several states naturally provide the
    FR + Regulations.gov dual-source pattern: register + portal (VA, IA, SD, CO, WI, MI), register +
    review-body tracker (PA Bulletin + IRRC, IL Register + JCAR/Flinn Report), register + agency

@@ -1,9 +1,9 @@
 # California Deep-Dive: OAL, the Z Register, and CARB
 
 > Companion to [`README.md`](README.md) and [`state-by-state.md`](state-by-state.md). California
-> gets extra depth because a CARB (California Air Resources Board) contact asked whether
-> DocketClock has a state-level equivalent — making CA both the first prospective user's home state
-> and one of the highest-volume rulemaking states.
+> gets extra depth as the highest-volume rulemaking state and the clearest example of a pattern
+> that recurs nationwide: a weak register coexisting with strong agency-level systems. CARB is
+> used throughout as the worked agency example.
 
 ## The publication pipeline
 
@@ -113,9 +113,8 @@ semantics.
 | Z Register (all CA agencies) | **MODERATE** | Weekly scrape of monthly TOC pages → fetch issue PDF → parse per-action digest blocks for agency, subject, comment deadline, hearing date. Layout is consistent; no feed; filenames irregular. |
 | CARB only | **EASY** | Poll `rulemaking-activity` + lispub docket list (deadline column!); subscribe to GovDelivery bulletins as push trigger; documents from the predictable `barcu/regact` tree. |
 
-**Strategic note:** the CARB contact's "do you have this for state level?" can be answered with a
-CARB-only adapter well before a general CA adapter: CARB's own systems expose everything a
-`ParticipationWindow` needs (open dockets, deadlines, 15-day reopenings, hearing dates) without
-touching the Z Register. The Z Register adapter is the generalization, and its per-action digest
-is the reconciliation cross-check — the same two-source pattern DocketClock already uses for
-FR + Regulations.gov.
+**Pattern note:** the CA split generalizes — in register-weak states, a high-volume agency's own
+systems often expose everything a `ParticipationWindow` needs (open dockets, deadlines, 15-day
+reopenings, hearing dates) without touching the register at all. Where both exist, the register's
+per-action digest becomes the reconciliation cross-check against the agency stream — the same
+two-source pattern DocketClock already uses for FR + Regulations.gov.
