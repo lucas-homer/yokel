@@ -66,15 +66,19 @@ Distribution of the 51 jurisdictions (details and per-state citations in
 
 ### Ingestion difficulty tiers (from the per-state assessments)
 
+*(revised after the [hard-states deep dive](hard-states.md), July 2026)*
+
 - **EASY (12):** WA, TX, UT, KS, PA, VA, DE, RI, ME, IN, WI, FL*(if bot-blocking solved)*
 - **EASY–MODERATE (5):** CT, AK, ID, CO, AZ
-- **MODERATE (22):** NY, IL, OH, MI, MN, IA, MO, ND, SD, KY, SC, WV, NC, OK, LA, MT, NM, WY, NH, VT, DC, CA
-- **MODERATE–HARD (1):** AR
-- **HARD (7):** GA, HI, NE, NV, TN, MS, MA, NJ
+- **MODERATE (28):** NY, IL, OH, MI, MN, IA, MO, ND, SD, KY, SC, WV, NC, OK, LA, MT, NM, WY, NH, VT, DC, CA, AL, MD, OR, **TN**, **NV**, **MA**
+- **MODERATE–HARD (4):** AR, **NE**, **MS**, **NJ**
+- **HARD (2):** GA, HI
 
-Roughly: **17 states are cheap wins, 22 are routine scraper work, 8 are genuinely painful.** The
-painful ones share three failure modes: no chokepoint (GA, HI, TN), image-scan PDFs (NE, ND
-partially, MS), or paywalled/vendor-locked streams (MA, NJ).
+Roughly: **17 jurisdictions are cheap wins, 28 are routine scraper work, and only 2 (GA, HI) are
+genuinely structural.** The deep dive on the original "hard eight" found that paywalls were the
+least durable barrier (MA and NJ both leak their notice streams for free on state sites), that TN
+and NV have scrapeable indexes the first pass missed, and that NE/MS are OCR projects with good
+triggers. Details and evidence: [`hard-states.md`](hard-states.md).
 
 ## What "state Regulations.gov" looks like where it exists
 
@@ -184,8 +188,10 @@ monitoring (or agency email lists) is the early-warning layer where latency matt
    cross-check; (b) **high-value MODERATE states by demand** (CA, NY, IL, OH…), where the shared
    pdftotext-plus-template pipeline does the work and OCR covers the scan cases; (c) in
    register-weak states, consider **agency-level adapters** for the highest-volume agencies as a
-   cheaper wedge than the register (the CA/CARB pattern); (d) defer GA/HI/NE/NV/TN/MS/MA/NJ until
-   there's a paying reason — see the hard-states deep dive.
+   cheaper wedge than the register (the CA/CARB pattern); (d) defer only GA and HI
+   (structurally fragmented) until there's a paying reason; NE/MS/NJ unlock once the shared OCR
+   fallback and one off-sandbox probe (NJ's Dynamics portal) exist — see
+   [`hard-states.md`](hard-states.md).
 7. **Two-source reconciliation has state analogues.** Several states naturally provide the
    FR + Regulations.gov dual-source pattern: register + portal (VA, IA, SD, CO, WI, MI), register +
    review-body tracker (PA Bulletin + IRRC, IL Register + JCAR/Flinn Report), register + agency
