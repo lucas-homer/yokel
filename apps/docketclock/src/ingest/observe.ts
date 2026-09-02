@@ -9,7 +9,10 @@
  * windows) happen in ONE transaction.
  */
 import type { Sql } from "../db/client.js";
-import type { ObservationCandidate } from "../sources/observation-candidate.js";
+import {
+  ObservationCandidateSchema,
+  type ObservationCandidate,
+} from "../sources/observation-candidate.js";
 
 export interface IngestResult {
   inserted: boolean;
@@ -30,9 +33,21 @@ export async function ingestObservation(
 ): Promise<IngestResult> {
   const ocdId = candidate.ocd_id;
 
+  // TYPED-RAW GATE (Slice R, PR-R1 review finding): a human_review candidate is schema-validated at
+  // the ingest seam, so a freeform/malformed verdict can never enter the log — the contract's
+  // "typed payload, never freeform JSON" decision is enforced where the write happens, not left to
+  // caller discipline. Scoped to human_review ONLY: the three machine sources deliberately carry
+  // their whole upstream payloads as unknown `raw` (validating them here would add a hot-path parse
+  // over large payloads for zero constraint gain — their shape is the upstream API's business).
+  if (candidate.source === "human_review") {
+    ObservationCandidateSchema.parse(candidate);
+  }
+
   // Dedupe: compare against the LATEST payload for this source's document key (FR -> fr_document_number,
-  // Regs.gov -> regs_document_id). If the key is absent there is nothing to dedupe against (insert
-  // unconditionally).
+  // Regs.gov -> regs_document_id, human_review -> ocd_id: a verdict has no source document — its
+  // natural key IS the window it resolves, so an identical retried verdict dedupes against the latest
+  // one for that window instead of appending a duplicate). If the key is absent there is nothing to
+  // dedupe against (insert unconditionally).
   //
   // CONCURRENCY(single-writer): this read-then-insert assumes ONE ingest writer (the differential
   // polling loop), so the latest-hash check can't race. Deliberately NOT a UNIQUE(payload_hash)
@@ -40,14 +55,20 @@ export async function ingestObservation(
   // when a payload changes and later reverts; we only skip an *immediate* re-fetch of the latest.
   // When multi-writer ingest arrives, harden with an advisory lock / serializable txn (or tolerate
   // the rare benign duplicate, since replay is idempotent) — not a hash uniqueness constraint.
+  // (The human_review CLI is interactive today, but PR-R3's resolve command retries like any
+  // network client — the ocd_id key makes that retry idempotent by the same rule as a re-fetch.)
   const dedupeColumn =
     candidate.source === "regulations_gov"
       ? "regs_document_id"
-      : "fr_document_number";
+      : candidate.source === "human_review"
+        ? "ocd_id"
+        : "fr_document_number";
   const dedupeValue =
     candidate.source === "regulations_gov"
       ? candidate.regs_document_id
-      : candidate.fr_document_number;
+      : candidate.source === "human_review"
+        ? candidate.ocd_id
+        : candidate.fr_document_number;
   if (dedupeValue) {
     const [latest] = await sql<{ payload_hash: string }[]>`
       select payload_hash

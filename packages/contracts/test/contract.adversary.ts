@@ -977,35 +977,102 @@ function baseWindow(over: Record<string, unknown> = {}) {
     );
   }
 
+  /** A full human_review Observation row (the plan's row conventions: notice flags all false,
+   *  raw_dates_text / document ids null, parser_version "human-review-v1") — spread + mutate. */
+  const baseHrObservation = (over: Record<string, unknown> = {}) => ({
+    observation_id: "obs-hr-1",
+    ocd_id: makeOcdId({ frDocNum: "2025-03547" }),
+    source: "human_review",
+    fr_document_number: null,
+    regs_document_id: null,
+    regs_object_id: null,
+    payload_hash: "c".repeat(64),
+    fetched_at: "2026-09-02T12:00:00.000Z",
+    parser_version: "human-review-v1",
+    raw_dates_text: null,
+    is_extension: false,
+    is_correction: false,
+    is_withdrawal: false,
+    is_reopening: false,
+    raw: baseVerdict({ kind: "pin_close", pinned_close_date: "2026-05-01" }),
+    ...over,
+  });
+
   // 10h — a FULL human_review Observation round-trips the schema: source "human_review", raw a
-  // HumanReviewVerdict, and the plan's row conventions (notice flags all false, raw_dates_text /
-  // document ids null, parser_version "human-review-v1"). The DB round-trip is docketclock's test;
+  // HumanReviewVerdict, and the plan's row conventions. The DB round-trip is docketclock's test;
   // this is the pure-schema half.
   {
-    const verdict = baseVerdict({
-      kind: "pin_close",
-      pinned_close_date: "2026-05-01",
-    });
-    const obs = {
-      observation_id: "obs-hr-1",
-      ocd_id: makeOcdId({ frDocNum: "2025-03547" }),
-      source: "human_review",
-      fr_document_number: null,
-      regs_document_id: null,
-      regs_object_id: null,
-      payload_hash: "c".repeat(64),
-      fetched_at: "2026-09-02T12:00:00.000Z",
-      parser_version: "human-review-v1",
-      raw_dates_text: null,
-      is_extension: false,
-      is_correction: false,
-      is_withdrawal: false,
-      is_reopening: false,
-      raw: verdict,
-    };
-    const r = Observation.safeParse(obs);
+    const r = Observation.safeParse(baseHrObservation());
     assert(
       "EDGE 10: a full Observation (source human_review, raw = HumanReviewVerdict) parses",
+      r.success,
+      r.success ? "" : JSON.stringify(r.error.issues),
+    );
+  }
+
+  // 10j — ATTACK (the PR #115 Copilot gap): a human_review Observation whose raw is FREEFORM JSON.
+  // MUST FAIL, at path ["raw", ...] — "typed verdict payload, never freeform JSON" is enforced by
+  // Observation ITSELF (observationRawInvariant), not left to every caller re-parsing raw.
+  {
+    const r = Observation.safeParse(baseHrObservation({ raw: { foo: 1 } }));
+    assert(
+      "EDGE 10 ATTACK: human_review Observation with freeform raw ({foo:1}) is REJECTED",
+      !r.success,
+      r.success
+        ? "Observation.parse accepted a freeform human_review payload!"
+        : "observationRawInvariant caught it",
+    );
+    assert(
+      "EDGE 10: every freeform-raw rejection issue surfaces under path ['raw', ...]",
+      !r.success &&
+        r.error.issues.length > 0 &&
+        r.error.issues.every((i) => i.path[0] === "raw"),
+      r.success
+        ? "record did not fail"
+        : `paths: ${JSON.stringify(r.error.issues.map((i) => i.path))}`,
+    );
+  }
+
+  // 10k — ATTACK: raw IS verdict-shaped but violates the verdict's OWN superRefine (pin_close
+  // without a date). MUST FAIL — the invariant runs the full HumanReviewVerdict parse, refinements
+  // included, and forwards the sub-issue at ["raw", "pinned_close_date"].
+  {
+    const r = Observation.safeParse(
+      baseHrObservation({ raw: baseVerdict({ kind: "pin_close" }) }),
+    );
+    assert(
+      "EDGE 10 ATTACK: human_review Observation whose raw is pin_close WITHOUT a date is REJECTED",
+      !r.success,
+      r.success
+        ? "Observation.parse accepted a verdict its own superRefine forbids!"
+        : "the nested pin ⇔ date refinement fired through the invariant",
+    );
+    assert(
+      "EDGE 10: the nested violation surfaces at ['raw','pinned_close_date']",
+      !r.success &&
+        r.error.issues.some(
+          (i) => i.path[0] === "raw" && i.path[1] === "pinned_close_date",
+        ),
+      r.success
+        ? "record did not fail"
+        : `paths: ${JSON.stringify(r.error.issues.map((i) => i.path))}`,
+    );
+  }
+
+  // 10l — ASYMMETRY PRESERVED: a machine-source observation keeps its deliberately-unknown raw (the
+  // whole upstream payload, verbatim for replay) — arbitrary freeform raw still parses.
+  {
+    const r = Observation.safeParse(
+      baseHrObservation({
+        source: "federal_register",
+        fr_document_number: "2025-03547",
+        parser_version: "p1",
+        raw_dates_text: "Comments due ...",
+        raw: { foo: 1 },
+      }),
+    );
+    assert(
+      "EDGE 10: a federal_register Observation with arbitrary freeform raw still parses (asymmetry preserved)",
       r.success,
       r.success ? "" : JSON.stringify(r.error.issues),
     );

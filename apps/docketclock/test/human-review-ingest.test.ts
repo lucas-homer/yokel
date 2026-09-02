@@ -11,6 +11,10 @@
  *     adversarial probe: widening is not opening).
  *   • APPEND-ONLY APPLIES UNCHANGED — a direct UPDATE on the ingested human_review row is rejected
  *     by 0001's trigger; corrections accrete, they never mutate.
+ *   • IDEMPOTENT RETRY + TYPED-RAW GATE (the #115 review findings) — a verdict dedupes on its
+ *     window (ocd_id, the natural key when document ids are null by convention) so a retried write
+ *     never duplicates, a different verdict still accretes, and a freeform-raw candidate is
+ *     schema-rejected at the ingest seam before it can touch the log.
  *   • INERT UNTIL reconcile-v2 — reconciling the window with a human_review row in its chain still
  *     derives from source observations only (v1.1 has no honor-the-verdict rule; the row is
  *     harmless, auditable data — the documented PR-R2 rollback stance holds in reverse).
@@ -118,6 +122,90 @@ try {
   assert(
     "ROUND-TRIP: raw payload still parses as HumanReviewVerdict",
     HumanReviewVerdict.safeParse(row!.raw).success,
+  );
+
+  // ── IDEMPOTENT RETRY: a verdict's natural dedupe key is its WINDOW (ocd_id) ─────────────────────────
+  // Document ids are null by convention, so without the ocd_id key every retried write would append a
+  // duplicate row (the #115 Copilot finding). An identical re-ingest must dedupe; a DIFFERENT verdict
+  // for the same window must still append (corrections accrete).
+  const retry = await ingestObservation(sql, {
+    ocd_id: OCD,
+    source: "human_review",
+    fr_document_number: null,
+    regs_document_id: null,
+    regs_object_id: null,
+    payload_hash: sha256(JSON.stringify(raw)),
+    fetched_at: "2026-06-02T00:05:00.000Z",
+    parser_version: "human-review-v1",
+    raw_dates_text: null,
+    is_extension: false,
+    is_correction: false,
+    is_withdrawal: false,
+    is_reopening: false,
+    raw,
+  });
+  assert(
+    "RETRY: identical verdict re-ingest dedupes (inserted=false)",
+    retry.inserted === false,
+  );
+  const raw2 = {
+    ...verdict,
+    note: "Second look — still Sep 12, but the extension notice confirms it.",
+  };
+  const second = await ingestObservation(sql, {
+    ocd_id: OCD,
+    source: "human_review",
+    fr_document_number: null,
+    regs_document_id: null,
+    regs_object_id: null,
+    payload_hash: sha256(JSON.stringify(raw2)),
+    fetched_at: "2026-06-02T01:00:00.000Z",
+    parser_version: "human-review-v1",
+    raw_dates_text: null,
+    is_extension: false,
+    is_correction: false,
+    is_withdrawal: false,
+    is_reopening: false,
+    raw: raw2,
+  });
+  assert(
+    "ACCRETE: a different verdict for the same window still appends",
+    second.inserted === true,
+  );
+
+  // ── TYPED-RAW GATE: a freeform-raw human_review candidate is rejected at the ingest seam ────────────
+  let gateRejected = false;
+  try {
+    await ingestObservation(sql, {
+      ocd_id: OCD,
+      source: "human_review",
+      fr_document_number: null,
+      regs_document_id: null,
+      regs_object_id: null,
+      payload_hash: sha256("freeform"),
+      fetched_at: "2026-06-02T02:00:00.000Z",
+      parser_version: "human-review-v1",
+      raw_dates_text: null,
+      is_extension: false,
+      is_correction: false,
+      is_withdrawal: false,
+      is_reopening: false,
+      raw: { foo: "not a verdict" },
+    });
+  } catch {
+    gateRejected = true;
+  }
+  assert(
+    "TYPED-RAW GATE: freeform raw never reaches the log (ingest throws)",
+    gateRejected,
+  );
+  const [hrRow] = await sql<{ count: string }[]>`
+    select count(*) as count from observations where source = 'human_review'
+  `;
+  assert(
+    "LOG STATE: exactly 2 human_review rows (verdict + accreted second; no dupe, no freeform)",
+    hrRow!.count === "2",
+    hrRow!.count,
   );
 
   // ── CHECK STILL CLOSED: an unknown source is rejected at the DB layer ───────────────────────────────
