@@ -6,18 +6,22 @@
  *   1. pollFrOnce  — FR open-comment discovery (FIRST), then
  *   2. pollRegsOnce — Regs.gov differential + re-poll pass, then
  *   3. chainReconcileOnce — the cross_window (chain) reconcile sweep (#31), then
- *   4. verifyOnce — the post-close verification pass (slice V, PR-V1),
+ *   4. refreshStaleOpenWindows — the status refresh (#107): re-derive open windows whose close has
+ *      passed, so status flips closed within one cycle instead of waiting for an observation a settled
+ *      notice may never produce. Runs BEFORE verify so a window flipped closed here is snapshot-eligible
+ *      for the SAME cycle's verification pass. Then
+ *   5. verifyOnce — the post-close verification pass (slice V, PR-V1),
  *
- * logging ALL FOUR summaries (labelled `fr:`, `regs:`, `chain:`, `verify:`).
+ * logging ALL FIVE summaries (labelled `fr:`, `regs:`, `chain:`, `status refresh:`, `verify:`).
  *
  * WHY VERIFY RUNS LAST (slice V): the verify pass reads the projections + observations the first
- * three passes just wrote — it snapshots newly-closed windows and judges windows whose horizon the
+ * four passes just wrote — it snapshots newly-closed windows and judges windows whose horizon the
  * cycle's fresh checks may just have satisfied. Its watch rows feed BACK into pass 2's re-poll set
  * (closed-in-horizon windows stay checked) starting the NEXT cycle — deferrable by design, budgeted
  * like every other re-poll. Same single-writer discipline: it UPSERTs watch rows and INSERTs final
  * accuracy_records, so it must never overlap another writer.
  *
- * WHY CHAIN RUNS LAST (a derive-over-derived pass): the chain pass reads the participation_windows +
+ * WHY CHAIN RUNS AFTER FR+REGS (a derive-over-derived pass): the chain pass reads the participation_windows +
  * federal_register observations the FR and Regs passes just wrote — it derives cross_window conflicts
  * over the windows the first two passes produced. Running it AFTER both means an amendment notice and the
  * original it amends, if both were (re)discovered this cycle, are linked in the SAME cycle. It is a full
@@ -61,6 +65,8 @@ const { createClient } = await import("../db/client.js");
 const { componentLogger } = await import("../log.js");
 const { regsApiKey } = await import("../sources/regulations-gov.js");
 const { chainReconcileOnce } = await import("../reconcile/persist.js");
+const { refreshStaleOpenWindows } =
+  await import("../reconcile/status-refresh.js");
 const { selectAdjudicator } = await import("../adjudicator/select.js");
 const { pollFrOnce } = await import("./fr-poll.js");
 const { pollRegsOnce } = await import("./poll.js");
@@ -69,6 +75,7 @@ const {
   recordFrPoll,
   recordRegsPoll,
   recordChainCycle,
+  recordStatusRefresh,
   recordVerifyCycle,
   setAccuracyHighRatio,
   recordPollPassFailure,
@@ -155,7 +162,23 @@ async function main(): Promise<void> {
         recordPollPassFailure("chain");
         log.error({ err }, "chain reconcile failed");
       }
-      // 4th pass — post-close verification (slice V). Runs LAST (it reads what the first three just
+      // 4th pass — status refresh (#107): re-derive open windows whose close has passed so status
+      // flips closed without waiting for a fresh observation. BEFORE verify (a window flipped closed
+      // here is snapshot-eligible this same cycle), INDEPENDENTLY try/caught like every pass. A
+      // non-zero versionBumped is logged loudly — a status flip must never move the close.
+      try {
+        const refresh = await refreshStaleOpenWindows(sql);
+        if (refresh.versionBumped > 0) {
+          log.warn({ summary: refresh }, "status refresh MOVED a close");
+        } else {
+          log.info({ summary: refresh }, "status refresh cycle");
+        }
+        recordStatusRefresh(refresh);
+      } catch (err) {
+        recordPollPassFailure("status_refresh");
+        log.error({ err }, "status refresh failed");
+      }
+      // 5th pass — post-close verification (slice V). Runs LAST (it reads what the first four just
       // wrote; see header) and is INDEPENDENTLY try/caught like every pass: a verify failure must
       // never affect discovery/reconcile (and vice-versa). The headline gauge is recomputed from SQL
       // each cycle so a restart never leaves it stale-at-zero.

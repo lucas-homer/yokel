@@ -27,7 +27,7 @@
 import { pathToFileURL } from "node:url";
 import { createClient, type Sql } from "./client.js";
 import { RECONCILER_VERSION } from "../reconcile/reconcile.js";
-import { reconcileOcdId } from "../reconcile/persist.js";
+import { rederiveOcdIds } from "../reconcile/rederive.js";
 
 export interface RederiveResult {
   scanned: number; // stale windows found (reconciler_version ≠ current)
@@ -51,29 +51,20 @@ export async function rederiveStaleWindows(
     order by ocd_id
   `;
 
-  let rederived = 0;
-  let versionBumped = 0;
-  const failures: { ocd_id: string; error: string }[] = [];
-
-  for (const { ocd_id } of stale) {
-    try {
-      const r = await reconcileOcdId(sql, ocd_id, now);
-      rederived++;
-      if (r.persist.versionBumped) versionBumped++;
-    } catch (err) {
-      failures.push({
-        ocd_id,
-        error: err instanceof Error ? err.message : String(err),
-      });
-    }
-  }
+  const rows = await rederiveOcdIds(
+    sql,
+    stale.map((r) => r.ocd_id),
+    now,
+  );
 
   return {
-    scanned: stale.length,
-    rederived,
-    versionBumped,
-    failed: failures.length,
-    failures,
+    scanned: rows.length,
+    rederived: rows.filter((r) => r.error === null).length,
+    versionBumped: rows.filter((r) => r.versionBumped).length,
+    failed: rows.filter((r) => r.error !== null).length,
+    failures: rows
+      .filter((r) => r.error !== null)
+      .map((r) => ({ ocd_id: r.ocd_id, error: r.error! })),
   };
 }
 

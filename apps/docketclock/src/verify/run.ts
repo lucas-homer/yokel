@@ -1,6 +1,6 @@
 /**
- * run.ts — verifyOnce: the DB-aware post-close verification pass (slice V, PR-V1), stage 4 of the
- * single-writer poll cycle (after fr → regs → chain). The pure rules live in select.ts (horizon state
+ * run.ts — verifyOnce: the DB-aware post-close verification pass (slice V, PR-V1), stage 5 of the
+ * single-writer poll cycle (after fr → regs → chain → status refresh). The pure rules live in select.ts (horizon state
  * machine) and verdict.ts (as-of-close judgment); this module only assembles their inputs from the
  * spine and persists the result.
  *
@@ -112,7 +112,7 @@ export async function verifyOnce(
         -- WITHDRAWN scoping is evidence-based, not status-based (adversary RB-4): a window withdrawn
         -- BEFORE close never had an operative close to judge (out of scope) — but a withdrawal we
         -- learn of POST-close is the revealed-withdrawal MISS itself, and reconcile flips status to
-        -- 'withdrawn' the moment the withdrawal ingests (stage 2, BEFORE this stage-4 snapshot), so a
+        -- 'withdrawn' the moment the withdrawal ingests (stage 2, BEFORE this stage-5 snapshot), so a
         -- bare status filter would suppress exactly the misses the gauge exists to count. Include a
         -- withdrawn-status window iff a post-close withdrawal observation exists for it.
         w.status <> 'withdrawn'
