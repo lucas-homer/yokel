@@ -9,7 +9,8 @@
  * sweep incidentally corrected 348 that were stuck in v1 rows). Same failure class as the #106 display
  * tail — a projection frozen at derivation time — but recurring, hence a poll-cycle pass, not a one-shot.
  *
- * THE RULEBOOK DECIDES, NOT THE PREDICATE. The scan predicate (`status='open' and close < now`) also
+ * THE RULEBOOK DECIDES, NOT THE PREDICATE. The scan predicate (`status='open' and close <= now` — the
+ * same boundary the engine's own closed rule and verify's snapshot use) also
  * matches windows the engine DELIBERATELY keeps open past their close — Regulations.gov's authoritative
  * openForComment=true wins over a passed date (the late-comment semantic, see the status rule in
  * reconcile.ts). Those re-derive right back to `open` (counted as `stillOpen`) and will re-match every
@@ -31,7 +32,11 @@ export interface StatusRefreshSummary {
   closed: number;
   /** re-derived back to open (the deliberate Regs-openForComment class) — expected steady-state churn. */
   stillOpen: number;
-  /** re-derived to any other status (withdrawn/unknown) — rare, driven by the same rulebook. */
+  /**
+   * re-derived to any other status — rare, driven by the same rulebook. Today that means
+   * withdrawn/unknown (the only other statuses reconcile() derives); the bucket absorbs any
+   * WindowStatus member a future rulebook may emit without a schema change here.
+   */
   otherStatus: number;
   /** re-derivations that MOVED the operative close. Expected 0 — audit loudly when not. */
   versionBumped: number;
@@ -48,7 +53,7 @@ export async function refreshStaleOpenWindows(
     select ocd_id from participation_windows
     where status = 'open'
       and resolved_close_utc is not null
-      and resolved_close_utc < ${now.toISOString()}
+      and resolved_close_utc <= ${now.toISOString()}
     order by ocd_id
   `;
 

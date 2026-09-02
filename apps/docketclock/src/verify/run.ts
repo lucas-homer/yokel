@@ -1,6 +1,6 @@
 /**
  * run.ts — verifyOnce: the DB-aware post-close verification pass (slice V, PR-V1), stage 5 of the
- * single-writer poll cycle (after fr → regs → chain). The pure rules live in select.ts (horizon state
+ * single-writer poll cycle (after fr → regs → chain → status refresh). The pure rules live in select.ts (horizon state
  * machine) and verdict.ts (as-of-close judgment); this module only assembles their inputs from the
  * spine and persists the result.
  *
