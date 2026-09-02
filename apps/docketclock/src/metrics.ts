@@ -26,6 +26,7 @@ import {
 import type { FrPollSummary } from "./poll/fr-poll.js";
 import type { PollSummary } from "./poll/poll.js";
 import type { ChainReconcileOnceResult } from "./reconcile/persist.js";
+import type { StatusRefreshSummary } from "./reconcile/status-refresh.js";
 
 /** The single process-wide registry. `/metrics` renders THIS. */
 export const registry = new Registry();
@@ -98,7 +99,7 @@ const pollPassFailures = new Counter({
 });
 const pollCycleDuration = new Histogram({
   name: "docketclock_poll_cycle_duration_seconds",
-  help: "Wall-clock duration of a full settled poll cycle (fr + regs + chain + verify).",
+  help: "Wall-clock duration of a full settled poll cycle (fr + regs + chain + status refresh + verify).",
   buckets: [0.5, 1, 2, 5, 10, 30, 60, 120, 300],
   registers: [registry],
 });
@@ -134,7 +135,7 @@ export function recordRegsPoll(s: PollSummary): void {
   pollTruncated.set({ source: "regs" }, s.truncated ? 1 : 0);
 }
 export function recordPollPassFailure(
-  pass: "fr" | "regs" | "chain" | "verify",
+  pass: "fr" | "regs" | "chain" | "status_refresh" | "verify",
 ): void {
   pollPassFailures.inc({ pass });
 }
@@ -209,7 +210,33 @@ export function recordChainCycle(s: ChainReconcileOnceResult): void {
   chainRetired.inc(s.retired);
 }
 
-// ── Post-close verification (stage 4, slice V) ────────────────────────────────────────────────────────
+// ── Status refresh (stage 4, #107) ────────────────────────────────────────────────────────────────────
+const statusRefreshScanned = new Gauge({
+  name: "docketclock_status_refresh_scanned",
+  help: "Stale-open windows (status=open, close passed) found by the LAST status-refresh pass. Steady-state ≈ the deliberate Regs-openForComment baseline (~34 at introduction); sustained growth means the pass is failing to flip windows.",
+  registers: [registry],
+});
+const statusRefreshTransitions = new Counter({
+  name: "docketclock_status_refresh_transitions_total",
+  help: "Status-refresh re-derivations, by outcome (closed | still_open | other | failed). still_open is the expected Regs-openForComment churn, re-counted every cycle.",
+  labelNames: ["outcome"],
+  registers: [registry],
+});
+const statusRefreshVersionBumps = new Counter({
+  name: "docketclock_status_refresh_version_bumps_total",
+  help: "Status-refresh re-derivations that MOVED the operative close. Expected 0 — a status flip never moves the close — so any increment deserves an audit (see status-refresh.ts).",
+  registers: [registry],
+});
+export function recordStatusRefresh(s: StatusRefreshSummary): void {
+  statusRefreshScanned.set(s.scanned);
+  statusRefreshTransitions.inc({ outcome: "closed" }, s.closed);
+  statusRefreshTransitions.inc({ outcome: "still_open" }, s.stillOpen);
+  statusRefreshTransitions.inc({ outcome: "other" }, s.otherStatus);
+  statusRefreshTransitions.inc({ outcome: "failed" }, s.failed);
+  statusRefreshVersionBumps.inc(s.versionBumped);
+}
+
+// ── Post-close verification (stage 5, slice V) ────────────────────────────────────────────────────────
 const accuracyChecks = new Counter({
   name: "docketclock_accuracy_checks_total",
   help: "Per-cycle verification evaluations of watched windows, by result (snapshotted | in_horizon | awaiting_check | verdict | lapsed).",
