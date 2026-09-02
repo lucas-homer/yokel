@@ -2078,6 +2078,75 @@ spec:
                   # Grafana then expands $labels at notification time. Siblings never hit this \u2014 this
                   # is the first rule to template a label into its summary.
                   summary: "Poll pass '{{ \"{{ $labels.pass }}\" }}' threw in 3+ cycles over the last hour while the cycle heartbeat stayed green \u2014 single-pass blindness (fr/regs: that source's ingest is dark; chain/verify: that stage is down). For regs, first suspect the API key (403 API_KEY_INVALID in poller logs) \u2014 rotate with 'task -d infra regs-key'. (#91)"
+              # Accuracy degraded (#90, plan \u00a7PR-V1.5): the product's headline promise \u2014 "% of
+              # HIGH-confidence deadlines correct, trailing 90d" \u2014 fell below the committed 95%
+              # credibility bar. Committed 2026-09-02 against a live baseline of ratio=1.0 on a
+              # 90d HIGH sample of 868 (the issue parked until the sample was meaningful; it was 1
+              # on 2026-07-14).
+              #
+              # MIN-SAMPLE GUARD (the load-bearing half): the ratio gauge is deliberately NaN on an
+              # empty sample (#97 \u2014 NaN satisfies no threshold), but a tiny sample can still swing
+              # 0%\u2194100% on a single verdict. The `and on()` clause keeps the ratio only when the
+              # sample gauge reads \u226520 (at 20, one miss = exactly 95% = not below the bar; it takes
+              # two to page). Below 20 the expression returns an EMPTY result \u2192 NoData, hence:
+              #
+              # noDataState OK \u2014 deliberately, like pass-failing: NoData here MEANS "suppressed by
+              # the min-sample guard" (young/empty window set), not a dark pipeline. Pipeline
+              # darkness is poller-stalled's + the dead-man switch's job. Both gauges are scoped to
+              # the poller series \u2014 the api process registers them but never sets them (forever NaN).
+              - uid: accuracy-degraded
+                title: Accuracy degraded (HIGH < 95% over 90d)
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: max(docketclock_accuracy_high_correct_ratio_90d{app_kubernetes_io_component="poller"}) and on() (max(docketclock_accuracy_high_sample_90d{app_kubernetes_io_component="poller"}) >= 20)
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: lt
+                        params:
+                        - 0.95
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: OK
+                execErrState: Error
+                for: 15m
+                labels:
+                  severity: critical
+                annotations:
+                  # Same Helm-tpl escape idiom as pass-failing: the outer Go-template emits literal
+                  # braces; Grafana expands $values at notification time (the live ratio in the push).
+                  summary: "HIGH-confidence 90d accuracy at {{ \"{{ $values.A }}\" }} \u2014 below the 95% credibility bar on a meaningful sample (\u226520 verdicts). The product's headline promise is broken: query accuracy_records for recent was_correct=false rows and read their contradicting_observation_ids before anything else. (#90)"
             # --- Backups (PR-5, plans/backups-restore-drill.md). Routes to local-noop like everything
             # else until Slice V's V3 lands a real receiver. Metric sources: cnpg_objectstore_* comes
             # from kube-state-metrics customResourceState over the barman ObjectStore CR (with plugin
