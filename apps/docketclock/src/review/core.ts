@@ -17,7 +17,13 @@
  * mid-write. That is a second writer, accepted at operator scale: the observation log is append-only
  * (no mutation to race), the human_review dedupe keys on ocd_id (a key the poller never writes), and
  * participation_windows is a re-derivable projection whose upsert runs in its own transaction — the
- * worst interleaving is a redundant re-derivation next cycle, never corruption.
+ * worst interleaving is a redundant re-derivation next cycle, never corruption. KNOWN NARROW GAP
+ * (#117 review): the reviewed-hashes SELECT and the verdict insert are separate statements, so a
+ * source observation landing in between (with fetched_at still earlier than the verdict's stamp)
+ * would be honored by the time gate yet absent from reviewed_payload_hashes — the audit list would
+ * under-claim by one hash. Milliseconds wide, interactive-scale, and the derivation itself stays
+ * correct (reconcile re-reads everything fresh); tighten to a single transaction if this path ever
+ * becomes non-interactive.
  */
 import { createHash } from "node:crypto";
 import {

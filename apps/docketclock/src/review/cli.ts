@@ -49,8 +49,51 @@ function usage(): never {
   process.exit(2);
 }
 
+// Validate EVERYTHING argument-side before opening a DB connection (#117 Copilot): `review` alone,
+// a bad command, or missing flags must print usage — never a DATABASE_URL / connection error.
 const [command, ...rest] = process.argv.slice(2);
+if (command !== "queue" && command !== "show" && command !== "resolve") usage();
+if (command === "show" && !rest[0]) usage();
+let resolveArgs: {
+  ocdId: string;
+  kind: Kind;
+  close?: string;
+  note: string;
+  operator: string;
+} | null = null;
+if (command === "resolve") {
+  const ocdId = rest[0];
+  if (!ocdId || ocdId.startsWith("--")) usage();
+  const { values } = parseArgs({
+    args: rest.slice(1),
+    options: {
+      kind: { type: "string" },
+      close: { type: "string" },
+      note: { type: "string" },
+      operator: { type: "string" },
+    },
+  });
+  const kind = values.kind as Kind | undefined;
+  if (!kind || !KINDS.includes(kind) || !values.note) usage();
+  const operator =
+    values.operator ?? process.env.REVIEW_OPERATOR ?? process.env.USER;
+  if (!operator) {
+    console.error(
+      "review resolve: no operator (pass --operator or set REVIEW_OPERATOR)",
+    );
+    process.exit(1);
+  }
+  resolveArgs = {
+    ocdId,
+    kind,
+    close: values.close,
+    note: values.note,
+    operator,
+  };
+}
+
 const sql = createClient();
+process.exitCode = 0;
 try {
   if (command === "queue") {
     const rows = await reviewQueue(sql);
@@ -105,35 +148,8 @@ try {
         console.log(`    ${v.fetched_at}  ${body}`);
       }
     }
-  } else if (command === "resolve") {
-    const ocdId = rest[0];
-    if (!ocdId || ocdId.startsWith("--")) usage();
-    const { values } = parseArgs({
-      args: rest.slice(1),
-      options: {
-        kind: { type: "string" },
-        close: { type: "string" },
-        note: { type: "string" },
-        operator: { type: "string" },
-      },
-    });
-    const kind = values.kind as Kind | undefined;
-    if (!kind || !KINDS.includes(kind) || !values.note) usage();
-    const operator =
-      values.operator ?? process.env.REVIEW_OPERATOR ?? process.env.USER;
-    if (!operator) {
-      console.error(
-        "review resolve: no operator (pass --operator or set REVIEW_OPERATOR)",
-      );
-      process.exit(1);
-    }
-    const out = await resolveWindow(sql, {
-      ocdId,
-      kind,
-      close: values.close,
-      note: values.note,
-      operator,
-    });
+  } else {
+    const out = await resolveWindow(sql, resolveArgs!);
     const w = out.result.window;
     console.log(
       out.inserted
@@ -151,9 +167,14 @@ try {
         "⚠ verdict NOT honored (a source observation is newer, or raw failed to parse) — the window derives purely from sources. `review show` to inspect.",
       );
     }
-  } else {
-    usage();
   }
+} catch (err) {
+  // Operator tool: expected refusals (unknown ocd-id, contract violations) print their MESSAGE,
+  // not a stack trace (#117 Copilot). The message text is written to be self-explanatory.
+  console.error(
+    `review ${command}: ${err instanceof Error ? err.message : String(err)}`,
+  );
+  process.exitCode = 1;
 } finally {
   await sql.end();
 }
