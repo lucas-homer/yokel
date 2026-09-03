@@ -23,7 +23,12 @@ import { parseFrObservation } from "../src/sources/federal-register.js";
 import { parseRegsObservation } from "../src/sources/regulations-gov.js";
 import { ingestObservation } from "../src/ingest/observe.js";
 import { reconcileOcdId } from "../src/reconcile/persist.js";
-import { resolveWindow, reviewQueue, reviewShow } from "../src/review/core.js";
+import {
+  resolveWindow,
+  reviewQueue,
+  reviewQueueStats,
+  reviewShow,
+} from "../src/review/core.js";
 
 let failures = 0;
 const out: string[] = [];
@@ -115,6 +120,20 @@ try {
       q1[0]!.ocd_id === OCD_CONFLICT &&
       q1[0]!.confidence === "conflicting",
     JSON.stringify(q1.map((r) => r.ocd_id)),
+  );
+
+  // ── STATS (PR-R4): depth by reason + rot age anchored on first detection ────────────────────────────
+  const stats1 = await reviewQueueStats(sql, new Date("2026-09-03T00:00:00Z"));
+  assert(
+    "STATS: depth counts the conflicting window, stale stays 0",
+    stats1.byReason.conflicting === 1 && stats1.byReason.stale === 0,
+    JSON.stringify(stats1.byReason),
+  );
+  assert(
+    "STATS: rot age = now minus the conflict's FIRST detection (reconciled at 2026-09-02 → 24h)",
+    stats1.oldestAgeSeconds !== null &&
+      Math.abs(stats1.oldestAgeSeconds - 86400) < 60,
+    String(stats1.oldestAgeSeconds),
   );
 
   // ── SHOW: sources side-by-side, no verdicts yet, one live conflict ──────────────────────────────────
@@ -242,6 +261,16 @@ try {
       s2.liveConflicts === 0 &&
       s2.retiredConflicts === 1,
     `verdicts=${s2.priorVerdicts.length} live=${s2.liveConflicts} retired=${s2.retiredConflicts}`,
+  );
+
+  // ── STATS after resolve: queue empty, rot age null (→ NaN gauge, alert can never fire) ─────────────
+  const stats2 = await reviewQueueStats(sql, new Date("2026-09-03T00:00:00Z"));
+  assert(
+    "STATS: resolved queue reads empty with null rot age",
+    stats2.byReason.conflicting === 0 &&
+      stats2.byReason.stale === 0 &&
+      stats2.oldestAgeSeconds === null,
+    JSON.stringify(stats2),
   );
 } finally {
   await sql.end();

@@ -10,9 +10,13 @@
  *      passed, so status flips closed within one cycle instead of waiting for an observation a settled
  *      notice may never produce. Runs BEFORE verify so a window flipped closed here is snapshot-eligible
  *      for the SAME cycle's verification pass. Then
- *   5. verifyOnce — the post-close verification pass (slice V, PR-V1),
+ *   5. verifyOnce — the post-close verification pass (slice V, PR-V1), then
+ *   6. reviewQueueStats — queue observability (Slice R, PR-R4): READ-ONLY depth + rot-age gauges
+ *      feeding the review-queue-stale alert. Last because it reads the projections/conflicts every
+ *      earlier pass may have just changed this cycle.
  *
- * logging ALL FIVE summaries (labelled `fr:`, `regs:`, `chain:`, `status refresh:`, `verify:`).
+ * logging ALL SIX summaries (labelled `fr:`, `regs:`, `chain:`, `status refresh:`, `verify:`,
+ * `review queue:`).
  *
  * WHY VERIFY RUNS LAST (slice V): the verify pass reads the projections + observations the first
  * four passes just wrote — it snapshots newly-closed windows and judges windows whose horizon the
@@ -67,6 +71,7 @@ const { regsApiKey } = await import("../sources/regulations-gov.js");
 const { chainReconcileOnce } = await import("../reconcile/persist.js");
 const { refreshStaleOpenWindows } =
   await import("../reconcile/status-refresh.js");
+const { reviewQueueStats } = await import("../review/core.js");
 const { selectAdjudicator } = await import("../adjudicator/select.js");
 const { pollFrOnce } = await import("./fr-poll.js");
 const { pollRegsOnce } = await import("./poll.js");
@@ -77,6 +82,7 @@ const {
   recordChainCycle,
   recordStatusRefresh,
   recordVerifyCycle,
+  recordReviewQueue,
   setAccuracyHighRatio,
   recordPollPassFailure,
   observePollCycle,
@@ -192,6 +198,17 @@ async function main(): Promise<void> {
       } catch (err) {
         recordPollPassFailure("verify");
         log.error({ err }, "verify pass failed");
+      }
+      // 6th pass — review-queue observability (Slice R, PR-R4). READ-ONLY: two aggregates feeding
+      // the depth gauges + the rot alert. Runs LAST (reads what every earlier pass just wrote) and
+      // is INDEPENDENTLY try/caught like every pass.
+      try {
+        const queue = await reviewQueueStats(sql);
+        log.info({ summary: queue }, "review queue stats");
+        recordReviewQueue(queue);
+      } catch (err) {
+        recordPollPassFailure("queue_stats");
+        log.error({ err }, "review queue stats failed");
       }
     } catch (err) {
       // Belt-and-braces: anything outside the two passes (should be nothing) must not kill the scheduler.

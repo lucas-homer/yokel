@@ -1460,6 +1460,149 @@ spec:
                           "refId": "A"
                         }
                       ]
+                    },
+                    {
+                      "id": 30,
+                      "type": "row",
+                      "title": "Review queue (Slice R)",
+                      "collapsed": false,
+                      "gridPos": {
+                        "h": 1,
+                        "w": 24,
+                        "x": 0,
+                        "y": 65
+                      },
+                      "panels": []
+                    },
+                    {
+                      "id": 31,
+                      "type": "stat",
+                      "title": "Queue depth by reason",
+                      "description": "Windows whose confidence demands a human (conflicting | stale) — the `review queue` worklist. Worked weekly per docs/runbooks/review-queue.md; the rot alert pages when the oldest item passes 7d.",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 5,
+                        "w": 12,
+                        "x": 0,
+                        "y": 66
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "short",
+                          "mappings": [],
+                          "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                              {
+                                "color": "green",
+                                "value": null
+                              },
+                              {
+                                "color": "orange",
+                                "value": 1
+                              }
+                            ]
+                          },
+                          "color": {
+                            "mode": "thresholds"
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "colorMode": "background",
+                        "graphMode": "area",
+                        "reduceOptions": {
+                          "calcs": [
+                            "lastNotNull"
+                          ],
+                          "fields": "",
+                          "values": false
+                        },
+                        "textMode": "auto"
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "sum by (reason) (docketclock_review_queue_depth{app_kubernetes_io_component=\"poller\"})",
+                          "legendFormat": "{{reason}}",
+                          "range": false,
+                          "instant": true,
+                          "refId": "A"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 32,
+                      "type": "stat",
+                      "title": "Oldest queue item age",
+                      "description": "Age of the oldest LIVE cross_source conflict (first-detection stamp — re-derivation never launders age). NaN/empty when the queue is clear. Red past 7d = the review-queue-stale alert threshold.",
+                      "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                      },
+                      "gridPos": {
+                        "h": 5,
+                        "w": 12,
+                        "x": 12,
+                        "y": 66
+                      },
+                      "fieldConfig": {
+                        "defaults": {
+                          "unit": "s",
+                          "mappings": [],
+                          "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                              {
+                                "color": "green",
+                                "value": null
+                              },
+                              {
+                                "color": "red",
+                                "value": 604800
+                              }
+                            ]
+                          },
+                          "color": {
+                            "mode": "thresholds"
+                          }
+                        },
+                        "overrides": []
+                      },
+                      "options": {
+                        "colorMode": "background",
+                        "graphMode": "area",
+                        "reduceOptions": {
+                          "calcs": [
+                            "lastNotNull"
+                          ],
+                          "fields": "",
+                          "values": false
+                        },
+                        "textMode": "auto"
+                      },
+                      "targets": [
+                        {
+                          "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                          },
+                          "editorMode": "code",
+                          "expr": "max(docketclock_review_queue_oldest_age_seconds{app_kubernetes_io_component=\"poller\"})",
+                          "legendFormat": "__auto",
+                          "range": false,
+                          "instant": true,
+                          "refId": "A"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -2147,6 +2290,67 @@ spec:
                   # Same Helm-tpl escape idiom as pass-failing: the outer Go-template emits literal
                   # braces; Grafana expands $values at notification time (the live ratio in the push).
                   summary: "HIGH-confidence 90d accuracy at {{ \"{{ $values.A }}\" }} \u2014 below the 95% credibility bar on a meaningful sample (\u226520 verdicts). The product's headline promise is broken: query accuracy_records for recent was_correct=false rows and read their contradicting_observation_ids before anything else. (#90)"
+              # Review-queue rot (Slice R, PR-R4): the queue is enforced like the drills \u2014 an
+              # unworked queue PAGES, it does not rot. Anchored on the oldest LIVE cross_source
+              # conflict's first-detection stamp (detected_at is preserved across re-derivations, so
+              # a re-deriving window can never launder its age). The gauge is NaN when the queue is
+              # empty (the #90 doctrine \u2014 NaN satisfies no threshold), hence noDataState OK: silence
+              # means an empty queue, and a dark poller is poller-stalled's + the dead-man's job.
+              # for: 1h \u2014 the age only moves at poll-cycle cadence; a rot signal is not a spike.
+              # ARMED KNOWINGLY over a backlog: at commit time the oldest live conflict was months
+              # old, so this fires immediately and keeps paging until the first real queue sweep
+              # (docs/runbooks/review-queue.md) \u2014 that is the designed enforcement, not a misfire.
+              - uid: review-queue-stale
+                title: Review queue rotting (oldest item > 7d)
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: max(docketclock_review_queue_oldest_age_seconds{app_kubernetes_io_component="poller"})
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: gt
+                        params:
+                        - 604800
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: OK
+                execErrState: Error
+                for: 1h
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "The oldest unresolved review-queue item is past 7 days \u2014 human judgment is rotting in the queue. Run the weekly sweep: `review queue` / `review show` / `review resolve` (docs/runbooks/review-queue.md). Depth and age are on the DocketClock \u2014 App dashboard's Review queue row."
             # --- Backups (PR-5, plans/backups-restore-drill.md). Routes to local-noop like everything
             # else until Slice V's V3 lands a real receiver. Metric sources: cnpg_objectstore_* comes
             # from kube-state-metrics customResourceState over the barman ObjectStore CR (with plugin

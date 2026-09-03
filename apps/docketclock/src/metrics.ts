@@ -27,6 +27,7 @@ import type { FrPollSummary } from "./poll/fr-poll.js";
 import type { PollSummary } from "./poll/poll.js";
 import type { ChainReconcileOnceResult } from "./reconcile/persist.js";
 import type { StatusRefreshSummary } from "./reconcile/status-refresh.js";
+import type { QueueStats } from "./review/core.js";
 
 /** The single process-wide registry. `/metrics` renders THIS. */
 export const registry = new Registry();
@@ -135,7 +136,7 @@ export function recordRegsPoll(s: PollSummary): void {
   pollTruncated.set({ source: "regs" }, s.truncated ? 1 : 0);
 }
 export function recordPollPassFailure(
-  pass: "fr" | "regs" | "chain" | "status_refresh" | "verify",
+  pass: "fr" | "regs" | "chain" | "status_refresh" | "verify" | "queue_stats",
 ): void {
   pollPassFailures.inc({ pass });
 }
@@ -234,6 +235,24 @@ export function recordStatusRefresh(s: StatusRefreshSummary): void {
   statusRefreshTransitions.inc({ outcome: "other" }, s.otherStatus);
   statusRefreshTransitions.inc({ outcome: "failed" }, s.failed);
   statusRefreshVersionBumps.inc(s.versionBumped);
+}
+
+// ── Review queue observability (Slice R, PR-R4) ───────────────────────────────────────────────────────
+const reviewQueueDepth = new Gauge({
+  name: "docketclock_review_queue_depth",
+  help: "Windows in the operator review queue, by reason (conflicting | stale). The queue is enforced like the drills: it pages (see the review-queue-stale alert), it does not rot.",
+  labelNames: ["reason"],
+  registers: [registry],
+});
+const reviewQueueOldest = new Gauge({
+  name: "docketclock_review_queue_oldest_age_seconds",
+  help: "Age of the oldest LIVE cross_source conflict (first-detection stamp — re-derivation never launders age). NaN when the queue is empty (the #90 doctrine: NaN satisfies no threshold, so the rot alert can never fire on an empty queue).",
+  registers: [registry],
+});
+export function recordReviewQueue(s: QueueStats): void {
+  reviewQueueDepth.set({ reason: "conflicting" }, s.byReason.conflicting);
+  reviewQueueDepth.set({ reason: "stale" }, s.byReason.stale);
+  reviewQueueOldest.set(s.oldestAgeSeconds ?? NaN);
 }
 
 // ── Post-close verification (stage 5, slice V) ────────────────────────────────────────────────────────
