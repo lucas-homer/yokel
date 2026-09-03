@@ -94,7 +94,11 @@ export interface QueueStats {
   oldestAgeSeconds: number | null;
 }
 
-/** Compute queue depth + rot age. Runs in the poll cycle tail; cheap (two indexed aggregates). */
+/**
+ * Compute queue depth + rot age. Runs in the poll cycle tail; cheap — the depth aggregate rides
+ * participation_windows_confidence_idx (0003), the rot aggregate rides the partial
+ * conflict_records_live_detected_idx (0012), whose predicate matches this query exactly.
+ */
 export async function reviewQueueStats(
   sql: Sql,
   now: Date = new Date(),

@@ -15,8 +15,8 @@
  *      feeding the review-queue-stale alert. Last because it reads the projections/conflicts every
  *      earlier pass may have just changed this cycle.
  *
- * logging ALL SIX summaries (labelled `fr:`, `regs:`, `chain:`, `status refresh:`, `verify:`,
- * `review queue:`).
+ * logging ALL SIX summaries (log messages: "fr poll cycle", "regs poll cycle", "chain reconcile
+ * cycle", "status refresh cycle", "verify cycle", "review queue stats").
  *
  * WHY VERIFY RUNS LAST (slice V): the verify pass reads the projections + observations the first
  * four passes just wrote — it snapshots newly-closed windows and judges windows whose horizon the

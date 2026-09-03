@@ -19,6 +19,7 @@ import {
   recordLlmCacheHit,
   recordVerifyCycle,
   setAccuracyHighRatio,
+  recordReviewQueue,
 } from "../src/metrics.js";
 
 let failures = 0;
@@ -358,6 +359,38 @@ function agg(
   assert(
     "a COMPUTED sample of 0 is published as a real 0, not NaN",
     val(s2, "docketclock_accuracy_high_sample_90d") === 0,
+  );
+}
+
+// 7b. recordReviewQueue (Slice R, PR-R4) — the NaN-on-empty guarantee AT THE PROM-CLIENT LAYER.
+// The review-queue-stale alert's safety property is "NaN satisfies no threshold, so an empty queue
+// can never page" (#118 review): proving reviewQueueStats returns null is not enough — a recorder
+// that mapped null to 0 would still satisfy the DB test while silently arming the alert on nothing.
+{
+  recordReviewQueue({
+    byReason: { conflicting: 55, stale: 0 },
+    oldestAgeSeconds: 1234.5,
+  });
+  const s = await snap();
+  assert(
+    "recordReviewQueue: depth gauges set per reason (explicit 0 for stale — series never goes stale)",
+    val(s, "docketclock_review_queue_depth", { reason: "conflicting" }) ===
+      55 && val(s, "docketclock_review_queue_depth", { reason: "stale" }) === 0,
+  );
+  assert(
+    "recordReviewQueue: rot age published as the real number",
+    val(s, "docketclock_review_queue_oldest_age_seconds") === 1234.5,
+  );
+  recordReviewQueue({
+    byReason: { conflicting: 0, stale: 0 },
+    oldestAgeSeconds: null,
+  });
+  const s2 = await snap();
+  const emptyAge = val(s2, "docketclock_review_queue_oldest_age_seconds");
+  assert(
+    "recordReviewQueue(empty): rot age exports NaN, NEVER 0 (0 would defeat the anti-misfire guarantee)",
+    typeof emptyAge === "number" && Number.isNaN(emptyAge),
+    String(emptyAge),
   );
 }
 
