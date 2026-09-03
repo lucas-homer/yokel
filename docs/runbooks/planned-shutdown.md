@@ -33,13 +33,13 @@ RESUMES.
 
 ## While it's off
 
-Nothing pages (Grafana is down and the dead-man is paused). launchd jobs (drill-cadence) simply
-don't fire. **The ingest gap self-heals**: the FR/Regs poll cursors resume from their stored
+Nothing pages (Grafana is down and the dead-man is paused), and the launchd jobs (drill-cadence)
+simply don't fire. **The ingest gap self-heals**: the FR/Regs poll cursors resume from their stored
 positions and backfill the missed days on the first cycles after restart.
 
 ## After plugging in
 
-1. Boot + auto-login. colima auto-starts (brew service) but the cluster does NOT — run:
+1. Boot + auto-login. The colima VM auto-starts (brew service) but the cluster does NOT — run:
    ```sh
    cd ~/dev/yokel/infra && task cluster-restart
    ```
