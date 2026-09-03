@@ -22,7 +22,11 @@
  * proof feed publishes only live conflicts (resolved_at IS NULL).
  */
 import type { Sql } from "../db/client.js";
-import type { ChangeHistoryEntry, ParticipationWindow } from "@yokel/contracts";
+import type {
+  ChangeHistoryEntry,
+  ObservationSource,
+  ParticipationWindow,
+} from "@yokel/contracts";
 import type { ReconcileResult } from "./reconcile.js";
 import { RECONCILER_VERSION, reconcile } from "./reconcile.js";
 import {
@@ -240,7 +244,10 @@ export async function reconcileOcdId(
     {
       observation_id: string;
       ocd_id: string;
-      source: "federal_register" | "regulations_gov" | "govinfo";
+      // Derived from the contract union (the #115 review note): a hand-listed union went stale the
+      // moment 0.10.0 added human_review — and reconcile-v2 READS those rows, so a silent drop here
+      // would silently disable supersedence for a future 5th source too.
+      source: ObservationSource;
       fr_document_number: string | null;
       regs_document_id: string | null;
       regs_object_id: string | null;
@@ -260,7 +267,7 @@ export async function reconcileOcdId(
            is_extension, is_correction, is_withdrawal, is_reopening, raw
     from observations
     where ocd_id = ${ocdId}
-    order by fetched_at asc
+    order by fetched_at asc, observation_id asc
   `;
 
   if (rows.length === 0)

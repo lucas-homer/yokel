@@ -9,6 +9,12 @@
  * calendar day — the FR-2018-27875 artifact); a real Eastern-day difference OR cross-source
  * withdrawn-vs-open => CONFLICTING.
  *
+ * reconcile-v2 (Slice R): the chain may also carry `human_review` observations — typed operator
+ * verdicts (HumanReviewVerdict). The latest one is HONORED iff no source observation is strictly newer
+ * (the supersedence rule, documented at the overlay below); the human is an INPUT to this versioned
+ * rulebook, never an override around it — same chain in, same window out, exactly as deterministic as
+ * every other rule.
+ *
  * Determinism: `now` is injectable so tests pin every timestamp; it is used only for the engine's own
  * stamps (detected_at / change-tracking), never read off a wall clock implicitly.
  *
@@ -18,6 +24,7 @@
  */
 import {
   ConflictRecord,
+  HumanReviewVerdict,
   ParticipationWindow,
   type ConflictFlag,
   type Confidence,
@@ -33,7 +40,7 @@ import {
 } from "./eastern-date.js";
 
 /** Pins the rulebook version — bump on any rule change (mirrors PARSER_VERSION in the adapters). */
-export const RECONCILER_VERSION = "reconcile-v1.1";
+export const RECONCILER_VERSION = "reconcile-v2";
 
 export interface ReconcileResult {
   window: ParticipationWindow;
@@ -47,13 +54,25 @@ function latestBySource(
 ): Observation | null {
   // The Observation contract pins fetched_at to z.string().datetime() (UTC "…Z"), so lexicographic and
   // epoch ordering agree today — but epoch compare stays correct if that ever loosens to allow offsets.
+  //
+  // TIEBREAK (adversary B1, reconcile-v2): equal fetched_at MUST NOT be decided by array order — the
+  // chain read has no guaranteed row order on ties, so first-encountered-wins let the same DB state
+  // flip a published close between re-derivations (worst for two tied human_review verdicts choosing
+  // different pins at HIGH). On equal epoch-ms the greater observation_id wins — arbitrary but total,
+  // which is all determinism needs ("same chain in, same window out"). reconcileOcdId's read orders
+  // by (fetched_at asc, observation_id asc) for the same reason — stable row order — but THIS
+  // in-memory tiebreak is what decides the winner, so the result is order-independent even for
+  // caller-constructed arrays (tests, the future CLI).
   let latest: Observation | null = null;
   for (const o of observations) {
     if (o.source !== source) continue;
-    if (
-      !latest ||
-      new Date(o.fetched_at).getTime() > new Date(latest.fetched_at).getTime()
-    )
+    if (!latest) {
+      latest = o;
+      continue;
+    }
+    const t = new Date(o.fetched_at).getTime();
+    const lt = new Date(latest.fetched_at).getTime();
+    if (t > lt || (t === lt && o.observation_id > latest.observation_id))
       latest = o;
   }
   return latest;
@@ -335,6 +354,90 @@ export function reconcile(
     status = "closed";
   } else {
     status = "unknown";
+  }
+
+  // ── reconcile-v2: the honor-the-verdict rule (Slice R, PR-R2; plans/review-resolve.md) ───────────
+  // A human resolution is an OBSERVATION in this chain (source human_review, raw = HumanReviewVerdict).
+  // THE LOAD-BEARING GATE: the latest verdict is honored IFF no source observation is STRICTLY NEWER
+  // than it — a human verdict is authoritative only while it has seen everything the machine has. The
+  // moment newer source data lands, this whole overlay is skipped and the window returns to the pure
+  // machine derivation above — and if that derivation is CONFLICTING again, the ConflictRecord fires
+  // again (emission below keys off the FINAL confidence): the conflict RESURFACES. Never blind
+  // latest-wins, never sticky human-wins. Ties (equal fetched_at) honor the human — the verdict "has
+  // seen" data fetched at the same instant it was recorded against.
+  //
+  // The overlay runs AFTER the machine rulebook so dual-fire stays computed from real machine state:
+  // an honored verdict CHANGES WHAT WE ASSERT (the window fields), not what we watch. The machine's
+  // conflict flags are CARRIED (plus human_resolved) so the window still shows what was disputed; the
+  // live ConflictRecord is not emitted while honored — persist retires it as RESOLVED (resolved_at),
+  // and the same-pair upsert revives it if it ever re-fires. A verdict whose raw fails
+  // HumanReviewVerdict is IGNORED (defense-in-depth — the ingest seam already rejects these; a bad
+  // legacy row must degrade to pure derivation, not brick the window forever).
+  const human = latestBySource(observations, "human_review");
+  let honoredVerdict: HumanReviewVerdict | null = null;
+  if (human) {
+    let newestSourceMs = -Infinity;
+    for (const o of observations) {
+      if (o.source === "human_review") continue;
+      const t = new Date(o.fetched_at).getTime();
+      if (t > newestSourceMs) newestSourceMs = t;
+    }
+    if (new Date(human.fetched_at).getTime() >= newestSourceMs) {
+      const v = HumanReviewVerdict.safeParse(human.raw);
+      if (v.success) honoredVerdict = v.data;
+    }
+  }
+
+  if (honoredVerdict) {
+    conflictFlags = [...conflictFlags, "human_resolved"];
+    currentObservationIds.push(human!.observation_id);
+    switch (honoredVerdict.kind) {
+      case "pin_close": {
+        // The operator asserts the operative close. Date-only, so the 11:59:59 p.m. ET convention
+        // applies exactly as it does to an FR date-only value; the display carries the calendar date
+        // (the reconcile-v1.1 lesson). Confidence HIGH per the locked decision; status derives from
+        // the pinned close alone — while honored, the pin outranks a stale openForComment flag.
+        const pinned = honoredVerdict.pinned_close_date!;
+        resolvedCloseUtc = frCloseDateToUtcInstant(pinned);
+        resolvedCloseDisplay = `closes ${pinned} at 11:59 p.m. ET (pinned by human review)`;
+        confidence = "high";
+        status = new Date(resolvedCloseUtc) > now ? "open" : "closed";
+        break;
+      }
+      case "confirm_withdrawn": {
+        // The operator confirms a withdrawal the machine cannot see (e.g. the #112 identity split —
+        // the withdrawal observation landed on a shadow window). Mirrors the machine's Regs-only
+        // withdrawal shape: never push-eligible — LOW when a historical close exists (contract: LOW
+        // requires a non-null close), UNKNOWN otherwise. The machine-derived close/display are kept
+        // as the historical record.
+        status = "withdrawn";
+        confidence = resolvedCloseUtc !== null ? "low" : "unknown";
+        break;
+      }
+      case "confirm_reopened": {
+        // The operator asserts the window is open again (a reopening the machine missed or derived
+        // ambiguously). Status only — no pinned date exists on this kind (contract forbids it), so
+        // the machine's close/confidence stand, EXCEPT a CONFLICTING machine verdict must degrade:
+        // the honored overlay never leaves confidence=conflicting (no live ConflictRecord while
+        // honored), so it drops to LOW with the machine's carried (disputed) close, or UNKNOWN when
+        // no close exists. An operator who also knows the new close should pin_close instead.
+        status = "open";
+        if (confidence === "conflicting")
+          confidence = resolvedCloseUtc !== null ? "low" : "unknown";
+        break;
+      }
+      case "dismiss_conflict": {
+        // The operator asserts the detected disagreement is noise (a known artifact class), NOT a
+        // choice of winner — dismissal removes the alarm without adding corroboration, so it lands
+        // at LOW with the machine's carried close (UNKNOWN when null), never MEDIUM/HIGH. An
+        // operator who knows the actual close should pin_close. Status: the normal machine status
+        // rule already ran above and stands (a dismissed withdrawn_vs_open keeps status=withdrawn —
+        // dismissing does not un-withdraw; confirm_withdrawn/confirm_reopened assert status).
+        if (confidence === "conflicting")
+          confidence = resolvedCloseUtc !== null ? "low" : "unknown";
+        break;
+      }
+    }
   }
 
   // ── provenance — agreeing when corroborating, conflicting in the CONFLICTING cases ───────────────
