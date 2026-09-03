@@ -12,6 +12,9 @@ import {
   ConflictRecord,
   Observation,
   ObservationTarget,
+  ObservationSource,
+  ConflictFlag,
+  HumanReviewVerdict,
   AccuracyRecord,
   makeOcdId,
   DISCLAIMER,
@@ -800,6 +803,295 @@ function baseWindow(over: Record<string, unknown> = {}) {
       r.success
         ? "Date.parse comparison, not lexicographic"
         : JSON.stringify(r.error.issues),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+// EDGE 10 — human_review (@0.10.0, Slice R PR-R1). A resolution is an OBSERVATION riding the same
+// append-only log; its `raw` is a TYPED HumanReviewVerdict. The adversarial probes: verdict payloads
+// that LIE about themselves (a pin without a date, a date smuggled onto a non-pin kind, a blank
+// "why", zero reviewed evidence) must not parse. The supersedence rule itself is reconcile-v2 —
+// here we only guard the payload shape and the two new enum members.
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+{
+  /** A valid dismiss_conflict verdict we can spread + mutate per attack. */
+  const baseVerdict = (over: Record<string, unknown> = {}) => ({
+    kind: "dismiss_conflict",
+    note: "Read both notices; the FR correction already aligns the dates — the mismatch flag is stale.",
+    operator: "lucas",
+    reviewed_payload_hashes: ["a".repeat(64), "b".repeat(64)],
+    ...over,
+  });
+
+  // 10a — each verdict kind's happy path parses (pin_close WITH its date; the others WITHOUT one).
+  {
+    const rPin = HumanReviewVerdict.safeParse(
+      baseVerdict({ kind: "pin_close", pinned_close_date: "2026-05-01" }),
+    );
+    const rWithdrawn = HumanReviewVerdict.safeParse(
+      baseVerdict({ kind: "confirm_withdrawn" }),
+    );
+    const rReopened = HumanReviewVerdict.safeParse(
+      baseVerdict({ kind: "confirm_reopened" }),
+    );
+    const rDismiss = HumanReviewVerdict.safeParse(baseVerdict());
+    assert(
+      "EDGE 10: pin_close + pinned_close_date parses",
+      rPin.success,
+      rPin.success ? "" : JSON.stringify(rPin.error.issues),
+    );
+    assert(
+      "EDGE 10: confirm_withdrawn (no date) parses",
+      rWithdrawn.success,
+      rWithdrawn.success ? "" : JSON.stringify(rWithdrawn.error.issues),
+    );
+    assert(
+      "EDGE 10: confirm_reopened (no date) parses",
+      rReopened.success,
+      rReopened.success ? "" : JSON.stringify(rReopened.error.issues),
+    );
+    assert(
+      "EDGE 10: dismiss_conflict (no date) parses",
+      rDismiss.success,
+      rDismiss.success ? "" : JSON.stringify(rDismiss.error.issues),
+    );
+  }
+
+  // 10b — ATTACK: pin_close WITHOUT pinned_close_date. MUST FAIL — a pin naming no date asserts
+  // nothing (the CLI would write a "resolution" that resolves nothing).
+  {
+    const r = HumanReviewVerdict.safeParse(baseVerdict({ kind: "pin_close" }));
+    assert(
+      "EDGE 10 ATTACK: pin_close WITHOUT pinned_close_date is REJECTED",
+      !r.success,
+      r.success
+        ? "schema accepted a pin that names no date!"
+        : "pin ⇔ date superRefine caught it",
+    );
+  }
+
+  // 10c — ATTACK: a date smuggled onto a NON-pin kind. MUST FAIL for every non-pin kind — the
+  // kind's semantics assert no close, so a date here is an assertion the audit trail can't explain.
+  {
+    const kinds = [
+      "confirm_withdrawn",
+      "confirm_reopened",
+      "dismiss_conflict",
+    ] as const;
+    for (const kind of kinds) {
+      const r = HumanReviewVerdict.safeParse(
+        baseVerdict({ kind, pinned_close_date: "2026-05-01" }),
+      );
+      assert(
+        `EDGE 10 ATTACK: ${kind} WITH pinned_close_date is REJECTED`,
+        !r.success,
+        r.success
+          ? "schema accepted a smuggled close date on a non-pin kind!"
+          : "date-forbidden superRefine caught it",
+      );
+    }
+  }
+
+  // 10d — ATTACK: a blank "why". MUST FAIL for both the empty string and a whitespace-only note —
+  // the note is the point of a human verdict; trim-then-check so whitespace can't sneak past min(1).
+  {
+    const rEmpty = HumanReviewVerdict.safeParse(baseVerdict({ note: "" }));
+    const rBlank = HumanReviewVerdict.safeParse(
+      baseVerdict({ note: "  \n\t " }),
+    );
+    assert(
+      "EDGE 10 ATTACK: empty note is REJECTED",
+      !rEmpty.success,
+      rEmpty.success
+        ? "schema accepted a why-less verdict!"
+        : "refine caught it",
+    );
+    assert(
+      "EDGE 10 ATTACK: whitespace-only note is REJECTED",
+      !rBlank.success,
+      rBlank.success
+        ? "schema accepted a whitespace note (min-length dodge)!"
+        : "trim refine caught it",
+    );
+  }
+
+  // 10e — ATTACK: zero reviewed evidence. MUST FAIL — a verdict must name what the human actually
+  // looked at (≥1 payload hash), or the audit chain records judgment resting on nothing.
+  {
+    const r = HumanReviewVerdict.safeParse(
+      baseVerdict({ reviewed_payload_hashes: [] }),
+    );
+    assert(
+      "EDGE 10 ATTACK: empty reviewed_payload_hashes is REJECTED",
+      !r.success,
+      r.success
+        ? "schema accepted a verdict reviewing nothing!"
+        : ".min(1) caught it",
+    );
+  }
+
+  // 10f — ATTACK: malformed evidence / malformed date formats. reviewed_payload_hashes entries must
+  // be real 64-hex PayloadHashes, and pinned_close_date must be a real YYYY-MM-DD calendar date.
+  {
+    const rHash = HumanReviewVerdict.safeParse(
+      baseVerdict({ reviewed_payload_hashes: ["not-a-sha256"] }),
+    );
+    const rUsDate = HumanReviewVerdict.safeParse(
+      baseVerdict({ kind: "pin_close", pinned_close_date: "05/01/2026" }),
+    );
+    const rBadMonth = HumanReviewVerdict.safeParse(
+      baseVerdict({ kind: "pin_close", pinned_close_date: "2026-13-01" }),
+    );
+    assert(
+      "EDGE 10 ATTACK: a non-sha256 reviewed_payload_hashes entry is REJECTED",
+      !rHash.success,
+      rHash.success
+        ? "PayloadHash constraint not mirrored!"
+        : "PayloadHash caught it",
+    );
+    assert(
+      "EDGE 10 ATTACK: pinned_close_date '05/01/2026' (non-ISO) is REJECTED",
+      !rUsDate.success,
+    );
+    assert(
+      "EDGE 10 ATTACK: pinned_close_date '2026-13-01' (month 13) is REJECTED",
+      !rBadMonth.success,
+    );
+  }
+
+  // 10g — the two new enum members: ObservationSource accepts "human_review"; ConflictFlag accepts
+  // "human_resolved". And an unknown source stays rejected (the widened enum is not a free-for-all).
+  {
+    assert(
+      "EDGE 10: ObservationSource accepts 'human_review'",
+      ObservationSource.safeParse("human_review").success,
+    );
+    assert(
+      "EDGE 10: ObservationSource still REJECTS an unknown source ('mirrulations')",
+      !ObservationSource.safeParse("mirrulations").success,
+    );
+    assert(
+      "EDGE 10: ConflictFlag accepts 'human_resolved'",
+      ConflictFlag.safeParse("human_resolved").success,
+    );
+  }
+
+  /** A full human_review Observation row (the plan's row conventions: notice flags all false,
+   *  raw_dates_text / document ids null, parser_version "human-review-v1") — spread + mutate. */
+  const baseHrObservation = (over: Record<string, unknown> = {}) => ({
+    observation_id: "obs-hr-1",
+    ocd_id: makeOcdId({ frDocNum: "2025-03547" }),
+    source: "human_review",
+    fr_document_number: null,
+    regs_document_id: null,
+    regs_object_id: null,
+    payload_hash: "c".repeat(64),
+    fetched_at: "2026-09-02T12:00:00.000Z",
+    parser_version: "human-review-v1",
+    raw_dates_text: null,
+    is_extension: false,
+    is_correction: false,
+    is_withdrawal: false,
+    is_reopening: false,
+    raw: baseVerdict({ kind: "pin_close", pinned_close_date: "2026-05-01" }),
+    ...over,
+  });
+
+  // 10h — a FULL human_review Observation round-trips the schema: source "human_review", raw a
+  // HumanReviewVerdict, and the plan's row conventions. The DB round-trip is docketclock's test;
+  // this is the pure-schema half.
+  {
+    const r = Observation.safeParse(baseHrObservation());
+    assert(
+      "EDGE 10: a full Observation (source human_review, raw = HumanReviewVerdict) parses",
+      r.success,
+      r.success ? "" : JSON.stringify(r.error.issues),
+    );
+  }
+
+  // 10j — ATTACK (the PR #115 Copilot gap): a human_review Observation whose raw is FREEFORM JSON.
+  // MUST FAIL, at path ["raw", ...] — "typed verdict payload, never freeform JSON" is enforced by
+  // Observation ITSELF (observationRawInvariant), not left to every caller re-parsing raw.
+  {
+    const r = Observation.safeParse(baseHrObservation({ raw: { foo: 1 } }));
+    assert(
+      "EDGE 10 ATTACK: human_review Observation with freeform raw ({foo:1}) is REJECTED",
+      !r.success,
+      r.success
+        ? "Observation.parse accepted a freeform human_review payload!"
+        : "observationRawInvariant caught it",
+    );
+    assert(
+      "EDGE 10: every freeform-raw rejection issue surfaces under path ['raw', ...]",
+      !r.success &&
+        r.error.issues.length > 0 &&
+        r.error.issues.every((i) => i.path[0] === "raw"),
+      r.success
+        ? "record did not fail"
+        : `paths: ${JSON.stringify(r.error.issues.map((i) => i.path))}`,
+    );
+  }
+
+  // 10k — ATTACK: raw IS verdict-shaped but violates the verdict's OWN superRefine (pin_close
+  // without a date). MUST FAIL — the invariant runs the full HumanReviewVerdict parse, refinements
+  // included, and forwards the sub-issue at ["raw", "pinned_close_date"].
+  {
+    const r = Observation.safeParse(
+      baseHrObservation({ raw: baseVerdict({ kind: "pin_close" }) }),
+    );
+    assert(
+      "EDGE 10 ATTACK: human_review Observation whose raw is pin_close WITHOUT a date is REJECTED",
+      !r.success,
+      r.success
+        ? "Observation.parse accepted a verdict its own superRefine forbids!"
+        : "the nested pin ⇔ date refinement fired through the invariant",
+    );
+    assert(
+      "EDGE 10: the nested violation surfaces at ['raw','pinned_close_date']",
+      !r.success &&
+        r.error.issues.some(
+          (i) => i.path[0] === "raw" && i.path[1] === "pinned_close_date",
+        ),
+      r.success
+        ? "record did not fail"
+        : `paths: ${JSON.stringify(r.error.issues.map((i) => i.path))}`,
+    );
+  }
+
+  // 10l — ASYMMETRY PRESERVED: a machine-source observation keeps its deliberately-unknown raw (the
+  // whole upstream payload, verbatim for replay) — arbitrary freeform raw still parses.
+  {
+    const r = Observation.safeParse(
+      baseHrObservation({
+        source: "federal_register",
+        fr_document_number: "2025-03547",
+        parser_version: "p1",
+        raw_dates_text: "Comments due ...",
+        raw: { foo: 1 },
+      }),
+    );
+    assert(
+      "EDGE 10: a federal_register Observation with arbitrary freeform raw still parses (asymmetry preserved)",
+      r.success,
+      r.success ? "" : JSON.stringify(r.error.issues),
+    );
+  }
+
+  // 10i — COMPOSITION: 'human_resolved' rides with HIGH confidence on a window (an honored pin_close
+  // derives HIGH), alongside the type flag it resolves — no confidence-pairing refinement blocks it.
+  {
+    const r = ParticipationWindow.safeParse(
+      baseWindow({
+        confidence: "high",
+        conflict_flags: ["fr_regs_date_mismatch", "human_resolved"],
+        resolved_close_utc: "2026-05-02T03:59:00.000Z",
+      }),
+    );
+    assert(
+      "EDGE 10: HIGH + ['fr_regs_date_mismatch','human_resolved'] parses (provenance marker composes with HIGH)",
+      r.success,
+      r.success ? "" : JSON.stringify(r.error.issues),
     );
   }
 }

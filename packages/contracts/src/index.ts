@@ -3,7 +3,7 @@
  * (Watershed Watch). Verticals join on stable OCD-IDs, never internal UUIDs.
  *
  * ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
- * │ FROZEN @ 0.9.0 (2026-07-13)                                                                    │
+ * │ FROZEN @ 0.10.0 (2026-09-02)                                                                   │
  * │                                                                                               │
  * │ LOCKED (builders may propose changes; the contract-keeper adjudicates — nobody else edits):   │
  * │   • Confidence / ConflictFlag / WindowType / WindowStatus enums.                              │
@@ -21,6 +21,17 @@
  * │       'unverified_lapsed' with was_correct NULL (excluded from the headline gauge; feeds the      │
  * │       starvation counter). A miss must NAME its contradicting observations ('manual' exempt).     │
  * │       [2026-07-13]                                                                               │
+ * │   • human_review (Slice R, PR-R1): ObservationSource 4th member "human_review" — an operator     │
+ * │       resolution is an OBSERVATION, never a mutation — + HumanReviewVerdict (the typed `raw`      │
+ * │       payload: kind pin_close|confirm_withdrawn|confirm_reopened|dismiss_conflict;               │
+ * │       pinned_close_date REQUIRED for pin_close / FORBIDDEN otherwise, superRefine both ways;      │
+ * │       note non-empty after trim; operator; reviewed_payload_hashes ≥1 PayloadHash) +              │
+ * │       ConflictFlag "human_resolved" provenance marker (the llm_corroborated pattern). Observation │
+ * │       ENFORCES the typed raw (source human_review ⇒ raw parses as HumanReviewVerdict) via the     │
+ * │       exported observationRawInvariant over the exported ObservationFields derivation base —      │
+ * │       zod-3 omit/pick cannot inherit a superRefine; derived schemas re-apply it. The              │
+ * │       supersedence rule itself (verdict honored only while no source observation is newer) is     │
+ * │       reconcile-v2, app-side — the contract carries only the payload shape. [2026-09-02]          │
  * │   • REST response envelope: DISCLAIMER + API_VERSION constants, EnvelopeMeta, Pagination, and  │
  * │       the apiItemEnvelope / apiListEnvelope factories (the single source for response shape so  │
  * │       the published OpenAPI and actual responses can never diverge).                            │
@@ -59,6 +70,39 @@
  * └─────────────────────────────────────────────────────────────────────────────────────────────┘
  *
  * REVISIONS
+ *   • 0.10.0 (2026-09-02) — the human-review write path (Slice R, PR-R1; plans/review-resolve.md).
+ *       Three ADDITIVE changes; no existing field/enum member reordered, renamed, or removed. (1)
+ *       ObservationSource += "human_review" (4th member): an operator resolution is an OBSERVATION,
+ *       never a mutation — it enters the SAME append-only log through the same ingest machinery as
+ *       source data, so corrections accrete and the audit chain stays complete (there is no admin
+ *       UPDATE path and never will be; migration 0011 widens the 0001 source CHECK in lockstep,
+ *       outside this package). (2) New HumanReviewVerdict + HumanReviewVerdictKind — the TYPED `raw`
+ *       payload shape for source:"human_review" observations (never freeform JSON): kind (pin_close |
+ *       confirm_withdrawn | confirm_reopened | dismiss_conflict), pinned_close_date (ISO calendar
+ *       date YYYY-MM-DD via z.string().date() — REQUIRED for pin_close, FORBIDDEN for every other
+ *       kind, superRefine in BOTH directions), note (REQUIRED free text, non-empty AFTER TRIM — the
+ *       "why" is the point), operator (non-empty), and reviewed_payload_hashes (≥1 PayloadHash — the
+ *       source observations the human actually looked at; audit evidence for the verdict).
+ *       SUPERSEDENCE INTENT (the rule is reconcile-v2, app-side — this schema is ONLY the payload
+ *       shape): a human verdict is honored only while NO source observation for the window is newer
+ *       than it; a newer source observation returns the window to pure derivation, and if derivation
+ *       disagrees the conflict RESURFACES — an outdated human verdict is never silently trusted, and
+ *       a resolution never suppresses the dual-fire behavior. ENFORCED ON THE LOG ROW (PR #115
+ *       review gap): Observation superRefines source "human_review" ⇒ raw parses as
+ *       HumanReviewVerdict (sub-issues surfaced at ["raw", …]) — the typed-verdict decision holds at
+ *       the schema seam, not per-caller; machine-source raw stays deliberately unknown (whole
+ *       upstream payloads, verbatim for replay). Mechanism: Observation =
+ *       ObservationFields.superRefine(observationRawInvariant), with ObservationFields (the
+ *       plain-ZodObject derivation base) and observationRawInvariant BOTH exported — zod-3
+ *       .omit/.pick cannot inherit a superRefine (ZodEffects has neither), so any derived schema
+ *       (e.g. an ingest candidate minus observation_id) must re-apply the exported refinement.
+ *       (3) ConflictFlag += "human_resolved" —
+ *       a PROVENANCE/honesty marker riding ALONGSIDE type flags (exactly the llm_corroborated
+ *       pattern) so every consumer can see a human is in the loop. It composes with ANY confidence —
+ *       in particular HIGH, since an honored pin_close derives HIGH — and no confidence-pairing
+ *       superRefine constrains it (tz_normalization_only remains the only flag with one; confidence
+ *       stays deterministic, the human is an INPUT to versioned rules, not an override around them).
+ *       Every existing schema unchanged; purely additive.
  *   • 0.9.0 (2026-07-13) — AccuracyRecord reshaped from placeholder to the verification-slice shape
  *       (plans/verification-accuracy.md, PR-V1). Reshaping a LOCKED-listed name inside a MINOR bump is
  *       legitimate here and only here: the prior AccuracyRecord was an explicit PLACEHOLDER with ZERO
@@ -209,6 +253,7 @@ export const ConflictFlag = z.enum([
   "multi_target_notice",
   "keyword_false_positive", // e.g. the BLM "land-withdrawal extension" trap
   "llm_corroborated", // PROVENANCE/honesty marker (NOT a confidence score — confidence is NEVER LLM-scored): a cross_window (chain) link the LLM adjudicator AFFIRMED for a pair that passed the structural rules (shared docket + amendment-after-original ordering + recency) but had NO deterministic identity corroboration (no shared RIN AND no explicit doc-number reference). Signals LOWER certainty than a deterministically-corroborated link; rides ALONGSIDE the link's type flag(s) (extension_chain_unresolved / correction_pending / withdrawn_vs_open / reopening), as multi_target_notice does.
+  "human_resolved", // PROVENANCE/honesty marker (the llm_corroborated pattern; NOT a confidence score): the current window derivation HONORS a human_review verdict (Slice R) — a human read the evidence and resolved it, and every consumer can see so. Rides ALONGSIDE the type flag(s) it resolves; composes with ANY confidence — in particular HIGH, since an honored pin_close derives HIGH — with NO confidence-pairing constraint (tz_normalization_only is the only flag carrying one). Honored only while NO source observation is newer than the verdict (reconcile-v2 supersedence) — never sticky, never a silence path.
 ]);
 export type ConflictFlag = z.infer<typeof ConflictFlag>;
 
@@ -233,12 +278,15 @@ export const WindowStatus = z.enum([
 ]);
 export type WindowStatus = z.infer<typeof WindowStatus>;
 
-/** The three live data sources behind every Observation. Mirrulations/spicy-regs is OFFLINE-only and
- *  deliberately NOT a source enum member — it never produces a live observation. */
+/** The sources behind every Observation: the three LIVE machine sources, plus "human_review" — an
+ *  operator verdict entering the SAME append-only log (Slice R: a resolution is an observation, never
+ *  a mutation; its `raw` is a HumanReviewVerdict, see below). Mirrulations/spicy-regs is OFFLINE-only
+ *  and deliberately NOT a source enum member — it never produces a live observation. */
 export const ObservationSource = z.enum([
   "federal_register",
   "regulations_gov",
   "govinfo",
+  "human_review", // operator resolution via the review CLI — same log, same append-only trigger; raw is a HumanReviewVerdict
 ]);
 export type ObservationSource = z.infer<typeof ObservationSource>;
 
@@ -286,12 +334,91 @@ export const PayloadHash = z
 export type PayloadHash = z.infer<typeof PayloadHash>;
 
 /**
- * Observation — one append-only log row. The audit spine: full replay can re-derive every window and
- * conflict from observations alone. DB enforces append-only (BEFORE UPDATE/DELETE trigger); this schema
- * validates the shape at the boundary. Skipped on insert if payload_hash matches the latest for
- * (source, document_id).
+ * HumanReviewVerdictKind — the four operator resolutions a human_review observation can record
+ * (Slice R; plans/review-resolve.md):
+ *   • "pin_close"         — a human read the disagreeing sources; the operative close is
+ *     pinned_close_date (the one kind that asserts a date; derives HIGH when honored).
+ *   • "confirm_withdrawn" — the withdrawal signal is real; the window is genuinely withdrawn.
+ *   • "confirm_reopened"  — the reopening signal is real; a fresh reliance window exists.
+ *   • "dismiss_conflict"  — the flagged conflict is a false positive; no date is asserted.
  */
-export const Observation = z.object({
+export const HumanReviewVerdictKind = z.enum([
+  "pin_close",
+  "confirm_withdrawn",
+  "confirm_reopened",
+  "dismiss_conflict",
+]);
+export type HumanReviewVerdictKind = z.infer<typeof HumanReviewVerdictKind>;
+
+/**
+ * HumanReviewVerdict — the typed `raw` payload for a source:"human_review" Observation (Slice R,
+ * PR-R1). A resolution is an OBSERVATION, never a mutation: it enters the same append-only log
+ * through the same ingest machinery as source data, so corrections accrete and the audit chain stays
+ * complete. Typed (never freeform JSON) so a verdict that lies about itself cannot parse — and
+ * ENFORCED at the log-row seam: Observation superRefines source "human_review" ⇒ raw parses as this
+ * schema (observationRawInvariant below), so the decision does not depend on every caller separately
+ * re-parsing raw.
+ *
+ * SUPERSEDENCE INTENT — this schema is ONLY the payload shape; the rule itself lands in reconcile-v2:
+ * a human verdict is honored only while NO source observation for the window is newer than it — the
+ * moment a newer source observation lands, the window returns to pure derivation and a disagreement
+ * RESURFACES the conflict (an outdated human verdict is never silently trusted).
+ *
+ * Refinements (illegal states unrepresentable):
+ *   (1) kind "pin_close" REQUIRES pinned_close_date; every OTHER kind FORBIDS it — superRefine in
+ *       BOTH directions (a pin naming no date asserts nothing; a date on a non-pin kind is a smuggled
+ *       assertion its semantics don't carry).
+ *   (2) note is REQUIRED and non-empty AFTER TRIM — the "why" is the point of a human verdict; a
+ *       blank/whitespace note must not parse.
+ *   (3) reviewed_payload_hashes names ≥1 PayloadHash — the source observations the human actually
+ *       looked at; the audit evidence the verdict rests on.
+ *
+ * Observation-row conventions for human_review rows (app-side, not enforceable here): notice flags
+ * all false, raw_dates_text and the document-id fields null, parser_version "human-review-v1".
+ */
+export const HumanReviewVerdict = z
+  .object({
+    kind: HumanReviewVerdictKind,
+    // ISO calendar DATE (YYYY-MM-DD, validated — z.string().date() is the date-only peer of the
+    // .datetime() idiom used package-wide; raw_fr_close_date et al. predate it and stay untouched).
+    // Date-only on purpose: the reconciler (v2) derives the operative UTC close from it, exactly as
+    // it does for an FR calendar date. Present ⇔ kind === "pin_close" (superRefine below).
+    pinned_close_date: z.string().date().optional(),
+    note: z.string().refine((s) => s.trim().length > 0, {
+      message:
+        'note must be non-empty after trim — the "why" is the point of a human verdict; a blank or whitespace-only note is no note.',
+    }),
+    operator: z.string().min(1), // who resolved it — required provenance, like every audit field here
+    reviewed_payload_hashes: z.array(PayloadHash).min(1), // ≥1: a verdict must name what the human actually reviewed
+  })
+  .superRefine((v, ctx) => {
+    // (1) pin ⇔ date, both directions.
+    if (v.kind === "pin_close" && v.pinned_close_date === undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["pinned_close_date"],
+        message:
+          "kind 'pin_close' requires pinned_close_date — a pin that names no date asserts nothing.",
+      });
+    }
+    if (v.kind !== "pin_close" && v.pinned_close_date !== undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["pinned_close_date"],
+        message: `kind '${v.kind}' forbids pinned_close_date — only 'pin_close' asserts a close date; a date here is a smuggled assertion the kind's semantics don't carry.`,
+      });
+    }
+  });
+export type HumanReviewVerdict = z.infer<typeof HumanReviewVerdict>;
+
+/**
+ * ObservationFields — the raw FIELD SHAPE of an Observation, exported as a plain ZodObject ONLY as
+ * the DERIVATION BASE (.omit/.pick — e.g. an ingest candidate that drops the DB-minted
+ * observation_id). It carries NO cross-field invariant, so NEVER validate against it directly: every
+ * schema derived from it MUST re-apply observationRawInvariant (zod-3 derivation cannot inherit a
+ * superRefine — see observationRawInvariant). `Observation` below is the canonical validating schema.
+ */
+export const ObservationFields = z.object({
   observation_id: z.string(), // immutable log row id (internal; NOT the public key)
 
   // OCD linkage — which window(s) this row feeds is expressed via observation_targets (M:N), but the
@@ -318,9 +445,59 @@ export const Observation = z.object({
   is_withdrawal: z.boolean(),
   is_reopening: z.boolean(), // 4th notice-type flag, peer to the three above; a previously-CLOSED comment period re-opened (a gap + fresh reliance window), NOT an open-deadline extension
 
-  // the raw payload, retained intact for replay/transparency (JSONB at rest)
+  // the raw payload, retained intact for replay/transparency (JSONB at rest). Machine sources: the
+  // WHOLE upstream payload, deliberately un-typed. source "human_review": MUST parse as
+  // HumanReviewVerdict — enforced by observationRawInvariant on Observation (below), not here.
   raw: z.unknown(),
 });
+
+/**
+ * observationRawInvariant — the source-discriminated `raw` check (PR #115 review gap): source
+ * "human_review" ⇒ `raw` must parse as HumanReviewVerdict, with the verdict's sub-issues surfaced
+ * under path ["raw", ...]. The asymmetry is deliberate: the three machine sources' `raw` stays
+ * `unknown` because it is the WHOLE upstream payload retained verbatim for replay/transparency — not
+ * a shape this contract could pin — while a human verdict is OUR OWN payload, so freeform JSON there
+ * is just an unenforced contract.
+ *
+ * Exported as a SHARED refinement (not only baked into Observation) because zod-3 `.superRefine`
+ * wraps a ZodObject into a ZodEffects, which has NO .omit/.pick/.extend — so a schema derived from
+ * ObservationFields (e.g. the app's ObservationCandidateSchema = fields minus observation_id) CANNOT
+ * inherit this check through derivation and must COMPOSE it:
+ *   ObservationFields.omit({ observation_id: true }).superRefine(observationRawInvariant)
+ * Structurally typed (only `source` + optional `raw`) so it fits any such derivative.
+ */
+export function observationRawInvariant(
+  obs: { source: ObservationSource; raw?: unknown },
+  ctx: z.RefinementCtx,
+): void {
+  if (obs.source !== "human_review") return; // machine raw: whole upstream payload, deliberately unknown
+  const verdict = HumanReviewVerdict.safeParse(obs.raw);
+  if (!verdict.success) {
+    for (const issue of verdict.error.issues) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["raw", ...issue.path],
+        message: issue.message,
+      });
+    }
+  }
+}
+
+/**
+ * Observation — one append-only log row. The audit spine: full replay can re-derive every window and
+ * conflict from observations alone. DB enforces append-only (BEFORE UPDATE/DELETE trigger); this schema
+ * validates the shape at the boundary. Skipped on insert if payload_hash matches the latest for
+ * (source, document_id).
+ *
+ * source "human_review" ⇒ `raw` MUST parse as HumanReviewVerdict (observationRawInvariant — the
+ * "typed verdict payload, never freeform JSON" locked decision, enforced at the schema seam instead
+ * of left to callers); machine-source `raw` stays deliberately unknown (whole upstream payloads).
+ * NOTE: the superRefine makes this a ZodEffects — derive candidate/partial shapes from
+ * ObservationFields and re-apply observationRawInvariant (see its doc).
+ */
+export const Observation = ObservationFields.superRefine(
+  observationRawInvariant,
+);
 export type Observation = z.infer<typeof Observation>;
 
 /**
