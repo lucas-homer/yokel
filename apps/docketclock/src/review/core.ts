@@ -79,6 +79,50 @@ export async function reviewQueue(sql: Sql): Promise<QueueRow[]> {
   }));
 }
 
+/** Per-cycle queue observability (PR-R4) — the numbers the gauge + rot alert are built from. */
+export interface QueueStats {
+  /** windows per queue reason (confidence tier). Both keys always present so gauges never go stale. */
+  byReason: { conflicting: number; stale: number };
+  /**
+   * Age (seconds) of the oldest LIVE cross_source conflict — the queue's rot signal. detected_at is
+   * the FIRST-detection stamp, preserved across re-derivations (persist.ts), so a re-deriving window
+   * can never launder its age. null when no live conflict exists. NOTE: anchored on conflicts, which
+   * every conflicting-confidence window carries by engine invariant; if something starts emitting
+   * confidence=stale (reserved, nothing does today), those items age invisibly until this learns a
+   * second anchor — extend then, not speculatively.
+   */
+  oldestAgeSeconds: number | null;
+}
+
+/**
+ * Compute queue depth + rot age. Runs in the poll cycle tail; cheap — the depth aggregate rides
+ * participation_windows_confidence_idx (0003), the rot aggregate rides the partial
+ * conflict_records_live_detected_idx (0012), whose predicate matches this query exactly.
+ */
+export async function reviewQueueStats(
+  sql: Sql,
+  now: Date = new Date(),
+): Promise<QueueStats> {
+  const depths = await sql<{ confidence: string; n: string }[]>`
+    select confidence, count(*) as n from participation_windows
+    where confidence in ('conflicting', 'stale')
+    group by confidence
+  `;
+  const byReason = { conflicting: 0, stale: 0 };
+  for (const d of depths) {
+    if (d.confidence === "conflicting") byReason.conflicting = Number(d.n);
+    if (d.confidence === "stale") byReason.stale = Number(d.n);
+  }
+  const [oldest] = await sql<{ min: Date | null }[]>`
+    select min(detected_at) as min from conflict_records
+    where resolved_at is null and conflict_scope = 'cross_source'
+  `;
+  const oldestAgeSeconds = oldest?.min
+    ? Math.max(0, (now.getTime() - oldest.min.getTime()) / 1000)
+    : null;
+  return { byReason, oldestAgeSeconds };
+}
+
 /** Per-source summary for `review show` — the values a reviewer actually compares. */
 export interface SourceSummary {
   source: string;

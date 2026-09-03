@@ -1,6 +1,11 @@
 # Review/Resolve Slice R — the human review path (`human_review` observations)
 
-> Status: **Ready to build** — decisions locked, awaiting go on PR-R1.
+> Status: **SHIPPED** (2026-09-03) — PR-R1 #115 (contract 0.10.0 + migration 0011), PR-R2 #116
+> (reconcile-v2 supersedence; adversary-verified, one blocking determinism find fixed), PR-R3 #117
+> (the review CLI + runbook; first live verdicts = the two #112 confirm_withdrawn resolutions),
+> PR-R4 (queue depth/rot gauges + the review-queue-stale alert — armed knowingly over the existing
+> backlog). Remaining Slice R threads live in #112 (identity-split fix + accuracy-record
+> supersedence) and the runbook's weekly sweep.
 > Follows Slice V (`plans/verification-accuracy.md`), which named this exact slice in its
 > out-of-scope list ("candidate for its own small slice right after V1"). Gap #3 of the
 > 2026-07 progress review (per the PR #103 body; #1 = README drift, #4 = drill cadence).
