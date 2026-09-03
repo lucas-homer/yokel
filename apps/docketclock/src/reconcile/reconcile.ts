@@ -59,8 +59,10 @@ function latestBySource(
   // chain read has no guaranteed row order on ties, so first-encountered-wins let the same DB state
   // flip a published close between re-derivations (worst for two tied human_review verdicts choosing
   // different pins at HIGH). On equal epoch-ms the greater observation_id wins — arbitrary but total,
-  // which is all determinism needs ("same chain in, same window out"). Mirrors the chain pass's
-  // fetched_at desc, observation_id desc discipline in persist.ts.
+  // which is all determinism needs ("same chain in, same window out"). reconcileOcdId's read orders
+  // by (fetched_at asc, observation_id asc) for the same reason — stable row order — but THIS
+  // in-memory tiebreak is what decides the winner, so the result is order-independent even for
+  // caller-constructed arrays (tests, the future CLI).
   let latest: Observation | null = null;
   for (const o of observations) {
     if (o.source !== source) continue;

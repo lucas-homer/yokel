@@ -15,9 +15,12 @@
  *     window (ocd_id, the natural key when document ids are null by convention) so a retried write
  *     never duplicates, a different verdict still accretes, and a freeform-raw candidate is
  *     schema-rejected at the ingest seam before it can touch the log.
- *   • INERT UNTIL reconcile-v2 — reconciling the window with a human_review row in its chain still
- *     derives from source observations only (v1.1 has no honor-the-verdict rule; the row is
- *     harmless, auditable data — the documented PR-R2 rollback stance holds in reverse).
+ *   • THE FRESHNESS GATE, END-TO-END (reconcile-v2) — a verdict OLDER than the newest source
+ *     observation is ignored through the real reconcileOcdId SQL read; a FRESH verdict is honored
+ *     (HIGH, pinned close, human_resolved) and persisted; and on a CONFLICTING pair the honored
+ *     verdict RETIRES the live conflict_records row (resolved_at stamped) while a newer
+ *     still-disagreeing source observation RESURFACES a live conflict — the full supersedence
+ *     lifecycle against real Postgres, not just the pure engine.
  *
  * Requires a throwaway Postgres:  DATABASE_URL=postgres://... pnpm --filter @yokel/docketclock test
  */
@@ -33,6 +36,7 @@ import {
 import { createClient } from "../src/db/client.js";
 import { runMigrations } from "../src/db/migrate.js";
 import { parseFrObservation } from "../src/sources/federal-register.js";
+import { parseRegsObservation } from "../src/sources/regulations-gov.js";
 import { ingestObservation } from "../src/ingest/observe.js";
 import { reconcileOcdId } from "../src/reconcile/persist.js";
 
@@ -49,6 +53,12 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const frFixture = JSON.parse(
   await readFile(join(HERE, "fixtures", "fr-2025-02910.json"), "utf8"),
 ) as Record<string, unknown>;
+const regsFixture = JSON.parse(
+  await readFile(
+    join(HERE, "fixtures", "regs-FAA-2025-5396-0001.json"),
+    "utf8",
+  ),
+) as { data: { id: string; attributes: Record<string, unknown> } };
 
 const NOW = new Date("2026-06-01T00:00:00Z");
 const OCD = "ocd-participation-window/federal/2025-02910";
@@ -238,14 +248,162 @@ try {
     updateRejected,
   );
 
-  // ── INERT UNTIL reconcile-v2: v1.1 derivation ignores the verdict entirely ──────────────────────────
-  const r = await reconcileOcdId(sql, OCD, new Date("2026-06-03T00:00:00Z"));
+  // ── GATE (reconcile-v2): the STALE verdicts above are not honored ───────────────────────────────────
+  // The FR observation's fetched_at is the ingest wall clock (today); both verdicts above are stamped
+  // 2026-06-02 — older than it. The freshness gate ignores them: pure derivation, no human_resolved.
+  const gated = await reconcileOcdId(
+    sql,
+    OCD,
+    new Date("2026-06-03T00:00:00Z"),
+  );
   assert(
-    "INERT: reconcile-v1.1 still derives the FR-only close (verdict not honored yet)",
-    r.window.resolved_close_display ===
+    "GATE: verdict older than the newest source observation is ignored end-to-end",
+    gated.window.resolved_close_display ===
       "closes 2026-09-10 at 11:59 p.m. ET (inferred from FR date-only value)" &&
-      !r.window.conflict_flags.includes("human_resolved"),
-    `${r.window.resolved_close_display} [${r.window.conflict_flags.join(",")}]`,
+      !gated.window.conflict_flags.includes("human_resolved"),
+    `${gated.window.resolved_close_display} [${gated.window.conflict_flags.join(",")}]`,
+  );
+
+  // ── HONORED end-to-end: a FRESH verdict flows through the real SQL read + persist ───────────────────
+  const rawFresh = {
+    ...verdict,
+    note: "Fresh verdict — newer than every source observation.",
+  };
+  await ingestObservation(sql, {
+    ocd_id: OCD,
+    source: "human_review",
+    fr_document_number: null,
+    regs_document_id: null,
+    regs_object_id: null,
+    payload_hash: sha256(JSON.stringify(rawFresh)),
+    fetched_at: new Date().toISOString(), // strictly ≥ the FR ingest stamp; ties honor the human
+    parser_version: "human-review-v1",
+    raw_dates_text: null,
+    is_extension: false,
+    is_correction: false,
+    is_withdrawal: false,
+    is_reopening: false,
+    raw: rawFresh,
+  });
+  const honored = await reconcileOcdId(
+    sql,
+    OCD,
+    new Date("2026-06-04T00:00:00Z"),
+  );
+  assert(
+    "HONORED: fresh verdict honored through reconcileOcdId (HIGH, pinned close, human_resolved)",
+    honored.window.confidence === "high" &&
+      honored.window.resolved_close_display ===
+        "closes 2026-09-12 at 11:59 p.m. ET (pinned by human review)" &&
+      honored.window.conflict_flags.includes("human_resolved"),
+    `${honored.window.confidence} ${honored.window.resolved_close_display}`,
+  );
+  const [persisted] = await sql<
+    { confidence: string; reconciler_version: string }[]
+  >`
+    select confidence, reconciler_version from participation_windows where ocd_id = ${OCD}
+  `;
+  assert(
+    "HONORED: projection row persisted at HIGH under reconcile-v2",
+    persisted!.confidence === "high" &&
+      persisted!.reconciler_version === "reconcile-v2",
+    `${persisted!.confidence} ${persisted!.reconciler_version}`,
+  );
+
+  // ── RETIRE + RESURFACE on a CONFLICTING pair (explicit fetched_at stamps — no wall-clock races) ─────
+  const OCD_B = "ocd-participation-window/federal/2025-66666";
+  const frB = {
+    ...parseFrObservation({
+      ...frFixture,
+      document_number: "2025-66666",
+      comments_close_on: "2026-09-15",
+    }),
+    fetched_at: "2026-09-01T00:00:00.000Z",
+  };
+  await ingestObservation(sql, frB);
+  const regsRawB = JSON.parse(
+    JSON.stringify(regsFixture),
+  ) as typeof regsFixture;
+  Object.assign(regsRawB.data.attributes, {
+    frDocNum: "2025-66666",
+    commentEndDate: "2026-09-21T03:59:59Z", // Eastern 2026-09-20 — a true date mismatch vs FR 09-15
+    withdrawn: false,
+    openForComment: true,
+  });
+  await ingestObservation(sql, {
+    ...parseRegsObservation(regsRawB),
+    fetched_at: "2026-09-01T01:00:00.000Z",
+  });
+  const conflicted = await reconcileOcdId(
+    sql,
+    OCD_B,
+    new Date("2026-09-02T00:00:00Z"),
+  );
+  const liveBefore = await sql<{ resolved_at: Date | null }[]>`
+    select resolved_at from conflict_records where ocd_id = ${OCD_B}
+  `;
+  assert(
+    "CONFLICT: machine mismatch emits a LIVE conflict_records row",
+    conflicted.window.confidence === "conflicting" &&
+      liveBefore.length === 1 &&
+      liveBefore[0]!.resolved_at === null,
+    `${conflicted.window.confidence} rows=${liveBefore.length}`,
+  );
+
+  const rawPinB = HumanReviewVerdict.parse({
+    kind: "pin_close",
+    pinned_close_date: "2026-09-20",
+    note: "Regs is right; FR DATES text carries the superseded value.",
+    operator: "lucas",
+    reviewed_payload_hashes: [frB.payload_hash],
+  });
+  await ingestObservation(sql, {
+    ocd_id: OCD_B,
+    source: "human_review",
+    fr_document_number: null,
+    regs_document_id: null,
+    regs_object_id: null,
+    payload_hash: sha256(JSON.stringify(rawPinB)),
+    fetched_at: "2026-09-02T00:00:00.000Z",
+    parser_version: "human-review-v1",
+    raw_dates_text: null,
+    is_extension: false,
+    is_correction: false,
+    is_withdrawal: false,
+    is_reopening: false,
+    raw: rawPinB,
+  });
+  await reconcileOcdId(sql, OCD_B, new Date("2026-09-02T01:00:00Z"));
+  const retired = await sql<{ resolved_at: Date | null }[]>`
+    select resolved_at from conflict_records where ocd_id = ${OCD_B}
+  `;
+  assert(
+    "RETIRE: honored verdict retires the live conflict (resolved_at stamped)",
+    retired.length === 1 && retired[0]!.resolved_at !== null,
+    `rows=${retired.length}`,
+  );
+
+  // A NEWER regs observation, STILL disagreeing (a third date) → verdict un-honored, conflict resurfaces.
+  const regsRawB2 = JSON.parse(JSON.stringify(regsRawB)) as typeof regsRawB;
+  regsRawB2.data.attributes.commentEndDate = "2026-09-26T03:59:59Z"; // Eastern 09-25
+  await ingestObservation(sql, {
+    ...parseRegsObservation(regsRawB2),
+    fetched_at: "2026-09-03T00:00:00.000Z",
+  });
+  const resurfaced = await reconcileOcdId(
+    sql,
+    OCD_B,
+    new Date("2026-09-03T01:00:00Z"),
+  );
+  const liveAfter = await sql<{ resolved_at: Date | null }[]>`
+    select resolved_at from conflict_records where ocd_id = ${OCD_B} and resolved_at is null
+  `;
+  assert(
+    "RESURFACE: newer disagreeing source un-honors the verdict — CONFLICTING again with a live record",
+    resurfaced.window.confidence === "conflicting" &&
+      !resurfaced.window.conflict_flags.includes("human_resolved") &&
+      liveAfter.length === 1,
+    `${resurfaced.window.confidence} live=${liveAfter.length}`,
   );
 } finally {
   await sql.end();
