@@ -115,6 +115,13 @@ tasks:
           # ExternalSecrets present `--all` is a clean no-op.
           if kubectl annotate externalsecret -A --all "force-sync=$(date +%s)" --overwrite 2>/dev/null; then
             echo "  ↳ ExternalSecrets re-synced (skips the ~1h refreshInterval wait)."
+          else
+            # NEVER fail silently (2026-09-14 post-move restart: this annotate failed with no output,
+            # ESO stayed on stale SecretSyncedError, and the miss was only caught because the success
+            # line above was absent). Transient API/webhook flakiness right after the vault bounce is
+            # the usual cause — a manual re-run succeeds.
+            echo "  ↳ WARN: ExternalSecret force-sync annotate FAILED — re-run by hand:"
+            echo "         kubectl annotate externalsecret -A --all force-sync=\$(date +%s) --overwrite"
           fi
         fi
       - echo "✅ cluster resumed; kubelet certs repaired; transit Vault re-unsealed; ExternalSecrets re-synced. Pods re-race the DB briefly, then settle ('task status')."
