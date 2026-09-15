@@ -74,4 +74,15 @@ positions and backfill the missed days on the first cycles after restart.
 - Main Vault crashlooping on a 404 after restart — the transit Vault is sealed; cluster-restart
   unseals it first, then bounces `vault-0`.
 - Argo apps Degraded with healthy pods for ~1h — stale `SecretSyncedError` on ExternalSecrets from
-  the outage window; cluster-restart's force-sync annotation clears it immediately.
+  the outage window; cluster-restart's force-sync annotation clears it immediately. If the task's
+  "ExternalSecrets re-synced" line did NOT print, the annotate failed (it now warns loudly) — re-run
+  it by hand.
+- `task cluster-restart` wedged forever on k3d's "Injecting records … into CoreDNS configmap" step
+  (seen 2026-09-14, after a 10-day outage): the colima VM can boot with a **months-stale clock** (no
+  RTC sync until lima's time-sync kicks in), and a multi-month jump mid-operation strands k3d's
+  internal waits. Check with `colima ssh -- date -u` vs `date -u`. Once they agree, Ctrl-C the wedged
+  task and re-run `task cluster-restart` — idempotent; the k3d start fast-skips. The skew window is
+  also why pods may crashloop at first (ENETUNREACH during node bounces, DB races) — they settle or
+  a pod delete resets the backoff. Verify no mistimestamped writes landed:
+  `select max(fetched_at) from observations` should be ≈ now, and a count over the skew-era date
+  range should show nothing new.
