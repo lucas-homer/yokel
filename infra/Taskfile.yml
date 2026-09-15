@@ -124,7 +124,9 @@ tasks:
             echo "         kubectl annotate externalsecret -A --all force-sync=\$(date +%s) --overwrite"
           fi
         fi
-      - echo "✅ cluster resumed; kubelet certs repaired; transit Vault re-unsealed; ExternalSecrets re-synced. Pods re-race the DB briefly, then settle ('task status')."
+      # The summary must not assert the ESO outcome — the re-sync step reports its OWN success or
+      # WARN above (#122 review: a fixed "re-synced" here contradicted a failed annotate).
+      - echo "✅ cluster resumed; kubelet certs repaired; transit Vault re-unsealed; ESO re-sync status printed above. Pods re-race the DB briefly, then settle ('task status')."
 
   install-boot-recovery:
     desc: Install a LaunchAgent that auto-runs `cluster-restart` after colima starts on every login/boot
