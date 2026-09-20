@@ -6,6 +6,14 @@ runbook is how a human **resolves** it. A resolution is an **observation, never 
 write to, and the reconciler honors it under the supersedence rule below. There is no admin UPDATE
 path, and the delivery API stays read-only — this CLI is the only write surface.
 
+## Guided review in Codex
+
+In a Codex task opened in this checkout, ask: **"Use $docketclock-review to work through the
+review queue with me, one item at a time."** The repository's
+[review skill](../../.agents/skills/docketclock-review/SKILL.md) gathers current source evidence,
+checks for extensions and distinct deadline types, drafts verdicts, and writes authorized
+decisions through this CLI. It verifies each result and preserves unresolved uncertainty.
+
 ## Running it
 
 In-cluster, zero setup (the poller image ships `src/` and `DATABASE_URL`):
