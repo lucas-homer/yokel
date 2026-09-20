@@ -73,12 +73,12 @@ Use only `review resolve` to write. Never UPDATE a window, retire conflicts with
 insert observations or accuracy records. The CLI records an append-only observation and re-derives
 the window. Corrections are new verdicts, never edits to old ones.
 
-| Verdict | Use and effect while honored |
-| --- | --- |
-| `pin_close` | Evidence establishes the operative date; requires `--close YYYY-MM-DD`; derives HIGH at the CLI's 11:59 p.m. Eastern convention. |
-| `confirm_withdrawn` | Evidence establishes withdrawal; derives withdrawn/LOW with the historical close. |
-| `confirm_reopened` | Evidence establishes reopening; derives open, with close/confidence machine-derived and conflicting confidence degraded to LOW. |
-| `dismiss_conflict` | Evidence establishes the disagreement is noise; derives LOW with the carried close. It does not select a correct deadline. |
+| Verdict             | Use and effect while honored                                                                                                     |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `pin_close`         | Evidence establishes the operative date; requires `--close YYYY-MM-DD`; derives HIGH at the CLI's 11:59 p.m. Eastern convention. |
+| `confirm_withdrawn` | Evidence establishes withdrawal; derives withdrawn/LOW with the historical close.                                                |
+| `confirm_reopened`  | Evidence establishes reopening; derives open, with close/confidence machine-derived and conflicting confidence degraded to LOW.  |
+| `dismiss_conflict`  | Evidence establishes the disagreement is noise; derives LOW with the carried close. It does not select a correct deadline.       |
 
 Only `pin_close` accepts `--close`. If an explicit deadline time differs from the pin convention,
 surface that limitation rather than silently changing its time. Do not dismiss an item solely
