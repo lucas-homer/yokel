@@ -113,15 +113,32 @@ tasks:
           # Bounce every ExternalSecret's force-sync annotation to trigger an immediate reconcile (the same
           # annotation we used by hand for grafana — confirmed to work on the installed ESO version). With no
           # ExternalSecrets present `--all` is a clean no-op.
-          if kubectl annotate externalsecret -A --all "force-sync=$(date +%s)" --overwrite 2>/dev/null; then
-            echo "  ↳ ExternalSecrets re-synced (skips the ~1h refreshInterval wait)."
+          # RETRY (bounded): the annotate failed on both the 2026-09-14 post-move restart and the
+          # 2026-09-23 unclean-reboot restart, and a manual re-run a minute later succeeded both times —
+          # transient API/webhook flakiness right after the node + vault bounces. Keep the last stderr so
+          # a persistent failure prints its actual cause instead of failing blind. `2>&1 >/dev/null` is
+          # order-sensitive: stderr is dup'd onto the capture pipe FIRST, then stdout is discarded — so
+          # `err` holds exactly kubectl's stderr.
+          synced=0
+          for t in $(seq 1 10); do
+            err=$(kubectl annotate externalsecret -A --all "force-sync=$(date +%s)" --overwrite 2>&1 >/dev/null) \
+              && { synced=1; break; }
+            rc=$?
+            [ "$t" -lt 10 ] && sleep 6
+          done
+          if [ "$synced" = "1" ]; then
+            echo "  ↳ ExternalSecrets re-synced (skips the ~1h refreshInterval wait; attempt $t)."
           else
-            # NEVER fail silently (2026-09-14 post-move restart: this annotate failed with no output,
-            # ESO stayed on stale SecretSyncedError, and the miss was only caught because the success
-            # line above was absent). Transient API/webhook flakiness right after the vault bounce is
-            # the usual cause — a manual re-run succeeds.
-            echo "  ↳ WARN: ExternalSecret force-sync annotate FAILED — re-run by hand:"
-            echo "         kubectl annotate externalsecret -A --all force-sync=\$(date +%s) --overwrite"
+            # NEVER fail silently (2026-09-14: the annotate failed with no output and the miss was only
+            # caught because the success line above was absent). kubectl can exit non-zero with EMPTY
+            # stderr — that was the 09-14 shape — so say so explicitly rather than print a blank line.
+            echo "  ↳ WARN: ExternalSecret force-sync annotate FAILED after 10 attempts (~54s). Last error:"
+            if [ -n "$err" ]; then
+              echo "$err" | sed 's/^/         /'
+            else
+              echo "         (kubectl printed no stderr; exit code $rc)"
+            fi
+            echo "         re-run by hand: kubectl annotate externalsecret -A --all force-sync=\$(date +%s) --overwrite"
           fi
         fi
       # The summary must not assert the ESO outcome — the re-sync step reports its OWN success or
