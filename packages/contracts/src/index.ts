@@ -30,7 +30,7 @@
  * │       ENFORCES the typed raw (source human_review ⇒ raw parses as HumanReviewVerdict) via the     │
  * │       exported observationRawInvariant over the exported ObservationFields derivation base —      │
  * │       zod-3 omit/pick cannot inherit a superRefine; derived schemas re-apply it. The              │
- * │       supersedence rule itself (verdict honored only while no source observation is newer) is     │
+ * │       supersedence rule itself (including the v2.1 metadata exception, ADR 0010) is                   │
  * │       reconcile-v2, app-side — the contract carries only the payload shape. [2026-09-02]          │
  * │   • REST response envelope: DISCLAIMER + API_VERSION constants, EnvelopeMeta, Pagination, and  │
  * │       the apiItemEnvelope / apiListEnvelope factories (the single source for response shape so  │
@@ -87,7 +87,8 @@
  *       shape): a human verdict is honored only while NO source observation for the window is newer
  *       than it; a newer source observation returns the window to pure derivation, and if derivation
  *       disagrees the conflict RESURFACES — an outdated human verdict is never silently trusted, and
- *       a resolution never suppresses the dual-fire behavior. ENFORCED ON THE LOG ROW (PR #115
+ *       a resolution never suppresses the dual-fire behavior. ADR 0010 later adds the narrow
+ *       reconcile-v2.1 Regs metadata exception without changing this schema. ENFORCED ON THE LOG ROW (PR #115
  *       review gap): Observation superRefines source "human_review" ⇒ raw parses as
  *       HumanReviewVerdict (sub-issues surfaced at ["raw", …]) — the typed-verdict decision holds at
  *       the schema seam, not per-caller; machine-source raw stays deliberately unknown (whole
@@ -253,7 +254,7 @@ export const ConflictFlag = z.enum([
   "multi_target_notice",
   "keyword_false_positive", // e.g. the BLM "land-withdrawal extension" trap
   "llm_corroborated", // PROVENANCE/honesty marker (NOT a confidence score — confidence is NEVER LLM-scored): a cross_window (chain) link the LLM adjudicator AFFIRMED for a pair that passed the structural rules (shared docket + amendment-after-original ordering + recency) but had NO deterministic identity corroboration (no shared RIN AND no explicit doc-number reference). Signals LOWER certainty than a deterministically-corroborated link; rides ALONGSIDE the link's type flag(s) (extension_chain_unresolved / correction_pending / withdrawn_vs_open / reopening), as multi_target_notice does.
-  "human_resolved", // PROVENANCE/honesty marker (the llm_corroborated pattern; NOT a confidence score): the current window derivation HONORS a human_review verdict (Slice R) — a human read the evidence and resolved it, and every consumer can see so. Rides ALONGSIDE the type flag(s) it resolves; composes with ANY confidence — in particular HIGH, since an honored pin_close derives HIGH — with NO confidence-pairing constraint (tz_normalization_only is the only flag carrying one). Honored only while NO source observation is newer than the verdict (reconcile-v2 supersedence) — never sticky, never a silence path.
+  "human_resolved", // PROVENANCE/honesty marker (the llm_corroborated pattern; NOT a confidence score): the current window derivation HONORS a human_review verdict (Slice R) — a human read the evidence and resolved it, and every consumer can see so. Rides ALONGSIDE the type flag(s) it resolves; composes with ANY confidence — in particular HIGH, since an honored pin_close derives HIGH — with NO confidence-pairing constraint (tz_normalization_only is the only flag carrying one). Newer source evidence invalidates it except proven Regs metadata refreshes (reconcile-v2.1, ADR 0010) — never sticky, never a silence path.
 ]);
 export type ConflictFlag = z.infer<typeof ConflictFlag>;
 
@@ -359,10 +360,11 @@ export type HumanReviewVerdictKind = z.infer<typeof HumanReviewVerdictKind>;
  * schema (observationRawInvariant below), so the decision does not depend on every caller separately
  * re-parsing raw.
  *
- * SUPERSEDENCE INTENT — this schema is ONLY the payload shape; the rule itself lands in reconcile-v2:
- * a human verdict is honored only while NO source observation for the window is newer than it — the
- * moment a newer source observation lands, the window returns to pure derivation and a disagreement
- * RESURFACES the conflict (an outdated human verdict is never silently trusted).
+ * SUPERSEDENCE INTENT — this schema is ONLY the payload shape; the rule is app-side. Newer source
+ * evidence returns the window to pure derivation and disagreement RESURFACES the conflict. In
+ * reconcile-v2.1, Regs refreshes differing only in modifyDate / links.self may preserve the verdict
+ * when every intervening observation matches its reviewed baseline (ADR 0010). Raw audit hashes
+ * remain exact; missing evidence and unknown changes invalidate review.
  *
  * Refinements (illegal states unrepresentable):
  *   (1) kind "pin_close" REQUIRES pinned_close_date; every OTHER kind FORBIDS it — superRefine in

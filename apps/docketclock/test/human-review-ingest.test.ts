@@ -33,6 +33,7 @@ import {
   Observation,
   type HumanReviewVerdict as HumanReviewVerdictT,
 } from "@yokel/contracts";
+import { RECONCILER_VERSION } from "../src/reconcile/reconcile.js";
 import { createClient } from "../src/db/client.js";
 import { runMigrations } from "../src/db/migrate.js";
 import { parseFrObservation } from "../src/sources/federal-register.js";
@@ -304,9 +305,9 @@ try {
     select confidence, reconciler_version from participation_windows where ocd_id = ${OCD}
   `;
   assert(
-    "HONORED: projection row persisted at HIGH under reconcile-v2",
+    "HONORED: projection row persisted at HIGH under the current reconciler version",
     persisted!.confidence === "high" &&
-      persisted!.reconciler_version === "reconcile-v2",
+      persisted!.reconciler_version === RECONCILER_VERSION,
     `${persisted!.confidence} ${persisted!.reconciler_version}`,
   );
 

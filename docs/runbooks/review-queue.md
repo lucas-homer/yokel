@@ -54,15 +54,24 @@ DATABASE_URL=… pnpm --filter @yokel/docketclock review queue
 
 ## Supersedence — what "honored" means
 
-Your verdict is authoritative **only while it has seen everything the machine has**. The moment a
-source observation newer than the verdict lands, the window returns to pure machine derivation — and
-if the sources still disagree, the conflict **resurfaces** (new live ConflictRecord, back in the
-queue). A resolution changes what we assert, never what we watch. Practical consequences:
+Your verdict remains authoritative while the evidence it reviewed remains current. A newer source
+observation returns the window to pure machine derivation unless it qualifies for the narrow
+metadata exception below. If the sources still disagree, the conflict **resurfaces** (a live
+ConflictRecord, back in the queue). A resolution changes what we assert, never what we watch.
+
+Since `reconcile-v2.1` ([ADR 0010](../decisions/0010-review-evidence-freshness.md)), Regulations.gov
+refreshes may differ only in `data.attributes.modifyDate` and top-level `links.self`. The full
+remaining payload and observation envelope must match the latest pre-verdict Regs observation,
+whose hash must be in `reviewed_payload_hashes`. Every intervening source observation must pass;
+a substantive change followed by a reversion does not revive the verdict. Missing evidence,
+unknown changed fields, parser/notice-flag changes, and newer FR/GovInfo observations still
+invalidate it. Raw payloads, hashes, notes, and operators remain unchanged. Equal timestamps
+retain the original tie policy. Practical consequences:
 
 - Resolving is idempotent and safe to retry (identical verdicts dedupe on the window).
 - A second verdict supersedes the first (latest wins); corrections accrete, nothing is edited.
 - `resolve` prints the re-derived window — if it warns "verdict NOT honored", a source observation
-  arrived between your `show` and your `resolve`; look again before re-issuing.
+  may have invalidated it, or the verdict could not be parsed; inspect the evidence before re-issuing.
 - Evidence is recorded automatically: `reviewed_payload_hashes` is filled from the latest per-source
   observations at write time.
 
@@ -81,3 +90,12 @@ gets `confirm_withdrawn` with a note citing the live regs.gov check.
 
 Chain-ambiguous pair triage and dead-letter replay live in follow-ups; manual AccuracyRecords stay
 off-limits (the verifier is the only accuracy writer); the D5 web console is spec'd by this CLI.
+
+## Rolling out a reconciler rule change
+
+Deploy the versioned reconciler through git → Argo CD. Then run the existing
+`src/db/rederive-stale-windows.ts` sweep from the deployed image to refresh projections stamped
+with the previous rule version (see that script for the command). Re-derivation preserves the
+append-only observation log and retires resolved conflicts through the normal persistence path.
+Verify affected items with `review show` and `review queue`; do not add duplicate verdicts just
+to force a refresh. A code deployment alone does not refresh windows without new observations.
