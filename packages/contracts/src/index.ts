@@ -30,8 +30,8 @@
  * │       ENFORCES the typed raw (source human_review ⇒ raw parses as HumanReviewVerdict) via the     │
  * │       exported observationRawInvariant over the exported ObservationFields derivation base —      │
  * │       zod-3 omit/pick cannot inherit a superRefine; derived schemas re-apply it. The              │
- * │       supersedence rule itself (including the v2.1 metadata exception, ADR 0010) is                   │
- * │       reconcile-v2, app-side — the contract carries only the payload shape. [2026-09-02]          │
+ * │       supersedence rule (including the metadata exception, ADR 0010) is app-side in             │
+ * │       reconcile-v2.1 — the contract carries only the payload shape. [2026-09-23]                  │
  * │   • REST response envelope: DISCLAIMER + API_VERSION constants, EnvelopeMeta, Pagination, and  │
  * │       the apiItemEnvelope / apiListEnvelope factories (the single source for response shape so  │
  * │       the published OpenAPI and actual responses can never diverge).                            │
