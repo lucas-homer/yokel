@@ -272,6 +272,71 @@ try {
       stats2.oldestAgeSeconds === null,
     JSON.stringify(stats2),
   );
+
+  // Metadata still appends to the immutable log, but does not reopen a reviewed conflict.
+  const refreshedRaw = {
+    ...regsRaw,
+    data: {
+      ...regsRaw.data,
+      attributes: {
+        ...regsRaw.data.attributes,
+        modifyDate: "2026-09-03T00:00:00Z",
+      },
+    },
+    links: {
+      self: `https://api.regulations.gov/v4/documents/${regsRaw.data.id}`,
+    },
+  };
+  const refresh = await ingestObservation(sql, {
+    ...parseRegsObservation(refreshedRaw),
+    fetched_at: "2026-09-03T00:00:00.000Z",
+  });
+  assert(
+    "REFRESH: distinct metadata payload is still appended",
+    refresh.inserted,
+  );
+  await reconcileOcdId(sql, OCD_CONFLICT, new Date("2026-09-03T01:00:00Z"));
+  const s3 = await reviewShow(sql, OCD_CONFLICT);
+  assert(
+    "REFRESH: original verdict and evidence hashes are unchanged",
+    JSON.stringify(s3.priorVerdicts) === JSON.stringify(s2.priorVerdicts),
+  );
+  assert(
+    "REFRESH: verdict remains honored and conflict stays retired",
+    s3.window?.confidence === "high" &&
+      Array.isArray(s3.window.conflict_flags) &&
+      s3.window.conflict_flags.includes("human_resolved") &&
+      s3.liveConflicts === 0 &&
+      s3.retiredConflicts === 1,
+  );
+  assert(
+    "REFRESH: reviewed window stays out of the queue",
+    (await reviewQueue(sql)).every((r) => r.ocd_id !== OCD_CONFLICT),
+  );
+
+  // A real deadline change still resurfaces and keeps the prior verdict as audit history.
+  const changedRaw = structuredClone(refreshedRaw);
+  Object.assign(changedRaw.data.attributes, {
+    commentEndDate: "2026-09-23T03:59:59Z",
+  });
+  await ingestObservation(sql, {
+    ...parseRegsObservation(changedRaw),
+    fetched_at: "2026-09-04T00:00:00.000Z",
+  });
+  await reconcileOcdId(sql, OCD_CONFLICT, new Date("2026-09-04T01:00:00Z"));
+  const s4 = await reviewShow(sql, OCD_CONFLICT);
+  assert(
+    "CHANGED: substantive source revision resurfaces in queue",
+    s4.window?.confidence === "conflicting" &&
+      Array.isArray(s4.window.conflict_flags) &&
+      !s4.window.conflict_flags.includes("human_resolved") &&
+      s4.liveConflicts === 1 &&
+      (await reviewQueue(sql)).some((r) => r.ocd_id === OCD_CONFLICT),
+  );
+  assert(
+    "CHANGED: prior verdict is preserved without adding a new verdict",
+    JSON.stringify(s4.priorVerdicts) === JSON.stringify(s2.priorVerdicts),
+  );
 } finally {
   await sql.end();
 }

@@ -10,8 +10,8 @@
  * withdrawn-vs-open => CONFLICTING.
  *
  * reconcile-v2 (Slice R): the chain may also carry `human_review` observations — typed operator
- * verdicts (HumanReviewVerdict). The latest one is HONORED iff no source observation is strictly newer
- * (the supersedence rule, documented at the overlay below); the human is an INPUT to this versioned
+ * verdicts (HumanReviewVerdict). Newer source observations invalidate the latest verdict, except for
+ * proven metadata-only Regs refreshes (reconcile-v2.1, ADR 0010). The human is an INPUT to this versioned
  * rulebook, never an override around it — same chain in, same window out, exactly as deterministic as
  * every other rule.
  *
@@ -33,6 +33,7 @@ import {
   type WindowStatus,
 } from "@yokel/contracts";
 import { extractFr, extractRegs } from "./extract.js";
+import { sameReviewedRegsEvidence } from "./review-evidence.js";
 import {
   easternCalendarDate,
   frCloseDateToUtcInstant,
@@ -40,7 +41,7 @@ import {
 } from "./eastern-date.js";
 
 /** Pins the rulebook version — bump on any rule change (mirrors PARSER_VERSION in the adapters). */
-export const RECONCILER_VERSION = "reconcile-v2";
+export const RECONCILER_VERSION = "reconcile-v2.1";
 
 export interface ReconcileResult {
   window: ParticipationWindow;
@@ -356,15 +357,12 @@ export function reconcile(
     status = "unknown";
   }
 
-  // ── reconcile-v2: the honor-the-verdict rule (Slice R, PR-R2; plans/review-resolve.md) ───────────
-  // A human resolution is an OBSERVATION in this chain (source human_review, raw = HumanReviewVerdict).
-  // THE LOAD-BEARING GATE: the latest verdict is honored IFF no source observation is STRICTLY NEWER
-  // than it — a human verdict is authoritative only while it has seen everything the machine has. The
-  // moment newer source data lands, this whole overlay is skipped and the window returns to the pure
-  // machine derivation above — and if that derivation is CONFLICTING again, the ConflictRecord fires
-  // again (emission below keys off the FINAL confidence): the conflict RESURFACES. Never blind
-  // latest-wins, never sticky human-wins. Ties (equal fetched_at) honor the human — the verdict "has
-  // seen" data fetched at the same instant it was recorded against.
+  // ── Honor-the-verdict rule (reconcile-v2.1; ADR 0010) ───────────────────────────────────────────
+  // Newer source evidence invalidates the latest human verdict, except Regulations.gov refreshes
+  // that differ from the reviewed baseline only in modifyDate / links.self. The baseline must be
+  // present in reviewed_payload_hashes; all intervening observations must qualify. Unknown changes,
+  // missing evidence, parser/notice-flag changes, and newer FR/GovInfo observations invalidate it.
+  // Equal fetched_at keeps the original v2 tie policy. Raw observations and audit hashes never change.
   //
   // The overlay runs AFTER the machine rulebook so dual-fire stays computed from real machine state:
   // an honored verdict CHANGES WHAT WE ASSERT (the window fields), not what we watch. The machine's
@@ -376,15 +374,29 @@ export function reconcile(
   const human = latestBySource(observations, "human_review");
   let honoredVerdict: HumanReviewVerdict | null = null;
   if (human) {
-    let newestSourceMs = -Infinity;
-    for (const o of observations) {
-      if (o.source === "human_review") continue;
-      const t = new Date(o.fetched_at).getTime();
-      if (t > newestSourceMs) newestSourceMs = t;
-    }
-    if (new Date(human.fetched_at).getTime() >= newestSourceMs) {
-      const v = HumanReviewVerdict.safeParse(human.raw);
-      if (v.success) honoredVerdict = v.data;
+    const v = HumanReviewVerdict.safeParse(human.raw);
+    if (v.success) {
+      const reviewedAt = new Date(human.fetched_at).getTime();
+      const newerSources = observations.filter(
+        (o) =>
+          o.source !== "human_review" &&
+          new Date(o.fetched_at).getTime() > reviewedAt,
+      );
+      const baseline = latestBySource(
+        observations.filter(
+          (o) => new Date(o.fetched_at).getTime() <= reviewedAt,
+        ),
+        "regulations_gov",
+      );
+      // Every intervening observation must match, not just the latest: a material change
+      // followed by a reversion must never silently revive an outdated verdict.
+      const stillReviewed = newerSources.every(
+        (o) =>
+          baseline !== null &&
+          v.data.reviewed_payload_hashes.includes(baseline.payload_hash) &&
+          sameReviewedRegsEvidence(baseline, o),
+      );
+      if (stillReviewed) honoredVerdict = v.data;
     }
   }
 

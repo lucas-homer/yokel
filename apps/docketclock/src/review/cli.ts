@@ -164,7 +164,7 @@ try {
     );
     if (!w.conflict_flags.includes("human_resolved")) {
       console.log(
-        "⚠ verdict NOT honored (a source observation is newer, or raw failed to parse) — the window derives purely from sources. `review show` to inspect.",
+        "⚠ verdict NOT honored (new source evidence invalidated the review, or raw failed to parse) — the window derives purely from sources. `review show` to inspect.",
       );
     }
   }

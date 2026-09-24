@@ -107,8 +107,9 @@ the queue. Confirm the recorded note/operator, retired source conflict, and memb
 Historical type flags such as `fr_regs_date_mismatch` may remain alongside `human_resolved`;
 their presence alone is not failure. Concurrent arrivals can change the overall queue count.
 
-A newer source observation supersedes the human verdict. If the CLI warns that the verdict was
-not honored, re-read the evidence; do not repeatedly pin just to suppress resurfacing conflicts.
+Newer source evidence supersedes the human verdict. Since `reconcile-v2.1`, proven Regs-only
+`modifyDate` / `links.self` changes preserve it under ADR 0010; other changes still invalidate it.
+If the CLI warns that the verdict was not honored, re-read the evidence; do not repeatedly pin just to suppress resurfacing conflicts.
 Report the race or changed evidence and reassess within the user's authorized scope.
 
 Report what was actually written and verified, remaining work, and any recurring cause worth a
