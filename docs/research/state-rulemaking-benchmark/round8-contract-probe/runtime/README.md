@@ -1,0 +1,5 @@
+# Bounded contract probe runtime
+
+New isolated operational namespace for one exact two-page WI notice. Inventory appends only the exact independently reviewed offline-contract prompt delta; inventory output remains 12,288 and input guard 35,000. Stronger input guard alone becomes 40,000, output remains 4,096. Jev total/state-plus-longest guards remain 64,000/32,000. Frozen R7 normalization and R8 observed contract are read-only dependencies; observed states reuse R8 semantics. No repair, retry, clipping or continuation.
+
+One inventory, one Jev and one stronger operation at most. Shared $2 admission and postresponse accounting retain both prior conservative charges (.261774). Both complete verifier bodies must fit before either call; uncertain/failing operations permanently stop. Source-only request bodies exclude image-reference labels. This is reused-source development evidence, not unseen accuracy or production readiness. See INTERFACE.md for exact primary preparation/auth shape. No authorization, live intent or native build is created by this implementation task.

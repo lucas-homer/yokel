@@ -1,0 +1,437 @@
+{
+  "/alternative_groups/0/association": "source_resolved",
+  "/alternative_groups/0/event_ids": [
+    "e_comments"
+  ],
+  "/alternative_groups/0/purpose": "submission",
+  "/alternative_groups/0/requirement_ids": [
+    "q_channels",
+    "q_comment_contact"
+  ],
+  "/alternative_groups/0/route_ids": [
+    "r_mail",
+    "r_comment_email",
+    "r_general_email",
+    "r_comment_web"
+  ],
+  "/alternative_groups/1/association": "source_resolved",
+  "/alternative_groups/1/event_ids": [
+    "e_hearing"
+  ],
+  "/alternative_groups/1/purpose": "hearing_access",
+  "/alternative_groups/1/requirement_ids": [],
+  "/alternative_groups/1/route_ids": [
+    "r_phone1",
+    "r_phone2"
+  ],
+  "/events/0/description": "Public hearing and opportunity for oral testimony on the permanent aquatic plant management rule.",
+  "/events/0/phase": "hearing",
+  "/events/0/timing/0/anchor_event_ids": [],
+  "/events/0/timing/0/condition_requirement_ids": [],
+  "/events/0/timing/0/dependency_relation": "none",
+  "/events/0/timing/0/kind": "absolute_date",
+  "/events/0/timing/0/raw": "April 22, 2026",
+  "/events/0/timing/0/role": "hearing_start",
+  "/events/0/timing/0/value": "2026-04-22",
+  "/events/0/timing/1/anchor_event_ids": [],
+  "/events/0/timing/1/condition_requirement_ids": [],
+  "/events/0/timing/1/dependency_relation": "none",
+  "/events/0/timing/1/kind": "clock",
+  "/events/0/timing/1/raw": "1:00 PM",
+  "/events/0/timing/1/role": "hearing_start",
+  "/events/0/timing/1/value": null,
+  "/events/1/description": "Zoom registration or pre-registration and Hearing Appearance form submission for telephone participants.",
+  "/events/1/phase": "hearing_intent",
+  "/events/2/description": "Submission of written comments on the proposed rule.",
+  "/events/2/phase": "written_comment",
+  "/events/2/timing/0/anchor_event_ids": [],
+  "/events/2/timing/0/condition_requirement_ids": [],
+  "/events/2/timing/0/dependency_relation": "none",
+  "/events/2/timing/0/kind": "absolute_date",
+  "/events/2/timing/0/raw": "April 30, 2026",
+  "/events/2/timing/0/role": "closes",
+  "/events/2/timing/0/value": "2026-04-30",
+  "/events/3/description": "Requests for communication aids and accessible hearing documents.",
+  "/events/3/phase": "other",
+  "/events/3/timing/0/anchor_event_ids": [],
+  "/events/3/timing/0/condition_requirement_ids": [
+    "q_access_request"
+  ],
+  "/events/3/timing/0/dependency_relation": "other",
+  "/events/3/timing/0/kind": "relative",
+  "/events/3/timing/0/raw": "as soon as\npossible",
+  "/events/3/timing/0/role": "other",
+  "/events/3/timing/0/value": null,
+  "/events/3/timing/1/anchor_event_ids": [],
+  "/events/3/timing/1/condition_requirement_ids": [
+    "q_access_aids"
+  ],
+  "/events/3/timing/1/dependency_relation": "other",
+  "/events/3/timing/1/kind": "conditional",
+  "/events/3/timing/1/raw": "reasonable advance notice",
+  "/events/3/timing/1/role": "other",
+  "/events/3/timing/1/value": null,
+  "/identities/0/event_ids": [
+    "e_hearing",
+    "e_comments",
+    "e_registration",
+    "e_accessibility"
+  ],
+  "/identities/0/kind": "agency",
+  "/identities/0/literal": "Department of Natural Resources",
+  "/identities/0/relation": "canonical",
+  "/identities/1/event_ids": [
+    "e_hearing",
+    "e_comments"
+  ],
+  "/identities/1/kind": "rule",
+  "/identities/1/literal": "chs. NR 107 and 109",
+  "/identities/1/relation": "canonical",
+  "/identities/2/event_ids": [
+    "e_hearing",
+    "e_comments"
+  ],
+  "/identities/2/kind": "other",
+  "/identities/2/literal": "NRB Order number WY-20-23",
+  "/identities/2/relation": "canonical",
+  "/requirements/0/association": "source_resolved",
+  "/requirements/0/event_ids": [
+    "e_registration"
+  ],
+  "/requirements/0/kind": "hearing_procedure",
+  "/requirements/0/modality": "conditional",
+  "/requirements/0/route_ids": [
+    "r_zoom_signup"
+  ],
+  "/requirements/0/semantic_class": "instruction",
+  "/requirements/0/text": "To join via Zoom, register or pre-register through the link and enter the information required on the Hearing Appearance form.",
+  "/requirements/1/association": "source_resolved",
+  "/requirements/1/event_ids": [
+    "e_registration",
+    "e_hearing"
+  ],
+  "/requirements/1/kind": "hearing_procedure",
+  "/requirements/1/modality": "optional",
+  "/requirements/1/route_ids": [
+    "r_zoom_signup"
+  ],
+  "/requirements/1/semantic_class": "instruction",
+  "/requirements/1/text": "Pre-registration is strongly encouraged for those planning spoken comments during the hearing.",
+  "/requirements/10/association": "source_resolved",
+  "/requirements/10/event_ids": [
+    "e_accessibility",
+    "e_hearing"
+  ],
+  "/requirements/10/kind": "other",
+  "/requirements/10/modality": "informational",
+  "/requirements/10/route_ids": [
+    "r_access_contact"
+  ],
+  "/requirements/10/semantic_class": "other",
+  "/requirements/10/text": "For hearing- or visually impaired people, non-English speakers, or others whose personal circumstances make meeting/hearing communication difficult, DNR will provide aids to the maximum extent possible and with reasonable advance notice, including an interpreter or non-English, large-print, or recorded hearing documents.",
+  "/requirements/11/association": "uncertain",
+  "/requirements/11/event_ids": [
+    "e_accessibility"
+  ],
+  "/requirements/11/kind": "other",
+  "/requirements/11/modality": "conditional",
+  "/requirements/11/route_ids": [
+    "r_access_contact"
+  ],
+  "/requirements/11/semantic_class": "instruction",
+  "/requirements/11/text": "To request accessibility resources, contact the email address or phone number listed below as soon as possible. The notice does not explicitly identify which downstream contact is intended.",
+  "/requirements/12/association": "source_resolved",
+  "/requirements/12/event_ids": [],
+  "/requirements/12/kind": "other",
+  "/requirements/12/modality": "informational",
+  "/requirements/12/route_ids": [
+    "r_coordinator"
+  ],
+  "/requirements/12/semantic_class": "other",
+  "/requirements/12/text": "Emma Esch is the Agency Small Business Regulatory Coordinator; telephone and email contacts are provided, not identified as comment-submission destinations.",
+  "/requirements/2/association": "source_resolved",
+  "/requirements/2/event_ids": [
+    "e_registration"
+  ],
+  "/requirements/2/kind": "format",
+  "/requirements/2/modality": "conditional",
+  "/requirements/2/route_ids": [
+    "r_form_email"
+  ],
+  "/requirements/2/semantic_class": "instruction",
+  "/requirements/2/text": "Those planning to phone in are asked to download and complete the fillable Hearing Appearance form and email it to Sarah.wood@wisconsin.gov; no form-download endpoint is printed.",
+  "/requirements/3/association": "source_resolved",
+  "/requirements/3/event_ids": [
+    "e_comments"
+  ],
+  "/requirements/3/kind": "timing",
+  "/requirements/3/modality": "mandatory",
+  "/requirements/3/route_ids": [
+    "r_mail",
+    "r_comment_email",
+    "r_general_email",
+    "r_comment_web"
+  ],
+  "/requirements/3/semantic_class": "instruction",
+  "/requirements/3/text": "Comments must be received on or before April 30, 2026.",
+  "/requirements/4/association": "source_resolved",
+  "/requirements/4/event_ids": [
+    "e_comments"
+  ],
+  "/requirements/4/kind": "other",
+  "/requirements/4/modality": "optional",
+  "/requirements/4/route_ids": [
+    "r_mail",
+    "r_comment_email",
+    "r_general_email",
+    "r_comment_web"
+  ],
+  "/requirements/4/semantic_class": "instruction",
+  "/requirements/4/text": "Written comments may be submitted by U.S. mail, email, or internet.",
+  "/requirements/5/association": "source_resolved",
+  "/requirements/5/event_ids": [
+    "e_comments",
+    "e_hearing"
+  ],
+  "/requirements/5/kind": "other",
+  "/requirements/5/modality": "informational",
+  "/requirements/5/route_ids": [],
+  "/requirements/5/semantic_class": "disclosure",
+  "/requirements/5/text": "Written comments have the same weight and effect as oral statements presented at the public hearing.",
+  "/requirements/6/association": "source_resolved",
+  "/requirements/6/event_ids": [
+    "e_comments"
+  ],
+  "/requirements/6/kind": "other",
+  "/requirements/6/modality": "unclear",
+  "/requirements/6/route_ids": [
+    "r_mail",
+    "r_comment_email"
+  ],
+  "/requirements/6/semantic_class": "instruction",
+  "/requirements/6/text": "Written comments should be submitted to the listed Department of Natural Resources contact, Attn: Madi Johansen.",
+  "/requirements/7/association": "source_resolved",
+  "/requirements/7/event_ids": [],
+  "/requirements/7/kind": "other",
+  "/requirements/7/modality": "informational",
+  "/requirements/7/route_ids": [
+    "r_query"
+  ],
+  "/requirements/7/semantic_class": "other",
+  "/requirements/7/text": "The Department of Natural Resources contact, Attn: Madi Johansen, is listed for questions on the proposed rules, with postal, telephone, and email contact details.",
+  "/requirements/8/association": "source_resolved",
+  "/requirements/8/event_ids": [],
+  "/requirements/8/kind": "reference",
+  "/requirements/8/modality": "informational",
+  "/requirements/8/route_ids": [
+    "r_view"
+  ],
+  "/requirements/8/semantic_class": "other",
+  "/requirements/8/text": "The rule can be viewed under NRB Order number WY-20-23 on the DNR proposed permanent rules page.",
+  "/requirements/9/association": "source_resolved",
+  "/requirements/9/event_ids": [
+    "e_comments"
+  ],
+  "/requirements/9/kind": "reference",
+  "/requirements/9/modality": "optional",
+  "/requirements/9/route_ids": [
+    "r_comment_web"
+  ],
+  "/requirements/9/semantic_class": "instruction",
+  "/requirements/9/text": "The legislative hearings page supports both rule review and comments.",
+  "/routes/0/alternative_group_id": null,
+  "/routes/0/association": "source_resolved",
+  "/routes/0/channel": "web",
+  "/routes/0/components/0/kind": "endpoint",
+  "/routes/0/components/0/literal": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g",
+  "/routes/0/description": "Zoom registration or pre-registration link.",
+  "/routes/0/event_ids": [
+    "e_registration"
+  ],
+  "/routes/0/role": "hearing_registration",
+  "/routes/1/alternative_group_id": null,
+  "/routes/1/association": "source_resolved",
+  "/routes/1/channel": "other",
+  "/routes/1/components/0/kind": "meeting_id",
+  "/routes/1/components/0/literal": "896 2745 6939",
+  "/routes/1/description": "Virtual Zoom hearing meeting identifier.",
+  "/routes/1/event_ids": [
+    "e_hearing"
+  ],
+  "/routes/1/role": "other",
+  "/routes/10/alternative_group_id": null,
+  "/routes/10/association": "source_resolved",
+  "/routes/10/channel": "other",
+  "/routes/10/components/0/kind": "name",
+  "/routes/10/components/0/literal": "Department of Natural Resources",
+  "/routes/10/components/1/kind": "name",
+  "/routes/10/components/1/literal": "Attn: Madi Johansen",
+  "/routes/10/components/2/kind": "address_part",
+  "/routes/10/components/2/literal": "3550 Mormon Coulee Road, La Crosse, WI",
+  "/routes/10/components/3/kind": "endpoint",
+  "/routes/10/components/3/literal": "608-712-2798",
+  "/routes/10/components/4/kind": "endpoint",
+  "/routes/10/components/4/literal": "Madison.johansen@wisconsin.gov",
+  "/routes/10/description": "Contact details for questions on proposed rules; co-listing does not establish interchangeable channels.",
+  "/routes/10/event_ids": [],
+  "/routes/10/role": "information_contact",
+  "/routes/11/alternative_group_id": null,
+  "/routes/11/association": "source_resolved",
+  "/routes/11/channel": "web",
+  "/routes/11/components/0/kind": "endpoint",
+  "/routes/11/components/0/literal": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html",
+  "/routes/11/description": "DNR link for viewing the proposed rule under NRB Order number WY-20-23, not explicitly a submission route.",
+  "/routes/11/event_ids": [],
+  "/routes/11/role": "information_contact",
+  "/routes/12/alternative_group_id": null,
+  "/routes/12/association": "uncertain",
+  "/routes/12/channel": "unknown",
+  "/routes/12/components/0/kind": "other",
+  "/routes/12/components/0/literal": "the email address or phone number listed below",
+  "/routes/12/description": "Accessibility request contact referenced by location only; specific endpoint association is unresolved.",
+  "/routes/12/event_ids": [
+    "e_accessibility"
+  ],
+  "/routes/12/role": "information_contact",
+  "/routes/13/alternative_group_id": null,
+  "/routes/13/association": "source_resolved",
+  "/routes/13/channel": "other",
+  "/routes/13/components/0/kind": "name",
+  "/routes/13/components/0/literal": "Emma Esch",
+  "/routes/13/components/1/kind": "endpoint",
+  "/routes/13/components/1/literal": "(608) 266-1959",
+  "/routes/13/components/2/kind": "endpoint",
+  "/routes/13/components/2/literal": "emma.esch@wisconsin.gov",
+  "/routes/13/description": "Agency Small Business Regulatory Coordinator contact details.",
+  "/routes/13/event_ids": [],
+  "/routes/13/role": "information_contact",
+  "/routes/2/alternative_group_id": "ag_phone",
+  "/routes/2/association": "source_resolved",
+  "/routes/2/channel": "telephone",
+  "/routes/2/components/0/kind": "endpoint",
+  "/routes/2/components/0/literal": "+13052241968",
+  "/routes/2/components/1/kind": "meeting_id",
+  "/routes/2/components/1/literal": "89627456939#",
+  "/routes/2/components/2/kind": "other",
+  "/routes/2/components/2/literal": "US",
+  "/routes/2/description": "US telephone hearing access.",
+  "/routes/2/event_ids": [
+    "e_hearing"
+  ],
+  "/routes/2/role": "other",
+  "/routes/3/alternative_group_id": "ag_phone",
+  "/routes/3/association": "source_resolved",
+  "/routes/3/channel": "telephone",
+  "/routes/3/components/0/kind": "endpoint",
+  "/routes/3/components/0/literal": "+13092053325",
+  "/routes/3/components/1/kind": "meeting_id",
+  "/routes/3/components/1/literal": "89627456939#",
+  "/routes/3/components/2/kind": "other",
+  "/routes/3/components/2/literal": "US",
+  "/routes/3/description": "US telephone hearing access.",
+  "/routes/3/event_ids": [
+    "e_hearing"
+  ],
+  "/routes/3/role": "other",
+  "/routes/4/alternative_group_id": null,
+  "/routes/4/association": "source_resolved",
+  "/routes/4/channel": "oral",
+  "/routes/4/components/0/kind": "activity",
+  "/routes/4/components/0/literal": "testify at the hearing",
+  "/routes/4/description": "Oral testimony at the hearing.",
+  "/routes/4/event_ids": [
+    "e_hearing"
+  ],
+  "/routes/4/role": "submission",
+  "/routes/5/alternative_group_id": null,
+  "/routes/5/association": "source_resolved",
+  "/routes/5/channel": "email",
+  "/routes/5/components/0/kind": "endpoint",
+  "/routes/5/components/0/literal": "Sarah.wood@wisconsin.gov",
+  "/routes/5/description": "Completed Hearing Appearance form destination for those planning to phone in.",
+  "/routes/5/event_ids": [
+    "e_registration"
+  ],
+  "/routes/5/role": "hearing_registration",
+  "/routes/6/alternative_group_id": "ag_comments",
+  "/routes/6/association": "source_resolved",
+  "/routes/6/channel": "postal",
+  "/routes/6/components/0/kind": "name",
+  "/routes/6/components/0/literal": "Department of Natural Resources",
+  "/routes/6/components/1/kind": "name",
+  "/routes/6/components/1/literal": "Attn: Madi Johansen",
+  "/routes/6/components/2/kind": "address_part",
+  "/routes/6/components/2/literal": "3550 Mormon Coulee Road, La Crosse, WI",
+  "/routes/6/description": "Postal destination for written comments.",
+  "/routes/6/event_ids": [
+    "e_comments"
+  ],
+  "/routes/6/role": "submission",
+  "/routes/7/alternative_group_id": "ag_comments",
+  "/routes/7/association": "source_resolved",
+  "/routes/7/channel": "email",
+  "/routes/7/components/0/kind": "endpoint",
+  "/routes/7/components/0/literal": "Madison.johansen@wisconsin.gov",
+  "/routes/7/description": "Listed contact email for written comments.",
+  "/routes/7/event_ids": [
+    "e_comments"
+  ],
+  "/routes/7/role": "submission",
+  "/routes/8/alternative_group_id": "ag_comments",
+  "/routes/8/association": "source_resolved",
+  "/routes/8/channel": "email",
+  "/routes/8/components/0/kind": "endpoint",
+  "/routes/8/components/0/literal": "DNRAdministrativeRulesComments@wisconsin.gov",
+  "/routes/8/description": "Additional email destination for comments.",
+  "/routes/8/event_ids": [
+    "e_comments"
+  ],
+  "/routes/8/role": "submission",
+  "/routes/9/alternative_group_id": "ag_comments",
+  "/routes/9/association": "source_resolved",
+  "/routes/9/channel": "web",
+  "/routes/9/components/0/kind": "endpoint",
+  "/routes/9/components/0/literal": "http://docs.legis.wisconsin.gov/code/chr/hearings",
+  "/routes/9/description": "Rule review and internet comment route.",
+  "/routes/9/event_ids": [
+    "e_comments"
+  ],
+  "/routes/9/role": "submission",
+  "/uncertainties/0/description": "The accessibility paragraph refers to an email address or phone number listed below without naming a recipient. Subsequent text contains multiple email and telephone contacts; no specific accessibility endpoint is selected.",
+  "/uncertainties/0/event_ids": [
+    "e_accessibility"
+  ],
+  "/uncertainties/0/identity_ids": [],
+  "/uncertainties/0/kind": "association",
+  "/uncertainties/0/requirement_ids": [
+    "q_access_request",
+    "q_access_aids"
+  ],
+  "/uncertainties/0/route_ids": [
+    "r_access_contact",
+    "r_query",
+    "r_form_email",
+    "r_coordinator"
+  ],
+  "/uncertainties/1/description": "Reasonable advance notice is not quantified; as soon as possible does not establish a precise deadline or an explicit before-hearing interval.",
+  "/uncertainties/1/event_ids": [
+    "e_accessibility"
+  ],
+  "/uncertainties/1/identity_ids": [],
+  "/uncertainties/1/kind": "timing",
+  "/uncertainties/1/requirement_ids": [
+    "q_access_aids",
+    "q_access_request"
+  ],
+  "/uncertainties/1/route_ids": [
+    "r_access_contact"
+  ],
+  "/uncertainties/2/description": "The hearing clock time has no printed timezone.",
+  "/uncertainties/2/event_ids": [
+    "e_hearing"
+  ],
+  "/uncertainties/2/identity_ids": [],
+  "/uncertainties/2/kind": "timing",
+  "/uncertainties/2/requirement_ids": [],
+  "/uncertainties/2/route_ids": []
+}

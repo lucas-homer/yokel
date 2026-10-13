@@ -1,0 +1,75 @@
+{
+  "action_ready": false,
+  "candidate_or_reference_input": false,
+  "check": {
+    "aggregate_max_nanousd": 1705990718,
+    "body_bytes": 14668,
+    "credentials_read": false,
+    "guarded_bytes": 15692,
+    "prior": {
+      "baseline_rows": 6981,
+      "historical_rounds": [
+        {
+          "operations": [
+            {
+              "budget_charge_nanousd": 161920000,
+              "reserved_nanousd": 161920000,
+              "stage": "stage-a",
+              "state": "validated_frozen"
+            },
+            {
+              "budget_charge_nanousd": 161920000,
+              "reserved_nanousd": 161920000,
+              "stage": "stage-b",
+              "state": "validated_frozen"
+            }
+          ],
+          "round": "round10-source-first"
+        },
+        {
+          "operations": [
+            {
+              "budget_charge_nanousd": 161920000,
+              "reserved_nanousd": 161920000,
+              "stage": "D",
+              "state": "failed_or_uncertain"
+            },
+            {
+              "budget_charge_nanousd": 161920000,
+              "reserved_nanousd": 161920000,
+              "stage": "A",
+              "state": "failed_or_uncertain"
+            }
+          ],
+          "round": "round12-automated-scope"
+        }
+      ],
+      "invoice_verified": false,
+      "prior_nanousd": 1505990718
+    },
+    "provider_calls": 0,
+    "request_sha256": "a6b5ed1c72ac1ff1d947fe5ed146221f169f91430f457a51de6ee29f53d70f8b",
+    "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+    "span_count": 37,
+    "state": "passed"
+  },
+  "check_output_sha256": "816e7f4ac2202b13d23ea1c8e482e3fda83c2a89f7a334755924521c9286c4eb",
+  "credentials_read": false,
+  "dependency_files": 8685,
+  "fixtures": "complete supplied synthetic protocol controls, not R12 prefix salvage or model discovery",
+  "imported_protocol": "exact pinned protocol/compact.py; validate_response + expand + contract",
+  "ledger_semantics": "charge_recorded; completed.json or stop.json is the separate outcome attestation; no hash cycle",
+  "native_executor_check": "pending_primary",
+  "passed": true,
+  "production_eligible": false,
+  "provider_calls": 0,
+  "provider_compatibility": "unverified",
+  "pure_unsigned_proposal_validation_passed": true,
+  "runtime_drift_entries": 0,
+  "runtime_test_methods": 18,
+  "schema_version": "round13.compact.offline-report.v1",
+  "semantic_status": "unverified",
+  "signer_executor_invoked": false,
+  "source_inventory_completeness": "unverified",
+  "test_output_sha256": "a1f5dd593fd282d9772af31f8322b32624b5eee82ebb8da36148b5ee60c43890"
+}

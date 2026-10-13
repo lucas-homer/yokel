@@ -1,0 +1,295 @@
+{
+  "fixture_id": "B07",
+  "reference_version": "reviewer-source-v1",
+  "collector_annotation_hash": "6c965989b41a5d8313ac223bf87ea6a3f2addf9e22aa439d90bfa07f3cb71160",
+  "collector_snapshot": "/private/tmp/docketclock-expanded-benchmark-2026-10-05/review/collector-snapshots/B07-6c965989b41a.json",
+  "input_sha256": "72e047bfd64535187cba909f2dbfc5f3a42955f604310ee423b402b9dba262bf",
+  "reviewer_kind": "independent agent, not human gold standard",
+  "new_vendor_outputs_inspected": false,
+  "state": "TX",
+  "primary_bucket": "dense register layouts",
+  "layout_features": [
+    "two-column dense",
+    "cross-page continuation",
+    "neighboring notices",
+    "rule text strikeouts"
+  ],
+  "package_limitations": "Derived contiguous complete notice/form excerpt. Full original retained; attachments/rule text outside selected notice are excluded; whole physical pages may contain neighboring notice material.",
+  "notice_scope_boundaries": "Target22TAC271.12 begins input1 right after TRD-202602104/diamonds; continues input2 left/righttop, ends TRD-202602105/contact/diamonds before Chapter272. Exclude271.8 and272.4 repeals.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency proposes License Designation changes?",
+      "expected_value": "Texas Optometry Board",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 19,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "The T exas Optometry Board proposes amendments",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Target opening says proposed amendments; authority paragraph inconsistently says proposes this repeal. Preserve source wording where reproduced; do not assert final repeal or borrow neighboring repeal lifecycle.",
+      "notice_scope_boundaries": "Target22TAC271.12 begins input1 right after TRD-202602104/diamonds; continues input2 left/righttop, ends TRD-202602105/contact/diamonds before Chapter272. Exclude271.8 and272.4 repeals.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "TX OptometryBoard proposedamendments22TAC271.12 LicenseDesignation;targetbegins page1right at22TAC271.12, continuespage2left andrighttopends contact/diamonds, TRD-202602105.",
+        "Comments30daysafterTexasRegisterpublication;June5,2026issuefooter. FiledMay19,2026;earliestpossibleadoptionJuly5,2026;noadoptedeffective.",
+        "Page2statutoryauthorityparagraph anomalouslysays proposes thisrepeal, but openingclearlyamendments withsectionsc,ddeletions. Retainwordingconflict ifparsing, donotpromotetofinalrepeal.",
+        "NeighborTRD-202602104271.8repealpage1left/toprightand272.4repealpage2rightnot target."
+      ]
+    },
+    {
+      "field_id": "citation",
+      "question": "Which rule citation belongs to this target notice?",
+      "expected_value": "22 TAC §271.12",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 19,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "22 TAC §271.12",
+      "basis": "source_text",
+      "semantic_group_id": "citation",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Target opening says proposed amendments; authority paragraph inconsistently says proposes this repeal. Preserve source wording where reproduced; do not assert final repeal or borrow neighboring repeal lifecycle.",
+      "notice_scope_boundaries": "Target22TAC271.12 begins input1 right after TRD-202602104/diamonds; continues input2 left/righttop, ends TRD-202602105/contact/diamonds before Chapter272. Exclude271.8 and272.4 repeals.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "TX OptometryBoard proposedamendments22TAC271.12 LicenseDesignation;targetbegins page1right at22TAC271.12, continuespage2left andrighttopends contact/diamonds, TRD-202602105.",
+        "Comments30daysafterTexasRegisterpublication;June5,2026issuefooter. FiledMay19,2026;earliestpossibleadoptionJuly5,2026;noadoptedeffective.",
+        "Page2statutoryauthorityparagraph anomalouslysays proposes thisrepeal, but openingclearlyamendments withsectionsc,ddeletions. Retainwordingconflict ifparsing, donotpromotetofinalrepeal.",
+        "NeighborTRD-202602104271.8repealpage1left/toprightand272.4repealpage2rightnot target."
+      ]
+    },
+    {
+      "field_id": "source_id",
+      "question": "What native TRD identifier belongs to License Designation?",
+      "expected_value": "TRD-202602105",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "TRD-202602105",
+      "basis": "source_text",
+      "semantic_group_id": "source_id",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Target opening says proposed amendments; authority paragraph inconsistently says proposes this repeal. Preserve source wording where reproduced; do not assert final repeal or borrow neighboring repeal lifecycle.",
+      "notice_scope_boundaries": "Target22TAC271.12 begins input1 right after TRD-202602104/diamonds; continues input2 left/righttop, ends TRD-202602105/contact/diamonds before Chapter272. Exclude271.8 and272.4 repeals.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "TX OptometryBoard proposedamendments22TAC271.12 LicenseDesignation;targetbegins page1right at22TAC271.12, continuespage2left andrighttopends contact/diamonds, TRD-202602105.",
+        "Comments30daysafterTexasRegisterpublication;June5,2026issuefooter. FiledMay19,2026;earliestpossibleadoptionJuly5,2026;noadoptedeffective.",
+        "Page2statutoryauthorityparagraph anomalouslysays proposes thisrepeal, but openingclearlyamendments withsectionsc,ddeletions. Retainwordingconflict ifparsing, donotpromotetofinalrepeal.",
+        "NeighborTRD-202602104271.8repealpage1left/toprightand272.4repealpage2rightnot target."
+      ]
+    },
+    {
+      "field_id": "comment_duration",
+      "question": "What relative public comment deadline applies?",
+      "expected_value": {
+        "days": 30,
+        "day_basis": null,
+        "anchor": "publication in Texas Register",
+        "computed_date": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "The deadline for furnishing com-\nments is thirty days after publication in the Texas Register.",
+      "basis": "source_text",
+      "semantic_group_id": "comment_duration",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Target opening says proposed amendments; authority paragraph inconsistently says proposes this repeal. Preserve source wording where reproduced; do not assert final repeal or borrow neighboring repeal lifecycle.",
+      "notice_scope_boundaries": "Target22TAC271.12 begins input1 right after TRD-202602104/diamonds; continues input2 left/righttop, ends TRD-202602105/contact/diamonds before Chapter272. Exclude271.8 and272.4 repeals.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "TX OptometryBoard proposedamendments22TAC271.12 LicenseDesignation;targetbegins page1right at22TAC271.12, continuespage2left andrighttopends contact/diamonds, TRD-202602105.",
+        "Comments30daysafterTexasRegisterpublication;June5,2026issuefooter. FiledMay19,2026;earliestpossibleadoptionJuly5,2026;noadoptedeffective.",
+        "Page2statutoryauthorityparagraph anomalouslysays proposes thisrepeal, but openingclearlyamendments withsectionsc,ddeletions. Retainwordingconflict ifparsing, donotpromotetofinalrepeal.",
+        "NeighborTRD-202602104271.8repealpage1left/toprightand272.4repealpage2rightnot target."
+      ]
+    },
+    {
+      "field_id": "publication",
+      "question": "What issue date anchors this relative duration?",
+      "expected_value": "2026-06-05",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Page footer",
+      "source_quote": "June 5, 2026 51 TexReg 3771",
+      "basis": "source_text",
+      "semantic_group_id": "publication",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Target opening says proposed amendments; authority paragraph inconsistently says proposes this repeal. Preserve source wording where reproduced; do not assert final repeal or borrow neighboring repeal lifecycle.",
+      "notice_scope_boundaries": "Target22TAC271.12 begins input1 right after TRD-202602104/diamonds; continues input2 left/righttop, ends TRD-202602105/contact/diamonds before Chapter272. Exclude271.8 and272.4 repeals.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "TX OptometryBoard proposedamendments22TAC271.12 LicenseDesignation;targetbegins page1right at22TAC271.12, continuespage2left andrighttopends contact/diamonds, TRD-202602105.",
+        "Comments30daysafterTexasRegisterpublication;June5,2026issuefooter. FiledMay19,2026;earliestpossibleadoptionJuly5,2026;noadoptedeffective.",
+        "Page2statutoryauthorityparagraph anomalouslysays proposes thisrepeal, but openingclearlyamendments withsectionsc,ddeletions. Retainwordingconflict ifparsing, donotpromotetofinalrepeal.",
+        "NeighborTRD-202602104271.8repealpage1left/toprightand272.4repealpage2rightnot target."
+      ]
+    },
+    {
+      "field_id": "filing",
+      "question": "What filing date belongs to TRD-202602105?",
+      "expected_value": "2026-05-19",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "Filed with the Office of the Secretary of State on May 19, 2026.",
+      "basis": "source_text",
+      "semantic_group_id": "filing",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Target opening says proposed amendments; authority paragraph inconsistently says proposes this repeal. Preserve source wording where reproduced; do not assert final repeal or borrow neighboring repeal lifecycle.",
+      "notice_scope_boundaries": "Target22TAC271.12 begins input1 right after TRD-202602104/diamonds; continues input2 left/righttop, ends TRD-202602105/contact/diamonds before Chapter272. Exclude271.8 and272.4 repeals.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "TX OptometryBoard proposedamendments22TAC271.12 LicenseDesignation;targetbegins page1right at22TAC271.12, continuespage2left andrighttopends contact/diamonds, TRD-202602105.",
+        "Comments30daysafterTexasRegisterpublication;June5,2026issuefooter. FiledMay19,2026;earliestpossibleadoptionJuly5,2026;noadoptedeffective.",
+        "Page2statutoryauthorityparagraph anomalouslysays proposes thisrepeal, but openingclearlyamendments withsectionsc,ddeletions. Retainwordingconflict ifparsing, donotpromotetofinalrepeal.",
+        "NeighborTRD-202602104271.8repealpage1left/toprightand272.4repealpage2rightnot target."
+      ]
+    },
+    {
+      "field_id": "earliest_adoption",
+      "question": "What earliest possible adoption date is supplied?",
+      "expected_value": "2026-07-05",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "Earliest possible date of adoption: July 5, 2026",
+      "basis": "source_text",
+      "semantic_group_id": "earliest_adoption",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Target opening says proposed amendments; authority paragraph inconsistently says proposes this repeal. Preserve source wording where reproduced; do not assert final repeal or borrow neighboring repeal lifecycle.",
+      "notice_scope_boundaries": "Target22TAC271.12 begins input1 right after TRD-202602104/diamonds; continues input2 left/righttop, ends TRD-202602105/contact/diamonds before Chapter272. Exclude271.8 and272.4 repeals.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "TX OptometryBoard proposedamendments22TAC271.12 LicenseDesignation;targetbegins page1right at22TAC271.12, continuespage2left andrighttopends contact/diamonds, TRD-202602105.",
+        "Comments30daysafterTexasRegisterpublication;June5,2026issuefooter. FiledMay19,2026;earliestpossibleadoptionJuly5,2026;noadoptedeffective.",
+        "Page2statutoryauthorityparagraph anomalouslysays proposes thisrepeal, but openingclearlyamendments withsectionsc,ddeletions. Retainwordingconflict ifparsing, donotpromotetofinalrepeal.",
+        "NeighborTRD-202602104271.8repealpage1left/toprightand272.4repealpage2rightnot target."
+      ]
+    },
+    {
+      "field_id": "effective",
+      "question": "Does the target License Designation proposal give an adopted effective date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Target §271.12 starts input page 1 after TRD-202602104 diamonds and ends input page 2 at TRD-202602105 diamonds; neighboring repeal excluded.",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "effective",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "No value is supplied in the retained target scope. Safe abstention requires complete relevant output scope; omitted scope cannot establish absence. Do not infer from neighboring notices or metadata. Target opening says proposed amendments; authority paragraph inconsistently says proposes this repeal. Preserve source wording where reproduced; do not assert final repeal or borrow neighboring repeal lifecycle.",
+      "notice_scope_boundaries": "Target22TAC271.12 begins input1 right after TRD-202602104/diamonds; continues input2 left/righttop, ends TRD-202602105/contact/diamonds before Chapter272. Exclude271.8 and272.4 repeals.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": "Target22TAC271.12 begins input1 right after TRD-202602104/diamonds; continues input2 left/righttop, ends TRD-202602105/contact/diamonds before Chapter272. Exclude271.8 and272.4 repeals.",
+      "reviewer_source_note": [
+        "TX OptometryBoard proposedamendments22TAC271.12 LicenseDesignation;targetbegins page1right at22TAC271.12, continuespage2left andrighttopends contact/diamonds, TRD-202602105.",
+        "Comments30daysafterTexasRegisterpublication;June5,2026issuefooter. FiledMay19,2026;earliestpossibleadoptionJuly5,2026;noadoptedeffective.",
+        "Page2statutoryauthorityparagraph anomalouslysays proposes thisrepeal, but openingclearlyamendments withsectionsc,ddeletions. Retainwordingconflict ifparsing, donotpromotetofinalrepeal.",
+        "NeighborTRD-202602104271.8repealpage1left/toprightand272.4repealpage2rightnot target."
+      ]
+    }
+  ],
+  "adjudications": [],
+  "critical_determinate_groups": 7,
+  "critical_uncertain_fields": [],
+  "reference_gate_eligible": true,
+  "collector_ready_confirmed": true,
+  "original_sha256": "376eb9a49d013878e837ca48449f4517008851f02e1ed354a99976b92ef66f9d",
+  "original_physical_pages": [
+    19,
+    20
+  ],
+  "collector_shared_original_group": "TX-2026-06-05",
+  "collector_template_family": "TX-Register-proposed-rule",
+  "agency_reference": "Texas Optometry Board"
+}

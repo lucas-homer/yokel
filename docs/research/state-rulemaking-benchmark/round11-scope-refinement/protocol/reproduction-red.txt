@@ -1,0 +1,58 @@
+test_adverse_and_positive_annotations (__main__.ContractTests.test_adverse_and_positive_annotations) ... ok
+test_candidate_changes_do_not_change_frozen_scope (__main__.ContractTests.test_candidate_changes_do_not_change_frozen_scope) ... ok
+test_classifier_cannot_add_record_access_field (__main__.ContractTests.test_classifier_cannot_add_record_access_field) ... ok
+test_cycle_rejected (__main__.ContractTests.test_cycle_rejected) ... ok
+test_decisions_cannot_omit_background (__main__.ContractTests.test_decisions_cannot_omit_background) ... ok
+test_dependency_unknown_does_not_erase_known_defect (__main__.ContractTests.test_dependency_unknown_does_not_erase_known_defect) ... ok
+test_exact_overlapping_unicode_evidence (__main__.ContractTests.test_exact_overlapping_unicode_evidence) ... ok
+test_json_strictness (__main__.ContractTests.test_json_strictness) ... ok
+test_mappings_cannot_omit_required_unit (__main__.ContractTests.test_mappings_cannot_omit_required_unit) ... ok
+test_reference_must_be_operative (__main__.ContractTests.test_reference_must_be_operative) ... ok
+test_reverse_audit_requires_all_claims (__main__.ContractTests.test_reverse_audit_requires_all_claims) ... ok
+test_review_hash_not_self_certification (__main__.ContractTests.test_review_hash_not_self_certification) ... ok
+test_reviewed_audit_requires_current_bindings (__main__.ContractTests.test_reviewed_audit_requires_current_bindings) ... FAIL
+test_same_relation_known_loss_survives_unknown_member (__main__.ContractTests.test_same_relation_known_loss_survives_unknown_member) ... FAIL
+test_source_addition_requires_expanded_reference (__main__.ContractTests.test_source_addition_requires_expanded_reference) ... ok
+test_uncertain_function_basis_cannot_certify_included_scope (__main__.ContractTests.test_uncertain_function_basis_cannot_certify_included_scope) ... FAIL
+test_unmapped_malformed_facet_rejected (__main__.ContractTests.test_unmapped_malformed_facet_rejected) ... FAIL
+
+======================================================================
+FAIL: test_reviewed_audit_requires_current_bindings (__main__.ContractTests.test_reviewed_audit_requires_current_bindings)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round11-scope-refinement/protocol/test_validator.py", line 98, in test_reviewed_audit_requires_current_bindings
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_same_relation_known_loss_survives_unknown_member (__main__.ContractTests.test_same_relation_known_loss_survives_unknown_member)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round11-scope-refinement/protocol/test_validator.py", line 89, in test_same_relation_known_loss_survives_unknown_member
+    self.assertIn('g', result['required_defects'])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'g' not found in []
+
+======================================================================
+FAIL: test_uncertain_function_basis_cannot_certify_included_scope (__main__.ContractTests.test_uncertain_function_basis_cannot_certify_included_scope)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round11-scope-refinement/protocol/test_validator.py", line 103, in test_uncertain_function_basis_cannot_certify_included_scope
+    with self.assertRaisesRegex(ValueError, 'scope basis/category'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_unmapped_malformed_facet_rejected (__main__.ContractTests.test_unmapped_malformed_facet_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round11-scope-refinement/protocol/test_validator.py", line 108, in test_unmapped_malformed_facet_rejected
+    with self.assertRaisesRegex(ValueError, 'operative kind'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.048s
+
+FAILED (failures=4)

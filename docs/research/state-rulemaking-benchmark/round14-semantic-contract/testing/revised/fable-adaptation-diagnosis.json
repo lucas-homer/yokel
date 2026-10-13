@@ -1,0 +1,15 @@
+{
+  "diagnosis": {
+    "failing_method": "StructuralInvariants.test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural",
+    "root_cause": "The method hard-coded test-only unit IDs 21, 22 and 23. The r14.2 fixture appends four new timing units (clock and timezone splits for s9 and s10), so the fixture now occupies IDs 1 through 24. The appended endpoint unit with i=21 collides with the fixture's new unit 21, and validate() correctly raises 'duplicate unit ID' before any assertion runs.",
+    "classification": "Test portability defect, not a contract or fixture defect. The validator behaved as specified. The other 11 methods pass unchanged because none of them depend on a unit count or on IDs above 20, and the renamed unit 2 assertion is not asserted textually anywhere.",
+    "fixture_diff_effect": "Fixture IDs 14, 15 and 19, which the method references as prerequisites, are unchanged in kind and position. Only the free ID range moved."
+  },
+  "scope_limits": [
+    "One method replaced. No other method, helper, protocol file, source text or expectation is changed.",
+    "IDs are now allocated from the fixture's current maximum plus one, two and three. All direct references to the former 21, 22 and 23 are rewritten to the allocated names.",
+    "A single precondition assertion was added to confirm the referenced fixture units 14, 15 and 19 still have the kinds the method relies on. Every prior assertion is preserved verbatim in meaning.",
+    "Semantic-versus-structural separation is unchanged: this method exercises only structural rules (dependency ordering for role endpoints, relationship membership, absence of force on edges).",
+    "This is not an approval of r14.2 semantic content. The new split units were not reviewed against the frozen source-only reference and no claim is made about their correctness."
+  ]
+}

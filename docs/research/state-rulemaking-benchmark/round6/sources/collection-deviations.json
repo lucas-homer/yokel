@@ -1,0 +1,44 @@
+{
+  "schema_version": "round6.collection-deviations.v1",
+  "procedural_deviations": [
+    {
+      "query_id": "Q01",
+      "issue": "Initial displayed-result metadata conversion omitted eight results from a complete raw capture.",
+      "resolution": "Preserved original record and appended exact correction recovering18 results; actual first3 candidates resolved beforeQ02. Candidates2/3 acquired with verified-release-gated manual transport because frozen helper reads original registration. No requery, candidate substitution or frozen code edit.",
+      "primary_acceptance_path": "../execution/Q01-correction-acceptance.json",
+      "primary_acceptance_sha256": "2f14ce892fe46fae985c7566cd16c05ee85a0fafb6fff0325f5db445cfbd147f",
+      "original_record_sha256": "2e9a02502938438c76805eb4c2d3f697bddefef5efdf62da8b99b644b12420c2",
+      "corrected_record_sha256": "3254a6d2e8e65d6141a61ef3d5fae8071fabbad8abb2550055259239fc42194c"
+    },
+    {
+      "query_id": "Q09",
+      "candidate_order": 1,
+      "issue": "Exclusion text initially misdescribed an incidental publisher guidance revision date.",
+      "resolution": "Append-only source-evidence precision correction records actual cover REVISED AUGUST2024. Guidance-scope exclusion unchanged."
+    }
+  ],
+  "source_stratum_interpretation": [
+    {
+      "document_id": "doc-9998d72f5aba",
+      "category": "conditional_control",
+      "basis": "Explicit conditional hearing cancellation and relative attendance notification in the participation notice. Planned general query; actual source category controls."
+    },
+    {
+      "document_id": "doc-03d522cbc19e",
+      "category": "conditional_control",
+      "basis": "Explicit agency-practicability condition for alternative electronic comment submission under the frozen broad source stratum. Fixed hearing and comment dates coexist. Does not establish a conditional deadline or negative lifecycle."
+    }
+  ],
+  "source_artifact_anomalies": [
+    "Kentucky repeated hearing-location text and drafting artifacts preserved.",
+    "Ohio Ethics Commission native letterhead/action stamp overlap preserved; body readable."
+  ],
+  "forbidden_calls": {
+    "parser": 0,
+    "model": 0,
+    "provider": 0,
+    "OCR": 0,
+    "labels": 0
+  },
+  "static_prep_or_code_edits_after_release": 0
+}

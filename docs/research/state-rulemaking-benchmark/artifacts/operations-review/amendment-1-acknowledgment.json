@@ -1,0 +1,23 @@
+{
+  "status": "acknowledged_pending_final_verification",
+  "amendment_path": "execution-amendment-1.json",
+  "amendment_sha256": "c19b50ef490ae7f5a2c354eee76f29bca2137c7d0a804c3ce1ad82b2fb171740",
+  "decision": "Resume Firecrawl after proven pre-job local transport failure; one corrected upload recovery for A01-A04, initial attempts for A05-B10.",
+  "constraints": [
+    "Original attempt records and local failure-stop history retained.",
+    "Use a new run directory; same immutable corpus, references and parser settings.",
+    "At most two concurrent final parses; reset failure counter only for this explicitly repaired transport phase, then stop again after three failures.",
+    "No retry of any uncertain submitted parse; no extra pre-job retry for an affected input.",
+    "Report local harness failures separately from vendor availability and content metrics; include setup overhead transparently."
+  ],
+  "primary_notice": "Preflight corrected and passed; initial A01-A04 local transport failures occurred before HTTP upload or final parse; recovery authorized. Verify retained evidence after run-complete notice.",
+  "final_review_requirements": [
+    "Assess corrected preflight evidence; retain preparation snapshot as historical finding.",
+    "Separate original local failures and recovery execution; do not attribute local failures to vendor content quality or availability.",
+    "Verify no initial HTTP upload or final parse submission for A01-A04, using available evidence and explicitly reporting uncertainty.",
+    "Verify at most one corrected pre-job recovery per A01-A04 and first attempts for remaining inputs.",
+    "Verify new run directory, retained original records, identical frozen inputs and parser settings.",
+    "Reconstruct concurrency and completion-order failure stop separately for original and amended phases.",
+    "Include original setup and local failure overhead in timing and usage accounting."
+  ]
+}

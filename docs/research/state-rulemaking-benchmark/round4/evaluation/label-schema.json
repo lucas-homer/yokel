@@ -1,0 +1,12 @@
+{
+  "schema_version": "round4.evaluation.labels.v1",
+  "notice_fields": ["opaque_document_id", "original_pdf_sha256", "retained_pdf_sha256", "official_url", "physical_page_mapping", "all_source_pages_viewed", "complete_notice_scope", "source_states_for_both_fields", "required_field_values", "scan_degradation_basis", "reviewer_identity", "reviewed_at_utc", "fields"],
+  "field_fields": ["field_id", "field_type", "source_state", "raw_literal", "page_region", "exact_source_quote", "role", "conditions", "supported_scope", "distinct_value_group", "uncertainty_reason_if_any", "normalized_value", "source_precision"],
+  "field_types": ["DATE", "EMAIL"],
+  "source_states": ["present_in_scope", "present_out_of_scope", "not_stated", "explicit_negative", "unresolved_conflict", "unresolved_uncertainty"],
+  "source_precision": ["date", "literal_email", "unsupported"],
+  "date_role": "written_comment_close",
+  "email_role": "written_comment_submission_email",
+  "reference_only": true,
+  "note": "Concrete evaluator extension to protocol/source-label-contract.json. See LABEL-API.md. validate_labels in evaluate.py is the executable validator; this file is a field inventory, not JSON Schema."
+}

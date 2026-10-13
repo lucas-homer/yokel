@@ -1,0 +1,78 @@
+{
+  "status": "READY",
+  "schema_version": "round14.source-ready.v1",
+  "selected": {
+    "id": "26-19-023",
+    "official_url": "https://lawfilesext.leg.wa.gov/Law/WSR/2026/19/26-19-023.htm",
+    "issue": "WSR 26-19",
+    "frame_readable_text_chars": 7138,
+    "extracted_body_chars": 7208,
+    "selection": "First eligible unused PROP notice in ascending stable WSR ID order; selection record frozen before notice retrieval or content assessment.",
+    "selection_record": "SELECTION.json"
+  },
+  "frame": {
+    "path": "../../round12-automated-scope/source/FRAME.json",
+    "sha256": "dad692e3007018e27a2ad58284538859965dbcece6332a8a840320c586693662",
+    "official_index": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19.htm"
+  },
+  "current_source_check": {
+    "method": "unauthenticated curl GET with --max-time 30, -L, --fail",
+    "http_status": 200,
+    "effective_url": "https://lawfilesext.leg.wa.gov/Law/WSR/2026/19/26-19-023.htm",
+    "content_type": "text/html",
+    "download_bytes": 11536,
+    "retrieved_utc": "2026-10-13T01:45:53.113991+00:00",
+    "credentials_used": false
+  },
+  "artifacts": {
+    "original.htm": {
+      "bytes": 11536,
+      "sha256": "9e0b728f39cd79dbe038f72a446a2aa05bc121f5fcac77494679572d6dfcce03"
+    },
+    "parsed-body.txt": {
+      "bytes": 7208,
+      "sha256": "5b8b221224c799e4950dbddf6df8bbf0652ee90db7150f1ed16a332b137df55f"
+    },
+    "anchors.json": {
+      "bytes": 1239,
+      "sha256": "c8b275921d0953315d7c8c6b85a6d6431ab50ffc171d74bbde50d4e94c2828f3"
+    },
+    "extract_source.py": {
+      "bytes": 3704,
+      "sha256": "02252052c239923c4ec803ba92ba2339e1c8a3c84c65f19526c287b44a27f6c7"
+    },
+    "COMPARISON.json": {
+      "bytes": 1141,
+      "sha256": "f2a5f3d026423aa9b3a99a210d3feb5c4eaaeeb962deadd18d0a733da83330d9"
+    },
+    "SELECTION.json": {
+      "bytes": 8866,
+      "sha256": "6fbd338973e5dd3cea2bcba692504217df00e43695056169e0667b8a915072f8"
+    },
+    "SELECTION-REPORT.md": {
+      "bytes": 1359,
+      "sha256": "452e1d8faceb4f0df9cefa2a14cd77456ac076f79e997b686954edd3b526560f"
+    }
+  },
+  "extraction": {
+    "script": "extract_source.py",
+    "method": "Python standard-library HTMLParser; decode utf-8-sig; convert character references; extract complete body text nodes and link href/labels; exclude head/style/script; add deterministic block/br line separators; no text truncation.",
+    "model_source": "parsed-body.txt",
+    "markup_authority": "original.htm; raw response bytes preserved unchanged. Plain-text extraction omits formatting/structural distinctions, including underline/strike/weight, and is not equivalent to browser innerText; consult original.htm where markup carries semantics.",
+    "receipt": "COMPARISON.json",
+    "anchors": "anchors.json"
+  },
+  "checks": {
+    "frame_contains_selected_candidate_and_marks_eligible": true,
+    "prospective_readable_size_at_most_8000": true,
+    "extracted_text_nonempty_and_at_most_8000_chars": true,
+    "original_html_sha256_and_length_match_extraction_receipt": true,
+    "copy_matches_downloaded_response_bytes": true,
+    "extractor_rerun_completed_successfully": true,
+    "selection_record_precedes_fetch": true,
+    "fake_html_wrapper_used": false,
+    "semantic_defect_screening_during_selection": false,
+    "gold_or_candidate_or_provider_outputs_added": false
+  },
+  "selection_record_sha256": "6fbd338973e5dd3cea2bcba692504217df00e43695056169e0667b8a915072f8"
+}

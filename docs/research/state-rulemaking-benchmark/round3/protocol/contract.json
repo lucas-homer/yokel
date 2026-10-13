@@ -1,0 +1,99 @@
+{
+  "version": "round3-development-v1",
+  "status": "ready_for_primary_execution_freeze",
+  "cohort": "all 28 retained notices are developmental; no fresh evaluation in this round",
+  "common_parser_representations": 4,
+  "max_offline_notice_representation_pairs": 112,
+  "initial_paid_pilot": {
+    "max_cases_per_provider": 20,
+    "max_attempts_per_case": 1,
+    "max_in_flight_per_provider": 1,
+    "nominal_estimated_usd_per_provider": 0.25,
+    "automatic_retries": 0,
+    "expansion_requires_recorded_primary_scope": true
+  },
+  "arms": [
+    "deterministic",
+    "deterministic_plus_jev",
+    "deterministic_plus_general"
+  ],
+  "jev_version_proposed": "jev-1.13.0",
+  "general_model": "primary must pin before calls",
+  "all_runtime_inputs_shared": true,
+  "runtime_reference_access": false,
+  "runtime_hidden_fallback_access": false,
+  "source_fidelity_separate_from_parse_support": true,
+  "destinations_in_round3_scope": true,
+  "zero_accepted_precision": null,
+  "source_conflict_action": "review; preserve both values/roles",
+  "production_authorization": false,
+  "fresh_evaluation_required_before_promotion": true,
+  "decisions_needed": [
+    "Primary final common freeze and per-provider execution authorization including concrete runner limits.",
+    "Fresh evaluation and route validation remain deferred."
+  ],
+  "adapter_contract_sha256": "2e0022f97d2ebbdb0a2381b1813a120164de0e5ec40e558cf500be1047c648f5",
+  "output_dimensions": {
+    "support": [
+      "supported",
+      "contradicted",
+      "insufficient"
+    ],
+    "role": [
+      "matched",
+      "mismatched",
+      "insufficient"
+    ],
+    "condition": [
+      "preserved",
+      "omitted_or_changed",
+      "insufficient"
+    ],
+    "conflict": [
+      "present",
+      "absent",
+      "insufficient"
+    ]
+  },
+  "primary_gate": "No deterministic blocking issues AND completed/schema-valid response AND support=supported AND role=matched AND condition=preserved AND conflict=absent. Otherwise escalation; probability/confidence never controls primary gate.",
+  "confidence_policy": "diagnostic_only_no_primary_cutoff",
+  "pilot_provider_eligibility": "Valid bounded-JSON schema, non-null candidate and exact nonempty evidence, no deterministic blocking issues; exact eligible list frozen before calls.",
+  "challenge_cases_available": 16,
+  "challenge_mode": "reviewer-authored candidates and selected retained spans; no automated retrieval/candidate or fresh evaluation claim",
+  "adopted_scope": [
+    "16-case four-dimension developmental challenge pilot",
+    "baseline native extraction development"
+  ],
+  "deferred_scope": [
+    "full 112-pair normalization replay",
+    "completed automatic routing replay",
+    "fresh independent evaluation"
+  ],
+  "requested_models": {
+    "jev": "jev-1.13.0",
+    "general": "openai/gpt-4.1-nano"
+  },
+  "scheduled_cases": 16,
+  "provider_eligible_cases": [
+    "C001",
+    "C002",
+    "C003",
+    "C004",
+    "C005",
+    "C006",
+    "C008",
+    "C009",
+    "C010",
+    "C011",
+    "C012",
+    "C013",
+    "C014",
+    "C015",
+    "C016"
+  ],
+  "deterministic_no_call_cases": [
+    "C007"
+  ],
+  "primary_resolved_gate_cases": 15,
+  "provider_eligible_resolved_gate_cases": 14
+}

@@ -1,0 +1,109 @@
+{
+  "status": "ORIGINAL_R15_0_REVIEW_COMPLETE_KNOWN_ROBUSTNESS_GAP_REVISED_READY_PENDING",
+  "roles": "Fable authored independent requirements and supplied advisory text review; Codex wrote/executed bounded tests, checked pins and reproduced the later graph gap. No Fable code execution or implementation approval claimed.",
+  "local_validation": {
+    "independent_methods": 17,
+    "independent_passed": true,
+    "owner_methods": 24,
+    "owner_passed": true,
+    "one_run_each": true,
+    "protocol_pins_verified_before_after": 37,
+    "R14_frozen_files_unchanged": 221,
+    "prior_baseline_entries_verified": 7063,
+    "evidence": [
+      "independent-test-output.txt",
+      "owner-test-output.txt",
+      "RESULT.json",
+      "PRE-RUN-PINS.json",
+      "POST-RUN-PINS.json"
+    ]
+  },
+  "material_original_gap": {
+    "status": "KNOWN_ORIGINAL_R15_0_ROBUSTNESS_GAP_REPRODUCED",
+    "source": "Primary relayed Opus finding; independently reproduced locally after the already-dispatched Fable assessment prompt.",
+    "results": [
+      {
+        "protocol": "r15.0",
+        "nodes": 399,
+        "authored_depth": 399,
+        "process_recursion_limit": 1000,
+        "accepted": false,
+        "exception_type": "ValueError",
+        "exception_text": "graph_depth"
+      },
+      {
+        "protocol": "r15.0",
+        "nodes": 399,
+        "authored_depth": 399,
+        "process_recursion_limit": 600,
+        "accepted": false,
+        "exception_type": "RecursionError",
+        "exception_text": "maximum recursion depth exceeded"
+      }
+    ],
+    "issue": "399-node chain is within count sentinel but exceeds declared depth12. Original recursive walk produces controlled graph_depth ValueError at recursion limit1000, but leaks RecursionError at process limit600 before depth rejection.",
+    "independent_17_methods": "Passed unchanged; these selected depth12/13 checks did not cover this chain stress. Original results remain true but bounded.",
+    "revision_status": "Primary preparing separate protocol-revised/r15.1; no original edits or test changes.",
+    "research_api_calls": 0,
+    "credentials_read": false,
+    "recorded_utc": "2026-10-13T04:49:47.780692+00:00"
+  },
+  "fable_assessment": {
+    "actual_model": "claude-fable-5-1",
+    "provider": "firstParty",
+    "authentication": "claude.ai",
+    "subscription": "max",
+    "requested_model_alias": "fable",
+    "requested_effort": "high",
+    "verdict_exact": "CONSISTENT WITH DECLARED CONTRACT; NO REPRODUCIBLE BLOCKER FOUND BY INSPECTION",
+    "scope_limit": "This inspection used the original implementation and original 17/24 passing evidence; the later-discovered 399-node recursion-limit reproduction was not in its prompt. Its no-blocker statement does not override the independently verified robustness gap.",
+    "material_test_limits": [
+      "These assertions test the mutation and expand() copy-through, not source mapping. Their only substantive content is that self.check() accepts the inverted structure. That is the intended 'structural acceptance only' point, but it should not be read as an inversion detector. Also the AND fixture's leaf c2 evidence is 'A AND' (connective inside a leaf), a non-atomic authored mapping.",
+      "Two parallel bare imperatives receive different force labels with no stated basis. The host cannot see this; if the control is later used as a semantic reference, its labels weaken the modality assertion. Independent-test reasons are placeholders ('Scope uncertain.' on deadline absences), so reason relevance is untested.",
+      "Blanket p2/q1 with generic reasons and no links is a false-uncertainty path indistinguishable structurally from genuine uncertainty. Requires advisory review; no fixture exercises it."
+    ],
+    "test_evidence_limits": [
+      "Single run of deterministic suites; hashes in RESULT.json are unverifiable here; owner test bodies unseen (names only).",
+      "All validated envelopes are authored; zero provider output was validated. Counts (17/24) are engineering coverage.",
+      "Rejection tests without error-code regex (several self.rejected calls) do not pin the firing rule.",
+      "Inversion/wrong-unit 'negatives' only demonstrate host acceptance; their assertNotEqual checks are tautological.",
+      "Frozen advisory fixtures (FX-A..FX-G, FX-A2, FX-C2, FX-REG, FX-L, FX-R) were not materialized; the independent tests reuse themes (eligible-but-unplaced, section 99, postmarked/received/Eastern Time, Café) in new synthetic sources.",
+      "Boundary coverage is selective (see F7); request guard and most text caps untested at B-1/B/B+1.",
+      "Semantic validity, condition coverage and completeness are constant 'unverified' strings; no reviewer layer exists yet."
+    ],
+    "provider_compatibility": "Unverified; code schema dialect/tuple and actual runtime/provider acceptance not established. Provider keyword-rejection comments are advisory hypotheses, not experimentally verified behavior.",
+    "sizing": "Full source/table and row-ID enum duplication can increase input. Local guard checks/growth are descriptive; no matched-tokenizer or live-fit guarantee."
+  },
+  "executed_scope": [
+    "TF-01 exact 697-character clause and known omitted suffix against explicit range mapping",
+    "TF-02 planted AND->OR and EXC child-order inversions, structural acceptance only",
+    "TF-04 R->L classification accepted; dangling graph links rejected; full missing-section prose entailment deferred",
+    "TF-05 explicit mandatory modality survives uncertain applicability; other normative/ambiguity semantics deferred",
+    "TF-07 separate absent/stated clock/timezone/timeliness basis preservation",
+    "TF-08 exact scalar/evidence/separator and normalization checks",
+    "TF-09 selected 159/160,399/400,depth12/13,8/9 fragments,48/49 scalar anchors,600000/600001 byte and64/65 parser-depth boundaries",
+    "TF-10 full-source/hash/table binding and local request growth diagnostics",
+    "TF-11 wrong governed-unit link and no applicability inheritance via d, source semantics remain reviewed mapping",
+    "TF-12 graph cycles/orphans/dangling/final-node abort, inverse tamper, closed types/terminal handling"
+  ],
+  "deferred_scope": [
+    "TF-03 full granted-waiver versus baseline truth matrices and nested exceptions to exceptions",
+    "TF-05 generic imperative force/contradiction entailment and uncertainty quality",
+    "TF-06 proposed/current status scope comparison across fixture variants",
+    "TF-11 full member permission/exception matrix and multi-purpose contact equivalence",
+    "Generic paraphrase entailment, atomicity/semantic completeness and source-wide condition discovery",
+    "Exhaustive B-1/B/B+1 for every schema cap, broad payload profiles, matched-tokenizer/provider compatibility",
+    "Full fixture materialization and mappings of the 63KB advisory overlays; no unseen-source evaluation"
+  ],
+  "semantic_boundary": "Source-exact 697-character fragment preserved. Deliberately shorter tail, missing applicability graph/link, wrong governed unit, AND/OR or EXC order mutations and R->L reclassification can remain structurally valid. Tests demonstrate acceptance and exact copy-through; they are not inversion detectors, extraction tests or semantic completeness proof.",
+  "qual_refinement": "Nonzero qual-link uncertainty and governing p2/nonzero unit uncertainty enforced by selected rejection tests; explicit mandatory modality remains separate.",
+  "next": "Wait for separate protocol-revised/r15.1 READY. Rerun bounded independent suite/reproduction against revision in a new folder, then use a scoped Fable diff/evidence assessment. Do not modify original tests, plan or protocol.",
+  "metrics": "Method/family/atom counts are engineering bookkeeping; no accuracy, causal improvement, unseen-source evaluation or blanket all12-families claim.",
+  "research_api_experiments": 0,
+  "credentials_read": false,
+  "runtime_or_prior_internal_reports_or_source_reference_labels_exported": false,
+  "signer_executor_invoked": false,
+  "production_eligible": false,
+  "action_ready": false,
+  "completed_utc": "2026-10-13T04:52:41.454930+00:00"
+}

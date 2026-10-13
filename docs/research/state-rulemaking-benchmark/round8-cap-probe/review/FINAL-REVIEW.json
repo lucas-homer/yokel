@@ -1,0 +1,109 @@
+{
+  "schema_version": "round8-cap-probe.independent_review.v1",
+  "created_utc": "2026-10-09T21:19:18.681096+00:00",
+  "verdict": "approved_for_primary_freeze_and_native_preflight",
+  "blockers": [],
+  "tests_passed": 18,
+  "separate_ledger_controls": {
+    "scope": "draft ledger only; not full implementation approval",
+    "checks": [
+      "prior_debit_and_precall_shared_budget",
+      "one_per_stage_three_total",
+      "completed_result_preserved_shared_overrun_latched",
+      "uncertain_call_never_retried"
+    ],
+    "passed": true,
+    "operations_sha256": "fa3ef67db9e5512022deac1d2f264534eae13d3bfee1d554b6ad3a66b59eb91c",
+    "provider_calls": 0
+  },
+  "original_review_baseline_files_verified": 1011,
+  "primary_R8_baseline_files_verified": 1046,
+  "code_pin_files_verified": 29,
+  "candidate_code_pins": {
+    "schema_version": "round8-cap-probe.implementation.v1",
+    "code": {
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/runtime/run_pipeline.py": "bf0e722248b2db3569ae643df9c9a84a8fd915a1605e92d6af11fa749271b294",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/runtime/operations.py": "fa3ef67db9e5512022deac1d2f264534eae13d3bfee1d554b6ad3a66b59eb91c",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/runtime/provider_transport.py": "e41c3d44ee6e41559fd27b41d8023b5c48cc6dfb47a5bbb1fb7406b45bc6a270",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/runtime/offline_checks.py": "ed4bbfb77251221c607dc7bb8006ff4e28e5c8f743ef13983223e967432d43cb",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/runtime/verify_offline.py": "78b6837a69a32465e96daa05c35b8f79a6a3dec08de15c21cdfa1c41684a37ef",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/runtime/INTERFACE.md": "f99e56862077333337a70599aef7a2c2c51149f5fba7a0f6db674f9e7e936d63",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/runtime/README.md": "b484724da8b3b7d40f105cded75f0ac57fbfd93e0ed93e17492933dfee956c0b",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/runtime/lineage.json": "5b46015de89ef70fece38b90d29f718c2e26a66db0017fd7e491dfd6d4994b1e",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/runtime/source-pin.json": "c3daa14b2e33c93435fc28a88becbae0b8c5085c22efa043472d2aafa817359d",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/runtime/prior-debit.json": "6f2f0ddbaa028cf7f6851036c97a9fa4432ff092d509d0e0ca582bfd0827b9b4",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/execution/service-account/adapter.py": "ddb95a946ee46623012d4eea4cb38d0f0a85a5a3bd4b404e84f4834ab13b5cac",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/execution/service-account/prepare_manifest.py": "3b7eabf65c9ffbc84110a2e4dd3c670296c73c310e352411c30e9a0bc848fe32",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/execution/service-account/test_adapter.py": "8a8a2626a0a2842b9bad9365db74d780a5e47ccf73a2156ca3775969bb36e49e",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/execution/service-account/README.md": "12212b6a216c3cb5c0b55a9493fe6979afdd2b55cb2ec5e1b2dbd1ce0f631166",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round7/pipeline/pipeline.py": "cab605c3da02ebc5c2670ba0711e63c24c4b97bdf52420d825d5f1a9040d1098",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round7/pipeline/inventory.schema.json": "45743e26e2e0404edcc1751450a557a036d6e590ce6431593e8a468b2ab8c83b",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round7/pipeline/record.schema.json": "adb033e89f46f566ee1ddc11bf50ba1c91dcadafa2f7a94977ca296256be94e2",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round7/pipeline/verdict.schema.json": "8f55dbf33853680d8c61477d5dd7a3cb2b70636eeb72f30d051b12d868007cab",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round7/pipeline/INTERFACE.md": "dd1e9c731e6b88955a391ee69c5806bcfd962a1cd8bfd3e47ac1d3043134106a",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round7/runtime/run_pipeline.py": "60f0557a0d46bb57ab4443c92489ef169536e27410ef85ecefd6e1f015ca2e3d",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round7/runtime/provider_adapters.py": "462302188e6e9c87f153e2f0c4bd73f9cce64bff0ca3e06c9b96029ff4dcb712",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round7/protocol/evaluate.py": "89b661f3bb7092972cc514aabd80f7cec56d24235b5d50768f6d4c803419836e",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round7/protocol/observed.schema.json": "ab49c0c0a1ba8dbc30f3e33ca6d8d81bdc76f142177fc14b19acd8203152cdfa",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round6/runtime/operations.py": "811fd693e059ab9c37fb415eb46136f80f44c47b1de0d8e6ea477ecfc0e3df86",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round6/runtime/jev_frozen.py": "8a0069d19f0fda7eaeac690c59749029b3ccea71fc07dfc2f8d311d2d872a59e",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8/protocol/evaluate.py": "f485d747ba4deca2bfcee1963c3aefda2fc54b1e9a2d4d531bccd93c802a499f",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8/protocol/CONTRACT.json": "b2fefbaea84ca25b35cebfa53286c0698137f7d285e71f55e4fd34ec7a801273",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8/protocol/reuse-pins.json": "cb97a83cf523d7a8e36dae00686593c8936c5406488b7804052e92f2f04fcc42",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8/protocol/PROTOCOL.md": "fb4d3d694f5e6cfeee42e607199773c62b81c9079e7ba0bb629449aadef3e41e"
+    },
+    "limits": {
+      "documents": 1,
+      "PDF_pages": 2,
+      "native_codepoints": 30000,
+      "OR_input_estimate": 35000,
+      "inventory_completion": 12288,
+      "stronger_completion": 4096,
+      "Jev_input_estimate": 64000,
+      "Jev_state_longest_estimate": 32000,
+      "inventory_calls": 1,
+      "stronger_calls": 1,
+      "Jev_calls": 1,
+      "budget_usd": 2.0
+    },
+    "models": {
+      "inventory": "openai/gpt-6.1-sol",
+      "stronger": "openai/gpt-6.1-sol",
+      "jev": "jev-1.13.0"
+    },
+    "OR_canonical_slug": "openai/gpt-6.1-sol-20260929",
+    "prices": {
+      "prompt": 2e-06,
+      "completion": 1e-05,
+      "jev": 4.2e-08
+    },
+    "nominal_max_reservation_usd": 0.306528,
+    "aggregate_nominal_with_prior_usd": 0.406694,
+    "prior_debit_sha256": "6f2f0ddbaa028cf7f6851036c97a9fa4432ff092d509d0e0ca582bfd0827b9b4",
+    "python_version": "3.12.14",
+    "pypdf_version": "6.10.0",
+    "R7_lineage_sha256": "5b46015de89ef70fece38b90d29f718c2e26a66db0017fd7e491dfd6d4994b1e",
+    "production_eligible": false,
+    "action_ready": false
+  },
+  "source_manifest_sha256": "73c2162a8a4e514f47dc0286f1345358c48a6211954d4476b29c450dbe3bebdd",
+  "old_request_sha256": "2585814e0bc4dbbae401633a9b49827647c4d6ab3b916307dc1d8e2208e9ffe3",
+  "new_inventory_body_sha256": "c95bb1fbb9b514ca5b15c0ccabd1b34f2267d22ce71e28aadf76bb109efb3809",
+  "only_inventory_body_delta": {
+    "max_tokens": {
+      "before": 6144,
+      "after": 12288
+    }
+  },
+  "prior_budget_debit_usd": 0.100166,
+  "aggregate_worst_nominal_usd": 0.406694,
+  "provider_calls": 0,
+  "credentials_read": false,
+  "independent_test_report_sha256": "8cb0218fafc6d3476b94b94b6e778e1f3e1795b19befcabfad0f9e26c0089620",
+  "independent_test_log_sha256": "4fd1dac8b415480bcebd0a833a26d60c4d5d8c9961d735685a6ee62f7a13340f",
+  "limitations": [
+    "Reused single Wisconsin source; development reachability probe, not unseen accuracy or production eligibility.",
+    "Concrete implementation/A/S/auth/dependencies/native-job/policy bindings not yet generated; primary must verify against these reviewed code pins and original freeze B.",
+    "Native build, Keychain authorization, live execution and postrun scoring outside this code-freeze review."
+  ]
+}

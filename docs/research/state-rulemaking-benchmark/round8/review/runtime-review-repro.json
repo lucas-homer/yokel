@@ -1,0 +1,77 @@
+{
+  "scope": "early review; owner not finished",
+  "results": [
+    {
+      "case": "postresponse_cost_overrun",
+      "stage": "inventory",
+      "synthetic_calls": [
+        "inventory"
+      ],
+      "gate": "inventory_failed",
+      "failure": "local_error",
+      "arms": {
+        "jev": "not_started",
+        "stronger": "not_started"
+      },
+      "inventory_hash": null,
+      "retained_completed_results": 1,
+      "conservative_charge": 3.0
+    },
+    {
+      "case": "postresponse_cost_overrun",
+      "stage": "stronger",
+      "synthetic_calls": [
+        "inventory",
+        "jev",
+        "stronger"
+      ],
+      "gate": "verification_failed",
+      "failure": "local_error",
+      "arms": {
+        "jev": "accepted_complete",
+        "stronger": "failed"
+      },
+      "inventory_hash": "f86f830651c1f06221498a9f783568b9a103ae1d59a197ca2288a6b122d75b04",
+      "retained_completed_results": 3,
+      "conservative_charge": 3.0932785359999997
+    },
+    {
+      "case": "protocol_dependency_pins",
+      "missing": [],
+      "mutable_ready_pinned": false
+    },
+    {
+      "case": "unavailable_observation_validator",
+      "synthetic_calls_before_failure": [
+        "inventory",
+        "jev",
+        "stronger"
+      ]
+    }
+  ],
+  "reviewed_hashes": {
+    "runtime/INTERFACE.md": "5414550269bdf897b3a29489121da8553d3fdd892668f1d00a2547ef16edde48",
+    "runtime/lineage.json": "90f014b174015c18a5fc9fd5ce3b68c0841979c6dc70f1eb3e18fd2608bf54cb",
+    "runtime/offline-report.json": "67febe8af4609f77b992b01a07d3fc96dffca46c2de89f7c023125db88072cff",
+    "runtime/offline_checks.py": "a3e49ebcdc6bc8c5e280410aff5911efa1c9f5d5c2a36644aa685d21c929e6cc",
+    "runtime/operations.py": "a228f325ec023c592dfdd728257d19703c39c20e4f3223660b548829cafefd69",
+    "runtime/provider_transport.py": "e41c3d44ee6e41559fd27b41d8023b5c48cc6dfb47a5bbb1fb7406b45bc6a270",
+    "runtime/run_pipeline.py": "1a7c3c5e8311ed77cdcb443109f2693f43958a9f6a11dfe3d2c316a49b8dcbfe",
+    "runtime/verify_offline.py": "1e928d81a26672af5f0491599cad0ac8f127e9c0e504c561b72cefd1751816fb",
+    "execution/service-account/adapter.py": "2a4f7a739ce078943c08f49033f3bc699dd2d94819f9b55c178ab3cb1196c73e",
+    "execution/service-account/prepare_manifest.py": "fc27a620bc71731e682e36e020a0d33d8b0dd3b660ba68077f8d874d49f07a3f",
+    "execution/service-account/test_adapter.py": "2d6793ae8b5f97dbc8db33c32e351cb1e96f55fda05649a54a18c022d62bc9c4",
+    "protocol/CONTRACT.json": "a99581b876b1057a4e998856403dfd19d0b7642e3356a44879e66ebefe2e5780",
+    "protocol/PROTOCOL.md": "207ee4141b1af24164b06aaafabf2902026dc26f186aa458527dc967792caa8f",
+    "protocol/README.md": "89a7d039f598af83fc2b272441406d4e7b309043231a767e1fbed2e587c62dc3",
+    "protocol/READY.json": "29ce9359f66c732f870e051dd7a85aea8902f9d1bac8ec1c3694278f0c9d6e03",
+    "protocol/evaluate.py": "46d65de78d0a52c686d8fe981a29969f38be2ca3d315cd207648f577ffd7f01d",
+    "protocol/observed.py": "ded8af3b261d6bfdb80e178586211e56fe363e31ace1d2734b2d9824e4cd7f8f",
+    "protocol/reuse-pins.json": "cb97a83cf523d7a8e36dae00686593c8936c5406488b7804052e92f2f04fcc42",
+    "protocol/test_evaluate.py": "5d0fec3bc8c1225e039094b438fa692a8959da301f347d0675f28a53a6db4d30"
+  },
+  "files_changed_during_reproduction": [],
+  "provider_calls": 0,
+  "fresh_sources_read": false,
+  "credential_values_read": false
+}

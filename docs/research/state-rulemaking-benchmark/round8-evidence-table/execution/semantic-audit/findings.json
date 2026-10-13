@@ -1,0 +1,238 @@
+{
+  "schema_version": "round8.evidence-table.semantic-findings.v1",
+  "reference_method": "Reuse unchanged original31-unit/80-claim contract-probe audit, not new reference labels or a fresh sample.",
+  "document_id": "doc-92211b8c7ba0",
+  "record_sha256": "315ddda2dd8012856463df1f31122dc8952dfcc050e152fcd6055bb3e2d0368a",
+  "original_payload_sha256": "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c",
+  "freeze_E_sha256": "db895208c9f7573517be057a58ec6126e793024caf6a532fe2e2a72dd391c53c",
+  "prior_semantic_audit_sha256": "295b0cea69077f928f97adbfd59f8de4cd9e6b31701a2622b6bfebe1dc15cd11",
+  "prior_READY_sha256": "5d7859b9b7f84da143450c3ce988a6a6f8e722cfee5dd1e9a08c73c114002ca9",
+  "request_delivery": {
+    "jev_and_stronger_same_encoded_payload": true,
+    "evidence_table_entries": 42,
+    "evidence_references": 81,
+    "independent_roundtrip_equals_original_payload": true,
+    "restored_record_bytes_equal_prior_audited_record": true,
+    "all_evidence_spans_exact": true,
+    "interpretation_limit": "Lossless transport and HTTP acceptance do not prove either model used every reference correctly or understood the complete table."
+  },
+  "jev": {
+    "called": true,
+    "http_status": 200,
+    "valid_complete_typed_response": true,
+    "dimensions": [
+      {
+        "dimension": "completeness",
+        "selected_label": "fail",
+        "selected_label_probability": 0.67,
+        "confidence": 0.51,
+        "full_probabilities": {
+          "fail": 0.67,
+          "pass": 0.29,
+          "uncertain": 0.04
+        },
+        "tie_abstention": false,
+        "request_criteria": {
+          "fail": "A source participation event/phase, timing, submission/signup route or alternative, instruction/modality/applicability, disclosure, ancillary contact/function, identity discrepancy or uncertainty is missing.",
+          "pass": "Record covers every source participation event/phase and timing, submission/signup route and alternative, instruction with modality/applicability, public-posting/publication/confidentiality disclosure and exception, ancillary accessibility/copies/query contact with actual role or faithful explicit out-of-submission annotation, identity discrepancy and participation uncertainty.",
+          "uncertain": "Entire-source completeness cannot be established; empty extraction or claimed coverage is insufficient proof."
+        },
+        "assessment": "consistent_with_prior_incomplete_record",
+        "specific_defect_detection": "unobservable",
+        "basis": "Existing audit finds repeal/recreation detail and full Zoom-versus-phone alternative relation only partly represented and coverage_complete incorrect. Jev selected fail, consistent at the whole-record completeness level. Typed output gives no reason or item ID, so it does not prove detection of either named omission.",
+        "prior_claim_ids": [
+          "coverage_complete"
+        ],
+        "prior_source_units": [
+          "rule",
+          "access_alternatives"
+        ]
+      },
+      {
+        "dimension": "association",
+        "selected_label": "fail",
+        "selected_label_probability": 0.38,
+        "confidence": 0.07,
+        "full_probabilities": {
+          "fail": 0.38,
+          "pass": 0.36,
+          "uncertain": 0.26
+        },
+        "tie_abstention": false,
+        "request_criteria": {
+          "fail": "An event, timing, route, instruction modality/applicability, disclosure scope or ancillary contact function is bound to the wrong activity or role.",
+          "pass": "Every phase, timing role, alternative route, mandatory/optional/conditional instruction and applicability, disclosure scope and ancillary accessibility/copies/query contact function keeps its actual source relationship; distinct phases and alternatives are not conflicts.",
+          "uncertain": "At least one required source relationship cannot be established."
+        },
+        "assessment": "negative_direction_consistent_but_fail_vs_uncertain_not_established",
+        "specific_defect_detection": "unobservable",
+        "basis": "Missing full access-alternative relationship and unresolved accessibility applicability justify withholding pass. However the exact fail criterion alleges wrong activity/role binding; the prior audit primarily records a missing group and unresolved association rather than a demonstrated wrong-activity destination. Without reasons, cannot credit a particular association defect or claim the fail label is proven correct instead of uncertain.",
+        "prior_claim_ids": [
+          "ag_phone",
+          "q_access_request_association",
+          "r_access_contact_association",
+          "u_access_contact"
+        ],
+        "prior_source_units": [
+          "access_alternatives",
+          "aid_request"
+        ]
+      },
+      {
+        "dimension": "requirements",
+        "selected_label": "fail",
+        "selected_label_probability": 0.66,
+        "confidence": 0.49,
+        "full_probabilities": {
+          "fail": 0.66,
+          "pass": 0.31,
+          "uncertain": 0.03
+        },
+        "tie_abstention": false,
+        "request_criteria": {
+          "fail": "An applicable instruction/reference/format/timing, its mandatory/optional/conditional modality or scope is omitted/changed, or a public-posting/publication/confidentiality disclosure scope or exception is omitted/changed.",
+          "pass": "Every participation instruction, reference, format and timing retains its mandatory/optional/conditional modality and applicability; public-posting/publication/confidentiality disclosures retain scope and exceptions as separately typed facts, without inventing a submission prerequisite.",
+          "uncertain": "Preservation of applicable instructions, modality or separate disclosures cannot be established."
+        },
+        "assessment": "review_direction_consistent_specific_failure_unverified",
+        "specific_defect_detection": "unobservable",
+        "basis": "Record preserves named aid formats, receipt timing, optional preregistration and equal-weight disclosure, while q_comment_contact uses unclear modality and accessibility-request applicability remains unresolved. These prevent certifying every requirement as preserved. Fail can be consistent with lost resolved modality/applicability, but no explanation establishes which issue Jev used or that fail rather than uncertain is justified for every disputed interpretation. Do not infer it rediscovered the old timing bug or missing aid formats: those were already resolved in this retained record.",
+        "prior_claim_ids": [
+          "q_comment_contact_modality",
+          "q_access_request_association",
+          "q_access_aids",
+          "t_access_request",
+          "t_advance",
+          "q_equal_weight"
+        ],
+        "prior_source_units": [
+          "aid_request",
+          "aid",
+          "written_cutoff",
+          "spoken_preregister",
+          "equal_weight"
+        ]
+      },
+      {
+        "dimension": "source_identity",
+        "selected_label": "pass",
+        "selected_label_probability": 0.65,
+        "confidence": 0.48,
+        "full_probabilities": {
+          "fail": 0.2,
+          "pass": 0.65,
+          "uncertain": 0.15
+        },
+        "tie_abstention": false,
+        "request_criteria": {
+          "fail": "Source participation identity is unresolved or contradicted, including an unresolved docket/notice discrepancy.",
+          "pass": "Source establishes an unambiguous participation notice identity, and record does not conceal or invent a resolution of docket/notice discrepancies.",
+          "uncertain": "A single resolved participation identity cannot be established."
+        },
+        "assessment": "consistent_with_unambiguous_source_scope",
+        "specific_defect_detection": "not_applicable",
+        "basis": "Frozen reference establishes one complete Wisconsin notice, agency/rule/order identity and no acceptance blockers. Partial preservation of repeal/recreation detail is a completeness issue, not evidence of competing notice identity. A source_identity pass is consistent with that narrower criterion.",
+        "prior_claim_ids": [
+          "i_agency",
+          "i_order"
+        ],
+        "prior_source_units": [
+          "agency",
+          "order",
+          "rule"
+        ]
+      },
+      {
+        "dimension": "support",
+        "selected_label": "pass",
+        "selected_label_probability": 0.48,
+        "confidence": 0.22,
+        "full_probabilities": {
+          "fail": 0.36,
+          "pass": 0.48,
+          "uncertain": 0.16
+        },
+        "tie_abstention": false,
+        "request_criteria": {
+          "fail": "A record fact, literal, instruction, disclosure or ancillary contact claim is contradicted or unsupported.",
+          "pass": "Every record claim and exact literal, including instructions, disclosures and ancillary contacts, is supported by source_text without repair or invention.",
+          "uncertain": "Support for at least one record claim cannot be established."
+        },
+        "assessment": "overbroad_under_every_claim_support_rule",
+        "specific_defect_detection": "unobservable",
+        "basis": "Question asks support for every record claim. Prior audit has an incorrect claimed_complete assertion and six unknown claims. Therefore blanket pass is not fully supported under the fixed audit, even though date/email literals are correct. This is not an assertion of invented date/email values, nor does the ambiguous Zoom glyph establish model fabrication. If coverage assertions were silently excluded, the criterion would differ from the frozen every-claim audit; no such exclusion is made here.",
+        "prior_claim_ids": [
+          "coverage_complete",
+          "q_comment_contact_modality",
+          "q_access_request_association",
+          "r_access_contact_association",
+          "u_access_contact",
+          "coverage_access_uncertainty",
+          "c_zoom"
+        ],
+        "prior_source_units": [
+          "zoom",
+          "aid_request"
+        ]
+      }
+    ],
+    "explanations_available": false,
+    "confidence_policy": "Diagnostic only. Selected type=choice labels retained exactly; no threshold, no below0.5 conversion, no calibration claim. Association fail is the unique plurality0.38 versus pass0.36, not a tie. Support pass0.48 is also unique plurality, not majority certainty.",
+    "provider_dimension_outcome": "Three fail, two pass",
+    "policy_disposition": "review",
+    "accepted_complete": false,
+    "independent_rejection_paths": {
+      "verifier": "association/completeness/requirements fail each prevents all-five-pass acceptance",
+      "deterministic": "explicit source uncertainties, unresolved route channel/association/requirement modality independently require review even if all labels had passed"
+    },
+    "outcome_interpretation": "Completeness-fail agrees with known incompleteness on this one reused record. Specific omission recognition unobservable. Final review alone cannot establish verifier correctness because deterministic guards already enforce review.",
+    "blanket_accuracy_claim": false
+  },
+  "stronger": {
+    "called": true,
+    "http_status": 200,
+    "finish_reason": "length",
+    "native_finish_reason": "max_output_tokens",
+    "completion_tokens": 4096,
+    "valid_verdict": false,
+    "failure_class": "invalid_response",
+    "json_parse_failure": {
+      "message": "Unterminated string starting at",
+      "position": 17116,
+      "content_characters": 17199
+    },
+    "scored_judgment": null,
+    "partial_reason_or_assessment_scored": false,
+    "interpretation": "Provider returned HTTP200 but output ended at the frozen cap with unterminated JSON. No valid all-item verdict, no inferred answer, no retry, no paired accuracy comparison. This is not an HTTP service failure or an established model rejection."
+  },
+  "known_record_state": {
+    "source_units": 31,
+    "claims_per_artifact": 80,
+    "source_status_counts": {
+      "matched": 21,
+      "mismatched": 2,
+      "unknown": 8
+    },
+    "claim_status_counts": {
+      "correct": 73,
+      "unknown": 6,
+      "incorrect": 1
+    },
+    "record_complete_supported": false,
+    "unchanged_from_prior_audit": true
+  },
+  "reference_caveats": [
+    "Frozen image URL I/l ambiguity remains strict unknown and propagates through dependent units; original labels unchanged.",
+    "Separately retained post-output PDF URI annotation supports model lowercase l. It is supplementary corroboration, not a retroactive reference correction.",
+    "Accessibility forward-reference ambiguity remains distinct from a fabricated contact."
+  ],
+  "study_limitations": [
+    "One reused, already known incomplete development record; not blinded fresh accuracy.",
+    "No valid stronger verdict, hence no paired judgment comparison.",
+    "No generative Jev reasons; cannot attribute failures to specific omitted or malformed claims.",
+    "No general evidence-table comprehension, confidence calibration, national accuracy or reliable-notice cost conclusion."
+  ],
+  "production_eligible": false,
+  "action_ready": false,
+  "cost_reporting": "Primary operational review owns experiment ledger; this semantic review does not turn token/probability numbers into accuracy or cost-per-correct-notice estimates."
+}

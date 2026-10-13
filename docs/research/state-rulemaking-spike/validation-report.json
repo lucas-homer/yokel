@@ -1,0 +1,111 @@
+{
+  "research_date": "2026-10-05",
+  "schema_version": "state-spike-v1",
+  "passed": true,
+  "observation_count": 41,
+  "artifact_count": 37,
+  "method_counts": {
+    "deterministic": 37,
+    "manual_visual": 4,
+    "manual_text": 0,
+    "model": 0
+  },
+  "predicate_counts": {
+    "agency": 9,
+    "comment_close": 8,
+    "comment_duration": 1,
+    "comment_open": 2,
+    "event_type": 3,
+    "filing_date": 3,
+    "hearing_request_duration": 1,
+    "hearing_status": 1,
+    "hearing_time": 1,
+    "operational_policy_date": 1,
+    "rule_action": 1,
+    "rule_citations": 2,
+    "title": 7,
+    "withdraws": 1
+  },
+  "lanes": [
+    {
+      "lane": "ct",
+      "artifact_count": 14,
+      "observation_count": 23,
+      "method_counts": {
+        "deterministic": 23,
+        "manual_text": 0,
+        "manual_visual": 0,
+        "model": 0
+      },
+      "exact_quote_count": 23,
+      "visual_evidence_count": 0,
+      "failures": [],
+      "passed": true,
+      "semantic_entailment": "requires separate source review",
+      "production_readiness": "not established",
+      "offline_replay_identical": true,
+      "normalizer_sha256": "e7a27a5e8f68e821b6eb2115899b036691a1701a783c4af0d68a9eb3eeeaf316",
+      "observations_sha256": "46a438228638dcec31465a2ae7a3da566d6c2db7ea359797d0aa243582f3be27",
+      "normalizer_stdout": "{\"observations\": 23, \"open_records\": 4, \"native_historical_windows\": 2}"
+    },
+    {
+      "lane": "wa",
+      "artifact_count": 10,
+      "observation_count": 10,
+      "method_counts": {
+        "deterministic": 10,
+        "manual_text": 0,
+        "manual_visual": 0,
+        "model": 0
+      },
+      "exact_quote_count": 11,
+      "visual_evidence_count": 0,
+      "failures": [],
+      "passed": true,
+      "semantic_entailment": "requires separate source review",
+      "production_readiness": "not established",
+      "offline_replay_identical": true,
+      "normalizer_sha256": "b053cb55b79a2ccee3c6b4bdb50d9dd02e05ab3cd31d5468e476a9e8748e8057",
+      "observations_sha256": "8e36e4864a013a24e815ded94ff5697a480937c65e65883c46f7457dcfff8690",
+      "normalizer_stdout": "{\"observation_count\": 10}"
+    },
+    {
+      "lane": "pdf",
+      "artifact_count": 13,
+      "observation_count": 8,
+      "method_counts": {
+        "deterministic": 4,
+        "manual_text": 0,
+        "manual_visual": 4,
+        "model": 0
+      },
+      "exact_quote_count": 5,
+      "visual_evidence_count": 4,
+      "failures": [],
+      "passed": true,
+      "semantic_entailment": "requires separate source review",
+      "production_readiness": "not established",
+      "offline_replay_identical": true,
+      "normalizer_sha256": "ad2b35074963d5d7b53c348124e80a6e79556c582874fd6190bf8a6f9c4ef884",
+      "observations_sha256": "890585a811802fe6c7d618aebb6e1b9b51b3417a7669f953e527657aa7042a89",
+      "normalizer_stdout": "8 observations; all manifest hashes and exact-text evidence validated"
+    }
+  ],
+  "checks": [
+    "artifact hashes",
+    "envelope types",
+    "temporal shape",
+    "canonical vocabulary",
+    "exact text quote presence",
+    "explicit manual visual provenance",
+    "deterministic offline replay",
+    "cross-lane identity uniqueness",
+    "evidence reference integrity"
+  ],
+  "limitations": [
+    "No blanket semantic-entailment guarantee.",
+    "No statewide discovery or completeness result.",
+    "No production projection or publication approval.",
+    "No blinded accuracy or vendor-comparison benchmark."
+  ]
+}

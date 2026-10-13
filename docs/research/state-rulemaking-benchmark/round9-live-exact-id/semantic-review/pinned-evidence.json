@@ -1,0 +1,1252 @@
+{
+  "schema_version": "round9.live.semantic-pinned-evidence.v1",
+  "document_id": "doc-92211b8c7ba0",
+  "reference_role": "Unchanged original image-derived AI source labels; not human gold; excerpts below are verbatim copies, not relabeling.",
+  "source_text_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5",
+  "record_sha256": "315ddda2dd8012856463df1f31122dc8952dfcc050e152fcd6055bb3e2d0368a",
+  "source_reference_sha256": "680fba60db84a1d3f31789350c5d7351e90d59841d7cfb70b15b515a27cffabe",
+  "prior_matching_audit_sha256": "295b0cea69077f928f97adbfd59f8de4cd9e6b31701a2622b6bfebe1dc15cd11",
+  "native_source_spans": {
+    "repeal_recreation": {
+      "start": 59,
+      "end": 392,
+      "quote": "The Department of Natural Resources announces that it will hold a public hearing on a\npermanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107, relating to aquatic\nplant management, manual removal and mechanical control regulations, aquatic habitat\nprotection, and surface water grants, at the time and place shown below.",
+      "offset_unit": "Python Unicode code points in retained source_text"
+    },
+    "hearing_access": {
+      "start": 456,
+      "end": 655,
+      "quote": "Virtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g\nMeeting ID: 896 2745 6939\nJoin by phone:\n        +13052241968, 89627456939# US\n        +13092053325, 89627456939# US",
+      "offset_unit": "Python Unicode code points in retained source_text"
+    },
+    "accessibility": {
+      "start": 1422,
+      "end": 1888,
+      "quote": "For the hearing or visually impaired, non-English speakers, or those with other personal\ncircumstances which might make communication at the meeting/hearing difficult, DNR will, to\nthe maximum extent possible and with reasonable advance notice, provide aids including an\ninterpreter, or a non-English, large-print, or recorded version of hearing documents. To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible.",
+      "offset_unit": "Python Unicode code points in retained source_text"
+    },
+    "registration": {
+      "start": 1952,
+      "end": 2404,
+      "quote": "The public has the opportunity to testify at the hearing. To join via Zoom, please register or pre-\nregister using the link above, which will prompt you to enter information required on the Hearing\nAppearance form. Pre-registration is strongly encouraged if you plan to provide spoken\ncomments during the hearing. For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov.",
+      "offset_unit": "Python Unicode code points in retained source_text"
+    },
+    "written_comments": {
+      "start": 2406,
+      "end": 2873,
+      "quote": "Comments on the proposed rule must be received on or before April 30, 2026. Written\ncomments may be submitted by U.S. mail, E-mail, or through the internet and will have the\nsame weight and effect as oral statements presented at the public hearing.\n\nWritten comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov",
+      "offset_unit": "Python Unicode code points in retained source_text"
+    },
+    "view_and_alternate_comment_routes": {
+      "start": 2875,
+      "end": 3174,
+      "quote": "The rule may be viewed under NRB Order number WY-20-23 at:\nhttps://dnr.wisconsin.gov/news/input/ProposedPermanent.html.\n\nComments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov.\n\nThe rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings.",
+      "offset_unit": "Python Unicode code points in retained source_text"
+    },
+    "coordinator": {
+      "start": 3493,
+      "end": 3587,
+      "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov",
+      "offset_unit": "Python Unicode code points in retained source_text"
+    }
+  },
+  "original_source_units": [
+    {
+      "id": "rule",
+      "category": "identity",
+      "subtype": "rule_identity",
+      "description": "Aquatic plant management permanent-rule repeal/recreation",
+      "raw_value": "chs. NR 107 and 109; ch. NR 107",
+      "modality": "descriptive",
+      "targets": [
+        "$notice"
+      ],
+      "evidence": [
+        {
+          "page": 1,
+          "region": "opening",
+          "quote": "permanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107"
+        }
+      ]
+    },
+    {
+      "id": "zoom",
+      "category": "fact",
+      "subtype": "hearing_access",
+      "description": "Virtual Zoom registration/access URL",
+      "raw_value": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrIdGeo84g",
+      "modality": "descriptive",
+      "targets": [
+        "hearing"
+      ],
+      "evidence": [
+        {
+          "page": 1,
+          "region": "Hearing Information",
+          "quote": "Virtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrIdGeo84g"
+        }
+      ]
+    },
+    {
+      "id": "access_alternatives",
+      "category": "relationship",
+      "subtype": "alternative_group",
+      "description": "Zoom and two telephone access alternatives",
+      "raw_value": null,
+      "modality": "descriptive",
+      "targets": [
+        "zoom",
+        "phone1",
+        "phone2"
+      ],
+      "evidence": [
+        {
+          "page": 1,
+          "region": "Hearing Information",
+          "quote": "Virtual Zoom Link:"
+        },
+        {
+          "page": 1,
+          "region": "Hearing Information",
+          "quote": "Join by phone:"
+        }
+      ]
+    },
+    {
+      "id": "zoom_register",
+      "category": "instruction",
+      "subtype": "registration",
+      "description": "Zoom attendees asked to register or preregister through link and enter Hearing Appearance form information",
+      "raw_value": null,
+      "modality": "mandatory",
+      "targets": [
+        "zoom"
+      ],
+      "evidence": [
+        {
+          "page": 1,
+          "region": "Appearances",
+          "quote": "To join via Zoom, please register or pre-register using the link above, which will prompt you to enter information required on the Hearing Appearance form."
+        }
+      ]
+    },
+    {
+      "id": "spoken_preregister",
+      "category": "instruction",
+      "subtype": "recommendation",
+      "description": "Pre-registration strongly encouraged for intended spoken commenters, not an absolute advance cutoff",
+      "raw_value": null,
+      "modality": "optional",
+      "targets": [
+        "hearing",
+        "zoom_register"
+      ],
+      "evidence": [
+        {
+          "page": 1,
+          "region": "Appearances",
+          "quote": "Pre-registration is strongly encouraged if you plan to provide spoken comments during the hearing."
+        }
+      ]
+    },
+    {
+      "id": "phone_form",
+      "category": "instruction",
+      "subtype": "conditional_requirement",
+      "description": "Phone participants asked to download, complete and email appearance form",
+      "raw_value": null,
+      "modality": "conditional",
+      "targets": [
+        "phone1",
+        "phone2",
+        "appearance_form",
+        "signup_email"
+      ],
+      "evidence": [
+        {
+          "page": 1,
+          "region": "Appearances",
+          "quote": "For those who plan to phone in, please download and complete the fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+        }
+      ]
+    },
+    {
+      "id": "written_cutoff",
+      "category": "fact",
+      "subtype": "timing",
+      "description": "Receipt cutoff, date only",
+      "raw_value": "April 30, 2026",
+      "modality": "mandatory",
+      "targets": [
+        "written"
+      ],
+      "evidence": [
+        {
+          "page": 2,
+          "region": "opening",
+          "quote": "Comments on the proposed rule must be received on or before April 30, 2026."
+        }
+      ]
+    },
+    {
+      "id": "equal_weight",
+      "category": "disclosure",
+      "subtype": "consideration_policy",
+      "description": "Written comments have same weight/effect as oral statements",
+      "raw_value": null,
+      "modality": "descriptive",
+      "targets": [
+        "written",
+        "hearing"
+      ],
+      "evidence": [
+        {
+          "page": 2,
+          "region": "opening",
+          "quote": "will have the same weight and effect as oral statements presented at the public hearing."
+        }
+      ]
+    },
+    {
+      "id": "aid",
+      "category": "ancillary",
+      "subtype": "accessibility",
+      "description": "DNR provides aids to maximum extent possible with reasonable advance notice; includes interpreter and alternative document formats",
+      "raw_value": null,
+      "modality": "descriptive",
+      "targets": [
+        "hearing"
+      ],
+      "evidence": [
+        {
+          "page": 1,
+          "region": "Accessibility",
+          "quote": "DNR will, to the maximum extent possible and with reasonable advance notice, provide aids including an interpreter, or a non-English, large-print, or recorded version of hearing documents."
+        }
+      ]
+    },
+    {
+      "id": "aid_request",
+      "category": "instruction",
+      "subtype": "accessibility_request",
+      "description": "Request accessibility resources as soon as possible at email or phone listed below",
+      "raw_value": null,
+      "modality": "optional",
+      "targets": [
+        "aid",
+        "email1",
+        "query_phone"
+      ],
+      "evidence": [
+        {
+          "page": 1,
+          "region": "Accessibility",
+          "quote": "To access these resources, please contact the email address or phone number listed below as soon as possible."
+        }
+      ]
+    }
+  ],
+  "retained_record_items": {
+    "i_rule": {
+      "json_pointer": "/identities/1",
+      "value": {
+        "event_ids": [
+          "e_hearing",
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "end": 213,
+            "quote": "permanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107",
+            "start": 145
+          }
+        ],
+        "id": "i_rule",
+        "kind": "rule",
+        "literal": "chs. NR 107 and 109",
+        "relation": "canonical"
+      }
+    },
+    "e_hearing": {
+      "json_pointer": "/events/0",
+      "value": {
+        "description": "Public hearing and opportunity for oral testimony on the permanent aquatic plant management rule.",
+        "evidence": [
+          {
+            "end": 392,
+            "quote": "The Department of Natural Resources announces that it will hold a public hearing on a\npermanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107, relating to aquatic\nplant management, manual removal and mechanical control regulations, aquatic habitat\nprotection, and surface water grants, at the time and place shown below.",
+            "start": 59
+          },
+          {
+            "end": 2009,
+            "quote": "The public has the opportunity to testify at the hearing.",
+            "start": 1952
+          }
+        ],
+        "id": "e_hearing",
+        "phase": "hearing",
+        "timing": [
+          {
+            "anchor_event_ids": [],
+            "condition_requirement_ids": [],
+            "dependency_relation": "none",
+            "evidence": [
+              {
+                "end": 437,
+                "quote": "Date:   April 22, 2026",
+                "start": 415
+              }
+            ],
+            "id": "t_hearing_date",
+            "kind": "absolute_date",
+            "raw": "April 22, 2026",
+            "role": "hearing_start",
+            "value": "2026-04-22"
+          },
+          {
+            "anchor_event_ids": [],
+            "condition_requirement_ids": [],
+            "dependency_relation": "none",
+            "evidence": [
+              {
+                "end": 454,
+                "quote": "Time:   1:00 PM",
+                "start": 439
+              }
+            ],
+            "id": "t_hearing_clock",
+            "kind": "clock",
+            "raw": "1:00 PM",
+            "role": "hearing_start",
+            "value": null
+          }
+        ]
+      }
+    },
+    "ag_phone": {
+      "json_pointer": "/alternative_groups/1",
+      "value": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "end": 655,
+            "quote": "Join by phone:\n        +13052241968, 89627456939# US\n        +13092053325, 89627456939# US",
+            "start": 565
+          }
+        ],
+        "id": "ag_phone",
+        "purpose": "hearing_access",
+        "requirement_ids": [],
+        "route_ids": [
+          "r_phone1",
+          "r_phone2"
+        ]
+      }
+    },
+    "r_zoom_signup": {
+      "json_pointer": "/routes/0",
+      "value": {
+        "alternative_group_id": null,
+        "association": "source_resolved",
+        "channel": "web",
+        "components": [
+          {
+            "evidence": [
+              {
+                "end": 538,
+                "quote": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g",
+                "start": 475
+              }
+            ],
+            "id": "c_zoom",
+            "kind": "endpoint",
+            "literal": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g"
+          }
+        ],
+        "description": "Zoom registration or pre-registration link.",
+        "event_ids": [
+          "e_registration"
+        ],
+        "evidence": [
+          {
+            "end": 2081,
+            "quote": "To join via Zoom, please register or pre-\nregister using the link above",
+            "start": 2010
+          }
+        ],
+        "id": "r_zoom_signup",
+        "role": "hearing_registration"
+      }
+    },
+    "r_meeting": {
+      "json_pointer": "/routes/1",
+      "value": {
+        "alternative_group_id": null,
+        "association": "source_resolved",
+        "channel": "other",
+        "components": [
+          {
+            "evidence": [
+              {
+                "end": 564,
+                "quote": "Meeting ID: 896 2745 6939",
+                "start": 539
+              }
+            ],
+            "id": "c_meeting",
+            "kind": "meeting_id",
+            "literal": "896 2745 6939"
+          }
+        ],
+        "description": "Virtual Zoom hearing meeting identifier.",
+        "event_ids": [
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "end": 564,
+            "quote": "Virtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g\nMeeting ID: 896 2745 6939",
+            "start": 456
+          }
+        ],
+        "id": "r_meeting",
+        "role": "other"
+      }
+    },
+    "r_phone1": {
+      "json_pointer": "/routes/2",
+      "value": {
+        "alternative_group_id": "ag_phone",
+        "association": "source_resolved",
+        "channel": "telephone",
+        "components": [
+          {
+            "evidence": [
+              {
+                "end": 617,
+                "quote": "+13052241968, 89627456939# US",
+                "start": 588
+              }
+            ],
+            "id": "c_phone1",
+            "kind": "endpoint",
+            "literal": "+13052241968"
+          },
+          {
+            "evidence": [
+              {
+                "end": 617,
+                "quote": "+13052241968, 89627456939# US",
+                "start": 588
+              }
+            ],
+            "id": "c_phone1_code",
+            "kind": "meeting_id",
+            "literal": "89627456939#"
+          },
+          {
+            "evidence": [
+              {
+                "end": 617,
+                "quote": "+13052241968, 89627456939# US",
+                "start": 588
+              }
+            ],
+            "id": "c_phone1_region",
+            "kind": "other",
+            "literal": "US"
+          }
+        ],
+        "description": "US telephone hearing access.",
+        "event_ids": [
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "end": 655,
+            "quote": "Join by phone:\n        +13052241968, 89627456939# US\n        +13092053325, 89627456939# US",
+            "start": 565
+          }
+        ],
+        "id": "r_phone1",
+        "role": "other"
+      }
+    },
+    "r_phone2": {
+      "json_pointer": "/routes/3",
+      "value": {
+        "alternative_group_id": "ag_phone",
+        "association": "source_resolved",
+        "channel": "telephone",
+        "components": [
+          {
+            "evidence": [
+              {
+                "end": 655,
+                "quote": "+13092053325, 89627456939# US",
+                "start": 626
+              }
+            ],
+            "id": "c_phone2",
+            "kind": "endpoint",
+            "literal": "+13092053325"
+          },
+          {
+            "evidence": [
+              {
+                "end": 655,
+                "quote": "+13092053325, 89627456939# US",
+                "start": 626
+              }
+            ],
+            "id": "c_phone2_code",
+            "kind": "meeting_id",
+            "literal": "89627456939#"
+          },
+          {
+            "evidence": [
+              {
+                "end": 655,
+                "quote": "+13092053325, 89627456939# US",
+                "start": 626
+              }
+            ],
+            "id": "c_phone2_region",
+            "kind": "other",
+            "literal": "US"
+          }
+        ],
+        "description": "US telephone hearing access.",
+        "event_ids": [
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "end": 655,
+            "quote": "Join by phone:\n        +13052241968, 89627456939# US\n        +13092053325, 89627456939# US",
+            "start": 565
+          }
+        ],
+        "id": "r_phone2",
+        "role": "other"
+      }
+    },
+    "q_comment_contact": {
+      "json_pointer": "/requirements/6",
+      "value": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "end": 2873,
+            "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov",
+            "start": 2656
+          }
+        ],
+        "id": "q_comment_contact",
+        "kind": "other",
+        "modality": "unclear",
+        "route_ids": [
+          "r_mail",
+          "r_comment_email"
+        ],
+        "semantic_class": "instruction",
+        "text": "Written comments should be submitted to the listed Department of Natural Resources contact, Attn: Madi Johansen."
+      }
+    },
+    "q_access_request": {
+      "json_pointer": "/requirements/11",
+      "value": {
+        "association": "uncertain",
+        "event_ids": [
+          "e_accessibility"
+        ],
+        "evidence": [
+          {
+            "end": 1888,
+            "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible.",
+            "start": 1779
+          }
+        ],
+        "id": "q_access_request",
+        "kind": "other",
+        "modality": "conditional",
+        "route_ids": [
+          "r_access_contact"
+        ],
+        "semantic_class": "instruction",
+        "text": "To request accessibility resources, contact the email address or phone number listed below as soon as possible. The notice does not explicitly identify which downstream contact is intended."
+      }
+    },
+    "r_access_contact": {
+      "json_pointer": "/routes/12",
+      "value": {
+        "alternative_group_id": null,
+        "association": "uncertain",
+        "channel": "unknown",
+        "components": [
+          {
+            "evidence": [
+              {
+                "end": 1867,
+                "quote": "please contact the email address or phone number listed below",
+                "start": 1806
+              }
+            ],
+            "id": "c_access_reference",
+            "kind": "other",
+            "literal": "the email address or phone number listed below"
+          }
+        ],
+        "description": "Accessibility request contact referenced by location only; specific endpoint association is unresolved.",
+        "event_ids": [
+          "e_accessibility"
+        ],
+        "evidence": [
+          {
+            "end": 1888,
+            "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible.",
+            "start": 1779
+          }
+        ],
+        "id": "r_access_contact",
+        "role": "information_contact"
+      }
+    },
+    "u_access_contact": {
+      "json_pointer": "/uncertainties/0",
+      "value": {
+        "description": "The accessibility paragraph refers to an email address or phone number listed below without naming a recipient. Subsequent text contains multiple email and telephone contacts; no specific accessibility endpoint is selected.",
+        "event_ids": [
+          "e_accessibility"
+        ],
+        "evidence": [
+          {
+            "end": 1888,
+            "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible.",
+            "start": 1779
+          },
+          {
+            "end": 2404,
+            "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov.",
+            "start": 2266
+          },
+          {
+            "end": 2873,
+            "quote": "608-712-2798, Madison.johansen@wisconsin.gov",
+            "start": 2829
+          },
+          {
+            "end": 3587,
+            "quote": "Emma Esch (608) 266-1959\nemma.esch@wisconsin.gov",
+            "start": 3539
+          }
+        ],
+        "id": "u_access_contact",
+        "identity_ids": [],
+        "kind": "association",
+        "requirement_ids": [
+          "q_access_request",
+          "q_access_aids"
+        ],
+        "route_ids": [
+          "r_access_contact",
+          "r_query",
+          "r_form_email",
+          "r_coordinator"
+        ]
+      }
+    },
+    "q_access_aids": {
+      "json_pointer": "/requirements/10",
+      "value": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_accessibility",
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "end": 1778,
+            "quote": "For the hearing or visually impaired, non-English speakers, or those with other personal\ncircumstances which might make communication at the meeting/hearing difficult, DNR will, to\nthe maximum extent possible and with reasonable advance notice, provide aids including an\ninterpreter, or a non-English, large-print, or recorded version of hearing documents.",
+            "start": 1422
+          }
+        ],
+        "id": "q_access_aids",
+        "kind": "other",
+        "modality": "informational",
+        "route_ids": [
+          "r_access_contact"
+        ],
+        "semantic_class": "other",
+        "text": "For hearing- or visually impaired people, non-English speakers, or others whose personal circumstances make meeting/hearing communication difficult, DNR will provide aids to the maximum extent possible and with reasonable advance notice, including an interpreter or non-English, large-print, or recorded hearing documents."
+      }
+    },
+    "t_access_request": {
+      "json_pointer": "/events/3/timing/0",
+      "value": {
+        "anchor_event_ids": [],
+        "condition_requirement_ids": [
+          "q_access_request"
+        ],
+        "dependency_relation": "other",
+        "evidence": [
+          {
+            "end": 1888,
+            "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible.",
+            "start": 1779
+          }
+        ],
+        "id": "t_access_request",
+        "kind": "relative",
+        "raw": "as soon as\npossible",
+        "role": "other",
+        "value": null
+      }
+    },
+    "t_advance": {
+      "json_pointer": "/events/3/timing/1",
+      "value": {
+        "anchor_event_ids": [],
+        "condition_requirement_ids": [
+          "q_access_aids"
+        ],
+        "dependency_relation": "other",
+        "evidence": [
+          {
+            "end": 1665,
+            "quote": "to\nthe maximum extent possible and with reasonable advance notice",
+            "start": 1600
+          }
+        ],
+        "id": "t_advance",
+        "kind": "conditional",
+        "raw": "reasonable advance notice",
+        "role": "other",
+        "value": null
+      }
+    },
+    "q_preregister": {
+      "json_pointer": "/requirements/1",
+      "value": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_registration",
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "end": 2265,
+            "quote": "Pre-registration is strongly encouraged if you plan to provide spoken\ncomments during the hearing.",
+            "start": 2167
+          }
+        ],
+        "id": "q_preregister",
+        "kind": "hearing_procedure",
+        "modality": "optional",
+        "route_ids": [
+          "r_zoom_signup"
+        ],
+        "semantic_class": "instruction",
+        "text": "Pre-registration is strongly encouraged for those planning spoken comments during the hearing."
+      }
+    },
+    "q_receipt": {
+      "json_pointer": "/requirements/3",
+      "value": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "end": 2481,
+            "quote": "Comments on the proposed rule must be received on or before April 30, 2026.",
+            "start": 2406
+          }
+        ],
+        "id": "q_receipt",
+        "kind": "timing",
+        "modality": "mandatory",
+        "route_ids": [
+          "r_mail",
+          "r_comment_email",
+          "r_general_email",
+          "r_comment_web"
+        ],
+        "semantic_class": "instruction",
+        "text": "Comments must be received on or before April 30, 2026."
+      }
+    },
+    "q_equal_weight": {
+      "json_pointer": "/requirements/5",
+      "value": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_comments",
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "end": 2654,
+            "quote": "Written\ncomments may be submitted by U.S. mail, E-mail, or through the internet and will have the\nsame weight and effect as oral statements presented at the public hearing.",
+            "start": 2482
+          }
+        ],
+        "id": "q_equal_weight",
+        "kind": "other",
+        "modality": "informational",
+        "route_ids": [],
+        "semantic_class": "disclosure",
+        "text": "Written comments have the same weight and effect as oral statements presented at the public hearing."
+      }
+    }
+  },
+  "retained_record_coverage": {
+    "evidence": [
+      {
+        "end": 1950,
+        "quote": "Appearances at the Hearing and Submittal of Written Comments",
+        "start": 1890
+      },
+      {
+        "end": 1420,
+        "quote": "Accessibility",
+        "start": 1407
+      },
+      {
+        "end": 3587,
+        "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov",
+        "start": 3493
+      }
+    ],
+    "rationale": "Reviewed the full supplied notice and represented hearing access and signup, oral testimony, written comments, receipt deadline, submission alternatives, rule-viewing links, query and accessibility contacts, accessibility qualifications and aid formats, and the small-business coordinator. The unspecified accessibility contact association and unquantified advance-notice timing remain explicit uncertainties. No public-posting or confidentiality policy is stated.",
+    "status": "claimed_complete"
+  },
+  "original_record_claim_findings": [
+    {
+      "id": "e_hearing",
+      "categories": [
+        "fact"
+      ],
+      "status": "correct",
+      "literal_kind": "none",
+      "literal_status": "not_applicable",
+      "evidence_status": "matched",
+      "basis": "Page1 supports public rulemaking hearing and oral testimony. Aquatic-plant topic is correct, but this description does not assert repeal/recreation details; that is a source-unit completeness loss rather than a false hearing claim. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+    },
+    {
+      "id": "i_rule",
+      "categories": [
+        "identity"
+      ],
+      "status": "correct",
+      "literal_kind": "other",
+      "literal_status": "correct",
+      "evidence_status": "matched",
+      "basis": "Printed chapters NR107 and109 correctly identified, but no structured recreate-chapter107/repeal relationship is asserted. The literal itself is correct; fuller frozen identity unit is only partly recovered. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+    },
+    {
+      "id": "c_zoom",
+      "categories": [
+        "fact",
+        "instruction"
+      ],
+      "status": "unknown",
+      "literal_kind": "other",
+      "literal_status": "unknown",
+      "evidence_status": "unknown",
+      "basis": "Original frozen image reference spells JqagrId with uppercase I, inventory spells Jqagrld with lowercase l. Image cannot reliably disambiguate. Strict image-reference judgment remains unknown, not a fabricated URL. Separately retained post-output PDF annotation supports lowercase l, without rewriting gold or strict score. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+    },
+    {
+      "id": "q_comment_contact",
+      "categories": [
+        "instruction"
+      ],
+      "status": "correct",
+      "literal_kind": "none",
+      "literal_status": "not_applicable",
+      "evidence_status": "matched",
+      "basis": "Page2 should-be-submitted-to Department/Madi wording faithfully preserved with postal/email links. Structured unclear modality is split below. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+    },
+    {
+      "id": "ag_phone",
+      "categories": [
+        "relationship"
+      ],
+      "status": "correct",
+      "literal_kind": "none",
+      "literal_status": "not_applicable",
+      "evidence_status": "matched",
+      "basis": "Page1 two telephone options are supported alternatives. Group correctly describes that subset but omits the larger Zoom-versus-phone relationship required by frozen access_alternatives unit. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+    },
+    {
+      "id": "u_access_contact",
+      "categories": [
+        "uncertainty"
+      ],
+      "status": "unknown",
+      "literal_kind": "none",
+      "literal_status": "not_applicable",
+      "evidence_status": "matched",
+      "basis": "Multiple downstream contacts and nonspecific forward reference are visible. Frozen reference chooses Madi email/phone; inventory deliberately does not select an endpoint. Strict association recovery is unknown, not proof of a fabricated destination or a changed source. Gold remains unchanged. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+    },
+    {
+      "id": "q_comment_contact_modality",
+      "categories": [
+        "instruction",
+        "uncertainty"
+      ],
+      "status": "unknown",
+      "literal_kind": "none",
+      "literal_status": "not_applicable",
+      "evidence_status": "matched",
+      "basis": "The semantic text preserves should, but modality unclear leaves whether it is advisory unresolved. The frozen convention treats should as advice. This is unresolved structured modality, not an incorrect postal/email value; it prevents unconditional complete support. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+    },
+    {
+      "id": "q_access_request_association",
+      "categories": [
+        "instruction",
+        "uncertainty"
+      ],
+      "status": "unknown",
+      "literal_kind": "none",
+      "literal_status": "not_applicable",
+      "evidence_status": "matched",
+      "basis": "Requirement association uncertain and explicit nonspecific-contact statement preserve hesitation but do not recover frozen email1/query_phone applicability. Exact forward referent remains uncertain under image audit. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+    },
+    {
+      "id": "r_access_contact_association",
+      "categories": [
+        "ancillary",
+        "uncertainty"
+      ],
+      "status": "unknown",
+      "literal_kind": "none",
+      "literal_status": "not_applicable",
+      "evidence_status": "matched",
+      "basis": "Unknown channel and unresolved placeholder do not bind the frozen specific email/phone contacts. Multiple later contacts justify uncertainty rather than accusing the model of inventing a destination. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+    },
+    {
+      "id": "coverage_complete",
+      "categories": [
+        "uncertainty"
+      ],
+      "status": "incorrect",
+      "literal_kind": "none",
+      "literal_status": "not_applicable",
+      "evidence_status": "matched",
+      "basis": "Claimed completeness is unsupported: repeal/recreation identity details and full Zoom/phone alternative relation are not structured; specific accessibility association unresolved. This remains incomplete independently of the URL reference ambiguity. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+    }
+  ],
+  "original_record_source_matches": [
+    {
+      "source_unit_id": "agency",
+      "status": "matched",
+      "claim_ids": [
+        "i_agency"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "rule",
+      "status": "mismatched",
+      "claim_ids": [
+        "i_rule",
+        "e_hearing"
+      ],
+      "basis": "Chapter107/109 identifiers and general aquatic-rule topic survive, but repeal of both chapters and recreation of107 appear only in evidence. The composite frozen identity is partially recovered, not fully matched; no source-label denominator change."
+    },
+    {
+      "source_unit_id": "order",
+      "status": "matched",
+      "claim_ids": [
+        "i_order"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "hearing",
+      "status": "matched",
+      "claim_ids": [
+        "e_hearing",
+        "r_oral",
+        "c_testify"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "hearing_time",
+      "status": "matched",
+      "claim_ids": [
+        "t_hearing_date",
+        "t_hearing_clock"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "zoom",
+      "status": "unknown",
+      "claim_ids": [
+        "c_zoom",
+        "r_zoom_signup"
+      ],
+      "basis": "Exact I/l source-reference glyph remains unknown. Supplementary PDF annotation supports inventory lowercase l but does not retroactively alter image-reference mapping. Zoom access role is indirect through join-via-Zoom instruction; URL uncertainty prevents full certification."
+    },
+    {
+      "source_unit_id": "meeting_id",
+      "status": "unknown",
+      "claim_ids": [
+        "r_meeting",
+        "c_meeting"
+      ],
+      "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: zoom. Propagated reference uncertainty, not a new erroneous literal."
+    },
+    {
+      "source_unit_id": "phone1",
+      "status": "unknown",
+      "claim_ids": [
+        "r_phone1",
+        "c_phone1",
+        "c_phone1_code",
+        "c_phone1_region"
+      ],
+      "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: meeting_id. Propagated reference uncertainty, not a new erroneous literal."
+    },
+    {
+      "source_unit_id": "phone2",
+      "status": "unknown",
+      "claim_ids": [
+        "r_phone2",
+        "c_phone2",
+        "c_phone2_code",
+        "c_phone2_region"
+      ],
+      "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: meeting_id. Propagated reference uncertainty, not a new erroneous literal."
+    },
+    {
+      "source_unit_id": "access_alternatives",
+      "status": "mismatched",
+      "claim_ids": [
+        "ag_phone",
+        "r_zoom_signup",
+        "r_meeting"
+      ],
+      "basis": "ag_phone groups only the two telephone options. Zoom registration/meeting items exist separately but no structured relation groups Zoom with phone as hearing-access alternatives. Partial relation is mismatched, independently of glyph ambiguity."
+    },
+    {
+      "source_unit_id": "zoom_register",
+      "status": "unknown",
+      "claim_ids": [
+        "q_zoom_signup",
+        "r_zoom_signup"
+      ],
+      "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: zoom. Propagated reference uncertainty, not a new erroneous literal."
+    },
+    {
+      "source_unit_id": "spoken_preregister",
+      "status": "unknown",
+      "claim_ids": [
+        "q_preregister"
+      ],
+      "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: zoom_register. Propagated reference uncertainty, not a new erroneous literal."
+    },
+    {
+      "source_unit_id": "appearance_form",
+      "status": "matched",
+      "claim_ids": [
+        "q_phone_form",
+        "q_phone_form_download_absence"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "signup_email",
+      "status": "matched",
+      "claim_ids": [
+        "r_form_email",
+        "c_form_email"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "phone_form",
+      "status": "unknown",
+      "claim_ids": [
+        "q_phone_form",
+        "r_form_email"
+      ],
+      "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: phone1, phone2. Propagated reference uncertainty, not a new erroneous literal."
+    },
+    {
+      "source_unit_id": "written",
+      "status": "matched",
+      "claim_ids": [
+        "e_comments"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "written_cutoff",
+      "status": "matched",
+      "claim_ids": [
+        "t_comments_close",
+        "q_receipt"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "mail",
+      "status": "matched",
+      "claim_ids": [
+        "r_mail",
+        "c_mail_office",
+        "c_mail_attn",
+        "c_mail_address"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "email1",
+      "status": "matched",
+      "claim_ids": [
+        "r_comment_email",
+        "c_comment_email"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "email2",
+      "status": "matched",
+      "claim_ids": [
+        "r_general_email",
+        "c_general_email"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "portal",
+      "status": "matched",
+      "claim_ids": [
+        "r_comment_web",
+        "c_comment_web",
+        "q_web_review"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "written_alternatives",
+      "status": "matched",
+      "claim_ids": [
+        "ag_comments",
+        "q_channels"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "equal_weight",
+      "status": "matched",
+      "claim_ids": [
+        "q_equal_weight"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "rule_view",
+      "status": "matched",
+      "claim_ids": [
+        "r_view",
+        "c_view",
+        "q_view"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "query_contact",
+      "status": "matched",
+      "claim_ids": [
+        "q_questions",
+        "r_query",
+        "c_query_name"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "query_phone",
+      "status": "matched",
+      "claim_ids": [
+        "c_query_phone",
+        "r_query"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "aid",
+      "status": "matched",
+      "claim_ids": [
+        "q_access_aids"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "aid_request",
+      "status": "unknown",
+      "claim_ids": [
+        "q_access_request",
+        "q_access_request_association",
+        "r_access_contact_association",
+        "u_access_contact",
+        "t_access_request"
+      ],
+      "basis": "Request text/timing retained, but source-specific email1/query_phone association is unresolved versus the frozen reference. This is an association uncertainty, not loss of named aids or a fabricated contact."
+    },
+    {
+      "source_unit_id": "coordinator",
+      "status": "matched",
+      "claim_ids": [
+        "q_coordinator",
+        "r_coordinator",
+        "c_coordinator_name"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "coord_phone",
+      "status": "matched",
+      "claim_ids": [
+        "c_coordinator_phone",
+        "r_coordinator"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    },
+    {
+      "source_unit_id": "coord_email",
+      "status": "matched",
+      "claim_ids": [
+        "c_coordinator_email",
+        "r_coordinator"
+      ],
+      "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+    }
+  ],
+  "supplementary_url_evidence": {
+    "schema_version": "round8.contract-probe.supplementary-finding.v1",
+    "source_sidecar": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/execution/supplementary-pdf-link.json",
+    "source_sidecar_sha256": "26bff39b22082cfe59183b2a36e7832c365d767080c4178a14e8dc974898367b",
+    "sidecar_scope": "Post-output supplementary PDF hyperlink annotation inspection, not pre-output image truth; no source/reference modification",
+    "pdf_sha256": "92211b8c7ba076dc059edf299719967c2b56b37b8945cfbc39c51a03a1255005",
+    "page": 1,
+    "pdf_annotation_uri": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g",
+    "inventory_uri_equal": true,
+    "status": "supplementary_post-output_corroboration_only",
+    "strict_image_reference_status": "unknown",
+    "original_truth_unchanged": true,
+    "note": "Read the existing supplementary sidecar after image-based audit review; did not independently reparse PDF here. No scored claims or source matches changed because of this corroboration."
+  },
+  "scope_note": "Native text and supplementary annotation support lowercase l; strict original image-reference ambiguity and endpoint closure remain unchanged. No synthetic R9 audit is source truth."
+}

@@ -1,0 +1,422 @@
+{
+  "scheduled": 16,
+  "results": 16,
+  "provider_responses": 15,
+  "deterministic_preblocks": 1,
+  "detectable_errors": {
+    "caught": 9,
+    "total": 10
+  },
+  "correct_controls": {
+    "accepted": 3,
+    "total": 4
+  },
+  "text_support_acceptances_excluding_ambiguous": 5,
+  "accepted_source_incorrect": 2,
+  "ambiguous_excluded": [
+    "C016"
+  ],
+  "rows": [
+    {
+      "case_id": "C001",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": true,
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "reference_labels": {
+        "support": "supported",
+        "role": "matched",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "origin": "correct_control",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": false,
+      "correct_control": true,
+      "source_fidelity": "correct"
+    },
+    {
+      "case_id": "C002",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": true,
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "reference_labels": {
+        "support": "contradicted",
+        "role": "insufficient",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "origin": "projection_of_retained_parser_error",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": true,
+      "correct_control": false,
+      "source_fidelity": "incorrect"
+    },
+    {
+      "case_id": "C003",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": true,
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "reference_labels": {
+        "support": "supported",
+        "role": "matched",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "origin": "projection_of_retained_parser_error",
+      "ambiguous": false,
+      "limitation": true,
+      "detectable_error": false,
+      "correct_control": false,
+      "source_fidelity": "incorrect"
+    },
+    {
+      "case_id": "C004",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": false,
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "reference_labels": {
+        "support": "supported",
+        "role": "matched",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "origin": "correct_control",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": false,
+      "correct_control": true,
+      "source_fidelity": "correct"
+    },
+    {
+      "case_id": "C005",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": false,
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "present",
+        "role": "matched",
+        "support": "contradicted"
+      },
+      "reference_labels": {
+        "support": "contradicted",
+        "role": "insufficient",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "origin": "projection_of_retained_parser_error",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": true,
+      "correct_control": false,
+      "source_fidelity": "incorrect"
+    },
+    {
+      "case_id": "C006",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": false,
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "insufficient",
+        "role": "mismatched",
+        "support": "insufficient"
+      },
+      "reference_labels": {
+        "support": "insufficient",
+        "role": "mismatched",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "origin": "controlled_candidate_mutation",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": true,
+      "correct_control": false,
+      "source_fidelity": "correct_but_runtime_unsupported"
+    },
+    {
+      "case_id": "C007",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": false,
+      "accepted_text_support": false,
+      "labels": {
+        "condition": "insufficient",
+        "conflict": "insufficient",
+        "role": "insufficient",
+        "support": "insufficient"
+      },
+      "reference_labels": {
+        "support": "insufficient",
+        "role": "insufficient",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "origin": "controlled_candidate_mutation",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": true,
+      "correct_control": false,
+      "source_fidelity": "incorrect"
+    },
+    {
+      "case_id": "C008",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": false,
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "insufficient",
+        "role": "insufficient",
+        "support": "insufficient"
+      },
+      "reference_labels": {
+        "support": "insufficient",
+        "role": "insufficient",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "origin": "controlled_candidate_mutation",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": true,
+      "correct_control": false,
+      "source_fidelity": "unresolved_by_source"
+    },
+    {
+      "case_id": "C009",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": false,
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "present",
+        "role": "mismatched",
+        "support": "contradicted"
+      },
+      "reference_labels": {
+        "support": "contradicted",
+        "role": "mismatched",
+        "condition": "omitted_or_changed",
+        "conflict": "absent"
+      },
+      "origin": "controlled_candidate_mutation",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": true,
+      "correct_control": false,
+      "source_fidelity": "incorrect"
+    },
+    {
+      "case_id": "C010",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": true,
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "reference_labels": {
+        "support": "supported",
+        "role": "matched",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "origin": "correct_control",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": false,
+      "correct_control": true,
+      "source_fidelity": "correct"
+    },
+    {
+      "case_id": "C011",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": false,
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "present",
+        "role": "mismatched",
+        "support": "contradicted"
+      },
+      "reference_labels": {
+        "support": "contradicted",
+        "role": "matched",
+        "condition": "omitted_or_changed",
+        "conflict": "absent"
+      },
+      "origin": "controlled_candidate_mutation",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": true,
+      "correct_control": false,
+      "source_fidelity": "incorrect"
+    },
+    {
+      "case_id": "C012",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": true,
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "reference_labels": {
+        "support": "supported",
+        "role": "matched",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "origin": "correct_control",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": false,
+      "correct_control": true,
+      "source_fidelity": "correct"
+    },
+    {
+      "case_id": "C013",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": false,
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "insufficient",
+        "role": "mismatched",
+        "support": "insufficient"
+      },
+      "reference_labels": {
+        "support": "insufficient",
+        "role": "mismatched",
+        "condition": "omitted_or_changed",
+        "conflict": "absent"
+      },
+      "origin": "controlled_candidate_mutation",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": true,
+      "correct_control": false,
+      "source_fidelity": "unresolved_by_source"
+    },
+    {
+      "case_id": "C014",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": false,
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "present",
+        "role": "matched",
+        "support": "supported"
+      },
+      "reference_labels": {
+        "support": "insufficient",
+        "role": "matched",
+        "condition": "preserved",
+        "conflict": "present"
+      },
+      "origin": "controlled_candidate_mutation",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": true,
+      "correct_control": false,
+      "source_fidelity": "unresolved_source_conflict"
+    },
+    {
+      "case_id": "C015",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": false,
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "present",
+        "role": "matched",
+        "support": "insufficient"
+      },
+      "reference_labels": {
+        "support": "insufficient",
+        "role": "matched",
+        "condition": "omitted_or_changed",
+        "conflict": "present"
+      },
+      "origin": "controlled_candidate_mutation",
+      "ambiguous": false,
+      "limitation": false,
+      "detectable_error": true,
+      "correct_control": false,
+      "source_fidelity": "unresolved_source_conflict"
+    },
+    {
+      "case_id": "C016",
+      "scheduled": true,
+      "result_present": true,
+      "provider_response_present": true,
+      "accepted_text_support": true,
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "reference_labels": {
+        "support": "insufficient",
+        "role": "insufficient",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "origin": "projection_from_retained_role_loss",
+      "ambiguous": true,
+      "limitation": false,
+      "detectable_error": false,
+      "correct_control": false,
+      "source_fidelity": "correct_but_runtime_unsupported"
+    }
+  ],
+  "limitations": "Development challenge, selected contexts and reviewer-authored claims. Not extraction recall, natural error prevalence, deployment calibration or routing validation."
+}

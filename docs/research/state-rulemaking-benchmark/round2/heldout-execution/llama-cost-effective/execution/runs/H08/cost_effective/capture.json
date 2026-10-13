@@ -1,0 +1,131 @@
+{
+  "fixture_id": "H08",
+  "tier": "cost_effective",
+  "job_id": "pjb-isuw3ywvokpeq14cmfj53zcmzf8n",
+  "file_id": "06724c33-6563-407c-9cb3-8a3285a9af8a",
+  "status": "COMPLETED",
+  "operational_success": true,
+  "started_at_utc": "2026-10-07T04:20:26.297872+00:00",
+  "observed_at_utc": "2026-10-07T04:20:41.568777+00:00",
+  "input_sha256": "af006f694c8e9e4f38139dd0332a1740b7ba323220b9b86028da2d44f51f706d",
+  "input_bytes": 113552,
+  "pages": 4,
+  "config": {
+    "file_id": "06724c33-6563-407c-9cb3-8a3285a9af8a",
+    "tier": "cost_effective",
+    "version": "latest",
+    "disable_cache": false,
+    "processing_options": {
+      "cost_optimizer": {
+        "enable": false
+      },
+      "ignore": {
+        "ignore_text_in_image": false
+      }
+    },
+    "output_options": {
+      "images_to_save": [
+        "screenshot"
+      ],
+      "markdown": {
+        "inline_images": false,
+        "tables": {
+          "output_tables_as_markdown": false,
+          "merge_continued_tables": false
+        }
+      },
+      "spatial_text": {
+        "preserve_very_small_text": false
+      }
+    },
+    "user_metadata": {
+      "benchmark_run": "round2-heldout-cost-effective",
+      "intent_token": "2caac598776a4beabc57b5aee123bdf6",
+      "input_sha256": "af006f694c8e9e4f38139dd0332a1740b7ba323220b9b86028da2d44f51f706d",
+      "tier": "cost_effective"
+    }
+  },
+  "outputs": [
+    {
+      "path": "runs/H08/cost_effective/output.md",
+      "sha256": "b96934fa181779fa77c9f91a79e0bf09df486b31e752934280cb2b0f503da8e4",
+      "bytes": 7493,
+      "exact_provider_markdown_full": true
+    },
+    {
+      "path": "runs/H08/cost_effective/output.json",
+      "sha256": "883b0c25356a5bd2528a9fdedb9e40280e554ddc3282abc1d4b97ac3cc2ea5eb",
+      "bytes": 59340,
+      "representation": "REST v2 expanded result, supplementary only"
+    }
+  ],
+  "returned_usage": {
+    "credits": 12.0
+  },
+  "job_metadata": {
+    "state_transitions": {
+      "pending_at": "2026-10-07T04:20:26.657156Z",
+      "throttled_at": "2026-10-07T04:20:26.851025Z",
+      "running_at": "2026-10-07T04:20:27.011103Z",
+      "completed_at": "2026-10-07T04:20:37.934806Z",
+      "failed_at": null,
+      "cancelled_at": null
+    },
+    "latency": {
+      "decode_ms": 7027,
+      "agent_ms": 1764,
+      "output_ms": 279,
+      "page_throttle_wall_ms": 0,
+      "page_throttle_sum_ms": 0,
+      "page_throttle_max_ms": 0,
+      "page_throttle_waits": 1,
+      "job_throttle_ms": 0,
+      "total_ms": 11115
+    },
+    "quarantine": null,
+    "pdf-pages": 4,
+    "pdf-real-pages": 4,
+    "pdf-rawTextLength": 7766,
+    "pdf-mdLength": 7493,
+    "pdf-time": 2720,
+    "pdf-ocrTime": 0,
+    "pdf-image-convertTime": 0,
+    "pdf-pdfToHTMLTime": 0,
+    "pdf-llmTime": 1129,
+    "pdf-inputTokens": 22933,
+    "pdf-outputTokens": 2455,
+    "pdf-image-ocr-count": 4,
+    "pdf-image-ocr-failed-count": 0,
+    "pdf-image-ocr-success-count": 4,
+    "pdf-image-ocr-empty-count": 2,
+    "pdf-image-ocr-hadText-count": 2,
+    "pdf-image-ocr-pixels": 26347294,
+    "pdf-multimodal-time": 0,
+    "pdf-multimodal-pdf2Image": 0,
+    "pdf-high-res-ocr": 4
+  },
+  "terminal_api_capture": "http/00063.json",
+  "raw_api_response_object_unmodified": true,
+  "provenance_note": "Authenticated REST v2; JSON response sanitized only if transient URLs/key appeared. Markdown scored alone; interface differences in plan.",
+  "operation_anomalies": [],
+  "returned_job_consistency": {
+    "file_id": {
+      "expected": "06724c33-6563-407c-9cb3-8a3285a9af8a",
+      "reported": null,
+      "available": false,
+      "matches": null
+    },
+    "tier": {
+      "expected": "cost_effective",
+      "reported": "cost_effective",
+      "available": true,
+      "matches": true
+    },
+    "version": {
+      "requested": "latest",
+      "reported": null,
+      "latest_alias_resolution_verified": null,
+      "note": "A reported dated version is retained, not asserted to be the current latest mapping"
+    }
+  }
+}

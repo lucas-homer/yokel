@@ -1,0 +1,415 @@
+{
+  "status": "completed_execution_audit",
+  "checked_at_utc": "2026-10-07T16:22:20.507334+00:00",
+  "checks_passed": 285,
+  "checks_total": 285,
+  "failed_checks": [],
+  "scheduled_documents": 12,
+  "document_states": {
+    "completed": 12
+  },
+  "operations": [
+    {
+      "operation_id": "doc-6de1104bdc54-OCR",
+      "kind": "ocr",
+      "document_id": "doc-6de1104bdc54",
+      "pages": 2,
+      "reserved_nominal_usd": 0.029,
+      "provider_reported_usd": 0.00410416,
+      "estimated_or_conservative_accounted_usd": 0.00810416,
+      "response_present": true,
+      "result_present": true
+    },
+    {
+      "operation_id": "doc-03fab2becee5-OCR",
+      "kind": "ocr",
+      "document_id": "doc-03fab2becee5",
+      "pages": 6,
+      "reserved_nominal_usd": 0.037000000000000005,
+      "provider_reported_usd": 0.01226752,
+      "estimated_or_conservative_accounted_usd": 0.02426752,
+      "response_present": true,
+      "result_present": true
+    },
+    {
+      "operation_id": "doc-09c6b865024f-OCR",
+      "kind": "ocr",
+      "document_id": "doc-09c6b865024f",
+      "pages": 1,
+      "reserved_nominal_usd": 0.027000000000000003,
+      "provider_reported_usd": 0.00205896,
+      "estimated_or_conservative_accounted_usd": 0.00405896,
+      "response_present": true,
+      "result_present": true
+    },
+    {
+      "operation_id": "doc-cc8a5c237cc2-OCR",
+      "kind": "ocr",
+      "document_id": "doc-cc8a5c237cc2",
+      "pages": 4,
+      "reserved_nominal_usd": 0.033,
+      "provider_reported_usd": 0.00816616,
+      "estimated_or_conservative_accounted_usd": 0.01616616,
+      "response_present": true,
+      "result_present": true
+    },
+    {
+      "operation_id": "doc-7035335ec6ae-OCR",
+      "kind": "ocr",
+      "document_id": "doc-7035335ec6ae",
+      "pages": 1,
+      "reserved_nominal_usd": 0.027000000000000003,
+      "provider_reported_usd": 0.00205824,
+      "estimated_or_conservative_accounted_usd": 0.004058239999999999,
+      "response_present": true,
+      "result_present": true
+    }
+  ],
+  "provider_counts": {
+    "ocr": 5
+  },
+  "provider_result_states": {
+    "completed": 5
+  },
+  "stop_states": {},
+  "OCR_pages": 14,
+  "OCR_start_gaps_seconds": [
+    22.005120038986206,
+    22.000612020492554,
+    22.005124807357788,
+    22.00191020965576
+  ],
+  "costs": {
+    "OpenRouter_reported_usd": 0.028655039999999996,
+    "Jev_usage_rate_estimated_usd": 0.0,
+    "nominal_reserved_usd": 0.153,
+    "conservative_budget_charge_usd": 0.153,
+    "unknown_cost_operations": 0,
+    "total_actual_invoice_verified": false
+  },
+  "routing": {
+    "decisions": {
+      "source_review": 7,
+      "acquire_mistral_ocr": 5
+    },
+    "native_deterministic_block_reasons": {
+      "case_overlimit": 6,
+      "condition_scope_requires_semantic_verification": 16,
+      "multiple_notice_or_rule_scopes": 9,
+      "multiple_same_role_values_scope_unresolved": 3,
+      "source_scope_incomplete_or_unknown": 9,
+      "lifecycle_scope_unresolved": 4,
+      "competing_temporal_role_cues": 1,
+      "date_year_order_or_range_unresolved": 1,
+      "replacement_character": 2
+    },
+    "fallback_deterministic_block_reasons": {
+      "condition_scope_requires_semantic_verification": 7,
+      "lifecycle_scope_unresolved": 3,
+      "multiple_notice_or_rule_scopes": 2
+    },
+    "terminal_statuses": {
+      "review": 23
+    }
+  },
+  "documents": [
+    {
+      "document_id": "doc-0511d79a7aa6",
+      "scope": "unknown",
+      "pdf_pages": 3,
+      "scheduled": true,
+      "native_proposed_candidates": 4,
+      "native_result_count": 4,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 4,
+      "fallback_decision": "source_review",
+      "fallback_reasons": [
+        "native_candidate_not_text_supported",
+        "native_pipeline_structural_review_route",
+        "parser_fallback_scope_incomplete_or_unknown",
+        "parser_fallback_wrapped_destination_signal"
+      ],
+      "state": "completed",
+      "terminal_observations": 4,
+      "text_supported": 0,
+      "terminal_review": 4,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    },
+    {
+      "document_id": "doc-7035335ec6ae",
+      "scope": "full_notice",
+      "pdf_pages": 1,
+      "scheduled": true,
+      "native_proposed_candidates": 2,
+      "native_result_count": 2,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 2,
+      "fallback_proposed_candidates": 2,
+      "fallback_result_count": 2,
+      "fallback_provider_completed": 0,
+      "fallback_deterministic_reviews": 2,
+      "fallback_decision": "acquire_mistral_ocr",
+      "fallback_reasons": [
+        "native_candidate_not_text_supported"
+      ],
+      "state": "completed",
+      "terminal_observations": 4,
+      "text_supported": 0,
+      "terminal_review": 4,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    },
+    {
+      "document_id": "doc-6de1104bdc54",
+      "scope": "full_notice",
+      "pdf_pages": 2,
+      "scheduled": true,
+      "native_proposed_candidates": 1,
+      "native_result_count": 1,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 1,
+      "fallback_proposed_candidates": 1,
+      "fallback_result_count": 1,
+      "fallback_provider_completed": 0,
+      "fallback_deterministic_reviews": 1,
+      "fallback_decision": "acquire_mistral_ocr",
+      "fallback_reasons": [
+        "native_candidate_not_text_supported",
+        "native_pipeline_structural_review_route",
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_unresolved_participation_date_evidence"
+      ],
+      "state": "completed",
+      "terminal_observations": 2,
+      "text_supported": 0,
+      "terminal_review": 2,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    },
+    {
+      "document_id": "doc-cc8a5c237cc2",
+      "scope": "full_notice",
+      "pdf_pages": 4,
+      "scheduled": true,
+      "native_proposed_candidates": 2,
+      "native_result_count": 2,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 2,
+      "fallback_proposed_candidates": 2,
+      "fallback_result_count": 2,
+      "fallback_provider_completed": 0,
+      "fallback_deterministic_reviews": 2,
+      "fallback_decision": "acquire_mistral_ocr",
+      "fallback_reasons": [
+        "native_candidate_not_text_supported",
+        "parser_fallback_missing_comment_deadline_candidate"
+      ],
+      "state": "completed",
+      "terminal_observations": 4,
+      "text_supported": 0,
+      "terminal_review": 4,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    },
+    {
+      "document_id": "doc-27f924e9b9d3",
+      "scope": "slice",
+      "pdf_pages": 6,
+      "scheduled": true,
+      "native_proposed_candidates": 1,
+      "native_result_count": 1,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 1,
+      "fallback_decision": "source_review",
+      "fallback_reasons": [
+        "native_candidate_not_text_supported",
+        "parser_fallback_missing_submission_email_candidate",
+        "parser_fallback_scope_incomplete_or_unknown"
+      ],
+      "state": "completed",
+      "terminal_observations": 1,
+      "text_supported": 0,
+      "terminal_review": 1,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    },
+    {
+      "document_id": "doc-6d4517336d61",
+      "scope": "unknown",
+      "pdf_pages": 10,
+      "scheduled": true,
+      "native_proposed_candidates": 1,
+      "native_result_count": 1,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 1,
+      "fallback_decision": "source_review",
+      "fallback_reasons": [
+        "native_candidate_not_text_supported",
+        "native_image_page_sparse_text",
+        "native_pipeline_structural_review_route",
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_scope_incomplete_or_unknown",
+        "parser_fallback_unresolved_participation_date_evidence"
+      ],
+      "state": "completed",
+      "terminal_observations": 1,
+      "text_supported": 0,
+      "terminal_review": 1,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    },
+    {
+      "document_id": "doc-bab42aac1958",
+      "scope": "slice",
+      "pdf_pages": 5,
+      "scheduled": true,
+      "native_proposed_candidates": 1,
+      "native_result_count": 1,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 1,
+      "fallback_decision": "source_review",
+      "fallback_reasons": [
+        "native_candidate_not_text_supported",
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_scope_incomplete_or_unknown",
+        "parser_fallback_unresolved_participation_date_evidence"
+      ],
+      "state": "completed",
+      "terminal_observations": 1,
+      "text_supported": 0,
+      "terminal_review": 1,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    },
+    {
+      "document_id": "doc-eb83abf91c18",
+      "scope": "unknown",
+      "pdf_pages": 12,
+      "scheduled": true,
+      "native_proposed_candidates": 2,
+      "native_result_count": 2,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 2,
+      "fallback_decision": "source_review",
+      "fallback_reasons": [
+        "native_candidate_not_text_supported",
+        "native_page_low_text_coverage",
+        "native_pipeline_structural_review_route",
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_scope_incomplete_or_unknown",
+        "parser_fallback_text_corruption_signal",
+        "parser_fallback_unresolved_participation_date_evidence"
+      ],
+      "state": "completed",
+      "terminal_observations": 2,
+      "text_supported": 0,
+      "terminal_review": 2,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    },
+    {
+      "document_id": "doc-09c6b865024f",
+      "scope": "full_notice",
+      "pdf_pages": 1,
+      "scheduled": true,
+      "native_proposed_candidates": 0,
+      "native_result_count": 0,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 0,
+      "fallback_proposed_candidates": 0,
+      "fallback_result_count": 0,
+      "fallback_provider_completed": 0,
+      "fallback_deterministic_reviews": 0,
+      "fallback_decision": "acquire_mistral_ocr",
+      "fallback_reasons": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_missing_submission_email_candidate",
+        "parser_fallback_unresolved_participation_date_evidence"
+      ],
+      "state": "completed",
+      "terminal_observations": 0,
+      "text_supported": 0,
+      "terminal_review": 0,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    },
+    {
+      "document_id": "doc-03fab2becee5",
+      "scope": "full_notice",
+      "pdf_pages": 6,
+      "scheduled": true,
+      "native_proposed_candidates": 2,
+      "native_result_count": 2,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 2,
+      "fallback_proposed_candidates": 2,
+      "fallback_result_count": 2,
+      "fallback_provider_completed": 0,
+      "fallback_deterministic_reviews": 2,
+      "fallback_decision": "acquire_mistral_ocr",
+      "fallback_reasons": [
+        "native_candidate_not_text_supported",
+        "native_pipeline_structural_review_route",
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_unresolved_participation_date_evidence"
+      ],
+      "state": "completed",
+      "terminal_observations": 4,
+      "text_supported": 0,
+      "terminal_review": 4,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    },
+    {
+      "document_id": "doc-de7ceb52736b",
+      "scope": "unknown",
+      "pdf_pages": 1,
+      "scheduled": true,
+      "native_proposed_candidates": 0,
+      "native_result_count": 0,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 0,
+      "fallback_decision": "source_review",
+      "fallback_reasons": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_missing_submission_email_candidate",
+        "parser_fallback_scope_incomplete_or_unknown"
+      ],
+      "state": "completed",
+      "terminal_observations": 0,
+      "text_supported": 0,
+      "terminal_review": 0,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    },
+    {
+      "document_id": "doc-b00441b94ff1",
+      "scope": "unknown",
+      "pdf_pages": 1,
+      "scheduled": true,
+      "native_proposed_candidates": 0,
+      "native_result_count": 0,
+      "native_provider_completed": 0,
+      "native_deterministic_reviews": 0,
+      "fallback_decision": "source_review",
+      "fallback_reasons": [
+        "native_pipeline_structural_review_route",
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_missing_submission_email_candidate",
+        "parser_fallback_scope_incomplete_or_unknown"
+      ],
+      "state": "completed",
+      "terminal_observations": 0,
+      "text_supported": 0,
+      "terminal_review": 0,
+      "channel_disagreement_fields": [],
+      "channel_unresolved_fields": []
+    }
+  ],
+  "provider_calls_by_audit": 0,
+  "source_labels_read": false,
+  "proposer_executed_by_audit": false,
+  "execution_artifacts_unchanged": true,
+  "execution_artifact_count": 125
+}

@@ -1,0 +1,37 @@
+--- docs/research/state-rulemaking-benchmark/round14-semantic-contract/testing/revised/test_fable_contract.py	2026-10-12 19:09:39
++++ docs/research/state-rulemaking-benchmark/round14-semantic-contract/testing/revised/test_fable_contract_adapted.py	2026-10-12 19:11:45
+@@ -155,20 +155,27 @@
+ 
+     def test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural(self):
+         v = fixture()
+-        v['u'].append(dict(i=21, k=4, s='The office in Alder City is the in-person arrival endpoint.', m=0, c='', d=[14, 15], b=[], e=['s5', 's9'], q=0, r=''))
+-        v['u'].append(dict(i=22, k=5, s='The office serves as the arrival location for the July 4, 2031 deadline.', m=0, c='', d=[21, 19], b=[], e=['s9', 's5'], q=0, r=''))
++        # Allocate test-only IDs above whatever the fixture currently uses, never hard-coded.
++        top = max(u['i'] for u in v['u'])
++        ep, role, rel = top + 1, top + 2, top + 3
++        self.assertLessEqual(rel, 160)
++        # Precondition: the fixture units this method leans on keep their kinds.
++        kinds = {u['i']: u['k'] for u in v['u']}
++        self.assertEqual((kinds[14], kinds[15], kinds[19]), (0, 0, 3))
++        v['u'].append(dict(i=ep, k=4, s='The office in Alder City is the in-person arrival endpoint.', m=0, c='', d=[14, 15], b=[], e=['s5', 's9'], q=0, r=''))
++        v['u'].append(dict(i=role, k=5, s='The office serves as the arrival location for the July 4, 2031 deadline.', m=0, c='', d=[ep, 19], b=[], e=['s9', 's5'], q=0, r=''))
+         units = by_id(C.expand(v, SOURCE, TABLE))
+-        self.assertEqual(units[22]['required_unit_ids'], [21, 19])
+-        self.assertEqual(units[21]['modality'], 'informational')
++        self.assertEqual(units[role]['required_unit_ids'], [ep, 19])
++        self.assertEqual(units[ep]['modality'], 'informational')
+         self.assertEqual(units[14]['modality'], 'informational')
+         # A mandatory dependent does not make its prerequisites mandatory: edges have no force.
+         w = copy.deepcopy(v); w['u'][-1].update(m=1)
+-        self.assertEqual(by_id(C.expand(w, SOURCE, TABLE))[21]['modality'], 'informational')
++        self.assertEqual(by_id(C.expand(w, SOURCE, TABLE))[ep]['modality'], 'informational')
+         # The role-to-endpoint ordering rule is purely structural and is enforced as such.
+-        w = copy.deepcopy(v); w['u'][-1]['d'] = [19, 21]
++        w = copy.deepcopy(v); w['u'][-1]['d'] = [19, ep]
+         self.assertTrue(check(w, 'role endpoint dependency'))
+         w = copy.deepcopy(v)
+-        w['u'].append(dict(i=23, k=7, s='Rule Q-8 and filing F-17 relate as amended rule and prior filing.', m=0, c='', d=[], b=[9, 10], e=['s4'], q=0, r=''))
++        w['u'].append(dict(i=rel, k=7, s='Rule Q-8 and filing F-17 relate as amended rule and prior filing.', m=0, c='', d=[], b=[9, 10], e=['s4'], q=0, r=''))
+         C.validate(w, SOURCE, TABLE)
+         w['u'][-1]['b'] = [9]
+         self.assertTrue(check(w, 'relationship members'))

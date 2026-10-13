@@ -1,0 +1,985 @@
+{
+  "schema_version": "round4.evaluation.labels.v1",
+  "documents": [
+    {
+      "opaque_document_id": "doc-a97c415f9644",
+      "original_pdf_sha256": "a97c415f96440c47912d36c0396b6bf08bb01358bf10b29f47572c0e16d613c0",
+      "retained_pdf_sha256": "a97c415f96440c47912d36c0396b6bf08bb01358bf10b29f47572c0e16d613c0",
+      "official_url": "https://apps.legislature.ky.gov/law/kar/downloads/docs/15992/document.markup.pdf",
+      "physical_page_mapping": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "all_source_pages_viewed": true,
+      "complete_notice_scope": true,
+      "source_states_for_both_fields": {
+        "DATE": [
+          "present_in_scope",
+          "present_out_of_scope"
+        ],
+        "EMAIL": [
+          "present_in_scope"
+        ]
+      },
+      "required_field_values": [
+        "date-close",
+        "email-juan",
+        "email-mark"
+      ],
+      "scan_degradation_basis": "Rendered pages visually legible; no image-only/native-layer classification inferred from appearance or uninspected extraction. Markup, typography and source defects retained.",
+      "reviewer_identity": "Independent Codex image-only reviewer / chat 01a10e68-225d-7cf3-ad93-ad51715a9887",
+      "reviewed_at_utc": "2026-10-07T18:06:27.765053+00:00",
+      "state": "KY",
+      "complete_notice_scope_basis": "Eight pages form one 17 KAR 1:030 Nurse Loan Repayment Program amendment: rule text on pages1-2, agency filing/hearing/comment notice on page3, impact/fiscal statements through a complete final analysis on page8. No second notice or missing continuation apparent.",
+      "fields": [
+        {
+          "field_id": "date-close",
+          "field_type": "DATE",
+          "source_state": "present_in_scope",
+          "raw_literal": "March 31, 2025",
+          "page_region": "page3 public hearing/comment paragraph, middle",
+          "exact_source_quote": "Written comments shall be accepted through March 31, 2025.",
+          "role": "written_comment_close",
+          "conditions": [],
+          "supported_scope": true,
+          "distinct_value_group": "date-close",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2025-03-31",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "email-juan",
+          "field_type": "EMAIL",
+          "source_state": "present_in_scope",
+          "raw_literal": "Juan.Renaud@ky.gov",
+          "page_region": "page3 lower half CONTACT PERSON; email line",
+          "exact_source_quote": "Juan.Renaud@ky.gov or Mark.Bowman@ky.gov.",
+          "role": "written_comment_submission_email",
+          "conditions": [
+            "Send written notification of intent to be heard at the public hearing or written comments on the proposed administrative regulation to the contact person."
+          ],
+          "supported_scope": true,
+          "distinct_value_group": "email-juan",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "Juan.Renaud@ky.gov",
+          "source_precision": "literal_email"
+        },
+        {
+          "field_id": "email-mark",
+          "field_type": "EMAIL",
+          "source_state": "present_in_scope",
+          "raw_literal": "Mark.Bowman@ky.gov",
+          "page_region": "page3 last printed line",
+          "exact_source_quote": "Juan.Renaud@ky.gov or Mark.Bowman@ky.gov.",
+          "role": "written_comment_submission_email",
+          "conditions": [
+            "Send written notification of intent to be heard at the public hearing or written comments on the proposed administrative regulation to the contact person."
+          ],
+          "supported_scope": true,
+          "distinct_value_group": "email-mark",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "Mark.Bowman@ky.gov",
+          "source_precision": "literal_email"
+        },
+        {
+          "field_id": "date-hearing",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "March 25, 2025",
+          "page_region": "page3 top public-hearing paragraph",
+          "exact_source_quote": "A public hearing on this administrative regulation shall be held on Tuesday, March 25, 2025, at 11:00 Eastern Time",
+          "role": "hearing_start",
+          "conditions": [
+            "If no notification of intent to attend the hearing is received by that date, the hearing may be cancelled."
+          ],
+          "supported_scope": false,
+          "distinct_value_group": "date-hearing",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2025-03-25",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "date-intent",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "five workdays prior to the hearing",
+          "page_region": "page3 hearing paragraph",
+          "exact_source_quote": "Individuals interested in being heard at that hearing shall notify this agency in writing by five workdays prior to the hearing, of their intent to attend.",
+          "role": "hearing_intent_notification_relative_cutoff",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-intent",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": null,
+          "source_precision": "unsupported"
+        },
+        {
+          "field_id": "date-approved",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "January 9, 2025",
+          "page_region": "page3 first line",
+          "exact_source_quote": "APPROVED BY AGENCY: January 9, 2025",
+          "role": "agency_approval",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-approved",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2025-01-09",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "date-filed",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "January 9, 2025",
+          "page_region": "page3 second line",
+          "exact_source_quote": "FILED WITH LRC: January 9, 2025 at 3:34 p.m.",
+          "role": "filing",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-filed",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2025-01-09",
+          "source_precision": "date"
+        }
+      ]
+    },
+    {
+      "opaque_document_id": "doc-ad2425138393",
+      "original_pdf_sha256": "ad24251383931a668ba94c11774f6c72b7ec34682f477d396a3babdd840a676b",
+      "retained_pdf_sha256": "ad24251383931a668ba94c11774f6c72b7ec34682f477d396a3babdd840a676b",
+      "official_url": "https://www.registerofohio.state.oh.us/hearings/hearingsSearch/results/950259/400940",
+      "physical_page_mapping": [
+        1,
+        2
+      ],
+      "all_source_pages_viewed": true,
+      "complete_notice_scope": true,
+      "source_states_for_both_fields": {
+        "DATE": [
+          "present_in_scope",
+          "present_out_of_scope"
+        ],
+        "EMAIL": [
+          "not_stated",
+          "present_out_of_scope"
+        ]
+      },
+      "required_field_values": [
+        "date-close"
+      ],
+      "scan_degradation_basis": "Rendered pages visually legible; no image-only/native-layer classification inferred from appearance or uninspected extraction. Markup, typography and source defects retained.",
+      "reviewer_identity": "Independent Codex image-only reviewer / chat 01a10e68-225d-7cf3-ad93-ad51715a9887",
+      "reviewed_at_utc": "2026-10-07T18:06:27.765053+00:00",
+      "state": "OH",
+      "complete_notice_scope_basis": "Two pages form a single Ohio EPA proposed-rulemaking public notice. Page1 begins notice and describes one common participation period; page2 completes the continuation and accessibility information. Multiple listed rule provisions share this notice, not separate comment windows.",
+      "fields": [
+        {
+          "field_id": "date-close",
+          "field_type": "DATE",
+          "source_state": "present_in_scope",
+          "raw_literal": "August 24, 2026",
+          "page_region": "page1 public-comment paragraph; page1 written-testimony paragraph",
+          "exact_source_quote": "The public comment period will run until August 24, 2026.",
+          "role": "written_comment_close",
+          "conditions": [
+            "All testimony received at the hearing or by close of business on August 24, 2026 will be considered by Ohio EPA prior to final action on this rulemaking proposal.",
+            "Written comments submitted after this date may be considered as time and circumstances permit."
+          ],
+          "supported_scope": true,
+          "distinct_value_group": "date-close",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2026-08-24",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "email-registration",
+          "field_type": "EMAIL",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "mary.mccarron@epa.ohio.gov",
+          "page_region": "page1 registration paragraph",
+          "exact_source_quote": "or by emailing mary.mccarron@epa.ohio.gov.",
+          "role": "hearing_registration_contact",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "email-registration",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "mary.mccarron@epa.ohio.gov",
+          "source_precision": "literal_email"
+        },
+        {
+          "field_id": "email-direct-absent",
+          "field_type": "EMAIL",
+          "source_state": "not_stated",
+          "raw_literal": null,
+          "page_region": "all pages1-2; written-testimony route paragraph",
+          "exact_source_quote": null,
+          "role": "written_comment_submission_email",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "email-direct-absent",
+          "uncertainty_reason_if_any": "No literal email designated as direct written-comment route; explicit routes are SmartComment, postal submission, and hearing officer.",
+          "normalized_value": null,
+          "source_precision": "unsupported"
+        },
+        {
+          "field_id": "date-hearing",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "August 24, 2026",
+          "page_region": "page1 hearing paragraph",
+          "exact_source_quote": "Monday, August 24, 2026, at 10:30a.m.",
+          "role": "hearing_start",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-hearing",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2026-08-24",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "date-header",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "07/16/2026",
+          "page_region": "page1 top-right ACTION/DATE header",
+          "exact_source_quote": "DATE: 07/16/2026 12:05 PM",
+          "role": "notice_filing_header",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-header",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2026-07-16",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "email-questions",
+          "field_type": "EMAIL",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "David.Brumbaugh@epa.ohio.gov",
+          "page_region": "page1 near bottom",
+          "exact_source_quote": "Questions regarding this rule package should be directed to David Brumbaugh at David.Brumbaugh@epa.ohio.gov or 614.644.2138.",
+          "role": "rule_package_inquiry_contact",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "email-questions",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "David.Brumbaugh@epa.ohio.gov",
+          "source_precision": "literal_email"
+        }
+      ]
+    },
+    {
+      "opaque_document_id": "doc-7d9d82dcb9a8",
+      "original_pdf_sha256": "7d9d82dcb9a8366459157efbe33e36b843be71cdf13e3300758827cae31b63de",
+      "retained_pdf_sha256": "7d9d82dcb9a8366459157efbe33e36b843be71cdf13e3300758827cae31b63de",
+      "official_url": "https://www.registerofohio.state.oh.us/hearings/hearingsSearch/results/953564/402709",
+      "physical_page_mapping": [
+        1,
+        2
+      ],
+      "all_source_pages_viewed": true,
+      "complete_notice_scope": true,
+      "source_states_for_both_fields": {
+        "DATE": [
+          "present_in_scope",
+          "present_out_of_scope"
+        ],
+        "EMAIL": [
+          "not_stated",
+          "present_out_of_scope"
+        ]
+      },
+      "required_field_values": [
+        "date-close"
+      ],
+      "scan_degradation_basis": "Rendered pages visually legible; no image-only/native-layer classification inferred from appearance or uninspected extraction. Markup, typography and source defects retained.",
+      "reviewer_identity": "Independent Codex image-only reviewer / chat 01a10e68-225d-7cf3-ad93-ad51715a9887",
+      "reviewed_at_utc": "2026-10-07T18:06:27.765053+00:00",
+      "state": "OH",
+      "complete_notice_scope_basis": "Two pages form a single Ohio EPA proposed-rulemaking public notice. Page1 begins notice and describes one common participation period; page2 completes the continuation and accessibility information. Multiple listed rule provisions share this notice, not separate comment windows.",
+      "fields": [
+        {
+          "field_id": "date-close",
+          "field_type": "DATE",
+          "source_state": "present_in_scope",
+          "raw_literal": "October 5, 2026",
+          "page_region": "page1 public-comment paragraph; page1 bottom through page2 top",
+          "exact_source_quote": "The public comment period will run until October 5, 2026.",
+          "role": "written_comment_close",
+          "conditions": [
+            "All testimony received at the hearing or by close of business on October 5, 2026, will be considered by Ohio EPA prior to final action on this rulemaking proposal.",
+            "Written comments submitted after this date may be considered as time and circumstances permit."
+          ],
+          "supported_scope": true,
+          "distinct_value_group": "date-close",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2026-10-05",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "email-registration",
+          "field_type": "EMAIL",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "mary.mccarron@epa.ohio.gov",
+          "page_region": "page1 registration paragraph",
+          "exact_source_quote": "or by emailing mary.mccarron@epa.ohio.gov.",
+          "role": "hearing_registration_contact",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "email-registration",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "mary.mccarron@epa.ohio.gov",
+          "source_precision": "literal_email"
+        },
+        {
+          "field_id": "email-direct-absent",
+          "field_type": "EMAIL",
+          "source_state": "not_stated",
+          "raw_literal": null,
+          "page_region": "all pages1-2; written-testimony route paragraph",
+          "exact_source_quote": null,
+          "role": "written_comment_submission_email",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "email-direct-absent",
+          "uncertainty_reason_if_any": "No literal email designated as direct written-comment route; explicit routes are SmartComment, postal submission, and hearing officer.",
+          "normalized_value": null,
+          "source_precision": "unsupported"
+        },
+        {
+          "field_id": "date-hearing",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "October 5, 2026",
+          "page_region": "page1 hearing paragraph",
+          "exact_source_quote": "October 5, 2026, 10:30 AM.",
+          "role": "hearing_start",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-hearing",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2026-10-05",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "date-header",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "08/26/2026",
+          "page_region": "page1 top-right ACTION/DATE header",
+          "exact_source_quote": "DATE: 08/26/2026 10:14 AM",
+          "role": "notice_filing_header",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-header",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2026-08-26",
+          "source_precision": "date"
+        }
+      ]
+    },
+    {
+      "opaque_document_id": "doc-1276066c75b8",
+      "original_pdf_sha256": "1276066c75b8c203306be30a7f6ded3b0c291b53df6207b6cc1397a2a384a061",
+      "retained_pdf_sha256": "1276066c75b8c203306be30a7f6ded3b0c291b53df6207b6cc1397a2a384a061",
+      "official_url": "https://www.courts.michigan.gov/siteassets/rules-instructions-administrative-orders/proposed-and-recently-adopted-orders-on-admin-matters/proposed-orders/2021-29_2022-06-15_formor_propamdmcr6.201.pdf",
+      "physical_page_mapping": [
+        1,
+        2
+      ],
+      "all_source_pages_viewed": true,
+      "complete_notice_scope": true,
+      "source_states_for_both_fields": {
+        "DATE": [
+          "present_in_scope",
+          "present_out_of_scope"
+        ],
+        "EMAIL": [
+          "present_in_scope"
+        ]
+      },
+      "required_field_values": [
+        "date-close",
+        "email-direct"
+      ],
+      "scan_degradation_basis": "Rendered pages visually legible; no image-only/native-layer classification inferred from appearance or uninspected extraction. Markup, typography and source defects retained.",
+      "reviewer_identity": "Independent Codex image-only reviewer / chat 01a10e68-225d-7cf3-ad93-ad51715a9887",
+      "reviewed_at_utc": "2026-10-07T18:06:27.765053+00:00",
+      "state": "MI",
+      "complete_notice_scope_basis": "Two-page Michigan Supreme Court order for ADM File2021-29 and proposed MCR6.201 amendment; page1 opens order and proposed text, page2 supplies staff note, participation instructions and clerk certification. No cut continuation or second notice.",
+      "fields": [
+        {
+          "field_id": "date-close",
+          "field_type": "DATE",
+          "source_state": "present_in_scope",
+          "raw_literal": "October 1, 2022",
+          "page_region": "page2 middle paragraph",
+          "exact_source_quote": "Comments on the proposal may be submitted by October 1, 2022",
+          "role": "written_comment_close",
+          "conditions": [
+            "When filing a comment, please refer to ADM File No. 2021-29."
+          ],
+          "supported_scope": true,
+          "distinct_value_group": "date-close",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2022-10-01",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "email-direct",
+          "field_type": "EMAIL",
+          "source_state": "present_in_scope",
+          "raw_literal": "ADMcomment@courts.mi.gov",
+          "page_region": "page2 middle paragraph",
+          "exact_source_quote": "You may also submit a comment in writing at P.O. Box 30052, Lansing, MI 48909 or via email at ADMcomment@courts.mi.gov.",
+          "role": "written_comment_submission_email",
+          "conditions": [
+            "When filing a comment, please refer to ADM File No. 2021-29.",
+            "Your comments and the comments of others will be posted under the chapter affected by this proposal."
+          ],
+          "supported_scope": true,
+          "distinct_value_group": "email-direct",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "ADMcomment@courts.mi.gov",
+          "source_precision": "literal_email"
+        },
+        {
+          "field_id": "date-order",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "June 15, 2022",
+          "page_region": "page1 upper-left order date and page2 certification",
+          "exact_source_quote": "June 15, 2022",
+          "role": "order_issue_and_certification",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-order",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2022-06-15",
+          "source_precision": "date"
+        }
+      ]
+    },
+    {
+      "opaque_document_id": "doc-1c5c46ddcd64",
+      "original_pdf_sha256": "1c5c46ddcd641a287dde623f35a516ce08a5269921eb5e743353e7a35976f8e0",
+      "retained_pdf_sha256": "1c5c46ddcd641a287dde623f35a516ce08a5269921eb5e743353e7a35976f8e0",
+      "official_url": "https://www.srca.nm.gov/wp-content/uploads/2025/06/PRCnotice_xxxvi12.pdf",
+      "physical_page_mapping": [
+        1,
+        2
+      ],
+      "all_source_pages_viewed": true,
+      "complete_notice_scope": false,
+      "source_states_for_both_fields": {
+        "DATE": [
+          "present_in_scope",
+          "present_out_of_scope",
+          "unresolved_uncertainty"
+        ],
+        "EMAIL": [
+          "present_in_scope",
+          "present_out_of_scope",
+          "unresolved_uncertainty"
+        ]
+      },
+      "required_field_values": [
+        "date-initial",
+        "date-response",
+        "email-records"
+      ],
+      "scan_degradation_basis": "Rendered pages visually legible; no image-only/native-layer classification inferred from appearance or uninspected extraction. Markup, typography and source defects retained.",
+      "reviewer_identity": "Independent Codex image-only reviewer / chat 01a10e68-225d-7cf3-ad93-ad51715a9887",
+      "reviewed_at_utc": "2026-10-07T18:06:27.765053+00:00",
+      "state": "NM",
+      "complete_notice_scope_basis": "Page1 repeatedly identifies Docket No. 23-00119-UT, but page2 footer identifies Docket No. 23-00188-UT. The pages are both present, but their same-notice association cannot be affirmed from images without correcting or choosing between publisher identifiers.",
+      "fields": [
+        {
+          "field_id": "date-initial",
+          "field_type": "DATE",
+          "source_state": "present_in_scope",
+          "raw_literal": "August 21, 2025",
+          "page_region": "page1 How a person may comment section",
+          "exact_source_quote": "Written initial comments may be filed no later than August 21, 2025, written response comments may be filed no later than September 8, 2025.",
+          "role": "written_comment_close",
+          "conditions": [
+            "Written initial comments",
+            "Filed comments shall refer to Docket No. 23-00119-UT."
+          ],
+          "supported_scope": true,
+          "distinct_value_group": "date-initial",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2025-08-21",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "date-response",
+          "field_type": "DATE",
+          "source_state": "present_in_scope",
+          "raw_literal": "September 8, 2025",
+          "page_region": "page1 How a person may comment section",
+          "exact_source_quote": "Written initial comments may be filed no later than August 21, 2025, written response comments may be filed no later than September 8, 2025.",
+          "role": "written_comment_close",
+          "conditions": [
+            "written response comments",
+            "Filed comments shall refer to Docket No. 23-00119-UT."
+          ],
+          "supported_scope": true,
+          "distinct_value_group": "date-response",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2025-09-08",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "email-records",
+          "field_type": "EMAIL",
+          "source_state": "present_in_scope",
+          "raw_literal": "prc.records@prc.nm.gov",
+          "page_region": "page1 How a person may comment section",
+          "exact_source_quote": "Comments may be electronically filed by sending them in PDF format to prc.records@prc.nm.gov.",
+          "role": "written_comment_submission_email",
+          "conditions": [
+            "Filed comments shall refer to Docket No. 23-00119-UT.",
+            "Comments may be electronically filed by sending them in PDF format to prc.records@prc.nm.gov.",
+            "All written comments will be posted on the Commission’s e-Docket website within three days of their receipt by the Commission’s Records Management Bureau."
+          ],
+          "supported_scope": true,
+          "distinct_value_group": "email-records",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "prc.records@prc.nm.gov",
+          "source_precision": "literal_email"
+        },
+        {
+          "field_id": "date-scope-unresolved",
+          "field_type": "DATE",
+          "source_state": "unresolved_uncertainty",
+          "raw_literal": null,
+          "page_region": "page1 notice heading versus page2 footer",
+          "exact_source_quote": "DOCKET NO. 23-00119-UT\nDocket No. 23-00188-UT",
+          "role": "written_comment_close",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-scope-unresolved",
+          "uncertainty_reason_if_any": "Page1 repeatedly identifies Docket No. 23-00119-UT, but page2 footer identifies Docket No. 23-00188-UT. The pages are both present, but their same-notice association cannot be affirmed from images without correcting or choosing between publisher identifiers.",
+          "normalized_value": null,
+          "source_precision": "unsupported"
+        },
+        {
+          "field_id": "email-scope-unresolved",
+          "field_type": "EMAIL",
+          "source_state": "unresolved_uncertainty",
+          "raw_literal": null,
+          "page_region": "page1 notice heading versus page2 footer",
+          "exact_source_quote": "DOCKET NO. 23-00119-UT\nDocket No. 23-00188-UT",
+          "role": "written_comment_submission_email",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "email-scope-unresolved",
+          "uncertainty_reason_if_any": "Page1 repeatedly identifies Docket No. 23-00119-UT, but page2 footer identifies Docket No. 23-00188-UT. The pages are both present, but their same-notice association cannot be affirmed from images without correcting or choosing between publisher identifiers.",
+          "normalized_value": null,
+          "source_precision": "unsupported"
+        },
+        {
+          "field_id": "date-record-close",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "September 29, 2025",
+          "page_region": "page1 below written-comment paragraph",
+          "exact_source_quote": "The record of this case closes on September 29, 2025.",
+          "role": "proceeding_record_close",
+          "conditions": [
+            "From that date through the completion of this proceeding, rulemaking participants shall be forbidden from communicating with the Commission or its representatives concerning substantive issues in this proceeding."
+          ],
+          "supported_scope": false,
+          "distinct_value_group": "date-record-close",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2025-09-29",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "date-hearing",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "August 28, 2025",
+          "page_region": "page1 public-hearing paragraph",
+          "exact_source_quote": "shall be held beginning at 10:00 a.m. on August 28, 2025",
+          "role": "hearing_start",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-hearing",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2025-08-28",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "email-hearing-signup",
+          "field_type": "EMAIL",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "public.comment@prc.nm.gov",
+          "page_region": "page1 lower hearing paragraph",
+          "exact_source_quote": "Any interested person who wishes to make a comment at the hearing may contact Patrick Rodriguez via email at public.comment@prc.nm.gov",
+          "role": "oral_hearing_signup_contact",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "email-hearing-signup",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "public.comment@prc.nm.gov",
+          "source_precision": "literal_email"
+        },
+        {
+          "field_id": "date-publication",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "June 24, 2025",
+          "page_region": "page1 header",
+          "exact_source_quote": "New Mexico Register / Volume XXXVI, Issue 12 / June 24, 2025",
+          "role": "publication",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-publication",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2025-06-24",
+          "source_precision": "date"
+        }
+      ]
+    },
+    {
+      "opaque_document_id": "doc-c09af2ab68af",
+      "original_pdf_sha256": "c09af2ab68afb95b22d7e6cb884bc24866bd0a0d880008cd7835f1dba2e8eb9f",
+      "retained_pdf_sha256": "c09af2ab68afb95b22d7e6cb884bc24866bd0a0d880008cd7835f1dba2e8eb9f",
+      "official_url": "https://www.srca.nm.gov/nmac/nmregister/xxxvi/RLD-CCDnotice_xxxvi07.pdf",
+      "physical_page_mapping": [
+        1,
+        2,
+        3
+      ],
+      "all_source_pages_viewed": true,
+      "complete_notice_scope": true,
+      "source_states_for_both_fields": {
+        "DATE": [
+          "present_out_of_scope",
+          "unresolved_uncertainty"
+        ],
+        "EMAIL": [
+          "present_in_scope",
+          "present_out_of_scope"
+        ]
+      },
+      "required_field_values": [
+        "email-direct"
+      ],
+      "scan_degradation_basis": "Rendered pages visually legible; no image-only/native-layer classification inferred from appearance or uninspected extraction. Markup, typography and source defects retained.",
+      "reviewer_identity": "Independent Codex image-only reviewer / chat 01a10e68-225d-7cf3-ad93-ad51715a9887",
+      "reviewed_at_utc": "2026-10-07T18:06:27.765053+00:00",
+      "state": "NM",
+      "complete_notice_scope_basis": "Three-page single Cannabis Control Division notice of proposed rule hearing; public participation section on page1, coherent amendments list continues pages2-3 through Plant Increase Request. No second notice or visibly severed sentence/continuation; multiple rule parts share the one hearing/comment procedure.",
+      "fields": [
+        {
+          "field_id": "date-hearing-bound-close",
+          "field_type": "DATE",
+          "source_state": "unresolved_uncertainty",
+          "raw_literal": "May 9, 2025",
+          "page_region": "page1 Public Comment section",
+          "exact_source_quote": "All public comments must be received by the close of the public rule hearing on May 9, 2025.",
+          "role": "written_comment_close",
+          "conditions": [
+            "by the close of the public rule hearing on May 9, 2025"
+          ],
+          "supported_scope": false,
+          "distinct_value_group": "date-hearing-bound-close",
+          "uncertainty_reason_if_any": "Explicit calendar date is attached to the hearing-close event; the frozen target excludes hearing-dependent closure. No unconditional absolute close or ending clock is independently stated.",
+          "normalized_value": "2025-05-09",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "email-direct",
+          "field_type": "EMAIL",
+          "source_state": "present_in_scope",
+          "raw_literal": "ccd.publiccomment@state.nm.us",
+          "page_region": "page1 Public Comment paragraph",
+          "exact_source_quote": "Please submit written comments on the proposed rules to Bradford A. Borman, Attorney for the Cannabis Control Division, via electronic mail at ccd.publiccomment@state.nm.us.",
+          "role": "written_comment_submission_email",
+          "conditions": [
+            "All public comments must be received by the close of the public rule hearing on May 9, 2025.",
+            "Comments received prior to the rule hearing will be posted to the RLD website at: https://www.rld.nm.gov/cannabis/."
+          ],
+          "supported_scope": true,
+          "distinct_value_group": "email-direct",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "ccd.publiccomment@state.nm.us",
+          "source_precision": "literal_email"
+        },
+        {
+          "field_id": "date-hearing",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "May 9, 2025",
+          "page_region": "page1 opening Public Hearing paragraph",
+          "exact_source_quote": "will hold a public rule hearing on Friday, May 9, 2025, at 9:00am.",
+          "role": "hearing_start",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-hearing",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2025-05-09",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "date-comment-open",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "April 8, 2025",
+          "page_region": "page1 Public Comment heading",
+          "exact_source_quote": "The Division will begin accepting public comment on the proposed rules beginning April 8, 2025.",
+          "role": "comment_period_start",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-comment-open",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2025-04-08",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "email-copies",
+          "field_type": "EMAIL",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "RLD.CannabisControl@rld.nm.gov",
+          "page_region": "page1 below Public Comment section",
+          "exact_source_quote": "by contacting the Cannabis Control Division at RLD.CannabisControl@rld.nm.gov or (505) 476-4995.",
+          "role": "copies_and_information_contact",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "email-copies",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "RLD.CannabisControl@rld.nm.gov",
+          "source_precision": "literal_email"
+        },
+        {
+          "field_id": "email-accessibility",
+          "field_type": "EMAIL",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "Victoria.Kaniatobe@rld.nm.gov",
+          "page_region": "page1 disability-assistance paragraph",
+          "exact_source_quote": "Victoria.Kaniatobe@rld.nm.gov",
+          "role": "accessibility_contact",
+          "conditions": [
+            "at least seven (7) days prior to the hearing."
+          ],
+          "supported_scope": false,
+          "distinct_value_group": "email-accessibility",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "Victoria.Kaniatobe@rld.nm.gov",
+          "source_precision": "literal_email"
+        }
+      ]
+    },
+    {
+      "opaque_document_id": "doc-f609417634ea",
+      "original_pdf_sha256": "f609417634eaf6a9cfe692bd04986496d82d58956d0ce74d03ef6a166f928e83",
+      "retained_pdf_sha256": "f609417634eaf6a9cfe692bd04986496d82d58956d0ce74d03ef6a166f928e83",
+      "official_url": "https://eregulations.ct.gov/eRegsPortal/Search/getDocument?guid=%7BB005A49B-0000-C71E-8EE5-6D93E2B619E3%7D",
+      "physical_page_mapping": [
+        1,
+        2
+      ],
+      "all_source_pages_viewed": true,
+      "complete_notice_scope": true,
+      "source_states_for_both_fields": {
+        "DATE": [
+          "present_out_of_scope",
+          "unresolved_uncertainty"
+        ],
+        "EMAIL": [
+          "present_in_scope"
+        ]
+      },
+      "required_field_values": [
+        "email-direct"
+      ],
+      "scan_degradation_basis": "Rendered pages visually legible; no image-only/native-layer classification inferred from appearance or uninspected extraction. Markup, typography and source defects retained.",
+      "reviewer_identity": "Independent Codex image-only reviewer / chat 01a10e68-225d-7cf3-ad93-ad51715a9887",
+      "reviewed_at_utc": "2026-10-07T18:06:27.765053+00:00",
+      "state": "CT",
+      "complete_notice_scope_basis": "Two physical pages form one PR2026-001 Criminal Justice Commission notice: notice heading and comment terms on physical page1 continue into the submission-method list and signature on physical page2. Both printed pages say Page2of2 and use different form revision labels; these defects are retained, but visible substantive beginning, continuation and signed ending establish the full notice. Missing agency instruction/disclaimer page is referenced as form guidance, not a substantive notice continuation.",
+      "fields": [
+        {
+          "field_id": "date-base-unresolved",
+          "field_type": "DATE",
+          "source_state": "unresolved_uncertainty",
+          "raw_literal": "February 9, 2026",
+          "page_region": "physical page1 Comment period and later participation paragraph",
+          "exact_source_quote": "A comment period of not less than thirty days shall begin upon posting of this notice to the eRegulations System website and shall end on February 9, 2026.",
+          "role": "written_comment_close",
+          "conditions": [
+            "The public comment shall be extended upon posting a copy of the proposed regulation to ensure all interested persons shall have a reasonable opportunity to submit their views."
+          ],
+          "supported_scope": false,
+          "distinct_value_group": "date-base-unresolved",
+          "uncertainty_reason_if_any": "The same notice specifies extension upon posting the proposed regulation without establishing whether or when that extension applies or its resulting close. Bare unconditional final date is unresolved.",
+          "normalized_value": "2026-02-09",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "email-direct",
+          "field_type": "EMAIL",
+          "source_state": "present_in_scope",
+          "raw_literal": "conndcj@ct.gov",
+          "page_region": "physical page2 submission-method list",
+          "exact_source_quote": "3. Email to conndcj@ct.gov.",
+          "role": "written_comment_submission_email",
+          "conditions": [
+            "Such written materials should be directed to Kathryn Bare, Executive Assistant State's Attorney, Office of the Chief State's Attorney, and sent via:",
+            "The public comment shall be extended upon posting a copy of the proposed regulation to ensure all interested persons shall have a reasonable opportunity to submit their views."
+          ],
+          "supported_scope": true,
+          "distinct_value_group": "email-direct",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "conndcj@ct.gov",
+          "source_precision": "literal_email"
+        },
+        {
+          "field_id": "date-posting",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "1/9/2026",
+          "page_region": "blue header both physical pages",
+          "exact_source_quote": "Connecticut eRegulations System — Tracking Number PR2026-001 — Posted 1/9/2026",
+          "role": "notice_posting",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-posting",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2026-01-09",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "date-signature",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "January 9, 2026",
+          "page_region": "physical page2 above signature",
+          "exact_source_quote": "January 9, 2026",
+          "role": "signature",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-signature",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2026-01-09",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "date-hearing-request-relative",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "fourteen days after the date of posting of this notice",
+          "page_region": "physical page1 final participation paragraph",
+          "exact_source_quote": "not later than fourteen days after the date of posting of this notice",
+          "role": "conditional_hearing_request_cutoff",
+          "conditions": [
+            "if requested by fifteen persons, by a governmental subdivision or agency, or by an association having not less than fifteen members"
+          ],
+          "supported_scope": false,
+          "distinct_value_group": "date-hearing-request-relative",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": null,
+          "source_precision": "unsupported"
+        }
+      ]
+    },
+    {
+      "opaque_document_id": "doc-6c6360609d68",
+      "original_pdf_sha256": "6c6360609d6818c1e6fa5ca91d7fcc30b8ef87089ac51747c9b755ef07aec912",
+      "retained_pdf_sha256": "6c6360609d6818c1e6fa5ca91d7fcc30b8ef87089ac51747c9b755ef07aec912",
+      "official_url": "https://sdsos.gov/about-the-office/board-of-elections/Assets/boe_pastminutes/State%20Board%20of%20Elections%20Public%20Hearing%20Notice.pdf",
+      "physical_page_mapping": [
+        1
+      ],
+      "all_source_pages_viewed": true,
+      "complete_notice_scope": true,
+      "source_states_for_both_fields": {
+        "DATE": [
+          "present_in_scope",
+          "present_out_of_scope"
+        ],
+        "EMAIL": [
+          "present_in_scope"
+        ]
+      },
+      "required_field_values": [
+        "date-close",
+        "email-direct"
+      ],
+      "scan_degradation_basis": "Rendered pages visually legible; no image-only/native-layer classification inferred from appearance or uninspected extraction. Markup, typography and source defects retained.",
+      "reviewer_identity": "Independent Codex image-only reviewer / chat 01a10e68-225d-7cf3-ad93-ad51715a9887",
+      "reviewed_at_utc": "2026-10-07T18:06:27.765053+00:00",
+      "state": "SD",
+      "complete_notice_scope_basis": "One complete State Board of Elections notice: title, hearing/date/place, rule scope/purpose, written participation cutoff and routes, postcomment process, accommodations, copies and newspaper cost line. No continuation or separate notice evident.",
+      "fields": [
+        {
+          "field_id": "date-close",
+          "field_type": "DATE",
+          "source_state": "present_in_scope",
+          "raw_literal": "September 26, 2022",
+          "page_region": "middle participation paragraph",
+          "exact_source_quote": "The deadline to submit any such written comments for consideration by this Board is September 26, 2022.",
+          "role": "written_comment_close",
+          "conditions": [],
+          "supported_scope": true,
+          "distinct_value_group": "date-close",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2022-09-26",
+          "source_precision": "date"
+        },
+        {
+          "field_id": "email-direct",
+          "field_type": "EMAIL",
+          "source_state": "present_in_scope",
+          "raw_literal": "elections@state.sd.us",
+          "page_region": "middle participation paragraph; repeated lower copies contact",
+          "exact_source_quote": "or mail or e-mail them to the Secretary of State, 500 East Capitol, Pierre, South Dakota 57501 or elections@state.sd.us.",
+          "role": "written_comment_submission_email",
+          "conditions": [],
+          "supported_scope": true,
+          "distinct_value_group": "email-direct",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "elections@state.sd.us",
+          "source_precision": "literal_email"
+        },
+        {
+          "field_id": "date-hearing",
+          "field_type": "DATE",
+          "source_state": "present_out_of_scope",
+          "raw_literal": "September 28, 2022",
+          "page_region": "opening hearing paragraph",
+          "exact_source_quote": "on September 28, 2022, at 10:00 a.m. (Central)",
+          "role": "hearing_start",
+          "conditions": [],
+          "supported_scope": false,
+          "distinct_value_group": "date-hearing",
+          "uncertainty_reason_if_any": null,
+          "normalized_value": "2022-09-28",
+          "source_precision": "date"
+        }
+      ]
+    }
+  ],
+  "review_boundary": {
+    "image_only": true,
+    "minimal_inventory_sha256": "7c07281ea2a668f1d998922d28844decde384dbcb9a7aaf0dc966c98bf33bcb7",
+    "native_text_read": false,
+    "collector_substantive_provenance_read": false,
+    "candidate_outputs_read": false,
+    "model_outputs_read": false,
+    "real_provider_calls": 0,
+    "source_manifest_sha256_from_inventory": "e6999e15c1b060399bc1b62a3e71ca2d606c061b79812d2b6d01f1052a09033b",
+    "quotation_convention": "Visual transcription; line-wrap whitespace joined where needed. No value spelling, punctuation meaning, date or clock repair. Crosspage identity quotes explicitly identify the two regions."
+  }
+}

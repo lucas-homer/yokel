@@ -1,0 +1,323 @@
+{
+  "baseline": {
+    "jev": {
+      "body_bytes": 39580,
+      "estimate": 40604,
+      "longest_question_bytes": 2236,
+      "paired_arm_admitted": false,
+      "state_bytes": 29889,
+      "state_longest_cap": 32000,
+      "state_longest_estimate": 33149,
+      "total_cap": 64000
+    },
+    "stronger": {
+      "body_bytes": 39529,
+      "cap": 40000,
+      "completion_cap": 4096,
+      "estimate": 40553,
+      "paired_arm_admitted": false
+    }
+  },
+  "controls": [
+    {
+      "name": "table-unicode-repeated-spans-exact-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "table-changed-source-rejected",
+      "passed": true
+    },
+    {
+      "name": "table-invalid-reference-or-span-rejected",
+      "passed": true
+    },
+    {
+      "name": "spans-unicode-repeated-spans-exact-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "spans-changed-source-rejected",
+      "passed": true
+    },
+    {
+      "name": "spans-invalid-reference-or-span-rejected",
+      "passed": true
+    },
+    {
+      "name": "span_table-unicode-repeated-spans-exact-roundtrip",
+      "passed": true
+    },
+    {
+      "name": "span_table-changed-source-rejected",
+      "passed": true
+    },
+    {
+      "name": "span_table-invalid-reference-or-span-rejected",
+      "passed": true
+    },
+    {
+      "name": "table-changed-exact-quote-rejected",
+      "passed": true
+    },
+    {
+      "name": "valid-reference-reassociation-detected-by-original-payload-hash",
+      "passed": true
+    }
+  ],
+  "credentials_read": false,
+  "frozen_E": {
+    "files_verified": 25,
+    "sha256": "70815b1749d86ed4b842fdff58755c7d265311c39f820f85ae74ab3572d1ab29"
+  },
+  "frozen_artifacts_modified": false,
+  "input_hashes": {
+    "execution/run/documents/doc-92211b8c7ba0/jev-request.json": "ed7e7cb26cd969dae559b66fc2f7d79a6f9f6a7569bf6f824b7084a781e5224d",
+    "execution/run/documents/doc-92211b8c7ba0/stronger-request.json": "d4f24e91cb41ab0ae540346a65bca0d14f977a2efacbe8f11db316a8960151e8"
+  },
+  "jev_overhead": {
+    "questions_bytes": 9647,
+    "questions_fields": {
+      "association": {
+        "container_adjustment": 1,
+        "fields": {
+          "criteria": 530,
+          "instructions": 1324,
+          "type": 16
+        },
+        "total": 1871
+      },
+      "completeness": {
+        "container_adjustment": 1,
+        "fields": {
+          "criteria": 744,
+          "instructions": 1475,
+          "type": 16
+        },
+        "total": 2236
+      },
+      "requirements": {
+        "container_adjustment": 1,
+        "fields": {
+          "criteria": 652,
+          "instructions": 1475,
+          "type": 16
+        },
+        "total": 2144
+      },
+      "source_identity": {
+        "container_adjustment": 1,
+        "fields": {
+          "criteria": 369,
+          "instructions": 1253,
+          "type": 16
+        },
+        "total": 1639
+      },
+      "support": {
+        "container_adjustment": 1,
+        "fields": {
+          "criteria": 368,
+          "instructions": 1294,
+          "type": 16
+        },
+        "total": 1679
+      }
+    },
+    "shared_instruction_prefix": {
+      "codepoints": 1113,
+      "copies": 5,
+      "implemented": false,
+      "reason": "Moving common question instructions into state requires separate provider/semantic contract verification; duplication is retained in all prototypes.",
+      "repeated_bytes_beyond_first": 4452,
+      "utf8_bytes": 1113
+    }
+  },
+  "limitations": [
+    "Roundtrip equality proves data preservation, not provider/schema compatibility or model evidence retrieval correctness.",
+    "Offsets are Unicode codepoint positions, not UTF-8 byte or token positions.",
+    "Bytes+1024 are conservative estimates, not measured verifier provider tokens.",
+    "No live schema/request/runtime was changed; diagnostic wire encodings require a new reviewed contract."
+  ],
+  "next_candidate_budget": {
+    "authorized": false,
+    "guard_max_aggregate_usd": 0.552584,
+    "guard_max_new_reservation_usd": 0.12364800000000001,
+    "inventory_calls": 0,
+    "jev_calls": 1,
+    "no_refund_or_reset": true,
+    "prior_conservative_debit_usd": 0.428936,
+    "proposed_new_operations": 2,
+    "stronger_calls": 1,
+    "table_exact_body_new_reservation_usd": 0.11405705399999999
+  },
+  "payload_fields_additive": {
+    "container_adjustment": 1,
+    "fields": {
+      "document_id": 33,
+      "inventory_sha256": 86,
+      "record": 25773,
+      "review_reasons": 137,
+      "schema_version": 57,
+      "source_scope": 29,
+      "source_text": 3685,
+      "source_text_sha256": 88
+    },
+    "total": 29889
+  },
+  "prototypes": {
+    "span_table": {
+      "body_savings_bytes": {
+        "jev": 7538,
+        "stronger": 9752
+      },
+      "decoder_instruction_bytes": 412,
+      "decoder_instruction_placements": {
+        "jev": 5,
+        "stronger": 1
+      },
+      "diagnostic_development_only": true,
+      "full_bodies_exactly_restored": true,
+      "measurements": {
+        "jev": {
+          "body_bytes": 32042,
+          "estimate": 33066,
+          "longest_question_bytes": 2648,
+          "paired_arm_admitted": true,
+          "state_bytes": 20291,
+          "state_longest_cap": 32000,
+          "state_longest_estimate": 23963,
+          "total_cap": 64000
+        },
+        "stronger": {
+          "body_bytes": 29777,
+          "cap": 40000,
+          "completion_cap": 4096,
+          "estimate": 30801,
+          "paired_arm_admitted": true
+        }
+      },
+      "model_correctness_measured": false,
+      "observed": false,
+      "original_payload_sha256": "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c",
+      "paired_mechanical_admission": true,
+      "provider_compatible": false,
+      "roundtrip_payload_sha256": "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c",
+      "wire_payload_sha256": "6ab5a269d9a432e860563e5f2d63b3609fcefd8cf2e12c7a0fcad21ae5af5809"
+    },
+    "spans": {
+      "body_savings_bytes": {
+        "jev": 6874,
+        "stronger": 8858
+      },
+      "decoder_instruction_bytes": 393,
+      "decoder_instruction_placements": {
+        "jev": 5,
+        "stronger": 1
+      },
+      "diagnostic_development_only": true,
+      "full_bodies_exactly_restored": true,
+      "measurements": {
+        "jev": {
+          "body_bytes": 32706,
+          "estimate": 33730,
+          "longest_question_bytes": 2629,
+          "paired_arm_admitted": true,
+          "state_bytes": 21050,
+          "state_longest_cap": 32000,
+          "state_longest_estimate": 24703,
+          "total_cap": 64000
+        },
+        "stronger": {
+          "body_bytes": 30671,
+          "cap": 40000,
+          "completion_cap": 4096,
+          "estimate": 31695,
+          "paired_arm_admitted": true
+        }
+      },
+      "model_correctness_measured": false,
+      "observed": false,
+      "original_payload_sha256": "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c",
+      "paired_mechanical_admission": true,
+      "provider_compatible": false,
+      "roundtrip_payload_sha256": "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c",
+      "wire_payload_sha256": "d65def9c4c17f411ba6b2594dcb9076c457f56651670f3bc39fe6d736f4ed604"
+    },
+    "table": {
+      "body_savings_bytes": {
+        "jev": 2817,
+        "stronger": 4798
+      },
+      "decoder_instruction_bytes": 406,
+      "decoder_instruction_placements": {
+        "jev": 5,
+        "stronger": 1
+      },
+      "diagnostic_development_only": true,
+      "full_bodies_exactly_restored": true,
+      "measurements": {
+        "jev": {
+          "body_bytes": 36763,
+          "estimate": 37787,
+          "longest_question_bytes": 2642,
+          "paired_arm_admitted": true,
+          "state_bytes": 25042,
+          "state_longest_cap": 32000,
+          "state_longest_estimate": 28708,
+          "total_cap": 64000
+        },
+        "stronger": {
+          "body_bytes": 34731,
+          "cap": 40000,
+          "completion_cap": 4096,
+          "estimate": 35755,
+          "paired_arm_admitted": true
+        }
+      },
+      "model_correctness_measured": false,
+      "observed": false,
+      "original_payload_sha256": "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c",
+      "paired_mechanical_admission": true,
+      "provider_compatible": false,
+      "roundtrip_payload_sha256": "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c",
+      "wire_payload_sha256": "a639c565a357b2560f8cc474c6d13ebb8bf0c0cb18b56f50e9e83a3cde36fb5c"
+    }
+  },
+  "provider_calls": 0,
+  "record_evidence": {
+    "all_evidence_objects_bytes": 10895,
+    "all_quote_values_json_bytes": 8179,
+    "evidence_arrays_bytes": 11047,
+    "occurrences": 81,
+    "unique_evidence_objects": 42,
+    "unique_evidence_objects_bytes": 5782,
+    "unique_quote_strings": 42,
+    "unique_quote_values_json_bytes": 4378
+  },
+  "record_fields_additive": {
+    "container_adjustment": 1,
+    "fields": {
+      "alternative_groups": 1288,
+      "coverage": 814,
+      "document_id": 33,
+      "events": 3684,
+      "identities": 797,
+      "requirements": 6950,
+      "routes": 10225,
+      "schema_version": 50,
+      "source_text_sha256": 88,
+      "uncertainties": 1833
+    },
+    "total": 25763
+  },
+  "schema_version": "contract-probe.lossless-size-diagnosis.v1",
+  "source_truth_decoded": false,
+  "stronger_overhead": {
+    "double_encoding_user_extra_bytes": 2584,
+    "inner_payload_bytes": 29889,
+    "inner_user_json_bytes": 29985,
+    "response_format_bytes": 4124,
+    "system_content_json_string_bytes": 2515,
+    "user_content_json_string_bytes": 32569
+  }
+}

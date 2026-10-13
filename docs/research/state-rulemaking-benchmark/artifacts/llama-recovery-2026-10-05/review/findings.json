@@ -1,0 +1,118 @@
+{
+  "validation": {
+    "passed": true,
+    "supplemental_documents": 4,
+    "supplemental_fields": 40,
+    "exact_quotes_verified": 40,
+    "frozen_artifacts_verified": 141,
+    "v1_preserved": true,
+    "content_arm": "downloaded Markdown; JSON supplementary only",
+    "critical_extra_assertions": 0,
+    "review_kind": "agent review, not blinded or human gold"
+  },
+  "document_outcomes": [
+    {
+      "fixture_id": "A02",
+      "arm": "llama_agentic",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 8
+      }
+    },
+    {
+      "fixture_id": "A02",
+      "arm": "llama_agentic_plus",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 8
+      }
+    },
+    {
+      "fixture_id": "A01",
+      "arm": "llama_agentic",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 8
+      }
+    },
+    {
+      "fixture_id": "A01",
+      "arm": "llama_agentic_plus",
+      "gate_outcome": "content_fail",
+      "critical_field_counts": {
+        "supported": 7,
+        "missing": 1
+      }
+    }
+  ],
+  "matched_slice": [
+    {
+      "arm": "native",
+      "notices": [
+        "A01",
+        "A02"
+      ],
+      "strict_passes": 0,
+      "notice_denominator": 2,
+      "supported_positive_critical_fields": 0,
+      "positive_critical_denominator": 16,
+      "outcomes": {
+        "A01": "operational_unusable",
+        "A02": "operational_unusable"
+      },
+      "note": "Original embedded-text baseline"
+    },
+    {
+      "arm": "firecrawl_local_parse",
+      "notices": [
+        "A01",
+        "A02"
+      ],
+      "strict_passes": 0,
+      "notice_denominator": 2,
+      "supported_positive_critical_fields": 13,
+      "positive_critical_denominator": 16,
+      "outcomes": {
+        "A01": "content_fail",
+        "A02": "content_fail"
+      },
+      "note": "Original completed Firecrawl captures"
+    },
+    {
+      "arm": "llama_agentic",
+      "notices": [
+        "A01",
+        "A02"
+      ],
+      "strict_passes": 2,
+      "notice_denominator": 2,
+      "supported_positive_critical_fields": 16,
+      "positive_critical_denominator": 16,
+      "outcomes": {
+        "A02": "pass",
+        "A01": "pass"
+      },
+      "note": "Existing-job dashboard recovery supplement; original connector timeouts retained"
+    },
+    {
+      "arm": "llama_agentic_plus",
+      "notices": [
+        "A01",
+        "A02"
+      ],
+      "strict_passes": 1,
+      "notice_denominator": 2,
+      "supported_positive_critical_fields": 15,
+      "positive_critical_denominator": 16,
+      "outcomes": {
+        "A02": "pass",
+        "A01": "content_fail"
+      },
+      "note": "Existing-job dashboard recovery supplement; original connector timeouts retained"
+    }
+  ],
+  "interpretation": "A01/A02 existing-job recovery only: Agentic16/16 critical fields and2/2 strict passes; Plus15/16 and1/2 because A01 stamp becomes [image]. Both tiers recover hearing-selection marks missing in Firecrawl; both recover A02 selected proposed-effective choice. The recovered subset does not establish general tier superiority; remaining36 Llama operations were never attempted. Original four connector timeouts remain operational facts, not retrospectively successful connector calls. JSON is supplementary, never a scoring rescue.",
+  "source_ambiguity": "Agentic A02 renders handwritten28576 as28574 under Accepted for filing by. Retained as supplementary discrepancy; role is unlabeled and not a predeclared critical identifier. No demonstrated critical extra assertion found.",
+  "timing": "Dashboard durations reported by primary are different from connector wrapper time; not interchangeable or vendor-speed estimates.",
+  "pending": []
+}

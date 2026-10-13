@@ -1,0 +1,42 @@
+{
+  "source_audit_sha256": "45b170b1709d78c815fa9f484493eda05d6c00f0547ca1878340c8572078a8ac",
+  "queries": 24,
+  "candidates": 68,
+  "retained": 4,
+  "excluded": 64,
+  "state_counts": {
+    "Kentucky": 1,
+    "Ohio": 2,
+    "New Hampshire": 1
+  },
+  "pages": 14,
+  "reason_counts_overlap": true,
+  "exclusion_reasons": {
+    "Official complete monthly Administrative Register issue includes multiple proceedings; no slicing permitted.": 2,
+    "prior original exact hash": 7,
+    "access failure after one ordinary retry": 13,
+    "native codepoint cap": 25,
+    "complete original over aggregate page cap": 18,
+    "would exceed retained aggregate page cap": 21,
+    "Native extraction contains only two tracking captions (162codepoints); pdfimages shows full-page raster images carrying the notice body. Material native-text absence/incompleteness; native-only protocol excludes, no OCR.": 1,
+    "Two-page agency statutory compliance certification after consideration of submissions; not an individual proposed-comment notice or express negative lifecycle notice. Generic statutory hearing-request conditions are retrospective certification, not current participation-window control.": 1,
+    "Publisher Submission Guidelines, effective November 2024; administrative process/style instructions with timelines, not a specific individual rulemaking notice. No notice-scope inference from example timing.": 1,
+    "Table of Pending Proposals aggregates COMAR references for many agencies/proceedings; an index rather than a complete individual notice; no slicing or follow-on source discovery.": 1,
+    "not verified official PDF response": 6,
+    "Agency approval and legislative review-committee filing, with rule text/sunset-extension provisions. It is not a proposed-comment notice inviting participation or an express negative rulemaking lifecycle notice. Incidental license-emergency conditions and rule sunset language do not establish control stratum.": 1,
+    "Agency approval and legislative review-committee filing for 11-10 sunset extension; not a proposed-comment participation notice or express negative rulemaking lifecycle notice. Source classification is based on filing stage, not missing substantive fields.": 1,
+    "One-page FSSA rulemaking docket/calendar summary, naming separate notice publications and anticipated later milestones. It is not established as the complete publisher-issued individual comment/hearing notice; no notice scope invented from summary participation fields. Source also contains conditional second-comment-period language, but no stratum is assigned to an ineligible summary.": 1,
+    "Complete one-page WSR26-06-024 notice expressly withdraws proposed rules: negative_lifecycle_control. Both predeclared control slots are already filled, so control quota excludes it; no substitution or reclassification of earlier retained sources.": 1,
+    "Complete publisher preproposal statement of inquiry for possible future rules, inviting participation in formulation before publication; proposed amendments and their hearing/comment phase are prospective. Excluded on preproposal source stage under the strict proposed-comment stratum, not for missing dates/contact fields. No negative lifecycle is declared.": 1,
+    "original PDF byte cap": 1,
+    "Generic Iowa rulemaking-process flowchart explaining notice/adoption/publication stages; no specific rulemaking proceeding or individual notice. Conditional possible-hearing text is process guidance rather than natural notice control.": 1
+  },
+  "important_interpretation": [
+    "Counts describe this fixed search/cap protocol, not the availability of state data generally.",
+    "Three Colorado responses have PDF signatures but generic MIME; content eligibility was not assessed.",
+    "A nonempty native text layer can omit the main notice body.",
+    "Known endpoint discovery and notice segmentation are separate capabilities from record extraction/verification.",
+    "Freshness means unseen in prior benchmark; publication year was not eligibility.",
+    "Source selection and runtime serialized-request caps differ; the retained Kentucky notice fails initial inventory admission and stays scheduled."
+  ]
+}

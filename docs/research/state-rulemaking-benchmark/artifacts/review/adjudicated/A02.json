@@ -1,0 +1,375 @@
+{
+  "fixture_id": "A02",
+  "reference_version": "reviewer-source-v1",
+  "collector_annotation_hash": "53a564c57d4a3ac6e22f667c13d233a72e9b1bbe731a2900dbe4424c7f3cda86",
+  "collector_snapshot": "/private/tmp/docketclock-expanded-benchmark-2026-10-05/review/collector-snapshots/A02-53a564c57d4a.json",
+  "input_sha256": "6738db08f6233b37320da7864bee379bbdf0771eb6f36e5b243cdd3d028cc8b5",
+  "reviewer_kind": "independent agent, not human gold standard",
+  "new_vendor_outputs_inspected": false,
+  "state": "MS",
+  "primary_bucket": "scanned/filled forms",
+  "layout_features": [
+    "image-only scanned SOS APA Form 001",
+    "marked hearing box and filled clock",
+    "X choices, filing stamp"
+  ],
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Publisher PDF contains only the one-page filing form; referenced rule text attachment is not included or collected. Native embedded text is empty; references use rendered-page transcription and marked selections.",
+    "All three MS units share SOS APA Form 001 template; three distinct PDF documents/agency records."
+  ],
+  "notice_scope_boundaries": "Entire single-page MS filing form; proposed-action column and scheduled-hearing box selected; attachments absent.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency names appear in the filing table?",
+      "expected_value": [
+        "Mississippi Commission on Environmental Quality",
+        "Mississippi Department of Environmental Quality"
+      ],
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top agency cell",
+      "source_quote": "Mississippi Commission on Environmental Quality\nMississippi Department of Environmental Quality",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "list",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; proposed-action column and scheduled-hearing box selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Commission on Environmental Quality / Department of Environmental Quality; FY2026 WPC revolving loan Intended Use Plan; 11 Admin Code Pt 6 Ch 8.",
+        "Submit and proposed-column FILED stamp April 14, 2026. Proposed amendment X; proposed final effective 30 days after filing X. Final/temporary columns blank.",
+        "Oral proceeding scheduled checked, May 20, 2026 at 11:00 a.m.; MDEQ first floor Hearing Room, 515 E Amite St, Jackson MS 39201. No timezone. Not scheduled unchecked.",
+        "Economic impact not required checked. Generic 20-day conditional hearing clause condition is unsatisfied because hearing already scheduled. Generic 25-day comment clause, no absolute close."
+      ]
+    },
+    {
+      "field_id": "rule_identity",
+      "question": "Which rule number and plan are named?",
+      "expected_value": "11 Admin. Code Pt. 6, Ch. 8 – Fiscal Year 2026 Intended Use Plan (IUP) for the Water Pollution Control Revolving Loan Fund Program.",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top rule name/number cell",
+      "source_quote": "11 Admin. Code Pt. 6, Ch. 8 – Fiscal Year 2026 Intended Use Plan (IUP) for the Water Pollution Control Revolving Loan Fund Program.",
+      "basis": "source_text",
+      "semantic_group_id": "rule_identity",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; proposed-action column and scheduled-hearing box selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Commission on Environmental Quality / Department of Environmental Quality; FY2026 WPC revolving loan Intended Use Plan; 11 Admin Code Pt 6 Ch 8.",
+        "Submit and proposed-column FILED stamp April 14, 2026. Proposed amendment X; proposed final effective 30 days after filing X. Final/temporary columns blank.",
+        "Oral proceeding scheduled checked, May 20, 2026 at 11:00 a.m.; MDEQ first floor Hearing Room, 515 E Amite St, Jackson MS 39201. No timezone. Not scheduled unchecked.",
+        "Economic impact not required checked. Generic 20-day conditional hearing clause condition is unsatisfied because hearing already scheduled. Generic 25-day comment clause, no absolute close."
+      ]
+    },
+    {
+      "field_id": "selected_lifecycle",
+      "question": "Which PROPOSED ACTION ON RULES option is marked?",
+      "expected_value": "Amendment to existing rule(s)",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "center proposed-action X",
+      "source_quote": "Amendment to existing rule(s)",
+      "basis": "visual_mark",
+      "semantic_group_id": "selected_lifecycle",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Preserve marked state attached to correct option, action heading, and column; merely listing labels is insufficient. Selected amendment is PROPOSED, not final/adopted.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; proposed-action column and scheduled-hearing box selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Commission on Environmental Quality / Department of Environmental Quality; FY2026 WPC revolving loan Intended Use Plan; 11 Admin Code Pt 6 Ch 8.",
+        "Submit and proposed-column FILED stamp April 14, 2026. Proposed amendment X; proposed final effective 30 days after filing X. Final/temporary columns blank.",
+        "Oral proceeding scheduled checked, May 20, 2026 at 11:00 a.m.; MDEQ first floor Hearing Room, 515 E Amite St, Jackson MS 39201. No timezone. Not scheduled unchecked.",
+        "Economic impact not required checked. Generic 20-day conditional hearing clause condition is unsatisfied because hearing already scheduled. Generic 25-day comment clause, no absolute close."
+      ]
+    },
+    {
+      "field_id": "hearing_selection",
+      "question": "Which oral-proceeding choice is selected?",
+      "expected_value": true,
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "first oral-proceeding box checked, second empty",
+      "source_quote": "An oral proceeding is scheduled for this rule on:",
+      "basis": "visual_mark",
+      "semantic_group_id": "hearing",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "bool",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Preserve marked state attached to correct option, action heading, and column; merely listing labels is insufficient.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; proposed-action column and scheduled-hearing box selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Commission on Environmental Quality / Department of Environmental Quality; FY2026 WPC revolving loan Intended Use Plan; 11 Admin Code Pt 6 Ch 8.",
+        "Submit and proposed-column FILED stamp April 14, 2026. Proposed amendment X; proposed final effective 30 days after filing X. Final/temporary columns blank.",
+        "Oral proceeding scheduled checked, May 20, 2026 at 11:00 a.m.; MDEQ first floor Hearing Room, 515 E Amite St, Jackson MS 39201. No timezone. Not scheduled unchecked.",
+        "Economic impact not required checked. Generic 20-day conditional hearing clause condition is unsatisfied because hearing already scheduled. Generic 25-day comment clause, no absolute close."
+      ]
+    },
+    {
+      "field_id": "hearing_clock",
+      "question": "What hearing date and time are entered, retaining unstated timezone?",
+      "expected_value": {
+        "date": "2026-05-20",
+        "time": "11:00",
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "oral proceeding date/time fields",
+      "source_quote": "Date: May 20, 2026 Time: 11:00 a.m.",
+      "basis": "source_text",
+      "semantic_group_id": "hearing",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; proposed-action column and scheduled-hearing box selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Commission on Environmental Quality / Department of Environmental Quality; FY2026 WPC revolving loan Intended Use Plan; 11 Admin Code Pt 6 Ch 8.",
+        "Submit and proposed-column FILED stamp April 14, 2026. Proposed amendment X; proposed final effective 30 days after filing X. Final/temporary columns blank.",
+        "Oral proceeding scheduled checked, May 20, 2026 at 11:00 a.m.; MDEQ first floor Hearing Room, 515 E Amite St, Jackson MS 39201. No timezone. Not scheduled unchecked.",
+        "Economic impact not required checked. Generic 20-day conditional hearing clause condition is unsatisfied because hearing already scheduled. Generic 25-day comment clause, no absolute close."
+      ]
+    },
+    {
+      "field_id": "submit_date",
+      "question": "What date is in SUBMIT DATE?",
+      "expected_value": {
+        "date": "2026-04-14"
+      },
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top submit-date cell",
+      "source_quote": "04/14/26",
+      "basis": "source_text",
+      "semantic_group_id": "submit_date",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; proposed-action column and scheduled-hearing box selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Commission on Environmental Quality / Department of Environmental Quality; FY2026 WPC revolving loan Intended Use Plan; 11 Admin Code Pt 6 Ch 8.",
+        "Submit and proposed-column FILED stamp April 14, 2026. Proposed amendment X; proposed final effective 30 days after filing X. Final/temporary columns blank.",
+        "Oral proceeding scheduled checked, May 20, 2026 at 11:00 a.m.; MDEQ first floor Hearing Room, 515 E Amite St, Jackson MS 39201. No timezone. Not scheduled unchecked.",
+        "Economic impact not required checked. Generic 20-day conditional hearing clause condition is unsatisfied because hearing already scheduled. Generic 25-day comment clause, no absolute close."
+      ]
+    },
+    {
+      "field_id": "filing_stamp",
+      "question": "What date is stamped FILED?",
+      "expected_value": {
+        "date": "2026-04-14"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "bottom center stamp",
+      "source_quote": "APR 14 2026",
+      "basis": "source_text",
+      "semantic_group_id": "filing_stamp",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; proposed-action column and scheduled-hearing box selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Commission on Environmental Quality / Department of Environmental Quality; FY2026 WPC revolving loan Intended Use Plan; 11 Admin Code Pt 6 Ch 8.",
+        "Submit and proposed-column FILED stamp April 14, 2026. Proposed amendment X; proposed final effective 30 days after filing X. Final/temporary columns blank.",
+        "Oral proceeding scheduled checked, May 20, 2026 at 11:00 a.m.; MDEQ first floor Hearing Room, 515 E Amite St, Jackson MS 39201. No timezone. Not scheduled unchecked.",
+        "Economic impact not required checked. Generic 20-day conditional hearing clause condition is unsatisfied because hearing already scheduled. Generic 25-day comment clause, no absolute close."
+      ]
+    },
+    {
+      "field_id": "proposed_effective",
+      "question": "Which proposed final effective-date option is selected?",
+      "expected_value": {
+        "duration": 30,
+        "unit": "days",
+        "anchor": "filing",
+        "computed_effective": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "center proposed-action effective X",
+      "source_quote": "30 days after filing",
+      "basis": "visual_mark",
+      "semantic_group_id": "proposed_effective",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Preserve marked state attached to correct option, action heading, and column; merely listing labels is insufficient.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; proposed-action column and scheduled-hearing box selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Commission on Environmental Quality / Department of Environmental Quality; FY2026 WPC revolving loan Intended Use Plan; 11 Admin Code Pt 6 Ch 8.",
+        "Submit and proposed-column FILED stamp April 14, 2026. Proposed amendment X; proposed final effective 30 days after filing X. Final/temporary columns blank.",
+        "Oral proceeding scheduled checked, May 20, 2026 at 11:00 a.m.; MDEQ first floor Hearing Room, 515 E Amite St, Jackson MS 39201. No timezone. Not scheduled unchecked.",
+        "Economic impact not required checked. Generic 20-day conditional hearing clause condition is unsatisfied because hearing already scheduled. Generic 25-day comment clause, no absolute close."
+      ]
+    },
+    {
+      "field_id": "generic_comment_duration",
+      "question": "What public-comment duration is printed in the generic instructions, without computing a close?",
+      "expected_value": {
+        "duration": 25,
+        "unit": "days",
+        "computed_close": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "paragraph below oral-proceeding boxes",
+      "source_quote": "twenty-five (25) day public comment period",
+      "basis": "source_text",
+      "semantic_group_id": "generic_comment_duration",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; proposed-action column and scheduled-hearing box selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Commission on Environmental Quality / Department of Environmental Quality; FY2026 WPC revolving loan Intended Use Plan; 11 Admin Code Pt 6 Ch 8.",
+        "Submit and proposed-column FILED stamp April 14, 2026. Proposed amendment X; proposed final effective 30 days after filing X. Final/temporary columns blank.",
+        "Oral proceeding scheduled checked, May 20, 2026 at 11:00 a.m.; MDEQ first floor Hearing Room, 515 E Amite St, Jackson MS 39201. No timezone. Not scheduled unchecked.",
+        "Economic impact not required checked. Generic 20-day conditional hearing clause condition is unsatisfied because hearing already scheduled. Generic 25-day comment clause, no absolute close."
+      ]
+    },
+    {
+      "field_id": "oral_request_condition",
+      "question": "What printed condition and deadline apply if a proceeding were not scheduled?",
+      "expected_value": {
+        "requestors": "political subdivision, an agency or ten (10) or more persons",
+        "duration": 20,
+        "unit": "days",
+        "anchor": "filing of this notice of proposed rule adoption",
+        "computed_close": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "generic instructions beneath scheduled hearing",
+      "source_quote": "political subdivision, an agency or ten (10) or more persons. The written request should be submitted to the agency contact person at the above address within twenty (20) days after the filing of this notice of proposed rule adoption",
+      "basis": "source_text",
+      "semantic_group_id": "oral_request_condition",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Counterfactual condition only: source already marks hearing scheduled. Must not treat this as an active hearing-request deadline.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; proposed-action column and scheduled-hearing box selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Commission on Environmental Quality / Department of Environmental Quality; FY2026 WPC revolving loan Intended Use Plan; 11 Admin Code Pt 6 Ch 8.",
+        "Submit and proposed-column FILED stamp April 14, 2026. Proposed amendment X; proposed final effective 30 days after filing X. Final/temporary columns blank.",
+        "Oral proceeding scheduled checked, May 20, 2026 at 11:00 a.m.; MDEQ first floor Hearing Room, 515 E Amite St, Jackson MS 39201. No timezone. Not scheduled unchecked.",
+        "Economic impact not required checked. Generic 20-day conditional hearing clause condition is unsatisfied because hearing already scheduled. Generic 25-day comment clause, no absolute close."
+      ]
+    }
+  ],
+  "adjudications": [],
+  "critical_determinate_groups": 7,
+  "critical_uncertain_fields": [],
+  "reference_gate_eligible": true,
+  "collector_ready_confirmed": true,
+  "original_sha256": "6738db08f6233b37320da7864bee379bbdf0771eb6f36e5b243cdd3d028cc8b5",
+  "original_physical_pages": [
+    1
+  ],
+  "collector_shared_original_group": null,
+  "collector_template_family": "MS-SOS-APA-001",
+  "agency_reference": [
+    "Mississippi Commission on Environmental Quality",
+    "Mississippi Department of Environmental Quality"
+  ]
+}

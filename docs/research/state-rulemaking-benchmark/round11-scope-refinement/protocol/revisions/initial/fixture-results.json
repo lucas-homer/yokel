@@ -1,0 +1,479 @@
+{
+  "interpretation": "synthetic contract checks only; no model evaluation",
+  "passed": 35,
+  "total": 35,
+  "results": [
+    {
+      "id": "complete_positive",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched",
+        "record_fidelity": "unverified"
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched",
+        "record_fidelity": "unverified"
+      }
+    },
+    {
+      "id": "background_missing_not_participation_defect",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched",
+        "background_diagnostics": {
+          "b": "missing"
+        }
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched",
+        "background_diagnostics": {
+          "b": "missing"
+        }
+      }
+    },
+    {
+      "id": "exclusion_hides_deadline",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "required_kind_excluded"
+      },
+      "expected": {
+        "valid": false,
+        "error": "required_kind_excluded"
+      }
+    },
+    {
+      "id": "classifier_deletes_inventory",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "inventory_changed"
+      },
+      "expected": {
+        "valid": false,
+        "error": "inventory_changed"
+      }
+    },
+    {
+      "id": "record_absence_cannot_exclude",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "scope enum"
+      },
+      "expected": {
+        "valid": false,
+        "error": "scope enum"
+      }
+    },
+    {
+      "id": "mixed_background_instruction_requires_split",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "atomize mixed or unsupported kind"
+      },
+      "expected": {
+        "valid": false,
+        "error": "atomize mixed or unsupported kind"
+      }
+    },
+    {
+      "id": "split_mixed_paragraph_deadline_missing",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "not_complete",
+        "required_defects": [
+          "d"
+        ]
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "not_complete",
+        "required_defects": [
+          "d"
+        ]
+      }
+    },
+    {
+      "id": "phone_questions_only_not_submission",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "facet_mismatch"
+      },
+      "expected": {
+        "valid": false,
+        "error": "facet_mismatch"
+      }
+    },
+    {
+      "id": "accommodations_not_questions",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "facet_mismatch"
+      },
+      "expected": {
+        "valid": false,
+        "error": "facet_mismatch"
+      }
+    },
+    {
+      "id": "same_endpoint_two_atomic_purposes",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      }
+    },
+    {
+      "id": "bundled_purposes_rejected",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "invalid role purpose"
+      },
+      "expected": {
+        "valid": false,
+        "error": "invalid role purpose"
+      }
+    },
+    {
+      "id": "shared_contact_ambiguous_scope",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "unverified",
+        "unresolved_scope": [
+          "r"
+        ]
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "unverified",
+        "unresolved_scope": [
+          "r"
+        ]
+      }
+    },
+    {
+      "id": "uncertain_scope_blocks_complete_even_when_matched",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "unverified",
+        "unresolved_scope": [
+          "b"
+        ]
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "unverified",
+        "unresolved_scope": [
+          "b"
+        ]
+      }
+    },
+    {
+      "id": "conditional_advisory_positive",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      }
+    },
+    {
+      "id": "advisory_not_mandatory",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "facet_mismatch"
+      },
+      "expected": {
+        "valid": false,
+        "error": "facet_mismatch"
+      }
+    },
+    {
+      "id": "condition_loss",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "facet_mismatch"
+      },
+      "expected": {
+        "valid": false,
+        "error": "facet_mismatch"
+      }
+    },
+    {
+      "id": "rule_identifier_without_transition",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "facet_mismatch"
+      },
+      "expected": {
+        "valid": false,
+        "error": "facet_mismatch"
+      }
+    },
+    {
+      "id": "atomic_rule_transitions_positive",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      }
+    },
+    {
+      "id": "substitution_with_qualifications_positive",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      }
+    },
+    {
+      "id": "relationship_subset_not_full",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "facet_mismatch"
+      },
+      "expected": {
+        "valid": false,
+        "error": "facet_mismatch"
+      }
+    },
+    {
+      "id": "alternative_qualification_loss",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "facet_mismatch"
+      },
+      "expected": {
+        "valid": false,
+        "error": "facet_mismatch"
+      }
+    },
+    {
+      "id": "unsupported_equivalence_no_evidence",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "evidence required"
+      },
+      "expected": {
+        "valid": false,
+        "error": "evidence required"
+      }
+    },
+    {
+      "id": "independent_view_permissions_no_group_required",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      }
+    },
+    {
+      "id": "explicit_independent_permissions_positive",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      }
+    },
+    {
+      "id": "permissions_not_actual_substitution",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "facet_mismatch"
+      },
+      "expected": {
+        "valid": false,
+        "error": "facet_mismatch"
+      }
+    },
+    {
+      "id": "glyph_and_reference_closure_unknown",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "unverified",
+        "required_unknown": [
+          "e",
+          "r",
+          "f"
+        ]
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "unverified",
+        "required_unknown": [
+          "e",
+          "r",
+          "f"
+        ]
+      }
+    },
+    {
+      "id": "native_literal_does_not_clear_glyph",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "uncertain_matched"
+      },
+      "expected": {
+        "valid": false,
+        "error": "uncertain_matched"
+      }
+    },
+    {
+      "id": "coordinator_heading_does_not_demote",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched"
+      }
+    },
+    {
+      "id": "coordinator_background_exclusion_rejected",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "required_kind_excluded"
+      },
+      "expected": {
+        "valid": false,
+        "error": "required_kind_excluded"
+      }
+    },
+    {
+      "id": "unsupported_addition_separate_unrun_audit",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched",
+        "record_fidelity": "unverified"
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched",
+        "record_fidelity": "unverified"
+      }
+    },
+    {
+      "id": "unsupported_addition_separate_reviewed_audit",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched",
+        "record_fidelity": "not_faithful",
+        "unsupported_record_refs": [
+          "invented"
+        ]
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "all_required_inventoried_units_matched",
+        "record_fidelity": "not_faithful",
+        "unsupported_record_refs": [
+          "invented"
+        ]
+      }
+    },
+    {
+      "id": "all_matches_without_source_review_unverified",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "unverified"
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "unverified"
+      }
+    },
+    {
+      "id": "source_only_new_obligation_unchanged_candidate",
+      "pass": true,
+      "actual": {
+        "valid": true,
+        "required_scope_status": "not_complete",
+        "required_defects": [
+          "new"
+        ]
+      },
+      "expected": {
+        "valid": true,
+        "required_scope_status": "not_complete",
+        "required_defects": [
+          "new"
+        ]
+      }
+    },
+    {
+      "id": "background_supplied_condition_not_discarded",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "facet_mismatch"
+      },
+      "expected": {
+        "valid": false,
+        "error": "facet_mismatch"
+      }
+    },
+    {
+      "id": "wrong_source_binding",
+      "pass": true,
+      "actual": {
+        "valid": false,
+        "error": "source_review_hash"
+      },
+      "expected": {
+        "valid": false,
+        "error": "source_review_hash"
+      }
+    }
+  ]
+}

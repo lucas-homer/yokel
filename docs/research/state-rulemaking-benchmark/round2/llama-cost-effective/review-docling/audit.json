@@ -1,0 +1,1588 @@
+{
+  "schema_version": "docling-operations-audit-v1",
+  "audited_at_utc": "2026-10-07T04:11:02.264722+00:00",
+  "status": "complete_operational_evidence_with_json_portability_limitation",
+  "checks": [
+    {
+      "check_id": "child-final-report",
+      "status": "pass",
+      "details": "Final child report/validation/result present; pipeline completion distinct from content quality",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "frozen-manifest",
+      "status": "pass",
+      "details": "900f21e8a75d50444f12a0e3814d665a4f401a0d689194465d0b00467a762946",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "141-frozen-files",
+      "status": "pass",
+      "details": {
+        "files": 141,
+        "changed_paths": []
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "629-baseline-files",
+      "status": "pass",
+      "details": {
+        "files": 629,
+        "changed_paths": []
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "20-unit-plan",
+      "status": "pass",
+      "details": "Unique 20 frozen parser inputs and34pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "runtime-versions",
+      "status": "pass",
+      "details": "Retained runtime Docling/Python versions match available isolated runtime",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "resolved-package-lock",
+      "status": "pass",
+      "details": {
+        "locked_packages": 109,
+        "mismatch_packages": [],
+        "key_versions": {
+          "docling": "2.134.0",
+          "docling-core": "2.100.0",
+          "docling-parse": "7.22.2",
+          "ocrmac": "1.0.1",
+          "torch": "2.14.1"
+        }
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "runtime-pipeline-provenance",
+      "status": "pass",
+      "details": "Local CPU4 layout/table, OCR and table structure, all content layers, no configured remote services/plugins/prompts",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "configured-ocr-backend-source",
+      "status": "pass",
+      "details": "Retained source explicitly selects Apple Vision/ocrmac accurate en-US adaptive OCR; runtime option JSON omits subtype recognition/kind fields",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "serial-stop-source",
+      "status": "pass",
+      "details": "Serial conversion and three-failure stop implemented; no failures exercise stop",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-A01",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-a/A01/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-A01",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-A01",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A01-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A01/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A01-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A01/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-A01",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-A01",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-A01",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-A02",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-a/A02/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-A02",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-A02",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A02-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A02/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A02-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A02/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-A02",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-A02",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-A02",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-A03",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-a/A03/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-A03",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-A03",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A03-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A03/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A03-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A03/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-A03",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-A03",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-A03",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-A04",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-a/A04/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-A04",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-A04",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A04-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A04/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A04-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A04/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-A04",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-A04",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-A04",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-A05",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-a/A05/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-A05",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-A05",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A05-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A05/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A05-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A05/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-A05",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-A05",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-A05",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-A06",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-a/A06/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-A06",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-A06",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A06-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A06/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A06-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A06/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-A06",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-A06",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-A06",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-A07",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-a/A07/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-A07",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-A07",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A07-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A07/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A07-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A07/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-A07",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-A07",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-A07",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-A08",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-a/A08/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-A08",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-A08",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A08-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A08/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A08-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A08/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-A08",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-A08",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-A08",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-A09",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-a/A09/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-A09",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-A09",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A09-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A09/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A09-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A09/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-A09",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-A09",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-A09",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-A10",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-a/A10/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-A10",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-A10",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A10-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A10/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A10-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "A10/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-A10",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-A10",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-A10",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-B01",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-b/B01/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-B01",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-B01",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B01-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B01/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B01-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B01/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-B01",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-B01",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-B01",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-B02",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-b/B02/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-B02",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-B02",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B02-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B02/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B02-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B02/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-B02",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-B02",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-B02",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-B03",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-b/B03/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-B03",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-B03",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B03-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B03/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B03-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B03/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-B03",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-B03",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-B03",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-B04",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-b/B04/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-B04",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-B04",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B04-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B04/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B04-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B04/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-B04",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-B04",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-B04",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-B05",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-b/B05/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-B05",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-B05",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B05-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B05/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B05-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B05/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-B05",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-B05",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-B05",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-B06",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-b/B06/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-B06",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-B06",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B06-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B06/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B06-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B06/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-B06",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-B06",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-B06",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-B07",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-b/B07/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-B07",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-B07",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B07-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B07/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B07-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B07/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-B07",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-B07",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-B07",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-B08",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-b/B08/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-B08",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-B08",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B08-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B08/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B08-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B08/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-B08",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-B08",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-B08",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-B09",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-b/B09/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-B09",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-B09",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B09-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B09/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B09-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B09/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-B09",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-B09",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-B09",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-B10",
+      "status": "pass",
+      "details": "Exact frozen input hash, bytes and independent physical PDF page count",
+      "evidence_paths": [
+        "source-b/B10/input.pdf"
+      ]
+    },
+    {
+      "check_id": "native-B10",
+      "status": "pass",
+      "details": "Native text copy is byte-identical to frozen embedded-text baseline; not new OCR output",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "status-B10",
+      "status": "pass",
+      "details": "Recorded successful complete conversion, not evidence accuracy",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B10-.md",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B10/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B10-.json",
+      "status": "pass",
+      "details": "Retained output hash/byte count agree",
+      "evidence_paths": [
+        "B10/output.json"
+      ]
+    },
+    {
+      "check_id": "structured-schema-pages-B10",
+      "status": "pass",
+      "details": "DoclingDocument schema validates and pages cover complete input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "full-markdown-export-B10",
+      "status": "pass",
+      "details": "Retained bytes exactly equal independent full-content-layer export from validated document JSON",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "timing-B10",
+      "status": "pass",
+      "details": "Recorded wrapper elapsed/CPU values consistent; RSS is cumulative process high-water mark",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "serial-observed-order",
+      "status": "pass",
+      "details": "Recorded conversion intervals do not overlap; sequence matches result ledger",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "pilot-operational-gate",
+      "status": "pass",
+      "details": "Scanned A01 and native-text A06 pilots succeed before18 remaining units; quality not a gate",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "reported-timing-summary",
+      "status": "pass",
+      "details": {
+        "first_A01_wrapper_ms": 20102,
+        "remaining19_median_ms": 1027,
+        "remaining19_min_ms": 351,
+        "remaining19_max_ms": 2391,
+        "peak_cumulative_rss_bytes": 1757904896,
+        "not_isolated_benchmark": true
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "model-cache-manifest",
+      "status": "pass",
+      "details": {
+        "model_files": 42,
+        "changed_paths": []
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "model-revisions",
+      "status": "pass",
+      "details": "Retained resolved model refs agree with available cache; main alias was not pre-download immutable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "artifact-secret-pattern-scan",
+      "status": "pass",
+      "details": {
+        "findings": []
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "docling-files-stable-during-audit",
+      "status": "pass",
+      "details": "No Docling child artifact changed during this read-only review",
+      "evidence_paths": []
+    }
+  ],
+  "failed_checks": [],
+  "units": 20,
+  "input_pages": 34,
+  "operational_successes": 20,
+  "runtime_versions": {
+    "docling": "2.134.0",
+    "docling-core": "2.100.0",
+    "docling-parse": "7.22.2",
+    "ocrmac": "1.0.1",
+    "torch": "2.14.1"
+  },
+  "timing": {
+    "first_A01_wrapper_ms": 20102,
+    "remaining19_median_ms": 1027,
+    "remaining19_min_ms": 351,
+    "remaining19_max_ms": 2391,
+    "peak_cumulative_rss_bytes": 1757904896,
+    "not_isolated_benchmark": true
+  },
+  "native_byte_comparisons": [
+    {
+      "fixture_id": "A01",
+      "native_bytes": 0,
+      "docling_markdown_bytes": 3227,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "A02",
+      "native_bytes": 0,
+      "docling_markdown_bytes": 3595,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "A03",
+      "native_bytes": 0,
+      "docling_markdown_bytes": 3429,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "A04",
+      "native_bytes": 454,
+      "docling_markdown_bytes": 560,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "A05",
+      "native_bytes": 1011,
+      "docling_markdown_bytes": 1035,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "A06",
+      "native_bytes": 3166,
+      "docling_markdown_bytes": 3179,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "A07",
+      "native_bytes": 3753,
+      "docling_markdown_bytes": 3685,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "A08",
+      "native_bytes": 9785,
+      "docling_markdown_bytes": 9708,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "A09",
+      "native_bytes": 8239,
+      "docling_markdown_bytes": 8227,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "A10",
+      "native_bytes": 8311,
+      "docling_markdown_bytes": 8274,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "B01",
+      "native_bytes": 3328,
+      "docling_markdown_bytes": 3301,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "B02",
+      "native_bytes": 5512,
+      "docling_markdown_bytes": 5507,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "B03",
+      "native_bytes": 4340,
+      "docling_markdown_bytes": 4311,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "B04",
+      "native_bytes": 3583,
+      "docling_markdown_bytes": 3662,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "B05",
+      "native_bytes": 17867,
+      "docling_markdown_bytes": 17592,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "B06",
+      "native_bytes": 11005,
+      "docling_markdown_bytes": 10886,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "B07",
+      "native_bytes": 12542,
+      "docling_markdown_bytes": 12314,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "B08",
+      "native_bytes": 347,
+      "docling_markdown_bytes": 337,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "B09",
+      "native_bytes": 308,
+      "docling_markdown_bytes": 333,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    },
+    {
+      "fixture_id": "B10",
+      "native_bytes": 256,
+      "docling_markdown_bytes": 260,
+      "native_equals_docling_markdown_bytes": false,
+      "not_quality_score": true
+    }
+  ],
+  "nonfinite_capture_json": [
+    {
+      "path": "A01/capture.json",
+      "json_paths": [
+        "/confidence/parse_score",
+        "/confidence/table_score",
+        "/confidence/pages/1/parse_score",
+        "/confidence/pages/1/table_score"
+      ]
+    },
+    {
+      "path": "A02/capture.json",
+      "json_paths": [
+        "/confidence/parse_score",
+        "/confidence/table_score",
+        "/confidence/pages/1/parse_score",
+        "/confidence/pages/1/table_score"
+      ]
+    },
+    {
+      "path": "A03/capture.json",
+      "json_paths": [
+        "/confidence/parse_score",
+        "/confidence/table_score",
+        "/confidence/pages/1/parse_score",
+        "/confidence/pages/1/table_score"
+      ]
+    },
+    {
+      "path": "A04/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/pages/1/table_score"
+      ]
+    },
+    {
+      "path": "A05/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score"
+      ]
+    },
+    {
+      "path": "A06/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/pages/2/table_score",
+        "/confidence/pages/2/ocr_score",
+        "/confidence/pages/1/table_score"
+      ]
+    },
+    {
+      "path": "A07/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/2/table_score",
+        "/confidence/pages/2/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score"
+      ]
+    },
+    {
+      "path": "A08/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/3/table_score",
+        "/confidence/pages/3/ocr_score",
+        "/confidence/pages/4/table_score",
+        "/confidence/pages/4/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score",
+        "/confidence/pages/2/table_score",
+        "/confidence/pages/2/ocr_score"
+      ]
+    },
+    {
+      "path": "A09/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score"
+      ]
+    },
+    {
+      "path": "A10/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score"
+      ]
+    },
+    {
+      "path": "B01/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/pages/2/table_score",
+        "/confidence/pages/1/table_score"
+      ]
+    },
+    {
+      "path": "B02/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/pages/3/table_score",
+        "/confidence/pages/3/ocr_score",
+        "/confidence/pages/2/table_score",
+        "/confidence/pages/1/table_score"
+      ]
+    },
+    {
+      "path": "B03/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/2/table_score",
+        "/confidence/pages/2/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score"
+      ]
+    },
+    {
+      "path": "B04/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/pages/2/table_score",
+        "/confidence/pages/2/ocr_score",
+        "/confidence/pages/1/table_score"
+      ]
+    },
+    {
+      "path": "B05/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/3/table_score",
+        "/confidence/pages/3/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score",
+        "/confidence/pages/2/table_score",
+        "/confidence/pages/2/ocr_score"
+      ]
+    },
+    {
+      "path": "B06/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score",
+        "/confidence/pages/2/table_score",
+        "/confidence/pages/2/ocr_score"
+      ]
+    },
+    {
+      "path": "B07/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score",
+        "/confidence/pages/2/table_score",
+        "/confidence/pages/2/ocr_score"
+      ]
+    },
+    {
+      "path": "B08/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score"
+      ]
+    },
+    {
+      "path": "B09/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score"
+      ]
+    },
+    {
+      "path": "B10/capture.json",
+      "json_paths": [
+        "/confidence/table_score",
+        "/confidence/ocr_score",
+        "/confidence/pages/1/table_score",
+        "/confidence/pages/1/ocr_score"
+      ]
+    }
+  ],
+  "content_scoring_performed": false,
+  "secret_findings": [],
+  "limitations": [
+    "All20pipeline completions are operational results, not content quality or deadline correctness; no scoring performed.",
+    "Capture confidence metadata has non-finite NaN values: strict JSON parsers reject these files. Use tolerant parsing or derive a separate strict-JSON confidence sidecar with explicit null/unknown values; do not silently rewrite original captures.",
+    "Runtime pipeline_options serialization omits OCR subtype recognition/kind fields; retained source supplies configuration evidence for OcrMac accurate en-US.",
+    "Exact Markdown re-export verifies consistency with retained DoclingDocument; not independent proof of semantic fidelity to source.",
+    "First conversion includes possible cold model download/init/OCR warmup; later converter reuse means one-run wrapper times do not establish comparative speed. Install/model acquisition, energy and full-machine load are not measured.",
+    "Peak RSS is cumulative macOS process high-water mark; Apple Vision internal accelerator selection is not controlled by CPU layout/table options.",
+    "Models/local isolated runtime remain in temporary storage. Hashed revisions support provenance while available; main alias was not pinned before initial download.",
+    "No conversion rerun, model inference, credential access, network/provider calls or Docling artifact mutation by this audit."
+  ]
+}

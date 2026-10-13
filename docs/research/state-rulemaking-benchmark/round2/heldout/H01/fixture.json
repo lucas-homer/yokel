@@ -1,0 +1,292 @@
+{
+  "fixture_id": "H01",
+  "state": "WI",
+  "source_url": "https://dnr.wisconsin.gov/sites/default/files/topic/Rules/FWP2224HearingNotice2.pdf",
+  "discovery_url": "https://dnr.wisconsin.gov/sites/default/files/topic/Rules/FWP2224HearingNotice2.pdf",
+  "retrieved_at": "2026-10-07T04:05:28.296067+00:00",
+  "retrieval_exit": 0,
+  "retrieval_error": "",
+  "original_page_count": 2,
+  "original_sha256": "fad42e0aae0832165fd39086afee87dd6003a719ad23c00eacc737c2ad75bbf9",
+  "original_bytes": 132965,
+  "input_page_count": 2,
+  "input_sha256": "fad42e0aae0832165fd39086afee87dd6003a719ad23c00eacc737c2ad75bbf9",
+  "input_bytes": 132965,
+  "original_physical_pages": [
+    1,
+    2
+  ],
+  "input_is_publisher_original": true,
+  "source_title": "Wisconsin DNR second hearing, FWP-22-24 (CR 25-088)",
+  "template_family": "WI-DNR-permanent-rule-hearing-notice",
+  "primary_bucket": "lifecycle_change",
+  "bucket": "lifecycle_change",
+  "layout_features": [
+    "born-digital standalone",
+    "bold section headings",
+    "second hearing and prior period"
+  ],
+  "event_type": "second public hearing on proposed permanent rule",
+  "notice_scope_boundaries": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+  "package_limitations": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+  "selection_reason": "Purposive accessible official example from a new state/publication family; chosen from source content before round2 parser output exposure.",
+  "reference_path": "H01/collector-reference.json",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency gives the notice?",
+      "expected_value": "Department of Natural Resources",
+      "answerability": "present",
+      "critical": false,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Opening paragraph",
+      "source_quote": "The Department of Natural Resources announces",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting agency or source context; not included in strict critical gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "source_id",
+      "question": "Which rulemaking IDs identify the second hearing?",
+      "expected_value": [
+        "FWP-22-24",
+        "CR 25-088"
+      ],
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Rule Information",
+      "source_quote": "FWP-22-24 (CR 25-\n088)",
+      "basis": "source_text",
+      "semantic_group_id": "source_id",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "list",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "event",
+      "question": "What event is announced?",
+      "expected_value": "second public hearing on a permanent rule to revise chapters NR1 and45",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Opening",
+      "source_quote": "it will hold a second public hearing on a \npermanent rule to revise chs. NR 1 and 45",
+      "basis": "source_text",
+      "semantic_group_id": "event",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "hearing",
+      "question": "When is the second hearing?",
+      "expected_value": "January 30, 2026, 12 p.m.",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Hearing Information",
+      "source_quote": "Date: January 30, 2026 \nTime: 12 p.m.",
+      "basis": "source_text",
+      "semantic_group_id": "hearing",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "prior_period",
+      "question": "What initial public-comment period is distinguished?",
+      "expected_value": "December 8, 2025 to January 12, 2026",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Rule Information",
+      "source_quote": "initial comment period from Dec. 8, 2025, to Jan. \n12, 2026",
+      "basis": "source_text",
+      "semantic_group_id": "prior_period",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "comment_close",
+      "question": "What is the written-comment receipt deadline?",
+      "expected_value": "on or before January 30, 2026",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 2,
+      "original_page": 2,
+      "region": "Submittal of Written Comments",
+      "source_quote": "Comments on the proposed rule must be received on or before Jan. 30, 2026.",
+      "basis": "source_text",
+      "semantic_group_id": "comment_close",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "change_scope",
+      "question": "Which sections are intended to be removed from the final version?",
+      "expected_value": "Sections4 and6, climbing-related definitions; future rulemaking intended",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Rule Information",
+      "source_quote": "the department intends to remove SECTIONS 4 and 6 (climbing-related definitions) of \nthe rule from the final version",
+      "basis": "source_text",
+      "semantic_group_id": "change_scope",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": [
+        {
+          "input_page": 1,
+          "original_page": 1,
+          "source_quote": "The department intends to address SECTIONS 4 and 6 of the current rule and climbing provisions during a future rulemaking effort.",
+          "quote_transcription": "visual source transcription; whitespace/line wraps normalized"
+        }
+      ]
+    },
+    {
+      "field_id": "close_clock",
+      "question": "Does the notice state a written-comment cutoff time?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "input_page": 2,
+      "original_page": 2,
+      "region": "Complete target notice",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "close_clock",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "No comment clock is stated; hearing noon must not be transferred to written comments.",
+      "notice_scope_boundaries": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "effective",
+      "question": "Does the complete notice supply an effective date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Complete target notice",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "effective",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Relevant complete notice scope must survive; silence alone is insufficient.",
+      "notice_scope_boundaries": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": "Entire two-page hearing notice, including written-comment paragraph on page2. Linked rule and hearing appearance form are not included.",
+      "additional_decisive_evidence": []
+    }
+  ],
+  "critical_fields": 8,
+  "reference_gate_eligible": true,
+  "uncertain_critical_fields": []
+}

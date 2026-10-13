@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "role": "Fable 5.1 bounded final advisory assessment via the Claude.ai Max bridge; no tools, no file inspection, no test execution, no provider calls. Independent test design was frozen before exposure to this implementation.",
+    "evidence_basis": {
+      "observed": [
+        "testing/execution/RESULT.json",
+        "testing/execution/independent-test-output.txt (17 ok)",
+        "testing/execution/owner-test-output.txt (24 ok, names only)",
+        "testing/execution/COVERAGE-AND-DEFERRED.json"
+      ],
+      "inspected_as_text": [
+        "protocol/compact.py",
+        "protocol/stage-a.system.txt",
+        "protocol/fictional_controls.py",
+        "testing/execution/test_independent.py"
+      ],
+      "not_supplied": [
+        "owner test bodies (test_capacity.py, test_compact.py)",
+        "protocol/request-settings.json",
+        "hash verification of the files actually executed"
+      ]
+    },
+    "path_root": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round15-condition-preservation/",
+    "claims_excluded": "No accuracy score, no causal improvement, no live-fit or provider-acceptance claim, no approval of paid dispatch, no claim that every frozen test family was implemented."
+  },
+  "verdict": {
+    "bounded_offline_implementation": "CONSISTENT WITH DECLARED CONTRACT; NO REPRODUCIBLE BLOCKER FOUND BY INSPECTION",
+    "what_passes_establish": "The host (compact.py) enforces source/table hash binding, exact codepoint-offset evidence resolution with conditional tail selection, closed strict types, declared sentinel/depth/byte/anchor guards, the qual+p2+link-q disposition, inverse expanded/compact equality, and fail-intact rejection including final-node errors. It is deliberately silent on meaning: planted operator inversions, exception-scope swaps, omitted tails, wrong governed units and R-to-L reclassification are accepted, and the suites prove exactly that silence.",
+    "what_passes_do_not_establish": "Nothing about extraction fidelity, condition coverage, correct connectives or scope, modality/force correctness, reason quality, or provider schema acceptance/output fit. All inputs are authored envelopes; no model output was validated.",
+    "paid_dispatch": "Not approved by this assessment; outside its authority and unsupported by offline evidence.",
+    "primary_disposition_status": "Implemented as stated (observed via test_qual_requires_link_and_governing_unit_uncertainty and test_primary_qual_refinement name). Parent-covering containment absence is not treated as a bug per instruction."
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "topic": "qual disposition and uncertainty coupling",
+      "status": "known/observed",
+      "evidence": "protocol/compact.py validate(): require(link['w'] != 'qual' or (link['q'] != 0 and units[link['u']]['p'] == 2), 'qual_requires_unknown_scope'); require(u['p'] != 2 or u['q'] != 0, 'unknown_applicability'); qual links are excluded from applicability_counts so p2 may carry partial if/onlyif/unless links. test_independent.py test_qual_requires_link_and_governing_unit_uncertainty rejects link_q0, unit_p0, unit_p1, unit_q0, node_only and accepts the obj/p0 clear variant; mandatory modality survives p2.",
+      "limit": "self.rejected() is called without an error code in that test, so it does not pin which rule fired (unit_q0 fails on 'unknown_applicability' before the qual rule). Oracle precision, not a host defect."
+    },
+    {
+      "id": "F2",
+      "topic": "long qualifiers without capped prose; exact fragments and conditional tails",
+      "status": "known/observed",
+      "evidence": "resolve_fragment() filters tails after head selection: 'and Z[1] + k >= start and Z[1] + k + len(tail) >= start + len(head)'. test_conditional_tail_repeated_and_overlapping_anchors confirms 'HEAD three TAIL', 'repeat'(7,13) vs wide 'repeat repeat'(7,20), and overlapping 'aaaa'->'aaa'. test_long_697_exact_fragment_and_no_clipped_qualification resolves a 697-codepoint range from <=24-char anchors byte-exact; test_full_long_crossrow_and_adjacent_fragments (owner, name only).",
+      "limit": "697 is an arbitrary length, not a bound; the design claim 'range length unbounded by anchor cap' is demonstrated, not boundary-probed. Live risk: a model must reproduce exact <=48-codepoint anchors and count overlapping occurrences in row-ascending order; untested."
+    },
+    {
+      "id": "F3",
+      "topic": "coherent-but-incomplete and regression-shaped fragments are accepted",
+      "status": "known/observed, by design",
+      "evidence": "test_short_exact_leaf_is_valid_but_authored_tail_omitted: evidence LONG[:cut] passes and drops 'eligible-but-unplaced'; fictional_controls semantic_negatives 'long_tail_omits_essential_exception' moves c10's tail to 'published accessibility arrangements', dropping the except/unless tail, and validates. A range ending mid-word or on a connective is structurally valid.",
+      "assessment": "Correct separation: silent loss is detectable only through authored mapping. No string-health triage layer exists in the host and none is required; it remains a deferred review layer. The regression pattern can also reappear inside unit 's' (280 cap), node 'g' (120) and 'r' (180), which stay capped model prose; the host cannot detect truncation or non-source script there."
+    },
+    {
+      "id": "F4",
+      "topic": "operator/scope inversion tests are pass-through demonstrations",
+      "status": "known/observed; oracle note",
+      "evidence": "test_operator_and_exception_scope_inversions_are_semantic_negatives asserts self.assertNotEqual(ex['nodes'][0]['op'], op) and assertNotEqual(args, ['c2','c3']) after mutating those same fields. Likewise test_link_omission_and_wrong_scope asserts link unit_id == 2 after setting it to 2.",
+      "assessment": "These assertions test the mutation and expand() copy-through, not source mapping. Their only substantive content is that self.check() accepts the inverted structure. That is the intended 'structural acceptance only' point, but it should not be read as an inversion detector. Also the AND fixture's leaf c2 evidence is 'A AND' (connective inside a leaf), a non-atomic authored mapping."
+    },
+    {
+      "id": "F5",
+      "topic": "fictional_controls fixture labeling consistency",
+      "status": "inspected; contested authored labels, not a protocol bug",
+      "evidence": "fictional_controls.py fixture(): unit 4 ('Send remarks by March 9, 2037.') is m=5 q=1 'directive force not stated'; unit 5 ('Arrive in person by 09:00 UTC on May 1, 2037.') is m=0 q=0 with b='na'. Unit 1 ('approves permits only if ...') is m=0 informational. semantic_negatives 'context_not_applicability' (unit 7 d=[1]) is a neutrality probe, not an inversion.",
+      "assessment": "Two parallel bare imperatives receive different force labels with no stated basis. The host cannot see this; if the control is later used as a semantic reference, its labels weaken the modality assertion. Independent-test reasons are placeholders ('Scope uncertain.' on deadline absences), so reason relevance is untested."
+    },
+    {
+      "id": "F6",
+      "topic": "unavailable references vs invalid links",
+      "status": "known/observed",
+      "evidence": "R requires q==2 (validate(): require(node['o'] != 'R' or node['q'] == 2, 'reference_uncertainty')); dangling link/child/unit raise 'dangling_link'/'dangling_child'/'dangling_unit_reference'. test_unavailable_reference_and_explicit_modality_independent shows R->L reclassification accepted with q=2 retained.",
+      "assessment": "Correctly separates structural dangling from unresolved source references. An L leaf carrying q=2 'reference_unresolved' is an accepted state; whether that should be rejected is a design choice. Noted only; no expansion authorized."
+    },
+    {
+      "id": "F7",
+      "topic": "Unicode, parser, count and depth guards",
+      "status": "known/observed",
+      "evidence": "Anchors capped by codepoints: text(head, 48, False); 48/49 '🫧' probed. unicode_depth rejects lone surrogates; strict_load rejects duplicate keys, NaN, trailing data; raw_guard 600000/600001 bytes and 64/65 depth; sentinels 159/160 units, 399/400 nodes/links; graph depth 12/13 (owner also 11); fragments 8/9. CRLF/NEL/U+2028/U+2029 cross-row exact; precomposed vs combining 'Café' not normalized (head_not_found).",
+      "limits": "Not probed: VT, FF, lone CR, U+001C-1E separators; s 280, r 180, g 120, d/b 16, e 6, dim x 4, link x 2, node arity 8 upper, id c400+1 (regex-excluded), 40000-byte request guard (only gross overshoot 'x'*40000). Sentinel policy (B-1 accept, B reject, B+1 'array_bound') matches the declared policy in stage-a.system.txt. Edge: anchors must be nonblank, so a range cannot start on >47 leading whitespace codepoints exactly; rare, not a defect."
+    },
+    {
+      "id": "F8",
+      "topic": "inverse equality and receipts",
+      "status": "known/observed",
+      "evidence": "contract() rebuilds compact, re-expands, and requires canonical(expected) == canonical(value) ('expanded_field_evidence_equality'); tampering text/end/role/condition_links/flags/nodes rejected. validate() binds h and t; stale table -> 'exact_host_table', mutated source -> 'binding_version'. validate_response rejects finish_reason != 'stop' ('non_stop') and partial JSON.",
+      "assessment": "Expanded view cannot carry extra claims; completeness flags are fixed 'unverified'. Receipts cover whole source; an uncovered-span coverage map is not computed (deferred diagnostic, not a host duty)."
+    },
+    {
+      "id": "F9",
+      "topic": "representable escape paths the host accepts by design",
+      "status": "inspected; test-evidence limit",
+      "evidence": "p=2/q!=0 with zero links is valid ('Unknown applicability may have partial links'); 'regardless' and 'acts' roles are unconstrained; y=None on a k=3 unit asserts non-deadline function; m=6 not_applicable needs no uncertainty.",
+      "assessment": "Blanket p2/q1 with generic reasons and no links is a false-uncertainty path indistinguishable structurally from genuine uncertainty. Requires advisory review; no fixture exercises it."
+    },
+    {
+      "id": "F10",
+      "topic": "request sizing: schema enum replication and source duplication",
+      "status": "inspected; arithmetic uncontested, bytes unmeasured",
+      "evidence": "build(): user content carries source_text AND span_table rows (full source twice); schema() defines sid = enum([row ids]) and inlines frag (2 sid copies) under dim x3 via deadline, node.x, link.x, plus unit.e -> about 11 serialized copies of the row-id enum; guard require(len(raw) + 1024 <= 40000, 'full_request_overflow').",
+      "assessment": "Request bytes grow with line count independent of source length (roughly 70-80 bytes per row from the enum copies) plus ~2x source plus system prompt. Effective source capacity is well below 40000 bytes and unmeasured. Failure is closed (overflow raised before dispatch), so this is sizing risk, not clipping. B-1/B/B+1 at 40000 not tested."
+    },
+    {
+      "id": "F11",
+      "topic": "provider compatibility",
+      "status": "inspected; explicitly unverified",
+      "evidence": "schema() comment: 'Provider dialect support UNVERIFIED'; uses prefixItems, items:false, minLength/maxLength, minimum/maximum, minItems/maxItems, pattern, anyOf-with-null, large enums; body uses messages + response_format.json_schema.strict and finish_reason 'stop' literal (OpenAI-style chat completions shape).",
+      "assessment": "No offline JSON-Schema validator run was shown confirming schema() accepts the control envelope or agrees with validate() (e.g., schema maxItems 160 vs host <160; schema allows blank anchors/reasons host rejects). Strict-mode providers commonly reject some of these keywords; expected failure mode is request rejection, not silent clipping, but unobserved. request-settings.json (max_tokens, model) not supplied, so output-fit versus RAW_LIMIT 600000 is unknown."
+    }
+  ],
+  "reproducible_blocker": "None identified from the supplied text. All inspected checks are internally consistent with stage-a.system.txt and with the observed test outputs.",
+  "test_evidence_limits": [
+    "Single run of deterministic suites; hashes in RESULT.json are unverifiable here; owner test bodies unseen (names only).",
+    "All validated envelopes are authored; zero provider output was validated. Counts (17/24) are engineering coverage.",
+    "Rejection tests without error-code regex (several self.rejected calls) do not pin the firing rule.",
+    "Inversion/wrong-unit 'negatives' only demonstrate host acceptance; their assertNotEqual checks are tautological.",
+    "Frozen advisory fixtures (FX-A..FX-G, FX-A2, FX-C2, FX-REG, FX-L, FX-R) were not materialized; the independent tests reuse themes (eligible-but-unplaced, section 99, postmarked/received/Eastern Time, Café) in new synthetic sources.",
+    "Boundary coverage is selective (see F7); request guard and most text caps untested at B-1/B/B+1.",
+    "Semantic validity, condition coverage and completeness are constant 'unverified' strings; no reviewer layer exists yet."
+  ],
+  "deferred_semantic_families": [
+    "TF-03 baseline vs granted-waiver truth matrices and exceptions-to-exceptions (FX-A2 variants).",
+    "TF-05 generic imperative force, contradictory modality (FX-C/C2), reason-quality review.",
+    "TF-06 proposed/current status scope across variants.",
+    "TF-11 full member x condition x exception matrix and shared-attribute bait (FX-E).",
+    "Paraphrase entailment, atomicity, source-wide discovery, uncovered-span coverage map.",
+    "String-health triage layer for s/g/r prose and fragment tails (FX-REG), with atom-survival mapping.",
+    "False-uncertainty review for blanket p2/q1 or y=None on deadline-like timing units (F9).",
+    "Exhaustive B-1/B/B+1 for all caps, payload growth profiles, schema-vs-host agreement check, matched-tokenizer fit."
+  ],
+  "residual_risk": {
+    "sizing": "Request capacity dominated by duplicated source plus ~11 row-id enum copies under a 40000-byte guard (F10); output side bounded by unknown max_tokens with fail-closed 'non_stop'/'raw_size'. Unmeasured.",
+    "provider_compatibility": "Schema dialect and finish_reason semantics unverified (F11); likely outcome of incompatibility is request rejection, which is bounded but blocks any dispatch.",
+    "live_fit": "Exact anchor reproduction and overlapping-occurrence counting by a model are untested; failure mode is 'head_not_found'/'tail_not_found' whole-inventory rejection, not clipping."
+  },
+  "status": "Fable advisory only. Observed: suites passed once as reported. Inspected: no blocker. Proposed semantics and deferred families remain unexecuted. Execution of further offline tests pending; no paid dispatch approved."
+}

@@ -1,0 +1,33 @@
+{
+  "version": "round4-runtime-policy-override-v1",
+  "status": "READY_verified_in_runtime_receipt",
+  "authority": "Primary delegation on October 6, 2026 Pacific; this overrides broader proposer soft-issue hints for the fresh experiment.",
+  "jev_clearable_issues": [
+    "submission_role_unverified",
+    "written_comment_role_unverified"
+  ],
+  "hard_even_if_proposer_calls_soft": [
+    "condition_scope_requires_semantic_verification",
+    "competing_temporal_role_cues"
+  ],
+  "unknown_issues": "hard review",
+  "email_multiplicity_exception": {
+    "eligible": "Exactly one distinct submission-email destination passes the complete frozen gate AND every alternative candidate is positively role mismatched.",
+    "blocked": [
+      "Any insufficient, failed, unprocessed or otherwise unclassified alternative",
+      "Two or more matched submission destinations",
+      "Any independent hard blocker on the surviving destination"
+    ],
+    "implementation_status": "verified final READY code and passing offline checks"
+  },
+  "cross_channel_policy": {
+    "missing_evidence": "No candidate in a channel permits recovery from the other supported channel; never proof of absence.",
+    "conservative_primary_rule": "When fallback exists, ANY unresolved candidate for a field in either channel blocks terminal acceptance for that field, including same-value and null-normalized candidates. Only a completed positively mismatched role can be ignored. Incompatible supported values also block.",
+    "raw_evidence": "Retain raw_literal for every candidate result.",
+    "terminal_status_consistency": "A terminal review downgrade updates shadow_status, disposition and action_readiness consistently; provider results remain immutable provisional evidence.",
+    "implementation_status": "verified final READY code and passing focused offline checks"
+  },
+  "frozen_proposer_artifact": "pipeline/ROUTING-POLICY.json remains historical candidate-hint policy; do not silently rewrite its freeze.",
+  "production_eligible": false,
+  "reviewed_implementation_receipt_sha256": "60438e1e1732d6763839f508612674f05d8ce8a69d8f83294d61489ce12c8cc8"
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": "round8-offline-contract.review.v1",
+  "verdict": "approved_offline_candidate_only",
+  "blockers": [],
+  "resolved_finding": "Coverage and source certainty separated; both authored cases retain explicit uncertainty/association gates, only unestablished coverage adds coverage uncertainty. Entire record apart from coverage is preserved.",
+  "passed_tests": 19,
+  "owner_tests": 12,
+  "independent_tests": 7,
+  "additional_focused_coverage_check": true,
+  "all_full_body_fixtures_recomputed": 10,
+  "prior_files_verified": 1158,
+  "pinned_input_files_verified": 52,
+  "handoff_sha256": "b4a0d74561c1bf0c52cd82869dc7f1a05666806a513cc016e1a914058a8f3313",
+  "reviewed_files": {
+    "README.md": "bca5096a389a3be375b02b18f54d57509b41650aed54a8a9531c3c0631ccd646",
+    "REPORT.json": "3a90f3e96155ce5128acaa9566492fcbcc2ace6432126d4d257d213a2d79ba4f",
+    "candidate.py": "024ff423f071d2b4d471158a824a214a5c0ff50944ea9ffc501f336f0bf92953",
+    "fixtures.py": "eb3b5f3f7dd442f5bfa2c2026536f56d6ae49a2d8a71a07de4048b9c05c13963",
+    "input-pins.json": "c0548300abf51685bc54a9ef256d2ba39af1efc98a6cbaf772c6fe37c7e65c91",
+    "prompt-delta.txt": "90a6f51531f5e26c9e1530a9b7b6c9feebde3b0742e238303839b8c975bf70b6",
+    "test-output.txt": "da02d6df85492ec0e83c155d88cb8b4cc1385d3b4c8f3e326f38fe7baeaaf868",
+    "test_candidate.py": "842033874cdb08b1ef18164f0dc12ccc09dde7c0a40e75df8880b629fb3f48ca",
+    "verify_offline.py": "6a66bdb90824ac5c3ac24afe715485acaa5a012f5924460510b6da2569e5318b"
+  },
+  "generated_handoff_hashes_superseded_by_rerun": [
+    "REPORT.json",
+    "test-output.txt"
+  ],
+  "handoff_note": "Primary explicitly confirmed a verify_offline.py rerun regenerated elapsed-time log and linked report hashes without code edits. Current outputs independently reproduce and are approved for primary offline freeze; PRIMARY-RERUN-VERIFICATION.json binds provenance/current hashes. Historical owner handoff generated hashes need no further test rerun.",
+  "inventory_candidate_estimate": 22141,
+  "inventory_estimate_delta": 2777,
+  "inventory_nominal_reservation_usd": 0.167162,
+  "prior_debit_usd": 0.261774,
+  "future_nominal_aggregate_usd": 0.578302,
+  "no_live_authorization": true,
+  "provider_calls": 0,
+  "generation_improvement_measured": false,
+  "semantic_accuracy_measured": false,
+  "unresolved": [
+    "No new model output using candidate prompt.",
+    "No demonstrated correctness, completeness or unseen-source improvement.",
+    "Strong 40000 guard is internal proposed admission policy, not validated provider capacity.",
+    "Diagnostic copies leave only 1011/987 Jev state-plus-longest headroom; future generated outputs require both full-body checks.",
+    "Any future live implementation, debit bindings and authorization are separately scoped."
+  ],
+  "primary_rerun_verification_sha256": "c24d357e0f81708e5b3f1ef602fdc5cbcdfbfcb0845dd2492c7d9e5ed308631f"
+}

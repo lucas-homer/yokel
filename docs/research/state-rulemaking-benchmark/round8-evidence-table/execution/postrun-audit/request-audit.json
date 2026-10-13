@@ -1,0 +1,106 @@
+{
+  "full_body_admissions": {
+    "stronger": {
+      "schema_version": "round7.admission.v1",
+      "stage": "stronger",
+      "body_sha256": "5c7f53e812f7ae9815e9fcbba2a07c313f6e4ba7498e98caa6027a065d06345a",
+      "body_utf8_bytes": 34723,
+      "estimate": 35747,
+      "cap": 40000,
+      "state_longest_estimate": null,
+      "state_longest_cap": null,
+      "admitted": true,
+      "reason": null,
+      "reservation_usd": 0.112454,
+      "source_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5"
+    },
+    "jev": {
+      "schema_version": "round7.admission.v1",
+      "stage": "jev",
+      "body_sha256": "6f714467b0ef288a51d615d3eb04c0e4d93150f7b16bf662e84072b29347cf87",
+      "body_utf8_bytes": 36755,
+      "estimate": 37779,
+      "cap": 64000,
+      "state_longest_estimate": 28700,
+      "state_longest_cap": 32000,
+      "admitted": true,
+      "reason": null,
+      "reservation_usd": 0.001586718,
+      "source_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5"
+    }
+  },
+  "restoration": {
+    "wire_sha256": "b0f1b97bafddf763745413c7b79f447fe9dffc181bd2989a9ab60486196fffa0",
+    "restored_payload_sha256": "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c",
+    "original_payload_sha256": "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c",
+    "original_record_sha256": "315ddda2dd8012856463df1f31122dc8952dfcc050e152fcd6055bb3e2d0368a",
+    "exact_restoration": true
+  },
+  "both_source_record_complete": true,
+  "both_admissions_before_dispatch": "Frozen runner builds and retains both full request/admission artifacts before ledger dispatch; reproduced bodies/admissions and retained artifacts agree. No separate wall-clock instrumentation trace.",
+  "inventory_calls": 0,
+  "jev_calls": 1,
+  "stronger_calls": 1,
+  "retries": 0,
+  "clipping": false,
+  "stronger_judgment_available": false,
+  "jev_native_answers": {
+    "association": {
+      "abstained_on_tie": false,
+      "confidence": 0.07,
+      "label": "fail",
+      "probabilities": {
+        "fail": 0.38,
+        "pass": 0.36,
+        "uncertain": 0.26
+      },
+      "raw_label": "fail"
+    },
+    "completeness": {
+      "abstained_on_tie": false,
+      "confidence": 0.51,
+      "label": "fail",
+      "probabilities": {
+        "fail": 0.67,
+        "pass": 0.29,
+        "uncertain": 0.04
+      },
+      "raw_label": "fail"
+    },
+    "requirements": {
+      "abstained_on_tie": false,
+      "confidence": 0.49,
+      "label": "fail",
+      "probabilities": {
+        "fail": 0.66,
+        "pass": 0.31,
+        "uncertain": 0.03
+      },
+      "raw_label": "fail"
+    },
+    "source_identity": {
+      "abstained_on_tie": false,
+      "confidence": 0.48,
+      "label": "pass",
+      "probabilities": {
+        "fail": 0.2,
+        "pass": 0.65,
+        "uncertain": 0.15
+      },
+      "raw_label": "pass"
+    },
+    "support": {
+      "abstained_on_tie": false,
+      "confidence": 0.22,
+      "label": "pass",
+      "probabilities": {
+        "fail": 0.36,
+        "pass": 0.48,
+        "uncertain": 0.16
+      },
+      "raw_label": "pass"
+    }
+  },
+  "jev_policy_disposition": "review",
+  "semantic_detection": "Independent semantic audit separately owned; policy review alone is not detection."
+}

@@ -1,0 +1,97 @@
+{
+  "version": "round3-development-v1",
+  "status": "draft_for_primary_adoption",
+  "unit": "claim case; report clusters by notice/original/template and semantic group",
+  "truth_labels": [
+    "valid",
+    "invalid",
+    "unresolved"
+  ],
+  "accept_event": "policy disposition accept_shadow after shared hard checks; action readiness separately evaluated",
+  "detection_event": "explicit error/conflict flag identifying the affected claim with reason/evidence, not generic review or provider failure",
+  "operational_policy": "Failures remain in scheduled yield, separately counted; no detector credit for operational fallback.",
+  "denominators": {
+    "A_valid": "Accepted claims independently valid to original source and supported by visible parse, with role/precision/conditions intact.",
+    "A_invalid": "Accepted claims invalid to original source or unsupported by their declared parser evidence.",
+    "A_unresolved": "Accepted claims whose truth/support remains unresolved, including settled acceptance of a source conflict.",
+    "V": "All scheduled valid, source-resolvable proposal cases.",
+    "E": "Scheduled cases with unambiguously invalid proposals or unsupported parser-text claims under frozen labels. Source-conflicted/unresolved truth has separate U denominator; do not silently pool. Source-fidelity and text-support versions of E are named separately.",
+    "U": "All scheduled unresolved proposal cases.",
+    "F_error": "Explicit error flags among E on successful verifier responses.",
+    "F_valid": "Explicit error flags among V on successful verifier responses.",
+    "F_unresolved": "Explicit error flags among U; show separately, not in resolved precision.",
+    "R_valid": "Valid cases escalated/reviewed by policy, separated into semantic, hard-check and operational reasons."
+  },
+  "metrics": {
+    "acceptance_precision_resolved": "A_valid / (A_valid + A_invalid); undefined if denominator zero; display A_unresolved alongside.",
+    "unsafe_acceptance_fraction": "(A_invalid + A_unresolved) / (A_valid + A_invalid + A_unresolved); undefined if no acceptances.",
+    "false_acceptance_fraction_resolved": "A_invalid / (A_valid + A_invalid); not the same denominator as escaped-error rate.",
+    "escaped_error_fraction": "A_invalid / E, using invalid-case membership; when unsupported visible evidence is an additional invalid dimension, use the frozen union E without double counting.",
+    "error_detection_recall": "F_error / E; scheduled denominator; operational failures do not count as detections.",
+    "error_detection_precision_resolved": "F_error / (F_error + F_valid); undefined if no resolved flags; report F_unresolved.",
+    "correct_acceptance_coverage": "A_valid / V; scheduled denominator, missing/failed responses reduce coverage.",
+    "unnecessary_escalation": "R_valid / V; report reason breakdown, not automatically verifier error.",
+    "unresolved_acceptance": "A_unresolved / U, with total U and source-conflict subset.",
+    "conflict_routing": "Source-conflict cases explicitly routed to review with conflict evidence / all source-conflict cases; show generic/operational review separately.",
+    "normalization_support_accuracy": "Per-dimension and all-four joint agreement on predeclared unique or set-valued labels; primary gate accuracy on resolved expected conjunction. Successful-response and scheduled-yield denominators separately.",
+    "candidate_coverage": "Source-labeled required field instances with at least one sufficient faithful candidate / all source-labeled required field instances; exclude genuine not_stated, report explicit_negative separately.",
+    "end_to_end_required_field_yield": "Correctly accepted source-grounded required field instances / all determinate required field instances, including missing candidates and operational failures.",
+    "document_action_readiness": "Notices with all required critical roles correctly covered, destinations verified, no accepted source conflicts and no unsupported critical extras / all scheduled notices; source-unresolved notices remain separately counted.",
+    "cost_per_correct_accept": "Known incremental verifier charge / A_valid; undefined if zero; retain unknown charges, currency/credit separation and parser replay accounting separately.",
+    "source_fidelity_escape": "Text-accepted claims incorrect/unresolved against original source / all text-accepted claims, including same-parser corrupted-value blind spots; no credit for unsupported guesses that happen to repair them."
+  },
+  "stratify_by": [
+    "natural_correct",
+    "natural_error",
+    "source_conflict",
+    "synthetic_mutation",
+    "parser_representation",
+    "field_role",
+    "state",
+    "template_family",
+    "original_pdf",
+    "input_acquisition_automated_or_reviewer_selected"
+  ],
+  "required_counts": [
+    "scheduled",
+    "attempted",
+    "completed_valid_response",
+    "schema_invalid",
+    "timeout_uncertain",
+    "provider_error",
+    "not_attempted",
+    "accepted_valid",
+    "accepted_invalid",
+    "accepted_unresolved",
+    "review_semantic",
+    "review_hard_check",
+    "review_operational"
+  ],
+  "calibration": "Diagnostic only; no primary threshold. General categorical output has no probability score. Jev probability bins/Brier descriptive on resolved labels only; 16 selected cases cannot establish calibration.",
+  "zero_denominator": "null plus reason; never replace with 0 or 1",
+  "promotion_from_development": false,
+  "support_dimensions": {
+    "support": [
+      "supported",
+      "contradicted",
+      "insufficient"
+    ],
+    "role": [
+      "matched",
+      "mismatched",
+      "insufficient"
+    ],
+    "condition": [
+      "preserved",
+      "omitted_or_changed",
+      "insufficient"
+    ],
+    "conflict": [
+      "present",
+      "absent",
+      "insufficient"
+    ]
+  },
+  "primary_gate": "No deterministic blocking issues AND completed/schema-valid response AND support=supported AND role=matched AND condition=preserved AND conflict=absent. Otherwise escalation; probability/confidence never controls primary gate.",
+  "primary_gate_eligibility": "Independent pre-run label review establishes unique expected text-gate outcome. Ambiguous gate cases remain scheduled and get bounds/sensitivity, excluded from resolved-gate accuracy. Dimension ambiguity alone need not exclude a uniquely failing gate."
+}

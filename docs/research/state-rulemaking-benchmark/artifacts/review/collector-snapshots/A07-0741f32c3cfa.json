@@ -1,0 +1,181 @@
+{
+  "fixture_id": "A07",
+  "state": "US-CA",
+  "bucket": "clean standalone PDFs",
+  "layout_features": [
+    "clean born-digital two-page notice",
+    "lists and underlined/struck presentation conventions",
+    "contradictory historical date"
+  ],
+  "event_type": "proposed modification",
+  "source_url": "https://www.dmv.ca.gov/portal/file/electronic-lien-and-title-program-notice-of-second-modified-regulatory-text-pdf/",
+  "discovery_url": "https://www.dmv.ca.gov/portal/about-the-california-department-of-motor-vehicles/california-dmv-rulemaking-actions/",
+  "retrieved_at": "2026-10-06T00:33:55.784532+00:00",
+  "source_title": "ELT Second Notice of Modifications and Addition of Documents",
+  "selection_reason": "Short complete DMV notice from same initial listing; provides explicit current opening/closing interval and scope.",
+  "original_sha256": "c56ca68a293ae601707ae3f88c406b3b60414aa2a471412706acfcc5051df7d8",
+  "input_sha256": "c56ca68a293ae601707ae3f88c406b3b60414aa2a471412706acfcc5051df7d8",
+  "original_byte_length": 72590,
+  "input_byte_length": 72590,
+  "original_physical_pages": [
+    1,
+    2
+  ],
+  "original_page_count": 2,
+  "input_page_count": 2,
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Clean-PDF allocation describes layout; content also contains lifecycle change. Related regulatory text/attachments are not included.",
+    "Original notice date conflicts: p1 October 31, 2025 versus p2 October 31, 2026; unresolved annotation, no outside correction."
+  ],
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which department issues this second modification notice?",
+      "expected_value": "Department of Motor Vehicles",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "Department of \nMotor Vehicles",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "lifecycle",
+      "question": "What action does the notice announce?",
+      "expected_value": "second modification to proposed regulations and addition of documents to rulemaking file",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "title",
+      "source_quote": "SECOND NOTICE OF MODIFICATIONS TO TEXT OF PROPOSED REGULATIONS  \nAND ADDITION OF DOCUMENTS TO RULEMAKING FILE",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "form_rule_links",
+      "question": "Which rule sections incorporate the two revised ELT application forms?",
+      "expected_value": {
+        "REG 670": "153.04",
+        "REG 671": "153.22"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "added document bullets",
+      "source_quote": "Revised ELT Program Service Provider Application, form REG 670 (Rev. \n8/2026), incorporated by reference in Section 153.04 \n• Revised ELT Program Lienholder Application, form REG 671 (Rev. 8/2026), \nincorporated by reference in Section 153.22",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "current_comment_open",
+      "question": "When does the stated written-comment window begin?",
+      "expected_value": {
+        "date": "2026-10-05",
+        "time": null,
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "current written-comment paragraph",
+      "source_quote": "accept written comments between \nOctober 5, 2026 through October 20, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "current_comment_close",
+      "question": "When does the stated written-comment window end?",
+      "expected_value": {
+        "date": "2026-10-20",
+        "time": null,
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "current written-comment paragraph",
+      "source_quote": "All written comments must be \nsubmitted to the department no later than October 20, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "comment_scope",
+      "question": "What current comments does the notice say it will review?",
+      "expected_value": "indicated changes or listed documents and other information",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "last comments paragraph",
+      "source_quote": "which pertain to the \nindicated changes or the above-listed documents and other information",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "prior_modification_date",
+      "question": "Which date belongs to the earlier modification notice?",
+      "expected_value": {
+        "date": "2026-04-23",
+        "role": "earlier modification notice"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "A Notice of Modification was also provided to the public on April 23, 2026.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "original_notice_date",
+      "question": "Is the original-notice date consistent across this complete notice?",
+      "expected_value": {
+        "printed_dates": [
+          "2025-10-31",
+          "2026-10-31"
+        ],
+        "resolved_date": null
+      },
+      "answerability": "uncertain",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "p1 opening paragraph conflicts with p2 original material paragraph: October 31, 2026",
+      "source_quote": "California Regulatory Notice \nRegister on October 31, 2025",
+      "basis": "source_text",
+      "additional_evidence": [
+        {
+          "original_page": 2,
+          "input_page": 2,
+          "region": "original materials paragraph",
+          "source_quote": "provided to the public on October 31, 2026.",
+          "basis": "source_text"
+        }
+      ]
+    },
+    {
+      "field_id": "new_hearing_clock",
+      "question": "Does the complete second modification notice specify a hearing date/time?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "entire two-page second modification notice inspected",
+      "source_quote": "",
+      "basis": "full_scope_absence"
+    }
+  ],
+  "collector": "source-a Codex task; source-only annotation before vendor parsing",
+  "reference_version": "collector-v1",
+  "discovery_method": "Official listing link or targeted official register PDF search, documented in selection-log.json",
+  "shared_original_group": null,
+  "template_group": null,
+  "visual_inspection": {
+    "all_input_pages_inspected": true,
+    "renderer": "bundled PDFium scale1.8; earlier Poppler previews for first forms",
+    "scope": "complete input pages, including columns, selected marks, stamps, footers, continuation"
+  },
+  "reference_basis_note": "Image-only forms: source_text quotes are manual rendered-image transcriptions; visual_mark identifies actual selected choice. Born-digital quotes retain exact native substrings when available. Full-scope absence applies only to specified target and retained input."
+}

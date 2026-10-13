@@ -1,0 +1,64 @@
+{
+  "role": "Fable independent offline test designer; frozen source-only reference untouched",
+  "findings": [
+    {
+      "control": "independently_lossy_facts_bundled",
+      "finding": "Label overclaims loss. Both 'Alder City' and 'North Province' remain recoverable from the single bundled unit citing s5. This is an atomicity violation of the extraction prompt, not a completeness failure. A completeness comparison must count both facts as present; only unit count differs (2 vs 1)."
+    },
+    {
+      "control": "historical_filing_replaces_affected_rule",
+      "finding": "Label slightly overstates. Rule Q-8 is still recoverable from identity unit 9, and unit 9 remains a dependency of the transition. The defect is a misattributed transition assertion that is internally inconsistent with its own dependencies, not loss of the affected rule."
+    },
+    {
+      "control": "unsupported_force_certainty",
+      "finding": "Reading the bare imperative 'Send remarks by' as mandatory is contestable, not an established error. The defect is uncertainty 'none' with no explicit modal in the cited text. The same unit with uncertainty 'source_ambiguous' and a reason is admissible and the tests accept it."
+    },
+    {
+      "control": "silently_missing_deadline_dimensions",
+      "finding": "Two independent defects are fused: dropped clock/timezone/basis dimensions and an unsupported certain 'advisory' force. Review should report them separately."
+    },
+    {
+      "control": "background_dropped_but_all_spans_still_cited",
+      "finding": "Correctly demonstrates coverage is bookkeeping. The appended s8 on the s10 unit is a legal broad multi-span citation, so no structural rejection is expected or asserted."
+    },
+    {
+      "control": "all five",
+      "finding": "All pass validate, expand and contract. The validator is semantics-blind by design; tests assert this separation rather than claiming structural rejection of semantic defects."
+    },
+    {
+      "api": "capacity",
+      "finding": "schema() allows maxItems 160 while validate() requires fewer than 160 units. A 160-unit response passes the schema but fails validate with 'inventory bound/capacity reached'. Tested as a boundary, flagged as a mismatch to review."
+    },
+    {
+      "api": "span_table",
+      "finding": "splitlines also splits on \\x0b, \\x0c, \\x1c-\\x1e, \\x85, \\u2028 and \\u2029. The synthetic source contains none, so the 10-row partition is exact and CRLF is one separator. A source containing those characters would partition exactly but with more rows than visible lines."
+    },
+    {
+      "limits": "reviewer heuristics",
+      "finding": "Helpers in the test file (force_is_justified, date_only_dims_explicit, recoverable) read fixture wording such as 'deadline' and 'clock unknown'. They are AI assessment aids over the authored fixture, not an oracle and not requirements on any extractor. No live model output exists; passing shows fixture preservation only, never model discovery."
+    }
+  ],
+  "test_inventory": [
+    "SpanTableAndBinding.test_partition_is_exact_and_byte_preserving",
+    "SpanTableAndBinding.test_one_byte_source_mutation_breaks_binding",
+    "StructuralInvariants.test_fixture_validates_roundtrips_and_never_claims_completeness",
+    "StructuralInvariants.test_id_evidence_cycle_terminal_capacity_and_truncation_rejections",
+    "StructuralInvariants.test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural",
+    "SemanticVersusStructural.test_all_semantic_negatives_pass_the_structural_validator",
+    "DeadlineDimensions.test_missing_present_ambiguous_dimensions_and_silent_drop",
+    "AffectedRuleVersusHistoricalFiling.test_affected_rule_and_historical_filing_stay_distinct_on_one_broad_span",
+    "AffectedRuleVersusHistoricalFiling.test_misattributed_transition_is_structurally_valid_and_separately_reviewable",
+    "RecoverabilityAndDecomposition.test_bundled_facts_remain_recoverable_with_fewer_units",
+    "RecoverabilityAndDecomposition.test_span_coverage_does_not_prove_fact_coverage",
+    "AmbiguousForce.test_contested_force_with_reason_accepted_unsupported_certainty_flagged"
+  ],
+  "constraints_honored": [
+    "no network",
+    "no file writes",
+    "no external libraries",
+    "build() never called",
+    "no provider output created",
+    "no schema extension asserted",
+    "ASCII-only test source with no double quotes or backslashes"
+  ]
+}

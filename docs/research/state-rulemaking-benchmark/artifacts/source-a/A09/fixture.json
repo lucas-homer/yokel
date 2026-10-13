@@ -1,0 +1,152 @@
+{
+  "fixture_id": "A09",
+  "state": "US-NY",
+  "bucket": "dense register layouts",
+  "layout_features": [
+    "dense two-column register",
+    "bracketed deletions/italic additions",
+    "neighboring notice begins in right column"
+  ],
+  "event_type": "proposed amendment",
+  "source_url": "https://dos.ny.gov/september-30-2026vol-xlviii-issue-39",
+  "discovery_url": "https://dos.ny.gov/state-register",
+  "retrieved_at": "2026-10-06T00:33:42.355769+00:00",
+  "source_title": "SGC-39-26-00023-P Licensing of Owners in Thoroughbred Racing",
+  "selection_reason": "First complete one-page target on inspected gaming notice pages of latest available issue; complete target ends before adjacent Coupling heading.",
+  "original_sha256": "fa9905b20ef140f1b2fd32bd7c5eb70f550741de45645a5d579ee9a0cb720928",
+  "input_sha256": "ea6dc4db696db4aa590262cf7409655175a12a2ce64f67d9fbaa10cac5049e3e",
+  "original_byte_length": 852912,
+  "input_byte_length": 112805,
+  "original_physical_pages": [
+    30
+  ],
+  "original_page_count": 98,
+  "input_page_count": 1,
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Original is complete 98-page September 30, 2026 issue, shared between A09/A10; inputs are distinct unchanged single physical pages and hashes. Adjacent notice text remains and must not supply target fields. Full target notice and its analyses survive; other issue pages/cover not in input. Downloaded original bytes contain a 422-byte warning prefix before the PDF header and produce xref warnings; original bytes retained without repair, readers successfully render the unaltered selected page content."
+  ],
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "For target SGC-39-26-00023-P, which agency proposes the rule?",
+      "expected_value": "New York State Gaming Commission",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 30,
+      "input_page": 1,
+      "region": "top left agency heading",
+      "source_quote": "New Y ork State Gaming\nCommission",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "notice_id",
+      "question": "What is the identifier of the Licensing of Owners target notice?",
+      "expected_value": "SGC-39-26-00023-P",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 30,
+      "input_page": 1,
+      "region": "left upper target header",
+      "source_quote": "I.D. No. SGC-39-26-00023-P",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "subject",
+      "question": "What is the subject of SGC-39-26-00023-P?",
+      "expected_value": "Licensing of owners in Thoroughbred racing.",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 30,
+      "input_page": 1,
+      "region": "left target Subject",
+      "source_quote": "Subject: Licensing of owners in Thoroughbred racing.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "proposed_action_rule",
+      "question": "What action and rule citation belong to SGC-39-26-00023-P (not neighboring Coupling notice)?",
+      "expected_value": {
+        "action": "amendment",
+        "citation": "section 4026.3 of Title 9 NYCRR"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 30,
+      "input_page": 1,
+      "region": "left target Proposed Action",
+      "source_quote": "Proposed Action: Amendment of section 4026.3 of Title 9 NYCRR.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "hearing_status",
+      "question": "Does SGC-39-26-00023-P schedule a hearing?",
+      "expected_value": false,
+      "answerability": "explicit_negative",
+      "critical": true,
+      "original_page": 30,
+      "input_page": 1,
+      "region": "left top target heading",
+      "source_quote": "NO HEARING(S) SCHEDULED",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "comment_duration_anchor",
+      "question": "What comment duration and anchor does SGC-39-26-00023-P state, without computing a close?",
+      "expected_value": {
+        "duration": 60,
+        "unit": "days",
+        "anchor": "publication of this notice",
+        "computed_close": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 30,
+      "input_page": 1,
+      "region": "left target comment paragraph above Regulatory Impact Statement",
+      "source_quote": "Public comment will be received until: 60 days after publication of this\nnotice.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "issue_publication_date",
+      "question": "What publication date is printed in this target notice page issue header?",
+      "expected_value": {
+        "date": "2026-09-30",
+        "role": "issue publication header"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 30,
+      "input_page": 1,
+      "region": "page header/footer",
+      "source_quote": "NYS Register/September 30, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "compliance_trigger",
+      "question": "What future compliance trigger belongs to SGC-39-26-00023-P rather than a current effective date?",
+      "expected_value": {
+        "anchor": "publication of Notice of Adoption in State Register",
+        "fixed_date": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 30,
+      "input_page": 1,
+      "region": "right upper column target 10. COMPLIANCE SCHEDULE",
+      "source_quote": "upon\npublication of the Notice of Adoption in the State Register.",
+      "basis": "source_text"
+    }
+  ],
+  "collector": "source-a Codex task; source-only annotation before vendor parsing",
+  "reference_version": "collector-v1",
+  "discovery_method": "Official listing link or targeted official register PDF search, documented in selection-log.json",
+  "shared_original_group": "NY-2026-39",
+  "template_group": "NY-register-two-column",
+  "visual_inspection": {
+    "all_input_pages_inspected": true,
+    "renderer": "bundled PDFium scale1.8; earlier Poppler previews for first forms",
+    "scope": "complete input pages, including columns, selected marks, stamps, footers, continuation"
+  },
+  "reference_basis_note": "Image-only forms: source_text quotes are manual rendered-image transcriptions; visual_mark identifies actual selected choice. Born-digital quotes retain exact native substrings when available. Full-scope absence applies only to specified target and retained input."
+}

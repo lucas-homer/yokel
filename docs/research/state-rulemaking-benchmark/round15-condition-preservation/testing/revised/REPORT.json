@@ -1,0 +1,51 @@
+{
+  "status": "READY_LOCAL_R15_1_VERIFICATION",
+  "author": "Codex/GPT local deterministic execution only; no additional Fable/bridge call in this phase",
+  "validation": {
+    "owner_methods_passed": 31,
+    "unchanged_independent_methods_passed": 17,
+    "targeted_hardening_methods_passed": 6,
+    "module_override": "Load unchanged testing/execution/test_independent.py; replace module.C with loaded protocol-revised/compact.py in memory before loading/executing methods. No test file or old receipt edit.",
+    "original_test_sha256": "16b16f95e6bc2feaa2537ac988c58d0b2c9c2895401d652072541a5fc02b219f",
+    "original_test_file_and_receipts_unchanged": true
+  },
+  "material_checks": [
+    "399-node chain produces graph_depth ValueError under recursion limits1000 and600, preserving input; original leaked RecursionError at600.",
+    "399-node cycle produces node_cycle ValueError at recursion limit600.",
+    "Shared deepest path accepts depth12/rejects13 across multiple node orders; a shared diamond validates and roundtrips.",
+    "Contract inverse detaches d/b/a mutable lists in both directions.",
+    "Deadline-uncertainty and applicability-link guards reached directly with exact error codes and no modality/qual masking.",
+    "New r15.1 envelope, r15.spans.2 table and expanded v2 bind correctly; old envelope/table versions reject."
+  ],
+  "pins": {
+    "original_protocol_artifacts_unchanged": 37,
+    "revised_protocol_artifacts_match": 40,
+    "revised_READY_sha256": "dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50",
+    "R14_files_unchanged": 221,
+    "historical_baseline_entries_unchanged": 7063,
+    "frozen_independent_plan_and_original_execution_receipts_unchanged": true
+  },
+  "harness_incident": {
+    "initial_failure": "unittest consumed runpy launcher path arguments as test names; six test methods did not run",
+    "correction": "Set sys.argv to target script only before runpy.run_path",
+    "evidence": [
+      "INITIAL-RESULT.json",
+      "targeted-initial-output.txt"
+    ],
+    "tests_or_protocol_changed": false,
+    "rerun_scope": "targeted six only; owner31 and unchanged17 not repeated"
+  },
+  "remaining_limits": [
+    "No new implementation failure observed in these bounded checks; this is not exhaustive proof.",
+    "Original Fable assessment and its source-mapping/oracle limits remain unchanged. Focused revised Fable diff review is owned by the separate review child, not supplied or claimed here.",
+    "Deliberately shorter/wrong-scope/operator graphs still demonstrate structural acceptance, not semantic inversion detection or complete condition discovery.",
+    "Remaining12-family materialization/truth matrices, generic force/scope/paraphrase review and provider/runtime/schema compatibility remain deferred as originally disclosed.",
+    "No matched-tokenizer/live output-fit, accuracy, causal improvement, unseen evaluation, production eligibility or dispatch approval."
+  ],
+  "bridge_calls": 0,
+  "research_api_experiments": 0,
+  "credentials_read": false,
+  "runtime_signer_executor_calls": 0,
+  "old_protocol_code_edits": false,
+  "completed_utc": "2026-10-13T04:58:37.642924+00:00"
+}

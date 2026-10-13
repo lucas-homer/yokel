@@ -1,0 +1,609 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "round9.exact-id.record_verdict.v1"
+      ]
+    },
+    "document_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "enum": [
+        "doc-92211b8c7ba0"
+      ]
+    },
+    "payload_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "enum": [
+        "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c"
+      ]
+    },
+    "completeness": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "incomplete",
+            "uncertain"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "evidence": {
+          "$ref": "#/$defs/e"
+        }
+      },
+      "required": [
+        "label",
+        "reason",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "source_identity": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "enum": [
+            "resolved",
+            "unresolved",
+            "contradicted",
+            "uncertain"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "evidence": {
+          "$ref": "#/$defs/e"
+        }
+      },
+      "required": [
+        "label",
+        "reason",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "assessments": {
+      "type": "object",
+      "properties": {
+        "ag_comments": {
+          "$ref": "#/$defs/a"
+        },
+        "ag_phone": {
+          "$ref": "#/$defs/a"
+        },
+        "c_access_reference": {
+          "$ref": "#/$defs/a"
+        },
+        "c_comment_email": {
+          "$ref": "#/$defs/a"
+        },
+        "c_comment_web": {
+          "$ref": "#/$defs/a"
+        },
+        "c_coordinator_email": {
+          "$ref": "#/$defs/a"
+        },
+        "c_coordinator_name": {
+          "$ref": "#/$defs/a"
+        },
+        "c_coordinator_phone": {
+          "$ref": "#/$defs/a"
+        },
+        "c_form_email": {
+          "$ref": "#/$defs/a"
+        },
+        "c_general_email": {
+          "$ref": "#/$defs/a"
+        },
+        "c_mail_address": {
+          "$ref": "#/$defs/a"
+        },
+        "c_mail_attn": {
+          "$ref": "#/$defs/a"
+        },
+        "c_mail_office": {
+          "$ref": "#/$defs/a"
+        },
+        "c_meeting": {
+          "$ref": "#/$defs/a"
+        },
+        "c_phone1": {
+          "$ref": "#/$defs/a"
+        },
+        "c_phone1_code": {
+          "$ref": "#/$defs/a"
+        },
+        "c_phone1_region": {
+          "$ref": "#/$defs/a"
+        },
+        "c_phone2": {
+          "$ref": "#/$defs/a"
+        },
+        "c_phone2_code": {
+          "$ref": "#/$defs/a"
+        },
+        "c_phone2_region": {
+          "$ref": "#/$defs/a"
+        },
+        "c_query_address": {
+          "$ref": "#/$defs/a"
+        },
+        "c_query_email": {
+          "$ref": "#/$defs/a"
+        },
+        "c_query_name": {
+          "$ref": "#/$defs/a"
+        },
+        "c_query_office": {
+          "$ref": "#/$defs/a"
+        },
+        "c_query_phone": {
+          "$ref": "#/$defs/a"
+        },
+        "c_testify": {
+          "$ref": "#/$defs/a"
+        },
+        "c_view": {
+          "$ref": "#/$defs/a"
+        },
+        "c_zoom": {
+          "$ref": "#/$defs/a"
+        },
+        "e_accessibility": {
+          "$ref": "#/$defs/a"
+        },
+        "e_comments": {
+          "$ref": "#/$defs/a"
+        },
+        "e_hearing": {
+          "$ref": "#/$defs/a"
+        },
+        "e_registration": {
+          "$ref": "#/$defs/a"
+        },
+        "i_agency": {
+          "$ref": "#/$defs/a"
+        },
+        "i_order": {
+          "$ref": "#/$defs/a"
+        },
+        "i_rule": {
+          "$ref": "#/$defs/a"
+        },
+        "q_access_aids": {
+          "$ref": "#/$defs/a"
+        },
+        "q_access_request": {
+          "$ref": "#/$defs/a"
+        },
+        "q_channels": {
+          "$ref": "#/$defs/a"
+        },
+        "q_comment_contact": {
+          "$ref": "#/$defs/a"
+        },
+        "q_coordinator": {
+          "$ref": "#/$defs/a"
+        },
+        "q_equal_weight": {
+          "$ref": "#/$defs/a"
+        },
+        "q_phone_form": {
+          "$ref": "#/$defs/a"
+        },
+        "q_preregister": {
+          "$ref": "#/$defs/a"
+        },
+        "q_questions": {
+          "$ref": "#/$defs/a"
+        },
+        "q_receipt": {
+          "$ref": "#/$defs/a"
+        },
+        "q_view": {
+          "$ref": "#/$defs/a"
+        },
+        "q_web_review": {
+          "$ref": "#/$defs/a"
+        },
+        "q_zoom_signup": {
+          "$ref": "#/$defs/a"
+        },
+        "r_access_contact": {
+          "$ref": "#/$defs/a"
+        },
+        "r_comment_email": {
+          "$ref": "#/$defs/a"
+        },
+        "r_comment_web": {
+          "$ref": "#/$defs/a"
+        },
+        "r_coordinator": {
+          "$ref": "#/$defs/a"
+        },
+        "r_form_email": {
+          "$ref": "#/$defs/a"
+        },
+        "r_general_email": {
+          "$ref": "#/$defs/a"
+        },
+        "r_mail": {
+          "$ref": "#/$defs/a"
+        },
+        "r_meeting": {
+          "$ref": "#/$defs/a"
+        },
+        "r_oral": {
+          "$ref": "#/$defs/a"
+        },
+        "r_phone1": {
+          "$ref": "#/$defs/a"
+        },
+        "r_phone2": {
+          "$ref": "#/$defs/a"
+        },
+        "r_query": {
+          "$ref": "#/$defs/a"
+        },
+        "r_view": {
+          "$ref": "#/$defs/a"
+        },
+        "r_zoom_signup": {
+          "$ref": "#/$defs/a"
+        },
+        "t_access_request": {
+          "$ref": "#/$defs/a"
+        },
+        "t_advance": {
+          "$ref": "#/$defs/a"
+        },
+        "t_comments_close": {
+          "$ref": "#/$defs/a"
+        },
+        "t_hearing_clock": {
+          "$ref": "#/$defs/a"
+        },
+        "t_hearing_date": {
+          "$ref": "#/$defs/a"
+        },
+        "u_access_contact": {
+          "$ref": "#/$defs/a"
+        },
+        "u_access_timing": {
+          "$ref": "#/$defs/a"
+        },
+        "u_timezone": {
+          "$ref": "#/$defs/a"
+        }
+      },
+      "required": [
+        "ag_comments",
+        "ag_phone",
+        "c_access_reference",
+        "c_comment_email",
+        "c_comment_web",
+        "c_coordinator_email",
+        "c_coordinator_name",
+        "c_coordinator_phone",
+        "c_form_email",
+        "c_general_email",
+        "c_mail_address",
+        "c_mail_attn",
+        "c_mail_office",
+        "c_meeting",
+        "c_phone1",
+        "c_phone1_code",
+        "c_phone1_region",
+        "c_phone2",
+        "c_phone2_code",
+        "c_phone2_region",
+        "c_query_address",
+        "c_query_email",
+        "c_query_name",
+        "c_query_office",
+        "c_query_phone",
+        "c_testify",
+        "c_view",
+        "c_zoom",
+        "e_accessibility",
+        "e_comments",
+        "e_hearing",
+        "e_registration",
+        "i_agency",
+        "i_order",
+        "i_rule",
+        "q_access_aids",
+        "q_access_request",
+        "q_channels",
+        "q_comment_contact",
+        "q_coordinator",
+        "q_equal_weight",
+        "q_phone_form",
+        "q_preregister",
+        "q_questions",
+        "q_receipt",
+        "q_view",
+        "q_web_review",
+        "q_zoom_signup",
+        "r_access_contact",
+        "r_comment_email",
+        "r_comment_web",
+        "r_coordinator",
+        "r_form_email",
+        "r_general_email",
+        "r_mail",
+        "r_meeting",
+        "r_oral",
+        "r_phone1",
+        "r_phone2",
+        "r_query",
+        "r_view",
+        "r_zoom_signup",
+        "t_access_request",
+        "t_advance",
+        "t_comments_close",
+        "t_hearing_clock",
+        "t_hearing_date",
+        "u_access_contact",
+        "u_access_timing",
+        "u_timezone"
+      ],
+      "additionalProperties": false
+    },
+    "missing_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "event",
+              "timing",
+              "route",
+              "requirement",
+              "identity",
+              "uncertainty",
+              "component",
+              "alternative_group"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "evidence": {
+            "$ref": "#/$defs/e"
+          }
+        },
+        "required": [
+          "kind",
+          "description",
+          "evidence"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 200
+    },
+    "contradictions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "enum": [
+                "ag_comments",
+                "ag_phone",
+                "c_access_reference",
+                "c_comment_email",
+                "c_comment_web",
+                "c_coordinator_email",
+                "c_coordinator_name",
+                "c_coordinator_phone",
+                "c_form_email",
+                "c_general_email",
+                "c_mail_address",
+                "c_mail_attn",
+                "c_mail_office",
+                "c_meeting",
+                "c_phone1",
+                "c_phone1_code",
+                "c_phone1_region",
+                "c_phone2",
+                "c_phone2_code",
+                "c_phone2_region",
+                "c_query_address",
+                "c_query_email",
+                "c_query_name",
+                "c_query_office",
+                "c_query_phone",
+                "c_testify",
+                "c_view",
+                "c_zoom",
+                "e_accessibility",
+                "e_comments",
+                "e_hearing",
+                "e_registration",
+                "i_agency",
+                "i_order",
+                "i_rule",
+                "q_access_aids",
+                "q_access_request",
+                "q_channels",
+                "q_comment_contact",
+                "q_coordinator",
+                "q_equal_weight",
+                "q_phone_form",
+                "q_preregister",
+                "q_questions",
+                "q_receipt",
+                "q_view",
+                "q_web_review",
+                "q_zoom_signup",
+                "r_access_contact",
+                "r_comment_email",
+                "r_comment_web",
+                "r_coordinator",
+                "r_form_email",
+                "r_general_email",
+                "r_mail",
+                "r_meeting",
+                "r_oral",
+                "r_phone1",
+                "r_phone2",
+                "r_query",
+                "r_view",
+                "r_zoom_signup",
+                "t_access_request",
+                "t_advance",
+                "t_comments_close",
+                "t_hearing_clock",
+                "t_hearing_date",
+                "u_access_contact",
+                "u_access_timing",
+                "u_timezone"
+              ]
+            },
+            "minItems": 0,
+            "maxItems": 200
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "evidence": {
+            "$ref": "#/$defs/e"
+          }
+        },
+        "required": [
+          "item_ids",
+          "description",
+          "evidence"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 200
+    }
+  },
+  "required": [
+    "schema_version",
+    "document_id",
+    "payload_sha256",
+    "completeness",
+    "source_identity",
+    "assessments",
+    "missing_items",
+    "contradictions"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "a": {
+      "type": "object",
+      "properties": {
+        "support": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "contradicted",
+            "uncertain"
+          ]
+        },
+        "association": {
+          "type": "string",
+          "enum": [
+            "matched",
+            "mismatched",
+            "uncertain",
+            "not_applicable"
+          ]
+        },
+        "requirements": {
+          "type": "string",
+          "enum": [
+            "preserved",
+            "omitted_or_changed",
+            "uncertain",
+            "not_applicable"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "evidence": {
+          "$ref": "#/$defs/e"
+        }
+      },
+      "required": [
+        "support",
+        "association",
+        "requirements",
+        "reason",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "e": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "quote": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30000
+          },
+          "occurrence": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "context": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 30000
+          }
+        },
+        "required": [
+          "quote",
+          "occurrence",
+          "context"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 30
+    }
+  }
+}

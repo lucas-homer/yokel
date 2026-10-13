@@ -1,0 +1,84 @@
+{
+  "amendment": 4,
+  "drafted_at_utc": "2026-10-06T05:00:32.141155+00:00",
+  "status": "adopted_by_primary_before_pilot",
+  "purpose": "Continue already-authorized frozen comparison through authenticated dashboard with durable visible job IDs, status and output downloads",
+  "preserved_history": {
+    "connector_provider_stop": "Unchanged; third consecutive operational timeout latched stop, fourth was already in flight",
+    "original_connector_timeouts": 4,
+    "existing_jobs_recovered_success": 4,
+    "recovery_basis": "Primary dashboard observations, downloaded artifacts and passing retained-artifact operations audit; not independent raw API configuration verification",
+    "old_artifacts": "No old captures, frozen references, source PDFs or prior results modified"
+  },
+  "remaining_scope": {
+    "fixtures": [
+      "A03",
+      "A04",
+      "A05",
+      "A06",
+      "A07",
+      "A08",
+      "A09",
+      "A10",
+      "B01",
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B09",
+      "B10"
+    ],
+    "excluded": [
+      "A01",
+      "A02"
+    ],
+    "new_jobs_planned": 36,
+    "input_pages_per_tier": 32,
+    "nominal_credits": 1760
+  },
+  "planned_settings": {
+    "tiers": [
+      "agentic",
+      "agentic_plus"
+    ],
+    "version": "latest",
+    "instructions": "none; no reference hints or expected answers",
+    "input_bytes": "exact staged frozen originals/excerpts",
+    "output": "markdown semantics matching original comparison; capture any UI-specific differences",
+    "settings_capture": "Primary records actual UI settings, durable job IDs, input mapping, timing, status, usage and downloads; do not assert options before UI verification"
+  },
+  "execution_gate": {
+    "pilot_fixture": "A03",
+    "pilot_tier": "agentic",
+    "next_step": "Primary submits A03 agentic pilot alone and inspects durable job mapping, terminal success and output retrieval. Then submit at most two jobs at a time, inspecting terminal states before the next pair. Staging 18 files does not authorize simultaneous 18-job execution.",
+    "duplicate_prevention": "Reconcile visible job/file IDs before retry; never blindly repeat an uncertain submission",
+    "reference_freeze": "No reference or corpus changes; no outcome-driven replacements",
+    "max_concurrent_provider_jobs": 2,
+    "consecutive_failure_stop": 3
+  },
+  "provenance_caveats": [
+    "UI configuration/status transcriptions must remain distinct from raw downloaded artifacts",
+    "Original connector failure metrics remain intact despite recovered service success",
+    "1760 credits is a nominal estimate, not measured consumption or currency cost",
+    "Preparation made no vendor/UI calls and submitted no jobs"
+  ],
+  "adopted_at_utc": "2026-10-06T05:01:40.540025+00:00",
+  "ui_preflight_observations": {
+    "agentic_selected": true,
+    "cost_optimizer": false,
+    "max_pages": false,
+    "target_pages": false,
+    "custom_prompt": false,
+    "skip_text_inside_images": false,
+    "output_tables_as_markdown": false,
+    "cache_results": true,
+    "preserve_very_small_text": false,
+    "inline_images_in_markdown": false,
+    "merge_continued_tables": false,
+    "confidence": "standard",
+    "note": "Observed in authenticated dashboard Build and Advanced settings; dated version not exposed before run. No setting changed."
+  }
+}

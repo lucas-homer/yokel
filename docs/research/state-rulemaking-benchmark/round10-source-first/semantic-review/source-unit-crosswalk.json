@@ -1,0 +1,1289 @@
+{
+  "schema_version": "round10.semantic.source-crosswalk.v1",
+  "all_original_units_accounted": 31,
+  "all_generated_units_accounted": 46,
+  "mapping": "Many-to-many qualitative comparison; never one generated unit = one original truth unit",
+  "unchanged_original_counts": {
+    "matched": 21,
+    "mismatched": 2,
+    "unknown": 8
+  },
+  "unchanged_original_exclusions": [
+    {
+      "pages": [
+        1,
+        2
+      ],
+      "rationale": "Exclude substantive APM program description, policy rationale and Initial Regulatory Flexibility Analysis; retain notice identity and all participation/contact information. No hidden Hearing Appearance form href certified."
+    }
+  ],
+  "rows": [
+    {
+      "source_unit_id": "agency",
+      "original_source_unit": {
+        "id": "agency",
+        "category": "identity",
+        "subtype": "agency",
+        "description": "Rulemaking agency",
+        "raw_value": "Department of Natural Resources",
+        "modality": "descriptive",
+        "targets": [
+          "$notice"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "opening",
+            "quote": "The Department of Natural Resources announces that it will hold a public hearing"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "agency",
+        "status": "matched",
+        "claim_ids": [
+          "i_agency"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u001"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u001": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "rule",
+      "original_source_unit": {
+        "id": "rule",
+        "category": "identity",
+        "subtype": "rule_identity",
+        "description": "Aquatic plant management permanent-rule repeal/recreation",
+        "raw_value": "chs. NR 107 and 109; ch. NR 107",
+        "modality": "descriptive",
+        "targets": [
+          "$notice"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "opening",
+            "quote": "permanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "rule",
+        "status": "mismatched",
+        "claim_ids": [
+          "i_rule",
+          "e_hearing"
+        ],
+        "basis": "Chapter107/109 identifiers and general aquatic-rule topic survive, but repeal of both chapters and recreation of107 appear only in evidence. The composite frozen identity is partially recovered, not fully matched; no source-label denominator change."
+      },
+      "stage_A_unit_ids": [
+        "u002",
+        "u003"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u002": "mismatched",
+        "u003": "mismatched"
+      },
+      "independent_comparison": "A u002 explicitly captures both repeals and recreation; B correctly finds unchanged record partial. u003 adds finer opening subjects, separately qualified."
+    },
+    {
+      "source_unit_id": "order",
+      "original_source_unit": {
+        "id": "order",
+        "category": "identity",
+        "subtype": "proceeding_identifier",
+        "description": "NRB order identifies rule",
+        "raw_value": "WY-20-23",
+        "modality": "descriptive",
+        "targets": [
+          "$notice"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "rule access",
+            "quote": "The rule may be viewed Under NRB Order number WY-20-23 at:"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "order",
+        "status": "matched",
+        "claim_ids": [
+          "i_order"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u038"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u038": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "hearing",
+      "original_source_unit": {
+        "id": "hearing",
+        "category": "fact",
+        "subtype": "phase",
+        "description": "Public hearing with public testimony opportunity",
+        "raw_value": "public hearing",
+        "modality": "descriptive",
+        "targets": [
+          "$notice"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "opening and appearances",
+            "quote": "The public has the opportunity to testify at the hearing."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "hearing",
+        "status": "matched",
+        "claim_ids": [
+          "e_hearing",
+          "r_oral",
+          "c_testify"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u001",
+        "u027"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u001": "matched",
+        "u027": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "hearing_time",
+      "original_source_unit": {
+        "id": "hearing_time",
+        "category": "fact",
+        "subtype": "timing",
+        "description": "Hearing date and clock time; no timezone stated",
+        "raw_value": "April 22, 2026; 1:00 PM",
+        "modality": "descriptive",
+        "targets": [
+          "hearing"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Hearing Information",
+            "quote": "Date: April 22, 2026\nTime: 1:00 PM"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "hearing_time",
+        "status": "matched",
+        "claim_ids": [
+          "t_hearing_date",
+          "t_hearing_clock"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u004",
+        "u005"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u004": "matched",
+        "u005": "unknown"
+      },
+      "independent_comparison": "Date and time captured; B time unknown follows no-timezone uncertainty, not a missing clock or changed original hearing_time label."
+    },
+    {
+      "source_unit_id": "zoom",
+      "original_source_unit": {
+        "id": "zoom",
+        "category": "fact",
+        "subtype": "hearing_access",
+        "description": "Virtual Zoom registration/access URL",
+        "raw_value": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrIdGeo84g",
+        "modality": "descriptive",
+        "targets": [
+          "hearing"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Hearing Information",
+            "quote": "Virtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrIdGeo84g"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "zoom",
+        "status": "unknown",
+        "claim_ids": [
+          "c_zoom",
+          "r_zoom_signup"
+        ],
+        "basis": "Exact I/l source-reference glyph remains unknown. Supplementary PDF annotation supports inventory lowercase l but does not retroactively alter image-reference mapping. Zoom access role is indirect through join-via-Zoom instruction; URL uncertainty prevents full certification."
+      },
+      "stage_A_unit_ids": [
+        "u006"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented_original_reference_limit",
+      "stage_B_model_dispositions": {
+        "u006": "matched"
+      },
+      "independent_comparison": "Native local facts preserved, but original I/l uncertainty and frozen dependent-unit closure remain unchanged; A graph is not the original source graph."
+    },
+    {
+      "source_unit_id": "meeting_id",
+      "original_source_unit": {
+        "id": "meeting_id",
+        "category": "fact",
+        "subtype": "access_component",
+        "description": "Zoom meeting identifier",
+        "raw_value": "896 2745 6939",
+        "modality": "descriptive",
+        "targets": [
+          "zoom"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Hearing Information",
+            "quote": "Meeting ID: 896 2745 6939"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "meeting_id",
+        "status": "unknown",
+        "claim_ids": [
+          "r_meeting",
+          "c_meeting"
+        ],
+        "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: zoom. Propagated reference uncertainty, not a new erroneous literal."
+      },
+      "stage_A_unit_ids": [
+        "u007"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented_original_reference_limit",
+      "stage_B_model_dispositions": {
+        "u007": "matched"
+      },
+      "independent_comparison": "Native local facts preserved, but original I/l uncertainty and frozen dependent-unit closure remain unchanged; A graph is not the original source graph."
+    },
+    {
+      "source_unit_id": "phone1",
+      "original_source_unit": {
+        "id": "phone1",
+        "category": "fact",
+        "subtype": "hearing_access",
+        "description": "First dial-in access number with meeting code",
+        "raw_value": "+13052241968, 89627456939# US",
+        "modality": "descriptive",
+        "targets": [
+          "hearing",
+          "meeting_id"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Join by phone",
+            "quote": "+13052241968, 89627456939# US"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "phone1",
+        "status": "unknown",
+        "claim_ids": [
+          "r_phone1",
+          "c_phone1",
+          "c_phone1_code",
+          "c_phone1_region"
+        ],
+        "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: meeting_id. Propagated reference uncertainty, not a new erroneous literal."
+      },
+      "stage_A_unit_ids": [
+        "u008"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented_original_reference_limit",
+      "stage_B_model_dispositions": {
+        "u008": "matched"
+      },
+      "independent_comparison": "Native local facts preserved, but original I/l uncertainty and frozen dependent-unit closure remain unchanged; A graph is not the original source graph."
+    },
+    {
+      "source_unit_id": "phone2",
+      "original_source_unit": {
+        "id": "phone2",
+        "category": "fact",
+        "subtype": "hearing_access",
+        "description": "Second dial-in access number with meeting code",
+        "raw_value": "+13092053325, 89627456939# US",
+        "modality": "descriptive",
+        "targets": [
+          "hearing",
+          "meeting_id"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Join by phone",
+            "quote": "+13092053325, 89627456939# US"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "phone2",
+        "status": "unknown",
+        "claim_ids": [
+          "r_phone2",
+          "c_phone2",
+          "c_phone2_code",
+          "c_phone2_region"
+        ],
+        "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: meeting_id. Propagated reference uncertainty, not a new erroneous literal."
+      },
+      "stage_A_unit_ids": [
+        "u009"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented_original_reference_limit",
+      "stage_B_model_dispositions": {
+        "u009": "matched"
+      },
+      "independent_comparison": "Native local facts preserved, but original I/l uncertainty and frozen dependent-unit closure remain unchanged; A graph is not the original source graph."
+    },
+    {
+      "source_unit_id": "access_alternatives",
+      "original_source_unit": {
+        "id": "access_alternatives",
+        "category": "relationship",
+        "subtype": "alternative_group",
+        "description": "Zoom and two telephone access alternatives",
+        "raw_value": null,
+        "modality": "descriptive",
+        "targets": [
+          "zoom",
+          "phone1",
+          "phone2"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Hearing Information",
+            "quote": "Virtual Zoom Link:"
+          },
+          {
+            "page": 1,
+            "region": "Hearing Information",
+            "quote": "Join by phone:"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "access_alternatives",
+        "status": "mismatched",
+        "claim_ids": [
+          "ag_phone",
+          "r_zoom_signup",
+          "r_meeting"
+        ],
+        "basis": "ag_phone groups only the two telephone options. Zoom registration/meeting items exist separately but no structured relation groups Zoom with phone as hearing-access alternatives. Partial relation is mismatched, independently of glyph ambiguity."
+      },
+      "stage_A_unit_ids": [
+        "u010"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u010": "mismatched"
+      },
+      "independent_comparison": "A u010 asserts full Zoom/two-phone access relationship; B correctly rejects phone-only record group as incomplete."
+    },
+    {
+      "source_unit_id": "zoom_register",
+      "original_source_unit": {
+        "id": "zoom_register",
+        "category": "instruction",
+        "subtype": "registration",
+        "description": "Zoom attendees asked to register or preregister through link and enter Hearing Appearance form information",
+        "raw_value": null,
+        "modality": "mandatory",
+        "targets": [
+          "zoom"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Appearances",
+            "quote": "To join via Zoom, please register or pre-register using the link above, which will prompt you to enter information required on the Hearing Appearance form."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "zoom_register",
+        "status": "unknown",
+        "claim_ids": [
+          "q_zoom_signup",
+          "r_zoom_signup"
+        ],
+        "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: zoom. Propagated reference uncertainty, not a new erroneous literal."
+      },
+      "stage_A_unit_ids": [
+        "u028"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented_original_reference_limit",
+      "stage_B_model_dispositions": {
+        "u028": "matched"
+      },
+      "independent_comparison": "Native local facts preserved, but original I/l uncertainty and frozen dependent-unit closure remain unchanged; A graph is not the original source graph."
+    },
+    {
+      "source_unit_id": "spoken_preregister",
+      "original_source_unit": {
+        "id": "spoken_preregister",
+        "category": "instruction",
+        "subtype": "recommendation",
+        "description": "Pre-registration strongly encouraged for intended spoken commenters, not an absolute advance cutoff",
+        "raw_value": null,
+        "modality": "optional",
+        "targets": [
+          "hearing",
+          "zoom_register"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Appearances",
+            "quote": "Pre-registration is strongly encouraged if you plan to provide spoken comments during the hearing."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "spoken_preregister",
+        "status": "unknown",
+        "claim_ids": [
+          "q_preregister"
+        ],
+        "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: zoom_register. Propagated reference uncertainty, not a new erroneous literal."
+      },
+      "stage_A_unit_ids": [
+        "u029"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented_original_reference_limit",
+      "stage_B_model_dispositions": {
+        "u029": "matched"
+      },
+      "independent_comparison": "Native local facts preserved, but original I/l uncertainty and frozen dependent-unit closure remain unchanged; A graph is not the original source graph."
+    },
+    {
+      "source_unit_id": "appearance_form",
+      "original_source_unit": {
+        "id": "appearance_form",
+        "category": "ancillary",
+        "subtype": "form_link",
+        "description": "Visible fillable Hearing Appearance form label; hidden target unavailable",
+        "raw_value": "Hearing Appearance form",
+        "modality": "descriptive",
+        "targets": [
+          "hearing"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Appearances",
+            "quote": "please download and complete the fillable Hearing Appearance form"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "appearance_form",
+        "status": "matched",
+        "claim_ids": [
+          "q_phone_form",
+          "q_phone_form_download_absence"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u030"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u030": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "signup_email",
+      "original_source_unit": {
+        "id": "signup_email",
+        "category": "fact",
+        "subtype": "signup_route",
+        "description": "Email for phoning attendees to send appearance form",
+        "raw_value": "Sarah.wood@wisconsin.gov",
+        "modality": "descriptive",
+        "targets": [
+          "hearing"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Appearances",
+            "quote": "send it to Sarah.wood@wisconsin.gov."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "signup_email",
+        "status": "matched",
+        "claim_ids": [
+          "r_form_email",
+          "c_form_email"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u030"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u030": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "phone_form",
+      "original_source_unit": {
+        "id": "phone_form",
+        "category": "instruction",
+        "subtype": "conditional_requirement",
+        "description": "Phone participants asked to download, complete and email appearance form",
+        "raw_value": null,
+        "modality": "conditional",
+        "targets": [
+          "phone1",
+          "phone2",
+          "appearance_form",
+          "signup_email"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Appearances",
+            "quote": "For those who plan to phone in, please download and complete the fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "phone_form",
+        "status": "unknown",
+        "claim_ids": [
+          "q_phone_form",
+          "r_form_email"
+        ],
+        "basis": "Local claim content is supported; frozen endpoint-closure rule withholds full credit because required target(s) are unresolved: phone1, phone2. Propagated reference uncertainty, not a new erroneous literal."
+      },
+      "stage_A_unit_ids": [
+        "u030"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented_original_reference_limit",
+      "stage_B_model_dispositions": {
+        "u030": "matched"
+      },
+      "independent_comparison": "Native local facts preserved, but original I/l uncertainty and frozen dependent-unit closure remain unchanged; A graph is not the original source graph."
+    },
+    {
+      "source_unit_id": "written",
+      "original_source_unit": {
+        "id": "written",
+        "category": "fact",
+        "subtype": "phase",
+        "description": "Written comments on proposed rule",
+        "raw_value": "Written comments",
+        "modality": "descriptive",
+        "targets": [
+          "$notice"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "opening",
+            "quote": "Written comments may be submitted by U.S. mail, E-mail, or through the internet"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "written",
+        "status": "matched",
+        "claim_ids": [
+          "e_comments"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u031",
+        "u032",
+        "u033",
+        "u034",
+        "u035",
+        "u037"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u031": "matched",
+        "u032": "matched",
+        "u033": "matched",
+        "u034": "matched",
+        "u035": "matched",
+        "u037": "mismatched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "written_cutoff",
+      "original_source_unit": {
+        "id": "written_cutoff",
+        "category": "fact",
+        "subtype": "timing",
+        "description": "Receipt cutoff, date only",
+        "raw_value": "April 30, 2026",
+        "modality": "mandatory",
+        "targets": [
+          "written"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "opening",
+            "quote": "Comments on the proposed rule must be received on or before April 30, 2026."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "written_cutoff",
+        "status": "matched",
+        "claim_ids": [
+          "t_comments_close",
+          "q_receipt"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u031"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u031": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "mail",
+      "original_source_unit": {
+        "id": "mail",
+        "category": "fact",
+        "subtype": "direct_route",
+        "description": "Madi Johansen postal route for written comments",
+        "raw_value": "Department of Natural Resources; Attn: Madi Johansen; 3550 Mormon Coulee Road, La Crosse, WI",
+        "modality": "descriptive",
+        "targets": [
+          "written"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "comment contact",
+            "quote": "Department of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "mail",
+        "status": "matched",
+        "claim_ids": [
+          "r_mail",
+          "c_mail_office",
+          "c_mail_attn",
+          "c_mail_address"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u037"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u037": "mismatched"
+      },
+      "independent_comparison": "Values and shared comments/questions role present in composite u037. Source should advice captured, B flags modality loss; phone-channel distinction remains a separate limitation."
+    },
+    {
+      "source_unit_id": "email1",
+      "original_source_unit": {
+        "id": "email1",
+        "category": "fact",
+        "subtype": "direct_route",
+        "description": "Contact email accepts written comments",
+        "raw_value": "Madison.johansen@wisconsin.gov",
+        "modality": "descriptive",
+        "targets": [
+          "written"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "comment contact",
+            "quote": "Written comments and any questions on the proposed rules should be submitted to:"
+          },
+          {
+            "page": 2,
+            "region": "comment contact",
+            "quote": "608-712-2798, Madison.johansen@wisconsin.gov"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "email1",
+        "status": "matched",
+        "claim_ids": [
+          "r_comment_email",
+          "c_comment_email"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u037"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u037": "mismatched"
+      },
+      "independent_comparison": "Values and shared comments/questions role present in composite u037. Source should advice captured, B flags modality loss; phone-channel distinction remains a separate limitation."
+    },
+    {
+      "source_unit_id": "email2",
+      "original_source_unit": {
+        "id": "email2",
+        "category": "fact",
+        "subtype": "direct_route",
+        "description": "Additional comment email",
+        "raw_value": "DNRAdministrativeRulesComments@wisconsin.gov",
+        "modality": "descriptive",
+        "targets": [
+          "written"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "comment email",
+            "quote": "Comments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "email2",
+        "status": "matched",
+        "claim_ids": [
+          "r_general_email",
+          "c_general_email"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u039"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u039": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "portal",
+      "original_source_unit": {
+        "id": "portal",
+        "category": "fact",
+        "subtype": "direct_route",
+        "description": "Online comment route also provides rule review",
+        "raw_value": "http://docs.legis.wisconsin.gov/code/chr/hearings",
+        "modality": "descriptive",
+        "targets": [
+          "written"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "rule/comment access",
+            "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "portal",
+        "status": "matched",
+        "claim_ids": [
+          "r_comment_web",
+          "c_comment_web",
+          "q_web_review"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u040",
+        "u041"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u040": "matched",
+        "u041": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "written_alternatives",
+      "original_source_unit": {
+        "id": "written_alternatives",
+        "category": "relationship",
+        "subtype": "alternative_group",
+        "description": "Postal, email and internet submission alternatives",
+        "raw_value": null,
+        "modality": "descriptive",
+        "targets": [
+          "mail",
+          "email1",
+          "email2",
+          "portal"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "opening",
+            "quote": "Written comments may be submitted by U.S. mail, E-mail, or through the internet"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "written_alternatives",
+        "status": "matched",
+        "claim_ids": [
+          "ag_comments",
+          "q_channels"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u035",
+        "u037",
+        "u039",
+        "u041"
+      ],
+      "stage_A_qualitative_coverage": "partial_endpoint_relationship",
+      "stage_B_model_dispositions": {
+        "u035": "matched",
+        "u037": "mismatched",
+        "u039": "matched",
+        "u041": "matched"
+      },
+      "independent_comparison": "A u035 groups broad mail/email/internet channels with deadline. Actual destinations are spread across composite u037 and u039/u041 but absent from its dependency set as separate endpoint units. B matches coarse assertion without establishing full endpoint-level inventory coverage."
+    },
+    {
+      "source_unit_id": "equal_weight",
+      "original_source_unit": {
+        "id": "equal_weight",
+        "category": "disclosure",
+        "subtype": "consideration_policy",
+        "description": "Written comments have same weight/effect as oral statements",
+        "raw_value": null,
+        "modality": "descriptive",
+        "targets": [
+          "written",
+          "hearing"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "opening",
+            "quote": "will have the same weight and effect as oral statements presented at the public hearing."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "equal_weight",
+        "status": "matched",
+        "claim_ids": [
+          "q_equal_weight"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u036"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u036": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "rule_view",
+      "original_source_unit": {
+        "id": "rule_view",
+        "category": "ancillary",
+        "subtype": "rule_access",
+        "description": "Rule access link under order WY-20-23",
+        "raw_value": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html",
+        "modality": "descriptive",
+        "targets": [
+          "order"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "rule access",
+            "quote": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "rule_view",
+        "status": "matched",
+        "claim_ids": [
+          "r_view",
+          "c_view",
+          "q_view"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u038",
+        "u042"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u038": "matched",
+        "u042": "mismatched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "query_contact",
+      "original_source_unit": {
+        "id": "query_contact",
+        "category": "ancillary",
+        "subtype": "information_contact",
+        "description": "Madi Johansen receives questions as well as comments",
+        "raw_value": "Madi Johansen",
+        "modality": "descriptive",
+        "targets": [
+          "mail",
+          "email1"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "comment contact",
+            "quote": "Written comments and any questions on the proposed rules should be submitted to:"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "query_contact",
+        "status": "matched",
+        "claim_ids": [
+          "q_questions",
+          "r_query",
+          "c_query_name"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u037"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u037": "mismatched"
+      },
+      "independent_comparison": "Values and shared comments/questions role present in composite u037. Source should advice captured, B flags modality loss; phone-channel distinction remains a separate limitation."
+    },
+    {
+      "source_unit_id": "query_phone",
+      "original_source_unit": {
+        "id": "query_phone",
+        "category": "ancillary",
+        "subtype": "information_phone",
+        "description": "Contact telephone; not a written-submission endpoint",
+        "raw_value": "608-712-2798",
+        "modality": "descriptive",
+        "targets": [
+          "query_contact"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "comment contact",
+            "quote": "608-712-2798, Madison.johansen@wisconsin.gov"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "query_phone",
+        "status": "matched",
+        "claim_ids": [
+          "c_query_phone",
+          "r_query"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u037"
+      ],
+      "stage_A_qualitative_coverage": "partial_role_distinction",
+      "stage_B_model_dispositions": {
+        "u037": "mismatched"
+      },
+      "independent_comparison": "Phone literal is present in combined comments/questions u037; query-only function versus written-submission is not explicitly separated. This is a role ambiguity, not a proven assertion of telephone comment submission."
+    },
+    {
+      "source_unit_id": "aid",
+      "original_source_unit": {
+        "id": "aid",
+        "category": "ancillary",
+        "subtype": "accessibility",
+        "description": "DNR provides aids to maximum extent possible with reasonable advance notice; includes interpreter and alternative document formats",
+        "raw_value": null,
+        "modality": "descriptive",
+        "targets": [
+          "hearing"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Accessibility",
+            "quote": "DNR will, to the maximum extent possible and with reasonable advance notice, provide aids including an interpreter, or a non-English, large-print, or recorded version of hearing documents."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "aid",
+        "status": "matched",
+        "claim_ids": [
+          "q_access_aids"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u017",
+        "u018",
+        "u019",
+        "u020",
+        "u021",
+        "u022"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u017": "matched",
+        "u018": "matched",
+        "u019": "matched",
+        "u020": "matched",
+        "u021": "matched",
+        "u022": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "aid_request",
+      "original_source_unit": {
+        "id": "aid_request",
+        "category": "instruction",
+        "subtype": "accessibility_request",
+        "description": "Request accessibility resources as soon as possible at email or phone listed below",
+        "raw_value": null,
+        "modality": "optional",
+        "targets": [
+          "aid",
+          "email1",
+          "query_phone"
+        ],
+        "evidence": [
+          {
+            "page": 1,
+            "region": "Accessibility",
+            "quote": "To access these resources, please contact the email address or phone number listed below as soon as possible."
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "aid_request",
+        "status": "unknown",
+        "claim_ids": [
+          "q_access_request",
+          "q_access_request_association",
+          "r_access_contact_association",
+          "u_access_contact",
+          "t_access_request"
+        ],
+        "basis": "Request text/timing retained, but source-specific email1/query_phone association is unresolved versus the frozen reference. This is an association uncertainty, not loss of named aids or a fabricated contact."
+      },
+      "stage_A_unit_ids": [
+        "u023",
+        "u024",
+        "u025",
+        "u026"
+      ],
+      "stage_A_qualitative_coverage": "source_reference_uncertain",
+      "stage_B_model_dispositions": {
+        "u023": "unknown",
+        "u024": "unknown",
+        "u025": "unknown",
+        "u026": "unknown"
+      },
+      "independent_comparison": "A/B preserve request, channel alternatives and urgency with unresolved specific endpoints. Original frozen Madi interpretation is not amended or conclusively refuted."
+    },
+    {
+      "source_unit_id": "coordinator",
+      "original_source_unit": {
+        "id": "coordinator",
+        "category": "ancillary",
+        "subtype": "small_business_contact",
+        "description": "Agency Small Business Regulatory Coordinator",
+        "raw_value": "Emma Esch",
+        "modality": "descriptive",
+        "targets": [
+          "$notice"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "Agency Small Business Regulatory Coordinator",
+            "quote": "Emma Esch (608) 266-1959"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "coordinator",
+        "status": "matched",
+        "claim_ids": [
+          "q_coordinator",
+          "r_coordinator",
+          "c_coordinator_name"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u046"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u046": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "coord_phone",
+      "original_source_unit": {
+        "id": "coord_phone",
+        "category": "ancillary",
+        "subtype": "contact_component",
+        "description": "Small-business coordinator telephone",
+        "raw_value": "(608) 266-1959",
+        "modality": "descriptive",
+        "targets": [
+          "coordinator"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "coordinator",
+            "quote": "Emma Esch (608) 266-1959"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "coord_phone",
+        "status": "matched",
+        "claim_ids": [
+          "c_coordinator_phone",
+          "r_coordinator"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u046"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u046": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    },
+    {
+      "source_unit_id": "coord_email",
+      "original_source_unit": {
+        "id": "coord_email",
+        "category": "ancillary",
+        "subtype": "contact_component",
+        "description": "Small-business coordinator email",
+        "raw_value": "emma.esch@wisconsin.gov",
+        "modality": "descriptive",
+        "targets": [
+          "coordinator"
+        ],
+        "evidence": [
+          {
+            "page": 2,
+            "region": "coordinator",
+            "quote": "emma.esch@wisconsin.gov"
+          }
+        ]
+      },
+      "unchanged_prior_record_finding": {
+        "source_unit_id": "coord_email",
+        "status": "matched",
+        "claim_ids": [
+          "c_coordinator_email",
+          "r_coordinator"
+        ],
+        "basis": "Structured semantic claims retain value, role, modality, applicability and evidence; all required source targets recovered."
+      },
+      "stage_A_unit_ids": [
+        "u046"
+      ],
+      "stage_A_qualitative_coverage": "locally_represented",
+      "stage_B_model_dispositions": {
+        "u046": "matched"
+      },
+      "independent_comparison": "Source assertion(s) locally present in listed A units; B judgments must be read with the detailed unit/mapping reviews."
+    }
+  ],
+  "generated_units_outside_original_exclusions": [
+    "u011",
+    "u012",
+    "u013",
+    "u014",
+    "u015",
+    "u016",
+    "u043",
+    "u044",
+    "u045"
+  ],
+  "no_whole_original_unit_entirely_unrepresented_locally": true,
+  "not_complete_certification": "Partial endpoint/role representation and unchanged reference uncertainties remain; presence is not strict source recovery. Original labels/counts are untouched."
+}

@@ -1,0 +1,116 @@
+{
+  "estimand": "Manual preservation of frozen heldout evidence; no tuning, national accuracy claim, or extraction precision.",
+  "native": {
+    "documents": 8,
+    "field_rows": 74,
+    "reference_eligible_documents": 7,
+    "document_gates": {
+      "pass": 7,
+      "insufficient_reference": 1
+    },
+    "field_outcomes": {
+      "supported": 58,
+      "safe_abstention": 15,
+      "not_assessable": 1
+    },
+    "critical_field_outcomes": {
+      "supported": 49,
+      "safe_abstention": 15,
+      "not_assessable": 1
+    },
+    "critical_positive_evidence_yield": {
+      "supported": 49,
+      "scheduled_determinate_positive": 49
+    },
+    "critical_positive_successful_output_content_score": {
+      "supported": 49,
+      "successful_output_determinate_positive": 49
+    },
+    "critical_negative_scope_preservation": {
+      "safe_abstention": 15,
+      "successful_output_negative_references": 15
+    },
+    "critical_uncertain_fields": 1,
+    "critical_extra_assertions": 0
+  },
+  "docling": {
+    "documents": 8,
+    "field_rows": 74,
+    "reference_eligible_documents": 7,
+    "document_gates": {
+      "pass": 5,
+      "content_fail": 2,
+      "insufficient_reference": 1
+    },
+    "field_outcomes": {
+      "supported": 56,
+      "safe_abstention": 13,
+      "partial_ambiguous": 1,
+      "not_assessable": 1,
+      "incorrect": 1,
+      "missing": 2
+    },
+    "critical_field_outcomes": {
+      "supported": 47,
+      "safe_abstention": 13,
+      "partial_ambiguous": 1,
+      "not_assessable": 1,
+      "incorrect": 1,
+      "missing": 2
+    },
+    "critical_positive_evidence_yield": {
+      "supported": 47,
+      "scheduled_determinate_positive": 49
+    },
+    "critical_positive_successful_output_content_score": {
+      "supported": 47,
+      "successful_output_determinate_positive": 49
+    },
+    "critical_negative_scope_preservation": {
+      "safe_abstention": 13,
+      "successful_output_negative_references": 15
+    },
+    "critical_uncertain_fields": 1,
+    "critical_extra_assertions": 1
+  },
+  "paired_document_gates": {
+    "both_pass": 5,
+    "native_only_pass": 2,
+    "reference_insufficient": 1
+  },
+  "failures": [
+    {
+      "fixture_id": "H03",
+      "arm": "docling",
+      "gate_outcome": "content_fail",
+      "failure_categories": [
+        "role_association_displaced"
+      ]
+    },
+    {
+      "fixture_id": "H06",
+      "arm": "native",
+      "gate_outcome": "insufficient_reference",
+      "failure_categories": [
+        "source_reference_uncertain"
+      ]
+    },
+    {
+      "fixture_id": "H06",
+      "arm": "docling",
+      "gate_outcome": "insufficient_reference",
+      "failure_categories": [
+        "source_reference_uncertain"
+      ]
+    },
+    {
+      "fixture_id": "H08",
+      "arm": "docling",
+      "gate_outcome": "content_fail",
+      "failure_categories": [
+        "absence_scope_incomplete",
+        "transcription_error"
+      ]
+    }
+  ]
+}

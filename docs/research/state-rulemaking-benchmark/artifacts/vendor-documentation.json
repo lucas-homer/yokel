@@ -1,0 +1,29 @@
+{
+  "checked_at_utc": "2026-10-06T00:48:10.036201+00:00",
+  "scope": "Published documentation; not actual billed usage or tested capabilities beyond the chosen connector settings.",
+  "sources": [
+    {
+      "url": "https://developers.llamaindex.ai/llamaparse/general/pricing/",
+      "findings": {
+        "agentic_credits_per_page": 10,
+        "agentic_plus_credits_per_page": 45,
+        "usd_per_1000_credits": 1.25,
+        "actual_charges": "unknown until returned receipts; never inferred from rate"
+      }
+    },
+    {
+      "url": "https://docs.firecrawl.dev/features/parse",
+      "findings": {
+        "pdf_credits_per_page": 1,
+        "onlyMainContent_default": true,
+        "full_api_options_not_exposed_by_installed_connector": [
+          "PDF mode",
+          "blocks",
+          "pages",
+          "pageMarkers"
+        ],
+        "limits_note": "No claim that absent connector controls are absent from the vendor API."
+      }
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+{
+  "schema_version": "round8.offline_failure_diagnosis.v1",
+  "metadata": {
+    "document_id": "doc-92211b8c7ba0",
+    "http_status": 200,
+    "response_sha256": "793c3693c5c03da6c451a45a7a2ec9d2bc392b5608e17b0f01a6aa3d0a4e5b4c",
+    "request_sha256": "2585814e0bc4dbbae401633a9b49827647c4d6ab3b916307dc1d8e2208e9ffe3",
+    "parser_sha256": "462302188e6e9c87f153e2f0c4bd73f9cce64bff0ca3e06c9b96029ff4dcb712",
+    "model": "openai/gpt-6.1-sol",
+    "provider": "OpenAI",
+    "allowed_models": [
+      "openai/gpt-6.1-sol",
+      "openai/gpt-6.1-sol-20260929"
+    ],
+    "finish_reason": "length",
+    "native_finish_reason": "max_output_tokens",
+    "configured_completion_cap": 6144,
+    "content_codepoints": 23362,
+    "usage": {
+      "prompt_tokens": 2952,
+      "completion_tokens": 6144,
+      "total_tokens": 9096,
+      "cost": 0.0688185,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 2949,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0688185,
+        "upstream_inference_prompt_cost": 0.0073785,
+        "upstream_inference_completions_cost": 0.06144
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 31,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider_reported_usd": 0.0688185,
+    "invoice_verified": false,
+    "usage_rate_estimated_usd": 0.06734400000000001
+  },
+  "parser_checks": {
+    "wrapper_object": true,
+    "wrapper_error_absent": true,
+    "model_allowed": true,
+    "provider_allowed": true,
+    "exactly_one_choice": true,
+    "choice_error_absent": true,
+    "finish_reason_stop": false,
+    "refusal_absent": true,
+    "tool_calls_absent": true,
+    "content_is_string": true,
+    "usage_object": true,
+    "prompt_tokens_valid": true,
+    "completion_tokens_valid": true,
+    "cost_valid": true
+  },
+  "observed_rejection": {
+    "frozen_parse": {
+      "accepted": false,
+      "exception_type": "Stop",
+      "reason": "incomplete structured completion; never retry"
+    },
+    "content_json": {
+      "valid": false,
+      "reason": "Unterminated string starting at",
+      "line": 428,
+      "column": 67,
+      "character_index": 23219
+    }
+  },
+  "diagnostic_only_finish_reason_override": {
+    "accepted": false,
+    "exception_type": "JSONDecodeError",
+    "reason": "Unterminated string starting at: line 428 column 67 (char 23219)"
+  },
+  "synthetic_parser_controls": [
+    {
+      "name": "allowed_model_openai/gpt-6.1-sol",
+      "expected": "accept_parser_transport_only",
+      "passed": true
+    },
+    {
+      "name": "allowed_model_openai/gpt-6.1-sol-20260929",
+      "expected": "accept_parser_transport_only",
+      "passed": true
+    },
+    {
+      "name": "length",
+      "expected": "reject",
+      "passed": true,
+      "reason": "Stop: incomplete structured completion; never retry"
+    },
+    {
+      "name": "unknown_model",
+      "expected": "reject",
+      "passed": true,
+      "reason": "Stop: OpenRouter model/provider mismatch or error"
+    },
+    {
+      "name": "wrong_provider",
+      "expected": "reject",
+      "passed": true,
+      "reason": "Stop: OpenRouter model/provider mismatch or error"
+    },
+    {
+      "name": "missing_usage_cost",
+      "expected": "reject",
+      "passed": true,
+      "reason": "Stop: missing/invalid reported cost; stop without retry"
+    },
+    {
+      "name": "bool_usage_count",
+      "expected": "reject",
+      "passed": true,
+      "reason": "Stop: missing/invalid usage"
+    },
+    {
+      "name": "truncated_json",
+      "expected": "reject",
+      "passed": true,
+      "reason": "JSONDecodeError: Unterminated string starting at: line 1 column 6 (char 5)"
+    }
+  ],
+  "partial_lexical_diagnostics_not_inventory": {
+    "closed_quote_fields": 56,
+    "distinct_quote_values": 39,
+    "quote_value_chars": 4835,
+    "repeated_quote_value_chars": 1575,
+    "outside_string_whitespace_chars": 3821,
+    "content_chars": 23362
+  },
+  "budget_scenarios": [
+    {
+      "notices": 8,
+      "inventory_completion": 6144,
+      "max_calls": 24,
+      "nominal_worst_case_usd": 1.960704,
+      "fits_new_2_usd_envelope": true
+    },
+    {
+      "notices": 8,
+      "inventory_completion": 8192,
+      "max_calls": 24,
+      "nominal_worst_case_usd": 2.124544,
+      "fits_new_2_usd_envelope": false
+    },
+    {
+      "notices": 8,
+      "inventory_completion": 12288,
+      "max_calls": 24,
+      "nominal_worst_case_usd": 2.452224,
+      "fits_new_2_usd_envelope": false
+    },
+    {
+      "notices": 8,
+      "inventory_completion": 16384,
+      "max_calls": 24,
+      "nominal_worst_case_usd": 2.779904,
+      "fits_new_2_usd_envelope": false
+    },
+    {
+      "notices": 7,
+      "inventory_completion": 6144,
+      "max_calls": 21,
+      "nominal_worst_case_usd": 1.715616,
+      "fits_new_2_usd_envelope": true
+    },
+    {
+      "notices": 7,
+      "inventory_completion": 8192,
+      "max_calls": 21,
+      "nominal_worst_case_usd": 1.858976,
+      "fits_new_2_usd_envelope": true
+    },
+    {
+      "notices": 7,
+      "inventory_completion": 12288,
+      "max_calls": 21,
+      "nominal_worst_case_usd": 2.145696,
+      "fits_new_2_usd_envelope": false
+    },
+    {
+      "notices": 7,
+      "inventory_completion": 16384,
+      "max_calls": 21,
+      "nominal_worst_case_usd": 2.432416,
+      "fits_new_2_usd_envelope": false
+    },
+    {
+      "notices": 5,
+      "inventory_completion": 6144,
+      "max_calls": 15,
+      "nominal_worst_case_usd": 1.22544,
+      "fits_new_2_usd_envelope": true
+    },
+    {
+      "notices": 5,
+      "inventory_completion": 8192,
+      "max_calls": 15,
+      "nominal_worst_case_usd": 1.32784,
+      "fits_new_2_usd_envelope": true
+    },
+    {
+      "notices": 5,
+      "inventory_completion": 12288,
+      "max_calls": 15,
+      "nominal_worst_case_usd": 1.53264,
+      "fits_new_2_usd_envelope": true
+    },
+    {
+      "notices": 5,
+      "inventory_completion": 16384,
+      "max_calls": 15,
+      "nominal_worst_case_usd": 1.73744,
+      "fits_new_2_usd_envelope": true
+    },
+    {
+      "notices": 1,
+      "inventory_completion": 6144,
+      "max_calls": 3,
+      "nominal_worst_case_usd": 0.245088,
+      "fits_new_2_usd_envelope": true
+    },
+    {
+      "notices": 1,
+      "inventory_completion": 8192,
+      "max_calls": 3,
+      "nominal_worst_case_usd": 0.265568,
+      "fits_new_2_usd_envelope": true
+    },
+    {
+      "notices": 1,
+      "inventory_completion": 12288,
+      "max_calls": 3,
+      "nominal_worst_case_usd": 0.306528,
+      "fits_new_2_usd_envelope": true
+    },
+    {
+      "notices": 1,
+      "inventory_completion": 16384,
+      "max_calls": 3,
+      "nominal_worst_case_usd": 0.347488,
+      "fits_new_2_usd_envelope": true
+    }
+  ],
+  "inventory_record_created": false,
+  "verifier_calls": 0,
+  "new_provider_calls": 0,
+  "credentials_read": false,
+  "source_labels_read": false,
+  "freeze_E_verified": true,
+  "parser_matches_frozen_implementation": true,
+  "frozen_files": 20,
+  "frozen_bytes_unchanged_during_analysis": true,
+  "analysis_control_passed": true,
+  "limitations": [
+    "Partial lexical counts are descriptive only; no missing-tail length or final semantic completeness is known.",
+    "Transport parser acceptance is not assembly or semantic acceptance.",
+    "Reported charge is response-reported, not invoice verified; stopped parser did not create result.json.",
+    "Any new higher-cap or compact transport requires separately authorized reviewed version, not retrying this frozen operation."
+  ]
+}

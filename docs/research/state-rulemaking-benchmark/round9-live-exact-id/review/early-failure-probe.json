@@ -1,0 +1,36 @@
+{
+  "adapter_sha256": "7e6a3e39a9f1a912d22439f3cb3dd4a3e2116401a0b7e1bebbcd417038616374",
+  "state": "reproduced_on_in_progress_candidate",
+  "transport_calls": 1,
+  "provider_calls": 0,
+  "response_retained_exact": true,
+  "raw_reported_cost_usd": 3,
+  "expected_conservative_total_nanousd": 3696390718,
+  "artifacts": {
+    "intent.json": {
+      "automatic_retry": false,
+      "ceiling_nanousd": 2000000000,
+      "input_guard": 40000,
+      "kind": "stronger",
+      "operation_id": "doc-92211b8c7ba0-stronger-exact-id",
+      "output_cap": 8192,
+      "prior_nanousd": 696390718,
+      "request_sha256": "093b205a1c01bc0f2f2d6640944d3e0854e88ba34ffc0ad4c2b5f9f4e4b812f5",
+      "reserved_nanousd": 161920000,
+      "schema_version": "round9-live-exact-id.intent.v1",
+      "started_utc": "2026-10-12T04:41:21.924120+00:00"
+    },
+    "stop.json": {
+      "automatic_retry": false,
+      "exception_text_retained": false,
+      "provider_calls_may_have_occurred": true,
+      "response_retained": true,
+      "state": "failed_or_uncertain"
+    },
+    "status.json": {
+      "http_status": 400,
+      "response_sha256": "02ee90514bdb8481f3a2748d9628457951ebda2e1299ff76f1271ebaa8d6b02c"
+    }
+  },
+  "finding": "Failed HTTP response contains finite usage.cost above reservation, but retained receipts omit recovered cost and cumulative debit; no cost ledger summary is written."
+}

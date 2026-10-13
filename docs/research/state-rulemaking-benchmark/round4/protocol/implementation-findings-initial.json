@@ -1,0 +1,58 @@
+{
+  "status": "not_ready",
+  "pipeline_sha256": "8038660ba5466609ba12e1a5893cb07200ca37dc475d59b1fc4c71586e9ea692",
+  "operations_sha256": "a67174ceb23b194a62f69d3042f763d011843e0c37760452d1569a0ef9882ab6",
+  "pipeline_tests": "17 existing tests passed; cross-paragraph reproducer not covered",
+  "provider_calls": 0,
+  "fresh_sources_inspected": 0,
+  "findings": [
+    {
+      "id": "R4-P01",
+      "severity": "must_resolve_before_freeze",
+      "file": "pipeline/pipeline.py",
+      "reproducer": "Written comments close October 31\\n\\n2026 Legislative Calendar",
+      "observed": {
+        "raw_literal": "October 31\n\n2026",
+        "normalized_value": "2026-10-31",
+        "issues": [],
+        "value_span": [
+          23,
+          39
+        ],
+        "context_span": [
+          0,
+          33
+        ]
+      },
+      "root_cause": "DATE and normalize_date accept \\s spanning paragraph/form-feed boundaries; propose locates the containing block using only match start and does not require the complete date span to stay within that block.",
+      "required_invariant": "A candidate must not borrow year/date components across a paragraph or page boundary without an explicit supported binding rule. Conservatively block cross-block values; retain normal single-line and legitimate wrapped-date behavior with explicit tests.",
+      "verification": "Reproduced by importing propose without network; code unchanged by reviewer."
+    },
+    {
+      "id": "R4-R01",
+      "severity": "must_resolve_before_freeze",
+      "file": "runtime/operations.py",
+      "observed": "Budget admission uses max(sum(reservations), sum(observed charges)). This is not sum(max(reservation_i, observed_i)) and can drop an unknown-charge operation reservation when another operation exceeds its estimate.",
+      "reproducer_arithmetic": {
+        "Jev_reserved_unknown_actual": 0.4,
+        "OCR_reserved": 0.1,
+        "OCR_observed": 0.5,
+        "current_accounted": 0.5,
+        "per_operation_conservative_accounted": 0.9
+      },
+      "required_invariant": "Keep each unknown/unresolved operation reservation and every known higher observed cost in the aggregate admission balance. Reserve next call against that combined amount; disclose still-not-invoice guarantee."
+    },
+    {
+      "id": "R4-I01",
+      "severity": "integration_requirement",
+      "file": "runtime/orchestrator pending",
+      "required_invariant": "Only written_comment_role_unverified and submission_role_unverified are Jev-clearable by fixed semantic gate. All other proposer issues fail closed unless a separately frozen, explicit resolver establishes the required property. condition_scope_requires_semantic_verification remains hard for this round because conditional/relative scope is unsupported. Missing/unknown issue names are hard by default."
+    },
+    {
+      "id": "R4-I02",
+      "severity": "integration_requirement",
+      "file": "runtime/orchestrator pending",
+      "required_invariant": "A single-process lock, both freezes and all code/source hashes, full-notice source contract, terminal merge, no hidden fallback and complete stop accounting must be checked in actual orchestration code before READY."
+    }
+  ]
+}

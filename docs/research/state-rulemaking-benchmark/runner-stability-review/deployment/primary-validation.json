@@ -1,0 +1,53 @@
+{
+  "state": "built_signed_jobs_checked_awaiting_owner_keychain_migration",
+  "utc": "2026-10-11T23:53:14.514607+00:00",
+  "executor_sha256": "821f91b67f4c0c2d2a7f333e1381fab9aec1f9d8a9b8be8c34a0ee135494547e",
+  "signing_checks": [
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--verify",
+        "--strict",
+        "/Users/home/.local/libexec/yokel/research-credentials-stable-v1"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--display",
+        "--verbose=4",
+        "/Users/home/.local/libexec/yokel/research-credentials-stable-v1"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Executable=/Users/home/.local/libexec/yokel/research-credentials-stable-v1\nIdentifier=research-credentials-stable-v1-555549440e2ccbac85623b2780479fb4f8d77d38\nFormat=Mach-O thin (arm64)\nCodeDirectory v=20500 size=1000 flags=0x10a02(adhoc,kill,restrict,runtime) hashes=24+2 location=embedded\nVersionPlatform=1\nVersionMin=983040\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=e51b17a7a822e62cc4a0ad89c9de7a2602975a6c\nCandidateCDHashFull sha256=e51b17a7a822e62cc4a0ad89c9de7a2602975a6ca88c4565c0892e933602ba6b\nHash choices=sha256\nCMSDigest=e51b17a7a822e62cc4a0ad89c9de7a2602975a6ca88c4565c0892e933602ba6b\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=49152\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=e51b17a7a822e62cc4a0ad89c9de7a2602975a6c\nSignature=adhoc\nInfo.plist=not bound\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources=none\nInternal requirements count=0 size=12\n"
+    },
+    {
+      "argv": [
+        "/usr/bin/codesign",
+        "--display",
+        "-r-",
+        "/Users/home/.local/libexec/yokel/research-credentials-stable-v1"
+      ],
+      "exit_code": 0,
+      "stdout": "# designated => cdhash H\"e51b17a7a822e62cc4a0ad89c9de7a2602975a6c\"\n",
+      "stderr": "Executable=/Users/home/.local/libexec/yokel/research-credentials-stable-v1\n"
+    }
+  ],
+  "prior_experiment_files_unchanged": 1391,
+  "stronger_freezes_verified": [
+    "A",
+    "S"
+  ],
+  "native_self_test": "passed",
+  "stronger_adapter_check": "passed",
+  "job_count": 3,
+  "claims_consumed": 0,
+  "provider_calls": 0,
+  "keychain_access": false,
+  "trust_migration_performed": false,
+  "compiler_warnings": "Two signed/unsigned comparison warnings in bounded file-length/write-count checks; build successful, no source alteration after review."
+}

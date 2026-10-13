@@ -1,0 +1,1242 @@
+{
+  "author": "Fable via isolated Claude.ai Max bridge, requested alias fable / effort high, actual claude-fable-5-1 firstParty",
+  "status": "INDEPENDENT_PREDESIGN_ADVISORY_EXPECTATIONS_FROZEN_EXECUTION_PENDING",
+  "overlay_order": [
+    "initial_fixtures",
+    "refinement_overrides (only named replacements; removed variants inactive)",
+    "final_consistency_corrections (only named replacements)"
+  ],
+  "initial_fixtures": [
+    {
+      "id": "FX-A",
+      "family": [
+        "TF-01",
+        "TF-02",
+        "TF-03",
+        "TF-10"
+      ],
+      "source": "F-A verbatim (fictional): An eligible district may collect an enrollment fee only for a child enrolled in a classroom receiving state funding, provided the district has published a sliding schedule, given the family written notice in an accessible language, offered a hardship review without requiring an application fee, and separately recorded collections by program year. No fee may be charged to a child eligible for but not yet placed in Program Oak or Program Pine, or to a child with a disability entitled to free appropriate public education. The hardship review waives the published-schedule condition only; it does not waive the no-fee protections or the separate-accounting condition.",
+      "expected": {
+        "permission": "district MAY collect enrollment fee (permissive, 'may ... only')",
+        "necessary_conditions_all_required": [
+          "A1 district is eligible",
+          "A2 child enrolled in a classroom receiving state funding",
+          "A3 district has published a sliding schedule",
+          "A4 family given written notice in an accessible language",
+          "A5 hardship review offered without requiring an application fee",
+          "A6 collections separately recorded by program year"
+        ],
+        "operator_over_A1_A6": "AND (every condition necessary; 'only ... provided ... and')",
+        "absolute_exclusions_not_waivable": [
+          "X1 child eligible for but not yet placed in Program Oak",
+          "X2 child eligible for but not yet placed in Program Pine",
+          "X3 child with a disability entitled to free appropriate public education"
+        ],
+        "operator_over_X": "OR (any exclusion blocks fee); Oak/Pine is a disjunction inside X1/X2",
+        "waiver": {
+          "mechanism": "hardship review",
+          "waives_exactly": [
+            "A3"
+          ],
+          "does_not_waive": [
+            "X1",
+            "X2",
+            "X3",
+            "A6"
+          ],
+          "note": "hardship review is simultaneously a condition (A5) and a waiver mechanism; both roles must survive. Source is silent on A1, A2, A4 relative to the waiver; do not assert they are waivable or non-waivable beyond 'waives A3 only' (which implies not waived, with the explicit list being the stronger evidence)."
+        },
+        "evidence_spans": [
+          "only for a child enrolled in a classroom receiving state funding",
+          "provided the district has published a sliding schedule",
+          "waives the published-schedule condition only",
+          "does not waive the no-fee protections or the separate-accounting condition"
+        ]
+      },
+      "variants": [
+        {
+          "v": "A-prefix-grammatical",
+          "spec": "Truncate the first sentence after 'given the family written notice in an accessible language.' (replace trailing comma with period). Grammatical, coherent; drops A5, A6.",
+          "planted_loss": [
+            "A5",
+            "A6"
+          ],
+          "expect": "A5/A6 ABSENT from inventory is correct for this variant source; but when the FULL source is given and the implementation emits the prefix string as the qualification, that is SILENT-LOSS. Automatic: atom coverage against metadata of the actual source fed."
+        },
+        {
+          "v": "A-drop-independent",
+          "spec": "Three sub-variants each deleting one clause: A3, A4, or A6 (comma-join repaired). Tests independent clause detection.",
+          "expect": "Inventory for each sub-variant must omit exactly the deleted atom and nothing else. Automatic."
+        },
+        {
+          "v": "A-and-to-or",
+          "spec": "Replace ', and separately recorded' with ', or separately recorded'.",
+          "expect": "Operator over A3..A6 group recorded as OR (or flagged ambiguous with uncertainty); treating as AND is INVERTED. Automatic flag; advisory on ambiguity note."
+        },
+        {
+          "v": "A-waiver-leak",
+          "spec": "Replace 'waives the published-schedule condition only' with 'waives the published-schedule and separate-accounting conditions'.",
+          "expect": "waives_exactly = [A3, A6]; A6 still must not appear in does_not_waive. Automatic set equality."
+        },
+        {
+          "v": "A-long-clause",
+          "spec": "Insert into A4 a 180-word parenthetical list of language-access requirements (generated, grounded in the variant file). Clause remains one condition.",
+          "expect": "Either full atom preserved or BOUNDED-FAIL for A4; never a shortened A4 string. Automatic: prefix/suffix check of emitted A4 against variant bytes."
+        },
+        {
+          "v": "A-dup-shared",
+          "spec": "Append a second paragraph restating A3 and A6 verbatim as conditions for a 'materials fee'.",
+          "expect": "Shared conditions represented many-to-many (same atom linked to both fee types) or duplicated; both fees link to A3 and A6. Automatic: link set per fee."
+        },
+        {
+          "v": "A-trunc-source",
+          "spec": "Feed source cut mid-word after 'offered a hardship rev'. Receipt must reflect the cut bytes.",
+          "expect": "Receipt hash equals cut bytes; inventory asserts nothing from the lost tail (no X1..X3, no waiver scope); truncation flagged as source-incomplete if implementation has such a notion. FABRICATED if waiver scope appears. Automatic."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "atom coverage A1..A6, X1..X3",
+          "AND/OR flags",
+          "waives_exactly/does_not_waive set equality",
+          "evidence span byte-grounding",
+          "receipt hash",
+          "prefix-truncation detection of emitted strings vs source"
+        ],
+        "advisory": [
+          "paraphrase adequacy of A4/A5 when not quoted",
+          "whether a merged A1+A2 unit is acceptable"
+        ]
+      }
+    },
+    {
+      "id": "FX-B",
+      "family": [
+        "TF-02",
+        "TF-03",
+        "TF-04"
+      ],
+      "source": "F-B verbatim: Eligibility requires A AND (B OR C). Disqualification D blocks eligibility unless waiver E is granted. E overrides D only; it does not override A or the requirement that B or C hold. Agency approval under section 7 is also required; section 7 is not supplied here.",
+      "expected": {
+        "eligibility_formula": "A AND (B OR C) AND NOT(D AND NOT E) AND approval(section 7)",
+        "operators": {
+          "A_group": "AND",
+          "BC_group": "OR",
+          "nesting": "B OR C is nested under the AND; flattening to A AND B AND C or A OR B OR C is INVERTED"
+        },
+        "blocker": "D blocks eligibility",
+        "waiver": {
+          "E": "overrides D only",
+          "does_not_override": [
+            "A",
+            "(B OR C)",
+            "section 7 approval (not stated; do not assert either way)"
+          ]
+        },
+        "external_ref": {
+          "target": "section 7",
+          "status": "unresolved external; content unavailable",
+          "must_not": "fabricate approval criteria or mark as satisfied/unsatisfied"
+        }
+      },
+      "variants": [
+        {
+          "v": "B-or-to-and",
+          "spec": "Replace '(B OR C)' with '(B AND C)'.",
+          "expect": "BC_group = AND. Automatic."
+        },
+        {
+          "v": "B-paren-shift",
+          "spec": "Rewrite as '(A AND B) OR C' with explicit parentheses.",
+          "expect": "Different formula; A no longer necessary. Automatic: formula or equivalent structure comparison; advisory on representation."
+        },
+        {
+          "v": "B-waiver-overreach",
+          "spec": "Replace 'E overrides D only' with 'E overrides D and A'.",
+          "expect": "does_not_override excludes A. Automatic."
+        },
+        {
+          "v": "B-contradiction",
+          "spec": "Append 'E also overrides A.' leaving the earlier 'does not override A' intact.",
+          "expect": "Both statements preserved and contradiction flagged; silently choosing one is INVERTED/SILENT-LOSS. Automatic presence of both; advisory on flag quality."
+        },
+        {
+          "v": "B-nesting-depth",
+          "spec": "Generate formula depth 3/4/5: A AND (B OR (C AND (D OR F))) etc., with matching prose.",
+          "expect": "Structure preserved at each depth or BOUNDED-FAIL at a declared depth bound (probe B-1/B/B+1 if exposed). Automatic."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "operator per group",
+          "nesting shape",
+          "override target set",
+          "section 7 marked unresolved external, no criteria text"
+        ],
+        "advisory": [
+          "acceptability of alternate logical encodings"
+        ]
+      }
+    },
+    {
+      "id": "FX-C",
+      "family": [
+        "TF-05",
+        "TF-06"
+      ],
+      "source": "F-C verbatim: Under the proposed rule, organizations must submit annual records if they served more than twenty participants AND received state funds; organizations receiving only private funds may submit records voluntarily. Organizations should retain supporting worksheets. Send requests to the office by the stated date. The last sentence does not specify whether its directive is mandatory or advisory.",
+      "expected": {
+        "status_axis": "every duty/permission tagged proposed (not current/in-force); dropping 'proposed' is SILENT-LOSS",
+        "duties": [
+          {
+            "d": "C1 submit annual records",
+            "modal": "must (mandatory)",
+            "condition": "served >20 participants AND received state funds",
+            "operator": "AND",
+            "threshold": "more than twenty (strict >20; '20 or more' is INVERTED)"
+          },
+          {
+            "d": "C2 submit records",
+            "modal": "may (voluntary)",
+            "condition": "receives only private funds"
+          },
+          {
+            "d": "C3 retain supporting worksheets",
+            "modal": "should (recommended; not mandatory)"
+          },
+          {
+            "d": "C4 send requests to the office by the stated date",
+            "modal": "imperative, strength unspecified by source",
+            "allowed_labels": [
+              "unspecified",
+              "ambiguous(mandatory|advisory)",
+              "imperative-unlabeled"
+            ],
+            "forbidden": [
+              "must",
+              "should",
+              "may",
+              "optional"
+            ],
+            "deadline_ref": "'the stated date' unresolved internal/external reference; no date fabricated"
+          }
+        ],
+        "evidence_spans": [
+          "Under the proposed rule",
+          "must submit",
+          "may submit records voluntarily",
+          "should retain",
+          "Send requests to the office by the stated date",
+          "does not specify whether its directive is mandatory or advisory"
+        ]
+      },
+      "variants": [
+        {
+          "v": "C-modal-swap",
+          "spec": "Swap 'must' and 'should' between C1 and C3.",
+          "expect": "Labels follow swap. Automatic."
+        },
+        {
+          "v": "C-current-vs-proposed",
+          "spec": "Replace 'Under the proposed rule' with 'Under the current rule'; second sub-variant deletes the prefix entirely.",
+          "expect": "status = current / status = unspecified respectively; asserting 'proposed' absent evidence is FABRICATED. Automatic."
+        },
+        {
+          "v": "C-contradictory-modality",
+          "spec": "Append 'Retention of worksheets is mandatory.' after C3's 'should'.",
+          "expect": "Both modalities preserved with contradiction/uncertainty explicit. Automatic presence; advisory flag quality."
+        },
+        {
+          "v": "C-threshold",
+          "spec": "Replace 'more than twenty' with 'twenty or more' / 'at least 20' / 'fewer than twenty'.",
+          "expect": "Comparator preserved exactly. Automatic."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "modal label per duty within allowed set",
+          "status axis",
+          "AND operator in C1",
+          "comparator",
+          "no fabricated date for C4"
+        ],
+        "advisory": [
+          "how C4 ambiguity is expressed"
+        ]
+      }
+    },
+    {
+      "id": "FX-D",
+      "family": [
+        "TF-07"
+      ],
+      "source": "F-D verbatim: Written comments open on March 2, 2032, at 8:00 a.m. and are due by March 30, 2032, at 5:00 p.m.; no timezone or receipt/postmark rule is supplied. Mailed permit applications must be postmarked by April 2, 2032. Electronic permit applications must be received by April 2, 2032, at 17:00 Eastern Time. Assistance requests should be made by March 23, 2032. In-person arrival must occur at 09:00 UTC on April 3, 2032.",
+      "expected_time_facts": [
+        {
+          "t": "D1 comment window opens",
+          "date": "2032-03-02",
+          "clock": "08:00",
+          "tz": "ABSENT",
+          "rule": "ABSENT",
+          "modal": "opens (event)"
+        },
+        {
+          "t": "D2 comments due",
+          "date": "2032-03-30",
+          "clock": "17:00",
+          "tz": "ABSENT",
+          "rule": "ABSENT (explicitly unsupplied)",
+          "modal": "due by"
+        },
+        {
+          "t": "D3 mailed permit app",
+          "date": "2032-04-02",
+          "clock": "ABSENT",
+          "tz": "ABSENT",
+          "rule": "postmark",
+          "modal": "must"
+        },
+        {
+          "t": "D4 electronic permit app",
+          "date": "2032-04-02",
+          "clock": "17:00",
+          "tz": "Eastern Time (verbatim; offset resolution is an added inference and must be flagged if emitted)",
+          "rule": "received",
+          "modal": "must"
+        },
+        {
+          "t": "D5 assistance request",
+          "date": "2032-03-23",
+          "clock": "ABSENT",
+          "tz": "ABSENT",
+          "rule": "ABSENT",
+          "modal": "should"
+        },
+        {
+          "t": "D6 in-person arrival",
+          "date": "2032-04-03",
+          "clock": "09:00",
+          "tz": "UTC",
+          "rule": "arrival (occurrence at time, not 'by')",
+          "modal": "must"
+        }
+      ],
+      "rules": "Absence is a value. Filling an absent tz (e.g., defaulting D2 to Eastern because D4 says Eastern) is FABRICATED. Converting D6 to local time is an added inference and must not replace the UTC fact. D3 vs D4 share a date but differ in rule and clock; merging them is SILENT-LOSS.",
+      "variants": [
+        {
+          "v": "D-tz-swap",
+          "spec": "Swap 'Eastern Time' and 'UTC' between D4 and D6.",
+          "expect": "tz follows swap. Automatic."
+        },
+        {
+          "v": "D-rule-swap",
+          "spec": "Swap 'postmarked' and 'received' between D3 and D4.",
+          "expect": "rule follows swap. Automatic."
+        },
+        {
+          "v": "D-ampm-drop",
+          "spec": "Remove 'a.m.'/'p.m.' from D1/D2.",
+          "expect": "clock recorded as ambiguous 8:00/5:00 with uncertainty, not assumed 24h. Automatic allowed-set; advisory wording."
+        },
+        {
+          "v": "D-at-vs-by",
+          "spec": "Change D6 'at 09:00 UTC' to 'by 09:00 UTC'.",
+          "expect": "rule changes from point-in-time to deadline. Automatic."
+        },
+        {
+          "v": "D-date-format",
+          "spec": "Render D4 as '2 April 2032 17:00 ET' and D3 as '04/02/2032'.",
+          "expect": "Same facts; ambiguity of 04/02 (MM/DD vs DD/MM) flagged if implementation normalizes; verbatim retention acceptable. Advisory."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "per-fact per-dimension equality incl. ABSENT",
+          "no merged D3/D4",
+          "no fabricated tz"
+        ],
+        "advisory": [
+          "DST/offset inference labeling"
+        ]
+      }
+    },
+    {
+      "id": "FX-E",
+      "family": [
+        "TF-11",
+        "TF-03"
+      ],
+      "source": "F-E verbatim: For members A and B the reduction is allowed when X holds; for member C the reduction is allowed only when Y AND Z hold. Exception Q applies only to member B. No statement permits Q to replace Y or Z for member C. A shared contact address alone does not make these permissions interchangeable.",
+      "expected_matrix": {
+        "A": {
+          "reduction_condition": "X",
+          "exceptions": []
+        },
+        "B": {
+          "reduction_condition": "X",
+          "exceptions": [
+            "Q"
+          ]
+        },
+        "C": {
+          "reduction_condition": "Y AND Z",
+          "exceptions": [],
+          "Q_applicable": false,
+          "Q_substitutes_Y_or_Z": false
+        }
+      },
+      "notes": "'allowed when X' (A,B) vs 'allowed only when Y AND Z' (C): the 'only' makes C's condition necessary; for A/B, X is sufficient and the source does not say 'only' — an implementation may mark A/B necessity as unspecified. Shared contact address is a non-condition; emitting it as a permission link is FABRICATED.",
+      "variants": [
+        {
+          "v": "E-leak-Q",
+          "spec": "Change 'applies only to member B' to 'applies to members B and C'.",
+          "expect": "C.exceptions=[Q]; 'no statement permits Q to replace Y or Z' still preserved (Q applies to C but does not substitute). Automatic matrix."
+        },
+        {
+          "v": "E-only-removal",
+          "spec": "Delete 'only' from C's clause.",
+          "expect": "C necessity becomes unspecified; forcing 'only' is INVERTED. Automatic allowed-set."
+        },
+        {
+          "v": "E-shared-attr-bait",
+          "spec": "Add 'Members B and C share a mailing address and a contact person.'",
+          "expect": "No permission crossover inferred. Automatic matrix equality."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "member×condition×exception matrix",
+          "no Q substitution for Y/Z",
+          "no address-derived link"
+        ],
+        "advisory": [
+          "sufficiency vs necessity labeling for A/B"
+        ]
+      }
+    },
+    {
+      "id": "FX-F",
+      "family": [
+        "TF-08"
+      ],
+      "source": "F-F content: the literal line 'Café / Café / 中文 / 🫧' where the first Café uses U+00E9 (precomposed) and the second uses 'e' U+0065 + U+0301 (combining acute). Fixture file stores exact bytes and a sidecar listing codepoints and UTF-8 byte offsets.",
+      "expected": {
+        "evidence_byte_equality": "any emitted evidence span for these tokens must byte-equal the fixture bytes",
+        "no_normalization_collapse": "the two Café forms remain distinct (different byte length 5 vs 6 in UTF-8); an inventory that treats them as one token or emits one form for both is a normalization failure",
+        "offset_unit_declared": "offsets must declare unit (byte|codepoint|utf16). Sidecar provides expected offsets in all three units; 🫧 (U+1FAE7) is 4 UTF-8 bytes, 1 codepoint, 2 UTF-16 units — mismatches identify the confusion type",
+        "line_endings": "generated variant lines joined by CRLF, LF, U+2028, U+2029, U+0085 in a known sequence; evidence spans crossing a boundary must retain the exact separator"
+      },
+      "variants": [
+        {
+          "v": "F-nfc-bait",
+          "spec": "Provide a second copy of the line NFC-normalized elsewhere in the source.",
+          "expect": "Each occurrence grounded to its own bytes; cross-linking as 'same text' allowed only with explicit normalized-match note. Automatic byte check."
+        },
+        {
+          "v": "F-offset-probe",
+          "spec": "Place 🫧 before a qualification clause so that byte/codepoint/utf16 offsets diverge by known deltas (3/0/1).",
+          "expect": "Emitted offsets consistent with declared unit. Automatic."
+        },
+        {
+          "v": "F-crlf-bomb",
+          "spec": "Put a qualification clause split across a CRLF and across U+2028.",
+          "expect": "Clause preserved whole; separator bytes preserved in evidence or clause spans quoted without separator loss. Automatic."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "byte equality",
+          "distinct Café forms",
+          "offset-unit consistency",
+          "separator retention"
+        ],
+        "advisory": []
+      }
+    },
+    {
+      "id": "FX-G",
+      "family": [
+        "TF-04"
+      ],
+      "source": "F-G verbatim: See section 99 for the fee exemption. Section 99 is not in this notice. Two local facts refer to this same unavailable section. Preserve the crossreference and unavailable content, not invented exemption criteria or a fabricated resolved prerequisite.",
+      "expected": {
+        "crossref": {
+          "target": "section 99",
+          "status": "unavailable external",
+          "referrers": "two local facts (fixture file names them G1, G2 with grounded spans)"
+        },
+        "must_not": [
+          "invent exemption criteria",
+          "mark exemption as resolved/satisfied",
+          "convert the two referrers into a resolved prerequisite chain",
+          "emit a 'false unknown' that erases the reference itself"
+        ],
+        "many_to_many": "G1 and G2 both link to one unresolved target; duplicating the target is acceptable, inventing two different targets is not"
+      },
+      "variants": [
+        {
+          "v": "G-partial-supply",
+          "spec": "Append a one-line 'Section 99: exemption applies to ...' truncated mid-phrase.",
+          "expect": "Partial content preserved as partial with truncation evident; not completed. Automatic prefix check; advisory on labeling."
+        },
+        {
+          "v": "G-internal-vs-external",
+          "spec": "Add a real internal 'section 12' defined in the same source and referenced by G2.",
+          "expect": "section 12 link resolvable and resolved; section 99 remains unresolved; distinction explicit. Automatic."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "unresolved marker",
+          "two referrers to one target",
+          "no criteria text absent from source"
+        ],
+        "advisory": [
+          "plausibility audit of any explanatory text"
+        ]
+      }
+    },
+    {
+      "id": "FX-REG",
+      "family": [
+        "TF-12",
+        "TF-01"
+      ],
+      "source": "Synthetic regression fixture modeled on the supplied public pattern (data, not a new evaluation). Base text = F-A. Planted output (not source) under test: five qualification strings ending in (1) dangling punctuation ', and', (2) partial phrase 'without requiring an', (3) non-source katakana 'ハードシップ審査', (4) comma-terminated 'provided the district has published a sliding schedule,', (5) empty string with a valid ID.",
+      "purpose": "Validate string-health checks against a known-bad output shape, and validate that the checker does NOT count every broken string as an absent function.",
+      "expected_checker_behaviour": {
+        "flag_each_string": "all five flagged (dangling terminator, non-terminal fragment, script not in source script set and not marked translation, trailing comma, empty)",
+        "constraint_survival": "for each flagged string, locate whether the same atom (A3, A5) survives intact in another assertion; report SURVIVES-ELSEWHERE vs ONLY-CARRIER-BROKEN",
+        "no_double_count": "fixture metadata lists atoms; broken strings map to atoms; absence is judged per atom, not per string"
+      },
+      "variants": [
+        {
+          "v": "REG-grammatical-break",
+          "spec": "String (4) rewritten as 'provided the district has published a sliding schedule' (no trailing comma).",
+          "expect": "Passes string-health; still SILENT-LOSS vs full A3..A6 group if emitted as the whole qualification — shows health checks are insufficient alone. Automatic coverage."
+        },
+        {
+          "v": "REG-translation-marked",
+          "spec": "Katakana string accompanied by explicit translation marker and grounded source span.",
+          "expect": "Not flagged as non-source script. Automatic."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "string health",
+          "atom-level survival",
+          "script-set subset unless marked"
+        ],
+        "advisory": [
+          "whether a surviving paraphrase is adequate"
+        ]
+      }
+    },
+    {
+      "id": "FX-S1",
+      "family": [
+        "TF-12"
+      ],
+      "source": "Structure-only fixture: a small valid inventory derived from F-B, then mutated. Mutations: (a) dependency cycle A→B→C→A among condition units; (b) self-link; (c) duplicate IDs; (d) dangling link to ID 'cond-404'.",
+      "expected": {
+        "detection": "cycle, self-link, duplicate, dangling each detected deterministically",
+        "non_normative": "structural dependency links are not normative prerequisites; the checker must not infer that a dangling link means a missing source condition, nor that an acyclic graph means conditions are complete",
+        "separation": "structural report emitted separately from semantic report"
+      },
+      "variants": [
+        {
+          "v": "S1-valid-but-empty",
+          "spec": "Fully valid graph whose nodes carry no qualification text.",
+          "expect": "Structural PASS, semantic SILENT-LOSS for all atoms. Automatic both."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "graph validity",
+          "independence of structural and semantic verdicts"
+        ],
+        "advisory": []
+      }
+    },
+    {
+      "id": "FX-L",
+      "family": [
+        "TF-09"
+      ],
+      "source": "Generated from F-A: qualification A4 padded to lengths L-1, L, L+1 for each exposed bound L (field length, unit count, request size, nesting depth, graph edge count). Padding text is grounded in the variant file.",
+      "expected": {
+        "at_L-1_and_L": "PRESERVED (full string, byte-equal)",
+        "at_L+1": "BOUNDED-FAIL for the named unit with no partial string; or PRESERVED if the bound is soft — never a shortened string",
+        "payload_growth": "record output bytes / source bytes per variant; growth is reported, not scored; a growth cliff coinciding with a bound suggests re-emission or repair and is flagged advisory",
+        "distinguish": "serialization failure (explicit, unit-named) vs semantic omission (unflagged). If the implementation cannot name the failing unit, record LIMIT-UNATTRIBUTED",
+        "token_caveat": "local byte/char/token sensitivity numbers are estimates; no matched-tokenizer or live output-fit claim is made"
+      },
+      "variants": [
+        {
+          "v": "L-not-exposed",
+          "spec": "Implementation exposes no bound.",
+          "expect": "Family recorded NOT-EXPOSED; probe with escalating lengths 1k/4k/16k/64k bytes to locate behaviour empirically, still offline. Automatic recording; advisory interpretation."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "byte-equality at L-1/L",
+          "flag presence at L+1",
+          "no shortened strings",
+          "growth table"
+        ],
+        "advisory": [
+          "growth acceptability"
+        ]
+      }
+    },
+    {
+      "id": "FX-R",
+      "family": [
+        "TF-10"
+      ],
+      "source": "Receipt/coverage fixture: F-A + F-D concatenated with known byte length and SHA-256 recorded in sidecar.",
+      "expected": {
+        "receipt": "inventory receipt hash equals sidecar hash of exactly the bytes fed",
+        "coverage_map": "every expected atom maps to a span inside [0, len); union of grounded spans reported; uncovered spans listed (not scored)",
+        "drift_cases": [
+          "R-drift-1: feed bytes B but implementation receipts hash(B') where B' = B with CRLF→LF: must be detected as drift",
+          "R-drift-2: feed truncated B[0:n]; receipt must hash the truncated bytes, and no atom beyond n may appear",
+          "R-drift-3: feed B with one condition deleted; receipt changes and exactly that atom disappears"
+        ]
+      },
+      "checks": {
+        "automatic": [
+          "hash equality",
+          "span bounds",
+          "atom disappearance matches deletion"
+        ],
+        "advisory": [
+          "materiality of uncovered spans"
+        ]
+      }
+    },
+    {
+      "id": "FX-S2",
+      "family": [
+        "TF-04",
+        "TF-12"
+      ],
+      "source": "Mixed-reference fixture: F-C 'the stated date' (unresolved, internal-or-external unclear), F-G section 99 (external unavailable), F-B section 7 (external unavailable), plus a synthetic internal 'see paragraph 2' that resolves within the fixture.",
+      "expected": {
+        "classes": {
+          "stated date": "unresolved, class unspecified (allow 'internal-missing|external' with uncertainty)",
+          "section 99": "external unavailable",
+          "section 7": "external unavailable",
+          "paragraph 2": "internal resolved"
+        },
+        "forbidden": [
+          "resolving any unavailable target",
+          "a single generic 'unknown' that discards the target identifier",
+          "treating an invalid internal link (dangling ID) as an external crossreference or vice versa"
+        ]
+      },
+      "checks": {
+        "automatic": [
+          "class per reference within allowed set",
+          "target identifier retained",
+          "internal resolution correct"
+        ],
+        "advisory": [
+          "class choice for 'the stated date'"
+        ]
+      }
+    }
+  ],
+  "refinement_overrides": {
+    "FX-A": {
+      "change": "Correct necessity claim and waiver-trigger ambiguity; split waiver-scope mutation into contradiction vs coherent variants. Source unchanged.",
+      "expected_replacement": {
+        "permission": "district MAY collect enrollment fee ('may ... only')",
+        "baseline_conditions": [
+          "A1 eligible district",
+          "A2 child enrolled in classroom receiving state funding",
+          "A3 published sliding schedule",
+          "A4 written notice in accessible language",
+          "A5 hardship review offered without application fee",
+          "A6 collections separately recorded by program year"
+        ],
+        "necessity": "A1, A2, A4, A5, A6 necessary wherever stated; A3 necessary absent a waiver. The source says 'the hardship review waives the published-schedule condition only' but does not state what event constitutes waiver (offering a review (A5), conducting it, or granting relief). Record trigger as AMBIGUOUS; an inventory may adopt a justified reading with explicit uncertainty. Asserting A3 unconditionally necessary, or asserting A3 waived whenever A5 holds, is COLLAPSED.",
+        "exclusions": [
+          "X1 eligible-not-placed Program Oak",
+          "X2 eligible-not-placed Program Pine",
+          "X3 child with disability entitled to FAPE"
+        ],
+        "operator_X": "OR; Oak/Pine disjunction inside X1/X2",
+        "waiver_scope": {
+          "waives_exactly": [
+            "A3"
+          ],
+          "does_not_waive": [
+            "X1",
+            "X2",
+            "X3",
+            "A6"
+          ],
+          "unknown_interaction": [
+            "A1",
+            "A2",
+            "A4",
+            "A5"
+          ],
+          "note": "'only' supports non-waiver of the others, but list them as UNKNOWN-INTERACTION rather than asserted non-waiver."
+        }
+      },
+      "variants_replacement_for": {
+        "A-waiver-leak": "REMOVED; replaced by the two below.",
+        "A-waiver-contradiction": {
+          "spec": "Replace 'waives the published-schedule condition only' with 'waives the published-schedule and separate-accounting conditions'; keep the following clause 'it does not waive the no-fee protections or the separate-accounting condition' intact.",
+          "expect": "Both statements present; A6 waiver status marked CONTRADICTORY with uncertainty. Choosing either reading silently is COLLAPSED. Tier A: presence of both; Tier B: flag quality."
+        },
+        "A-waiver-scope-coherent": {
+          "spec": "Replace the final sentence entirely with 'The hardship review waives the published-schedule and separate-accounting conditions only; it does not waive the no-fee protections.'",
+          "expect": "waives_exactly = [A3, A6]; does_not_waive = [X1, X2, X3]; A6 not in does_not_waive. Tier A set equality."
+        }
+      },
+      "unchanged": [
+        "A-prefix-grammatical",
+        "A-drop-independent",
+        "A-and-to-or",
+        "A-long-clause",
+        "A-dup-shared",
+        "A-trunc-source"
+      ]
+    },
+    "FX-A2": {
+      "new": true,
+      "families": [
+        "TF-01",
+        "TF-03"
+      ],
+      "source": "An eligible district may collect an enrollment fee only for a child enrolled in a classroom receiving state funding, and only if the district has published a sliding schedule, has given the family written notice in an accessible language, has offered the family a hardship review without requiring an application fee, and separately records collections by program year. No fee may be charged to a child eligible for but not yet placed in Program Oak or Program Pine, or to a child with a disability entitled to free appropriate public education. If the district's hardship review board has issued a written hardship waiver to a family, the published-schedule condition does not apply to that family's fee; every other condition and the no-fee protections continue to apply to that family. Offering a hardship review does not by itself constitute a waiver.",
+      "expected": {
+        "baseline_unwaived": "fee permitted for a child only if A1..A6 all hold and no X1..X3 applies (same atom labels as FX-A)",
+        "waiver_trigger": "W = hardship review board has issued a written hardship waiver to the family (distinct from A5 offering a review; source states offering ≠ waiver)",
+        "waived_state": "when W holds for a family: A3 not required for that family; A1, A2, A4, A5, A6 still required; X1..X3 still block",
+        "scope_of_waiver": "per family, not district-wide",
+        "necessity_summary": "A3 is necessary iff not W; representation free (e.g., (A3 OR W) under the conjunction, or baseline/waived state pair); an inventory listing A3 as unconditionally necessary with no waiver link is SILENT-LOSS; one treating A5 as W is INVERTED",
+        "evidence_spans": [
+          "and only if the district has published a sliding schedule",
+          "has issued a written hardship waiver to a family, the published-schedule condition does not apply",
+          "every other condition and the no-fee protections continue to apply",
+          "Offering a hardship review does not by itself constitute a waiver"
+        ]
+      },
+      "variants": [
+        {
+          "v": "A2-trigger-conflate",
+          "spec": "Delete the last sentence.",
+          "expect": "Trigger still W (issued written waiver) from the third sentence; absence of the clarifier does not license A5=W. Tier A: trigger atom = W."
+        },
+        {
+          "v": "A2-scope-contradiction",
+          "spec": "Change 'the published-schedule condition does not apply' to 'the published-schedule and separate-accounting conditions do not apply'; keep 'every other condition ... continue to apply' intact.",
+          "expect": "A6 status under W marked CONTRADICTORY; both statements present. COLLAPSED if resolved silently."
+        },
+        {
+          "v": "A2-scope-coherent",
+          "spec": "Same edit plus change 'every other condition' to 'every other condition except separate accounting'.",
+          "expect": "waived under W = [A3, A6]; still required = [A1, A2, A4, A5]; X unchanged. Tier A."
+        },
+        {
+          "v": "A2-district-wide-leak",
+          "spec": "Replace 'to that family's fee' with 'to any fee collected by the district'.",
+          "expect": "scope_of_waiver = district-wide. Tier A."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "baseline atom coverage",
+          "W ≠ A5",
+          "waived-set and still-required-set equality",
+          "scope per family"
+        ],
+        "advisory": [
+          "acceptability of chosen waiver representation"
+        ]
+      }
+    },
+    "FX-B": {
+      "change": "Separate unknown waiver interaction from asserted non-override; reclassify section 7; split overreach into contradiction vs coherent variants.",
+      "expected_replacement": {
+        "eligibility": "A AND (B OR C) AND NOT(D AND NOT E) AND approval(section 7)",
+        "operators": {
+          "A_group": "AND",
+          "BC_group": "OR",
+          "nesting": "B OR C nested under AND"
+        },
+        "waiver_E": {
+          "overrides": [
+            "D"
+          ],
+          "does_not_override_stated": [
+            "A",
+            "(B OR C)"
+          ],
+          "unknown_interaction": [
+            "section 7 approval"
+          ]
+        },
+        "section_7": {
+          "status": "UNAVAILABLE-IN-EXCERPT",
+          "identifier_retained": "section 7",
+          "must_not": "resolve, classify as external/jurisdictional, or assert satisfied/unsatisfied"
+        }
+      },
+      "variants_replacement_for": {
+        "B-waiver-overreach": "REMOVED; replaced by the two below.",
+        "B-override-contradiction": {
+          "spec": "Replace 'E overrides D only' with 'E overrides D and A'; keep 'it does not override A or the requirement that B or C hold' intact.",
+          "expect": "Both present; A override status CONTRADICTORY with uncertainty; COLLAPSED if one reading chosen silently."
+        },
+        "B-override-scope-coherent": {
+          "spec": "Replace the third sentence entirely with 'E overrides D and A only; it does not override the requirement that B or C hold.'",
+          "expect": "overrides = [D, A]; does_not_override_stated = [(B OR C)]; unknown_interaction = [section 7]. Tier A."
+        }
+      },
+      "unchanged": [
+        "B-or-to-and",
+        "B-paren-shift",
+        "B-contradiction",
+        "B-nesting-depth"
+      ]
+    },
+    "FX-C": {
+      "change": "Allow justified force interpretation with explicit ambiguity for C4; record status-scope uncertainty instead of a blanket proposed label.",
+      "expected_replacement": {
+        "duties": [
+          {
+            "d": "C1 submit annual records",
+            "modal": "must",
+            "condition": "served >20 participants AND received state funds",
+            "status": "proposed (explicit via opening phrase in same sentence)"
+          },
+          {
+            "d": "C2 may submit records voluntarily",
+            "modal": "may",
+            "condition": "receives only private funds",
+            "status": "proposed or scope-uncertain (same sentence as opening phrase; both accepted)"
+          },
+          {
+            "d": "C3 retain supporting worksheets",
+            "modal": "should",
+            "status": "allowed: proposed | scope-uncertain; forbidden: current/in-force asserted"
+          },
+          {
+            "d": "C4 send requests to the office by the stated date",
+            "modal": "allowed: unspecified | mandatory-with-explicit-ambiguity | advisory-with-explicit-ambiguity | imperative-unlabeled; forbidden: any force label without an ambiguity marker, or discarding the directive",
+            "deadline_ref": "'the stated date' UNAVAILABLE-IN-EXCERPT or internal-unresolved; identifier retained; no date fabricated",
+            "status": "allowed: proposed | scope-uncertain"
+          }
+        ],
+        "status_rule": "The opening phrase clearly scopes C1; its reach over C2–C4 is ambiguous. Asserting 'current' for any duty is FABRICATED; asserting 'proposed' for C3/C4 without uncertainty is accepted as a justified reading only if the inventory records the scope basis; blanket proposed is not required."
+      },
+      "variants_unchanged": [
+        "C-modal-swap",
+        "C-current-vs-proposed",
+        "C-contradictory-modality",
+        "C-threshold"
+      ],
+      "variant_note": "C-current-vs-proposed sub-variant 2 (prefix deleted): allowed status = unspecified for all four; 'proposed' then FABRICATED."
+    },
+    "FX-C2": {
+      "new": true,
+      "families": [
+        "TF-06"
+      ],
+      "source": "Each of the following four requirements is part of the proposed rule and is not currently in effect. First, organizations must submit annual records if they served more than twenty participants and received state funds. Second, organizations receiving only private funds may submit records voluntarily. Third, organizations should retain supporting worksheets. Fourth, organizations send requests to the office by the stated date.",
+      "expected": {
+        "status": "proposed for all four, explicit; 'not currently in effect' preserved as a separate fact",
+        "modals": {
+          "C1": "must",
+          "C2": "may",
+          "C3": "should",
+          "C4": "bare imperative; allowed labels as in FX-C C4"
+        },
+        "operator_C1": "AND",
+        "comparator": ">20 strict"
+      },
+      "variants": [
+        {
+          "v": "C2-partial-scope",
+          "spec": "Change 'Each of the following four requirements' to 'The first two of the following requirements'.",
+          "expect": "C1, C2 proposed; C3, C4 status unspecified. Tier A allowed-set."
+        },
+        {
+          "v": "C2-status-contradiction",
+          "spec": "Append 'The third requirement is currently in effect.' leaving the opening sentence intact.",
+          "expect": "C3 status CONTRADICTORY, both statements present."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "status per duty",
+          "modal per duty within allowed set",
+          "AND and comparator"
+        ],
+        "advisory": [
+          "C4 force justification"
+        ]
+      }
+    },
+    "FX-F": {
+      "change": "Supply literal codepoint/byte data; separator generation data; clarify byte tests apply to evidence/receipts, not paraphrases.",
+      "source_literal": {
+        "line_text_json": "Café / Café / 中文 / 🫧",
+        "tokens": [
+          {
+            "label": "cafe_precomposed",
+            "codepoints": [
+              "U+0043",
+              "U+0061",
+              "U+0066",
+              "U+00E9"
+            ],
+            "utf8_hex": "43 61 66 C3 A9",
+            "utf16_units": 4
+          },
+          {
+            "label": "cafe_decomposed",
+            "codepoints": [
+              "U+0043",
+              "U+0061",
+              "U+0066",
+              "U+0065",
+              "U+0301"
+            ],
+            "utf8_hex": "43 61 66 65 CC 81",
+            "utf16_units": 5
+          },
+          {
+            "label": "zhongwen",
+            "codepoints": [
+              "U+4E2D",
+              "U+6587"
+            ],
+            "utf8_hex": "E4 B8 AD E6 96 87",
+            "utf16_units": 2
+          },
+          {
+            "label": "bubbles",
+            "codepoints": [
+              "U+1FAE7"
+            ],
+            "utf8_hex": "F0 9F AB A7",
+            "utf16_units": 2,
+            "utf16_hex": "D83E DEE7"
+          }
+        ],
+        "separator_token": " / (U+0020 U+002F U+0020)"
+      },
+      "separator_variant_generation": {
+        "lines": [
+          "L1: Café / Café / 中文 / 🫧",
+          "L2: The fee applies only if the family has received written notice",
+          "L3: in an accessible language, and",
+          "L4: only if a hardship review was offered.",
+          "L5: No fee for a child entitled to free appropriate public education."
+        ],
+        "separators_in_order": [
+          {
+            "after": "L1",
+            "name": "CRLF",
+            "codepoints": [
+              "U+000D",
+              "U+000A"
+            ],
+            "utf8_hex": "0D 0A"
+          },
+          {
+            "after": "L2",
+            "name": "LF",
+            "codepoints": [
+              "U+000A"
+            ],
+            "utf8_hex": "0A"
+          },
+          {
+            "after": "L3",
+            "name": "LINE SEPARATOR",
+            "codepoints": [
+              "U+2028"
+            ],
+            "utf8_hex": "E2 80 A8"
+          },
+          {
+            "after": "L4",
+            "name": "PARAGRAPH SEPARATOR",
+            "codepoints": [
+              "U+2029"
+            ],
+            "utf8_hex": "E2 80 A9"
+          },
+          {
+            "after": "L5",
+            "name": "NEL",
+            "codepoints": [
+              "U+0085"
+            ],
+            "utf8_hex": "C2 85"
+          }
+        ],
+        "planted_qualification": "L2–L4 form one condition group ('only if ... notice ... accessible language, and only if ... hardship review') spanning LF and U+2028 boundaries"
+      },
+      "expected_replacement": {
+        "byte_tests_apply_to": [
+          "evidence spans (quoted source)",
+          "receipts (hash of bytes fed)"
+        ],
+        "byte_tests_do_not_apply_to": "grounded paraphrases; a paraphrase must point to a grounded span and is judged for adequacy in Tier B",
+        "no_nfc_collapse": "cafe_precomposed and cafe_decomposed remain distinct in evidence; one byte form emitted for both occurrences is a normalization failure",
+        "offset_unit": "declared unit required; sidecar gives byte/codepoint/UTF-16 offsets; bubbles deltas (4/1/2) classify confusion",
+        "separator_retention": "evidence spanning L2→L3→L4 must contain 0A and E2 80 A8 exactly; the condition group must be preserved whole or BOUNDED-FAIL per declared policy"
+      },
+      "variants_unchanged": [
+        "F-nfc-bait",
+        "F-offset-probe",
+        "F-crlf-bomb (now specified by separator_variant_generation)"
+      ]
+    },
+    "FX-G": {
+      "change": "Concrete two-referrer fictional source; test instructions removed from source; expectations separated.",
+      "source": "4(a) A permit application fee of forty dollars applies to each application. 4(b) The fee in 4(a) is waived for an applicant who qualifies for the fee exemption described in section 99. 6(c) An applicant claiming the section 99 fee exemption must attach the exemption certificate to the application. Section 99 is not reproduced in this notice.",
+      "expected": {
+        "facts": [
+          "G0 fee $40 per application (4(a))",
+          "G1 fee waived if applicant qualifies for section 99 exemption (4(b)) — condition content unavailable",
+          "G2 claimant of section 99 exemption must attach exemption certificate (6(c))"
+        ],
+        "reference": {
+          "identifier": "section 99",
+          "status": "UNAVAILABLE-IN-EXCERPT (source states not reproduced)",
+          "referrers": [
+            "G1",
+            "G2"
+          ],
+          "many_to_many": "both referrers link to the one unavailable target; duplicating the target node is acceptable; two different targets or a resolved target is not"
+        },
+        "must_not": [
+          "invent exemption criteria",
+          "mark G1 waiver satisfied/unsatisfied",
+          "treat G2's certificate duty as the exemption criteria",
+          "emit a bare 'unknown' that drops the identifier 'section 99'",
+          "classify section 99 as external/jurisdictional law"
+        ]
+      },
+      "variants": [
+        {
+          "v": "G-partial-supply",
+          "spec": "Append 'Section 99. The fee exemption applies to an applicant whose household' (cut mid-phrase).",
+          "expect": "Partial content preserved as partial; not completed; G1/G2 still link to section 99 now partially available. Tier A prefix check; Tier B labeling."
+        },
+        {
+          "v": "G-internal-vs-external",
+          "spec": "Add '4(c) Applicants under paragraph 4(b) must also meet the residency condition in 4(d). 4(d) The applicant must reside in the district.' so 4(d) is an in-excerpt reference.",
+          "expect": "4(d) resolved in-excerpt; section 99 remains unavailable; a dangling inventory ID (if any) reported structurally, separately. Tier A."
+        }
+      ],
+      "checks": {
+        "automatic": [
+          "identifier retained",
+          "two referrers → one target",
+          "no exemption text absent from source",
+          "in-excerpt resolution"
+        ],
+        "advisory": [
+          "plausibility audit of any explanatory text"
+        ]
+      }
+    },
+    "FX-S2": {
+      "change": "Reclassify reference classes.",
+      "expected_replacement": {
+        "classes": {
+          "the stated date": "unresolved; allowed: unavailable-in-excerpt | internal-unresolved, with uncertainty",
+          "section 99": "UNAVAILABLE-IN-EXCERPT",
+          "section 7": "UNAVAILABLE-IN-EXCERPT",
+          "paragraph 2": "in-excerpt resolved"
+        },
+        "forbidden": [
+          "resolving unavailable targets",
+          "generic 'unknown' discarding the identifier",
+          "jurisdictional/external legal classification from absence alone",
+          "confusing an invalid inventory link (dangling ID) with an unavailable source reference"
+        ]
+      }
+    },
+    "FX-REG": {
+      "change": "Downgrade string-health flags to triage signals; no forced translation; proper names in other scripts allowed.",
+      "expected_checker_behaviour_replacement": {
+        "triage": "Each of the five planted strings is queued (dangling terminator, non-terminal fragment, script outside source script set, trailing comma, empty). Queueing is not a verdict.",
+        "atom_survival": "For each queued string, map to its atom (A3, A5) via the reviewed mapping and report SURVIVES-ELSEWHERE vs ONLY-CARRIER-AFFECTED. Absence is judged per atom.",
+        "script_rule": "A string in a script not present in the source is a triage signal only. If it is a grounded proper name, term, or a marked translation/paraphrase pointing to a source span, it is not a failure. The checker must not require translation capability.",
+        "punctuation_rule": "Trailing comma / dangling conjunction is a triage signal; the string is then compared to its grounded span for prefix-truncation (Tier A) and adequacy (Tier B)."
+      },
+      "variants_unchanged": [
+        "REG-grammatical-break",
+        "REG-translation-marked"
+      ],
+      "variant_added": {
+        "v": "REG-proper-name-script",
+        "spec": "Source contains the fictional proper name 'Program オーク' as a program title; output carries it verbatim.",
+        "expect": "Queued by script signal, cleared as grounded proper name. Tier A grounding."
+      }
+    },
+    "FX-L": {
+      "change": "Follow declared capacity policy; no exactly-B pass assumption; no unit-naming requirement for global limits.",
+      "expected_replacement": {
+        "policy_first": "Before scoring, record the implementation's declared policy per bound: inclusive/exclusive/sentinel; per-unit vs whole-inventory; failure signal shape. If undeclared, record POLICY-UNDECLARED and run probes descriptively.",
+        "at_B-1_B_B+1": "Acceptable outcomes at each probe are PRESERVED or BOUNDED-FAIL consistent with the declared policy. Whether exactly-B passes is determined by the declared inclusive/exclusive rule, not assumed.",
+        "global_limits": "For request/inventory-wide limits, an explicit whole-inventory BOUNDED-FAIL is acceptable without naming a unit. Unit-named failure is expected only where the implementation declares per-unit limits.",
+        "never_acceptable": [
+          "shortened or repaired qualification strings",
+          "partial salvage of an inventory presented as complete",
+          "false completeness markers after a limit hit"
+        ],
+        "payload_growth": "report output bytes / source bytes per probe; growth is recorded, not scored; a cliff near a bound is a Tier B note",
+        "token_caveat": "local byte/char/token estimates are not matched-tokenizer or live output-fit guarantees"
+      },
+      "variants_replacement": [
+        {
+          "v": "L-undeclared",
+          "spec": "No bound or policy declared.",
+          "expect": "NOT-EXPOSED / POLICY-UNDECLARED; escalating offline probes (1k/4k/16k/64k bytes) recorded descriptively; any clipped string is still a failure."
+        }
+      ]
+    }
+  },
+  "final_consistency_corrections": {
+    "FX-A2": {
+      "replace_variants": {
+        "A2-scope-contradiction": {
+          "spec": "Replace the third sentence with: 'If the district's hardship review board has issued a written hardship waiver to a family, the published-schedule condition and the separate-accounting condition do not apply to that family's fee; every other condition and the no-fee protections continue to apply to that family, and the separate-accounting condition continues to apply to that family.' Keep the fourth sentence ('Offering a hardship review does not by itself constitute a waiver.') unchanged.",
+          "reason": "The prior wording relied on reading 'every other condition' as including separate accounting, which it naturally excludes. The source must itself state that separate accounting both does not apply and continues to apply under W.",
+          "expected": {
+            "waived_under_W": "A3 (published schedule) unambiguously; A6 (separate accounting) CONTRADICTORY — source states both 'do not apply' and 'continues to apply' for the same family under the same trigger",
+            "still_required_under_W": "A1, A2, A4, A5 explicitly; A6 contradictory, not asserted either way",
+            "X1..X3": "still block",
+            "trigger": "W = issued written hardship waiver; A5 offering ≠ W (fourth sentence retained)",
+            "atom_coverage": "all baseline atoms A1..A6, X1..X3 and W present",
+            "outcomes": "PRESERVED only if both A6 statements are carried with an uncertainty/contradiction marker; choosing either A6 reading silently is COLLAPSED; dropping one statement is SILENT-LOSS; treating 'every other condition' phrasing as the contradiction is not a basis for any verdict"
+          },
+          "checks": {
+            "automatic": [
+              "both A6 statements present (grounded spans)",
+              "A6 marked contradictory/uncertain",
+              "A3 waived under W",
+              "A1, A2, A4, A5 still required",
+              "W ≠ A5"
+            ],
+            "advisory": [
+              "form and wording of the contradiction marker"
+            ]
+          }
+        },
+        "A2-scope-coherent": {
+          "spec": "Replace the third sentence with: 'If the district's hardship review board has issued a written hardship waiver to a family, the published-schedule condition and the separate-accounting condition do not apply to that family's fee; the district-eligibility condition, the state-funded-classroom condition, the written-notice condition, the hardship-review-offer condition, and the no-fee protections continue to apply to that family.' Keep the fourth sentence unchanged.",
+          "reason": "States every retained condition explicitly so the coherent scope change does not depend on interpreting 'other'.",
+          "expected": {
+            "waived_under_W": "A3, A6",
+            "still_required_under_W": "A1, A2, A4, A5 (each named in source)",
+            "X1..X3": "still block",
+            "trigger": "W; A5 ≠ W",
+            "atom_coverage": "all baseline atoms, X1..X3 and W present; no contradiction marker expected",
+            "outcomes": "PRESERVED if waived set = {A3, A6} and retained set = {A1, A2, A4, A5}; A6 appearing in the retained set is INVERTED; a contradiction marker on A6 here is a false-uncertainty finding, recorded for advisory review"
+          },
+          "checks": {
+            "automatic": [
+              "waived-set equality",
+              "retained-set equality",
+              "W ≠ A5"
+            ],
+            "advisory": [
+              "representation of waived state"
+            ]
+          }
+        }
+      },
+      "unchanged_variants": [
+        "A2-trigger-conflate",
+        "A2-district-wide-leak"
+      ],
+      "unchanged_fields": [
+        "source (base text)",
+        "expected (base)",
+        "checks (base)"
+      ]
+    },
+    "FX-C2": {
+      "choice": "Option 1: change the fourth sentence to a grammatical bare imperative while keeping the proposed-only umbrella.",
+      "replace_source": "Each of the following four requirements is part of the proposed rule and is not currently in effect. First, organizations must submit annual records if they served more than twenty participants and received state funds. Second, organizations receiving only private funds may submit records voluntarily. Third, organizations should retain supporting worksheets. Fourth, send requests to the office by the stated date.",
+      "reason": "The prior fourth sentence ('organizations send requests ...') was declarative prose, not a bare imperative, so it could not test imperative-force ambiguity. The umbrella sentence is retained so proposed status for all four items remains explicit.",
+      "replace_expected": {
+        "status": "proposed for all four items, explicit via umbrella; 'not currently in effect' preserved as a separate fact",
+        "modals": {
+          "C1": "must (mandatory)",
+          "C2": "may (voluntary)",
+          "C3": "should (recommended, not mandatory)",
+          "C4": "bare imperative. Allowed labels: unspecified | mandatory-with-explicit-ambiguity | advisory-with-explicit-ambiguity | imperative-unlabeled. Forbidden: a force label without an ambiguity marker; dropping the directive; labeling C4 (or C2, C3) mandatory on the basis that the umbrella calls the items 'requirements'"
+        },
+        "umbrella_rule": "The word 'requirements' in the umbrella sentence fixes status (proposed, not in effect), not force. Force is read per item from its own modal or imperative. An inventory that upgrades C2 'may' or C3 'should' or C4 to mandatory because of the heading is INVERTED.",
+        "operator_C1": "AND",
+        "comparator": ">20 strict",
+        "deadline_ref_C4": "'the stated date' unresolved; identifier retained; no date fabricated"
+      },
+      "variants_adjust": {
+        "C2-partial-scope": {
+          "note": "unchanged spec; with the new fourth sentence, C4 status becomes unspecified under this variant and its force expectation is unchanged"
+        },
+        "C2-status-contradiction": {
+          "note": "unchanged"
+        },
+        "add": {
+          "v": "C2-heading-force-bait",
+          "spec": "Replace 'four requirements' in the umbrella with 'four mandatory requirements'; leave items unchanged.",
+          "expected": "Umbrella force claim ('mandatory') and per-item modals ('may', 'should', bare imperative) are both preserved; C2/C3/C4 force marked CONTRADICTORY or uncertain rather than silently upgraded to mandatory; C1 unaffected. COLLAPSED if items are uniformly labeled mandatory without uncertainty.",
+          "checks": {
+            "automatic": [
+              "per-item modal retained",
+              "umbrella claim present",
+              "contradiction/uncertainty marker on C2, C3, C4"
+            ],
+            "advisory": [
+              "marker wording"
+            ]
+          }
+        }
+      },
+      "unchanged_fields": [
+        "families",
+        "checks (base)"
+      ]
+    }
+  },
+  "oracle_limits": [
+    "Tier A automation of operator/atom truth matrices applies only to authored logical fixtures (FX-A, FX-A2, FX-B, FX-C/C2 operators and comparators, FX-D dimensions, FX-E matrix, FX-G/S2 reference classes) and to known-bad output shapes (FX-REG), and only after an explicit reviewed mapping from the implementation's representation to fixture atoms exists. Without that mapping the fixture is run descriptively.",
+    "Byte/hash equality is an oracle for evidence spans and receipts only. Accurate grounded paraphrases are not required to be byte-identical; their adequacy is Tier B.",
+    "Generic paraphrase entailment, normative force of bare imperatives, status-scope reach of an opening phrase, waiver-trigger readings in FX-A, and materiality of uncovered spans are advisory and need AI/human review.",
+    "Script-set differences, trailing punctuation, fragments and empty strings are triage signals that route a string to atom-survival and advisory review; they are not universal semantic failures. No translation capability is required; supported proper names in other scripts are accepted when grounded.",
+    "Contradiction and ambiguity fixtures are scored on presence of both statements plus an uncertainty marker; the wording or form of that marker is advisory.",
+    "Capacity probes are interpreted only under the implementation's declared policy; absence of a declaration yields POLICY-UNDECLARED, not pass or fail.",
+    "Unavailable references are judged on identifier retention and non-resolution; the checker does not and cannot determine legal/jurisdictional status of missing sections.",
+    "No aggregate score, accuracy denominator or model performance claim is produced; all verdicts are per fixture, per atom.",
+    "Unseen-source (Tier B discovery) completeness is never automated by this plan."
+  ],
+  "unresolved_implementation_choices": [
+    "Representation of qualifications (quoted span, paraphrase, logical form, graph, baseline/waived state pairs) and the reviewed mapping to fixture atoms.",
+    "Declared capacity policy per bound: which bounds exist, inclusive/exclusive/sentinel, per-unit vs whole-inventory, failure signal shape.",
+    "Offset unit (byte/codepoint/UTF-16) and receipt hash algorithm; whether receipts hash pre- or post-chunking bytes.",
+    "How contradictions, ambiguity (bare imperative force, status scope, waiver trigger) and unavailable references are expressed — presence is automatic, form is advisory.",
+    "Whether shared conditions and shared unavailable targets are linked many-to-many or duplicated per referrer; link-set equality is what is checked.",
+    "Whether a merged unit (e.g., A1+A2) counts as preserving both atoms — default accept if both are recoverable from the grounded span, otherwise advisory.",
+    "Whether 'proposed' status is per-assertion or document-level in the implementation; both accepted if each duty's allowed status set is satisfied.",
+    "Reviewer selection for Tier B (AI on the Claude.ai Max bridge vs human); requires separate authorization and is out of scope here."
+  ],
+  "materialization": "Fixture specifications only. Materialize exact source bytes and review the representation-to-atom mapping after design freeze. No actual extraction outputs or live experiments generated.",
+  "counts": "Test families, fixtures and atoms are engineering coverage bookkeeping; no accuracy denominator."
+}

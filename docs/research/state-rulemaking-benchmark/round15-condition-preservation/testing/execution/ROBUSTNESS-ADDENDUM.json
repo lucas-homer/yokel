@@ -1,0 +1,30 @@
+{
+  "status": "KNOWN_ORIGINAL_R15_0_ROBUSTNESS_GAP_REPRODUCED",
+  "source": "Primary relayed Opus finding; independently reproduced locally after the already-dispatched Fable assessment prompt.",
+  "results": [
+    {
+      "protocol": "r15.0",
+      "nodes": 399,
+      "authored_depth": 399,
+      "process_recursion_limit": 1000,
+      "accepted": false,
+      "exception_type": "ValueError",
+      "exception_text": "graph_depth"
+    },
+    {
+      "protocol": "r15.0",
+      "nodes": 399,
+      "authored_depth": 399,
+      "process_recursion_limit": 600,
+      "accepted": false,
+      "exception_type": "RecursionError",
+      "exception_text": "maximum recursion depth exceeded"
+    }
+  ],
+  "issue": "399-node chain is within count sentinel but exceeds declared depth12. Original recursive walk produces controlled graph_depth ValueError at recursion limit1000, but leaks RecursionError at process limit600 before depth rejection.",
+  "independent_17_methods": "Passed unchanged; these selected depth12/13 checks did not cover this chain stress. Original results remain true but bounded.",
+  "revision_status": "Primary preparing separate protocol-revised/r15.1; no original edits or test changes.",
+  "research_api_calls": 0,
+  "credentials_read": false,
+  "recorded_utc": "2026-10-13T04:49:47.780692+00:00"
+}

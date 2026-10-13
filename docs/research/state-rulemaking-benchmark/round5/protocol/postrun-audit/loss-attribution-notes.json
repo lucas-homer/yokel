@@ -1,0 +1,52 @@
+{
+  "Ohio_false_multiple_notice_signal": {
+    "document_id": "doc-ad2425138393",
+    "source_scope_from_frozen_label": "complete single notice",
+    "frozen_heading_regex_matches": [
+      {
+        "start": 200,
+        "end": 247,
+        "quote": "                            Proposed Rulemaking"
+      },
+      {
+        "start": 1155,
+        "end": 1174,
+        "quote": "proposed rulemaking"
+      }
+    ],
+    "judgment": "Heading and continuation line mentioning proposed rulemaking trigger multiple_notice_scopes despite one notice. No second window is established."
+  },
+  "New_Mexico_response_candidate_omission": {
+    "document_id": "doc-1c5c46ddcd64",
+    "native_span": {
+      "start": 1840,
+      "end": 1910,
+      "quote": "written response comments may be filed no\nlater than September 8, 2025"
+    },
+    "frozen_CLOSE_regex_literal_fragment": "no later than",
+    "judgment": "Printed/native response close is present. In native text no and later are split across a newline, while CLOSE uses literal spaces; no candidate exists for2025-09-08. This is a bounded code/source explanation, not a repaired output."
+  },
+  "qualification_losses": [
+    {
+      "document_id": "doc-a97c415f9644",
+      "field": "DATE",
+      "judgment": "Relative hearing-intent text produces a document-wide DATE hard blocker although frozen image truth establishes separate unconditional written close."
+    },
+    {
+      "document_id": "doc-1c5c46ddcd64",
+      "field": "DATE",
+      "judgment": "The three-day e-Docket publication statement contributes relative-window blocking for the local initial-close candidate; whole-input identity remains independently unresolved."
+    },
+    {
+      "document_id": "doc-f609417634ea",
+      "field": "EMAIL",
+      "judgment": "Lifecycle extension hard blocker suppresses independently explicit email destination; the DATE extension uncertainty remains valid and separate."
+    },
+    {
+      "document_id": "doc-7d9d82dcb9a8",
+      "field": "DATE",
+      "judgment": "Jev rejected condition preservation. Candidate included hearing-related statements but omitted source close-of-business/late-consideration qualifiers present in full native context."
+    }
+  ],
+  "limits": "Observed stage evidence only. No classifier threshold, prompt, source label or code changed."
+}

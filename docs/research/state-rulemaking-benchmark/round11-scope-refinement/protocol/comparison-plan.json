@@ -1,0 +1,88 @@
+{
+  "version": "round11.prospective-paired-plan.v2",
+  "status": "unfunded_preparation_only",
+  "dispatch_authorized": false,
+  "freshness": "Exclude all prior-used notices and known reviewer-exposed sources; log exposure before sample selection.",
+  "cohort": {
+    "target_pairs": 12,
+    "interpretation": "Descriptive initial cohort, no statistical power claim; requires separate funding and release.",
+    "eligible_frame": "Complete archived, official rulemaking notices with public participation text in a prospectively fixed jurisdiction/date interval; freeze interval, jurisdictions, every eligible ID and exclusions before sampling. Reference ambiguity is retained, not an exclusion.",
+    "frame_status": "not_created",
+    "selection": "Sort stable source IDs, then sample without replacement using a published frozen seed; retain complete selection order. Pilot is the first selected eligible case, never an outcome-selected replacement.",
+    "seed": null,
+    "selected_ids": null
+  },
+  "arms": {
+    "direct": {
+      "calls_per_case": 1,
+      "input": "Full source/reference material and frozen complete operative candidate only; no human scope labels, reasons/evidence annotations, held-out reference or crosswalk."
+    },
+    "source_first": {
+      "calls_per_case": 2,
+      "A_input": "Full source/reference material only; no operational scope or held-out reference.",
+      "B_input": "Same full source/reference material, frozen A, operational annotator scope/category/reason/exact evidence/uncertainty per A unit, same candidate. No held-out reference units, adjudication/crosswalk, omissions or direct output."
+    }
+  },
+  "scope_annotation": "A separate operational scope annotator receives only full source/reference material and frozen A inventory. It supplies source-only scope category, reason, exact evidence and uncertainty per A unit to B. It never sees candidate, direct/B outputs, held-out reference units, reviewer adjudication, crosswalks or known omissions. No paid classifier stage.",
+  "reference": "Two disjoint held-out reference reviewers independently discover obligations/background/unresolved scope from source/reference material only, then adjudicate and freeze reference before model outputs. They do not produce operational B inputs. Reference and adjudication are sealed from operational annotator and both arms until both outputs are frozen. Post-output reviewers crosswalk omissions and audit additions; no feedback or correction reaches either arm.",
+  "freeze_before_dispatch": [
+    "policy and prompts",
+    "eligible frame, exclusions, selection order and seed",
+    "exposure log",
+    "source and reference material hashes",
+    "independent source-only obligations and scope",
+    "same candidate procedure and candidate hashes",
+    "model/provider settings and representations",
+    "call admission/cost/size limits",
+    "review normalization rules",
+    "metrics and failures ledger",
+    "disjoint reviewer/operational annotator identities, exposure logs and sealed information boundaries",
+    "exact per-arm annotation inputs and human-effort reporting rules"
+  ],
+  "dispatch_order": "Alternate direct-first and source-first-first by sample index; arms isolated without shared outputs/history.",
+  "stopping": "No retries, repair or favorable replacements; preserve all selected cases and attempted-call reservations. Admit a full three-call pair only after preflight total reservation fits. A failure/overflow prevents B; pair remains failed/incomplete in intended-pair reporting.",
+  "metrics": [
+    "case-level paired outcomes",
+    "independent required obligations missed",
+    "false required-loss alarms",
+    "source-first discovery omissions",
+    "unresolved scope and recovery",
+    "role/modality/relationship correctness",
+    "unsupported additions in separate reverse audit",
+    "structural failure and full request size",
+    "provider reported cost, frozen-rate estimate and conservative debit separately"
+  ],
+  "correct_case_criterion": "Independent review confirms all required and identifying obligations, true known losses correctly flagged, no false required-loss findings, no unresolved scope/recovery and completed reverse audit with no incorrect unsupported-addition judgments. Preserve actual record defects separately from verifier correctness.",
+  "cost_per_correct_case": "Provider-only conservative debit across all selected/attempted cases divided by independently correctly verified cases, labeled provider-only cost per correct case. Zero denominator is undefined. Separately report operational annotation time/compensation by arm and shared reference/evaluation/review time/compensation.",
+  "budget": {
+    "remaining_usd": "0.817849282",
+    "prior_per_call_reserve_usd": "0.161920",
+    "pair_reserve_usd": "0.485760",
+    "maximum_prior_rate_calls": 5,
+    "maximum_complete_pairs": 1,
+    "pilot_dispatch_authorized": false,
+    "constraint": "Recalculate before release if costs/caps change; two leftover calls do not fund a second pair. No paid calls or budget increase here."
+  },
+  "interpretation_limits": [
+    "Synthetic fixtures do not measure model behavior",
+    "One pilot does not estimate accuracy",
+    "Generated units are not independent samples",
+    "No ordering-only causal attribution",
+    "No source relabeling or convenient outcome selection",
+    "No live compatibility claim",
+    "No production readiness",
+    "Unequal operational human assistance is an intervention; no automated ordering comparison or gold leakage permitted"
+  ],
+  "comparison_type": "human-assisted source-first system versus unassisted direct system; unequal assistance explicitly disclosed; not an automated ordering test",
+  "human_boundaries": {
+    "operational_annotator": "Disjoint from both held-out reference reviewers; sees source and frozen A only. Record prior source exposure and all accessible artifacts before annotation. Prior gold/review exposure disqualifies from this operational role for that case.",
+    "held_out_reference_reviewers": "Source-only before any A/candidate/direct/B inspection; no role producing arm inputs. Record prior exposure and resolve disagreements in sealed reference. If clean isolation unavailable, stop blind-evaluation claim and retain unverified limitation.",
+    "unblinding": "Reference may be unsealed for evaluation only after both arm outputs and operational annotations are frozen. Operational annotator receives no evaluation feedback during any cohort case.",
+    "source_review_envelope": "Offline validator host-side attestation/hash binding; not held-out gold or a provider input and not proof of exhaustive discovery."
+  },
+  "human_effort_accounting": {
+    "operational_scope": "Record per-case annotator minutes, any compensation and annotation/revision timestamps separately as source-first intervention cost; no unreported gold assistance.",
+    "reference_and_evaluation": "Record per-case minutes and compensation separately for each held-out reviewer, adjudication, crosswalk, candidate reverse audit and final review; do not attribute shared reference cost to only one arm.",
+    "comparison_reporting": "Report provider-only dollar/debit metric, operational human assistance time/compensation per arm and shared evaluation/review effort separately. Do not call provider-only dollars total system cost. No implied dollar conversion for unpaid minutes."
+  }
+}

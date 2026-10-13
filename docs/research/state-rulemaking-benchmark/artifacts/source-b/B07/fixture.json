@@ -1,0 +1,136 @@
+{
+  "fixture_id": "B07",
+  "state": "TX",
+  "bucket": "dense register layouts",
+  "layout_features": [
+    "two-column dense",
+    "cross-page continuation",
+    "neighboring notices",
+    "rule text strikeouts"
+  ],
+  "event_type": "proposal",
+  "source_url": "https://www.sos.state.tx.us/texreg/pdf/backview/0605/0605is.pdf",
+  "discovery_url": "https://www.sos.texas.gov/texreg/index.shtml",
+  "retrieved_at": "2026-10-06T00:32:59.715474+00:00",
+  "source_title": "Optometry License Designation proposal",
+  "selection_reason": "First complete bounded amendment in inspected optometry sequence, across two pages; distinct second issue.",
+  "original_sha256": "376eb9a49d013878e837ca48449f4517008851f02e1ed354a99976b92ef66f9d",
+  "input_sha256": "72e047bfd64535187cba909f2dbfc5f3a42955f604310ee423b402b9dba262bf",
+  "original_bytes": 14094724,
+  "input_bytes": 235896,
+  "original_page_count": 93,
+  "input_page_count": 2,
+  "original_physical_pages": [
+    19,
+    20
+  ],
+  "package_limitations": "Derived contiguous complete notice/form excerpt. Full original retained; attachments/rule text outside selected notice are excluded; whole physical pages may contain neighboring notice material.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency proposes License Designation changes?",
+      "expected_value": "Texas Optometry Board",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 19,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "The T exas Optometry Board proposes amendments",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "citation",
+      "question": "Which rule citation belongs to this target notice?",
+      "expected_value": "22 TAC \u00a7271.12",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 19,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "22 TAC \u00a7271.12",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "source_id",
+      "question": "What native TRD identifier belongs to License Designation?",
+      "expected_value": "TRD-202602105",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "TRD-202602105",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "comment_duration",
+      "question": "What relative public comment deadline applies?",
+      "expected_value": {
+        "days": 30,
+        "day_basis": null,
+        "anchor": "publication in Texas Register",
+        "computed_date": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "The deadline for furnishing com-\nments is thirty days after publication in the Texas Register.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "publication",
+      "question": "What issue date anchors this relative duration?",
+      "expected_value": "2026-06-05",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Page footer",
+      "source_quote": "June 5, 2026 51 TexReg 3771",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "filing",
+      "question": "What filing date belongs to TRD-202602105?",
+      "expected_value": "2026-05-19",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "Filed with the Office of the Secretary of State on May 19, 2026.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "earliest_adoption",
+      "question": "What earliest possible adoption date is supplied?",
+      "expected_value": "2026-07-05",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "Earliest possible date of adoption: July 5, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "effective",
+      "question": "Does the target License Designation proposal give an adopted effective date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 20,
+      "input_page": 2,
+      "region": "Target \u00a7271.12 starts input page 1 after TRD-202602104 diamonds and ends input page 2 at TRD-202602105 diamonds; neighboring repeal excluded.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    }
+  ],
+  "annotation_author": "Codex source collector agent; not human gold",
+  "visual_inspection": "All input pages inspected as rendered images by collector agent; source-only references, pending independent review.",
+  "shared_original_group": "TX-2026-06-05",
+  "template_family": "TX-Register-proposed-rule",
+  "page_derivation_validation": "Selected page content streams and media/crop boxes equal original mapped pages; rendered all input pages inspected."
+}

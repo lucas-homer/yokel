@@ -1,0 +1,75 @@
+{
+  "schema_version": "round6.Q01-registration-correction-review.v1",
+  "status": "Q01_RESOLVED_HOLDING_Q02_FOR_PRIMARY_REVIEW",
+  "prior_record_preserved": true,
+  "original_record": "search-results/Q01.json",
+  "original_record_sha256": "2e9a02502938438c76805eb4c2d3f697bddefef5efdf62da8b99b644b12420c2",
+  "corrected_record": "search-submission-Q01.corrected.json",
+  "corrected_record_sha256": "3254a6d2e8e65d6141a61ef3d5fae8071fabbad8abb2550055259239fc42194c",
+  "raw_response_equal": true,
+  "returned_results_actual": 18,
+  "returned_results_initial_metadata": 10,
+  "error": "Metadata converter required newline preceding separator; tool sometimes concatenated separator directly after body text. Raw capture complete. Corrected metadata derived mechanically from same displayed response before advancing, not a requery or rank inference from citation IDs.",
+  "actual_first_three_candidates": [
+    {
+      "candidate_order": 1,
+      "display_order": 1,
+      "url": "https://apps.legislature.ky.gov/law/kar/downloads/docs/16872/document.markup.pdf",
+      "decision": "retain",
+      "source_stratum": "conditional_control",
+      "pdf_pages": 10,
+      "native_codepoints": 24251,
+      "original_sha256": "9998d72f5aba433434ae7bdf7b60690bf9c34c3074b7628d0da34251c8d9b304",
+      "original_path": "documents/doc-9998d72f5aba/original.pdf",
+      "acquisition_path": "documents/doc-9998d72f5aba/acquisition.json",
+      "reason": "Complete individual integrated rule filing; natural conditional hearing terms; within all caps."
+    },
+    {
+      "candidate_order": 2,
+      "display_order": 2,
+      "url": "https://apps.legislature.ky.gov/law/kar/registers/52Ky_R_2025-26/11_May.pdf",
+      "decision": "exclude",
+      "source_stratum": null,
+      "pdf_pages": 302,
+      "native_codepoints": 2757478,
+      "original_sha256": "e00b2eceb2160e886aeec84ac09a833204444b32388522138ec78d227e0b4601",
+      "original_path": "candidates/Q01-02/original.pdf",
+      "acquisition_path": "candidates/Q01-02/acquisition.json",
+      "reason": "Complete monthly Administrative Register issue; multiple proceedings and over frozen native/page caps; no slicing."
+    },
+    {
+      "candidate_order": 3,
+      "display_order": 3,
+      "url": "https://apps.legislature.ky.gov/law/kar/registers/52Ky_R_2025-26/08_Feb.pdf",
+      "decision": "exclude",
+      "source_stratum": null,
+      "pdf_pages": 282,
+      "native_codepoints": 2598101,
+      "original_sha256": "fb1f6781c47b93ee818de81234a8aa15ac1d073068e5e96ab3837f96f8cbc780",
+      "original_path": "candidates/Q01-03/original.pdf",
+      "acquisition_path": "candidates/Q01-03/acquisition.json",
+      "reason": "Complete monthly Administrative Register issue; multiple proceedings and over frozen native/page caps; no slicing."
+    }
+  ],
+  "helper_limitation": "Frozen helper selects first original query_registered event, which contained one candidate. Corrected candidates2\u20133 were preserved through gated manual curl with a maximum one ordinary retry, exact pinned native extraction and diagnostics; decisions appended separately. No helper/static code altered.",
+  "retained": {
+    "notices": 1,
+    "pages": 10,
+    "states": [
+      "Kentucky"
+    ],
+    "general": 0,
+    "controls": 1
+  },
+  "remaining": {
+    "notices": 7,
+    "general": 6,
+    "controls": 1,
+    "minimum_additional_states": 5,
+    "page_budget": 30
+  },
+  "queries_executed": 1,
+  "pending": "Primary review of appended correction; Q02 has not been requested/submitted.",
+  "provider_parser_OCR_labels_calls": 0,
+  "static_preparation_hashes_unchanged": true
+}

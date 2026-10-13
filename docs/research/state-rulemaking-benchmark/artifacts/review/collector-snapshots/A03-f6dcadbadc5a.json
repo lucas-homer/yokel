@@ -1,0 +1,181 @@
+{
+  "fixture_id": "A03",
+  "state": "US-MS",
+  "bucket": "scanned/filled forms",
+  "layout_features": [
+    "image-only scanned SOS APA Form 001",
+    "final-column X choices and fixed effective date",
+    "colored filing stamp"
+  ],
+  "event_type": "final adoption",
+  "source_url": "https://www.sos.ms.gov/adminsearch/ACProposed/00028572a.pdf",
+  "discovery_url": "https://www.sos.ms.gov/adminsearch/ACProposed/00028572a.pdf",
+  "retrieved_at": "2026-10-06T00:33:40.873121+00:00",
+  "source_title": "Title 35 Part VIII table of contents final filing",
+  "selection_reason": "Third eligible distinct agency form found earlier in search; fixed-date effective option contrasts with relative option.",
+  "original_sha256": "f449dbda4031d44f32dd92b60d87f6a7ac87d75612957f407a8b6939ba0578b1",
+  "input_sha256": "f449dbda4031d44f32dd92b60d87f6a7ac87d75612957f407a8b6939ba0578b1",
+  "original_byte_length": 408959,
+  "input_byte_length": 408959,
+  "original_physical_pages": [
+    1
+  ],
+  "original_page_count": 1,
+  "input_page_count": 1,
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Publisher PDF contains only the one-page filing form; referenced rule text attachment is not included or collected. Native embedded text is empty; references use rendered-page transcription and marked selections.",
+    "All three MS units share SOS APA Form 001 template; three distinct PDF documents/agency records."
+  ],
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency is filing this notice?",
+      "expected_value": "Mississippi Department of Revenue",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top agency table",
+      "source_quote": "Mississippi Department of Revenue",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "rule_identity",
+      "question": "Which rule name or number is stated?",
+      "expected_value": "Title 35, Part VIII, Subpart 1 to 5 - Table of Contents",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top rule name/number cell",
+      "source_quote": "Title 35, Part VIII, Subpart 1 to 5 - Table of Contents",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "selected_lifecycle",
+      "question": "Which FINAL ACTION ON RULES option is marked?",
+      "expected_value": "Adopted with no changes in text",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "right final-action column selected X",
+      "source_quote": "Adopted with no changes in text",
+      "basis": "visual_mark"
+    },
+    {
+      "field_id": "hearing_selection",
+      "question": "Is an oral proceeding presently scheduled, according to the selected box?",
+      "expected_value": false,
+      "answerability": "explicit_negative",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "oral proceeding second box selected",
+      "source_quote": "Presently, an oral proceeding is not scheduled on this rule.",
+      "basis": "visual_mark"
+    },
+    {
+      "field_id": "submit_date",
+      "question": "What date appears in the SUBMIT DATE cell?",
+      "expected_value": {
+        "date": "2026-04-07"
+      },
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top submit-date cell",
+      "source_quote": "4/7/26",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "filing_stamp",
+      "question": "What date is shown in the selected official filing stamp?",
+      "expected_value": {
+        "date": "2026-04-07"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "bottom right official filing stamp",
+      "source_quote": "APR 07 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "prior_proposal_filed",
+      "question": "What date does FINAL ACTION identify for the proposed rule filing?",
+      "expected_value": {
+        "date": "2025-12-31"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "right final-action column, Date Proposed Rule Filed",
+      "source_quote": "12/31/25",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "selected_effective",
+      "question": "Which effective-date choice is marked in FINAL ACTION?",
+      "expected_value": {
+        "date": "2026-05-08"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "right final-action effective choice X",
+      "source_quote": "Other (specify): 5/8/2026",
+      "basis": "visual_mark"
+    },
+    {
+      "field_id": "generic_comment_duration",
+      "question": "What public-comment duration is printed in generic form instructions (without treating it as a newly opened comment cycle)?",
+      "expected_value": {
+        "duration": 25,
+        "unit": "days",
+        "role": "generic form instruction; no current close calculated"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "paragraph below oral-proceeding boxes",
+      "source_quote": "twenty-five (25) day public comment period",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "conditional_oral_request",
+      "question": "What printed request condition and relative deadline would trigger an oral proceeding if one is not scheduled?",
+      "expected_value": {
+        "requestors": "political subdivision, an agency or ten (10) or more persons",
+        "duration": 20,
+        "unit": "days",
+        "anchor": "filing of this notice of proposed rule adoption",
+        "computed_close": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "generic oral-proceeding instructions",
+      "source_quote": "political subdivision, an agency or ten (10) or more persons. The written request should be submitted to the agency contact person at the above address within twenty (20) days after the filing of this notice of proposed rule adoption",
+      "basis": "source_text"
+    }
+  ],
+  "collector": "source-a Codex task; source-only annotation before vendor parsing",
+  "reference_version": "collector-v1",
+  "discovery_method": "Targeted web search with official direct PDF result; dynamic bulletin listing did not expose a usable ordered result set",
+  "shared_original_group": null,
+  "template_group": "MS-SOS-APA-001",
+  "visual_inspection": {
+    "all_input_pages_inspected": true,
+    "renderer": "bundled PDFium scale1.8; earlier Poppler previews for first forms",
+    "scope": "complete input pages, including columns, selected marks, stamps, footers, continuation"
+  },
+  "reference_basis_note": "Image-only forms: source_text quotes are manual rendered-image transcriptions; visual_mark identifies actual selected choice. Born-digital quotes retain exact native substrings when available. Full-scope absence applies only to specified target and retained input."
+}

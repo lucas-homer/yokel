@@ -1,0 +1,260 @@
+{
+  "fixture_id": "A04",
+  "reference_version": "reviewer-source-v1",
+  "collector_annotation_hash": "c8cb3b651029bc89d3eec27b98ac63ba018e9a19c81176a5633759a8635b3656",
+  "collector_snapshot": "/private/tmp/docketclock-expanded-benchmark-2026-10-05/review/collector-snapshots/A04-c8cb3b651029.json",
+  "input_sha256": "95ac7a80eba8b41e9fd03b34cb9b495036a5303f5f2de993b14de55d20dc0923",
+  "reviewer_kind": "independent agent, not human gold standard",
+  "new_vendor_outputs_inspected": false,
+  "state": "WA",
+  "primary_bucket": "lifecycle changes",
+  "layout_features": [
+    "native-text letter",
+    "signature and bottom filing-stamp graphic"
+  ],
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim."
+  ],
+  "notice_scope_boundaries": "Entire one-page withdrawal letter and current filing stamp.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which office withdraws the rulemaking?",
+      "expected_value": "Office of the Code Reviser",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "body",
+      "source_quote": "The office of the code reviser",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire one-page withdrawal letter and current filing stamp.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "WA Office of Code Reviser withdrawal of CR-105 expedited rulemaking, chapter 1-21 WAC. Letter April 2, 2025.",
+        "Current filing April 2, 2025 8:56 AM; WSR 25-08-088. Zone not stated.",
+        "Target filed January 20, 2025 and published as WSR 25-03-112.",
+        "No comment close, hearing, effective date or newly scheduled future window on full page."
+      ]
+    },
+    {
+      "field_id": "notice_id",
+      "question": "Which current WSR identifier is shown in the filing stamp?",
+      "expected_value": "WSR 25-08-088",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "bottom right filing stamp",
+      "source_quote": "WSR 25-08-088",
+      "basis": "visual_mark",
+      "semantic_group_id": "notice_id",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Preserve marked state attached to correct option, action heading, and column; merely listing labels is insufficient.",
+      "notice_scope_boundaries": "Entire one-page withdrawal letter and current filing stamp.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "WA Office of Code Reviser withdrawal of CR-105 expedited rulemaking, chapter 1-21 WAC. Letter April 2, 2025.",
+        "Current filing April 2, 2025 8:56 AM; WSR 25-08-088. Zone not stated.",
+        "Target filed January 20, 2025 and published as WSR 25-03-112.",
+        "No comment close, hearing, effective date or newly scheduled future window on full page."
+      ]
+    },
+    {
+      "field_id": "lifecycle",
+      "question": "What action is taken on the identified CR-105?",
+      "expected_value": "withdrawal",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "central paragraph",
+      "source_quote": "is withdrawing CR-105 expedited rule making",
+      "basis": "source_text",
+      "semantic_group_id": "lifecycle",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire one-page withdrawal letter and current filing stamp.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "WA Office of Code Reviser withdrawal of CR-105 expedited rulemaking, chapter 1-21 WAC. Letter April 2, 2025.",
+        "Current filing April 2, 2025 8:56 AM; WSR 25-08-088. Zone not stated.",
+        "Target filed January 20, 2025 and published as WSR 25-03-112.",
+        "No comment close, hearing, effective date or newly scheduled future window on full page."
+      ]
+    },
+    {
+      "field_id": "withdrawal_target_scope",
+      "question": "Which prior notice/form and rule chapter are withdrawn?",
+      "expected_value": {
+        "target": "WSR 25-03-112",
+        "form": "CR-105 expedited rule making",
+        "scope": "chapter 1-21 WAC"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "central paragraph",
+      "source_quote": "withdrawing CR-105 expedited rule making for chapter 1-21 \nWAC, filed on January 20, 2025, and published as WSR 25-03-112.",
+      "basis": "source_text",
+      "semantic_group_id": "withdrawal_target_scope",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire one-page withdrawal letter and current filing stamp.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "WA Office of Code Reviser withdrawal of CR-105 expedited rulemaking, chapter 1-21 WAC. Letter April 2, 2025.",
+        "Current filing April 2, 2025 8:56 AM; WSR 25-08-088. Zone not stated.",
+        "Target filed January 20, 2025 and published as WSR 25-03-112.",
+        "No comment close, hearing, effective date or newly scheduled future window on full page."
+      ]
+    },
+    {
+      "field_id": "target_filing_date",
+      "question": "When was the withdrawn rulemaking filed?",
+      "expected_value": {
+        "date": "2025-01-20"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "central paragraph",
+      "source_quote": "filed on January 20, 2025",
+      "basis": "source_text",
+      "semantic_group_id": "target_filing_date",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire one-page withdrawal letter and current filing stamp.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "WA Office of Code Reviser withdrawal of CR-105 expedited rulemaking, chapter 1-21 WAC. Letter April 2, 2025.",
+        "Current filing April 2, 2025 8:56 AM; WSR 25-08-088. Zone not stated.",
+        "Target filed January 20, 2025 and published as WSR 25-03-112.",
+        "No comment close, hearing, effective date or newly scheduled future window on full page."
+      ]
+    },
+    {
+      "field_id": "current_filing_clock",
+      "question": "What filing date and time are stamped for this withdrawal, retaining unstated timezone?",
+      "expected_value": {
+        "date": "2025-04-02",
+        "time": "08:56",
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "bottom right filing stamp",
+      "source_quote": "DATE: April 02, 2025 TIME: 8:56 AM",
+      "basis": "visual_mark",
+      "semantic_group_id": "current_filing_clock",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Preserve marked state attached to correct option, action heading, and column; merely listing labels is insufficient.",
+      "notice_scope_boundaries": "Entire one-page withdrawal letter and current filing stamp.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "WA Office of Code Reviser withdrawal of CR-105 expedited rulemaking, chapter 1-21 WAC. Letter April 2, 2025.",
+        "Current filing April 2, 2025 8:56 AM; WSR 25-08-088. Zone not stated.",
+        "Target filed January 20, 2025 and published as WSR 25-03-112.",
+        "No comment close, hearing, effective date or newly scheduled future window on full page."
+      ]
+    },
+    {
+      "field_id": "new_comment_close",
+      "question": "Does this withdrawal letter state a new comment close?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "entire one-page withdrawal letter and stamp inspected",
+      "source_quote": "",
+      "basis": "full_scope_absence",
+      "semantic_group_id": "new_comment_close",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "No value is supplied in the retained target scope. Safe abstention requires complete relevant output scope; omitted scope cannot establish absence. Do not infer from neighboring notices or metadata.",
+      "notice_scope_boundaries": "Entire one-page withdrawal letter and current filing stamp.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": "Entire one-page withdrawal letter and current filing stamp.",
+      "reviewer_source_note": [
+        "WA Office of Code Reviser withdrawal of CR-105 expedited rulemaking, chapter 1-21 WAC. Letter April 2, 2025.",
+        "Current filing April 2, 2025 8:56 AM; WSR 25-08-088. Zone not stated.",
+        "Target filed January 20, 2025 and published as WSR 25-03-112.",
+        "No comment close, hearing, effective date or newly scheduled future window on full page."
+      ]
+    }
+  ],
+  "adjudications": [],
+  "critical_determinate_groups": 6,
+  "critical_uncertain_fields": [],
+  "reference_gate_eligible": true,
+  "collector_ready_confirmed": true,
+  "original_sha256": "95ac7a80eba8b41e9fd03b34cb9b495036a5303f5f2de993b14de55d20dc0923",
+  "original_physical_pages": [
+    1
+  ],
+  "collector_shared_original_group": null,
+  "collector_template_family": null,
+  "agency_reference": "Office of the Code Reviser"
+}

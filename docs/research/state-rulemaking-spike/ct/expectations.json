@@ -1,0 +1,63 @@
+{
+  "basis": "Inspected examples recorded before normalizer implementation; not a blind benchmark",
+  "checks": [
+    {
+      "name": "fresh_open_count",
+      "expected": 4,
+      "source": "captures/open.json"
+    },
+    {
+      "name": "historical_record_absent_from_open_list",
+      "record": "PR2024-059",
+      "expected": true,
+      "meaning": "absence alone makes no closure or withdrawal assertion"
+    },
+    {
+      "name": "native_history_window_count",
+      "record": "PR2024-059",
+      "expected": 2
+    },
+    {
+      "name": "2025_native_close",
+      "expected": "2025-03-28T03:00:00Z"
+    },
+    {
+      "name": "2026_native_close",
+      "expected": "2026-10-03T03:00:00Z"
+    },
+    {
+      "name": "taxi_native_close",
+      "expected": "2026-10-12T03:45:00Z"
+    },
+    {
+      "name": "taxi_rendered_close",
+      "expected": {
+        "date": "2026-10-11",
+        "time": "23:45",
+        "timezone_text": null,
+        "iana_zone": null,
+        "utc_instant": null
+      }
+    },
+    {
+      "name": "history_posted_dates_retained_as_metadata_only",
+      "expected": [
+        "2025-02-25",
+        "2025-03-27",
+        "2026-09-01",
+        "2026-10-02"
+      ],
+      "scope": "captures and results source-specific checks; no participation-boundary observation",
+      "expected_current_record_posted_date": "2026-09-09"
+    },
+    {
+      "name": "generic_hearing_widget_abstained",
+      "expected": true
+    },
+    {
+      "name": "operational_policy_distinct_from_comment_close",
+      "expected": "2026-09-01"
+    }
+  ],
+  "correction": "The initial inspected expectation preserved date precision but not date role; integration correction requires retaining Posted Date only as history metadata."
+}

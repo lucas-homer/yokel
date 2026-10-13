@@ -1,0 +1,97 @@
+{
+  "status": "READY_OFFLINE_TESTING_AND_FROZEN_REFERENCE",
+  "scope": "Fable design and semantic judgments, Codex local execution. Synthetic fixture preservation and structural contract tests; no live model discovery or semantic accuracy claim.",
+  "source_reference": "../reference/READY.json",
+  "reference_hashes_unchanged": true,
+  "actual_model": [
+    "claude-fable-5-1"
+  ],
+  "requested_effort": "high",
+  "provider": "firstParty",
+  "authentication": "claude.ai",
+  "subscription": "max",
+  "fable_session": "52edcc3c-3a7e-43f6-bd68-27caba45eb8d",
+  "host": "Codex",
+  "validation": {
+    "existing_protocol_tests_passed": 19,
+    "fable_independent_test_methods_passed": 12,
+    "fable_test_file": "test_fable_contract.py",
+    "test_file_sha256": "b7f4cf593f3ff1841b514936290f479fc11cac723ea4f7bb214c714ef137564e",
+    "fable_code_applied_unchanged": true,
+    "local_command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=docs/research/state-rulemaking-benchmark/round14-semantic-contract/protocol python3 -B -m unittest discover -s docs/research/state-rulemaking-benchmark/round14-semantic-contract/testing -p test_fable_contract.py -v",
+    "local_exit_code": 0,
+    "local_result": "Ran 12 tests in 0.017s; OK",
+    "side_effect_inspection": "AST inspected before execution: no open/eval/exec/build or shell/network/write calls; stdlib + offline contract imports; bytecode disabled.",
+    "local_runtime_candidate_checks": "local-runtime-candidate-checks.json"
+  },
+  "fable_material_findings": [
+    {
+      "control": "independently_lossy_facts_bundled",
+      "finding": "Label overclaims loss. Both 'Alder City' and 'North Province' remain recoverable from the single bundled unit citing s5. This is an atomicity violation of the extraction prompt, not a completeness failure. A completeness comparison must count both facts as present; only unit count differs (2 vs 1)."
+    },
+    {
+      "control": "historical_filing_replaces_affected_rule",
+      "finding": "Label slightly overstates. Rule Q-8 is still recoverable from identity unit 9, and unit 9 remains a dependency of the transition. The defect is a misattributed transition assertion that is internally inconsistent with its own dependencies, not loss of the affected rule."
+    },
+    {
+      "control": "unsupported_force_certainty",
+      "finding": "Reading the bare imperative 'Send remarks by' as mandatory is contestable, not an established error. The defect is uncertainty 'none' with no explicit modal in the cited text. The same unit with uncertainty 'source_ambiguous' and a reason is admissible and the tests accept it."
+    },
+    {
+      "control": "silently_missing_deadline_dimensions",
+      "finding": "Two independent defects are fused: dropped clock/timezone/basis dimensions and an unsupported certain 'advisory' force. Review should report them separately."
+    },
+    {
+      "control": "background_dropped_but_all_spans_still_cited",
+      "finding": "Correctly demonstrates coverage is bookkeeping. The appended s8 on the s10 unit is a legal broad multi-span citation, so no structural rejection is expected or asserted."
+    },
+    {
+      "control": "all five",
+      "finding": "All pass validate, expand and contract. The validator is semantics-blind by design; tests assert this separation rather than claiming structural rejection of semantic defects."
+    }
+  ],
+  "fable_review_notes": [
+    {
+      "api": "capacity",
+      "finding": "schema() allows maxItems 160 while validate() requires fewer than 160 units. A 160-unit response passes the schema but fails validate with 'inventory bound/capacity reached'. Tested as a boundary, flagged as a mismatch to review."
+    },
+    {
+      "api": "span_table",
+      "finding": "splitlines also splits on \\x0b, \\x0c, \\x1c-\\x1e, \\x85, \\u2028 and \\u2029. The synthetic source contains none, so the 10-row partition is exact and CRLF is one separator. A source containing those characters would partition exactly but with more rows than visible lines."
+    },
+    {
+      "limits": "reviewer heuristics",
+      "finding": "Helpers in the test file (force_is_justified, date_only_dims_explicit, recoverable) read fixture wording such as 'deadline' and 'clock unknown'. They are AI assessment aids over the authored fixture, not an oracle and not requirements on any extractor. No live model output exists; passing shows fixture preservation only, never model discovery."
+    }
+  ],
+  "limits": [
+    "Synthetic authored facts and heuristic checks do not prove extraction completeness or source discovery.",
+    "Bundled facts remain recoverable despite prompt atomicity violations; no fixed unit count is an accuracy denominator.",
+    "Debated force is an uncertainty-preservation issue, not an established legal-force error.",
+    "Schema permits 160 units while validator refuses a reached-capacity inventory; Fable flags review note, with release decision owned by primary/protocol reviewer.",
+    "Exact provenance coverage does not establish entailment.",
+    "Runtime candidate checked locally but runtime READY absent at inspection; no signer/executor invoked.",
+    "Fresh provider output not yet supplied or assessed. Source-reference labels remain excluded from protocol session."
+  ],
+  "payload_approval": "Primary relayed explicit user approval for new R14 protocol code, extraction prompt, fictional fixtures and test results only; excludes credentials, prior internal reports, source-reference labels and runtime credential code.",
+  "hold_incident": {
+    "targeted_export_started_before_hold_received": true,
+    "local_auto_review_accepted_export": true,
+    "payload": "protocol/compact.py and fictional_controls.py, no prior research report, credentials or runtime files",
+    "primary_hold_received_during_inference": true,
+    "terminated_processes": [
+      24335,
+      24292
+    ],
+    "exit_code": 143,
+    "targeted_result_bytes": 0,
+    "no_targeted_result_used": true,
+    "next": "Await primary payload approval before any further implementation-data export; generic and public-source sessions remain separately attributable."
+  },
+  "approval_resolution": "After explicit scoped user approval arrived, the targeted request was resumed under the isolated bridge and completed successfully; no held partial output was used.",
+  "provider_research_calls": 0,
+  "credentials_read": false,
+  "signer_executor_invoked": false,
+  "changed_scope": "Only testing/ and reference/; previous outputs and owner protocol/runtime/source files unchanged.",
+  "completed_utc": "2026-10-13T02:02:49.773030+00:00"
+}

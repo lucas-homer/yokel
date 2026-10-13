@@ -1,0 +1,344 @@
+{
+  "fixture_id": "B04",
+  "reference_version": "reviewer-source-v1",
+  "collector_annotation_hash": "19b98665c6672c12ffae985adac88026d3461209b72ff187e56d34f14e0157d5",
+  "collector_snapshot": "/private/tmp/docketclock-expanded-benchmark-2026-10-05/review/collector-snapshots/B04-19b98665c667.json",
+  "input_sha256": "729f04f18c347aad06ef7008c03b4fbc3ad4a35f94feb2b07ffe1ac7a636169b",
+  "reviewer_kind": "independent agent, not human gold standard",
+  "new_vendor_outputs_inspected": false,
+  "state": "NC",
+  "primary_bucket": "clean standalone PDFs",
+  "layout_features": [
+    "single-column notice",
+    "checkboxes",
+    "filled notice"
+  ],
+  "package_limitations": "Derived contiguous complete notice/form excerpt. Full original retained; attachments/rule text outside selected notice are excluded; whole physical pages may contain neighboring notice material.",
+  "notice_scope_boundaries": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency proposes the waiver amendment?",
+      "expected_value": "State Board of Elections",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "1. Rule-Making Agency: State Board of Elections",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "NC StateBoardofElections NoticeofText filedJune8,2026 OAH;Volume41Issue01.",
+        "ScheduledhearingcheckboxX; AMENDMENT08NCAC21.0206checkboxX; allotheractionboxesblank. Proposed effectiveNovember1,2026.",
+        "HearingAugust3,2026 at10:00am DobbsBuilding430N.SalisburyStRaleighNC27603; nozone.",
+        "CommentperiodendsAugust31,2026; no clock/zone. Legislativeobjection5p.m. boilerplate distinctfromcommentclock.",
+        "FormallyproposedMay20,2026; LindseyWakelycommentcontact; fiscal nofiscalnoterequired. Fulltwo-pageformread; futureproposalnotfinal."
+      ]
+    },
+    {
+      "field_id": "citation",
+      "question": "Which rule citation is selected for amendment?",
+      "expected_value": "08 NCAC 21 .0206",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "AMENDMENT: 08 NCAC 21 .0206",
+      "basis": "source_text",
+      "semantic_group_id": "citation",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "NC StateBoardofElections NoticeofText filedJune8,2026 OAH;Volume41Issue01.",
+        "ScheduledhearingcheckboxX; AMENDMENT08NCAC21.0206checkboxX; allotheractionboxesblank. Proposed effectiveNovember1,2026.",
+        "HearingAugust3,2026 at10:00am DobbsBuilding430N.SalisburyStRaleighNC27603; nozone.",
+        "CommentperiodendsAugust31,2026; no clock/zone. Legislativeobjection5p.m. boilerplate distinctfromcommentclock.",
+        "FormallyproposedMay20,2026; LindseyWakelycommentcontact; fiscal nofiscalnoterequired. Fulltwo-pageformread; futureproposalnotfinal."
+      ]
+    },
+    {
+      "field_id": "event_selected",
+      "question": "Which action is marked, rather than merely listed?",
+      "expected_value": "proposed amendment",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Block 3: X aligned with AMENDMENT row",
+      "source_quote": "X AMENDMENT: 08 NCAC 21 .0206",
+      "basis": "visual_mark",
+      "semantic_group_id": "event_selected",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Preserve marked state attached to correct option, action heading, and column; merely listing labels is insufficient.",
+      "notice_scope_boundaries": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "NC StateBoardofElections NoticeofText filedJune8,2026 OAH;Volume41Issue01.",
+        "ScheduledhearingcheckboxX; AMENDMENT08NCAC21.0206checkboxX; allotheractionboxesblank. Proposed effectiveNovember1,2026.",
+        "HearingAugust3,2026 at10:00am DobbsBuilding430N.SalisburyStRaleighNC27603; nozone.",
+        "CommentperiodendsAugust31,2026; no clock/zone. Legislativeobjection5p.m. boilerplate distinctfromcommentclock.",
+        "FormallyproposedMay20,2026; LindseyWakelycommentcontact; fiscal nofiscalnoterequired. Fulltwo-pageformread; futureproposalnotfinal."
+      ]
+    },
+    {
+      "field_id": "proposed_effective",
+      "question": "What proposed effective date is given?",
+      "expected_value": "2026-11-01",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "4. Proposed effective date:  11/01/2026",
+      "basis": "source_text",
+      "semantic_group_id": "proposed_effective",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "NC StateBoardofElections NoticeofText filedJune8,2026 OAH;Volume41Issue01.",
+        "ScheduledhearingcheckboxX; AMENDMENT08NCAC21.0206checkboxX; allotheractionboxesblank. Proposed effectiveNovember1,2026.",
+        "HearingAugust3,2026 at10:00am DobbsBuilding430N.SalisburyStRaleighNC27603; nozone.",
+        "CommentperiodendsAugust31,2026; no clock/zone. Legislativeobjection5p.m. boilerplate distinctfromcommentclock.",
+        "FormallyproposedMay20,2026; LindseyWakelycommentcontact; fiscal nofiscalnoterequired. Fulltwo-pageformread; futureproposalnotfinal."
+      ]
+    },
+    {
+      "field_id": "hearing",
+      "question": "What hearing date/time is given?",
+      "expected_value": {
+        "date": "2026-08-03",
+        "time": "10:00",
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "08/03/2026 10:00  am",
+      "basis": "source_text",
+      "semantic_group_id": "hearing",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "NC StateBoardofElections NoticeofText filedJune8,2026 OAH;Volume41Issue01.",
+        "ScheduledhearingcheckboxX; AMENDMENT08NCAC21.0206checkboxX; allotheractionboxesblank. Proposed effectiveNovember1,2026.",
+        "HearingAugust3,2026 at10:00am DobbsBuilding430N.SalisburyStRaleighNC27603; nozone.",
+        "CommentperiodendsAugust31,2026; no clock/zone. Legislativeobjection5p.m. boilerplate distinctfromcommentclock.",
+        "FormallyproposedMay20,2026; LindseyWakelycommentcontact; fiscal nofiscalnoterequired. Fulltwo-pageformread; futureproposalnotfinal."
+      ]
+    },
+    {
+      "field_id": "comment_close",
+      "question": "What date closes public comments?",
+      "expected_value": "2026-08-31",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "10. Comment Period Ends: 08/31/2026",
+      "basis": "source_text",
+      "semantic_group_id": "comment_deadline",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Five p.m. belongs to later legislative-review objections, not current comment close.",
+      "notice_scope_boundaries": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "NC StateBoardofElections NoticeofText filedJune8,2026 OAH;Volume41Issue01.",
+        "ScheduledhearingcheckboxX; AMENDMENT08NCAC21.0206checkboxX; allotheractionboxesblank. Proposed effectiveNovember1,2026.",
+        "HearingAugust3,2026 at10:00am DobbsBuilding430N.SalisburyStRaleighNC27603; nozone.",
+        "CommentperiodendsAugust31,2026; no clock/zone. Legislativeobjection5p.m. boilerplate distinctfromcommentclock.",
+        "FormallyproposedMay20,2026; LindseyWakelycommentcontact; fiscal nofiscalnoterequired. Fulltwo-pageformread; futureproposalnotfinal."
+      ]
+    },
+    {
+      "field_id": "filing",
+      "question": "What filing date does the stamp show?",
+      "expected_value": "2026-06-08",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "OAH filing stamp",
+      "source_quote": "Filed Jun 8, 2026",
+      "basis": "source_text",
+      "semantic_group_id": "filing",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "NC StateBoardofElections NoticeofText filedJune8,2026 OAH;Volume41Issue01.",
+        "ScheduledhearingcheckboxX; AMENDMENT08NCAC21.0206checkboxX; allotheractionboxesblank. Proposed effectiveNovember1,2026.",
+        "HearingAugust3,2026 at10:00am DobbsBuilding430N.SalisburyStRaleighNC27603; nozone.",
+        "CommentperiodendsAugust31,2026; no clock/zone. Legislativeobjection5p.m. boilerplate distinctfromcommentclock.",
+        "FormallyproposedMay20,2026; LindseyWakelycommentcontact; fiscal nofiscalnoterequired. Fulltwo-pageformread; futureproposalnotfinal."
+      ]
+    },
+    {
+      "field_id": "close_clock",
+      "question": "Does the notice state a clock time for August 31 comment close?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "Complete two-page Form 300; 5 p.m. belongs to legislative-review objections.",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "comment_deadline",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "No value is supplied in the retained target scope. Safe abstention requires complete relevant output scope; omitted scope cannot establish absence. Do not infer from neighboring notices or metadata. Five p.m. belongs to later legislative-review objections, not current comment close.",
+      "notice_scope_boundaries": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+      "reviewer_source_note": [
+        "NC StateBoardofElections NoticeofText filedJune8,2026 OAH;Volume41Issue01.",
+        "ScheduledhearingcheckboxX; AMENDMENT08NCAC21.0206checkboxX; allotheractionboxesblank. Proposed effectiveNovember1,2026.",
+        "HearingAugust3,2026 at10:00am DobbsBuilding430N.SalisburyStRaleighNC27603; nozone.",
+        "CommentperiodendsAugust31,2026; no clock/zone. Legislativeobjection5p.m. boilerplate distinctfromcommentclock.",
+        "FormallyproposedMay20,2026; LindseyWakelycommentcontact; fiscal nofiscalnoterequired. Fulltwo-pageformread; futureproposalnotfinal."
+      ]
+    },
+    {
+      "field_id": "timezone",
+      "question": "Is the public-hearing timezone explicitly stated?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Complete two-page Form 300 input pages 1-2.",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "hearing",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "No value is supplied in the retained target scope. Safe abstention requires complete relevant output scope; omitted scope cannot establish absence. Do not infer from neighboring notices or metadata.",
+      "notice_scope_boundaries": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": "Complete two-page Form300 notice, original1–2; rule-text attachment original3–4 excluded.",
+      "reviewer_source_note": [
+        "NC StateBoardofElections NoticeofText filedJune8,2026 OAH;Volume41Issue01.",
+        "ScheduledhearingcheckboxX; AMENDMENT08NCAC21.0206checkboxX; allotheractionboxesblank. Proposed effectiveNovember1,2026.",
+        "HearingAugust3,2026 at10:00am DobbsBuilding430N.SalisburyStRaleighNC27603; nozone.",
+        "CommentperiodendsAugust31,2026; no clock/zone. Legislativeobjection5p.m. boilerplate distinctfromcommentclock.",
+        "FormallyproposedMay20,2026; LindseyWakelycommentcontact; fiscal nofiscalnoterequired. Fulltwo-pageformread; futureproposalnotfinal."
+      ]
+    }
+  ],
+  "adjudications": [
+    {
+      "field_id": "event_selected",
+      "type": "role_precision_clarification",
+      "reason": "Selected AMENDMENT is inside Proposed Action block. Must retain proposed stage and X association, not final amendment.",
+      "collector_value": "amendment",
+      "reviewer_value": "proposed amendment",
+      "collector_answerability": "present",
+      "reviewer_answerability": "present"
+    }
+  ],
+  "critical_determinate_groups": 5,
+  "critical_uncertain_fields": [],
+  "reference_gate_eligible": true,
+  "collector_ready_confirmed": true,
+  "original_sha256": "a8a9fead239db1020c1683c1c3c67dd11633de6e625e8415e37f48b0c4787bee",
+  "original_physical_pages": [
+    1,
+    2
+  ],
+  "collector_shared_original_group": "NC-register-41-01-waiver",
+  "collector_template_family": "NC-Form-300",
+  "agency_reference": "State Board of Elections"
+}

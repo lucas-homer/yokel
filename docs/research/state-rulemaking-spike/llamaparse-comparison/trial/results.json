@@ -1,0 +1,89 @@
+{
+  "verdict": "Partial semantic/evidence benefit on this selected fixture; critical filing-stamp loss blocks complete evidence-preserving parse claim",
+  "input": {
+    "path": "source.pdf",
+    "sha256": "ac95c240653690261eb7a6fef83bd80a04310cf49c15c37256569bbc70315955",
+    "bytes": 401742,
+    "upload": "multipart POST of exact retained original bytes to connector-issued upload URL",
+    "file_id": "d59cad68-4e67-4d83-96b7-5ae57a03e285",
+    "server_digest": "not returned"
+  },
+  "runs": {
+    "agentic": {
+      "request": {
+        "fileId": "d59cad68-4e67-4d83-96b7-5ae57a03e285",
+        "markdown": true,
+        "tier": "agentic",
+        "version": "latest"
+      },
+      "started_at": "2026-10-05T23:58:10.922Z",
+      "ended_at": "2026-10-05T23:58:34.651Z",
+      "elapsed_ms": 23729,
+      "returned_resolved_version": null,
+      "reported_usage": null,
+      "reported_job_id": null
+    },
+    "agentic_plus": {
+      "request": {
+        "fileId": "d59cad68-4e67-4d83-96b7-5ae57a03e285",
+        "markdown": true,
+        "tier": "agentic_plus",
+        "version": "latest"
+      },
+      "started_at": "2026-10-06T00:00:13.218Z",
+      "ended_at": "2026-10-06T00:00:49.304Z",
+      "elapsed_ms": 36086,
+      "returned_resolved_version": null,
+      "reported_usage": null,
+      "reported_job_id": null
+    }
+  },
+  "extraction": {
+    "status": "MCP request timed out; no vendor JSON returned",
+    "configuration_created": true,
+    "tier_requested": "agentic",
+    "target": "per_doc",
+    "schema": "extraction-config-request.json",
+    "outcome": "unassessed; backend completion/charges unknown; no retry",
+    "timing": {
+      "request": {
+        "configurationId": "cfg-n3a0cri0r8hj69frsvnrhc9ot9zc",
+        "fileId": "d59cad68-4e67-4d83-96b7-5ae57a03e285"
+      },
+      "started_at": "2026-10-05T23:59:02.147Z",
+      "ended_at": "2026-10-06T00:01:06.024Z",
+      "elapsed_ms": 123877,
+      "outcome": "MCP timeout; backend completion and billing unknown; no retry"
+    }
+  },
+  "capability_limits": {
+    "forms_enrich": "Not exposed by parseFile tool schema; not requested; does not establish absence in broader vendor API",
+    "expand_forms": "Not exposed by parseFile tool schema",
+    "bounding_boxes": "Not exposed by chosen parse tool; no page/region structures returned. Other index and LiteParse tools mention boxes but were not run",
+    "versions": "latest requested; no resolved version returned",
+    "job_ids": "No parse/extraction job id returned; file_id and extraction configurationId retained",
+    "usage_cost": "No actual usage/credit/cost returned by parse responses; extraction docs list agentic 15 credits/page but this is not observed billing"
+  },
+  "validation": {
+    "original_sha": "matches declared 401742-byte source",
+    "normalizer": "7 observations, all needs_review; filing date withheld; upstream model parser explicitly annotated",
+    "shared_validator": "passed 19 artifacts / 7 observations / 9 exact quotes / 0 visual repairs",
+    "scope": "structural/evidence replay, not vendor inference reproducibility",
+    "negative_tests": "3 passed: missing hearing duration, comment duration, eligibility; each fails explicitly and emits 6 partial observations, no fabricated dates",
+    "raw_to_markdown": "Both parse.md and parse-plus.md exactly equal paired raw response content[0].text; no newline or correction added; enforced on replay",
+    "relocated_replay": "passed copied lane replay with cwd=/ and byte-identical observations; no absolute baseline-root dependency"
+  },
+  "limitations": [
+    "Selected known diagnostic example, not blind benchmark or general vendor ranking",
+    "One page form, attachment package and source coverage untested",
+    "Agent-authored comparison is not vendor structured extraction",
+    "No agent-authored filing stamp repair",
+    "Markdown signatures/seal transcriptions outside evaluated fields are unreliable and unvalidated",
+    "No paid plan or credential changes"
+  ],
+  "next_decisions": [
+    "Retain both parser candidates and abstention; independent reviewer judges claims",
+    "Potential future test of form-enriched API needs a capability that exposes it; not executed here",
+    "Vendor extraction timeout needs status/retrieval support before repeating a potentially billed job"
+  ]
+}

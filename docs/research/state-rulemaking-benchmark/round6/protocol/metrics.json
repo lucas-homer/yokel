@@ -1,0 +1,89 @@
+{
+  "version": "round6-evaluation-preregistration-v1",
+  "status": "READY_independent_review_passed_pending_primary_freeze",
+  "unit": "notice; atom/edge counts descriptive and clustered",
+  "groups": {
+    "source_facts": [
+      "notice/event identity",
+      "phase/timing expressions",
+      "routes and literal destinations"
+    ],
+    "relationships": [
+      "event-target",
+      "timing-event",
+      "route-event",
+      "alternative-group",
+      "requirement/disclosure applicability",
+      "relative/conditional dependency"
+    ],
+    "instructions": [
+      "required reference",
+      "format",
+      "recipient/method",
+      "arrival/postmark/timing rule",
+      "prerequisite",
+      "modality"
+    ],
+    "disclosures": [
+      "public posting",
+      "confidentiality/public-record treatment"
+    ],
+    "uncertainties": [
+      "identity conflict",
+      "incomplete scope",
+      "unresolved value/association/lifecycle"
+    ]
+  },
+  "metrics": {
+    "scalar_fact_accuracy": "Correct supported literal/date projections / claimed scalar facts; empty denominator null. Wrong role/link is separately counted, never erased by a correct string.",
+    "source_fact_recall": "Correct source facts represented with correct type/role / image-resolvable source facts; all known facts in denominator, extraction failure gets zero.",
+    "relationship_precision_recall": "Exact semantic source-supported endpoint/applicability/modality relations among claimed vs required source relations; dangling/unknown endpoint cannot establish match.",
+    "instruction_coverage": "Source instructions retained with correct modality and applicability / image-resolvable source instructions. Required reference is scored here rather than falsifying calendar-value accuracy.",
+    "disclosure_coverage": "Source disclosures retained with their actual scope / image-resolvable disclosures; report separately from instructions.",
+    "unsupported_additions": "Claims/relations/requirements unsupported or overasserted in source, including invented mandatory requirements; count by category and notices affected.",
+    "inventory_omissions": "Image source requirements missing from source-only inventory, independently of whether record or verifier repeats omission.",
+    "record_completeness": "Per-notice record contains all required source facts, relations, instructions/disclosures and explicit uncertainty, without unsupported assertions. Unknown complete source scope precludes certified complete record.",
+    "unsafe_acceptance": "Per arm: accepted complete-record claims failing ANY source-grounded completeness/support/relationship/uncertainty requirement / accepted complete-record claims. Zero accepted =>null, not evidence of safety.",
+    "useful_coverage": "Per arm: correctly complete source-audited records actually terminal-accepted / all8 scheduled notices; all failures/unstarted remain denominator. Whole-cohort rate null if source truth incomplete; report known counts and descriptive source-complete subset.",
+    "review_workload": "Per arm: notices routed to review or with no usable terminal record /8; separate semantic review, deterministic/extraction/provider/coverage/cost failure. Diagnostic flags count per notice/category after dedup; human minutes unmeasured.",
+    "cost": "Shared extraction, Jev, stronger verifier, total; per correct complete accepted record only with positive denominator; show usage estimates/reservations/invoice data distinctly.",
+    "paired_comparison": "Notice-level joint correct acceptance, one-arm-only correct acceptance, unsafe acceptance, common review and asymmetric failure. Same shared extraction outcomes for both arms; no best-of-two union."
+  },
+  "limits": {
+    "notices": 8,
+    "minimum_states": 6,
+    "maximum_notices_per_state": 2,
+    "pages": 40,
+    "native_codepoints_per_notice": 30000,
+    "total_conservative_usd": 2,
+    "OCR_calls": 0,
+    "automatic_POST_retries": 0,
+    "exact_stage_caps": {
+      "status": "approved_and_independently_verified",
+      "openrouter_conservative_input_tokens": 35000,
+      "jev_max_requests": 8,
+      "jev_requests_per_notice": 1,
+      "jev_total_tokens": 64000,
+      "jev_state_plus_longest_question_tokens": 32000,
+      "maximum_reservation_usd": 1.960704,
+      "completion_caps": {
+        "inventory": 6144,
+        "stronger": 4096
+      },
+      "incomplete_batch": "review; no question dropping",
+      "development_size_proofs": "preserve failed30000 and final35000 proofs",
+      "inventory_calls": 8,
+      "stronger_calls": 8,
+      "total_calls": 24
+    }
+  },
+  "confirmed_gate": {
+    "zero_unsafe_accepted_records": true,
+    "minimum_correct_complete_accepted_notices_per_arm": 2,
+    "all_scheduled_notices": 8,
+    "minimum_useful_coverage": 0.25,
+    "all8_complete_source_truth_required_for_whole_cohort_gate": true,
+    "meaning": "consideration of a larger shadow study only; descriptive arm comparison remains informative when gate fails",
+    "confirmed_by": "Primary chat authorization, October7,2026"
+  }
+}

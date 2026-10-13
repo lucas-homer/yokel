@@ -1,0 +1,198 @@
+{
+  "fixture_id": "A08",
+  "state": "US-CA",
+  "bucket": "clean standalone PDFs",
+  "layout_features": [
+    "clean born-digital four-page standalone notice",
+    "p2 two contact columns",
+    "planned submission vs relative close",
+    "repeated inconsistent printed year"
+  ],
+  "event_type": "proposed emergency readoption",
+  "source_url": "https://nrm.dfg.ca.gov/FileHandler.ashx?DocumentID=241124",
+  "discovery_url": "https://wildlife.ca.gov/Notices/Regulations/Commercial-Groundfish-2025",
+  "retrieved_at": "2026-10-06T00:33:56.074150+00:00",
+  "source_title": "Rescinding Select Commercial Groundfish Management Measures: proposed readoption",
+  "selection_reason": "Eligible short standalone original from targeted search; tests planned versus actual anchor and comment versus extension duration.",
+  "original_sha256": "cedd8f50770ac09fbc61f438134c8a059eb88f26239cb2b7327faa5220b01d8a",
+  "input_sha256": "cedd8f50770ac09fbc61f438134c8a059eb88f26239cb2b7327faa5220b01d8a",
+  "original_byte_length": 151940,
+  "input_byte_length": 151940,
+  "original_physical_pages": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "original_page_count": 4,
+  "input_page_count": 4,
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Clean-PDF allocation describes layout; content also contains lifecycle change. Related regulatory text/attachments are not included.",
+    "Printed January 29, 2025 header predates body August 21, 2025 effectiveness and January 2026 anticipated filing. Preserve literal heading; no correction or computed deadline."
+  ],
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which department proposes this emergency readoption?",
+      "expected_value": "Department of Fish and Wildlife",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "the Department of Fish and Wildlife",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "lifecycle",
+      "question": "Is this proposed readoption or an adopted permanent regulation?",
+      "expected_value": "proposed readoption of emergency regulations",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "title",
+      "source_quote": "NOTICE OF PROPOSED READOPTION OF EMERGENCY REGULATIONS",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "rule_identity",
+      "question": "Which CCR sections and title does the notice address?",
+      "expected_value": {
+        "title": 14,
+        "sections": [
+          "150.06",
+          "150.16"
+        ]
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "title",
+      "source_quote": "Amend Sections 150.06, and 150.16 \nTitle 14, California Code of Regulations (CCR)",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "comment_duration_anchor",
+      "question": "What relative comment duration, counting basis, and anchor are stated, without computing a calendar close?",
+      "expected_value": {
+        "duration": 5,
+        "unit": "calendar days",
+        "anchor": "submission of proposed emergency to OAL",
+        "computed_close": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "last paragraph page 1",
+      "source_quote": "After submission of the proposed \nemergency to the Office of Administrative Law, the Office of Administrative Law shall allow \ninterested persons five calendar days to submit comments",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "receipt_condition",
+      "question": "What condition applies to mailed/emailed written comments?",
+      "expected_value": {
+        "condition": "received at OAL within five days after Department submits emergency regulations to OAL for review",
+        "routes": [
+          "US mail",
+          "email"
+        ]
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "Written Comment Period",
+      "source_quote": "Written comments \nsubmitted via U.S. mail or e-mail must be received at OAL within five days after the Department \nsubmits the emergency regulations to OAL for review.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "planned_submission",
+      "question": "What qualified planned submission date is stated?",
+      "expected_value": {
+        "date": "2026-01-28",
+        "qualifier": "on or after; anticipated",
+        "role": "planned OAL submission"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "paragraph after contact columns",
+      "source_quote": "The Department anticipates it will submit the rulemaking to OAL on or after January 28, \n2026.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "actual_submission_date",
+      "question": "Does the notice state the actual OAL submission date needed to calculate the comment close?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "all four notice pages inspected; p2 only anticipates submission and directs reader to OAL status",
+      "source_quote": "",
+      "basis": "full_scope_absence"
+    },
+    {
+      "field_id": "prior_effective_date",
+      "question": "What effective date is stated for the original emergency regulations?",
+      "expected_value": {
+        "date": "2025-08-21",
+        "role": "original emergency regulations"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "The emergency regulations, effective on \nAugust 21, 2025",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "proposed_extension",
+      "question": "How long would the proposed readoption extend the emergency regulations?",
+      "expected_value": {
+        "duration": 90,
+        "unit": "days",
+        "role": "proposed extension; not comment duration"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "an extension of 90 days will be provided",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "printed_notice_date",
+      "question": "What date is literally printed in the heading, without correcting its year?",
+      "expected_value": {
+        "date": "2025-01-29",
+        "role": "literal printed heading; chronological inconsistency with body left unresolved"
+      },
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "title date; repeated in continuation headers",
+      "source_quote": "January 29, 2025",
+      "basis": "source_text"
+    }
+  ],
+  "collector": "source-a Codex task; source-only annotation before vendor parsing",
+  "reference_version": "collector-v1",
+  "discovery_method": "Official listing link or targeted official register PDF search, documented in selection-log.json",
+  "shared_original_group": null,
+  "template_group": null,
+  "visual_inspection": {
+    "all_input_pages_inspected": true,
+    "renderer": "bundled PDFium scale1.8; earlier Poppler previews for first forms",
+    "scope": "complete input pages, including columns, selected marks, stamps, footers, continuation"
+  },
+  "reference_basis_note": "Image-only forms: source_text quotes are manual rendered-image transcriptions; visual_mark identifies actual selected choice. Born-digital quotes retain exact native substrings when available. Full-scope absence applies only to specified target and retained input."
+}

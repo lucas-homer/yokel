@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+"""Read-only evidence-table postrun audit; new derivatives only, no provider replay."""
+import copy,hashlib,importlib.util,json,sys
+from pathlib import Path
+from decimal import Decimal as D
+from datetime import datetime,timezone
+OUT=Path(__file__).resolve().parent;R=OUT.parents[1];BASE=R.parent;OLD=BASE/'round8';PREV=BASE/'round8-contract-probe';RUN=R/'execution/run';DOC='doc-92211b8c7ba0';E='db895208c9f7573517be057a58ec6126e793024caf6a532fe2e2a72dd391c53c'
+def guard(event,args):
+ if event.startswith(('socket.','subprocess.')) or event in ('os.system','os.posix_spawn'):raise RuntimeError('postrun disables network/processes')
+ if event=='open' and isinstance(args[0],(str,bytes)):
+  n=str(args[0]).lower()
+  if '/.env' in n or '/library/keychains/' in n or '/.aws/' in n or Path(n).name in ('credentials','credentials.json'):raise RuntimeError('postrun disables credential access')
+sys.addaudithook(guard)
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def read(p):return json.loads(Path(p).read_bytes())
+def canon(v):return json.dumps(v,sort_keys=True,ensure_ascii=False,separators=(',',':'),allow_nan=False).encode()
+def save(n,v):(OUT/n).write_text(json.dumps(v,indent=2,allow_nan=False)+'\n')
+def load(n,p):
+ s=importlib.util.spec_from_file_location(n,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+checks=[];fixed={}
+def check(n,ok):
+ if not ok:raise AssertionError(n)
+ checks.append(n)
+def freeze(root,name,expected):
+ p=root/'execution'/('freeze-'+name+'.json');v=read(p);check('freeze '+str(p),sha(p)==expected);fixed[str(p)]=expected;seen=set()
+ for row in v['files']:
+  path=(root/row['path']).resolve();check('frozen '+str(path),not Path(row['path']).is_absolute() and path.is_relative_to(root.resolve()) and row['path'] not in seen and path.stat().st_size==row['bytes'] and sha(path)==row['sha256']);seen.add(row['path']);fixed[str(path)]=row['sha256']
+ return dict(sha256=expected,files=len(seen),created_utc=v['created_utc'])
+def main():
+ binding=read(R/'execution/service-account/binding.json');freezes={k:freeze(R,k,E if k=='E' else binding['freeze_'+k+'_sha256']) for k in ('A','S','E')};check('A/S/E counts',[freezes[k]['files'] for k in ('A','S','E')]==[35,4,32]);freezes['original_B']=freeze(OLD,'B','60b1e0f8c6321cee6407cfa04ad02af92a7546b059dd5235868746115cc5b792')
+ baselines={}
+ for name,p in [('primary',R/'execution/prior-baseline.json'),('independent',R/'review/prior-baseline.json')]:
+  files=read(p)['files'];baselines[name]=len(files)
+  for path,h in files.items():check('prior '+path,sha(path)==h)
+ rt=load('evidence_table_postrun_runtime',R/'runtime/run_pipeline.py');impl=rt.verify_implementation(R/'runtime/implementation.json');review=read(R/'review/FINAL-REVIEW.json');check('approved 42 pins exact',impl==review['candidate_code_pins'] and len(impl['code'])==42)
+ prior=rt.verify_prior_debit()
+ for row in prior['operations']:
+  root=Path(row['round_root']);freezes[root.name]=freeze(root,'E',row['files'][str(root/'execution/freeze-E.json')])
+ auth=read(R/'execution/live-authorization.json');expected=dict(schema_version='round8-evidence-table.live-authorization.v1',implementation_sha256=sha(R/'runtime/implementation.json'),manifest_sha256=sha(R/'sources/source-inputs.READY.json'),source_labels_frozen_before_outputs=True,source_labels_freeze_sha256=freezes['original_B']['sha256'],nominal_budget_usd=2.0,**rt.auth_scope());check('exact reviewed authorization',auth==expected)
+ live=read(R/'execution/service-account/live-intent.json');deps=read(R/'execution/service-account/dependencies.json');job=read(R/'execution/service-account/native-job.json');policy=read(R/'execution/service-account/policy-v6.json')
+ for k,p in [('implementation_sha256','runtime/implementation.json'),('manifest_sha256','sources/source-inputs.READY.json'),('authorization_sha256','execution/live-authorization.json'),('dependencies_sha256','execution/service-account/dependencies.json')]:check('native binding '+k,binding[k]==live[k]==sha(R/p))
+ check('native receipt binding',live['adapter_sha256']==sha(R/'execution/service-account/adapter.py') and live['binding_sha256']==sha(R/'execution/service-account/binding.json') and live['automatic_retry'] is False and live['output_path']==str(RUN) and live['max_new_operations']==2 and live['prior_budget_debit_usd']==.428936)
+ for p,h in deps['files'].items():check('dependency '+p,sha(p)==h and job['files'][p]==h)
+ for p,h in job['files'].items():check('native job '+p,sha(p)==h)
+ check('1743 dependencies',len(deps['files'])==live['dependency_files']==1743);check('fixed native job',policy['jobs']=={'round8-evidence-table-initial':job} and job['argv'][1:]==['-I','-S','-B',str(R/'execution/service-account/adapter.py'),'--live-initial'] and job['timeout_seconds']==1800)
+ check('native failed receipt honest',read(R/'execution/service-account/live-result.json')['state']=='stopped_provider_operation' and read(R/'execution/service-account/live-stop.json')['automatic_retry'] is False)
+ rows=rt.load_sources(R/'sources/source-inputs.READY.json',R/'sources');check('one exact retained input',len(rows)==1 and not rows[0]['source_errors']);d=rows[0];folder=RUN/'documents'/DOC
+ for name,value in [('source',d['source']),('assembled',d['assembled']),('common-payload',d['common']),('restoration',d['restoration'])]:check('retained/reproduced '+name,read(folder/(name+'.json'))==value)
+ for name in ('source','assembled','common-payload'):check('original bytes reused '+name,sha(folder/(name+'.json'))==sha(PREV/'execution/run/documents'/DOC/(name+'.json')))
+ check('original schema restored',not rt.p.schema_errors(rt.codec.restore(d['restoration']['wire'],d['common']['payload_sha256'])['record'],rt.p.RECORD_SCHEMA) and d['assembled']['validation']['valid'] and not d['assembled']['action_ready'])
+ plans=d['plans'];wire=d['restoration']['wire'];check('both same full wire',plans['jev']['body']['state']==json.loads(plans['stronger']['body']['messages'][1]['content'])['payload']==wire and rt.codec.restore(wire,d['common']['payload_sha256'])==d['common']['payload'])
+ for arm in ('jev','stronger'):
+  for suffix,field in [('request','body'),('admission','admission')]:check('exact full '+arm+' '+suffix,read(folder/(arm+'-'+suffix+'.json'))==plans[arm][field])
+  check('admitted body '+arm,plans[arm]['admission']['admitted'] and plans[arm]['admission']['body_sha256']==sha(folder/(arm+'-request.json')))
+ check('unchanged limits and sizes',plans['jev']['admission']['estimate']==37779 and plans['jev']['admission']['state_longest_estimate']==28700 and plans['stronger']['admission']['estimate']==35747 and plans['stronger']['body']['max_tokens']==4096)
+ obs_paths=list(RUN.glob('observed-*.json'));snap_paths=list(RUN.glob('snapshot-*.json'));check('one terminal snapshot',len(obs_paths)==len(snap_paths)==1 and not (RUN/'completed.json').exists());obs_path=obs_paths[0];observed=read(obs_path);snapshot=read(snap_paths[0]);rt.validate_observation(observed);rt.audit_failure_receipts(observed,RUN);doc=observed['documents'][0];check('snapshot stopped',snapshot['state']=='stopped_provider_operation' and snapshot['observed_sha256']==sha(obs_path) and snapshot['budget_stop_evidence_sha256'] is None)
+ check('exact terminal artifacts',len(observed['documents'])==1 and doc==read(folder/'terminal.json') and doc['inventory_sha256']==d['assembled']['inventory_sha256'] and doc['record_sha256']==rt.sha(rt.j.encode(d['assembled']['record'])) and doc['payload_sha256']==d['common']['payload_sha256'])
+ check('honest failed stronger state',doc['runtime_gate']=='verification_failed' and doc['failure']['kind']=='invalid_response' and doc['failure']['stage']=='stronger' and doc['failure']['intent_recorded'] and doc['failure']['http_status'] is None and not doc['provider_service_error'] and doc['arms']['stronger']['called'] and doc['arms']['stronger']['status']=='failed' and not doc['arms']['stronger']['source_coverage_complete'] and 'judgment' not in doc['arms']['stronger'] and not (folder/'stronger-validation.json').exists())
+ ops=list((RUN/'operations').iterdir());check('exactly two attempts zero extraction',len(ops)==len(list(RUN.glob('operations/*/intent.json')))==2 and len(list(RUN.glob('operations/*/result.json')))==1);pins=read(RUN/'pins.json');check('run pins',pins['implementation']==impl and pins['authorization_sha256']==sha(R/'execution/live-authorization.json') and pins['manifest_sha256']==sha(R/'sources/source-inputs.READY.json') and pins['prior_budget_debit_usd']==.428936 and pins['prior_debit_sha256']==sha(R/'runtime/prior-debit.json'))
+ operations={}
+ for op in ops:
+  meta=read(op/'identity.json');intent=read(op/'intent.json');stage=meta['kind'];status=read(op/'status.json');raw=read(op/'response.body');check('known stage '+stage,stage in ('jev','stronger') and stage not in operations)
+  check('durable identity '+stage,meta['operation_id']==DOC+'-'+stage and all(intent[k]==v for k,v in meta.items()) and intent['automatic_retry'] is False and meta['pins_sha256']==sha(RUN/'pins.json') and meta['request_sha256']==sha(op/'request.json')==sha(folder/(stage+'-request.json')) and meta['identity']==dict(document_id=DOC,payload_sha256=d['common']['payload_sha256'],record_sha256=doc['record_sha256'],wire_payload_sha256=d['restoration']['wire_sha256']) and op.name==stage+'-'+rt.sha(rt.j.encode(meta))[:24])
+  check('HTTP and raw hash '+stage,status['http_status']==200 and status['response_sha256']==sha(op/'response.body') and intent['reserved_nominal_usd']==plans[stage]['admission']['reservation_usd']);operations[stage]=dict(path=op,intent=intent,raw=raw)
+ jop=operations['jev'];sop=operations['stronger'];jr=read(jop['path']/'result.json');check('strict Jev parse',rt.a.parse_jev((jop['path']/'response.body').read_bytes(),plans['jev']['body']['questions'])==jr and not (jop['path']/'stop.json').exists());labels={k:v['label'] if v['label'] is not None else 'uncertain' for k,v in jr['answers'].items()};expected_judgment=rt.normalized.terminal_arm('jev',labels,d['assembled'],valid=True,errors=[],explanations=False)
+ check('Jev judgment exact',doc['arms']['jev']['judgment']==expected_judgment and doc['arms']['jev']==read(folder/'progress-after-jev.json')['arms']['jev'] and doc['arms']['jev']['called'] and doc['arms']['jev']['status']=='review' and doc['arms']['jev']['source_coverage_complete']);check('Jev dimensions',labels=={'association':'fail','completeness':'fail','requirements':'fail','source_identity':'pass','support':'pass'})
+ sr=sop['raw'];check('stronger length stop',sr['model']==impl['models']['stronger'] and sr['choices'][0]['finish_reason']=='length' and sr['choices'][0]['native_finish_reason']=='max_output_tokens' and sr['usage']['completion_tokens']==4096 and not (sop['path']/'result.json').exists() and read(sop['path']/'stop.json')=={'retry_allowed':False,'state':'invalid_response_or_usage'})
+ try:rt.a.parse_or((sop['path']/'response.body').read_bytes())
+ except rt.a.Stop:check('strict stronger parser rejects truncated native response',True)
+ else:raise AssertionError('truncated response accepted')
+ check('freeze and dispatch chronology',datetime.fromisoformat(freezes['original_B']['created_utc'])<datetime.fromisoformat(freezes['A']['created_utc'])<datetime.fromisoformat(live['started_utc'])<=datetime.fromisoformat(jop['intent']['created_utc'])<datetime.fromisoformat(sop['intent']['created_utc'])<datetime.fromisoformat(freezes['E']['created_utc']))
+ ju=jop['raw']['usage'];su=sr['usage'];jev_est=D(ju['input_tokens'])*D(str(impl['prices']['jev']));strong_est=D(su['prompt_tokens'])*D(str(impl['prices']['prompt']))+D(su['completion_tokens'])*D(str(impl['prices']['completion']));strong_reported=D(str(su['cost']));jreserve=D(str(jop['intent']['reserved_nominal_usd']));sreserve=D(str(sop['intent']['reserved_nominal_usd']));prior_reported=sum(D(str(x['reported_cost_usd'])) for x in prior['operations']);prior_debit=D(str(rt.PRIOR_DEBIT));new_charge=max(jreserve,jev_est)+max(sreserve,strong_reported)
+ check('exact raw usage and pricing',ju=={'input_tokens':11953,'output_tokens':192} and jr['reported_cost_usd'] is None and jr['usage_rate_estimated_usd']==jr['observed_cost_usd']==float(jev_est) and jev_est==D('.000502026') and strong_est==D('.055182') and strong_reported==D('.058736'))
+ check('independent prior and new cost accounting',prior_reported==D('.249253') and prior_debit==D('.428936') and new_charge==D('.114040718') and prior_debit+new_charge==D('.542976718') and prior_reported+strong_reported==D('.307989'))
+ totals=snapshot['totals'];check('frozen ledger honest partial cost',totals==dict(budget_charge_usd=.542976718,inventory_cases=0,jev_cases=1,new_budget_charge_usd=.114040718,nominal_reserved_usd=.114040718,observed_accounted_usd=.000502026,ocr_pages=0,operations=2,prior_budget_debit_usd=.428936,stronger_cases=1))
+ costs={'extraction':dict(usage_estimate_usd=0,provider_reported_usd=0,conservative_charge_usd=0),'jev':dict(usage_estimate_usd=float(jev_est),provider_reported_usd=None,conservative_charge_usd=float(max(jreserve,jev_est))),'stronger':dict(usage_estimate_usd=float(strong_est),provider_reported_usd=float(strong_reported),conservative_charge_usd=float(max(sreserve,strong_reported)))}
+ save('cost-audit.json',{'schema_version':'round8-evidence-table.cost_audit.v1','incremental_probe':costs,'raw_usage':{'jev':ju,'stronger':su},'raw_response_sha256':{k:sha(v['path']/'response.body') for k,v in operations.items()},'prior_three_extractions':{'provider_reported_usd':float(prior_reported),'conservative_charge_usd':float(prior_debit)},'cumulative_five_operations':{'known_provider_reported_subtotal_usd':float(prior_reported+strong_reported),'provider_reported_total_usd':None,'separate_jev_usage_estimate_usd':float(jev_est),'conservative_charge_usd':float(prior_debit+new_charge)},'raw_stronger_cost_recovered_despite_invalid_result':True,'runtime_observed_accounted_usd':totals['observed_accounted_usd'],'ledger_limitation':'The ledger observed-accounted field reads parsed result files only: it includes Jev usage estimate but omits raw reported cost for stronger invalid response. Recovery is in this derivative only; full stronger reservation already exceeds raw cost, so guard debit is unchanged.','invoice_verified':False,'extraction_cost_scope':'Zero new extraction; original artifacts reused byte-for-byte and all prior extraction spending remains separate.','future_guard_carry_forward_usd':float(prior_debit+new_charge)})
+ derived=copy.deepcopy(observed);derived['costs']=costs;check('observed derivative only adds costs',{k:v for k,v in derived.items() if k!='costs'}==observed);save('observed-with-costs.json',derived);save('observation-derivative.json',{'source_path':str(obs_path),'source_sha256':sha(obs_path),'derived_sha256':sha(OUT/'observed-with-costs.json'),'freeze_E_sha256':E,'changes':['Added incremental cost fields only. Failed stronger response and all existing hashes/states/judgments remain unchanged.'],'inventory_and_record':'Exact retained artifacts reused, not newly extracted.'})
+ for kind,path in [('schedule',OLD/'execution/schedule.json'),('truth',OLD/'protocol/source-labels/truth.json')]:
+  value=read(path);projected={**copy.deepcopy(value),'documents':[copy.deepcopy(x) for x in value['documents'] if x['document_id']==DOC]};check(kind+' exact WI projection',len(projected['documents'])==1);save(kind+'-WI-projection.json',projected)
+ check('31 unchanged truth units',len(read(OUT/'truth-WI-projection.json')['documents'][0]['units'])==31)
+ save('request-audit.json',{'full_body_admissions':{k:v['admission'] for k,v in plans.items()},'restoration':{k:v for k,v in d['restoration'].items() if k!='wire'},'both_source_record_complete':True,'both_admissions_before_dispatch':'Frozen runner builds and retains both full request/admission artifacts before ledger dispatch; reproduced bodies/admissions and retained artifacts agree. No separate wall-clock instrumentation trace.','inventory_calls':0,'jev_calls':1,'stronger_calls':1,'retries':0,'clipping':False,'stronger_judgment_available':False,'jev_native_answers':jr['answers'],'jev_policy_disposition':'review','semantic_detection':'Independent semantic audit separately owned; policy review alone is not detection.'})
+ for path,h in fixed.items():check('unchanged after audit '+path,sha(path)==h)
+ for p,h in read(R/'review/prior-baseline.json')['files'].items():check('prior still unchanged '+p,sha(p)==h)
+ summary={'schema_version':'round8-evidence-table.postrun_audit.v1','passed':True,'created_utc':datetime.now(timezone.utc).isoformat(),'freezes':freezes,'checks':checks,'baseline_counts':baselines,'code_files':42,'native_dependency_files':1743,'operation_counts':{'inventory':0,'jev':1,'stronger':1},'runtime_gate':'verification_failed','stronger_failure':'HTTP 200, finish length/native max_output_tokens at 4096; no parsed result or judgment; no retry','jev_dimensions':labels,'costs':costs,'combined_conservative_debit_usd':float(prior_debit+new_charge),'new_provider_calls_during_audit':0,'credentials_read':False,'frozen_files_modified':False};save('audit.json',summary);print(json.dumps({k:v for k,v in summary.items() if k not in ('checks','freezes','costs')}))
+if __name__=='__main__':main()

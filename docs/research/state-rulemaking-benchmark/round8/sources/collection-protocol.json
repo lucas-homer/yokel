@@ -1,0 +1,93 @@
+{
+  "schema_version": "round8.collection-protocol.v1",
+  "status": "PREPARED_COLLECTION_ON_HOLD",
+  "release_gate": {
+    "required": "Explicit primary code/protocol-freeze release before any fresh query, candidate inspection or acquisition. Primary release receipt must bind preparation.READY SHA256, verbatim release message/locator, implementation and policy freeze hashes, and timestamp/timezone.",
+    "receipt_path": "freeze-release.json",
+    "receipt_created": false
+  },
+  "target": {
+    "notices": 8,
+    "minimum_states": 6,
+    "max_per_state": 2,
+    "max_total_pages": 40,
+    "general_comment": 6,
+    "controls": 2
+  },
+  "source_strata": {
+    "general_comment": "Complete proposed rulemaking notice inviting comments, without qualifying conditional/event-relative participation or hearing timing. Fixed dates and absent fields both allowed.",
+    "conditional_control": "Natural source condition on comment submission timing or hearing availability/request threshold, conditional cancellation of a proposed-rule hearing, or event-relative participation timing. A generic submission-format practicability qualifier, accessibility request, possible later rule modification or incidental quoted statute alone does not qualify. Fixed written-comment dates may coexist with a conditional hearing. No negative lifecycle-only controls in this round.",
+    "precedence": "Actual source category governs quota, regardless of query planned stratum. These are sampling categories, not reference answers."
+  },
+  "selection": "Sequential bounded displayed-result order. Do not select for substantive deadline/email/channel/clock/timezone field presence, exact values, ease of parsing, outputs or verifier behavior. Missing fields remain eligible; only predeclared control stratum may depend on participation/lifecycle terms.",
+  "scope": "Accept only complete unchanged official publisher individual notice PDFs or a single complete publisher regulation filing that includes its notice and required integrated filing sections. A coherent individual proposed rule order is eligible including judicial rulemaking. Publisher labeling alone does not establish completeness: record mechanical opening/continuation/end boundaries for one proceeding. Reject multi-notice register issues, mixed packets, unrelated attachments, scans without native text, slice/unknown scopes. Several coordinated rules within one single notice are allowed. Never invent notice boundaries or remove pages.",
+  "native_caps": {
+    "max_codepoints": 30000,
+    "max_pdf_bytes": 25000000,
+    "render_dpi": 150,
+    "utf8": "strict nonempty UTF-8; no replacement characters or material native-text damage; FF count must equal all PDF pages",
+    "extractor": "pdftotext -layout -enc UTF-8; exact bytes; no OCR, repair, reflow, truncation or excerpt",
+    "validation_order": "Check all native/PDF/page budgets and dedup before any retention. Native acquisition is not provisional selection. Serialized case-size eligibility remains for primary runtime freeze; no runtime case generation in collector."
+  },
+  "quota_rule": "At most one retained notice per state until six distinct states are retained, then at most two. Before acceptance require current 6-general/2-control capacity, total<8, aggregate pages<=40 and six-state feasibility. First qualifying chronological candidate wins. No imagined future-source reservation or output-based replacement.",
+  "discovery": "First three distinct direct official PDF/document URLs in displayed result order; citation IDs are not ranks. Full raw response and all metadata preserved and independently reconciled before registration. No HTML-link expansion, rerun, alternate query, or replacement search. A known prior URL still consumes its bounded slot and is excluded without reacquisition.",
+  "access": "Public web search and ordinary HTTP only; no paid Firecrawl/API source access. Maximum two60-second ordinary attempts per bounded candidate; retain both attempts including partial bytes, HTTP headers/errors/timestamps. No retry after success, bypass, alternate URLs or hidden retrieval. Prior URL/hash exclusions consume slots. No application/benchmark parser, model/provider API, OCR or labels calls, and no credentials. Mechanical local native PDF tools (strict pypdf parsing, Poppler diagnostics/extraction/rendering) are allowed.",
+  "stopping": "Success at exact eight, six general plus two controls, >=six states, <=two/state and <=40 pages. Otherwise after Q24 bounded candidates stop and disclose shortfall. No replacements after source freeze.",
+  "artifacts": "Preserve all exclusions and acquired originals/diagnostics/native bytes. Retained input PDF byte-identical to original. Render every retained page at150DPI. Hash all artifacts and each PNG; preserve versions, acquisition timestamps UTC, official URL, HTTP, identity/boundary/dedup evidence and source anomalies. Keep selection audit outside runtime and blind inventory.",
+  "runtime_manifest": {
+    "schema_version": "round8.sources.v1",
+    "exact_keys": [
+      "document_id",
+      "channel",
+      "text_path",
+      "text_sha256",
+      "pdf_path",
+      "pdf_sha256",
+      "pdf_pages",
+      "scope",
+      "native_page_map_known"
+    ],
+    "document_id": "doc- plus first12 original SHA256",
+    "channel": "native",
+    "scope": "full_notice",
+    "paths": "relative to sources root",
+    "labels": "none"
+  },
+  "blinded_image_inventory": {
+    "schema_version": "round8.blinded-images.v1",
+    "document_keys": [
+      "document_id",
+      "pdf_pages",
+      "pages"
+    ],
+    "page_keys": [
+      "page",
+      "image_path",
+      "image_sha256"
+    ],
+    "excludes": "native text, URLs, titles, source categories, candidate decisions, expected fields, evidence hints, decisive spans, labels and runtime outputs. All pages only; IDs match opaque runtime IDs."
+  },
+  "audit_limits": [
+    "Native-only, individual-publisher-PDF and frozen-search-ranking coverage biases disclosed.",
+    "No representative-sample claim.",
+    "Natural controls only; no synthetic controls or provider-assisted collection."
+  ],
+  "prior_rounds": "Immutable; dedup includes all known originals and excluded bytes; no labels consulted.",
+  "mime_policy": "Accept application/pdf or application/octet-stream only when bytes begin %PDF- and strict pypdf parsing succeeds with >=1 page; both are eligible MIME types, not proof of full notice. HTML, redirects outside official query domain, corrupt PDFs, other MIME types and access failures are excluded honestly. Preserve originals/headers/errors without access bypass.",
+  "body_coverage": "Nonempty captions/headers do not establish body coverage. Before retention record per-page substantive body presence in exact native text, compare native text with a full source-only visual check of every original page at150DPI, and affirm all substantive body/table/footnote/continuation/end matter is represented. Images/scans with missing substantive native body fail even if captions exist. No OCR, repair, truncation or reconstruction. Blank/decorative pages may be recorded explicitly. If material coverage is uncertain, exclude.",
+  "dedup": "Use frozen historical hash, URL, exact native and normalized-text inventories; manual underlying notice identity comparison against prior source identities required even when mechanical tests pass. A register containing a previously seen individual notice may not supply that notice under new bytes. New publication date alone is insufficient. Unknown novelty => exclude.",
+  "control_definition_change_from_round6": "Stricter source sampling rule: the Round6 New Hampshire alternative electronic submission-format practicability qualifier alone is not sufficient. Only actual conditional/event-relative participation timing or hearing availability qualifies. This precollection change is independent of model performance and does not revise any prior-round artifact.",
+  "query_invocation_lifecycle": {
+    "intent": "query-request appends and fsyncs a one-shot invocation intent before external search; a repeat is refused even if no response is registered. Intent consumes the query budget; never rerun uncertain/failed invocations.",
+    "response": "register-search retains byte-identical complete supplied search record and fsyncs a response-hash receipt before interpreting it. Recognized ordered-result headers or exactly recognized zero-result raw text may resolve. Partial/mismatched/unknown/failed responses stay HELD; next query prohibited.",
+    "recognized_zero_result_raw_text": [
+      "No search results found.",
+      "No search results found",
+      "No results found.",
+      "No results found"
+    ],
+    "primary_resolution": "resolve-search Q## RECEIPT requires a source-owned primary receipt with authorized_resolution=true, primary_review_message, timestamp_utc, query_id, retained_search_record_sha256, decision and raw_response_interpretation. failed_or_unavailable_no_candidates requires zero original rows/count; reviewed_ordered_results requires reviewed_result_count and full reviewed_results in actual display order. Receipt binds exact immutable raw response and remains separate from it. No automatic unknown-format bypass, metadata overwrite or query rerun.",
+    "interrupted_outcome": "Preserve whatever returned/error evidence exists as the single retained record. If outcome unavailable, explicitly mark unknown/unavailable and report that evidence gap; only primary may resolve it with no candidates. Do not claim a successful empty search.",
+    "stopping_audit": "Registered resolved invocations include search_disposition. A failed/unavailable query consumes a budget slot and narrows coverage; disclose distinctly from a genuine zero-result response."
+  }
+}

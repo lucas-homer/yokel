@@ -1,0 +1,181 @@
+{
+  "request": {
+    "name": "MS notice one-page research comparison",
+    "tier": "agentic",
+    "extractionTarget": "per_doc",
+    "dataSchema": {
+      "type": "object",
+      "properties": {
+        "agency": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Agency name"
+        },
+        "rule_citations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "program_acronym": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Acronym as printed"
+        },
+        "proposed_action": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Only marked proposed action, not blank alternatives"
+        },
+        "hearing_status": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Marked scheduled/not_scheduled choice; null if not discernible"
+        },
+        "economic_impact_status": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Marked economic impact choice, not blank alternative"
+        },
+        "submit_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Handwritten SUBMIT DATE as YYYY-MM-DD, distinct from filing stamp"
+        },
+        "filing_stamp_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Date visibly inside FILED official stamp as YYYY-MM-DD. Do not substitute submit date. Null if unavailable"
+        },
+        "hearing_request_duration_days": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "hearing_request_anchor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Explicit anchor clause only"
+        },
+        "hearing_request_eligibility": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Full requester eligibility and conditional circumstances"
+        },
+        "public_comment_duration_days": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "public_comment_anchor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Explicit starting event only. Duration clause alone is not an anchor. Null if unstated"
+        },
+        "comment_close": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Only explicitly stated absolute closing date; never compute"
+        },
+        "effective_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Only marked/stated date; blank options are not assertions"
+        },
+        "final_action": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Only marked final action; null if blank"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "quote": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Exact source transcription supporting this field; null if unavailable"
+              },
+              "page": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "region": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Vendor-supported region locator/bounding box description if available; do not invent coordinates"
+              }
+            },
+            "required": [
+              "field",
+              "quote",
+              "page",
+              "region"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "agency",
+        "rule_citations",
+        "program_acronym",
+        "proposed_action",
+        "hearing_status",
+        "economic_impact_status",
+        "submit_date",
+        "filing_stamp_date",
+        "hearing_request_duration_days",
+        "hearing_request_anchor",
+        "hearing_request_eligibility",
+        "public_comment_duration_days",
+        "public_comment_anchor",
+        "comment_close",
+        "effective_date",
+        "final_action",
+        "evidence"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "recorded_at": "2026-10-05T23:58:52.477Z",
+  "purpose": "One bounded vendor schema extraction from original PDF, separately evaluated from parse"
+}

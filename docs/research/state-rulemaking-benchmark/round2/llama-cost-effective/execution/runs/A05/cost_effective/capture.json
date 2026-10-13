@@ -1,0 +1,131 @@
+{
+  "fixture_id": "A05",
+  "tier": "cost_effective",
+  "job_id": "pjb-itdxn41q4eq2lllusuem1zcz02mk",
+  "file_id": "7a6400a0-5017-44b7-94af-3e5f64a30058",
+  "status": "COMPLETED",
+  "operational_success": true,
+  "started_at_utc": "2026-10-07T04:10:04.824944+00:00",
+  "observed_at_utc": "2026-10-07T04:10:13.665923+00:00",
+  "input_sha256": "7d0af749a85bb07ccc105327bdeda1bd225380eacc54c5465447e79171311cf8",
+  "input_bytes": 71316,
+  "pages": 1,
+  "config": {
+    "file_id": "7a6400a0-5017-44b7-94af-3e5f64a30058",
+    "tier": "cost_effective",
+    "version": "latest",
+    "disable_cache": false,
+    "processing_options": {
+      "cost_optimizer": {
+        "enable": false
+      },
+      "ignore": {
+        "ignore_text_in_image": false
+      }
+    },
+    "output_options": {
+      "images_to_save": [
+        "screenshot"
+      ],
+      "markdown": {
+        "inline_images": false,
+        "tables": {
+          "output_tables_as_markdown": false,
+          "merge_continued_tables": false
+        }
+      },
+      "spatial_text": {
+        "preserve_very_small_text": false
+      }
+    },
+    "user_metadata": {
+      "benchmark_run": "round2-llama-cost-effective",
+      "intent_token": "d5c631e6d84e47ec93b4e82084f29372",
+      "input_sha256": "7d0af749a85bb07ccc105327bdeda1bd225380eacc54c5465447e79171311cf8",
+      "tier": "cost_effective"
+    }
+  },
+  "outputs": [
+    {
+      "path": "runs/A05/cost_effective/output.md",
+      "sha256": "f6554b2c5cbc03cb534b2c4d30226a53349eaa4b1e91fccc7cf55c4569cfa37f",
+      "bytes": 1034,
+      "exact_provider_markdown_full": true
+    },
+    {
+      "path": "runs/A05/cost_effective/output.json",
+      "sha256": "bc638d5ca719ab8cbf22b79890605e1307d0484dcd7c21ea0a45109a78c648a3",
+      "bytes": 10212,
+      "representation": "REST v2 expanded result, supplementary only"
+    }
+  ],
+  "returned_usage": {
+    "credits": 3.0
+  },
+  "job_metadata": {
+    "state_transitions": {
+      "pending_at": "2026-10-07T04:10:05.205143Z",
+      "throttled_at": "2026-10-07T04:10:05.332563Z",
+      "running_at": "2026-10-07T04:10:05.488108Z",
+      "completed_at": "2026-10-07T04:10:12.099565Z",
+      "failed_at": null,
+      "cancelled_at": null
+    },
+    "latency": {
+      "decode_ms": 3737,
+      "agent_ms": 1323,
+      "output_ms": 226,
+      "page_throttle_wall_ms": 0,
+      "page_throttle_sum_ms": 0,
+      "page_throttle_max_ms": 0,
+      "page_throttle_waits": 1,
+      "job_throttle_ms": 0,
+      "total_ms": 6781
+    },
+    "quarantine": null,
+    "pdf-pages": 1,
+    "pdf-real-pages": 1,
+    "pdf-rawTextLength": 1187,
+    "pdf-mdLength": 1034,
+    "pdf-time": 1502,
+    "pdf-ocrTime": 0,
+    "pdf-image-convertTime": 0,
+    "pdf-pdfToHTMLTime": 0,
+    "pdf-llmTime": 653,
+    "pdf-inputTokens": 5331,
+    "pdf-outputTokens": 361,
+    "pdf-image-ocr-count": 1,
+    "pdf-image-ocr-failed-count": 0,
+    "pdf-image-ocr-success-count": 1,
+    "pdf-image-ocr-empty-count": 1,
+    "pdf-image-ocr-hadText-count": 0,
+    "pdf-image-ocr-pixels": 7913600,
+    "pdf-multimodal-time": 0,
+    "pdf-multimodal-pdf2Image": 0,
+    "pdf-high-res-ocr": 1
+  },
+  "terminal_api_capture": "http/00034.json",
+  "raw_api_response_object_unmodified": true,
+  "provenance_note": "Authenticated REST v2; JSON response sanitized only if transient URLs/key appeared. Markdown scored alone; interface differences in plan.",
+  "operation_anomalies": [],
+  "returned_job_consistency": {
+    "file_id": {
+      "expected": "7a6400a0-5017-44b7-94af-3e5f64a30058",
+      "reported": null,
+      "available": false,
+      "matches": null
+    },
+    "tier": {
+      "expected": "cost_effective",
+      "reported": "cost_effective",
+      "available": true,
+      "matches": true
+    },
+    "version": {
+      "requested": "latest",
+      "reported": null,
+      "latest_alias_resolution_verified": null,
+      "note": "A reported dated version is retained, not asserted to be the current latest mapping"
+    }
+  }
+}

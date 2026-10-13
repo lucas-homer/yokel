@@ -1,0 +1,97 @@
+{
+  "status": "prespecified behavioral controls; A/B own executable implementation",
+  "not_fresh_sources": true,
+  "actual_provider_calls": 0,
+  "controls": [
+    {
+      "id": "positive_phases_routes",
+      "synthetic_source": "Initial written comments close October 1, 2026. Response comments close October 15, 2026. Submit either phase by email to first@example.gov or second@example.gov.",
+      "mutation": "None",
+      "expected_evidence": "Both phase/date relationships and both alternative direct routes retained; valid positive reaches both arms."
+    },
+    {
+      "id": "double_omission",
+      "synthetic_source": "Written comments close October 1, 2026. Email PDF comments to comments@example.gov and include Docket AB-42.",
+      "mutation": "Remove PDF-format and docket-reference requirements from BOTH inventory and assembled record.",
+      "expected_evidence": "Source-omission question can return missing despite perfect inventory-to-record match. Frozen-image evaluator counts two instruction omissions even if both fake verifiers say complete."
+    },
+    {
+      "id": "filing_reference_vs_date",
+      "synthetic_source": "Written comments close October 1, 2026. Include Docket AB-42 with every comment.",
+      "mutation": "Remove required reference.",
+      "expected_evidence": "Calendar DATE accuracy remains correct; instruction coverage and record completeness fail; terminal complete acceptance is unsafe."
+    },
+    {
+      "id": "missing_disclosure",
+      "synthetic_source": "Email comments to comments@example.gov. All comments will be posted publicly.",
+      "mutation": "Remove public-posting disclosure.",
+      "expected_evidence": "Route literal/role can be correct while disclosure coverage and complete-record acceptance fail."
+    },
+    {
+      "id": "hearing_bound",
+      "synthetic_source": "Comments must arrive by the close of the hearing on October 1, 2026.",
+      "mutation": "Flatten into unconditional absolute close.",
+      "expected_evidence": "Date literal can match; timing-dependency relationship is wrong and acceptance unsafe. Qualified hearing-bound record may be supported without inventing ending clock."
+    },
+    {
+      "id": "incidental_condition",
+      "synthetic_source": "Written comments close October 1, 2026. If you need accessibility assistance, contact access@example.gov.",
+      "mutation": "None",
+      "expected_evidence": "Ordinary close preserved; accessibility contact remains another role; incidental condition does not block correct participation record."
+    },
+    {
+      "id": "identity_conflict",
+      "synthetic_source": "Notice Docket AB-42. File comments quoting AB-42.\n\fFooter: Docket XY-99.",
+      "mutation": "Select AB-42 as resolved identity; omit footer.",
+      "expected_evidence": "Full-source coverage sees footer; unresolved identity retained and whole-record complete acceptance blocked."
+    },
+    {
+      "id": "modality_reversal",
+      "synthetic_source": "Comments may be sent in PDF format to comments@example.gov.",
+      "mutation": "Change optional format to mandatory.",
+      "expected_evidence": "Literal route remains correct; unsupported mandatory instruction/modality fails."
+    },
+    {
+      "id": "cross_block_relation",
+      "synthetic_source": "Comments may be emailed to comments@example.gov.\n\nFor all submissions described above, include Docket AB-42.",
+      "mutation": "Put route and reference in different coverage blocks.",
+      "expected_evidence": "Every block covered; cross-block applicability must be retained or unresolved, never assumed complete from local favorable checks."
+    },
+    {
+      "id": "repeated_quote",
+      "synthetic_source": "For questions, contact office@example.gov.\nFor written comments, contact office@example.gov.",
+      "mutation": "Evidence quote contains only repeated address and no disambiguator.",
+      "expected_evidence": "Ambiguous evidence selection fails closed unless explicit frozen occurrence/context rule resolves it; no first-occurrence guess."
+    },
+    {
+      "id": "unicode_linebreak",
+      "synthetic_source": "\ud83d\ude00 Written response comments must be filed no\nlater than October 15, 2026.",
+      "mutation": "Evidence exact quote with line break; then repeat with invented whitespace-normalized quote.",
+      "expected_evidence": "Exact original quote resolves deterministically without model offset counting; altered quote rejected rather than repaired."
+    },
+    {
+      "id": "source_absence",
+      "synthetic_source": "No written comment period is opened by this cancellation notice. Contact staff@example.gov for copies.",
+      "mutation": "Treat empty inventory as proof of no participation requirements.",
+      "expected_evidence": "Independent source pass must establish explicit negative and copies-only role; unexplained empty set is not completeness."
+    },
+    {
+      "id": "favorable_fake_omission",
+      "synthetic_source": "Send PDF comments to comments@example.gov.",
+      "mutation": "Drop PDF format; make both fake verifier arms return favorable categories.",
+      "expected_evidence": "Runtime may faithfully record favorable choices; independent gold evaluator MUST flag unsafe complete acceptance. This tests scoring without claiming deterministic semantic detection."
+    },
+    {
+      "id": "operational_failure",
+      "synthetic_source": "Ordinary complete positive synthetic notice.",
+      "mutation": "Skip a coverage block, return unknown usage/transport failure, or exceed a pre-reserved cap.",
+      "expected_evidence": "No complete acceptance; all scheduled notice/arm failures counted; no retries, repairs or hidden extra calls."
+    },
+    {
+      "id": "paired_payload",
+      "synthetic_source": "Ordinary complete positive synthetic notice.",
+      "mutation": "Alter source/record/inventory or block schedule only for one arm.",
+      "expected_evidence": "Reject pairing or explicitly mark comparison invalid; no claim identical records if hashes differ."
+    }
+  ]
+}

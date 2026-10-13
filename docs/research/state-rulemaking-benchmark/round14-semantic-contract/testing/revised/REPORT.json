@@ -1,0 +1,59 @@
+{
+  "status": "READY_OFFLINE_REVISED_TESTING",
+  "protocol_version": "r14.2",
+  "protocol_ready_sha256": "478d8cb4aaaeea97dd3a33b751c373847fe457a1e789212999b11c7224280500",
+  "results": {
+    "owner_suite": {
+      "methods": 24,
+      "passed": true,
+      "result": "owner-suite-result.json"
+    },
+    "unmodified_fable_suite": {
+      "methods": 12,
+      "passed": 11,
+      "errors": 1,
+      "cause": "Test-only IDs 21-23 collided with r14.2 fixture IDs 21-24. Unmodified failure retained.",
+      "result": "unmodified-result.json"
+    },
+    "adapted_fable_suite": {
+      "methods": 12,
+      "passed": 12,
+      "result": "adapted-result.json"
+    }
+  },
+  "adaptation": {
+    "author": "Fable through existing Claude.ai Max subscription bridge",
+    "actual_model": "claude-fable-5-1",
+    "provider": "firstParty",
+    "requested_effort": "high",
+    "scope": "One test method only: dynamically allocate new test-only IDs above fixture maximum; retain all prior assertions and add fixture-kind/capacity preconditions.",
+    "evidence": [
+      "fable-adaptation-prompt.txt",
+      "fable-adaptation-result.json",
+      "fable-adaptation-diagnosis.json",
+      "test-adaptation.diff"
+    ],
+    "all_other_function_ASTs_unchanged": true,
+    "applied_exactly": true,
+    "execution_host": "Codex"
+  },
+  "frozen_evidence": {
+    "original_testing_READY_files_unchanged": true,
+    "original_testing_READY_sha256": "727a258e42de3ff5cdd64d908715f185637f44ac27883f18928fcdb359c7161c",
+    "source_reference_artifact_hashes_unchanged": true,
+    "source_reference_READY_sha256": "c4369657a426ce95d4dc05467a37b9677272ad509ca128982402af10754f4eb6",
+    "protocol_revised_READY_pins_match": true
+  },
+  "standing_constraint": "Claude.ai Max subscription bridge only; no OpenRouter Claude or Anthropic API-billing fallback.",
+  "limits": [
+    "Tests establish authored synthetic fixture preservation and structural contract behavior; semantic-negative acceptance is intentional when assertions require independent review.",
+    "No Fable semantic implementation approval inferred from this adaptation or passing tests. Independent reviewer owns revision approval.",
+    "Runtime final READY and implementation release await primary; previous local candidate checks are not final runtime approval.",
+    "Fresh provider output assessment remains pending; no output supplied."
+  ],
+  "research_provider_calls": 0,
+  "credentials_read": false,
+  "signer_executor_invoked": false,
+  "changed_scope": "New testing/revised/ artifacts only; original protocol, original testing evidence, source/reference freeze and protocol-revised owner files unchanged.",
+  "completed_utc": "2026-10-13T02:12:26.516187+00:00"
+}

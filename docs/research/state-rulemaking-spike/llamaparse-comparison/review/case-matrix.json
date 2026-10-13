@@ -1,0 +1,1296 @@
+{
+  "phase": "raw-output and downstream normalizer review complete",
+  "rubric_sha256": "edc5a78be798a9e59e108e9d2a3ea2820ea88513c588ad2778bfcd7dd0fc608f",
+  "source_pdf_sha256": "ac95c240653690261eb7a6fef83bd80a04310cf49c15c37256569bbc70315955",
+  "judgment_method": "Independent agent review against original saved image and frozen cases; not automated semantic scoring or human gold labels.",
+  "stage_order": [
+    "native",
+    "firecrawl_parse",
+    "firecrawl_extract",
+    "llama_agentic_parse",
+    "llama_agentic_plus_parse",
+    "llama_agentic_extract"
+  ],
+  "stage_artifacts": {
+    "native": {
+      "path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+      "sha256": "1c590a598624f86db726c73c99d2037a9ff215282fc9718f877a538f38aaf77f"
+    },
+    "firecrawl_parse": {
+      "path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+      "sha256": "9e7891c173e99aebb0ecfc433a06850eeb52ad34aff167ce31226486f1873ff1"
+    },
+    "llama_agentic_parse": {
+      "path": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+      "sha256": "79796ddc439f130ceeba5c3a5d9f10b7077ef476f4b0cd3ba4be89e9ecf03936"
+    },
+    "firecrawl_extract": {
+      "path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/raw/firecrawl-model.json",
+      "sha256": "4db6201ed432eb028eed100944d0ab6a9f79c24b982070a0307e27fb1b99afd0"
+    },
+    "llama_agentic_plus_parse": {
+      "path": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+      "sha256": "0139af28c6617cd9a8b1d9a3bc1db1de2e19c22a84b838aa8eddd4a61179d9dd"
+    },
+    "llama_agentic_extract": {
+      "path": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+      "sha256": "8032967c6429903309fd0428eb8b3d5462dd9da6747b220c185ea5bfab4abaf7"
+    }
+  },
+  "stage_kinds": {
+    "native": "local native text extraction",
+    "firecrawl_parse": "vendor_parse",
+    "firecrawl_extract": "vendor_extract prompt-only",
+    "llama_agentic_parse": "vendor_parse",
+    "llama_agentic_plus_parse": "vendor_parse",
+    "llama_agentic_extract": "vendor_extract schema-configured; timed out without result"
+  },
+  "agentic_execution": {
+    "file_id": "d59cad68-4e67-4d83-96b7-5ae57a03e285",
+    "requested_tier": "agentic",
+    "requested_version": "latest",
+    "resolved_vendor_version": null,
+    "wrapper_elapsed_ms": 23729,
+    "timing_scope": "saved parse tool-call wrapper; excludes upload; one sample",
+    "credits_consumed": null,
+    "credit_basis": "parse response supplies no billed-credit field; capability text is not a billing receipt"
+  },
+  "agentic_plus_execution": {
+    "requested_tier": "agentic_plus",
+    "requested_version": "latest",
+    "resolved_vendor_version": null,
+    "wrapper_elapsed_ms": 36086,
+    "credits_consumed": null,
+    "timing_scope": "saved parse tool-call wrapper; one sample"
+  },
+  "extraction_execution": {
+    "configured_tier": "agentic",
+    "outcome": "MCP timeout; no extraction output",
+    "wrapper_elapsed_ms": 123877,
+    "backend_completion": "unknown",
+    "billing": "unknown",
+    "retried": false
+  },
+  "normalizer_audit": "normalizer-audit.json; 7 needs_review observations, 9 exact quotes, no filing date/visual repair, repeatable offline replay; synthetic conflict/column-scope limits disclosed in REVIEW.md",
+  "cases": [
+    {
+      "case_id": "M1",
+      "focus": "Hearing not-scheduled mark and unchecked scheduled alternative",
+      "results": {
+        "native": {
+          "category": "text_only_or_partial",
+          "reason": "Both labels survive, but the checked state of not scheduled does not.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 1093,
+              "end_character": 1230,
+              "quote": "ORAL PROCEEDING:\nI IAn oralproceedingisscheduledforthisruleon Time:Date: Place:\nPresently,an oralproceeding isnot scheduled on thisrule.\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "text_only_or_partial",
+          "reason": "Both mutually exclusive labels survive without marks.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 1165,
+              "end_character": 1329,
+              "quote": "ORAL PROCEEDING:\n\nAn oral proceeding is scheduled for this rule on Date: ____ Time: ____ Place: ____\n\nPresently, an oral proceeding is not scheduled on this rule.\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "correct_but_ungrounded",
+          "reason": "Correct status; evidence repeats the sentence without the decisive checkbox state.",
+          "raw_citations": [],
+          "field_values": {
+            "hearing_status": "Not scheduled",
+            "evidence_quotes": [
+              "The Exam Validity Extension Program (EVEP) provides an opportunity for registered representatives and investment adviser representatives to extend their state qualification exams.",
+              "This program allows industry professionals to maintain their state qualification exams for up to five years if they maintain compliance with their continuing education requirements.",
+              "An oral proceeding is not scheduled on this rule.",
+              "An oral proceeding must be held if a written request for an oral proceeding is submitted by a political subdivision, an agency or ten (10) or more persons."
+            ]
+          },
+          "field_citation_quality": "No field-level checkbox citation; source answer checked visually by reviewer.",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "recovered_supported",
+          "reason": "Explicit [ ] scheduled and [x] not scheduled remain adjacent to the correct labels.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 1558,
+              "end_character": 1699,
+              "quote": "[ ] An oral proceeding is scheduled for this rule on Date:  Time:  Place:\n\n[x] Presently, an oral proceeding is not scheduled on this rule.\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "recovered_supported",
+          "reason": "Explicit checked/unchecked status is bound to the two hearing alternatives.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 1230,
+              "end_character": 1400,
+              "quote": "[unchecked] An oral proceeding is scheduled for this rule on Date: [___] Time: [___] Place: [___]\n[checked] Presently, an oral proceeding is not scheduled on this rule.\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    },
+    {
+      "case_id": "M2",
+      "focus": "Proposed amendment selected, distinct from final adoption",
+      "results": {
+        "native": {
+          "category": "text_only_or_partial",
+          "reason": "Amendment label survives, but X is detached into days X.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 2348,
+              "end_character": 2694,
+              "quote": "Action proposed:\nNew rule(s)\nAmendment to existingrule(s)\nRepeal of existingrule{s)\nAdoption by reference\nProposed finaleffectivedate:\n30 days afterfiling\nOther (specify):\t\nAdopted with no changes in text\nAdopted with changes\nAdopted by reference\nWithdrawn\nRepeal adopted as proposed\nEffective date:\n30 days afterfiling\nOther(specify):\t \t\ndays X\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "recovered_supported",
+          "reason": "X is associated with amendment; alternate proposed actions have blank underlines.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 2491,
+              "end_character": 2621,
+              "quote": "Action proposed:\n\n____ New rule(s)\n\nX Amendment to existing rule(s)\n\n____ Repeal of existing rule(s)\n\n____ Adoption by reference\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "correct_but_ungrounded",
+          "reason": "Correct amendment value with no supporting mark citation.",
+          "raw_citations": [],
+          "field_values": {
+            "proposed_action": "Amendment to existing rule(s)",
+            "evidence_quotes": [
+              "The Exam Validity Extension Program (EVEP) provides an opportunity for registered representatives and investment adviser representatives to extend their state qualification exams.",
+              "This program allows industry professionals to maintain their state qualification exams for up to five years if they maintain compliance with their continuing education requirements.",
+              "An oral proceeding is not scheduled on this rule.",
+              "An oral proceeding must be held if a written request for an oral proceeding is submitted by a political subdivision, an agency or ten (10) or more persons."
+            ]
+          },
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "text_only_or_partial",
+          "reason": "Selected amendment is explicitly recovered with [x], but unselected alternatives lack explicit blank/unchecked encoding. Full-case success includes both selected and unselected distinctions.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 2886,
+              "end_character": 3096,
+              "quote": "<strong>PROPOSED ACTION ON RULES</strong><br /><br /><strong>Action proposed:</strong><br /> New rule(s)<br />[x] Amendment to existing rule(s)<br /> Repeal of existing rule(s)<br /> Adoption by reference<br />",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "recovered_supported",
+          "reason": "Amendment checked; new, repeal and adoption-by-reference explicitly unchecked in proposed-action column.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 2376,
+              "end_character": 3948,
+              "quote": "| TEMPORARY RULES                         | PROPOSED ACTION ON RULES                 | FINAL ACTION ON RULES                        |\n| :-------------------------------------- | :--------------------------------------- | :------------------------------------------- |\n| [unchecked] Original filing            | **Action proposed:**                     | **Date Proposed Rule Filed:** [___]      |\n| [unchecked] Renewal of effectiveness   | [unchecked] New rule(s)                 | **Action taken:**                            |\n| To be in effect in [___] days       | [checked] Amendment to existing rule(s) | [unchecked] Adopted with no changes in text |\n| **Effective date:**                     | [unchecked] Repeal of existing rule(s)  | [unchecked] Adopted with changes            |\n| [unchecked] Immediately upon filing    | [unchecked] Adoption by reference       | [unchecked] Adopted by reference            |\n| [unchecked] Other (specify): [___] | **Proposed final effective date:**       | [unchecked] Withdrawn                       |\n|                                         | [unchecked] 30 days after filing        | [unchecked] Repeal adopted as proposed      |\n|                                         | [unchecked] Other (specify): [___]  | **Effective date:**                          |\n|                                         |                                          | [unchecked] 30 days after filing            |\n|                                         |                                          | [unchecked] Other (specify): [___]      |\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    },
+    {
+      "case_id": "M3",
+      "focus": "Economic-impact not-required selected and attached-summary unchecked",
+      "results": {
+        "native": {
+          "category": "text_only_or_partial",
+          "reason": "Caret and I I artifacts survive, but their checkbox semantics are not explicitly resolved.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 1999,
+              "end_character": 2127,
+              "quote": "ECONOMIC IMPACT STATEMENT:\n^ Economicimpactstatementnotrequiredforthisrule. I IConcisesummaryofeconomicimpactstatementattached.\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "text_only_or_partial",
+          "reason": "Both alternatives are plain text with no selected/unselected association.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 2142,
+              "end_character": 2284,
+              "quote": "## ECONOMIC IMPACT STATEMENT:\n\nEconomic impact statement not required for this rule.\n\nConcise summary of economic impact statement attached.\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "not_demonstrated",
+          "reason": "No economic-impact field or evidence; this field was not requested in that older prompt.",
+          "raw_citations": [],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "recovered_supported",
+          "reason": "Explicit [x] not required and [ ] attached summary preserve both states.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 2548,
+              "end_character": 2664,
+              "quote": "[x] Economic impact statement not required for this rule. [ ] Concise summary of economic impact statement attached.",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "recovered_supported",
+          "reason": "Not-required checked and attached-summary unchecked are explicit.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 2244,
+              "end_character": 2376,
+              "quote": "[checked] Economic impact statement not required for this rule.\n[unchecked] Concise summary of economic impact statement attached.\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    },
+    {
+      "case_id": "B1",
+      "focus": "Blank final action choices and blank final-section Date Proposed Rule Filed",
+      "results": {
+        "native": {
+          "category": "text_only_or_partial",
+          "reason": "Final labels and blank date survive, but table order and option-state encoding are incomplete.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 2127,
+              "end_character": 2190,
+              "quote": "FINAL ACTION ON RULES\nDate Proposed Rule Filed:\t\nAction taken:\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            },
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 2176,
+              "end_character": 2687,
+              "quote": "Action taken:\nTEMPORARY RULES PROPOSED ACTION ON RULES\nOriginalfiling\nRenewal of effectiveness\nTo be in effect in\nEffective date:\nImmediately upon filing\nOther (specify):\t\nAction proposed:\nNew rule(s)\nAmendment to existingrule(s)\nRepeal of existingrule{s)\nAdoption by reference\nProposed finaleffectivedate:\n30 days afterfiling\nOther (specify):\t\nAdopted with no changes in text\nAdopted with changes\nAdopted by reference\nWithdrawn\nRepeal adopted as proposed\nEffective date:\n30 days afterfiling\nOther(specify):\t \t\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "safe_abstention",
+          "reason": "Final-action alternatives and date retain blank underlines; no option is marked.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 2708,
+              "end_character": 2922,
+              "quote": "## FINAL ACTION ON RULES\n\nDate Proposed Rule Filed: ____\n\nAction taken:\n\n____ Adopted with no changes in text\n\n____ Adopted with changes\n\n____ Adopted by reference\n\n____ Withdrawn\n\n____ Repeal adopted as proposed\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "safe_abstention",
+          "reason": "Final action explicitly unknown and final-section date listed in unknowns. Strings are not typed JSON nulls.",
+          "raw_citations": [],
+          "field_values": {
+            "final_action": "Not explicitly specified",
+            "unknowns": [
+              "Oral proceeding date and time",
+              "Effective date for temporary rules",
+              "Proposed final effective date",
+              "Date Proposed Rule Filed"
+            ]
+          },
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "text_only_or_partial",
+          "reason": "Final column and empty date are retained, but blank action underscores/unchecked states are not explicitly encoded. No false selected fact asserted.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 3203,
+              "end_character": 3479,
+              "quote": "<strong>FINAL ACTION ON RULES</strong><br /><br /><strong>Date Proposed Rule Filed:</strong> <br /><strong>Action taken:</strong><br /> Adopted with no changes in text<br /> Adopted with changes<br /> Adopted by reference<br /> Withdrawn<br /> Repeal adopted as proposed<br />",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "safe_abstention",
+          "reason": "Final action alternatives explicitly unchecked, and final-section Date Proposed Rule Filed retains a blank placeholder.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 2376,
+              "end_character": 3948,
+              "quote": "| TEMPORARY RULES                         | PROPOSED ACTION ON RULES                 | FINAL ACTION ON RULES                        |\n| :-------------------------------------- | :--------------------------------------- | :------------------------------------------- |\n| [unchecked] Original filing            | **Action proposed:**                     | **Date Proposed Rule Filed:** [___]      |\n| [unchecked] Renewal of effectiveness   | [unchecked] New rule(s)                 | **Action taken:**                            |\n| To be in effect in [___] days       | [checked] Amendment to existing rule(s) | [unchecked] Adopted with no changes in text |\n| **Effective date:**                     | [unchecked] Repeal of existing rule(s)  | [unchecked] Adopted with changes            |\n| [unchecked] Immediately upon filing    | [unchecked] Adoption by reference       | [unchecked] Adopted by reference            |\n| [unchecked] Other (specify): [___] | **Proposed final effective date:**       | [unchecked] Withdrawn                       |\n|                                         | [unchecked] 30 days after filing        | [unchecked] Repeal adopted as proposed      |\n|                                         | [unchecked] Other (specify): [___]  | **Effective date:**                          |\n|                                         |                                          | [unchecked] 30 days after filing            |\n|                                         |                                          | [unchecked] Other (specify): [___]      |\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    },
+    {
+      "case_id": "B2",
+      "focus": "Blank temporary/proposed-final/final effective options, including 30-day boilerplate",
+      "results": {
+        "native": {
+          "category": "text_only_or_partial",
+          "reason": "Boilerplate appears without reliable blank-option state; no computed effective date is emitted.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 2190,
+              "end_character": 2694,
+              "quote": "TEMPORARY RULES PROPOSED ACTION ON RULES\nOriginalfiling\nRenewal of effectiveness\nTo be in effect in\nEffective date:\nImmediately upon filing\nOther (specify):\t\nAction proposed:\nNew rule(s)\nAmendment to existingrule(s)\nRepeal of existingrule{s)\nAdoption by reference\nProposed finaleffectivedate:\n30 days afterfiling\nOther (specify):\t\nAdopted with no changes in text\nAdopted with changes\nAdopted by reference\nWithdrawn\nRepeal adopted as proposed\nEffective date:\n30 days afterfiling\nOther(specify):\t \t\ndays X\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "safe_abstention",
+          "reason": "Blank underscores retained on effective options; no effective-date selection is asserted.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 2284,
+              "end_character": 2989,
+              "quote": "## TEMPORARY RULES\n\n____ Original filing\n\n____ Renewal of effectiveness\n\nTo be in effect in ____ days\n\nEffective date:\n\n____ Immediately upon filing\n\n## PROPOSED ACTION ON RULES\n\n____ Other (specify): ____\n\nAction proposed:\n\n____ New rule(s)\n\nX Amendment to existing rule(s)\n\n____ Repeal of existing rule(s)\n\n____ Adoption by reference\n\nProposed final effective date:\n\n____ 30 days after filing\n\n____ Other (specify): ____\n\n## FINAL ACTION ON RULES\n\nDate Proposed Rule Filed: ____\n\nAction taken:\n\n____ Adopted with no changes in text\n\n____ Adopted with changes\n\n____ Adopted by reference\n\n____ Withdrawn\n\n____ Repeal adopted as proposed\n\nEffective date:\n\n____ 30 days after filing\n\n____ Other (specify):\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "safe_abstention",
+          "reason": "Effective date explicitly unknown; no 30-day boilerplate promoted to a fact. Uses string unknowns.",
+          "raw_citations": [],
+          "field_values": {
+            "effective_date": "Not explicitly specified",
+            "unknowns": [
+              "Oral proceeding date and time",
+              "Effective date for temporary rules",
+              "Proposed final effective date",
+              "Date Proposed Rule Filed"
+            ]
+          },
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "text_only_or_partial",
+          "reason": "Columns/option labels survive, but unmarked 30-day choices lack explicit blank/unchecked encoding. No absolute effective date asserted.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 2681,
+              "end_character": 3582,
+              "quote": "<strong>TEMPORARY RULES</strong><br /><br /> Original filing<br /> Renewal of effectiveness<br />To be in effect in  days<br />Effective date:<br /> Immediately upon filing<br /> Other (specify): </th><th><strong>PROPOSED ACTION ON RULES</strong><br /><br /><strong>Action proposed:</strong><br /> New rule(s)<br />[x] Amendment to existing rule(s)<br /> Repeal of existing rule(s)<br /> Adoption by reference<br /><strong>Proposed final effective date:</strong><br /> 30 days after filing<br /> Other (specify): </th><th><strong>FINAL ACTION ON RULES</strong><br /><br /><strong>Date Proposed Rule Filed:</strong> <br /><strong>Action taken:</strong><br /> Adopted with no changes in text<br /> Adopted with changes<br /> Adopted by reference<br /> Withdrawn<br /> Repeal adopted as proposed<br /><strong>Effective date:</strong><br /> 30 days after filing<br /> Other (specify): </th></tr></table>\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "safe_abstention",
+          "reason": "Temporary and effective choices explicitly unchecked; 30-day options remain boilerplate rather than facts.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 2376,
+              "end_character": 3948,
+              "quote": "| TEMPORARY RULES                         | PROPOSED ACTION ON RULES                 | FINAL ACTION ON RULES                        |\n| :-------------------------------------- | :--------------------------------------- | :------------------------------------------- |\n| [unchecked] Original filing            | **Action proposed:**                     | **Date Proposed Rule Filed:** [___]      |\n| [unchecked] Renewal of effectiveness   | [unchecked] New rule(s)                 | **Action taken:**                            |\n| To be in effect in [___] days       | [checked] Amendment to existing rule(s) | [unchecked] Adopted with no changes in text |\n| **Effective date:**                     | [unchecked] Repeal of existing rule(s)  | [unchecked] Adopted with changes            |\n| [unchecked] Immediately upon filing    | [unchecked] Adoption by reference       | [unchecked] Adopted by reference            |\n| [unchecked] Other (specify): [___] | **Proposed final effective date:**       | [unchecked] Withdrawn                       |\n|                                         | [unchecked] 30 days after filing        | [unchecked] Repeal adopted as proposed      |\n|                                         | [unchecked] Other (specify): [___]  | **Effective date:**                          |\n|                                         |                                          | [unchecked] 30 days after filing            |\n|                                         |                                          | [unchecked] Other (specify): [___]      |\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    },
+    {
+      "case_id": "D1",
+      "focus": "Handwritten submit date, separate role from filing stamp",
+      "results": {
+        "native": {
+          "category": "not_demonstrated",
+          "reason": "SUBMIT DATE label remains but handwritten date is absent.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 279,
+              "end_character": 291,
+              "quote": "SUBMIT\nDATE\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "recovered_supported",
+          "reason": "12/27/2023 remains bound to SUBMIT DATE.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 291,
+              "end_character": 311,
+              "quote": "SUBMITDATE12/27/2023",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "not_demonstrated",
+          "reason": "Separate submit date was not requested or returned; generic filing_date does not prove this role.",
+          "raw_citations": [],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "recovered_supported",
+          "reason": "Table cell explicitly binds 12/27/2023 to SUBMIT DATE.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 580,
+              "end_character": 624,
+              "quote": "<strong>SUBMIT DATE</strong><br />12/27/2023",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "recovered_supported",
+          "reason": "Submit field preserves handwritten date as 12/27/2023.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 327,
+              "end_character": 354,
+              "quote": "**SUBMIT DATE:** 12/27/2023",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    },
+    {
+      "case_id": "D2",
+      "focus": "Official FILED stamp date, date precision only",
+      "results": {
+        "native": {
+          "category": "not_demonstrated",
+          "reason": "Stamp date absent from native text.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 2828,
+              "end_character": 3024,
+              "quote": "DO NOT WRITE BELOW THIS LINE\nOFFICIAL FILING STAMPOFFICIAL FILING STAMP OFFICIAL FILING STAMP\nMISSISSIPPI\nSECRETARY OF STATE\nAccepted for filingby\nam m\nAccepted for filingby Accepted for filingby\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "recovered_supported",
+          "reason": "DEC 27 2023 appears in the filing-stamp portion, distinct from top submit field.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 3138,
+              "end_character": 3364,
+              "quote": "OFFICIAL FILING STAMP\n\nDO NOT WRITE BELOW THIS LINE OFFICIAL FILING STAMP\n\nAccepted for filing by\n\nDEC 27 2023\n\nMISSISSIPPI SECRETARY OF STATE\n\nAccepted for filing by 27305 1812\n\nOFFICIAL FILING STAMP\n\nAccepted for filing by\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "correct_but_ungrounded",
+          "reason": "Date matches source, but no stamp-specific evidence. Same-valued submit date cannot establish provenance.",
+          "raw_citations": [],
+          "field_values": {
+            "filing_date": "12/27/2023",
+            "evidence_quotes": [
+              "The Exam Validity Extension Program (EVEP) provides an opportunity for registered representatives and investment adviser representatives to extend their state qualification exams.",
+              "This program allows industry professionals to maintain their state qualification exams for up to five years if they maintain compliance with their continuing education requirements.",
+              "An oral proceeding is not scheduled on this rule.",
+              "An oral proceeding must be held if a written request for an oral proceeding is submitted by a political subdivision, an agency or ten (10) or more persons."
+            ]
+          },
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "not_demonstrated",
+          "reason": "Official stamp region retained as seal/acceptance text, but DEC 27 2023 and FILED are omitted. Top submit date is not a replacement.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 3764,
+              "end_character": 4135,
+              "quote": "<table><tr><th><strong>OFFICIAL FILING STAMP</strong><br /><br />Accepted for filing by</th><th><strong>DO NOT WRITE BELOW THIS LINE</strong><br /><strong>OFFICIAL FILING STAMP</strong><br /><br />seal: Mississippi Secretary of StateAccepted for filing by<br />27305 BBJ</th><th><strong>OFFICIAL FILING STAMP</strong><br /><br />Accepted for filing by</th></tr></table>\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "not_demonstrated",
+          "reason": "Official filing stamp heading and a signature-like string survive, but the FILED date is absent. Submit date does not establish this role.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 4131,
+              "end_character": 4181,
+              "quote": "**OFFICIAL FILING STAMP**\n[signature: 27305 1lg]\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    },
+    {
+      "case_id": "T1",
+      "focus": "20-day hearing request and explicit filing anchor",
+      "results": {
+        "native": {
+          "category": "recovered_supported",
+          "reason": "Full hearing request clause retains twenty (20) days after filing, despite OCR spacing.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 1411,
+              "end_character": 1810,
+              "quote": "The written request should be submitted to the agency contact person at the above address withintwenty (20)days afterthe filingofthis\nnotice of proposed ruleadoption and should includethe name, address,email address,and telephone number of the person(s)making the request;and, ifyou are an\nagent or attorney,the name, address,email address,and telephone number of the party or partiesyou represent. ",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "recovered_supported",
+          "reason": "Full hearing request clause retains role, duration and anchor.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 1525,
+              "end_character": 1940,
+              "quote": "The written request should be submitted to the agency contact person at the above address within twenty (20) days after the filing of this notice of proposed rule adoption and should include the name, address, email address, and telephone number of the person(s) making the request; and, if you are an agent or attorney, the name, address, email address, and telephone number of the party or parties you represent. ",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "recovered_supported",
+          "reason": "20 and the filing clause are correct; the anchor field itself preserves exact source language. Dedicated vendor field citations are absent.",
+          "raw_citations": [],
+          "field_values": {
+            "hearing_request_duration_days": 20,
+            "hearing_request_anchor": "within twenty (20) days after the filing of this notice of proposed rule adoption"
+          },
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "recovered_supported",
+          "reason": "Full clause preserves role, twenty (20), and filing anchor.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 1897,
+              "end_character": 2312,
+              "quote": "The written request should be submitted to the agency contact person at the above address within twenty (20) days after the filing of this notice of proposed rule adoption and should include the name, address, email address, and telephone number of the person(s) making the request; and, if you are an agent or attorney, the name, address, email address, and telephone number of the party or parties you represent. ",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "recovered_supported",
+          "reason": "20-day hearing-request duration and explicit filing anchor survive.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 1596,
+              "end_character": 2011,
+              "quote": "The written request should be submitted to the agency contact person at the above address within twenty (20) days after the filing of this notice of proposed rule adoption and should include the name, address, email address, and telephone number of the person(s) making the request; and, if you are an agent or attorney, the name, address, email address, and telephone number of the party or parties you represent. ",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    },
+    {
+      "case_id": "T2",
+      "focus": "Conditional hearing-request requester eligibility",
+      "results": {
+        "native": {
+          "category": "recovered_supported",
+          "reason": "Conditional no-hearing context, political subdivision/agency/ten-person scope all survive.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 1230,
+              "end_character": 1411,
+              "quote": "Ifan oralproceedingisnot scheduled,an ora!proceedingmust be held ifa writtenrequest foran oralproceeding issubmitted by a politicalsubdivision,an agency or\nten (10)or more persons. ",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "recovered_supported",
+          "reason": "Complete conditional sentence survives.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 1329,
+              "end_character": 1525,
+              "quote": "If an oral proceeding is not scheduled, an oral proceeding must be held if a written request for an oral proceeding is submitted by a political subdivision, an agency or ten (10) or more persons. ",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "text_only_or_partial",
+          "reason": "Evidence mentions requester classes but omits leading condition when no hearing is scheduled; no separately structured eligibility field.",
+          "raw_citations": [],
+          "field_values": {
+            "hearing_status": "Not scheduled",
+            "evidence_quotes": [
+              "The Exam Validity Extension Program (EVEP) provides an opportunity for registered representatives and investment adviser representatives to extend their state qualification exams.",
+              "This program allows industry professionals to maintain their state qualification exams for up to five years if they maintain compliance with their continuing education requirements.",
+              "An oral proceeding is not scheduled on this rule.",
+              "An oral proceeding must be held if a written request for an oral proceeding is submitted by a political subdivision, an agency or ten (10) or more persons."
+            ]
+          },
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "recovered_supported",
+          "reason": "Complete conditional sentence survives unchanged.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 1701,
+              "end_character": 1897,
+              "quote": "If an oral proceeding is not scheduled, an oral proceeding must be held if a written request for an oral proceeding is submitted by a political subdivision, an agency or ten (10) or more persons. ",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "recovered_supported",
+          "reason": "Full no-hearing conditional and requester eligibility survive.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 1400,
+              "end_character": 1596,
+              "quote": "If an oral proceeding is not scheduled, an oral proceeding must be held if a written request for an oral proceeding is submitted by a political subdivision, an agency or ten (10) or more persons. ",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    },
+    {
+      "case_id": "T3",
+      "focus": "25-day public comments; no invented anchor/counting/absolute close",
+      "results": {
+        "native": {
+          "category": "recovered_supported",
+          "reason": "25-day comment clause survives distinctly; no starting event or computed close added.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 1810,
+              "end_character": 1999,
+              "quote": "At any time withinthe twenty-five(25)day public\ncomment period,writtensubmissionsincludingarguments, data,and views on the proposed rule/amendment/repeal may besubmittedtothefilingagency.\t\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "recovered_supported",
+          "reason": "25-day clause survives; no anchor or absolute close added.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 1940,
+              "end_character": 2142,
+              "quote": "At any time within the twenty-five (25) day public comment period, written submissions including arguments, data, and views on the proposed rule/amendment/repeal may be submitted to the filing agency.\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "incorrect_or_fabricated",
+          "reason": "25 and abstention on absolute close are correct, but public_comment_anchor wrongly holds the duration clause instead of a starting event. This is a role/type error, not a fabricated computed date.",
+          "raw_citations": [],
+          "field_values": {
+            "public_comment_duration_days": 25,
+            "public_comment_anchor": "At any time within the twenty-five (25) day public comment period",
+            "comment_close": "Not explicitly specified"
+          },
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "recovered_supported",
+          "reason": "25-day clause remains separate and no start event/absolute close is invented.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 2312,
+              "end_character": 2516,
+              "quote": "At any time within the twenty-five (25) day public comment period, written submissions including arguments, data, and views on the proposed rule/amendment/repeal may be submitted to the filing agency.**\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "recovered_supported",
+          "reason": "25-day comment clause survives separately with no invented anchor/absolute close.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 2011,
+              "end_character": 2213,
+              "quote": "At any time within the twenty-five (25) day public comment period, written submissions including arguments, data, and views on the proposed rule/amendment/repeal may be submitted to the filing agency.\n\n",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    },
+    {
+      "case_id": "X1",
+      "focus": "Rule 5.29 in named field and repeated citation",
+      "results": {
+        "native": {
+          "category": "text_only_or_partial",
+          "reason": "First field reads Rule 5,29; later occurrence is correct. Do not claim first-field recovery from the later occurrence.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 318,
+              "end_character": 327,
+              "quote": "Rule 5,29",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            },
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 1069,
+              "end_character": 1092,
+              "quote": "proposed rule:Rule 5.29",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "recovered_supported",
+          "reason": "Named field reads Rule 5.29.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 314,
+              "end_character": 349,
+              "quote": "Name or number of rule(s):Rule 5.29",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "correct_but_ungrounded",
+          "reason": "Correct rule reference; no field-specific quote in its evidence list.",
+          "raw_citations": [],
+          "field_values": {
+            "rule_citations": [
+              "Rule 5.29"
+            ]
+          },
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "recovered_supported",
+          "reason": "Named rule table cell reads Rule 5.29.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 645,
+              "end_character": 703,
+              "quote": "<strong>Name or number of rule(s):</strong><br />Rule 5.29",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "recovered_supported",
+          "reason": "Named rule field is Rule 5.29.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 355,
+              "end_character": 395,
+              "quote": "**Name or number of rule(s):** Rule 5.29",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    },
+    {
+      "case_id": "X2",
+      "focus": "EVEP acronym",
+      "results": {
+        "native": {
+          "category": "incorrect_or_fabricated",
+          "reason": "Acronym transcribed as EVER.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/native.txt",
+              "text_basis": "UTF-8 file",
+              "start_character": 419,
+              "end_character": 459,
+              "quote": "The Exam ValidityExtensionProgram (EVER)",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_parse": {
+          "category": "recovered_supported",
+          "reason": "EVEP transcribed correctly.",
+          "raw_citations": [
+            {
+              "artifact": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/pdf/derived/firecrawl.md",
+              "text_basis": "UTF-8 file",
+              "start_character": 453,
+              "end_character": 495,
+              "quote": "The Exam Validity Extension Program (EVEP)",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "firecrawl_extract": {
+          "category": "recovered_supported",
+          "reason": "EVEP appears in an exact supported evidence sentence, not a separate structured acronym field.",
+          "raw_citations": [],
+          "field_values": {
+            "evidence_quotes": [
+              "The Exam Validity Extension Program (EVEP) provides an opportunity for registered representatives and investment adviser representatives to extend their state qualification exams.",
+              "This program allows industry professionals to maintain their state qualification exams for up to five years if they maintain compliance with their continuing education requirements.",
+              "An oral proceeding is not scheduled on this rule.",
+              "An oral proceeding must be held if a written request for an oral proceeding is submitted by a political subdivision, an agency or ten (10) or more persons."
+            ]
+          },
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_parse": {
+          "category": "recovered_supported",
+          "reason": "EVEP transcribed correctly.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 821,
+              "end_character": 863,
+              "quote": "The Exam Validity Extension Program (EVEP)",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_plus_parse": {
+          "category": "recovered_supported",
+          "reason": "EVEP transcribed correctly.",
+          "raw_citations": [
+            {
+              "artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/parse-plus-response.json",
+              "text_basis": "/content/0/text",
+              "start_character": 495,
+              "end_character": 537,
+              "quote": "The Exam Validity Extension Program (EVEP)",
+              "locator_author": "independent reviewer, not vendor-generated field citation"
+            }
+          ],
+          "field_values": {},
+          "field_citation_quality": "reviewer-located retained text; no vendor field citation claimed",
+          "assessment_actor": "independent agent reviewer",
+          "downstream_repair_applied": false
+        },
+        "llama_agentic_extract": {
+          "category": "not_demonstrated",
+          "status": "tool_timeout_no_output",
+          "reason": "MCP timeout; no structured extraction result retained. Backend completion and billing unknown. Not an accuracy error or safe abstention.",
+          "raw_response_artifact": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial/extraction-response.json",
+          "downstream_repair_applied": false
+        }
+      }
+    }
+  ],
+  "verdict": "Partial semantic/evidence benefit: both Llama parses improve hearing/economic-impact mark associations; plus explicitly retains unchecked alternatives. Both omit official filing stamp date. Structured extraction not demonstrated due to timeout.",
+  "comparison_limits": [
+    "Unequal prompt/schema coverage across extraction trials must be reported.",
+    "No total accuracy score; easy lexical recovery cannot offset critical missing fields.",
+    "Extraction timeout is not an accuracy result.",
+    "Raw parse locators were created by reviewer; not native vendor field-citation metadata.",
+    "No bbox/form/enrichment option appears in recorded parse tool schema, and no native field coordinates/job IDs/consumed credits/resolved version appear in these responses; this is a connector/trial observation, not a platform-wide feature claim.",
+    "Local source hash and same upload file ID are verified; remote checksum was not returned."
+  ]
+}

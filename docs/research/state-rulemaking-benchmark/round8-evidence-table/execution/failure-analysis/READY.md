@@ -1,0 +1,5 @@
+# Output-failure diagnosis ready — edits stopped
+
+The frozen stronger completion is invalid: finish length, 4,096 tokens including 220 reasoning, 53 complete forensic objects of 70 required item IDs, no complete global verdict. No partial result was repaired, accepted or semantically scored. Four diagnostic codec controls pass; all 32 frozen evidence entries remain unchanged.
+
+Prefer a separately scoped one-call stronger-only 8,192 output-cap candidate with otherwise identical request/schema/acceptance, no inventory/Jev calls or retry. Maximum new nominal .161920 plus all-five-attempt conservative debit .542976718 yields .704896718. Recover failed-response reported cost separately for honest reporting, without refunding its reserve. A compact output contract is a distinct, larger alternative with unmeasured generation/comprehension; no live path was implemented. See README.md, REPORT.json and NEXT-EXPERIMENT-CANDIDATE.md; HANDOFF.json binds final new artifact hashes for independent review.

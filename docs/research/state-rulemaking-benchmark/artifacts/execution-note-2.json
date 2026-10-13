@@ -1,0 +1,24 @@
+{
+  "id": "execution-note-2",
+  "at_utc": "2026-10-06T00:58:08.239081+00:00",
+  "decision": "Use observed request-rate pacing and permit one recovery for explicit pre-job rate-limit rejection only.",
+  "basis": "A05 and A06 final parse requests returned explicit rate-limit rejection with req/min 11 and12, remaining0, reset time; no accepted job/output identifier. Both setup and parse calls consume the observed request budget.",
+  "evidence": [
+    {
+      "path": "firecrawl/recovery-1/A05/parse-response.json",
+      "sha256": "4cfd78b20f4810e283f9ffa261ef0e29668eab303ca569ccabae529599170f71"
+    },
+    {
+      "path": "firecrawl/recovery-1/A06/parse-response.json",
+      "sha256": "a26f98b4dbd84c45b04be34cd6f399db0228675031d4aff528ebe536a69c9732"
+    }
+  ],
+  "constraints": [
+    "Complete frozen corpus with unchanged bytes/settings/references; no outcome-driven replacements.",
+    "Pace subsequent requests and respect observed reset instructions; no purchase or credential change.",
+    "One separately recorded recovery per explicitly rate-rejected input after initial sweep; retain first attempt as rate rejection.",
+    "Never retry timeout or unknown acceptance/billing state.",
+    "Final report distinguishes initial successful captures, rate-recovered captures, initial local harness failures and remaining provider failures."
+  ],
+  "protocol_interpretation": "Explicit rate rejection is a proven pre-job network failure under the permitted single recovery; recorded prospectively before recovery calls."
+}

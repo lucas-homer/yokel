@@ -1,0 +1,92 @@
+{
+  "negative_judgment_promoted_to_accepted": {
+    "rejected": false
+  },
+  "accepted_judgment_removed": {
+    "rejected": false
+  },
+  "completed_pair_has_failed_arm": {
+    "rejected": false
+  },
+  "first_arm_failed_but_later_called": {
+    "rejected": false
+  },
+  "size_gate_has_inventory_but_no_record": {
+    "rejected": false
+  },
+  "cost_0": {
+    "rejected": true,
+    "reason": "observed schema: $.costs.extraction.usage_estimate_usd: expected ['number', 'null'], got integer"
+  },
+  "cost_0.0": {
+    "rejected": false
+  },
+  "cost_1": {
+    "rejected": true,
+    "reason": "observed schema: $.costs.extraction.usage_estimate_usd: expected ['number', 'null'], got integer"
+  },
+  "41_pdf_pages": {
+    "gate": "paired_verification_completed",
+    "dispatches": [
+      "inventory",
+      "jev",
+      "stronger"
+    ]
+  },
+  "jev_state_only_overlimit": {
+    "schema_version": "round7.admission.v1",
+    "stage": "jev",
+    "body_sha256": "59367ff3bb1074933f546546dc7f093bc215b500cd9eb392c78f28b3e2bbcdd5",
+    "body_utf8_bytes": 51010,
+    "estimate": 52034,
+    "cap": 64000,
+    "state_longest_estimate": 44579,
+    "state_longest_cap": 32000,
+    "admitted": false,
+    "reason": "Jev state + longest question overlimit; no clipping",
+    "reservation_usd": null
+  },
+  "jev_total_only_overlimit": {
+    "schema_version": "round7.admission.v1",
+    "stage": "jev",
+    "body_sha256": "aa91d7381095015096e1eb53263205613a0710d25cab2aa7671e95872ac2b721",
+    "body_utf8_bytes": 70990,
+    "estimate": 72014,
+    "cap": 64000,
+    "state_longest_estimate": 16559,
+    "state_longest_cap": 32000,
+    "admitted": false,
+    "reason": "Jev total input overlimit; no clipping",
+    "reservation_usd": null
+  },
+  "jev_failure_preservation": {
+    "gate": "verification_failed",
+    "arms": {
+      "jev": {
+        "status": "failed",
+        "called": true,
+        "source_coverage_complete": false
+      },
+      "stronger": {
+        "status": "not_started",
+        "called": false,
+        "source_coverage_complete": false
+      }
+    }
+  },
+  "stronger_failure_preservation": {
+    "gate": "verification_failed",
+    "arms": {
+      "jev": {
+        "status": "accepted_complete",
+        "called": true,
+        "source_coverage_complete": true
+      },
+      "stronger": {
+        "status": "failed",
+        "called": true,
+        "source_coverage_complete": false
+      }
+    }
+  }
+}

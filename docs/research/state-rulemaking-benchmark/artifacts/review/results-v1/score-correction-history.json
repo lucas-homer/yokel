@@ -1,0 +1,38 @@
+[
+  {
+    "fixture_id": "A03",
+    "arm": "firecrawl_local_parse",
+    "type": "post_freeze_scoring_correction",
+    "trigger": "Primary challenged explanatory body glyph; independently reinspected original PDF detail at300dpi and retained render crop.",
+    "initial_extra_assertion": [
+      {
+        "assertion_id": "A03-firecrawl-subpart-5",
+        "fixture_id": "A03",
+        "arm": "firecrawl_local_parse",
+        "assertion_text": "Short explanation of rule/amendment/repeal and reason(s) for proposing rule/amendment/repeal: A new subpart 5 was created regarding the changes made by HB 916 of the 2025 Regular Session and the table of contents requires updating. Other minor changes were made.\n",
+        "output_artifact": "firecrawl/recovery-1/A03/markdown.md",
+        "output_artifact_hash": "855c08220f5720e39fd27f388335ae3dda4d8f51e4c5dc8cf846712ba5ab385d",
+        "output_locator": {
+          "line_start": 10,
+          "line_end": 10,
+          "char_start": 483,
+          "char_end": 746
+        },
+        "source_scope": "Original page1 explanation of proposed action: new subpart S; frozen A03 adjudication confirms letter S in title and description.",
+        "error_type": "contradictory_rule_identity",
+        "critical": true,
+        "reason": "Changes newly created subpart S to5 within same target notice.",
+        "affected_field_ids": [
+          "rule_identity"
+        ]
+      }
+    ],
+    "finding": "Body reads new subpart5, matching returned output. Earlier reviewer source-note claim that body saysS was overconfident; frozen title reference remains S and Firecrawl title matches it. No demonstrated output-added contradiction.",
+    "action": "Remove extra assertion, restore supported rule_identity based on title. Do not alter frozen reference/source files.",
+    "evidence": [
+      "A03-original-detail.png",
+      "A03-title-body-crop.png"
+    ],
+    "reference_amendment": "No scored title-field amendment required for this correction; frozen descriptive note about body is erroneous and disclosed here, not silently edited."
+  }
+]

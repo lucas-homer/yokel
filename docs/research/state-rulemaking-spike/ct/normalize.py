@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+"""Offline Connecticut research normalizer. No network, third-party modules or production claims."""
+import json, re
+from pathlib import Path
+from datetime import datetime, timezone, timedelta
+
+ROOT = Path(__file__).resolve().parent
+observations = []
+def read(name):
+    return (ROOT / 'captures' / name).read_text()
+def instant(value):
+    match = re.fullmatch(r'/Date\((-?\d+)\)/', value)
+    if not match:
+        raise ValueError('Unsupported native timestamp: ' + str(value))
+    stamp = datetime(1970, 1, 1, tzinfo=timezone.utc) + timedelta(milliseconds=int(match[1]))
+    return {'kind':'instant', 'utc_instant':stamp.isoformat(timespec='milliseconds' if int(match[1]) % 1000 else 'seconds').replace('+00:00','Z')}
+def json_quote(raw, field, value):
+    # Recover the original JSON lexical token, including its escaped slashes.
+    for m in re.finditer(r'"' + re.escape(field) + r'"\s*:\s*("(?:[^"\\]|\\.)*")', raw):
+        if json.loads(m[1]) == value:
+            return m[0]
+    raise ValueError('Missing lexical evidence: ' + field)
+def emit(record, subject, predicate, value, artifact, locator, quote, warnings=()):
+    assert quote and quote in read(artifact), (artifact, quote)
+    observations.append({'schema_version':'state-spike-v1','observation_id':f'ct-{len(observations)+1:03}',
+        'jurisdiction':'US-CT','source_record_id':record,'subject':subject,'predicate':predicate,'value':value,
+        'evidence':[{'artifact_id':'ct-'+artifact,'locator':locator,'quote':quote,'support':'text_exact'}],
+        'method':{'kind':'deterministic','name':'ct-native-and-rendered-fields','version':'1'},
+        'review_state':'candidate','warnings':list(warnings)})
+def proceeding(record):
+    return {'kind':'proceeding','id':'research:US-CT:eRegs:'+record}
+def window(record, token):
+    return {'kind':'participation_window','id':'research:US-CT:eRegs:'+record+':window:'+token}
+
+raw = read('open.json')
+rows = json.loads(raw)
+assert isinstance(rows, list)
+current_windows = {}
+for i, row in enumerate(rows):
+    record = row['TrackingNumber']
+    assert re.fullmatch(r'PR\d{4}-\d{3}', record)
+    for field, pred in [('AgencyName','agency'),('ShortName','title')]:
+        value = row.get(field)
+        if isinstance(value, str) and value.strip():
+            emit(record, proceeding(record), pred, value, 'open.json', f'/{i}/{field}', json_quote(raw,field,value))
+    value = row.get('CommentPeriodEndDate')
+    if value:
+        # The list has no comment-period GUID: this is a snapshot-scoped candidate window.
+        subject = window(record,'open-list-'+str(int(re.fullmatch(r'/Date\((\d+)\)/',value)[1])))
+        current_windows[record] = subject
+        emit(record,subject,'comment_close',instant(value),'open.json',f'/{i}/CommentPeriodEndDate',json_quote(raw,'CommentPeriodEndDate',value),
+             ['Decoded source timestamp; legal authority not established.', 'Open-list window identity is provisional; no comment-period GUID in this route.'])
+
+raw = read('history059.json')
+history = json.loads(raw)
+history_windows = {}
+for i, row in enumerate(history):
+    details = row.get('AssociatedDetails')
+    if row.get('Description') != 'Comment Period Opened' or not details or details.get('DetailType') != 1:
+        continue
+    record = row['TrackingNumber']
+    subject = window(record,details['GUID'].strip('{}'))
+    history_windows[row['RMRID']] = subject
+    for field, pred in [('CommentPeriodStartDate','comment_open'),('CommentPeriodEndDate','comment_close')]:
+        if details.get(field):
+            emit(record,subject,pred,instant(details[field]),'history059.json',f'/{i}/AssociatedDetails/{field}',json_quote(raw,field,details[field]),
+                 ['Decoded source timestamp; exact source clock may reflect system processing and is not independent legal corroboration.'])
+
+for artifact in ['fc059retry.md','fc014.md']:
+    text = read(artifact)
+    record = re.search(r'Tracking Number: (PR\d{4}-\d{3})', text)[1]
+    for label,pred in [('Agency Name','agency'),('Subject','title'),('Section(s) Affected','rule_citations')]:
+        match = re.search(r'^\| '+re.escape(label)+r' \| ([^|]+) \|',text,re.M)
+        if match and match[1].strip() not in ('null',''):
+            value = match[1].strip()
+            if pred == 'rule_citations':
+                value = [x.strip() for x in value.split(';') if x.strip()]
+            emit(record,proceeding(record),pred,value,artifact,'Summary Information / '+label,match[0])
+    # RMR History Posted Date is posting metadata, not a participation boundary.
+    match = re.search(r'^\| Comments Period Ends \| (\d{2}/\d{2}/\d{4}) (\d{1,2}:\d{2} [AP]M) \|[^\n]*',text,re.M)
+    if match:
+        value = datetime.strptime(match[1]+' '+match[2],'%m/%d/%Y %I:%M %p')
+        emit(record,current_windows[record],'comment_close',{'kind':'local_datetime','date':value.date().isoformat(),'time':value.strftime('%H:%M'),
+             'timezone_text':None,'iana_zone':None,'utc_instant':None},artifact,'Notes / Comments Period Ends',match[0],
+             ['Page text states no timezone; America/New_York would align with native instant but is an unadopted inference.'])
+    match = re.search(r'The attached Operational Policy is effective on ([A-Z][a-z]+ \d{1,2}, \d{4})[^\]]*',text)
+    if match:
+        emit(record,{'kind':'instrument','id':'research:US-CT:eRegs:'+record+':operational-policy-description'},'operational_policy_date',
+             {'kind':'date','date':datetime.strptime(match[1],'%B %d, %Y').date().isoformat()},artifact,'RMR History / operational policy description',match[0],
+             ['Portal history description only; underlying operational policy document not fetched.'])
+
+(ROOT/'observations.json').write_text(json.dumps(observations,indent=2)+'\n')
+print(json.dumps({'observations':len(observations),'open_records':len(rows),'native_historical_windows':len(history_windows)}))

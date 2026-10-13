@@ -1,0 +1,207 @@
+{
+  "validation": {
+    "passed": true,
+    "scheduled_documents": 16,
+    "completed_documents": 16,
+    "scheduled_fields": 144,
+    "completed_fields": 144,
+    "frozen_files_unchanged": 141,
+    "exact_quotes_valid": true,
+    "original_v1_scores_untouched": true,
+    "critical_extra_assertions": 3
+  },
+  "completed_documents": [
+    {
+      "fixture_id": "A03",
+      "arm": "llama_agentic",
+      "gate_outcome": "content_fail",
+      "critical_field_counts": {
+        "incorrect": 1,
+        "supported": 7
+      },
+      "failure_categories": [
+        "title_rule_identity_transcription"
+      ],
+      "reviewer_note": "Complete page1 source and full returned Markdown inspected. Seven critical fields supported; title identity mismatch fails strict gate. Hearing selection and final-action/effective choices preserved. Body5 is source-faithful and not a false assertion; no additional critical extra assertion found."
+    },
+    {
+      "fixture_id": "A03",
+      "arm": "llama_agentic_plus",
+      "gate_outcome": "content_fail",
+      "critical_field_counts": {
+        "incorrect": 1,
+        "supported": 5,
+        "missing": 2
+      },
+      "failure_categories": [
+        "participation_boilerplate_omitted",
+        "title_rule_identity_transcription"
+      ],
+      "reviewer_note": "Full source and all55 Markdown lines reviewed. Same title S-to5 mismatch as Agentic; body5 remains source-faithful. Plus additionally omits entire20/25-day participation-boilerplate paragraph, losing two critical fields. Hearing selection, final action, prior proposed filing, effective date and official filing date survive. No other critical extra assertion found."
+    },
+    {
+      "fixture_id": "A04",
+      "arm": "llama_agentic",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 5,
+        "safe_abstention": 1
+      },
+      "failure_categories": [],
+      "reviewer_note": "Complete single-page letter and bottom-right stamp visually reviewed. Markdown preserves current WSR25-08-088, April2,2025 08:56 filing clock, and separate withdrawn WSR25-03-112/January20 target. Full relevant absence scope survives; no new comment close or critical extra assertion added."
+    },
+    {
+      "fixture_id": "A04",
+      "arm": "llama_agentic_plus",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 5,
+        "safe_abstention": 1
+      },
+      "failure_categories": [],
+      "reviewer_note": "Complete single-page letter and bottom-right stamp visually reviewed. Markdown preserves current WSR25-08-088, April2,2025 08:56 filing clock, and separate withdrawn WSR25-03-112/January20 target. Logo/signature image references do not replace critical text. Full relevant absence scope survives; no critical extra assertion found."
+    },
+    {
+      "fixture_id": "A05",
+      "arm": "llama_agentic",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 7,
+        "safe_abstention": 1
+      },
+      "failure_categories": [],
+      "reviewer_note": "Complete retained WSR notice including top filing clock and certification footer visually reviewed. Current withdrawal, prior proposal/comment dates, and conditional future preproposal remain distinct. Full scope survives for no-new-comment-close question; no critical extra assertion found."
+    },
+    {
+      "fixture_id": "A05",
+      "arm": "llama_agentic_plus",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 7,
+        "safe_abstention": 1
+      },
+      "failure_categories": [],
+      "reviewer_note": "All20 Markdown lines compared with previously reviewed full one-page source. Current withdrawal and filing clock, prior proposal/comment period, certification footer, and conditional future preproposal preserve their roles. Full absence scope survives; no new comment close or critical extra assertion added."
+    },
+    {
+      "fixture_id": "A06",
+      "arm": "llama_agentic",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6,
+        "safe_abstention": 1
+      },
+      "failure_categories": [],
+      "reviewer_note": "Both source pages and all46 Markdown lines reviewed. Prior August18 close is distinct from current September17 receipt deadline; scope limited to indicated changes. Date-only precision, mail/email receipt routes and full no-new-hearing scope preserved. No critical extra assertion found."
+    },
+    {
+      "fixture_id": "A06",
+      "arm": "llama_agentic_plus",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6,
+        "safe_abstention": 1
+      },
+      "failure_categories": [],
+      "reviewer_note": "Both full source pages were visually reviewed and unchanged hashes reverified; all47 REST Markdown lines checked. Prior August18 close remains distinct from current September17 receipt deadline; limited change scope and mail/email receipt routes survive. Complete no-new-hearing scope retained; no critical extra assertion found. REST settings/provenance differ from dashboard; no settings-equivalence or resolved-latest-version claim."
+    },
+    {
+      "fixture_id": "A07",
+      "arm": "llama_agentic",
+      "gate_outcome": "insufficient_reference",
+      "critical_field_counts": {
+        "supported": 6,
+        "not_assessable": 1,
+        "safe_abstention": 1
+      },
+      "failure_categories": [
+        "reference_uncertainty"
+      ],
+      "reviewer_note": "Both full source pages and all45 Markdown lines reviewed. Current October5\u201320 window, form/section links and limited comment scope survive. Original-notice dates October31,2025 and October31,2026 both remain exactly as source; frozen uncertain field stays not_assessable and document remains insufficient_reference. No new critical false assertion found."
+    },
+    {
+      "fixture_id": "A07",
+      "arm": "llama_agentic_plus",
+      "gate_outcome": "insufficient_reference",
+      "critical_field_counts": {
+        "supported": 6,
+        "not_assessable": 1,
+        "safe_abstention": 1
+      },
+      "failure_categories": [
+        "reference_uncertainty"
+      ],
+      "reviewer_note": "Both source pages previously visually reviewed; frozen hashes reverified. Full38-line Markdown retains current window, form/section links and comment scope. Both conflicting original-notice years2025/2026 remain source-faithful. Reference uncertainty remains not_assessable; strict gate insufficient_reference. No added critical assertion found."
+    },
+    {
+      "fixture_id": "A08",
+      "arm": "llama_agentic",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 7,
+        "safe_abstention": 1
+      },
+      "failure_categories": [],
+      "reviewer_note": "All four complete source-page images and87 Markdown lines reviewed. Five calendar days follow actual OAL submission; January28,2026 remains anticipated on-or-after timing, not proof of submission.90 days is proposed rule extension, separate from comment duration; August21,2025 is original effective date. Literal January29,2025 heading preserved despite chronology anomaly. No actual submission date invented, full absence scope survives, no critical extra assertion found."
+    },
+    {
+      "fixture_id": "A08",
+      "arm": "llama_agentic_plus",
+      "gate_outcome": "content_fail",
+      "critical_field_counts": {
+        "supported": 7,
+        "safe_abstention": 1
+      },
+      "failure_categories": [
+        "unsupported_temporal_condition_deletion"
+      ],
+      "reviewer_note": "All four complete source-page images and all94 Markdown lines reviewed; high-resolution page2 crop confirms no source strikethrough. All eight frozen critical fields preserved, including conditional planned submission and complete scope for no actual submission date. Nonetheless line47 adds deletion markup to the reversion condition, failing the mandatory notice-wide critical-extra-assertion gate. Literal January29,2025 header retained. No JSON rescue or inferred chronology. Additional editorial strike on intends at line62 does not independently change the proposed permanent-rulemaking status and is not counted as another critical assertion."
+    },
+    {
+      "fixture_id": "A09",
+      "arm": "llama_agentic",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6
+      },
+      "failure_categories": [],
+      "reviewer_note": "Complete dense two-column source page and112 Markdown lines reviewed. Target SGC-39-26-00023-P, issue date, section4026.3, no-hearing statement and60-day publication anchor preserved. Compliance begins upon future Notice of Adoption publication, not current proposal. Adjacent Coupling notice remains separately headed/identified; no borrowed identity or critical extra assertion found."
+    },
+    {
+      "fixture_id": "A09",
+      "arm": "llama_agentic_plus",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6
+      },
+      "failure_categories": [],
+      "reviewer_note": "Full source page and all72 Markdown lines inspected. Target SGC-39-26-00023-P, proposed amendment4026.3, explicit no hearing,60-day publication anchor and issue date survive. Compliance remains conditional on future Notice of Adoption publication. Target bracketed deletions and proposed replacements preserve their roles; separate Coupling notice begins line50 and is excluded from target scoring. No critical extra assertion found in retained target scope."
+    },
+    {
+      "fixture_id": "A10",
+      "arm": "llama_agentic",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6
+      },
+      "failure_categories": [],
+      "reviewer_note": "Full source page visually reinspected and all87 Markdown lines reviewed. Target PSC-39-26-00027-P remains distinct from flexible-interconnection and submetering neighbors. Proposed debt authority is capped at500million throughDecember31,2029; September1,2026 is petition filing;2027/2028 are debt maturities. Explicit no hearing,60-day publication comment anchor, and visible September30,2026 issue header preserved without inferred deadline. No critical extra assertion found in target scope."
+    },
+    {
+      "fixture_id": "A10",
+      "arm": "llama_agentic_plus",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6
+      },
+      "failure_categories": [],
+      "reviewer_note": "Full source page visually reinspected and all88 Markdown lines reviewed. Target PSC-39-26-00027-P remains distinct from flexible-interconnection and submetering neighbors. Proposed debt authority is capped at500million throughDecember31,2029; September1,2026 is petition filing;2027/2028 are debt maturities. Explicit no hearing,60-day publication comment anchor, and visible September30,2026 issue header preserved without inferred deadline. No critical extra assertion found in target scope."
+    }
+  ],
+  "limitations": [
+    "Agent-reviewed Markdown evidence preservation, not automated normalization accuracy.",
+    "Actual lane retained per row: dashboard preview setting and RESTv2 configuration differ from original connector captures. High-resolution OCR metadata does not prove settings equivalence; latest remains unresolved.",
+    "Unchanged frozen A07 reference conflict remains not_assessable and prevents an unqualified strict pass.",
+    "A03 title S and body5 are distinct source facts; do not repeat prior false body-error assertion."
+  ]
+}

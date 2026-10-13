@@ -1,0 +1,146 @@
+{
+  "fixture_id": "B04",
+  "state": "NC",
+  "bucket": "clean standalone PDFs",
+  "layout_features": [
+    "single-column notice",
+    "checkboxes",
+    "filled notice"
+  ],
+  "event_type": "proposal",
+  "source_url": "https://s3.amazonaws.com/dl.ncsbe.gov/Legal/Rules/2026%20Proposed%20Rules/Waiver%20Rule%20Amendment/Notice%20of%20Text%20Waiver%20Rule%20Amendment.pdf",
+  "discovery_url": "https://www.ncsbe.gov/about-elections/legal-resources/rulemaking",
+  "retrieved_at": "2026-10-06T00:34:16.765606+00:00",
+  "source_title": "Waiver rule amendment notice",
+  "selection_reason": "After campaigns notice exceeded 4-page full package, selected complete 2-page Form 300 notice from waiver package; proposed rule attachment excluded.",
+  "original_sha256": "a8a9fead239db1020c1683c1c3c67dd11633de6e625e8415e37f48b0c4787bee",
+  "input_sha256": "729f04f18c347aad06ef7008c03b4fbc3ad4a35f94feb2b07ffe1ac7a636169b",
+  "original_bytes": 268042,
+  "input_bytes": 209585,
+  "original_page_count": 4,
+  "input_page_count": 2,
+  "original_physical_pages": [
+    1,
+    2
+  ],
+  "package_limitations": "Derived contiguous complete notice/form excerpt. Full original retained; attachments/rule text outside selected notice are excluded; whole physical pages may contain neighboring notice material.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency proposes the waiver amendment?",
+      "expected_value": "State Board of Elections",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "1. Rule-Making Agency: State Board of Elections",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "citation",
+      "question": "Which rule citation is selected for amendment?",
+      "expected_value": "08 NCAC 21 .0206",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "AMENDMENT: 08 NCAC 21 .0206",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "event_selected",
+      "question": "Which action is marked, rather than merely listed?",
+      "expected_value": "amendment",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Block 3: X aligned with AMENDMENT row",
+      "source_quote": "X AMENDMENT: 08 NCAC 21 .0206",
+      "basis": "visual_mark"
+    },
+    {
+      "field_id": "proposed_effective",
+      "question": "What proposed effective date is given?",
+      "expected_value": "2026-11-01",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "4. Proposed effective date:  11/01/2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "hearing",
+      "question": "What hearing date/time is given?",
+      "expected_value": {
+        "date": "2026-08-03",
+        "time": "10:00",
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "08/03/2026 10:00  am",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "comment_close",
+      "question": "What date closes public comments?",
+      "expected_value": "2026-08-31",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "10. Comment Period Ends: 08/31/2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "filing",
+      "question": "What filing date does the stamp show?",
+      "expected_value": "2026-06-08",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "OAH filing stamp",
+      "source_quote": "Filed Jun 8, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "close_clock",
+      "question": "Does the notice state a clock time for August 31 comment close?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "Complete two-page Form 300; 5 p.m. belongs to legislative-review objections.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    },
+    {
+      "field_id": "timezone",
+      "question": "Is the public-hearing timezone explicitly stated?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Complete two-page Form 300 input pages 1-2.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    }
+  ],
+  "annotation_author": "Codex source collector agent; not human gold",
+  "visual_inspection": "All input pages inspected as rendered images by collector agent; source-only references, pending independent review.",
+  "shared_original_group": "NC-register-41-01-waiver",
+  "template_family": "NC-Form-300",
+  "page_derivation_validation": "Selected page content streams and media/crop boxes equal original mapped pages; rendered all input pages inspected."
+}

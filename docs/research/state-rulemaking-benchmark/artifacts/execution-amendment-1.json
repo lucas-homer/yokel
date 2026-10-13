@@ -1,0 +1,24 @@
+{
+  "id": "execution-amendment-1",
+  "at_utc": "2026-10-06T00:54:36.431887+00:00",
+  "decision": "Resume Firecrawl after proven pre-job local transport failure; one corrected upload recovery for A01-A04, initial attempts for A05-B10.",
+  "basis": "Four phase-one setup responses succeeded; local closed-stdin bug prevented every HTTP upload and every final parse call. PTY transport repaired and synthetic 99019-byte transfer verified exact without echo. No Firecrawl content result exists, so no sample/output-driven replacement.",
+  "evidence": [
+    {
+      "path": "firecrawl/INVESTIGATION.md",
+      "sha256": "0c8716396a53ac03556cae2e76c5fe24621c35a30e7ebc0726721c27ed67164f"
+    },
+    {
+      "path": "firecrawl/local-validation.json",
+      "sha256": "ac72cb70c9bcf2c87f802fd2c653e1e7eafdcdd9cd502a3fbd9e2772b70ec92a"
+    }
+  ],
+  "constraints": [
+    "Original attempt records and local failure-stop history retained.",
+    "Use a new run directory; same immutable corpus, references and parser settings.",
+    "At most two concurrent final parses; reset failure counter only for this explicitly repaired transport phase, then stop again after three failures.",
+    "No retry of any uncertain submitted parse; no extra pre-job retry for an affected input.",
+    "Report local harness failures separately from vendor availability and content metrics; include setup overhead transparently."
+  ],
+  "scope_change": "Execution recovery only. No reference, corpus, content-scoring or arm-setting change."
+}

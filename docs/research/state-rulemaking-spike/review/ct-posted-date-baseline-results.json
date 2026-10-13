@@ -1,0 +1,278 @@
+{
+  "normalizer_sha256": "46c1b5cdcc5d3c781b7931aed94de8d6895be444db1702c93a28708ff86a757e",
+  "purpose": "Synthetic mutation of Posted Date only; native deadline fields untouched.",
+  "results": [
+    {
+      "mutated_posted_date_only": false,
+      "returncode": 0,
+      "stdout": "{\"observations\": 28, \"open_records\": 4, \"native_historical_windows\": 2}\n",
+      "stderr": "",
+      "comment_close_observations": [
+        {
+          "schema_version": "state-spike-v1",
+          "observation_id": "ct-014",
+          "jurisdiction": "US-CT",
+          "source_record_id": "PR2024-059",
+          "subject": {
+            "kind": "participation_window",
+            "id": "research:US-CT:eRegs:PR2024-059:window:70603D95-0000-CE9B-8CD6-8AF750C3E5F3"
+          },
+          "predicate": "comment_close",
+          "value": {
+            "kind": "instant",
+            "utc_instant": "2025-03-28T03:00:00Z"
+          },
+          "evidence": [
+            {
+              "artifact_id": "ct-history059.json",
+              "locator": "/4/AssociatedDetails/CommentPeriodEndDate",
+              "quote": "\"CommentPeriodEndDate\":\"\\/Date(1743130800000)\\/\"",
+              "support": "text_exact"
+            }
+          ],
+          "method": {
+            "kind": "deterministic",
+            "name": "ct-native-and-rendered-fields",
+            "version": "1"
+          },
+          "review_state": "candidate",
+          "warnings": [
+            "Decoded source timestamp; exact source clock may reflect system processing and is not independent legal corroboration."
+          ]
+        },
+        {
+          "schema_version": "state-spike-v1",
+          "observation_id": "ct-016",
+          "jurisdiction": "US-CT",
+          "source_record_id": "PR2024-059",
+          "subject": {
+            "kind": "participation_window",
+            "id": "research:US-CT:eRegs:PR2024-059:window:30195EA0-0000-C421-BEB4-E0F5F94DC3A9"
+          },
+          "predicate": "comment_close",
+          "value": {
+            "kind": "instant",
+            "utc_instant": "2026-10-03T03:00:00Z"
+          },
+          "evidence": [
+            {
+              "artifact_id": "ct-history059.json",
+              "locator": "/9/AssociatedDetails/CommentPeriodEndDate",
+              "quote": "\"CommentPeriodEndDate\":\"\\/Date(1790996400000)\\/\"",
+              "support": "text_exact"
+            }
+          ],
+          "method": {
+            "kind": "deterministic",
+            "name": "ct-native-and-rendered-fields",
+            "version": "1"
+          },
+          "review_state": "candidate",
+          "warnings": [
+            "Decoded source timestamp; exact source clock may reflect system processing and is not independent legal corroboration."
+          ]
+        },
+        {
+          "schema_version": "state-spike-v1",
+          "observation_id": "ct-021",
+          "jurisdiction": "US-CT",
+          "source_record_id": "PR2024-059",
+          "subject": {
+            "kind": "participation_window",
+            "id": "research:US-CT:eRegs:PR2024-059:window:70603D95-0000-CE9B-8CD6-8AF750C3E5F3"
+          },
+          "predicate": "comment_close",
+          "value": {
+            "kind": "date",
+            "date": "2025-03-27"
+          },
+          "evidence": [
+            {
+              "artifact_id": "ct-fc059retry.md",
+              "locator": "RMR History row 6",
+              "quote": "| 6 | 03/27/2025 | Comment Period Closed | No Details Available |",
+              "support": "text_exact"
+            }
+          ],
+          "method": {
+            "kind": "deterministic",
+            "name": "ct-native-and-rendered-fields",
+            "version": "1"
+          },
+          "review_state": "candidate",
+          "warnings": [
+            "History column is Posted Date; rendered date is date-only and may reflect event posting."
+          ]
+        },
+        {
+          "schema_version": "state-spike-v1",
+          "observation_id": "ct-023",
+          "jurisdiction": "US-CT",
+          "source_record_id": "PR2024-059",
+          "subject": {
+            "kind": "participation_window",
+            "id": "research:US-CT:eRegs:PR2024-059:window:30195EA0-0000-C421-BEB4-E0F5F94DC3A9"
+          },
+          "predicate": "comment_close",
+          "value": {
+            "kind": "date",
+            "date": "2026-10-02"
+          },
+          "evidence": [
+            {
+              "artifact_id": "ct-fc059retry.md",
+              "locator": "RMR History row 11",
+              "quote": "| 11 | 10/02/2026 | Comment Period Closed | No Details Available |",
+              "support": "text_exact"
+            }
+          ],
+          "method": {
+            "kind": "deterministic",
+            "name": "ct-native-and-rendered-fields",
+            "version": "1"
+          },
+          "review_state": "candidate",
+          "warnings": [
+            "History column is Posted Date; rendered date is date-only and may reflect event posting."
+          ]
+        }
+      ]
+    },
+    {
+      "mutated_posted_date_only": true,
+      "returncode": 0,
+      "stdout": "{\"observations\": 28, \"open_records\": 4, \"native_historical_windows\": 2}\n",
+      "stderr": "",
+      "comment_close_observations": [
+        {
+          "schema_version": "state-spike-v1",
+          "observation_id": "ct-014",
+          "jurisdiction": "US-CT",
+          "source_record_id": "PR2024-059",
+          "subject": {
+            "kind": "participation_window",
+            "id": "research:US-CT:eRegs:PR2024-059:window:70603D95-0000-CE9B-8CD6-8AF750C3E5F3"
+          },
+          "predicate": "comment_close",
+          "value": {
+            "kind": "instant",
+            "utc_instant": "2025-03-28T03:00:00Z"
+          },
+          "evidence": [
+            {
+              "artifact_id": "ct-history059.json",
+              "locator": "/4/AssociatedDetails/CommentPeriodEndDate",
+              "quote": "\"CommentPeriodEndDate\":\"\\/Date(1743130800000)\\/\"",
+              "support": "text_exact"
+            }
+          ],
+          "method": {
+            "kind": "deterministic",
+            "name": "ct-native-and-rendered-fields",
+            "version": "1"
+          },
+          "review_state": "candidate",
+          "warnings": [
+            "Decoded source timestamp; exact source clock may reflect system processing and is not independent legal corroboration."
+          ]
+        },
+        {
+          "schema_version": "state-spike-v1",
+          "observation_id": "ct-016",
+          "jurisdiction": "US-CT",
+          "source_record_id": "PR2024-059",
+          "subject": {
+            "kind": "participation_window",
+            "id": "research:US-CT:eRegs:PR2024-059:window:30195EA0-0000-C421-BEB4-E0F5F94DC3A9"
+          },
+          "predicate": "comment_close",
+          "value": {
+            "kind": "instant",
+            "utc_instant": "2026-10-03T03:00:00Z"
+          },
+          "evidence": [
+            {
+              "artifact_id": "ct-history059.json",
+              "locator": "/9/AssociatedDetails/CommentPeriodEndDate",
+              "quote": "\"CommentPeriodEndDate\":\"\\/Date(1790996400000)\\/\"",
+              "support": "text_exact"
+            }
+          ],
+          "method": {
+            "kind": "deterministic",
+            "name": "ct-native-and-rendered-fields",
+            "version": "1"
+          },
+          "review_state": "candidate",
+          "warnings": [
+            "Decoded source timestamp; exact source clock may reflect system processing and is not independent legal corroboration."
+          ]
+        },
+        {
+          "schema_version": "state-spike-v1",
+          "observation_id": "ct-021",
+          "jurisdiction": "US-CT",
+          "source_record_id": "PR2024-059",
+          "subject": {
+            "kind": "participation_window",
+            "id": "research:US-CT:eRegs:PR2024-059:window:70603D95-0000-CE9B-8CD6-8AF750C3E5F3"
+          },
+          "predicate": "comment_close",
+          "value": {
+            "kind": "date",
+            "date": "2025-03-27"
+          },
+          "evidence": [
+            {
+              "artifact_id": "ct-fc059retry.md",
+              "locator": "RMR History row 6",
+              "quote": "| 6 | 03/27/2025 | Comment Period Closed | No Details Available |",
+              "support": "text_exact"
+            }
+          ],
+          "method": {
+            "kind": "deterministic",
+            "name": "ct-native-and-rendered-fields",
+            "version": "1"
+          },
+          "review_state": "candidate",
+          "warnings": [
+            "History column is Posted Date; rendered date is date-only and may reflect event posting."
+          ]
+        },
+        {
+          "schema_version": "state-spike-v1",
+          "observation_id": "ct-023",
+          "jurisdiction": "US-CT",
+          "source_record_id": "PR2024-059",
+          "subject": {
+            "kind": "participation_window",
+            "id": "research:US-CT:eRegs:PR2024-059:window:30195EA0-0000-C421-BEB4-E0F5F94DC3A9"
+          },
+          "predicate": "comment_close",
+          "value": {
+            "kind": "date",
+            "date": "2026-10-04"
+          },
+          "evidence": [
+            {
+              "artifact_id": "ct-fc059retry.md",
+              "locator": "RMR History row 11",
+              "quote": "| 11 | 10/04/2026 | Comment Period Closed | No Details Available |",
+              "support": "text_exact"
+            }
+          ],
+          "method": {
+            "kind": "deterministic",
+            "name": "ct-native-and-rendered-fields",
+            "version": "1"
+          },
+          "review_state": "candidate",
+          "warnings": [
+            "History column is Posted Date; rendered date is date-only and may reflect event posting."
+          ]
+        }
+      ]
+    }
+  ]
+}

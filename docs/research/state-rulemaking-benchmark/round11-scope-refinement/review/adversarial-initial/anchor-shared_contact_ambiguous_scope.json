@@ -1,0 +1,184 @@
+{
+  "case": {
+    "source": "Written comments and questions should be submitted to: office, phone 555-0110, mail@example.test.",
+    "inventory": [
+      {
+        "id": "p",
+        "kind": "endpoint",
+        "value": "555-0110",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "555-0110",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "r",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "p",
+          "purpose": "questions"
+        },
+        "modality": "unknown",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "p"
+        ],
+        "evidence": [
+          {
+            "quote": "Written comments and questions should be submitted to: office, phone 555-0110, mail@example.test.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "Shared contact block does not establish phone function"
+      }
+    ],
+    "classified_inventory": [
+      {
+        "id": "p",
+        "kind": "endpoint",
+        "value": "555-0110",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "555-0110",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "r",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "p",
+          "purpose": "questions"
+        },
+        "modality": "unknown",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "p"
+        ],
+        "evidence": [
+          {
+            "quote": "Written comments and questions should be submitted to: office, phone 555-0110, mail@example.test.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "Shared contact block does not establish phone function"
+      }
+    ],
+    "scopes": {
+      "p": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint",
+        "evidence": [
+          {
+            "quote": "555-0110",
+            "occurrence": 1
+          }
+        ]
+      },
+      "r": {
+        "category": "unresolved_scope",
+        "basis": "uncertain_source_function",
+        "reason": "Ambiguous shared contact role",
+        "evidence": [
+          {
+            "quote": "Written comments and questions should be submitted to: office, phone 555-0110, mail@example.test.",
+            "occurrence": 1
+          }
+        ]
+      }
+    },
+    "operative": {
+      "p": {
+        "condition": "unconditional",
+        "kind": "endpoint",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": "555-0110"
+      },
+      "r": {
+        "condition": "unconditional",
+        "kind": "endpoint_role",
+        "modality": "unknown",
+        "qualifications": [],
+        "value": {
+          "endpoint": "p",
+          "purpose": "questions"
+        }
+      }
+    },
+    "mappings": {
+      "p": {
+        "status": "matched",
+        "refs": [
+          "p"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      },
+      "r": {
+        "status": "unknown",
+        "refs": [
+          "r"
+        ],
+        "reason": "Function unresolved"
+      }
+    },
+    "source_review": {
+      "status": "source_only_frozen",
+      "source_sha256": "9521c713849639ac9fc005f337ccf15ba1caa564b726f11c831b2295d56b15ba",
+      "inventory_sha256": "d975092ecbb22c909a7e40f22d23b1a7fcc2903c87c91159196cc8c8b474b3ba",
+      "scopes_sha256": "6a68c28259ea18d7e0547cad549ac0aaa334398a5dd166a2c73515853fdfb5ee"
+    },
+    "record_audit": {
+      "status": "not_run",
+      "reviewed_refs": [],
+      "unsupported_refs": [],
+      "unknown_refs": []
+    }
+  },
+  "name": "anchor-shared_contact_ambiguous_scope",
+  "expected": {
+    "valid": true,
+    "required_scope_status": "unverified",
+    "unresolved_scope": [
+      "r"
+    ]
+  },
+  "actual": {
+    "accepted": true,
+    "result": {
+      "required_scope_status": "unverified",
+      "unresolved_scope": [
+        "r"
+      ],
+      "required_unknown": [],
+      "required_defects": [],
+      "effective_mappings": {
+        "p": "matched",
+        "r": "unknown"
+      },
+      "background_diagnostics": {},
+      "source_completeness": "reviewer_attestation_only",
+      "record_fidelity": "unverified",
+      "unsupported_record_refs": [],
+      "production_ready": false,
+      "live_compatibility": "unverified"
+    }
+  },
+  "expectation_met": true
+}

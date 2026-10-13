@@ -1,0 +1,131 @@
+{
+  "fixture_id": "H06",
+  "tier": "cost_effective",
+  "job_id": "pjb-4key8mh7astotr22gn7fets2xvja",
+  "file_id": "f71e4456-8a6c-4e0c-b65c-7dcff4e1ed9b",
+  "status": "COMPLETED",
+  "operational_success": true,
+  "started_at_utc": "2026-10-07T04:20:02.210422+00:00",
+  "observed_at_utc": "2026-10-07T04:20:18.457513+00:00",
+  "input_sha256": "e33ab6d2e713f61e7d09955f8e7fef62139102d7620d1465675f878d3c427fe4",
+  "input_bytes": 318756,
+  "pages": 4,
+  "config": {
+    "file_id": "f71e4456-8a6c-4e0c-b65c-7dcff4e1ed9b",
+    "tier": "cost_effective",
+    "version": "latest",
+    "disable_cache": false,
+    "processing_options": {
+      "cost_optimizer": {
+        "enable": false
+      },
+      "ignore": {
+        "ignore_text_in_image": false
+      }
+    },
+    "output_options": {
+      "images_to_save": [
+        "screenshot"
+      ],
+      "markdown": {
+        "inline_images": false,
+        "tables": {
+          "output_tables_as_markdown": false,
+          "merge_continued_tables": false
+        }
+      },
+      "spatial_text": {
+        "preserve_very_small_text": false
+      }
+    },
+    "user_metadata": {
+      "benchmark_run": "round2-heldout-cost-effective",
+      "intent_token": "b6f2d8dd52db4f0981aea059961d2899",
+      "input_sha256": "e33ab6d2e713f61e7d09955f8e7fef62139102d7620d1465675f878d3c427fe4",
+      "tier": "cost_effective"
+    }
+  },
+  "outputs": [
+    {
+      "path": "runs/H06/cost_effective/output.md",
+      "sha256": "42cdebd389147b7f95b06af1252938911493431b6841aa611dee91104e760df0",
+      "bytes": 17609,
+      "exact_provider_markdown_full": true
+    },
+    {
+      "path": "runs/H06/cost_effective/output.json",
+      "sha256": "bd6e3a750c4dc9192634e25647df3825ba753d65a85bfd855f63fcb51b2e9e07",
+      "bytes": 100316,
+      "representation": "REST v2 expanded result, supplementary only"
+    }
+  ],
+  "returned_usage": {
+    "credits": 12.0
+  },
+  "job_metadata": {
+    "state_transitions": {
+      "pending_at": "2026-10-07T04:20:02.527870Z",
+      "throttled_at": "2026-10-07T04:20:02.674391Z",
+      "running_at": "2026-10-07T04:20:02.833968Z",
+      "completed_at": "2026-10-07T04:20:14.230191Z",
+      "failed_at": null,
+      "cancelled_at": null
+    },
+    "latency": {
+      "decode_ms": 5905,
+      "agent_ms": 2539,
+      "output_ms": 229,
+      "page_throttle_wall_ms": 0,
+      "page_throttle_sum_ms": 0,
+      "page_throttle_max_ms": 0,
+      "page_throttle_waits": 1,
+      "job_throttle_ms": 0,
+      "total_ms": 11584
+    },
+    "quarantine": null,
+    "pdf-pages": 4,
+    "pdf-real-pages": 4,
+    "pdf-rawTextLength": 17566,
+    "pdf-mdLength": 17603,
+    "pdf-time": 4290,
+    "pdf-ocrTime": 0,
+    "pdf-image-convertTime": 0,
+    "pdf-pdfToHTMLTime": 0,
+    "pdf-llmTime": 1399,
+    "pdf-inputTokens": 21324,
+    "pdf-outputTokens": 4385,
+    "pdf-image-ocr-count": 4,
+    "pdf-image-ocr-failed-count": 0,
+    "pdf-image-ocr-success-count": 4,
+    "pdf-image-ocr-empty-count": 4,
+    "pdf-image-ocr-hadText-count": 0,
+    "pdf-image-ocr-pixels": 31654400,
+    "pdf-multimodal-time": 0,
+    "pdf-multimodal-pdf2Image": 0,
+    "pdf-high-res-ocr": 4
+  },
+  "terminal_api_capture": "http/00048.json",
+  "raw_api_response_object_unmodified": true,
+  "provenance_note": "Authenticated REST v2; JSON response sanitized only if transient URLs/key appeared. Markdown scored alone; interface differences in plan.",
+  "operation_anomalies": [],
+  "returned_job_consistency": {
+    "file_id": {
+      "expected": "f71e4456-8a6c-4e0c-b65c-7dcff4e1ed9b",
+      "reported": null,
+      "available": false,
+      "matches": null
+    },
+    "tier": {
+      "expected": "cost_effective",
+      "reported": "cost_effective",
+      "available": true,
+      "matches": true
+    },
+    "version": {
+      "requested": "latest",
+      "reported": null,
+      "latest_alias_resolution_verified": null,
+      "note": "A reported dated version is retained, not asserted to be the current latest mapping"
+    }
+  }
+}

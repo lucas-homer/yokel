@@ -1,0 +1,123 @@
+{
+  "version": "round11.offline.scope-role.v1",
+  "unit_keys": [
+    "id",
+    "kind",
+    "value",
+    "modality",
+    "condition",
+    "qualifications",
+    "dependencies",
+    "evidence",
+    "uncertainty"
+  ],
+  "facet_keys": [
+    "kind",
+    "value",
+    "modality",
+    "condition",
+    "qualifications"
+  ],
+  "kinds": [
+    "identity",
+    "rule_transition",
+    "phase",
+    "timing",
+    "endpoint",
+    "endpoint_role",
+    "instruction",
+    "relationship",
+    "background"
+  ],
+  "modalities": [
+    "descriptive",
+    "mandatory",
+    "advisory",
+    "optional",
+    "prohibited",
+    "unknown"
+  ],
+  "purposes": [
+    "submit_written",
+    "testify_orally",
+    "attend_hearing",
+    "questions",
+    "accommodations",
+    "view_material",
+    "ancillary_contact"
+  ],
+  "relationship_semantics": [
+    "substitution",
+    "independent_permissions",
+    "joint_requirement",
+    "sequence",
+    "applies_to"
+  ],
+  "scope_categories": [
+    "required_participation",
+    "identifying_context",
+    "retained_background",
+    "unresolved_scope"
+  ],
+  "scope_bases": [
+    "participation_function",
+    "identifies_proceeding",
+    "substantive_background_only",
+    "uncertain_source_function"
+  ],
+  "mapping_statuses": [
+    "matched",
+    "missing",
+    "mismatched",
+    "unknown"
+  ],
+  "allowed_scope_by_kind": {
+    "identity": [
+      "identifying_context",
+      "unresolved_scope"
+    ],
+    "rule_transition": [
+      "identifying_context",
+      "unresolved_scope"
+    ],
+    "phase": [
+      "required_participation",
+      "unresolved_scope"
+    ],
+    "timing": [
+      "required_participation",
+      "unresolved_scope"
+    ],
+    "endpoint": [
+      "required_participation",
+      "retained_background",
+      "unresolved_scope"
+    ],
+    "endpoint_role": [
+      "required_participation",
+      "unresolved_scope"
+    ],
+    "instruction": [
+      "required_participation",
+      "unresolved_scope"
+    ],
+    "relationship": [
+      "required_participation",
+      "unresolved_scope"
+    ],
+    "background": [
+      "required_participation",
+      "retained_background",
+      "unresolved_scope"
+    ]
+  },
+  "source_only_classification": true,
+  "inventory_mutation_allowed": false,
+  "record_presence_scope_basis_allowed": false,
+  "semantic_equivalence_requires_independent_review": true,
+  "unresolved_scope_blocks_completeness": true,
+  "unsupported_record_additions_separate_audit": true,
+  "model_evaluation_claims": false,
+  "live_compatibility": "unverified",
+  "production_ready": false
+}

@@ -1,0 +1,129 @@
+{
+  "fixture_id": "B08",
+  "state": "CO",
+  "bucket": "lifecycle changes",
+  "layout_features": [
+    "single-column notice",
+    "label/value layout",
+    "lifecycle event"
+  ],
+  "event_type": "termination",
+  "source_url": "https://www.sos.state.co.us/CCR/RegisterPdfContents.do?publicationDay=09/10/2026",
+  "discovery_url": "https://www.sos.state.co.us/CCR/RegisterHome.do",
+  "retrieved_at": "2026-10-06T00:34:06.952629+00:00",
+  "source_title": "Education terminated rulemaking 2026-00317",
+  "selection_reason": "Newest PDF-available issue termination; administrative-error refiling with unchanged hearing date.",
+  "original_sha256": "bfe49e110bbba501b4c19fb8d466827adf277e54274cbbca0afd2cbe8ba9df2c",
+  "input_sha256": "5b1519790f98997d010e6e3f2aa8afc644af51f0ddf2aa92f2397526cebcb869",
+  "original_bytes": 8719779,
+  "input_bytes": 71439,
+  "original_page_count": 1222,
+  "input_page_count": 1,
+  "original_physical_pages": [
+    1207
+  ],
+  "package_limitations": "Derived contiguous complete notice/form excerpt. Full original retained; attachments/rule text outside selected notice are excluded; whole physical pages may contain neighboring notice material.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency is named in this terminated-rulemaking notice?",
+      "expected_value": "Colorado State Board of Education",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1207,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "Colorado State Board of Education",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "citation",
+      "question": "Which CCR number is terminated?",
+      "expected_value": "1 CCR 301-28",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1207,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "1 CCR 301-28",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "tracking",
+      "question": "Which native tracking number is terminated?",
+      "expected_value": "2026-00317",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1207,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "2026-00317",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "event",
+      "question": "What lifecycle event is identified?",
+      "expected_value": "terminated rulemaking",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1207,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "Terminated Rulemaking",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "termination_date",
+      "question": "What date is labeled Termination date?",
+      "expected_value": "2026-08-25",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1207,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "08/25/2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "scope_reason",
+      "question": "What reason/scope does the termination supply?",
+      "expected_value": "Hearing date unchanged - notice will be re-filed to correct an administrative error.",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1207,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "Hearing date unchanged - notice will be re-filed to correct an administrative error.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "replacement_hearing",
+      "question": "Does this termination supply a new scheduled hearing date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1207,
+      "input_page": 1,
+      "region": "Entire one-page termination notice; reason preserves unchanged date or promises rescheduling but supplies no actual date.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    },
+    {
+      "field_id": "comment_close",
+      "question": "Does this termination supply a new comment-close date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1207,
+      "input_page": 1,
+      "region": "Entire one-page termination notice.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    }
+  ],
+  "annotation_author": "Codex source collector agent; not human gold",
+  "visual_inspection": "All input pages inspected as rendered images by collector agent; source-only references, pending independent review.",
+  "shared_original_group": "CO-49-17",
+  "template_family": "CO-Terminated-Rulemaking",
+  "page_derivation_validation": "Selected page content streams and media/crop boxes equal original mapped pages; rendered all input pages inspected."
+}

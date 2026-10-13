@@ -1,0 +1,143 @@
+{
+  "protocol_ready_sha256": "fa473752bff2b750f41ed325e19f4e8b40408b820ef2e03e16cc5f8e3fd31a43",
+  "protocol_pins": 10,
+  "consulted_input_pins": 7,
+  "all_pins_unchanged_before_after": true,
+  "owner_fixtures_passed": 35,
+  "owner_fixtures_total": 35,
+  "owner_tests_run": 13,
+  "owner_tests_passed": true,
+  "independent_probes": 17,
+  "independent_expectations_met": 13,
+  "counterexamples": [
+    {
+      "name": "known-loss-with-unknown-member",
+      "expected": "Scope unverified AND known g mismatch explicitly retained in defect diagnostics.",
+      "actual": {
+        "accepted": true,
+        "result": {
+          "required_scope_status": "unverified",
+          "unresolved_scope": [],
+          "required_unknown": [
+            "e0",
+            "r0",
+            "g"
+          ],
+          "required_defects": [],
+          "effective_mappings": {
+            "e0": "unknown",
+            "r0": "unknown",
+            "e1": "matched",
+            "r1": "matched",
+            "e2": "matched",
+            "r2": "matched",
+            "g": "unknown"
+          },
+          "background_diagnostics": {},
+          "source_completeness": "reviewer_attestation_only",
+          "record_fidelity": "unverified",
+          "unsupported_record_refs": [],
+          "production_ready": false,
+          "live_compatibility": "unverified"
+        }
+      },
+      "expectation_met": false
+    },
+    {
+      "name": "stale-reverse-audit",
+      "expected": "Changed operative projection invalidates prior audit; reject or record_fidelity unverified.",
+      "actual": {
+        "accepted": true,
+        "result": {
+          "required_scope_status": "not_complete",
+          "unresolved_scope": [],
+          "required_unknown": [],
+          "required_defects": [
+            "d"
+          ],
+          "effective_mappings": {
+            "b": "matched",
+            "d": "mismatched",
+            "p": "matched",
+            "q": "matched",
+            "a": "matched",
+            "ar": "matched"
+          },
+          "background_diagnostics": {
+            "b": "matched"
+          },
+          "source_completeness": "reviewer_attestation_only",
+          "record_fidelity": "reviewer_attestation_only",
+          "unsupported_record_refs": [],
+          "production_ready": false,
+          "live_compatibility": "unverified"
+        }
+      },
+      "expectation_met": false
+    },
+    {
+      "name": "unresolved-basis-positive-category",
+      "expected": "Reject inconsistent category/basis or block scoped coverage as unverified.",
+      "actual": {
+        "accepted": true,
+        "result": {
+          "required_scope_status": "all_required_inventoried_units_matched",
+          "unresolved_scope": [],
+          "required_unknown": [],
+          "required_defects": [],
+          "effective_mappings": {
+            "b": "matched",
+            "d": "matched",
+            "p": "matched",
+            "q": "matched",
+            "a": "matched",
+            "ar": "matched"
+          },
+          "background_diagnostics": {
+            "b": "matched"
+          },
+          "source_completeness": "reviewer_attestation_only",
+          "record_fidelity": "unverified",
+          "unsupported_record_refs": [],
+          "production_ready": false,
+          "live_compatibility": "unverified"
+        }
+      },
+      "expectation_met": false
+    },
+    {
+      "name": "malformed-operative-facet",
+      "expected": "Reject malformed operative facet independently of mapping coverage.",
+      "actual": {
+        "accepted": true,
+        "result": {
+          "required_scope_status": "all_required_inventoried_units_matched",
+          "unresolved_scope": [],
+          "required_unknown": [],
+          "required_defects": [],
+          "effective_mappings": {
+            "b": "matched",
+            "d": "matched",
+            "p": "matched",
+            "q": "matched",
+            "a": "matched",
+            "ar": "matched"
+          },
+          "background_diagnostics": {
+            "b": "matched"
+          },
+          "source_completeness": "reviewer_attestation_only",
+          "record_fidelity": "reviewer_attestation_only",
+          "unsupported_record_refs": [],
+          "production_ready": false,
+          "live_compatibility": "unverified"
+        }
+      },
+      "expectation_met": false
+    }
+  ],
+  "provider_calls": 0,
+  "credentials_read": false,
+  "prior_files_edited": false,
+  "synthetic_model_accuracy_claim": false
+}

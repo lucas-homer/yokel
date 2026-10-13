@@ -1,0 +1,421 @@
+{
+  "fixture_id": "A08",
+  "reference_version": "reviewer-source-v1",
+  "collector_annotation_hash": "8db3b9b739c4c5fbeece32fbe5ff9b5a72f6a5d4ae7ee24ba1b6bdf2665262c4",
+  "collector_snapshot": "/private/tmp/docketclock-expanded-benchmark-2026-10-05/review/collector-snapshots/A08-8db3b9b739c4.json",
+  "input_sha256": "cedd8f50770ac09fbc61f438134c8a059eb88f26239cb2b7327faa5220b01d8a",
+  "reviewer_kind": "independent agent, not human gold standard",
+  "new_vendor_outputs_inspected": false,
+  "state": "CA",
+  "primary_bucket": "clean standalone PDFs",
+  "layout_features": [
+    "clean born-digital four-page standalone notice",
+    "p2 two contact columns",
+    "planned submission vs relative close",
+    "repeated inconsistent printed year"
+  ],
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Clean-PDF allocation describes layout; content also contains lifecycle change. Related regulatory text/attachments are not included.",
+    "Printed January 29, 2025 header predates body August 21, 2025 effectiveness and January 2026 anticipated filing. Preserve literal heading; no correction or computed deadline."
+  ],
+  "notice_scope_boundaries": "All four pages of complete proposed emergency-readoption notice.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which department proposes this emergency readoption?",
+      "expected_value": "Department of Fish and Wildlife",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "the Department of Fish and Wildlife",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "All four pages of complete proposed emergency-readoption notice.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife proposed readoption of emergency regulations amending sections150.06 and150.16 Title14; select commercial groundfish measures.",
+        "Heading January29,2025; page1 existing emergency effective August21,2025 and proposed90dayextension; page2 anticipated OAL submission on or after January28,2026 and potential expiration February17,2026. Preserve date inconsistency.",
+        "Comments must be received at OAL within five days after Department submits to OAL; page1 explicitly five calendar days. Trigger actual submission not supplied, so no computed absolute close or clock/timezone.",
+        "Comments via US mail/email to OAL and CDFW; reference named emergency rulemaking.",
+        "Full four-page source has no scheduled hearing. Notice requirement at least five working days prior submission is a distinct agency obligation, not comment duration."
+      ]
+    },
+    {
+      "field_id": "lifecycle",
+      "question": "Is this proposed readoption or an adopted permanent regulation?",
+      "expected_value": "proposed readoption of emergency regulations",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "title",
+      "source_quote": "NOTICE OF PROPOSED READOPTION OF EMERGENCY REGULATIONS",
+      "basis": "source_text",
+      "semantic_group_id": "lifecycle",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "All four pages of complete proposed emergency-readoption notice.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife proposed readoption of emergency regulations amending sections150.06 and150.16 Title14; select commercial groundfish measures.",
+        "Heading January29,2025; page1 existing emergency effective August21,2025 and proposed90dayextension; page2 anticipated OAL submission on or after January28,2026 and potential expiration February17,2026. Preserve date inconsistency.",
+        "Comments must be received at OAL within five days after Department submits to OAL; page1 explicitly five calendar days. Trigger actual submission not supplied, so no computed absolute close or clock/timezone.",
+        "Comments via US mail/email to OAL and CDFW; reference named emergency rulemaking.",
+        "Full four-page source has no scheduled hearing. Notice requirement at least five working days prior submission is a distinct agency obligation, not comment duration."
+      ]
+    },
+    {
+      "field_id": "rule_identity",
+      "question": "Which CCR sections and title does the notice address?",
+      "expected_value": {
+        "title": 14,
+        "sections": [
+          "150.06",
+          "150.16"
+        ]
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "title",
+      "source_quote": "Amend Sections 150.06, and 150.16 \nTitle 14, California Code of Regulations (CCR)",
+      "basis": "source_text",
+      "semantic_group_id": "rule_identity",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "All four pages of complete proposed emergency-readoption notice.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife proposed readoption of emergency regulations amending sections150.06 and150.16 Title14; select commercial groundfish measures.",
+        "Heading January29,2025; page1 existing emergency effective August21,2025 and proposed90dayextension; page2 anticipated OAL submission on or after January28,2026 and potential expiration February17,2026. Preserve date inconsistency.",
+        "Comments must be received at OAL within five days after Department submits to OAL; page1 explicitly five calendar days. Trigger actual submission not supplied, so no computed absolute close or clock/timezone.",
+        "Comments via US mail/email to OAL and CDFW; reference named emergency rulemaking.",
+        "Full four-page source has no scheduled hearing. Notice requirement at least five working days prior submission is a distinct agency obligation, not comment duration."
+      ]
+    },
+    {
+      "field_id": "comment_duration_anchor",
+      "question": "What relative comment duration, counting basis, and anchor are stated, without computing a calendar close?",
+      "expected_value": {
+        "duration": 5,
+        "unit": "calendar days",
+        "anchor": "submission of proposed emergency to OAL",
+        "computed_close": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "last paragraph page 1",
+      "source_quote": "After submission of the proposed \nemergency to the Office of Administrative Law, the Office of Administrative Law shall allow \ninterested persons five calendar days to submit comments",
+      "basis": "source_text",
+      "semantic_group_id": "comment_deadline",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "All four pages of complete proposed emergency-readoption notice.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife proposed readoption of emergency regulations amending sections150.06 and150.16 Title14; select commercial groundfish measures.",
+        "Heading January29,2025; page1 existing emergency effective August21,2025 and proposed90dayextension; page2 anticipated OAL submission on or after January28,2026 and potential expiration February17,2026. Preserve date inconsistency.",
+        "Comments must be received at OAL within five days after Department submits to OAL; page1 explicitly five calendar days. Trigger actual submission not supplied, so no computed absolute close or clock/timezone.",
+        "Comments via US mail/email to OAL and CDFW; reference named emergency rulemaking.",
+        "Full four-page source has no scheduled hearing. Notice requirement at least five working days prior submission is a distinct agency obligation, not comment duration."
+      ]
+    },
+    {
+      "field_id": "receipt_condition",
+      "question": "What condition applies to mailed/emailed written comments?",
+      "expected_value": {
+        "condition": "received at OAL within five days after Department submits emergency regulations to OAL for review",
+        "routes": [
+          "US mail",
+          "email"
+        ]
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "Written Comment Period",
+      "source_quote": "Written comments \nsubmitted via U.S. mail or e-mail must be received at OAL within five days after the Department \nsubmits the emergency regulations to OAL for review.",
+      "basis": "source_text",
+      "semantic_group_id": "comment_deadline",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "All four pages of complete proposed emergency-readoption notice.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife proposed readoption of emergency regulations amending sections150.06 and150.16 Title14; select commercial groundfish measures.",
+        "Heading January29,2025; page1 existing emergency effective August21,2025 and proposed90dayextension; page2 anticipated OAL submission on or after January28,2026 and potential expiration February17,2026. Preserve date inconsistency.",
+        "Comments must be received at OAL within five days after Department submits to OAL; page1 explicitly five calendar days. Trigger actual submission not supplied, so no computed absolute close or clock/timezone.",
+        "Comments via US mail/email to OAL and CDFW; reference named emergency rulemaking.",
+        "Full four-page source has no scheduled hearing. Notice requirement at least five working days prior submission is a distinct agency obligation, not comment duration."
+      ]
+    },
+    {
+      "field_id": "planned_submission",
+      "question": "What qualified planned submission date is stated?",
+      "expected_value": {
+        "date": "2026-01-28",
+        "qualifier": "on or after; anticipated",
+        "role": "planned OAL submission"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "paragraph after contact columns",
+      "source_quote": "The Department anticipates it will submit the rulemaking to OAL on or after January 28, \n2026.",
+      "basis": "source_text",
+      "semantic_group_id": "planned_submission",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Retain literal role and chronology inconsistency; anticipated on-or-after submission does not supply actual submission or absolute comment deadline.",
+      "notice_scope_boundaries": "All four pages of complete proposed emergency-readoption notice.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife proposed readoption of emergency regulations amending sections150.06 and150.16 Title14; select commercial groundfish measures.",
+        "Heading January29,2025; page1 existing emergency effective August21,2025 and proposed90dayextension; page2 anticipated OAL submission on or after January28,2026 and potential expiration February17,2026. Preserve date inconsistency.",
+        "Comments must be received at OAL within five days after Department submits to OAL; page1 explicitly five calendar days. Trigger actual submission not supplied, so no computed absolute close or clock/timezone.",
+        "Comments via US mail/email to OAL and CDFW; reference named emergency rulemaking.",
+        "Full four-page source has no scheduled hearing. Notice requirement at least five working days prior submission is a distinct agency obligation, not comment duration."
+      ]
+    },
+    {
+      "field_id": "actual_submission_date",
+      "question": "Does the notice state the actual OAL submission date needed to calculate the comment close?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "all four notice pages inspected; p2 only anticipates submission and directs reader to OAL status",
+      "source_quote": "",
+      "basis": "full_scope_absence",
+      "semantic_group_id": "comment_deadline",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "No value is supplied in the retained target scope. Safe abstention requires complete relevant output scope; omitted scope cannot establish absence. Do not infer from neighboring notices or metadata.",
+      "notice_scope_boundaries": "All four pages of complete proposed emergency-readoption notice.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": "All four pages of complete proposed emergency-readoption notice.",
+      "reviewer_source_note": [
+        "CA Fish and Wildlife proposed readoption of emergency regulations amending sections150.06 and150.16 Title14; select commercial groundfish measures.",
+        "Heading January29,2025; page1 existing emergency effective August21,2025 and proposed90dayextension; page2 anticipated OAL submission on or after January28,2026 and potential expiration February17,2026. Preserve date inconsistency.",
+        "Comments must be received at OAL within five days after Department submits to OAL; page1 explicitly five calendar days. Trigger actual submission not supplied, so no computed absolute close or clock/timezone.",
+        "Comments via US mail/email to OAL and CDFW; reference named emergency rulemaking.",
+        "Full four-page source has no scheduled hearing. Notice requirement at least five working days prior submission is a distinct agency obligation, not comment duration."
+      ]
+    },
+    {
+      "field_id": "prior_effective_date",
+      "question": "What effective date is stated for the original emergency regulations?",
+      "expected_value": {
+        "date": "2025-08-21",
+        "role": "original emergency regulations"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "The emergency regulations, effective on \nAugust 21, 2025",
+      "basis": "source_text",
+      "semantic_group_id": "prior_effective_date",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Retain literal role and chronology inconsistency; anticipated on-or-after submission does not supply actual submission or absolute comment deadline.",
+      "notice_scope_boundaries": "All four pages of complete proposed emergency-readoption notice.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife proposed readoption of emergency regulations amending sections150.06 and150.16 Title14; select commercial groundfish measures.",
+        "Heading January29,2025; page1 existing emergency effective August21,2025 and proposed90dayextension; page2 anticipated OAL submission on or after January28,2026 and potential expiration February17,2026. Preserve date inconsistency.",
+        "Comments must be received at OAL within five days after Department submits to OAL; page1 explicitly five calendar days. Trigger actual submission not supplied, so no computed absolute close or clock/timezone.",
+        "Comments via US mail/email to OAL and CDFW; reference named emergency rulemaking.",
+        "Full four-page source has no scheduled hearing. Notice requirement at least five working days prior submission is a distinct agency obligation, not comment duration."
+      ]
+    },
+    {
+      "field_id": "proposed_extension",
+      "question": "How long would the proposed readoption extend the emergency regulations?",
+      "expected_value": {
+        "duration": 90,
+        "unit": "days",
+        "role": "proposed extension; not comment duration"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "an extension of 90 days will be provided",
+      "basis": "source_text",
+      "semantic_group_id": "proposed_extension",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "All four pages of complete proposed emergency-readoption notice.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife proposed readoption of emergency regulations amending sections150.06 and150.16 Title14; select commercial groundfish measures.",
+        "Heading January29,2025; page1 existing emergency effective August21,2025 and proposed90dayextension; page2 anticipated OAL submission on or after January28,2026 and potential expiration February17,2026. Preserve date inconsistency.",
+        "Comments must be received at OAL within five days after Department submits to OAL; page1 explicitly five calendar days. Trigger actual submission not supplied, so no computed absolute close or clock/timezone.",
+        "Comments via US mail/email to OAL and CDFW; reference named emergency rulemaking.",
+        "Full four-page source has no scheduled hearing. Notice requirement at least five working days prior submission is a distinct agency obligation, not comment duration."
+      ]
+    },
+    {
+      "field_id": "printed_notice_date",
+      "question": "What date is literally printed in the heading, without correcting its year?",
+      "expected_value": {
+        "date": "2025-01-29",
+        "role": "literal printed heading; chronological inconsistency with body left unresolved"
+      },
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "title date; repeated in continuation headers",
+      "source_quote": "January 29, 2025",
+      "basis": "source_text",
+      "semantic_group_id": "printed_notice_date",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Retain literal role and chronology inconsistency; anticipated on-or-after submission does not supply actual submission or absolute comment deadline.",
+      "notice_scope_boundaries": "All four pages of complete proposed emergency-readoption notice.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife proposed readoption of emergency regulations amending sections150.06 and150.16 Title14; select commercial groundfish measures.",
+        "Heading January29,2025; page1 existing emergency effective August21,2025 and proposed90dayextension; page2 anticipated OAL submission on or after January28,2026 and potential expiration February17,2026. Preserve date inconsistency.",
+        "Comments must be received at OAL within five days after Department submits to OAL; page1 explicitly five calendar days. Trigger actual submission not supplied, so no computed absolute close or clock/timezone.",
+        "Comments via US mail/email to OAL and CDFW; reference named emergency rulemaking.",
+        "Full four-page source has no scheduled hearing. Notice requirement at least five working days prior submission is a distinct agency obligation, not comment duration."
+      ]
+    }
+  ],
+  "adjudications": [],
+  "critical_determinate_groups": 6,
+  "critical_uncertain_fields": [],
+  "reference_gate_eligible": true,
+  "collector_ready_confirmed": true,
+  "original_sha256": "cedd8f50770ac09fbc61f438134c8a059eb88f26239cb2b7327faa5220b01d8a",
+  "original_physical_pages": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "collector_shared_original_group": null,
+  "collector_template_family": null,
+  "agency_reference": "Department of Fish and Wildlife"
+}

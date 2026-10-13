@@ -1,0 +1,28 @@
+# Evidence-table postrun audit — complete
+
+Two verifier attempts and zero extraction calls occurred. Jev returned a valid five-dimension typed response and a review disposition. Stronger returned HTTP 200, but hit the unchanged 4,096 completion-token cap (`length` / `max_output_tokens`); its response is invalid and no parsed result or complete verdict exists. The run stopped at `verification_failed`. No retry, clipping, repair, stronger judgment or completed-run marker was fabricated.
+
+Operational verification passed: new A/S/E freezes (35/4/32 entries), original source-label B, all three prior extraction E freezes and debit artifacts, 42 reviewed code pins, 1,743 native-job dependencies, exact v6 fixed job/authorization, durable operation identities, raw response hashes and failure receipt. All 1,279 primary-baselined and 4,798 independently baselined prior files remain unchanged. Byte-for-byte source, assembly and original common payload reuse was verified. The wire payload restores exactly to original canonical payload `873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c`; both requests contain the same full source and record with all evidence associations.
+
+Both exact requests and admissions were retained before dispatch by the reviewed runner. Their reconstructed admissions match: Jev 37,779 total / 28,700 state-plus-longest, stronger 35,747; existing guards 64,000 / 32,000 / 40,000 remain unchanged. This verifies the code path and frozen artifacts, not a separate wall-clock instrumentation trace. Exactly one durable Jev intent and one stronger intent exist; neither retries automatically.
+
+Jev returned fail for completeness, association and requirements; pass for source identity and support. Its parsed native answers, confidence and probability distributions are retained in `request-audit.json`. The independent semantic review finds completeness-fail consistent with the known incomplete record and source-identity-pass consistent with one resolved notice. Support-pass is overbroad under the every-record-claim criterion. Association/requirements negative direction supports review, but fail versus uncertainty and specific defect detection are not established without explanations. No confidence threshold or calibration rule was added. Existing deterministic uncertainties independently require review; final policy disposition alone does not establish model detection.
+
+The stronger truncated content contributes no scored semantic assessment or reason. Successful transport is not a valid verdict, and this run provides no paired judgment comparison. Jev's `source_coverage_complete` field means all required answer dimensions were parsed; it does not mean that the source or record is complete/correct.
+
+| Incremental stage | Usage-rate estimate USD | Provider-reported USD | Conservative debit USD |
+|---|---:|---:|---:|
+| Extraction (none) | 0 | 0 | 0 |
+| Jev | 0.000502026 | Unknown | 0.001586718 |
+| Stronger | 0.055182 | 0.058736 | 0.112454 |
+| New experiment | 0.055684026 | Unknown total; known subtotal 0.058736 | 0.114040718 |
+
+Jev raw usage is 11,953 input / 192 output tokens, with output free under the pinned rate; no reported dollar field exists. Stronger raw usage is 7,111 prompt / 4,096 completion tokens and independently reports USD 0.058736. That cost is recovered even though the strict response parser rejected the response and no result file exists. The frozen ledger's `observed_accounted_usd` is only USD 0.000502026 because it sums parsed results; it omits the stronger raw cost. This is transparently corrected only in the cost derivative. The full stronger reservation already exceeds its reported cost, so no conservative debit changes.
+
+Three prior extraction attempts retain USD 0.249253 provider-reported cost and USD 0.428936 conservative debit. Across all five operations, the known reported-cost subtotal is USD 0.307989, with Jev's USD 0.000502026 estimate separately stated. The complete provider-reported total remains unknown, and costs are not invoice-verified. The conservative carry-forward is **USD 0.542976718**, with no refund or reset.
+
+Frozen R8 scoring consumes exact one-WI projections of the original schedule and truth, the unchanged original contract-probe matching audit, and an observed derivative adding incremental costs only. All 31 source units remain. Inventory and record quality fields describe reused artifacts, not new extraction: 80 claims each (73 correct, one incorrect, six unknown), 21/31 fully matched units, and no complete record. Both arms were called; Jev status is review, stronger is failed. Both accepted counts are zero; unsafe-acceptance fractions and cost per correct-complete record are undefined. The single reused known-incomplete notice is inadequate for generalization, fresh accuracy, table-comprehension or calibration claims. The original Zoom glyph caveat remains separate and unchanged.
+
+`evaluation-report.json` binds all four input paths and hashes plus the new semantic READY/findings. Primary can independently import the original pinned `round8/protocol/evaluate.py`, call `evaluate(**inputs)` using those four files, and compare every base report field and the original limitations prefix. Added provenance, semantic findings and limitations remain separate from frozen scorer output. `audit.py` and `evaluate.py` were run with bundled Python and bytecode disabled; they write derivatives and must not be rerun in this directory after READY.
+
+Only this new postrun-audit directory was written. No credentials, provider/network calls, native builds, live/replay dispatch, prior-file changes or new semantic mapping were performed. Edits stop at READY; this audit initiates no further paid experiment.

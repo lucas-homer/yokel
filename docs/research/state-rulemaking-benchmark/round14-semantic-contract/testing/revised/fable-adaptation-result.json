@@ -1,0 +1,104 @@
+{
+  "sessionId": "52edcc3c-3a7e-43f6-bd68-27caba45eb8d",
+  "stopReason": "success",
+  "text": "```json\n{\n  \"diagnosis\": {\n    \"failing_method\": \"StructuralInvariants.test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural\",\n    \"root_cause\": \"The method hard-coded test-only unit IDs 21, 22 and 23. The r14.2 fixture appends four new timing units (clock and timezone splits for s9 and s10), so the fixture now occupies IDs 1 through 24. The appended endpoint unit with i=21 collides with the fixture's new unit 21, and validate() correctly raises 'duplicate unit ID' before any assertion runs.\",\n    \"classification\": \"Test portability defect, not a contract or fixture defect. The validator behaved as specified. The other 11 methods pass unchanged because none of them depend on a unit count or on IDs above 20, and the renamed unit 2 assertion is not asserted textually anywhere.\",\n    \"fixture_diff_effect\": \"Fixture IDs 14, 15 and 19, which the method references as prerequisites, are unchanged in kind and position. Only the free ID range moved.\"\n  },\n  \"scope_limits\": [\n    \"One method replaced. No other method, helper, protocol file, source text or expectation is changed.\",\n    \"IDs are now allocated from the fixture's current maximum plus one, two and three. All direct references to the former 21, 22 and 23 are rewritten to the allocated names.\",\n    \"A single precondition assertion was added to confirm the referenced fixture units 14, 15 and 19 still have the kinds the method relies on. Every prior assertion is preserved verbatim in meaning.\",\n    \"Semantic-versus-structural separation is unchanged: this method exercises only structural rules (dependency ordering for role endpoints, relationship membership, absence of force on edges).\",\n    \"This is not an approval of r14.2 semantic content. The new split units were not reviewed against the frozen source-only reference and no claim is made about their correctness.\"\n  ],\n  \"replacement_method\": \"    def test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural(self):\\n        v = fixture()\\n        # Allocate test-only IDs above whatever the fixture currently uses, never hard-coded.\\n        top = max(u['i'] for u in v['u'])\\n        ep, role, rel = top + 1, top + 2, top + 3\\n        self.assertLessEqual(rel, 160)\\n        # Precondition: the fixture units this method leans on keep their kinds.\\n        kinds = {u['i']: u['k'] for u in v['u']}\\n        self.assertEqual((kinds[14], kinds[15], kinds[19]), (0, 0, 3))\\n        v['u'].append(dict(i=ep, k=4, s='The office in Alder City is the in-person arrival endpoint.', m=0, c='', d=[14, 15], b=[], e=['s5', 's9'], q=0, r=''))\\n        v['u'].append(dict(i=role, k=5, s='The office serves as the arrival location for the July 4, 2031 deadline.', m=0, c='', d=[ep, 19], b=[], e=['s9', 's5'], q=0, r=''))\\n        units = by_id(C.expand(v, SOURCE, TABLE))\\n        self.assertEqual(units[role]['required_unit_ids'], [ep, 19])\\n        self.assertEqual(units[ep]['modality'], 'informational')\\n        self.assertEqual(units[14]['modality'], 'informational')\\n        # A mandatory dependent does not make its prerequisites mandatory: edges have no force.\\n        w = copy.deepcopy(v); w['u'][-1].update(m=1)\\n        self.assertEqual(by_id(C.expand(w, SOURCE, TABLE))[ep]['modality'], 'informational')\\n        # The role-to-endpoint ordering rule is purely structural and is enforced as such.\\n        w = copy.deepcopy(v); w['u'][-1]['d'] = [19, ep]\\n        self.assertTrue(check(w, 'role endpoint dependency'))\\n        w = copy.deepcopy(v)\\n        w['u'].append(dict(i=rel, k=7, s='Rule Q-8 and filing F-17 relate as amended rule and prior filing.', m=0, c='', d=[], b=[9, 10], e=['s4'], q=0, r=''))\\n        C.validate(w, SOURCE, TABLE)\\n        w['u'][-1]['b'] = [9]\\n        self.assertTrue(check(w, 'relationship members'))\\n        w = copy.deepcopy(v); w['u'][0]['b'] = [2]\\n        self.assertTrue(check(w, 'members on nonrelationship'))\\n\"\n}\n```",
+  "result": {
+    "duration_api_ms": 543182,
+    "stop_reason": "end_turn",
+    "session_id": "52edcc3c-3a7e-43f6-bd68-27caba45eb8d",
+    "total_cost_usd": 3.4138667500000004,
+    "usage": {
+      "input_tokens": 2,
+      "cache_creation_input_tokens": 38308,
+      "cache_read_input_tokens": 26735,
+      "output_tokens": 2817,
+      "output_tokens_details": {
+        "thinking_tokens": 1208
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 38308,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "global",
+      "iterations": [
+        {
+          "input_tokens": 2,
+          "output_tokens": 2817,
+          "cache_read_input_tokens": 26735,
+          "cache_creation_input_tokens": 38308,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 38308
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "modelUsage": {
+      "claude-fable-5-1": {
+        "inputTokens": 8,
+        "outputTokens": 46876,
+        "thinkingTokens": 28769,
+        "cacheReadInputTokens": 54907,
+        "cacheCreationInputTokens": 52813,
+        "webSearchRequests": 0,
+        "costUSD": 3.4138667500000004,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000,
+        "canonicalModel": "claude-fable-5-1",
+        "provider": "firstParty",
+        "costBasis": "list"
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "fast_mode_disabled_reason": "sdk_opt_in_required",
+    "subagent_stats": {
+      "spawned": 0,
+      "requested": {
+        "background": 0,
+        "foreground": 0,
+        "unset": 0
+      },
+      "started_in_background": 0,
+      "max_depth": 0,
+      "spawned_by_subagents": 0,
+      "completed": 0,
+      "failed": 0,
+      "killed": {
+        "parent": 0,
+        "user": 0,
+        "system": 0
+      },
+      "refused": {
+        "depth_limit": 0,
+        "concurrency_limit": 0,
+        "budget": 0
+      },
+      "by_type": {}
+    },
+    "safety_stops": 0,
+    "is_error": false,
+    "num_turns": 1,
+    "subtype": "success",
+    "api_error_status": null,
+    "result": "```json\n{\n  \"diagnosis\": {\n    \"failing_method\": \"StructuralInvariants.test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural\",\n    \"root_cause\": \"The method hard-coded test-only unit IDs 21, 22 and 23. The r14.2 fixture appends four new timing units (clock and timezone splits for s9 and s10), so the fixture now occupies IDs 1 through 24. The appended endpoint unit with i=21 collides with the fixture's new unit 21, and validate() correctly raises 'duplicate unit ID' before any assertion runs.\",\n    \"classification\": \"Test portability defect, not a contract or fixture defect. The validator behaved as specified. The other 11 methods pass unchanged because none of them depend on a unit count or on IDs above 20, and the renamed unit 2 assertion is not asserted textually anywhere.\",\n    \"fixture_diff_effect\": \"Fixture IDs 14, 15 and 19, which the method references as prerequisites, are unchanged in kind and position. Only the free ID range moved.\"\n  },\n  \"scope_limits\": [\n    \"One method replaced. No other method, helper, protocol file, source text or expectation is changed.\",\n    \"IDs are now allocated from the fixture's current maximum plus one, two and three. All direct references to the former 21, 22 and 23 are rewritten to the allocated names.\",\n    \"A single precondition assertion was added to confirm the referenced fixture units 14, 15 and 19 still have the kinds the method relies on. Every prior assertion is preserved verbatim in meaning.\",\n    \"Semantic-versus-structural separation is unchanged: this method exercises only structural rules (dependency ordering for role endpoints, relationship membership, absence of force on edges).\",\n    \"This is not an approval of r14.2 semantic content. The new split units were not reviewed against the frozen source-only reference and no claim is made about their correctness.\"\n  ],\n  \"replacement_method\": \"    def test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural(self):\\n        v = fixture()\\n        # Allocate test-only IDs above whatever the fixture currently uses, never hard-coded.\\n        top = max(u['i'] for u in v['u'])\\n        ep, role, rel = top + 1, top + 2, top + 3\\n        self.assertLessEqual(rel, 160)\\n        # Precondition: the fixture units this method leans on keep their kinds.\\n        kinds = {u['i']: u['k'] for u in v['u']}\\n        self.assertEqual((kinds[14], kinds[15], kinds[19]), (0, 0, 3))\\n        v['u'].append(dict(i=ep, k=4, s='The office in Alder City is the in-person arrival endpoint.', m=0, c='', d=[14, 15], b=[], e=['s5', 's9'], q=0, r=''))\\n        v['u'].append(dict(i=role, k=5, s='The office serves as the arrival location for the July 4, 2031 deadline.', m=0, c='', d=[ep, 19], b=[], e=['s9', 's5'], q=0, r=''))\\n        units = by_id(C.expand(v, SOURCE, TABLE))\\n        self.assertEqual(units[role]['required_unit_ids'], [ep, 19])\\n        self.assertEqual(units[ep]['modality'], 'informational')\\n        self.assertEqual(units[14]['modality'], 'informational')\\n        # A mandatory dependent does not make its prerequisites mandatory: edges have no force.\\n        w = copy.deepcopy(v); w['u'][-1].update(m=1)\\n        self.assertEqual(by_id(C.expand(w, SOURCE, TABLE))[ep]['modality'], 'informational')\\n        # The role-to-endpoint ordering rule is purely structural and is enforced as such.\\n        w = copy.deepcopy(v); w['u'][-1]['d'] = [19, ep]\\n        self.assertTrue(check(w, 'role endpoint dependency'))\\n        w = copy.deepcopy(v)\\n        w['u'].append(dict(i=rel, k=7, s='Rule Q-8 and filing F-17 relate as amended rule and prior filing.', m=0, c='', d=[], b=[9, 10], e=['s4'], q=0, r=''))\\n        C.validate(w, SOURCE, TABLE)\\n        w['u'][-1]['b'] = [9]\\n        self.assertTrue(check(w, 'relationship members'))\\n        w = copy.deepcopy(v); w['u'][0]['b'] = [2]\\n        self.assertTrue(check(w, 'members on nonrelationship'))\\n\"\n}\n```",
+    "ttft_ms": 19767,
+    "type": "result",
+    "duration_ms": 37350,
+    "uuid": "7ced4f01-8ca3-43f9-b73d-1cc2e2bf3452",
+    "ttft_stream_ms": 2466,
+    "time_to_request_ms": 24,
+    "first_content_frame_ms": 2466,
+    "queued_turn_count": 0,
+    "result_index": 0
+  }
+}

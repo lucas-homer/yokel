@@ -1,0 +1,290 @@
+{
+  "fixture_id": "B01",
+  "reference_version": "reviewer-source-v1",
+  "collector_annotation_hash": "88b486ca3fb93bf3d251af402befcfac4174b01e238040f2573e1629e0318f38",
+  "collector_snapshot": "/private/tmp/docketclock-expanded-benchmark-2026-10-05/review/collector-snapshots/B01-88b486ca3fb9.json",
+  "input_sha256": "b87f4cae6fa71684d88b2d85aeaec441421d5627c9d65998e2ef166ac3fdc1ca",
+  "reviewer_kind": "independent agent, not human gold standard",
+  "new_vendor_outputs_inspected": false,
+  "state": "MA",
+  "primary_bucket": "scanned/filled forms",
+  "layout_features": [
+    "filled form",
+    "embedded native text",
+    "signature/stamp image",
+    "blank fields"
+  ],
+  "package_limitations": "Derived contiguous complete notice/form excerpt. Full original retained; attachments/rule text outside selected notice are excluded; whole physical pages may contain neighboring notice material. State Library hosts the electronic register; the original notes that regulatory text in electronic register is unofficial and printed version is official.",
+  "notice_scope_boundaries": "Complete two-page Hospital Assessment filing form, original61–62 printed55–56; separate rule text excluded.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency filed the Hospital Assessment form?",
+      "expected_value": "Executive Office of Health and Human Services",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 61,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "AGENCY: Executive Office of Health and Human Services",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Complete two-page Hospital Assessment filing form, original61–62 printed55–56; separate rule text excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MA EOHHS Hospital Assessment regulation101CMR514.00 docket561. Emergencyadoption/amendment explicit page1emergency description and page2promulgation/attestation.",
+        "Final effectiveFebruary7,2025; signatureFeb7,2025; truecopyattestFeb7,2025. Register1542 publicationFebruary28,2025.",
+        "Full form publichearing/commentperiod lineblank; no supplied close or hearing date. ANFapprovalFeb5 and145lettersFeb6 are priornotifications, not windowdates.",
+        "Pageprinted55–56."
+      ]
+    },
+    {
+      "field_id": "citation",
+      "question": "What chapter is this filing for?",
+      "expected_value": "101 CMR 514.00",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 61,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "CHAPTER NUMBER: 101 CMR 514.00",
+      "basis": "source_text",
+      "semantic_group_id": "citation",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Complete two-page Hospital Assessment filing form, original61–62 printed55–56; separate rule text excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MA EOHHS Hospital Assessment regulation101CMR514.00 docket561. Emergencyadoption/amendment explicit page1emergency description and page2promulgation/attestation.",
+        "Final effectiveFebruary7,2025; signatureFeb7,2025; truecopyattestFeb7,2025. Register1542 publicationFebruary28,2025.",
+        "Full form publichearing/commentperiod lineblank; no supplied close or hearing date. ANFapprovalFeb5 and145lettersFeb6 are priornotifications, not windowdates.",
+        "Pageprinted55–56."
+      ]
+    },
+    {
+      "field_id": "event",
+      "question": "Is this an emergency adoption?",
+      "expected_value": "emergency adoption",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 62,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "This is an emergency \nregulation.  There are no \nreplacement pages.",
+      "basis": "source_text",
+      "semantic_group_id": "event",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Complete two-page Hospital Assessment filing form, original61–62 printed55–56; separate rule text excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MA EOHHS Hospital Assessment regulation101CMR514.00 docket561. Emergencyadoption/amendment explicit page1emergency description and page2promulgation/attestation.",
+        "Final effectiveFebruary7,2025; signatureFeb7,2025; truecopyattestFeb7,2025. Register1542 publicationFebruary28,2025.",
+        "Full form publichearing/commentperiod lineblank; no supplied close or hearing date. ANFapprovalFeb5 and145lettersFeb6 are priornotifications, not windowdates.",
+        "Pageprinted55–56."
+      ]
+    },
+    {
+      "field_id": "effective",
+      "question": "What effective date is supplied, independently of publication?",
+      "expected_value": "2025-02-07",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 62,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "EFFECTIVE DATE: 2/7/25",
+      "basis": "source_text",
+      "semantic_group_id": "effective",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Complete two-page Hospital Assessment filing form, original61–62 printed55–56; separate rule text excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MA EOHHS Hospital Assessment regulation101CMR514.00 docket561. Emergencyadoption/amendment explicit page1emergency description and page2promulgation/attestation.",
+        "Final effectiveFebruary7,2025; signatureFeb7,2025; truecopyattestFeb7,2025. Register1542 publicationFebruary28,2025.",
+        "Full form publichearing/commentperiod lineblank; no supplied close or hearing date. ANFapprovalFeb5 and145lettersFeb6 are priornotifications, not windowdates.",
+        "Pageprinted55–56."
+      ]
+    },
+    {
+      "field_id": "publication",
+      "question": "What register publication date is supplied?",
+      "expected_value": "2025-02-28",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 62,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "MASSACHUSETTS REGISTER NUMBER: 1542 DATE: 2/28/25",
+      "basis": "source_text",
+      "semantic_group_id": "publication",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Complete two-page Hospital Assessment filing form, original61–62 printed55–56; separate rule text excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MA EOHHS Hospital Assessment regulation101CMR514.00 docket561. Emergencyadoption/amendment explicit page1emergency description and page2promulgation/attestation.",
+        "Final effectiveFebruary7,2025; signatureFeb7,2025; truecopyattestFeb7,2025. Register1542 publicationFebruary28,2025.",
+        "Full form publichearing/commentperiod lineblank; no supplied close or hearing date. ANFapprovalFeb5 and145lettersFeb6 are priornotifications, not windowdates.",
+        "Pageprinted55–56."
+      ]
+    },
+    {
+      "field_id": "signature_date",
+      "question": "What date accompanies the agency attestation?",
+      "expected_value": "2025-02-07",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 62,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "SIGNATURE: SIGNATURE ON FILE DATE: Feb 07 2025",
+      "basis": "source_text",
+      "semantic_group_id": "signature_date",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Complete two-page Hospital Assessment filing form, original61–62 printed55–56; separate rule text excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MA EOHHS Hospital Assessment regulation101CMR514.00 docket561. Emergencyadoption/amendment explicit page1emergency description and page2promulgation/attestation.",
+        "Final effectiveFebruary7,2025; signatureFeb7,2025; truecopyattestFeb7,2025. Register1542 publicationFebruary28,2025.",
+        "Full form publichearing/commentperiod lineblank; no supplied close or hearing date. ANFapprovalFeb5 and145lettersFeb6 are priornotifications, not windowdates.",
+        "Pageprinted55–56."
+      ]
+    },
+    {
+      "field_id": "comment_close",
+      "question": "Does the filled form supply a comment closing date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 61,
+      "input_page": 1,
+      "region": "Complete Hospital Assessment form input pages 1-2; public-review date line blank.",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "public_review",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "No value is supplied in the retained target scope. Safe abstention requires complete relevant output scope; omitted scope cannot establish absence. Do not infer from neighboring notices or metadata.",
+      "notice_scope_boundaries": "Complete two-page Hospital Assessment filing form, original61–62 printed55–56; separate rule text excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": "Complete two-page Hospital Assessment filing form, original61–62 printed55–56; separate rule text excluded.",
+      "reviewer_source_note": [
+        "MA EOHHS Hospital Assessment regulation101CMR514.00 docket561. Emergencyadoption/amendment explicit page1emergency description and page2promulgation/attestation.",
+        "Final effectiveFebruary7,2025; signatureFeb7,2025; truecopyattestFeb7,2025. Register1542 publicationFebruary28,2025.",
+        "Full form publichearing/commentperiod lineblank; no supplied close or hearing date. ANFapprovalFeb5 and145lettersFeb6 are priornotifications, not windowdates.",
+        "Pageprinted55–56."
+      ]
+    },
+    {
+      "field_id": "hearing",
+      "question": "Does the filled form supply a scheduled hearing date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 61,
+      "input_page": 1,
+      "region": "Complete Hospital Assessment form input pages 1-2; public-review date line blank.",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "public_review",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "No value is supplied in the retained target scope. Safe abstention requires complete relevant output scope; omitted scope cannot establish absence. Do not infer from neighboring notices or metadata.",
+      "notice_scope_boundaries": "Complete two-page Hospital Assessment filing form, original61–62 printed55–56; separate rule text excluded.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": "Complete two-page Hospital Assessment filing form, original61–62 printed55–56; separate rule text excluded.",
+      "reviewer_source_note": [
+        "MA EOHHS Hospital Assessment regulation101CMR514.00 docket561. Emergencyadoption/amendment explicit page1emergency description and page2promulgation/attestation.",
+        "Final effectiveFebruary7,2025; signatureFeb7,2025; truecopyattestFeb7,2025. Register1542 publicationFebruary28,2025.",
+        "Full form publichearing/commentperiod lineblank; no supplied close or hearing date. ANFapprovalFeb5 and145lettersFeb6 are priornotifications, not windowdates.",
+        "Pageprinted55–56."
+      ]
+    }
+  ],
+  "adjudications": [],
+  "critical_determinate_groups": 5,
+  "critical_uncertain_fields": [],
+  "reference_gate_eligible": true,
+  "collector_ready_confirmed": true,
+  "original_sha256": "5db42cc3438d50bf0997ac785dead877d2b5923363b2c6bade411a460e5994dd",
+  "original_physical_pages": [
+    61,
+    62
+  ],
+  "collector_shared_original_group": "MA-register-1542",
+  "collector_template_family": "MA-Regulation-Filing",
+  "agency_reference": "Executive Office of Health and Human Services"
+}

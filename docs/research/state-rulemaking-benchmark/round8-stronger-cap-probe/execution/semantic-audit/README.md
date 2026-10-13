@@ -1,0 +1,15 @@
+# Stronger8192 diagnostic — semantic review
+
+The response is parseable and finished normally at6026 completion tokens, but is not a valid verdict. All70required IDs appear exactly once; there are no missing or duplicate IDs. One extra assessment, `coverage`, violates the frozen exact-ID contract. Validation returns no normalized verdict. Nothing was dropped, repaired or salvaged.
+
+Qualitative review of all71 reasons finds useful local distinctions: optional preregistration versus mandatory receipt deadline; hearing-form recipient versus written-comment contacts; ancillary query/coordinator roles; equal-consideration disclosure; named accessibility formats and nonquantified timing. It specifically identifies uncertain accessibility ownership, which remains subject to the original reference caveat.
+
+The raw global completeness label is `complete`, with no missing items, contrary to the unchanged audit. Repeal/recreation detail remains only in source/evidence; the response credits the hearing description even though it does not assert that detail. The phone-only alternative group is locally correct but does not recover the full Zoom/phone relation. The response notices unclear comment-contact modality and excuses it as conservative, which does not establish preservation under the frozen modality contract. Extra `coverage` similarly asserts unsupported completeness. These are qualitative findings about an invalid response, not a scored subset or an accepted model verdict.
+
+Resolved source identity is consistent with one unambiguous notice and is separate from missing rule-identity detail. The lowercase-l Zoom URL matches supplied native source and supplementary PDF annotation, while the original image-reference I/l ambiguity remains unchanged. This is not a confirmed fabricated URL. Accessibility-contact explanations preserve a useful uncertainty, not grounds to rewrite original labels.
+
+Runtime review combines validator rejection and independent deterministic guards. Its all-uncertain common dimensions are validation fallback values, not raw model-selected dimensions. Final nonacceptance does not demonstrate detection of the known completeness defects. Historical Jev is not a new paired invocation; no comparative accuracy claim follows.
+
+Recommendation: retain invalid status and no retry. For a separately authorized future protocol, first test an explicit/schema-enumerated exact ID schedule, with coverage confined to global sections, and semantic regressions for evidence-only recovery, missing full alternatives and unresolved modality. No larger cap is indicated by this normally finished6026-token response. Do not relax the validator or delete the extra row after observing this result.
+
+All23 Freeze-E files and all10 prior semantic-audit artifact pins verified unchanged before/after. No source relabeling, providers, credentials or original edits. This is one reused development diagnostic and independent AI qualitative review, not human gold or fresh accuracy. Edits stop at READY.

@@ -1,0 +1,135 @@
+{
+  "interpretation": "Complete synthetic annotation fixtures only, not evidence of source atomicity, entailment, model performance or completeness. No invalid response prefix used.",
+  "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+  "span_table_sha256": "2bfffa03b53eb7e21fdd3acdb96e0685c0b2f3f8d75903fd9789cc8b85f412c7",
+  "partition_spans": 37,
+  "source_utf8_bytes": 3876,
+  "source_reconstruction_exact": true,
+  "request_body_bytes": 14668,
+  "request_guarded_bytes": 15692,
+  "request_sha256": "a6b5ed1c72ac1ff1d947fe5ed146221f169f91430f457a51de6ee29f53d70f8b",
+  "output_cap": 8192,
+  "estimator": {
+    "tokenizer": "No tiktoken/tokenizers available in existing Python; no installation/network used.",
+    "method": "UTF-8 byte ratios 2/3/4 bytes per token, each plus 256 token reasoning/envelope allowance. Ratios are sensitivity assumptions, not a reliable upper bound or model-matched tokenization.",
+    "recommended_targets": "Representative fixture <=70% cap; stressed <=85% under chosen ratio. Primary must choose/freeze ratio/threshold and release decision. No unconditional fit guarantee."
+  },
+  "profiles": [
+    {
+      "name": "representative32",
+      "units": 32,
+      "assertion_dimension": 55,
+      "conditional_text_dimension": 12,
+      "uncertainty_units": 0,
+      "full_output_bytes": 4344,
+      "full_output_characters": 4344,
+      "expanded_bytes": 13503,
+      "compact_sha256": "3a442d8521a97374bb444496a9ac4f42ee0cb8aaaffbd566f23c8299288e18fe",
+      "exact_semantic_roundtrip": true,
+      "estimates_bytes_per_token": {
+        "2": {
+          "estimated_tokens_including_reasoning_allowance": 2428,
+          "remaining_tokens": 5764,
+          "cap_fraction": 0.29638671875
+        },
+        "3": {
+          "estimated_tokens_including_reasoning_allowance": 1704,
+          "remaining_tokens": 6488,
+          "cap_fraction": 0.2080078125
+        },
+        "4": {
+          "estimated_tokens_including_reasoning_allowance": 1342,
+          "remaining_tokens": 6850,
+          "cap_fraction": 0.163818359375
+        }
+      }
+    },
+    {
+      "name": "representative64",
+      "units": 64,
+      "assertion_dimension": 55,
+      "conditional_text_dimension": 12,
+      "uncertainty_units": 4,
+      "full_output_bytes": 8691,
+      "full_output_characters": 8691,
+      "expanded_bytes": 27853,
+      "compact_sha256": "883eea79294bb9547978fb6d9ee8511ccbc65550d3b294f56affae924eabd30d",
+      "exact_semantic_roundtrip": true,
+      "estimates_bytes_per_token": {
+        "2": {
+          "estimated_tokens_including_reasoning_allowance": 4602,
+          "remaining_tokens": 3590,
+          "cap_fraction": 0.561767578125
+        },
+        "3": {
+          "estimated_tokens_including_reasoning_allowance": 3153,
+          "remaining_tokens": 5039,
+          "cap_fraction": 0.3848876953125
+        },
+        "4": {
+          "estimated_tokens_including_reasoning_allowance": 2429,
+          "remaining_tokens": 5763,
+          "cap_fraction": 0.2965087890625
+        }
+      }
+    },
+    {
+      "name": "stressed96",
+      "units": 96,
+      "assertion_dimension": 75,
+      "conditional_text_dimension": 30,
+      "uncertainty_units": 12,
+      "full_output_bytes": 15410,
+      "full_output_characters": 15410,
+      "expanded_bytes": 44351,
+      "compact_sha256": "6a9e9162c5bcfa7bd3a7fa334f418a8e59ba9b0d820b165c421ebb4d91134503",
+      "exact_semantic_roundtrip": true,
+      "estimates_bytes_per_token": {
+        "2": {
+          "estimated_tokens_including_reasoning_allowance": 7961,
+          "remaining_tokens": 231,
+          "cap_fraction": 0.9718017578125
+        },
+        "3": {
+          "estimated_tokens_including_reasoning_allowance": 5393,
+          "remaining_tokens": 2799,
+          "cap_fraction": 0.6583251953125
+        },
+        "4": {
+          "estimated_tokens_including_reasoning_allowance": 4109,
+          "remaining_tokens": 4083,
+          "cap_fraction": 0.5015869140625
+        }
+      }
+    },
+    {
+      "name": "stressed128",
+      "units": 128,
+      "assertion_dimension": 100,
+      "conditional_text_dimension": 50,
+      "uncertainty_units": 28,
+      "full_output_bytes": 24674,
+      "full_output_characters": 24674,
+      "expanded_bytes": 63419,
+      "compact_sha256": "f00b97cee82d5546a5439c1c7fead8213d1405bcce55e750734b66ace818d96c",
+      "exact_semantic_roundtrip": true,
+      "estimates_bytes_per_token": {
+        "2": {
+          "estimated_tokens_including_reasoning_allowance": 12593,
+          "remaining_tokens": -4401,
+          "cap_fraction": 1.5372314453125
+        },
+        "3": {
+          "estimated_tokens_including_reasoning_allowance": 8481,
+          "remaining_tokens": -289,
+          "cap_fraction": 1.0352783203125
+        },
+        "4": {
+          "estimated_tokens_including_reasoning_allowance": 6425,
+          "remaining_tokens": 1767,
+          "cap_fraction": 0.7843017578125
+        }
+      }
+    }
+  ]
+}

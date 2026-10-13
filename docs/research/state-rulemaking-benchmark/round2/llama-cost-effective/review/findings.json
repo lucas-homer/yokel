@@ -1,0 +1,235 @@
+{
+  "validation": {
+    "passed": true,
+    "checks": 1067,
+    "failed_checks": [],
+    "documents": 20,
+    "fields": 174,
+    "critical_fields": 142,
+    "completed_operations": 20,
+    "source_pages_viewed": 34,
+    "frozen_files_unchanged": 141,
+    "original_baseline_files_unchanged": 629,
+    "exact_quotes_valid": true,
+    "source_images_hashed": true,
+    "reference_questions_unchanged": true,
+    "critical_extra_assertions": 0,
+    "noncritical_extra_findings": 2
+  },
+  "gate_outcomes": {
+    "content_fail": 2,
+    "pass": 17,
+    "insufficient_reference": 1
+  },
+  "field_outcomes": {
+    "supported": 148,
+    "partial_ambiguous": 1,
+    "incorrect": 1,
+    "safe_abstention": 23,
+    "not_assessable": 1
+  },
+  "critical_outcomes": {
+    "supported": 116,
+    "partial_ambiguous": 1,
+    "incorrect": 1,
+    "safe_abstention": 23,
+    "not_assessable": 1
+  },
+  "eligible_document_denominator": 19,
+  "determinate_field_denominator": 173,
+  "determinate_critical_denominator": 141,
+  "documents": [
+    {
+      "fixture_id": "A01",
+      "gate_outcome": "content_fail",
+      "critical_field_counts": {
+        "supported": 7,
+        "partial_ambiguous": 1
+      },
+      "failure_categories": [
+        "unsupported_strikethrough_on_filing_date"
+      ]
+    },
+    {
+      "fixture_id": "A02",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 8
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "A03",
+      "gate_outcome": "content_fail",
+      "critical_field_counts": {
+        "incorrect": 1,
+        "supported": 7
+      },
+      "failure_categories": [
+        "literal_rule_identity_changed"
+      ]
+    },
+    {
+      "fixture_id": "A04",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 5,
+        "safe_abstention": 1
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "A05",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 7,
+        "safe_abstention": 1
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "A06",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6,
+        "safe_abstention": 1
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "A07",
+      "gate_outcome": "insufficient_reference",
+      "critical_field_counts": {
+        "supported": 6,
+        "not_assessable": 1,
+        "safe_abstention": 1
+      },
+      "failure_categories": [
+        "reference_uncertainty"
+      ]
+    },
+    {
+      "fixture_id": "A08",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 7,
+        "safe_abstention": 1
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "A09",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "A10",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "B01",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 4,
+        "safe_abstention": 2
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "B02",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 5,
+        "safe_abstention": 2
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "B03",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6,
+        "safe_abstention": 2
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "B04",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 5,
+        "safe_abstention": 2
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "B05",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6,
+        "safe_abstention": 1
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "B06",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6,
+        "safe_abstention": 1
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "B07",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 6,
+        "safe_abstention": 1
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "B08",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 5,
+        "safe_abstention": 2
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "B09",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 5,
+        "safe_abstention": 2
+      },
+      "failure_categories": []
+    },
+    {
+      "fixture_id": "B10",
+      "gate_outcome": "pass",
+      "critical_field_counts": {
+        "supported": 3,
+        "safe_abstention": 3
+      },
+      "failure_categories": []
+    }
+  ],
+  "limitations": [
+    "Bounded independent agent judgment of evidence preservation, not normalizer accuracy or provider schema extraction.",
+    "One diagnostic output per frozen notice; nonrandom template-heavy sample supplies no national error rate.",
+    "Actual cost_effective latest tier retained, not evidence of released-version or other-lane equivalence.",
+    "A07 source conflict excluded from determinate accuracy denominators and strict eligible document denominator.",
+    "Noncritical proposed-rule-body formatting findings do not alter the critical participation gate; pass does not certify all rule text.",
+    "A01 critical filing date HTML strike is an evidence-status ambiguity, not an explicit cancellation assertion."
+  ]
+}

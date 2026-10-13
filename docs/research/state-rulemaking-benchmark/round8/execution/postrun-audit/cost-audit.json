@@ -1,0 +1,65 @@
+{
+  "schema_version": "round8.postrun_cost_audit.v1",
+  "operation_id": "doc-92211b8c7ba0-inventory",
+  "stage": "extraction",
+  "provider_response_sha256": "793c3693c5c03da6c451a45a7a2ec9d2bc392b5608e17b0f01a6aa3d0a4e5b4c",
+  "request_sha256": "2585814e0bc4dbbae401633a9b49827647c4d6ab3b916307dc1d8e2208e9ffe3",
+  "usage": {
+    "prompt_tokens": 2952,
+    "completion_tokens": 6144,
+    "total_tokens": 9096,
+    "cost": 0.0688185,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 2949,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.0688185,
+      "upstream_inference_prompt_cost": 0.0073785,
+      "upstream_inference_completions_cost": 0.06144
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 31,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "http_status": 200,
+  "finish_reason": "length",
+  "parser_rejection": "incomplete structured completion; never retry",
+  "response_provider": "OpenAI",
+  "response_model": "openai/gpt-6.1-sol",
+  "pinned_rates": {
+    "completion": 1e-05,
+    "jev": 4.2e-08,
+    "prompt": 2e-06
+  },
+  "usage_rate_estimate_usd": "0.067344",
+  "provider_response_reported_usd": "0.0688185",
+  "nominal_reservation_usd": "0.100166",
+  "conservative_charge_usd": "0.100166",
+  "frozen_ledger_observed_accounted_usd": 0,
+  "ledger_note": "No parsed result was persisted, so the frozen ledger observed_accounted_usd omits the charge available in raw response usage; this does not mean free execution. Conservative charge already covers it.",
+  "verifier_zero_basis": "No verifier intents or operations exist in the complete frozen run inventory.",
+  "invoice_verified": false,
+  "costs": {
+    "extraction": {
+      "usage_estimate_usd": 0.067344,
+      "conservative_charge_usd": 0.100166,
+      "provider_reported_usd": 0.0688185
+    },
+    "jev": {
+      "usage_estimate_usd": 0,
+      "conservative_charge_usd": 0,
+      "provider_reported_usd": 0
+    },
+    "stronger": {
+      "usage_estimate_usd": 0,
+      "conservative_charge_usd": 0,
+      "provider_reported_usd": 0
+    }
+  }
+}

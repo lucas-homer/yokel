@@ -1,0 +1,37 @@
+{
+  "version": "round11.prospective-paired-plan.v1",
+  "status": "unfunded_preparation_only",
+  "dispatch_authorized": false,
+  "freshness": "Exclude all prior-used notices and known reviewer-exposed sources; log exposure before sample selection.",
+  "cohort": {
+    "target_pairs": 12,
+    "interpretation": "Descriptive initial cohort, no statistical power claim; requires separate funding and release.",
+    "eligible_frame": "Complete archived, official rulemaking notices with public participation text in a prospectively fixed jurisdiction/date interval; freeze interval, jurisdictions, every eligible ID and exclusions before sampling. Reference ambiguity is retained, not an exclusion.",
+    "frame_status": "not_created",
+    "selection": "Sort stable source IDs, then sample without replacement using a published frozen seed; retain complete selection order. Pilot is the first selected eligible case, never an outcome-selected replacement.",
+    "seed": null,
+    "selected_ids": null
+  },
+  "arms": {
+    "direct": {"calls_per_case": 1, "input": "full source and frozen complete operative candidate"},
+    "source_first": {"calls_per_case": 2, "A_input": "full source only", "B_input": "same full source, frozen A plus source-only scope annotations, same frozen complete operative candidate"}
+  },
+  "scope_annotation": "Independent source-only human judgment with deterministic policy checks; no automatically added paid classifier stage.",
+  "reference": "Two independent source-only reviewers freeze full obligations, background and unresolved scope before record/model unblinding; separately crosswalk generated units and audit every operative addition.",
+  "freeze_before_dispatch": ["policy and prompts", "eligible frame, exclusions, selection order and seed", "exposure log", "source and reference material hashes", "independent source-only obligations and scope", "same candidate procedure and candidate hashes", "model/provider settings and representations", "call admission/cost/size limits", "review normalization rules", "metrics and failures ledger"],
+  "dispatch_order": "Alternate direct-first and source-first-first by sample index; arms isolated without shared outputs/history.",
+  "stopping": "No retries, repair or favorable replacements; preserve all selected cases and attempted-call reservations. Admit a full three-call pair only after preflight total reservation fits. A failure/overflow prevents B; pair remains failed/incomplete in intended-pair reporting.",
+  "metrics": ["case-level paired outcomes", "independent required obligations missed", "false required-loss alarms", "source-first discovery omissions", "unresolved scope and recovery", "role/modality/relationship correctness", "unsupported additions in separate reverse audit", "structural failure and full request size", "provider reported cost, frozen-rate estimate and conservative debit separately"],
+  "correct_case_criterion": "Independent review confirms all required and identifying obligations, true known losses correctly flagged, no false required-loss findings, no unresolved scope/recovery and completed reverse audit with no incorrect unsupported-addition judgments. Preserve actual record defects separately from verifier correctness.",
+  "cost_per_correct_case": "Total conservative debit across all selected/attempted cases divided by independently correctly verified cases; zero denominator is undefined, report cost and zero count.",
+  "budget": {
+    "remaining_usd": "0.817849282",
+    "prior_per_call_reserve_usd": "0.161920",
+    "pair_reserve_usd": "0.485760",
+    "maximum_prior_rate_calls": 5,
+    "maximum_complete_pairs": 1,
+    "pilot_dispatch_authorized": false,
+    "constraint": "Recalculate before release if costs/caps change; two leftover calls do not fund a second pair. No paid calls or budget increase here."
+  },
+  "interpretation_limits": ["Synthetic fixtures do not measure model behavior", "One pilot does not estimate accuracy", "Generated units are not independent samples", "No ordering-only causal attribution", "No source relabeling or convenient outcome selection", "No live compatibility claim", "No production readiness"]
+}

@@ -1,0 +1,253 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "round12.direct-verification.v1"
+      ]
+    },
+    "source_text_sha256": {
+      "type": "string",
+      "enum": [
+        "__SOURCE_SHA256__"
+      ]
+    },
+    "record_sha256": {
+      "type": "string",
+      "enum": [
+        "__RECORD_SHA256__"
+      ]
+    },
+    "operative_record_sha256": {
+      "type": "string",
+      "enum": [
+        "__OPERATIVE_SHA256__"
+      ]
+    },
+    "units": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/d"
+      },
+      "minItems": 1,
+      "maxItems": 64
+    }
+  },
+  "required": [
+    "schema_version",
+    "source_text_sha256",
+    "record_sha256",
+    "operative_record_sha256",
+    "units"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "e": {
+      "type": "object",
+      "properties": {
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 320
+        },
+        "occurrence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        }
+      },
+      "required": [
+        "quote",
+        "occurrence"
+      ],
+      "additionalProperties": false
+    },
+    "u": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "identity",
+            "rule_transition",
+            "phase",
+            "timing",
+            "endpoint",
+            "endpoint_role",
+            "instruction",
+            "relationship",
+            "background"
+          ]
+        },
+        "assertion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 360
+        },
+        "modality": {
+          "type": "string",
+          "enum": [
+            "mandatory",
+            "advisory",
+            "optional",
+            "informational",
+            "prohibited",
+            "unknown",
+            "not_applicable"
+          ]
+        },
+        "applicability": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "uncertainty": {
+          "type": "string",
+          "enum": [
+            "none",
+            "source_ambiguous",
+            "reference_unresolved"
+          ]
+        },
+        "uncertainty_reason": {
+          "type": "string",
+          "maxLength": 240
+        },
+        "required_unit_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          },
+          "minItems": 0,
+          "maxItems": 16
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/e"
+          },
+          "minItems": 1,
+          "maxItems": 3
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "assertion",
+        "modality",
+        "applicability",
+        "uncertainty",
+        "uncertainty_reason",
+        "required_unit_ids",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "s": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "required_participation",
+            "identifying_context",
+            "retained_background",
+            "unresolved_scope"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "enum": [
+            "participation_function",
+            "identifies_proceeding",
+            "substantive_background_only",
+            "uncertain_source_function"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 360
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/e"
+          },
+          "minItems": 1,
+          "maxItems": 3
+        }
+      },
+      "required": [
+        "category",
+        "basis",
+        "reason",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "m": {
+      "type": "object",
+      "properties": {
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "matched",
+            "missing",
+            "mismatched",
+            "unknown"
+          ]
+        },
+        "operative_pointers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "minItems": 0,
+          "maxItems": 12
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 420
+        }
+      },
+      "required": [
+        "disposition",
+        "operative_pointers",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "d": {
+      "type": "object",
+      "properties": {
+        "source_unit": {
+          "$ref": "#/$defs/u"
+        },
+        "scope": {
+          "$ref": "#/$defs/s"
+        },
+        "mapping": {
+          "$ref": "#/$defs/m"
+        }
+      },
+      "required": [
+        "source_unit",
+        "scope",
+        "mapping"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

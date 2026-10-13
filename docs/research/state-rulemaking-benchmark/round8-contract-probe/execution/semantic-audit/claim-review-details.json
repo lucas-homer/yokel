@@ -1,0 +1,1880 @@
+{
+  "schema_version": "round8.contract-probe.claim-review.v1",
+  "inventory_and_record_claims": [
+    {
+      "claim_id": "e_hearing",
+      "pointer": "/events/0",
+      "reviewed_inventory_claim": {
+        "description": "Public hearing and opportunity for oral testimony on the permanent aquatic plant management rule.",
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "The Department of Natural Resources announces that it will hold a public hearing on a\npermanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107, relating to aquatic\nplant management, manual removal and mechanical control regulations, aquatic habitat\nprotection, and surface water grants, at the time and place shown below."
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "The public has the opportunity to testify at the hearing."
+          }
+        ],
+        "id": "e_hearing",
+        "phase": "hearing"
+      },
+      "judgment": "correct",
+      "basis": "Page1 supports public rulemaking hearing and oral testimony. Aquatic-plant topic is correct, but this description does not assert repeal/recreation details; that is a source-unit completeness loss rather than a false hearing claim.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "t_hearing_date",
+      "pointer": "/events/0/timing/0",
+      "reviewed_inventory_claim": {
+        "anchor_event_ids": [],
+        "condition_requirement_ids": [],
+        "dependency_relation": "none",
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Date:   April 22, 2026"
+          }
+        ],
+        "id": "t_hearing_date",
+        "kind": "absolute_date",
+        "raw": "April 22, 2026",
+        "role": "hearing_start",
+        "value": "2026-04-22"
+      },
+      "judgment": "correct",
+      "basis": "Page1 April22,2026 /2026-04-22 hearing-start date correct.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "t_hearing_clock",
+      "pointer": "/events/0/timing/1",
+      "reviewed_inventory_claim": {
+        "anchor_event_ids": [],
+        "condition_requirement_ids": [],
+        "dependency_relation": "none",
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Time:   1:00 PM"
+          }
+        ],
+        "id": "t_hearing_clock",
+        "kind": "clock",
+        "raw": "1:00 PM",
+        "role": "hearing_start",
+        "value": null
+      },
+      "judgment": "correct",
+      "basis": "Page1 1:00PM hearing clock correct; no timezone inferred.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "e_registration",
+      "pointer": "/events/1",
+      "reviewed_inventory_claim": {
+        "description": "Zoom registration or pre-registration and Hearing Appearance form submission for telephone participants.",
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "To join via Zoom, please register or pre-\nregister using the link above, which will prompt you to enter information required on the Hearing\nAppearance form. Pre-registration is strongly encouraged if you plan to provide spoken\ncomments during the hearing. For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+          }
+        ],
+        "id": "e_registration",
+        "phase": "hearing_intent"
+      },
+      "judgment": "correct",
+      "basis": "Page1 supports Zoom registration/pre-registration and telephone appearance-form delivery; registration phase faithful.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "e_comments",
+      "pointer": "/events/2",
+      "reviewed_inventory_claim": {
+        "description": "Submission of written comments on the proposed rule.",
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Comments on the proposed rule must be received on or before April 30, 2026."
+          }
+        ],
+        "id": "e_comments",
+        "phase": "written_comment"
+      },
+      "judgment": "correct",
+      "basis": "Page2 supports written-comment submission phase.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "t_comments_close",
+      "pointer": "/events/2/timing/0",
+      "reviewed_inventory_claim": {
+        "anchor_event_ids": [],
+        "condition_requirement_ids": [],
+        "dependency_relation": "none",
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Comments on the proposed rule must be received on or before April 30, 2026."
+          }
+        ],
+        "id": "t_comments_close",
+        "kind": "absolute_date",
+        "raw": "April 30, 2026",
+        "role": "closes",
+        "value": "2026-04-30"
+      },
+      "judgment": "correct",
+      "basis": "Page2 April30,2026 /2026-04-30 closing date correct; q_receipt retains received-by condition.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "e_accessibility",
+      "pointer": "/events/3",
+      "reviewed_inventory_claim": {
+        "description": "Requests for communication aids and accessible hearing documents.",
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "For the hearing or visually impaired, non-English speakers, or those with other personal\ncircumstances which might make communication at the meeting/hearing difficult, DNR will, to\nthe maximum extent possible and with reasonable advance notice, provide aids including an\ninterpreter, or a non-English, large-print, or recorded version of hearing documents. To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible."
+          }
+        ],
+        "id": "e_accessibility",
+        "phase": "other"
+      },
+      "judgment": "correct",
+      "basis": "Page1 supports ancillary communication-aid and accessible-document requests, correctly distinct from written comments.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "t_access_request",
+      "pointer": "/events/3/timing/0",
+      "reviewed_inventory_claim": {
+        "anchor_event_ids": [],
+        "condition_requirement_ids": [
+          "q_access_request"
+        ],
+        "dependency_relation": "other",
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible."
+          }
+        ],
+        "id": "t_access_request",
+        "kind": "relative",
+        "raw": "as soon as\npossible",
+        "role": "other",
+        "value": null
+      },
+      "judgment": "correct",
+      "basis": "Page1 as-soon-as-possible phrase retained with explicit other relationship to q_access_request. No quantified interval, calendar date, or false before-hearing arithmetic; dependency fields now coherent.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "t_advance",
+      "pointer": "/events/3/timing/1",
+      "reviewed_inventory_claim": {
+        "anchor_event_ids": [],
+        "condition_requirement_ids": [
+          "q_access_aids"
+        ],
+        "dependency_relation": "other",
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "to\nthe maximum extent possible and with reasonable advance notice"
+          }
+        ],
+        "id": "t_advance",
+        "kind": "conditional",
+        "raw": "reasonable advance notice",
+        "role": "other",
+        "value": null
+      },
+      "judgment": "correct",
+      "basis": "Page1 reasonable-advance-notice qualification retained, explicitly associated with q_access_aids through other relationship. Conditional tag reflects qualification, not a manufactured absolute deadline.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "i_agency",
+      "pointer": "/identities/0",
+      "reviewed_inventory_claim": {
+        "event_ids": [
+          "e_hearing",
+          "e_comments",
+          "e_registration",
+          "e_accessibility"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "The Department of Natural Resources announces that it will hold a public hearing"
+          }
+        ],
+        "id": "i_agency",
+        "kind": "agency",
+        "literal": "Department of Natural Resources",
+        "relation": "canonical"
+      },
+      "judgment": "correct",
+      "basis": "Page1 DNR name and associated participation events supported.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "i_rule",
+      "pointer": "/identities/1",
+      "reviewed_inventory_claim": {
+        "event_ids": [
+          "e_hearing",
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "permanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107"
+          }
+        ],
+        "id": "i_rule",
+        "kind": "rule",
+        "literal": "chs. NR 107 and 109",
+        "relation": "canonical"
+      },
+      "judgment": "correct",
+      "basis": "Printed chapters NR107 and109 correctly identified, but no structured recreate-chapter107/repeal relationship is asserted. The literal itself is correct; fuller frozen identity unit is only partly recovered.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "i_order",
+      "pointer": "/identities/2",
+      "reviewed_inventory_claim": {
+        "event_ids": [
+          "e_hearing",
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "The rule may be viewed under NRB Order number WY-20-23 at:"
+          }
+        ],
+        "id": "i_order",
+        "kind": "other",
+        "literal": "NRB Order number WY-20-23",
+        "relation": "canonical"
+      },
+      "judgment": "correct",
+      "basis": "Page2 NRB Order number WY-20-23 correct; other identity kind plus explicit order literal preserves proceeding identifier.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_zoom_signup",
+      "pointer": "/routes/0",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": null,
+        "association": "source_resolved",
+        "channel": "web",
+        "description": "Zoom registration or pre-registration link.",
+        "event_ids": [
+          "e_registration"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "To join via Zoom, please register or pre-\nregister using the link above"
+          }
+        ],
+        "id": "r_zoom_signup",
+        "role": "hearing_registration"
+      },
+      "judgment": "correct",
+      "basis": "Page1 Zoom registration/pre-registration route faithfully typed. Its URL glyph is separately unknown under original image reference; no general access-group relation is asserted here.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_zoom",
+      "pointer": "/routes/0/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g"
+          }
+        ],
+        "id": "c_zoom",
+        "kind": "endpoint",
+        "literal": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g"
+      },
+      "judgment": "unknown",
+      "basis": "Original frozen image reference spells JqagrId with uppercase I, inventory spells Jqagrld with lowercase l. Image cannot reliably disambiguate. Strict image-reference judgment remains unknown, not a fabricated URL. Separately retained post-output PDF annotation supports lowercase l, without rewriting gold or strict score.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_meeting",
+      "pointer": "/routes/1",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": null,
+        "association": "source_resolved",
+        "channel": "other",
+        "description": "Virtual Zoom hearing meeting identifier.",
+        "event_ids": [
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Virtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g\nMeeting ID: 896 2745 6939"
+          }
+        ],
+        "id": "r_meeting",
+        "role": "other"
+      },
+      "judgment": "correct",
+      "basis": "Page1 Zoom meeting identifier correctly associated with hearing. Other channel/kind is faithful for credential-only route, not a submission destination.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_meeting",
+      "pointer": "/routes/1/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Meeting ID: 896 2745 6939"
+          }
+        ],
+        "id": "c_meeting",
+        "kind": "meeting_id",
+        "literal": "896 2745 6939"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_meeting against page1. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_phone1",
+      "pointer": "/routes/2",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": "ag_phone",
+        "association": "source_resolved",
+        "channel": "telephone",
+        "description": "US telephone hearing access.",
+        "event_ids": [
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Join by phone:\n        +13052241968, 89627456939# US\n        +13092053325, 89627456939# US"
+          }
+        ],
+        "id": "r_phone1",
+        "role": "other"
+      },
+      "judgment": "correct",
+      "basis": "First US dial-in option correctly associated with hearing and phone-alternative group; telephone channel supported.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_phone1",
+      "pointer": "/routes/2/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "+13052241968, 89627456939# US"
+          }
+        ],
+        "id": "c_phone1",
+        "kind": "endpoint",
+        "literal": "+13052241968"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_phone1 against page1. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_phone1_code",
+      "pointer": "/routes/2/components/1",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "+13052241968, 89627456939# US"
+          }
+        ],
+        "id": "c_phone1_code",
+        "kind": "meeting_id",
+        "literal": "89627456939#"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_phone1 against page1. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_phone1_region",
+      "pointer": "/routes/2/components/2",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "+13052241968, 89627456939# US"
+          }
+        ],
+        "id": "c_phone1_region",
+        "kind": "other",
+        "literal": "US"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_phone1 against page1. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_phone2",
+      "pointer": "/routes/3",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": "ag_phone",
+        "association": "source_resolved",
+        "channel": "telephone",
+        "description": "US telephone hearing access.",
+        "event_ids": [
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Join by phone:\n        +13052241968, 89627456939# US\n        +13092053325, 89627456939# US"
+          }
+        ],
+        "id": "r_phone2",
+        "role": "other"
+      },
+      "judgment": "correct",
+      "basis": "Second US dial-in option correctly associated with hearing and phone-alternative group; telephone channel supported.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_phone2",
+      "pointer": "/routes/3/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "+13092053325, 89627456939# US"
+          }
+        ],
+        "id": "c_phone2",
+        "kind": "endpoint",
+        "literal": "+13092053325"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_phone2 against page1. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_phone2_code",
+      "pointer": "/routes/3/components/1",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "+13092053325, 89627456939# US"
+          }
+        ],
+        "id": "c_phone2_code",
+        "kind": "meeting_id",
+        "literal": "89627456939#"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_phone2 against page1. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_phone2_region",
+      "pointer": "/routes/3/components/2",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "+13092053325, 89627456939# US"
+          }
+        ],
+        "id": "c_phone2_region",
+        "kind": "other",
+        "literal": "US"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_phone2 against page1. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_oral",
+      "pointer": "/routes/4",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": null,
+        "association": "source_resolved",
+        "channel": "oral",
+        "description": "Oral testimony at the hearing.",
+        "event_ids": [
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "The public has the opportunity to testify at the hearing."
+          }
+        ],
+        "id": "r_oral",
+        "role": "submission"
+      },
+      "judgment": "correct",
+      "basis": "Page1 expressly allows public testimony at hearing; oral submission role appropriate, not a written route.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_testify",
+      "pointer": "/routes/4/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "The public has the opportunity to testify at the hearing."
+          }
+        ],
+        "id": "c_testify",
+        "kind": "activity",
+        "literal": "testify at the hearing"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_oral against page1. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_form_email",
+      "pointer": "/routes/5",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": null,
+        "association": "source_resolved",
+        "channel": "email",
+        "description": "Completed Hearing Appearance form destination for those planning to phone in.",
+        "event_ids": [
+          "e_registration"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+          }
+        ],
+        "id": "r_form_email",
+        "role": "hearing_registration"
+      },
+      "judgment": "correct",
+      "basis": "Page1 completed form email for intended phone participants is correctly hearing registration. No inferred contact personal name.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_form_email",
+      "pointer": "/routes/5/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+          }
+        ],
+        "id": "c_form_email",
+        "kind": "endpoint",
+        "literal": "Sarah.wood@wisconsin.gov"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_form_email against page1. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_mail",
+      "pointer": "/routes/6",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": "ag_comments",
+        "association": "source_resolved",
+        "channel": "postal",
+        "description": "Postal destination for written comments.",
+        "event_ids": [
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov"
+          }
+        ],
+        "id": "r_mail",
+        "role": "submission"
+      },
+      "judgment": "correct",
+      "basis": "Page2 Department/Madi postal endpoint correctly written-comment submission and ag_comments membership.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_mail_office",
+      "pointer": "/routes/6/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Department of Natural Resources\nAttn: Madi Johansen"
+          }
+        ],
+        "id": "c_mail_office",
+        "kind": "name",
+        "literal": "Department of Natural Resources"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_mail against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_mail_attn",
+      "pointer": "/routes/6/components/1",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Attn: Madi Johansen"
+          }
+        ],
+        "id": "c_mail_attn",
+        "kind": "name",
+        "literal": "Attn: Madi Johansen"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_mail against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_mail_address",
+      "pointer": "/routes/6/components/2",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "3550 Mormon Coulee Road, La Crosse, WI"
+          }
+        ],
+        "id": "c_mail_address",
+        "kind": "address_part",
+        "literal": "3550 Mormon Coulee Road, La Crosse, WI"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_mail against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_comment_email",
+      "pointer": "/routes/7",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": "ag_comments",
+        "association": "source_resolved",
+        "channel": "email",
+        "description": "Listed contact email for written comments.",
+        "event_ids": [
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov"
+          }
+        ],
+        "id": "r_comment_email",
+        "role": "submission"
+      },
+      "judgment": "correct",
+      "basis": "Page2 listed Department contact email accepts written comments, correct phase/group.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_comment_email",
+      "pointer": "/routes/7/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "608-712-2798, Madison.johansen@wisconsin.gov"
+          }
+        ],
+        "id": "c_comment_email",
+        "kind": "endpoint",
+        "literal": "Madison.johansen@wisconsin.gov"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_comment_email against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_general_email",
+      "pointer": "/routes/8",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": "ag_comments",
+        "association": "source_resolved",
+        "channel": "email",
+        "description": "Additional email destination for comments.",
+        "event_ids": [
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Comments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov."
+          }
+        ],
+        "id": "r_general_email",
+        "role": "submission"
+      },
+      "judgment": "correct",
+      "basis": "Page2 additional email explicitly accepts comments, correct phase/group.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_general_email",
+      "pointer": "/routes/8/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Comments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov."
+          }
+        ],
+        "id": "c_general_email",
+        "kind": "endpoint",
+        "literal": "DNRAdministrativeRulesComments@wisconsin.gov"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_general_email against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_comment_web",
+      "pointer": "/routes/9",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": "ag_comments",
+        "association": "source_resolved",
+        "channel": "web",
+        "description": "Rule review and internet comment route.",
+        "event_ids": [
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings."
+          }
+        ],
+        "id": "r_comment_web",
+        "role": "submission"
+      },
+      "judgment": "correct",
+      "basis": "Page2 legislative hearings URL explicitly permits rule review and comments, both functions retained.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_comment_web",
+      "pointer": "/routes/9/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "http://docs.legis.wisconsin.gov/code/chr/hearings."
+          }
+        ],
+        "id": "c_comment_web",
+        "kind": "endpoint",
+        "literal": "http://docs.legis.wisconsin.gov/code/chr/hearings"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_comment_web against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_query",
+      "pointer": "/routes/10",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": null,
+        "association": "source_resolved",
+        "channel": "other",
+        "description": "Contact details for questions on proposed rules; co-listing does not establish interchangeable channels.",
+        "event_ids": [],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov"
+          }
+        ],
+        "id": "r_query",
+        "role": "information_contact"
+      },
+      "judgment": "correct",
+      "basis": "Page2 questions contact bundle retains office/name/address/phone/email and information-contact role. Other channel represents mixed bundle; no invented interchangeable-channel group.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_query_office",
+      "pointer": "/routes/10/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Department of Natural Resources\nAttn: Madi Johansen"
+          }
+        ],
+        "id": "c_query_office",
+        "kind": "name",
+        "literal": "Department of Natural Resources"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_query against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_query_name",
+      "pointer": "/routes/10/components/1",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Attn: Madi Johansen"
+          }
+        ],
+        "id": "c_query_name",
+        "kind": "name",
+        "literal": "Attn: Madi Johansen"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_query against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_query_address",
+      "pointer": "/routes/10/components/2",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "3550 Mormon Coulee Road, La Crosse, WI"
+          }
+        ],
+        "id": "c_query_address",
+        "kind": "address_part",
+        "literal": "3550 Mormon Coulee Road, La Crosse, WI"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_query against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_query_phone",
+      "pointer": "/routes/10/components/3",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "608-712-2798, Madison.johansen@wisconsin.gov"
+          }
+        ],
+        "id": "c_query_phone",
+        "kind": "endpoint",
+        "literal": "608-712-2798"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_query against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_query_email",
+      "pointer": "/routes/10/components/4",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "608-712-2798, Madison.johansen@wisconsin.gov"
+          }
+        ],
+        "id": "c_query_email",
+        "kind": "endpoint",
+        "literal": "Madison.johansen@wisconsin.gov"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_query against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_view",
+      "pointer": "/routes/11",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": null,
+        "association": "source_resolved",
+        "channel": "web",
+        "description": "DNR link for viewing the proposed rule under NRB Order number WY-20-23, not explicitly a submission route.",
+        "event_ids": [],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "The rule may be viewed under NRB Order number WY-20-23 at:\nhttps://dnr.wisconsin.gov/news/input/ProposedPermanent.html."
+          }
+        ],
+        "id": "r_view",
+        "role": "information_contact"
+      },
+      "judgment": "correct",
+      "basis": "Page2 DNR rule-viewing link under order correctly ancillary, not explicitly a submission endpoint.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_view",
+      "pointer": "/routes/11/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html."
+          }
+        ],
+        "id": "c_view",
+        "kind": "endpoint",
+        "literal": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_view against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_access_contact",
+      "pointer": "/routes/12",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": null,
+        "association": "uncertain",
+        "channel": "unknown",
+        "description": "Accessibility request contact referenced by location only; specific endpoint association is unresolved.",
+        "event_ids": [
+          "e_accessibility"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible."
+          }
+        ],
+        "id": "r_access_contact",
+        "role": "information_contact"
+      },
+      "judgment": "correct",
+      "basis": "Page1 does refer to the email address or phone number listed below. Core placeholder/information-contact role supported; assertion of unresolved association is separately assessed.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_access_reference",
+      "pointer": "/routes/12/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "please contact the email address or phone number listed below"
+          }
+        ],
+        "id": "c_access_reference",
+        "kind": "other",
+        "literal": "the email address or phone number listed below"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_access_contact against page1. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_coordinator",
+      "pointer": "/routes/13",
+      "reviewed_inventory_claim": {
+        "alternative_group_id": null,
+        "association": "source_resolved",
+        "channel": "other",
+        "description": "Agency Small Business Regulatory Coordinator contact details.",
+        "event_ids": [],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+          }
+        ],
+        "id": "r_coordinator",
+        "role": "information_contact"
+      },
+      "judgment": "correct",
+      "basis": "Page2 small-business coordinator name/phone/email correctly grouped as ancillary contact without promoting to comment submission.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_coordinator_name",
+      "pointer": "/routes/13/components/0",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Emma Esch (608) 266-1959"
+          }
+        ],
+        "id": "c_coordinator_name",
+        "kind": "name",
+        "literal": "Emma Esch"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_coordinator against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_coordinator_phone",
+      "pointer": "/routes/13/components/1",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Emma Esch (608) 266-1959"
+          }
+        ],
+        "id": "c_coordinator_phone",
+        "kind": "endpoint",
+        "literal": "(608) 266-1959"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_coordinator against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "c_coordinator_email",
+      "pointer": "/routes/13/components/2",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "emma.esch@wisconsin.gov"
+          }
+        ],
+        "id": "c_coordinator_email",
+        "kind": "endpoint",
+        "literal": "emma.esch@wisconsin.gov"
+      },
+      "judgment": "correct",
+      "basis": "Visually checked literal, kind and role inside r_coordinator against page2. No invented ZIP, contact name, endpoint or meeting credential.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_zoom_signup",
+      "pointer": "/requirements/0",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_registration"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "To join via Zoom, please register or pre-\nregister using the link above, which will prompt you to enter information required on the Hearing\nAppearance form."
+          }
+        ],
+        "id": "q_zoom_signup",
+        "kind": "hearing_procedure",
+        "modality": "conditional",
+        "route_ids": [
+          "r_zoom_signup"
+        ],
+        "semantic_class": "instruction",
+        "text": "To join via Zoom, register or pre-register through the link and enter the information required on the Hearing Appearance form."
+      },
+      "judgment": "correct",
+      "basis": "Page1 To join via Zoom condition correctly preserves required registration for that mode and form-information instruction; conditional modality is not loss of scoped requirement.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_preregister",
+      "pointer": "/requirements/1",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_registration",
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Pre-registration is strongly encouraged if you plan to provide spoken\ncomments during the hearing."
+          }
+        ],
+        "id": "q_preregister",
+        "kind": "hearing_procedure",
+        "modality": "optional",
+        "route_ids": [
+          "r_zoom_signup"
+        ],
+        "semantic_class": "instruction",
+        "text": "Pre-registration is strongly encouraged for those planning spoken comments during the hearing."
+      },
+      "judgment": "correct",
+      "basis": "Page1 strongly encouraged preregistration for spoken comments remains optional, not an absolute cutoff.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_phone_form",
+      "pointer": "/requirements/2",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_registration"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+          }
+        ],
+        "id": "q_phone_form",
+        "kind": "format",
+        "modality": "conditional",
+        "route_ids": [
+          "r_form_email"
+        ],
+        "semantic_class": "instruction",
+        "text": "Those planning to phone in are asked to download and complete the fillable Hearing Appearance form and email it to Sarah.wood@wisconsin.gov; no form-download endpoint is printed."
+      },
+      "judgment": "correct",
+      "basis": "Page1 phone-participant form download/completion/email requirement retained with actual printed email. Hearing Appearance form name is semantic text, not evidence-only. No Sarah Wood personal-name expansion. Separate no-printed-download-endpoint claim below.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_receipt",
+      "pointer": "/requirements/3",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Comments on the proposed rule must be received on or before April 30, 2026."
+          }
+        ],
+        "id": "q_receipt",
+        "kind": "timing",
+        "modality": "mandatory",
+        "route_ids": [
+          "r_mail",
+          "r_comment_email",
+          "r_general_email",
+          "r_comment_web"
+        ],
+        "semantic_class": "instruction",
+        "text": "Comments must be received on or before April 30, 2026."
+      },
+      "judgment": "correct",
+      "basis": "Page2 comments must be received by April30,2026, mandatory and applied to all written routes.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_channels",
+      "pointer": "/requirements/4",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Written\ncomments may be submitted by U.S. mail, E-mail, or through the internet"
+          }
+        ],
+        "id": "q_channels",
+        "kind": "other",
+        "modality": "optional",
+        "route_ids": [
+          "r_mail",
+          "r_comment_email",
+          "r_general_email",
+          "r_comment_web"
+        ],
+        "semantic_class": "instruction",
+        "text": "Written comments may be submitted by U.S. mail, email, or internet."
+      },
+      "judgment": "correct",
+      "basis": "Page2 explicitly permits mail/email/internet submission alternatives; optional modality preserves choice.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_equal_weight",
+      "pointer": "/requirements/5",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_comments",
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Written\ncomments may be submitted by U.S. mail, E-mail, or through the internet and will have the\nsame weight and effect as oral statements presented at the public hearing."
+          }
+        ],
+        "id": "q_equal_weight",
+        "kind": "other",
+        "modality": "informational",
+        "route_ids": [],
+        "semantic_class": "disclosure",
+        "text": "Written comments have the same weight and effect as oral statements presented at the public hearing."
+      },
+      "judgment": "correct",
+      "basis": "Page2 equal weight/effect of written and oral comments is explicitly typed disclosure with informational modality and both phases; other subtype does not discard disclosure meaning.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_comment_contact",
+      "pointer": "/requirements/6",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov"
+          }
+        ],
+        "id": "q_comment_contact",
+        "kind": "other",
+        "modality": "unclear",
+        "route_ids": [
+          "r_mail",
+          "r_comment_email"
+        ],
+        "semantic_class": "instruction",
+        "text": "Written comments should be submitted to the listed Department of Natural Resources contact, Attn: Madi Johansen."
+      },
+      "judgment": "correct",
+      "basis": "Page2 should-be-submitted-to Department/Madi wording faithfully preserved with postal/email links. Structured unclear modality is split below.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_questions",
+      "pointer": "/requirements/7",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov"
+          }
+        ],
+        "id": "q_questions",
+        "kind": "other",
+        "modality": "informational",
+        "route_ids": [
+          "r_query"
+        ],
+        "semantic_class": "other",
+        "text": "The Department of Natural Resources contact, Attn: Madi Johansen, is listed for questions on the proposed rules, with postal, telephone, and email contact details."
+      },
+      "judgment": "correct",
+      "basis": "Page2 Department/Madi question-contact role and postal/telephone/email details faithfully retained via r_query.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_view",
+      "pointer": "/requirements/8",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "The rule may be viewed under NRB Order number WY-20-23 at:\nhttps://dnr.wisconsin.gov/news/input/ProposedPermanent.html."
+          }
+        ],
+        "id": "q_view",
+        "kind": "reference",
+        "modality": "informational",
+        "route_ids": [
+          "r_view"
+        ],
+        "semantic_class": "other",
+        "text": "The rule can be viewed under NRB Order number WY-20-23 on the DNR proposed permanent rules page."
+      },
+      "judgment": "correct",
+      "basis": "Page2 rule-viewing link and NRB order association supported.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_web_review",
+      "pointer": "/requirements/9",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings."
+          }
+        ],
+        "id": "q_web_review",
+        "kind": "reference",
+        "modality": "optional",
+        "route_ids": [
+          "r_comment_web"
+        ],
+        "semantic_class": "instruction",
+        "text": "The legislative hearings page supports both rule review and comments."
+      },
+      "judgment": "correct",
+      "basis": "Page2 legislative hearings URL supports both review and comments; optional use appropriate.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_access_aids",
+      "pointer": "/requirements/10",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_accessibility",
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "For the hearing or visually impaired, non-English speakers, or those with other personal\ncircumstances which might make communication at the meeting/hearing difficult, DNR will, to\nthe maximum extent possible and with reasonable advance notice, provide aids including an\ninterpreter, or a non-English, large-print, or recorded version of hearing documents."
+          }
+        ],
+        "id": "q_access_aids",
+        "kind": "other",
+        "modality": "informational",
+        "route_ids": [
+          "r_access_contact"
+        ],
+        "semantic_class": "other",
+        "text": "For hearing- or visually impaired people, non-English speakers, or others whose personal circumstances make meeting/hearing communication difficult, DNR will provide aids to the maximum extent possible and with reasonable advance notice, including an interpreter or non-English, large-print, or recorded hearing documents."
+      },
+      "judgment": "correct",
+      "basis": "Page1 beneficiary scope, maximum-extent/advance-notice qualifications, interpreter, non-English, large-print and recorded documents all explicitly retained as semantic text. Named aid-format loss from prior probe is resolved.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_access_request",
+      "pointer": "/requirements/11",
+      "reviewed_inventory_claim": {
+        "association": "uncertain",
+        "event_ids": [
+          "e_accessibility"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible."
+          }
+        ],
+        "id": "q_access_request",
+        "kind": "other",
+        "modality": "conditional",
+        "route_ids": [
+          "r_access_contact"
+        ],
+        "semantic_class": "instruction",
+        "text": "To request accessibility resources, contact the email address or phone number listed below as soon as possible. The notice does not explicitly identify which downstream contact is intended."
+      },
+      "judgment": "correct",
+      "basis": "Page1 asks requests through the email/phone listed below as soon as possible. Conditional on requesting aid is faithful; unresolved specific-endpoint assertion split below.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_coordinator",
+      "pointer": "/requirements/12",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+          }
+        ],
+        "id": "q_coordinator",
+        "kind": "other",
+        "modality": "informational",
+        "route_ids": [
+          "r_coordinator"
+        ],
+        "semantic_class": "other",
+        "text": "Emma Esch is the Agency Small Business Regulatory Coordinator; telephone and email contacts are provided, not identified as comment-submission destinations."
+      },
+      "judgment": "correct",
+      "basis": "Page2 coordinator identity and phone/email role supported; correctly does not invent comment submission role.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "ag_comments",
+      "pointer": "/alternative_groups/0",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_comments"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Written\ncomments may be submitted by U.S. mail, E-mail, or through the internet and will have the\nsame weight and effect as oral statements presented at the public hearing."
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Comments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov."
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings."
+          }
+        ],
+        "id": "ag_comments",
+        "purpose": "submission",
+        "requirement_ids": [
+          "q_channels",
+          "q_comment_contact"
+        ],
+        "route_ids": [
+          "r_mail",
+          "r_comment_email",
+          "r_general_email",
+          "r_comment_web"
+        ]
+      },
+      "judgment": "correct",
+      "basis": "Page2 four written routes are faithful alternatives, with appropriate phases and requirements.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "ag_phone",
+      "pointer": "/alternative_groups/1",
+      "reviewed_inventory_claim": {
+        "association": "source_resolved",
+        "event_ids": [
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Join by phone:\n        +13052241968, 89627456939# US\n        +13092053325, 89627456939# US"
+          }
+        ],
+        "id": "ag_phone",
+        "purpose": "hearing_access",
+        "requirement_ids": [],
+        "route_ids": [
+          "r_phone1",
+          "r_phone2"
+        ]
+      },
+      "judgment": "correct",
+      "basis": "Page1 two telephone options are supported alternatives. Group correctly describes that subset but omits the larger Zoom-versus-phone relationship required by frozen access_alternatives unit.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "u_access_contact",
+      "pointer": "/uncertainties/0",
+      "reviewed_inventory_claim": {
+        "description": "The accessibility paragraph refers to an email address or phone number listed below without naming a recipient. Subsequent text contains multiple email and telephone contacts; no specific accessibility endpoint is selected.",
+        "event_ids": [
+          "e_accessibility"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible."
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "608-712-2798, Madison.johansen@wisconsin.gov"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Emma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+          }
+        ],
+        "id": "u_access_contact",
+        "identity_ids": [],
+        "kind": "association",
+        "requirement_ids": [
+          "q_access_request",
+          "q_access_aids"
+        ],
+        "route_ids": [
+          "r_access_contact",
+          "r_query",
+          "r_form_email",
+          "r_coordinator"
+        ]
+      },
+      "judgment": "unknown",
+      "basis": "Multiple downstream contacts and nonspecific forward reference are visible. Frozen reference chooses Madi email/phone; inventory deliberately does not select an endpoint. Strict association recovery is unknown, not proof of a fabricated destination or a changed source. Gold remains unchanged.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "u_access_timing",
+      "pointer": "/uncertainties/1",
+      "reviewed_inventory_claim": {
+        "description": "Reasonable advance notice is not quantified; as soon as possible does not establish a precise deadline or an explicit before-hearing interval.",
+        "event_ids": [
+          "e_accessibility"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "to\nthe maximum extent possible and with reasonable advance notice"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible."
+          }
+        ],
+        "id": "u_access_timing",
+        "identity_ids": [],
+        "kind": "timing",
+        "requirement_ids": [
+          "q_access_aids",
+          "q_access_request"
+        ],
+        "route_ids": [
+          "r_access_contact"
+        ]
+      },
+      "judgment": "correct",
+      "basis": "Source does not quantify reasonable advance notice or make as-soon-as-possible a precise deadline. No exact before-hearing interval is stated; this uncertainty is supported, not an omitted explicit numerical constraint.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "u_timezone",
+      "pointer": "/uncertainties/2",
+      "reviewed_inventory_claim": {
+        "description": "The hearing clock time has no printed timezone.",
+        "event_ids": [
+          "e_hearing"
+        ],
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Time:   1:00 PM"
+          }
+        ],
+        "id": "u_timezone",
+        "identity_ids": [],
+        "kind": "timing",
+        "requirement_ids": [],
+        "route_ids": []
+      },
+      "judgment": "correct",
+      "basis": "Page1 clock has no printed timezone. Honest missing precision, not an invented timezone or source error.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_phone_form_download_absence",
+      "pointer": "/requirements/2/text",
+      "reviewed_inventory_claim": "no form-download endpoint is printed",
+      "judgment": "correct",
+      "basis": "Image prints a linked form label but not its destination URL; no printed endpoint is a correct limited statement, not a claim that no embedded hyperlink exists.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_comment_contact_modality",
+      "pointer": "/requirements/6/modality",
+      "reviewed_inventory_claim": "unclear",
+      "judgment": "unknown",
+      "basis": "The semantic text preserves should, but modality unclear leaves whether it is advisory unresolved. The frozen convention treats should as advice. This is unresolved structured modality, not an incorrect postal/email value; it prevents unconditional complete support.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "q_access_request_association",
+      "pointer": "/requirements/11",
+      "reviewed_inventory_claim": {
+        "association": "uncertain",
+        "route_ids": [
+          "r_access_contact"
+        ]
+      },
+      "judgment": "unknown",
+      "basis": "Requirement association uncertain and explicit nonspecific-contact statement preserve hesitation but do not recover frozen email1/query_phone applicability. Exact forward referent remains uncertain under image audit.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "r_access_contact_association",
+      "pointer": "/routes/12",
+      "reviewed_inventory_claim": {
+        "association": "uncertain",
+        "channel": "unknown"
+      },
+      "judgment": "unknown",
+      "basis": "Unknown channel and unresolved placeholder do not bind the frozen specific email/phone contacts. Multiple later contacts justify uncertainty rather than accusing the model of inventing a destination.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "coverage_complete",
+      "pointer": "/coverage",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Appearances at the Hearing and Submittal of Written Comments"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Accessibility"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+          }
+        ],
+        "rationale": "Reviewed the full supplied notice and represented hearing access and signup, oral testimony, written comments, receipt deadline, submission alternatives, rule-viewing links, query and accessibility contacts, accessibility qualifications and aid formats, and the small-business coordinator. The unspecified accessibility contact association and unquantified advance-notice timing remain explicit uncertainties. No public-posting or confidentiality policy is stated.",
+        "status": "claimed_complete"
+      },
+      "judgment": "incorrect",
+      "basis": "Claimed completeness is unsupported: repeal/recreation identity details and full Zoom/phone alternative relation are not structured; specific accessibility association unresolved. This remains incomplete independently of the URL reference ambiguity.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "coverage_scope",
+      "pointer": "/coverage",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Appearances at the Hearing and Submittal of Written Comments"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Accessibility"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+          }
+        ],
+        "rationale": "Reviewed the full supplied notice and represented hearing access and signup, oral testimony, written comments, receipt deadline, submission alternatives, rule-viewing links, query and accessibility contacts, accessibility qualifications and aid formats, and the small-business coordinator. The unspecified accessibility contact association and unquantified advance-notice timing remain explicit uncertainties. No public-posting or confidentiality policy is stated.",
+        "status": "claimed_complete"
+      },
+      "judgment": "correct",
+      "basis": "The inventory represents all enumerated topic families including aid formats. Topic presence is not exhaustive source recovery or proof of the model internal reading process.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "coverage_access_uncertainty",
+      "pointer": "/coverage",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Appearances at the Hearing and Submittal of Written Comments"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Accessibility"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+          }
+        ],
+        "rationale": "Reviewed the full supplied notice and represented hearing access and signup, oral testimony, written comments, receipt deadline, submission alternatives, rule-viewing links, query and accessibility contacts, accessibility qualifications and aid formats, and the small-business coordinator. The unspecified accessibility contact association and unquantified advance-notice timing remain explicit uncertainties. No public-posting or confidentiality policy is stated.",
+        "status": "claimed_complete"
+      },
+      "judgment": "unknown",
+      "basis": "Repeats unresolved specific accessibility contact; original reference and inventory differ and image alone does not settle referent.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "coverage_timing_uncertainty",
+      "pointer": "/coverage",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Appearances at the Hearing and Submittal of Written Comments"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Accessibility"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+          }
+        ],
+        "rationale": "Reviewed the full supplied notice and represented hearing access and signup, oral testimony, written comments, receipt deadline, submission alternatives, rule-viewing links, query and accessibility contacts, accessibility qualifications and aid formats, and the small-business coordinator. The unspecified accessibility contact association and unquantified advance-notice timing remain explicit uncertainties. No public-posting or confidentiality policy is stated.",
+        "status": "claimed_complete"
+      },
+      "judgment": "correct",
+      "basis": "Unquantified advance-notice/as-soon-as-possible timing remains explicitly and correctly qualified.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "coverage_no_posting",
+      "pointer": "/coverage",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Appearances at the Hearing and Submittal of Written Comments"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Accessibility"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+          }
+        ],
+        "rationale": "Reviewed the full supplied notice and represented hearing access and signup, oral testimony, written comments, receipt deadline, submission alternatives, rule-viewing links, query and accessibility contacts, accessibility qualifications and aid formats, and the small-business coordinator. The unspecified accessibility contact association and unquantified advance-notice timing remain explicit uncertainties. No public-posting or confidentiality policy is stated.",
+        "status": "claimed_complete"
+      },
+      "judgment": "correct",
+      "basis": "All-page review finds no public-posting policy; equal-weight consideration is a different disclosure.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    },
+    {
+      "claim_id": "coverage_no_confidentiality",
+      "pointer": "/coverage",
+      "reviewed_inventory_claim": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Appearances at the Hearing and Submittal of Written Comments"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Accessibility"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+          }
+        ],
+        "rationale": "Reviewed the full supplied notice and represented hearing access and signup, oral testimony, written comments, receipt deadline, submission alternatives, rule-viewing links, query and accessibility contacts, accessibility qualifications and aid formats, and the small-business coordinator. The unspecified accessibility contact association and unquantified advance-notice timing remain explicit uncertainties. No public-posting or confidentiality policy is stated.",
+        "status": "claimed_complete"
+      },
+      "judgment": "correct",
+      "basis": "No confidentiality policy is printed in the two pages.",
+      "scope": "Container semantic fields reviewed except explicitly split subordinate/nested claims. Same semantic fields independently checked in normalized record; evidence spans separately verified."
+    }
+  ],
+  "enumeration": "39 array-item cores +5 timing claims +26 components +4 subordinate splits +6 coverage assertions =80 semantic claims per artifact. No double-counting of schema/hash metadata. Same assertions repeated in record assessed separately after all semantic fields and evidence checked.",
+  "all_field_semantic_equality": true
+}

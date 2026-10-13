@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Independent terminal acceptance source audits",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "audits"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "round4.evaluation.audits.v1"
+    },
+    "audits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "document_id",
+          "case_id",
+          "channel",
+          "claim_group",
+          "reviewer_identity",
+          "basis",
+          "source_field_id",
+          "source_value",
+          "role",
+          "conditions",
+          "precision",
+          "scope"
+        ],
+        "properties": {
+          "document_id": {
+            "type": "string"
+          },
+          "case_id": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "claim_group": {
+            "type": "string"
+          },
+          "reviewer_identity": {
+            "type": "string"
+          },
+          "basis": {
+            "type": "string"
+          },
+          "source_field_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_value": {
+            "enum": [
+              "correct",
+              "incorrect",
+              "unknown"
+            ]
+          },
+          "role": {
+            "enum": [
+              "matched",
+              "mismatched",
+              "unknown"
+            ]
+          },
+          "conditions": {
+            "enum": [
+              "preserved",
+              "lost_or_changed",
+              "unknown"
+            ]
+          },
+          "precision": {
+            "enum": [
+              "date_only",
+              "exact_literal",
+              "mismatched",
+              "unknown"
+            ]
+          },
+          "scope": {
+            "enum": [
+              "matched",
+              "out_of_scope",
+              "unknown"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

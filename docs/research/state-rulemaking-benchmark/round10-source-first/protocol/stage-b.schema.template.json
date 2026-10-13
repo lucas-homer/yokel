@@ -1,0 +1,80 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "round10.source-mapping.v1"
+      ]
+    },
+    "source_text_sha256": {
+      "type": "string",
+      "enum": [
+        "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5"
+      ]
+    },
+    "record_sha256": {
+      "type": "string",
+      "enum": [
+        "315ddda2dd8012856463df1f31122dc8952dfcc050e152fcd6055bb3e2d0368a"
+      ]
+    },
+    "inventory_sha256": {
+      "type": "string",
+      "enum": [
+        "__VALIDATED_INVENTORY_CANONICAL_SHA256__"
+      ]
+    },
+    "mappings": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "source_text_sha256",
+    "record_sha256",
+    "inventory_sha256",
+    "mappings"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "m": {
+      "type": "object",
+      "properties": {
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "matched",
+            "missing",
+            "mismatched",
+            "unknown"
+          ]
+        },
+        "operative_pointers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "minItems": 0,
+          "maxItems": 12
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 420
+        }
+      },
+      "required": [
+        "disposition",
+        "operative_pointers",
+        "reason"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

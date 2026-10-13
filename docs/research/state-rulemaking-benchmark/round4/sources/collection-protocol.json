@@ -1,0 +1,122 @@
+{
+  "version": "round4-source-preparation-v1",
+  "status": "awaiting_primary_implementation_freeze",
+  "authorization_gate": {
+    "required": "Explicit primary message announcing implementation freeze before any fresh search, candidate selection, download or inspection.",
+    "receipt_file": "implementation-freeze-receipt.json",
+    "receipt_contents": [
+      "primary freeze message verbatim",
+      "referenced implementation freeze path and hashes",
+      "recorded timestamp with timezone"
+    ],
+    "currently_received": false
+  },
+  "scope": {
+    "unit": "One complete state rulemaking notice",
+    "primary_fields": [
+      "explicit absolute written-comment deadline DATE",
+      "submission EMAIL"
+    ],
+    "not_required_for_eligibility": "Presence of either target field; negative, relative-date, conditional and uncertain cases remain eligible.",
+    "labels": "Collector stores source metadata only. No extracted answers, expected verdicts or adjudication labels in runtime or manifest."
+  },
+  "sampling": {
+    "target_notices": 12,
+    "minimum_states": 6,
+    "maximum_notices_per_state": 2,
+    "reserved_slots": {
+      "publisher_scans": 4,
+      "general_proposed_notice": 4,
+      "conditional_or_relative_language_notice": 2,
+      "negative_lifecycle_notice": 2
+    },
+    "assignment": "Scan slot takes priority; each notice occupies one slot. Negative/conditional stratum classifications are discovery bookkeeping, not field labels; kept out of pipeline runtime. Eligible source includes absence of an absolute date or email.",
+    "novelty": "Reject matching old original PDF SHA256 or same underlying old notice even if URL/bytes changed. Prefer publication/template families absent from dedup inventory. No more than one notice from each new original PDF. New URL or state alone is not family independence.",
+    "family_fallback": "If no novel-family scan found in bounded scan queue, allow a fresh original from an old family only with explicit overlap flag and remaining quota rationale; never duplicate old notice.",
+    "selection": "First eligible candidate in ordered query/results queue that fills an open stratum and state slot. Record exclusions and duplicates. Stop accepting at12; do not replace accepted notices based on extraction results.",
+    "shortfall": "If bounded search cannot fill scan/state/negative/conditional quotas, preserve actual achieved counts and report incomplete design to primary. Do not silently fill scan slots with born-digital forms or synthetic rasters.",
+    "temporal": "No requirement that comment period remains open; historical notices eligible. Do not filter by a date or email being easy to extract."
+  },
+  "scan_evidence": {
+    "qualifies": "Original publisher PDF whose notice body is image-only, or a genuine scanned/degraded notice with an unreliable embedded OCR layer; visually verify source pages and PDF image/text diagnostics.",
+    "does_not_qualify": [
+      "born-digital filled forms",
+      "a signature or stamp image on otherwise born-digital text",
+      "a synthetic scan created by rasterizing a digital original",
+      "empty pdftotext caused by tool failure or encryption without scan confirmation"
+    ],
+    "retain": [
+      "unaltered original bytes",
+      "native pdftotext output including empty output",
+      "pdftotext exit status and stderr",
+      "PDF page and image/font diagnostics",
+      "rendered page images",
+      "per-notice factual scan classification with supporting physical pages"
+    ],
+    "ambiguity": "Count uncertain scan classification separately, not toward the minimum four."
+  },
+  "retention": {
+    "per_source": [
+      "source URL and final redirected URL",
+      "official publisher/discovery URL and discovery linkage",
+      "retrieval timestamp including timezone, HTTP status, headers, errors",
+      "original.pdf with SHA256 and byte count",
+      "input.pdf with SHA256 and derivation provenance if needed",
+      "native.txt from unmodified input; native-original.txt when excerpted",
+      "page images for every input page",
+      "physical original-to-input page map",
+      "printed page numbers when present",
+      "complete notice start/end boundaries and neighboring material",
+      "publisher/template family and old-family overlap",
+      "tool versions and exact rendering/extraction commands"
+    ],
+    "standalone_preference": "Use full standalone notice PDFs when available. Retain complete original even when a register excerpt is necessary. Never truncate a notice to fit limits.",
+    "register_rule": "Include every continuation page of the notice and retain whole physical pages; specify named target and boundaries. Do not mask inconvenient neighboring material. Preserve full original and page map. If notice exceeds frozen pipeline limits, log exclusion before any model execution.",
+    "manifest": "Adapt source-only metadata to the pipeline child published manifest contract once available; do not invent a competing runtime contract."
+  },
+  "ledger": {
+    "file": "search-access-ledger.jsonl",
+    "append_only": true,
+    "events": [
+      "freeze_received",
+      "query_executed",
+      "candidate_discovered",
+      "retrieval_attempt",
+      "access_failure",
+      "dedup_rejection",
+      "eligibility_decision",
+      "notice_accepted",
+      "quota_shortfall"
+    ],
+    "fields": [
+      "event_id",
+      "timestamp_with_timezone",
+      "query_id",
+      "query_execution_order",
+      "result_rank",
+      "candidate_url",
+      "publisher_url",
+      "state",
+      "http_status_or_tool_status",
+      "retry_number",
+      "decision",
+      "reason",
+      "saved_artifact_paths_and_hashes"
+    ],
+    "access_rule": "At most one ordinary retry per failed URL; no bypass of authentication, robots or access controls. Record403/404/timeouts/non-PDF redirects and proceed in queue."
+  },
+  "contamination_controls": [
+    "No fresh-source browsing before freeze receipt.",
+    "No evaluation implementation edits in this owned directory.",
+    "No source selection using model outputs; freeze source manifest before model execution.",
+    "No paid parser/model calls by collector.",
+    "Any post-freeze correction preserves original source bytes and change history."
+  ],
+  "preparation_validation": {
+    "old_notice_count": 28,
+    "fresh_queries_executed": 0,
+    "fresh_notices_selected": 0,
+    "fresh_downloads": 0,
+    "provider_calls": 0
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "original_html_sha256": "9e0b728f39cd79dbe038f72a446a2aa05bc121f5fcac77494679572d6dfcce03",
+  "original_html_bytes": 11536,
+  "parsed_body_text_sha256": "5b8b221224c799e4950dbddf6df8bbf0652ee90db7150f1ed16a332b137df55f",
+  "parsed_body_text_chars": 7208,
+  "parsed_body_text_utf8_bytes": 7208,
+  "parsed_body_text_token_count_whitespace_split": 1016,
+  "anchor_count": 12,
+  "anchor_inventory": "anchors.json",
+  "text_output": "parsed-body.txt",
+  "parser": "extract_source.py (stdlib HTMLParser, convert_charrefs=True; retains every body text node and anchor href/label; skips head, style, and script; inserts newlines at listed block boundaries and br tags).",
+  "loss_limits": [
+    "Text-node order and wording are retained; HTML structure and inline formatting are not represented in parsed-body.txt.",
+    "Underline/strike/bold/italics, table-cell boundaries beyond block newlines, and CSS presentation may carry meaning and must be checked against original.htm.",
+    "No browser document.body.innerText capture is included; parsed-body.txt is the reproducible model-source text derived from the preserved original HTML."
+  ]
+}

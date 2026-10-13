@@ -1,0 +1,250 @@
+{
+  "case": {
+    "source": "Join at https://example.test/Il. Use the form linked above.",
+    "inventory": [
+      {
+        "id": "e",
+        "kind": "endpoint",
+        "value": "https://example.test/Il",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "https://example.test/Il",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "Image I/l ambiguous; native text does not settle reference"
+      },
+      {
+        "id": "r",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "e",
+          "purpose": "attend_hearing"
+        },
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "e"
+        ],
+        "evidence": [
+          {
+            "quote": "Join at https://example.test/Il.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "f",
+        "kind": "instruction",
+        "value": "use referenced form",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "r"
+        ],
+        "evidence": [
+          {
+            "quote": "Use the form linked above.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "Referenced form target unavailable"
+      }
+    ],
+    "classified_inventory": [
+      {
+        "id": "e",
+        "kind": "endpoint",
+        "value": "https://example.test/Il",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "https://example.test/Il",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "Image I/l ambiguous; native text does not settle reference"
+      },
+      {
+        "id": "r",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "e",
+          "purpose": "attend_hearing"
+        },
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "e"
+        ],
+        "evidence": [
+          {
+            "quote": "Join at https://example.test/Il.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "f",
+        "kind": "instruction",
+        "value": "use referenced form",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "r"
+        ],
+        "evidence": [
+          {
+            "quote": "Use the form linked above.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "Referenced form target unavailable"
+      }
+    ],
+    "scopes": {
+      "e": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint",
+        "evidence": [
+          {
+            "quote": "https://example.test/Il",
+            "occurrence": 1
+          }
+        ]
+      },
+      "r": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint_role",
+        "evidence": [
+          {
+            "quote": "Join at https://example.test/Il.",
+            "occurrence": 1
+          }
+        ]
+      },
+      "f": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of instruction",
+        "evidence": [
+          {
+            "quote": "Use the form linked above.",
+            "occurrence": 1
+          }
+        ]
+      }
+    },
+    "operative": {
+      "e": {
+        "condition": "unconditional",
+        "kind": "endpoint",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": "https://example.test/Il"
+      },
+      "r": {
+        "condition": "unconditional",
+        "kind": "endpoint_role",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": {
+          "endpoint": "e",
+          "purpose": "attend_hearing"
+        }
+      },
+      "f": {
+        "condition": "unconditional",
+        "kind": "instruction",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": "use referenced form"
+      }
+    },
+    "mappings": {
+      "e": {
+        "status": "unknown",
+        "refs": [
+          "e"
+        ],
+        "reason": "Reference closure unresolved"
+      },
+      "r": {
+        "status": "unknown",
+        "refs": [
+          "r"
+        ],
+        "reason": "Reference closure unresolved"
+      },
+      "f": {
+        "status": "unknown",
+        "refs": [
+          "f"
+        ],
+        "reason": "Reference closure unresolved"
+      }
+    },
+    "source_review": {
+      "status": "source_only_frozen",
+      "source_sha256": "aca7f27c27fe07e37f57d70196bf3eb0a56eebdb393a176137fa063b91048f0d",
+      "inventory_sha256": "d58ffcbe032a9675f2b62b4ef8869da26d29beff58551ffbf9709330bc9ba4a9",
+      "scopes_sha256": "42b4e485ed958d32eeca2d446c7ad6965f8de146dc7d47c9148a1ec67681d4c4"
+    },
+    "record_audit": {
+      "status": "not_run",
+      "reviewed_refs": [],
+      "unsupported_refs": [],
+      "unknown_refs": []
+    }
+  },
+  "name": "anchor-glyph_and_reference_closure_unknown",
+  "expected": {
+    "valid": true,
+    "required_scope_status": "unverified",
+    "required_unknown": [
+      "e",
+      "r",
+      "f"
+    ]
+  },
+  "actual": {
+    "accepted": true,
+    "result": {
+      "required_scope_status": "unverified",
+      "unresolved_scope": [],
+      "required_unknown": [
+        "e",
+        "r",
+        "f"
+      ],
+      "required_defects": [],
+      "effective_mappings": {
+        "e": "unknown",
+        "r": "unknown",
+        "f": "unknown"
+      },
+      "background_diagnostics": {},
+      "source_completeness": "reviewer_attestation_only",
+      "record_fidelity": "unverified",
+      "unsupported_record_refs": [],
+      "production_ready": false,
+      "live_compatibility": "unverified"
+    }
+  },
+  "expectation_met": true
+}

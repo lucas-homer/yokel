@@ -1,0 +1,33 @@
+{
+  "schema_version": "round3.verifier.v1",
+  "adapter_contract": "round3/verifiers/INPUT-CONTRACT.json",
+  "adapter_contract_sha256": "2e0022f97d2ebbdb0a2381b1813a120164de0e5ec40e558cf500be1047c648f5",
+  "runtime_file": "runtime.jsonl",
+  "evaluation_file": "evaluation-only.jsonl",
+  "status": "developmental_reviewer_labeled_not_fresh",
+  "cases": 16,
+  "labels_must_not_enter_runtime": true,
+  "candidates_are_reviewer_authored": true,
+  "natural_error_semantics": "Natural parser errors are exact retained errors projected into manually authored observations; these are not naturally observed extractor errors.",
+  "source_text_semantics": "Unmodified retained parser-text spans joined by two newlines; reviewer-selected context, not automated retrieval. Complete output supplied for original-document absence challenge.",
+  "label_conventions": {
+    "support": "Entailment by supplied text; explicit false certainty loses support. No image/reference rescue.",
+    "role": "Whether candidate assigns evidence to the correct semantic slot; ambiguous/displaced slot is insufficient.",
+    "condition": "Preserved includes no applicable condition; omitted_or_changed only for relevant qualification/condition.",
+    "conflict": "Relevant source disagreement, not merely candidate contradiction or unrelated conflict."
+  },
+  "same_parser_blindspot": "C003 should be text-supported despite incorrect original-PDF email. Never count rejection as successful semantic recovery without independent evidence; report source-fidelity limitation separately.",
+  "scope_limitations": [
+    "No fresh evaluation, random sampling, statistical independence or national generalization.",
+    "Excerpts are reviewer-scoped to the named notice; target segmentation is not evaluated.",
+    "C004 material scope is initial announced hearing dates only; separate extension conditions are tested by C012.",
+    "Related cases deliberately share evidence; report paired case families, not independent trials.",
+    "Submission-email risk is newly scoped here; do not retroactively change round2 gate.",
+    "Labels independent of model execution, but challenge reviewer also collected held-out sources and reviewed earlier OpenRouter results.",
+    "No paid calls, network lookups, or original-source edits."
+  ],
+  "review_status": "Primary adopted all independent pre-run audit amendments; ready for freeze. Labels are agent judgments, not human gold.",
+  "label_history": "evaluation-only.pre-review.jsonl",
+  "model_only_denominator_note": "C007 is deterministic abstention; retain in scheduled system metrics.",
+  "ambiguous_case_note": "C016 excluded from primary determinate error/gate accuracy; provisional labels and accepted alternative retained."
+}

@@ -1,0 +1,338 @@
+{
+  "fixture_id": "H08",
+  "reference_version": "collector-source-v1",
+  "collector_kind": "agent source annotations, not human gold labels",
+  "independent_review_status": "pending",
+  "new_vendor_outputs_inspected": false,
+  "native_text_used_for_navigation_and_quote_transcription": true,
+  "complete_input_images_inspected": true,
+  "input_sha256": "af006f694c8e9e4f38139dd0332a1740b7ba323220b9b86028da2d44f51f706d",
+  "state": "AK",
+  "primary_bucket": "clean_standalone_pdf",
+  "template_family": "AK-BOG-proposed-change-with-additional-info",
+  "notice_scope_boundaries": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+  "package_limitations": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency proposes the amendments?",
+      "expected_value": "Alaska Board of Game",
+      "answerability": "present",
+      "critical": false,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Heading",
+      "source_quote": "IN THE REGULATIONS OF THE ALASKA BOARD OF GAME",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting agency or source context; not included in strict critical gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "source_id",
+      "question": "What Department of Law file number is provided?",
+      "expected_value": "2026200173",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 3,
+      "original_page": 3,
+      "region": "Additional info item4",
+      "source_quote": "Department of Law file number, if any: 2026200173",
+      "basis": "source_text",
+      "semantic_group_id": "source_id",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "citation",
+      "question": "Which four provisions are proposed to be amended?",
+      "expected_value": [
+        "5 AAC92.510",
+        "5 AAC92.550",
+        "5 AAC92.126(b)",
+        "5 AAC92.085"
+      ],
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Numbered summary",
+      "source_quote": "5 AAC 92.126(b) is proposed to be amended",
+      "basis": "source_text",
+      "semantic_group_id": "citation",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "list",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "All four numbered provisions in input1; preserve (b) specificity there rather than broader grouped92.126 on input3.",
+      "notice_scope_boundaries": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": [
+        {
+          "input_page": 1,
+          "original_page": 1,
+          "source_quote": "5 AAC 92.510 is proposed to be amended",
+          "quote_transcription": "visual source transcription; whitespace/line wraps normalized"
+        },
+        {
+          "input_page": 1,
+          "original_page": 1,
+          "source_quote": "5 AAC 92.550 is proposed to be amended",
+          "quote_transcription": "visual source transcription; whitespace/line wraps normalized"
+        },
+        {
+          "input_page": 1,
+          "original_page": 1,
+          "source_quote": "5 AAC 92.085 is proposed to be amended",
+          "quote_transcription": "visual source transcription; whitespace/line wraps normalized"
+        }
+      ]
+    },
+    {
+      "field_id": "event",
+      "question": "What stage does the notice announce?",
+      "expected_value": "proposed regulation amendments, not final adoption",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Heading",
+      "source_quote": "NOTICE OF PROPOSED CHANGES",
+      "basis": "source_text",
+      "semantic_group_id": "event",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "comment_close",
+      "question": "When must written comments be received?",
+      "expected_value": "July16,2026 8:00a.m.",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Written comment deadline",
+      "source_quote": "The comments must be received not later than 8:00 a.m. on \nThursday, July 16, 2026.",
+      "basis": "source_text",
+      "semantic_group_id": "comment_close",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "hearing",
+      "question": "What initial hearing dates and daily times are stated?",
+      "expected_value": "July22–23,2026 8:30a.m.–5:30p.m.",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Oral hearing",
+      "source_quote": "The hearing will be held from 8:30 a.m. to 5:30 p.m.",
+      "basis": "source_text",
+      "semantic_group_id": "hearing",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Date range July22–23 in preceding sentence. Do not confuse separate written-comment deadline with hearing participation.",
+      "notice_scope_boundaries": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": [
+        {
+          "input_page": 1,
+          "original_page": 1,
+          "source_quote": "a hearing to be held on July 22-23, 2026",
+          "quote_transcription": "visual source transcription; whitespace/line wraps normalized"
+        }
+      ]
+    },
+    {
+      "field_id": "extension_condition",
+      "question": "What optional hearing extension and eligibility condition are stated?",
+      "expected_value": "Might extend to July24,8:30a.m.–5:30p.m.,same location, to accommodate those present before1:00p.m.July22 who lacked opportunity to comment",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Oral hearing",
+      "source_quote": "might be extended to July 24, \nfrom 8:30 am to 5:30 p. m. at the same location to accommodate those present before 1: 00 p.m. \non July 22, who did not have an opportunity to comment.",
+      "basis": "source_text",
+      "semantic_group_id": "extension_condition",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "notice_date",
+      "question": "What date accompanies the signed notice?",
+      "expected_value": "June12,2026",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 2,
+      "original_page": 2,
+      "region": "Signature block",
+      "source_quote": "Date: June 12, 2026",
+      "basis": "source_text",
+      "semantic_group_id": "notice_date",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "timezone",
+      "question": "Does the complete notice state a timezone for comments/hearing?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Complete target notice",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "timezone",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Relevant complete notice scope must survive; silence alone is insufficient.",
+      "notice_scope_boundaries": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "effective",
+      "question": "Does the complete notice supply a final effective date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "input_page": 2,
+      "original_page": 2,
+      "region": "Complete target notice",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "effective",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Relevant complete notice scope must survive; silence alone is insufficient.",
+      "notice_scope_boundaries": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "absence_scope_if_applicable": "Complete four-page notice and additional-regulation-information form. Separate proposed regulations linked by notice are not included.",
+      "additional_decisive_evidence": []
+    }
+  ]
+}

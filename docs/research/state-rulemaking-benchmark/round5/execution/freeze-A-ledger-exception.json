@@ -1,0 +1,13 @@
+{
+  "created_utc": "2026-10-07T17:55:24.213398+00:00",
+  "type": "primary_freeze_bookkeeping_exception",
+  "freeze_A_sha256": "3d8c36e16eb81bba63761e938b6b9f7cf112ebe966125067fed654ab9b752713",
+  "path": "sources/search-access-ledger.jsonl",
+  "original_bytes": 0,
+  "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "current_bytes": 9593,
+  "current_sha256": "c9fa9840f89e3b32260781a185feb53eee35feb0431cf783ceaa92429eeea974",
+  "other_frozen_files_unchanged": 181,
+  "explanation": "Primary inadvertently included the empty access ledger in the static implementation freeze. Collection was explicitly authorized to append access events. The empty original prefix is preserved; only this intentionally growing ledger differs. No implementation, policy, prompts, selection plan or evaluator pins changed. Freeze A is not rewritten; source Freeze S now pins the completed ledger.",
+  "timing": "before independent labels and fresh runtime output"
+}

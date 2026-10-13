@@ -1,0 +1,410 @@
+{
+  "status": "completed_read_only_three_inventory_failure_diagnosis_not_source_correctness_scoring",
+  "pipeline_version": "round6-participation-record-1.0.2",
+  "pipeline_sha256": "2220f2cb751521f822cfe65062dcaf87bb87560c428c24be7f47b66dc9b4a680",
+  "admitted_inventory_documents": 3,
+  "total_assembly_errors": 18,
+  "error_class_counts": {
+    "assembler_weekday_grammar_gap": 4,
+    "model_literal_contract_violation": 6,
+    "model_group_contract_violation_and_role_purpose_limit": 8
+  },
+  "all_exact_evidence_selectors_resolved": 102,
+  "verifier_calls_for_these_documents": 0,
+  "documents": [
+    {
+      "document_id": "doc-de09ce82c4c7",
+      "source_text_sha256": "2527bde221f292839729f0f6031037f7e0356d823b20b88989f282badd6db7c6",
+      "source_codepoints": 3067,
+      "source_pages": 1,
+      "terminal_state": "assembly_review",
+      "terminal_arms": {},
+      "record_is_null": true,
+      "errors_reproduced": true,
+      "exact_evidence_selectors_resolved": 34,
+      "item_counts": {
+        "events": 4,
+        "routes": 10,
+        "requirements": 6,
+        "identities": 4,
+        "uncertainties": 1
+      },
+      "timing_items": 5,
+      "operation": {
+        "model": "openai/gpt-6.1-sol",
+        "provider": "OpenAI",
+        "operation_status": "completed",
+        "observed_cost_usd": 0.048171,
+        "cost_basis": "OpenRouter response-reported usage.cost; estimate separate, not invoice verified"
+      },
+      "findings": [
+        {
+          "item_id": "tm_hearing_date",
+          "error": "absolute date must normalize from explicit complete literal",
+          "source_spans": [
+            {
+              "start": 1060,
+              "end": 1087,
+              "quote": "DATE: Monday, July 13, 2026"
+            }
+          ],
+          "classification": "assembler_weekday_grammar_gap",
+          "raw": "Monday, July 13, 2026",
+          "value": "2026-07-13",
+          "printed_raw_result": null,
+          "component_only_diagnostic": "July 13, 2026",
+          "component_normalizer_result": "2026-07-13"
+        },
+        {
+          "item_id": "tm_written_date",
+          "error": "absolute date must normalize from explicit complete literal",
+          "source_spans": [
+            {
+              "start": 2413,
+              "end": 2529,
+              "quote": "Written comments received in\nthe Commission’s offices by 5:00 p.m. on Friday, July 10, 2026 will also be considered."
+            }
+          ],
+          "classification": "assembler_weekday_grammar_gap",
+          "raw": "Friday, July 10, 2026",
+          "value": "2026-07-10",
+          "printed_raw_result": null,
+          "component_only_diagnostic": "July 10, 2026",
+          "component_normalizer_result": "2026-07-10"
+        },
+        {
+          "item_id": "route_header_address",
+          "error": "literal not contained in its evidence",
+          "source_spans": [
+            {
+              "start": 514,
+              "end": 646,
+              "quote": "30 West Spring Street, L3\nMary M. Ross-Dolen                                                               Columbus, Ohio 43215-2256"
+            }
+          ],
+          "classification": "model_literal_contract_violation",
+          "literal": "30 West Spring Street, L3; Columbus, Ohio 43215-2256",
+          "literal_anywhere_in_source": false,
+          "role": "information_contact"
+        }
+      ],
+      "input_sha256": {
+        "execution/run/documents/doc-de09ce82c4c7/source.json": "b7cc86399aed24ff858451395613606bf6fb4202346296e1e48d330ce55ee389",
+        "execution/run/documents/doc-de09ce82c4c7/assembled.json": "bc84db28ec6e090b2a509f29e118ed71de1dfbabda8d1affe2b581c8f756520c",
+        "execution/run/documents/doc-de09ce82c4c7/terminal.json": "c0460ba1b29c5559ec0083157b05dd2661454c5ec250aad5073015ace2926320",
+        "execution/run/documents/doc-de09ce82c4c7/inventory-plan.json": "9d2520ead1c6d87dc155506e8d9f2a93f385d879893903d0ffb937d3b69852d7",
+        "execution/run/operations/inventory-751e9d026108779650088350/identity.json": "751e9d0261087796500883503a656a021b4495da137016db742b4be12616d060",
+        "execution/run/operations/inventory-751e9d026108779650088350/result.json": "27386dc6c7e1ef392e2bbd6ba813958afda929c249e3c65c6d2ded95dd6164a6"
+      }
+    },
+    {
+      "document_id": "doc-7be63f24299e",
+      "source_text_sha256": "9dfd5b5d07cb3cd4e33a509c3b809787fe61b900a753228f294a51d1c2592a64",
+      "source_codepoints": 2990,
+      "source_pages": 1,
+      "terminal_state": "assembly_review",
+      "terminal_arms": {},
+      "record_is_null": true,
+      "errors_reproduced": true,
+      "exact_evidence_selectors_resolved": 34,
+      "item_counts": {
+        "events": 4,
+        "routes": 8,
+        "requirements": 7,
+        "identities": 5,
+        "uncertainties": 0
+      },
+      "timing_items": 5,
+      "operation": {
+        "model": "openai/gpt-6.1-sol",
+        "provider": "OpenAI",
+        "operation_status": "completed",
+        "observed_cost_usd": 0.0429725,
+        "cost_basis": "OpenRouter response-reported usage.cost; estimate separate, not invoice verified"
+      },
+      "findings": [
+        {
+          "item_id": "t1",
+          "error": "absolute date must normalize from explicit complete literal",
+          "source_spans": [
+            {
+              "start": 1060,
+              "end": 1089,
+              "quote": "DATE: Monday, October 5, 2026"
+            }
+          ],
+          "classification": "assembler_weekday_grammar_gap",
+          "raw": "Monday, October 5, 2026",
+          "value": "2026-10-05",
+          "printed_raw_result": null,
+          "component_only_diagnostic": "October 5, 2026",
+          "component_normalizer_result": "2026-10-05"
+        },
+        {
+          "item_id": "t3",
+          "error": "absolute date must normalize from explicit complete literal",
+          "source_spans": [
+            {
+              "start": 2334,
+              "end": 2452,
+              "quote": "Written comments received in the\nCommission’s offices by 5:00 p.m. on Friday, October 2, 2026 will also be considered."
+            }
+          ],
+          "classification": "assembler_weekday_grammar_gap",
+          "raw": "Friday, October 2, 2026",
+          "value": "2026-10-02",
+          "printed_raw_result": null,
+          "component_only_diagnostic": "October 2, 2026",
+          "component_normalizer_result": "2026-10-02"
+        },
+        {
+          "item_id": "r1",
+          "error": "literal not contained in its evidence",
+          "source_spans": [
+            {
+              "start": 1108,
+              "end": 1216,
+              "quote": "PLACE: William H. Green Building\n       Level 2, Room 2\n       30 W. Spring Street\n       Columbus, OH 43215"
+            },
+            {
+              "start": 2069,
+              "end": 2201,
+              "quote": "appear and be heard in person, by an attorney, or both; may present their positions, arguments, or\ncontentions orally or in writing;"
+            }
+          ],
+          "classification": "model_literal_contract_violation",
+          "literal": "William H. Green Building, Level 2, Room 2, 30 W. Spring Street, Columbus, OH 43215",
+          "literal_anywhere_in_source": false,
+          "role": "submission"
+        },
+        {
+          "item_id": "r2",
+          "error": "literal not contained in its evidence",
+          "source_spans": [
+            {
+              "start": 2069,
+              "end": 2201,
+              "quote": "appear and be heard in person, by an attorney, or both; may present their positions, arguments, or\ncontentions orally or in writing;"
+            }
+          ],
+          "classification": "model_literal_contract_violation",
+          "literal": "Oral presentation at the hearing",
+          "literal_anywhere_in_source": false,
+          "role": "submission"
+        }
+      ],
+      "input_sha256": {
+        "execution/run/documents/doc-7be63f24299e/source.json": "a77258b4a51d261443003b58f462d859cebb62abf7b54b2a6ad762cc14656d86",
+        "execution/run/documents/doc-7be63f24299e/assembled.json": "77c1cfbd728a8962bed68206e1a1fc224eb996dafccbce3fd96edb64c7e595cd",
+        "execution/run/documents/doc-7be63f24299e/terminal.json": "c316de3f15add1c5c95e30e0d95f24fd73ddd4c24e62ff072694322234e3fa72",
+        "execution/run/documents/doc-7be63f24299e/inventory-plan.json": "f7b0566c70ca0713bf2e88729fff36dc095115618e1b2340ae4a99e14805fe69",
+        "execution/run/operations/inventory-9ccf34b242863333cf0b10ba/identity.json": "9ccf34b242863333cf0b10bae5bde09a5ba8722c5ff999479ca7a166976d940a",
+        "execution/run/operations/inventory-9ccf34b242863333cf0b10ba/result.json": "1d4968995f1593518514cb9ac5e8937f881910481259fbbe7831e2d1a7dce1ee"
+      }
+    },
+    {
+      "document_id": "doc-03d522cbc19e",
+      "source_text_sha256": "f8e6957c160ed394b6aa359be7532c09551d1205a4f47584a594d007b4c1ffae",
+      "source_codepoints": 2859,
+      "source_pages": 2,
+      "terminal_state": "assembly_review",
+      "terminal_arms": {},
+      "record_is_null": true,
+      "errors_reproduced": true,
+      "exact_evidence_selectors_resolved": 34,
+      "item_counts": {
+        "events": 3,
+        "routes": 11,
+        "requirements": 7,
+        "identities": 3,
+        "uncertainties": 3
+      },
+      "timing_items": 4,
+      "operation": {
+        "model": "openai/gpt-6.1-sol",
+        "provider": "OpenAI",
+        "operation_status": "completed",
+        "observed_cost_usd": 0.04658,
+        "cost_basis": "OpenRouter response-reported usage.cost; estimate separate, not invoice verified"
+      },
+      "findings": [
+        {
+          "item_id": "r1",
+          "error": "alternative groups reserved for submission routes",
+          "source_spans": [
+            {
+              "start": 1137,
+              "end": 1253,
+              "quote": "      Physical Location:\n\n      Franklin Training Center\n      528 River Street\n      Franklin, New Hampshire, 03235"
+            }
+          ],
+          "classification": "model_group_contract_violation_and_role_purpose_limit",
+          "role": "other",
+          "alternative_group": "hearing_access",
+          "literal": "Franklin Training Center\n      528 River Street\n      Franklin, New Hampshire, 03235"
+        },
+        {
+          "item_id": "r2",
+          "error": "literal not contained in its evidence",
+          "source_spans": [
+            {
+              "start": 1255,
+              "end": 1405,
+              "quote": "      Electronic Access, if applicable:\n      Microsoft Teams\n\n      Join the meeting now\n      Meeting ID:263 051 550 032 470\n      Passcode:Ss9xo3gS"
+            }
+          ],
+          "classification": "model_literal_contract_violation",
+          "literal": "Microsoft Teams; Meeting ID:263 051 550 032 470; Passcode:Ss9xo3gS",
+          "literal_anywhere_in_source": false,
+          "role": "other"
+        },
+        {
+          "item_id": "r2",
+          "error": "alternative groups reserved for submission routes",
+          "source_spans": [
+            {
+              "start": 1255,
+              "end": 1405,
+              "quote": "      Electronic Access, if applicable:\n      Microsoft Teams\n\n      Join the meeting now\n      Meeting ID:263 051 550 032 470\n      Passcode:Ss9xo3gS"
+            }
+          ],
+          "classification": "model_group_contract_violation_and_role_purpose_limit",
+          "role": "other",
+          "alternative_group": "hearing_access",
+          "literal": "Microsoft Teams; Meeting ID:263 051 550 032 470; Passcode:Ss9xo3gS"
+        },
+        {
+          "item_id": "r3",
+          "error": "literal not contained in its evidence",
+          "source_spans": [
+            {
+              "start": 1505,
+              "end": 1659,
+              "quote": "        Dial in by phone\n        +1 603-931-4944,,468731372# United States, Concord\n        Find a local number\n\n        Phone conference ID: 468 731 372#"
+            }
+          ],
+          "classification": "model_literal_contract_violation",
+          "literal": "+1 603-931-4944,,468731372#; Phone conference ID: 468 731 372#",
+          "literal_anywhere_in_source": false,
+          "role": "other"
+        },
+        {
+          "item_id": "r3",
+          "error": "alternative groups reserved for submission routes",
+          "source_spans": [
+            {
+              "start": 1505,
+              "end": 1659,
+              "quote": "        Dial in by phone\n        +1 603-931-4944,,468731372# United States, Concord\n        Find a local number\n\n        Phone conference ID: 468 731 372#"
+            }
+          ],
+          "classification": "model_group_contract_violation_and_role_purpose_limit",
+          "role": "other",
+          "alternative_group": "hearing_access",
+          "literal": "+1 603-931-4944,,468731372#; Phone conference ID: 468 731 372#"
+        },
+        {
+          "item_id": "r6",
+          "error": "alternative groups reserved for submission routes",
+          "source_spans": [
+            {
+              "start": 1764,
+              "end": 1844,
+              "quote": "Mark Kondelis, Jr. at 603-271-3549 or via email at Mark.A.KondelisJr@des.nh.gov."
+            }
+          ],
+          "classification": "model_group_contract_violation_and_role_purpose_limit",
+          "role": "information_contact",
+          "alternative_group": "hearing_help",
+          "literal": "603-271-3549"
+        },
+        {
+          "item_id": "r7",
+          "error": "alternative groups reserved for submission routes",
+          "source_spans": [
+            {
+              "start": 1764,
+              "end": 1844,
+              "quote": "Mark Kondelis, Jr. at 603-271-3549 or via email at Mark.A.KondelisJr@des.nh.gov."
+            }
+          ],
+          "classification": "model_group_contract_violation_and_role_purpose_limit",
+          "role": "information_contact",
+          "alternative_group": "hearing_help",
+          "literal": "Mark.A.KondelisJr@des.nh.gov"
+        },
+        {
+          "item_id": "r8",
+          "error": "literal not contained in its evidence",
+          "source_spans": [
+            {
+              "start": 2226,
+              "end": 2431,
+              "quote": " Name: Aron Johnson                                   Title: Legal Coordinator\n Address: 29 Hazen Drive\n PO Box 95                                            Phone Number: (603) 271-2464\n Concord, NH 03302"
+            }
+          ],
+          "classification": "model_literal_contract_violation",
+          "literal": "Aron Johnson, Legal Coordinator, 29 Hazen Drive, PO Box 95, Concord, NH 03302",
+          "literal_anywhere_in_source": false,
+          "role": "information_contact"
+        },
+        {
+          "item_id": "r8",
+          "error": "alternative groups reserved for submission routes",
+          "source_spans": [
+            {
+              "start": 2226,
+              "end": 2431,
+              "quote": " Name: Aron Johnson                                   Title: Legal Coordinator\n Address: 29 Hazen Drive\n PO Box 95                                            Phone Number: (603) 271-2464\n Concord, NH 03302"
+            }
+          ],
+          "classification": "model_group_contract_violation_and_role_purpose_limit",
+          "role": "information_contact",
+          "alternative_group": "copies_questions_accessibility",
+          "literal": "Aron Johnson, Legal Coordinator, 29 Hazen Drive, PO Box 95, Concord, NH 03302"
+        },
+        {
+          "item_id": "r9",
+          "error": "alternative groups reserved for submission routes",
+          "source_spans": [
+            {
+              "start": 2384,
+              "end": 2412,
+              "quote": "Phone Number: (603) 271-2464"
+            }
+          ],
+          "classification": "model_group_contract_violation_and_role_purpose_limit",
+          "role": "information_contact",
+          "alternative_group": "copies_questions_accessibility",
+          "literal": "(603) 271-2464"
+        },
+        {
+          "item_id": "r10",
+          "error": "alternative groups reserved for submission routes",
+          "source_spans": [
+            {
+              "start": 2552,
+              "end": 2584,
+              "quote": "Email: aron.b.johnson@des.nh.gov"
+            }
+          ],
+          "classification": "model_group_contract_violation_and_role_purpose_limit",
+          "role": "information_contact",
+          "alternative_group": "copies_questions_accessibility",
+          "literal": "aron.b.johnson@des.nh.gov"
+        }
+      ],
+      "input_sha256": {
+        "execution/run/documents/doc-03d522cbc19e/source.json": "f0b4fb39d8d6f45f39634ce57646501423308ed7246473070c8ec53a66b31284",
+        "execution/run/documents/doc-03d522cbc19e/assembled.json": "da5c9ab950366e233a570b11592312f7050cf30c571b3e48b065fe27f6214624",
+        "execution/run/documents/doc-03d522cbc19e/terminal.json": "403c50a3f24ad86e2a74b8b9739d5cb449fda191773d20ea7c1850e96329bc53",
+        "execution/run/documents/doc-03d522cbc19e/inventory-plan.json": "00133e2d16b21544ce58ca82eac54fb001504b1ff235d093f58bc436bd41b125",
+        "execution/run/operations/inventory-0074085581a8dc399b7cc0a3/identity.json": "0074085581a8dc399b7cc0a3bc8874bcb12affad4978e69235148dee1009dcc9",
+        "execution/run/operations/inventory-0074085581a8dc399b7cc0a3/result.json": "7d0ba0f5d9c40967545b8563ab7a5fdafda60c023539820a10e1267840e1a60f"
+      }
+    }
+  ],
+  "new_provider_calls": 0,
+  "frozen_code_or_outputs_changed": false,
+  "source_labels_read": false
+}

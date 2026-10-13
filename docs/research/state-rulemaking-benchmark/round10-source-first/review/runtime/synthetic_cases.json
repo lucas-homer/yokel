@@ -1,0 +1,2440 @@
+{
+  "schema_version": "round10.review.offline-cases.v1",
+  "classification": "Private independent review cases; runtime must not read this file except in a guarded offline test harness",
+  "fixture_path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round9-exact-id-completeness/protocol/development-fixtures.json",
+  "fixture_sha256": "d8d6b83da1232c3063c8206972c33a12c18829556c3e99e5979310ef0364749a",
+  "derivation": "Original source assertions, evidence and oracle pointers/dispositions copied transparently; IDs assigned u001 onward. The src-optional modality is optional, src-receipt mandatory, remaining units informational. Evidence-only transition retains partial event assertion and remains mismatched. Unknown endpoint/modality are record-recovery unknowns, not newly invented source uncertainty. This is supplied annotation aggregation, not semantic discovery.",
+  "cases": [
+    {
+      "case_id": "rule_assertion/semantic_positive",
+      "classification": "Private supplied offline annotation, never a provider response or measured discovery",
+      "source_text": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+      "record": {
+        "schema_version": "round7.participation_record.v1",
+        "document_id": "synthetic-r9-rule",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "coverage": {
+          "status": "claimed_complete",
+          "rationale": "Synthetic development fixture, not a real notice or a completeness oracle.",
+          "evidence": [
+            {
+              "start": 0,
+              "end": 89,
+              "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "e_hearing",
+            "phase": "hearing",
+            "description": "Public hearing to repeal Chapters A and B and recreate Chapter A.",
+            "timing": [],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          }
+        ],
+        "routes": [],
+        "requirements": [],
+        "identities": [
+          {
+            "id": "i_agency",
+            "kind": "agency",
+            "literal": "Civic Board",
+            "relation": "canonical",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          },
+          {
+            "id": "i_rule",
+            "kind": "rule",
+            "literal": "Chapters A and B",
+            "relation": "canonical",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          }
+        ],
+        "uncertainties": [],
+        "alternative_groups": []
+      },
+      "inventory": {
+        "schema_version": "round10.source-inventory.v1",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "units": [
+          {
+            "id": "u001",
+            "kind": "identity",
+            "assertion": "Civic Board is issuing agency.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u002",
+            "kind": "fact",
+            "assertion": "Public hearing occurs.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u003",
+            "kind": "identity",
+            "assertion": "Both A and B are repealed and A is recreated in this proceeding.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          }
+        ]
+      },
+      "mapping_response": {
+        "schema_version": "round10.source-mapping.v1",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "record_sha256": "46e3aa14567d969fd989960b0eedc35e14a6a4ae81d673b72913ace142167434",
+        "inventory_sha256": "0b764e81dcc2adf367903ac319b9363032fc25f427331c01632bce055e1ad518",
+        "mappings": {
+          "u001": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/identities/0/literal"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u002": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description",
+              "/events/0/phase"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u003": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description"
+            ],
+            "reason": "Transition must occur in event semantic description. Evidence and coverage rationale are never assertion pointers."
+          }
+        }
+      },
+      "expected_mapping_status": "all_inventoried_units_matched",
+      "expected_semantic_status": "unverified",
+      "private_canary": "REVIEW_PRIVATE_EXPECTATION_c91fbd:rule_assertion/semantic_positive"
+    },
+    {
+      "case_id": "rule_assertion/evidence_only_negative",
+      "classification": "Private supplied offline annotation, never a provider response or measured discovery",
+      "source_text": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+      "record": {
+        "schema_version": "round7.participation_record.v1",
+        "document_id": "synthetic-r9-rule",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "coverage": {
+          "status": "claimed_complete",
+          "rationale": "Synthetic development fixture, not a real notice or a completeness oracle.",
+          "evidence": [
+            {
+              "start": 0,
+              "end": 89,
+              "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "e_hearing",
+            "phase": "hearing",
+            "description": "Public hearing on Chapters A and B.",
+            "timing": [],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          }
+        ],
+        "routes": [],
+        "requirements": [],
+        "identities": [
+          {
+            "id": "i_agency",
+            "kind": "agency",
+            "literal": "Civic Board",
+            "relation": "canonical",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          },
+          {
+            "id": "i_rule",
+            "kind": "rule",
+            "literal": "Chapters A and B",
+            "relation": "canonical",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          }
+        ],
+        "uncertainties": [],
+        "alternative_groups": []
+      },
+      "inventory": {
+        "schema_version": "round10.source-inventory.v1",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "units": [
+          {
+            "id": "u001",
+            "kind": "identity",
+            "assertion": "Civic Board is issuing agency.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u002",
+            "kind": "fact",
+            "assertion": "Public hearing occurs.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u003",
+            "kind": "identity",
+            "assertion": "Both A and B are repealed and A is recreated in this proceeding.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          }
+        ]
+      },
+      "mapping_response": {
+        "schema_version": "round10.source-mapping.v1",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "record_sha256": "a50611c0f9c466590b86e8cbb9faa54a42679ee74b2249a77d27392fd48b3ac6",
+        "inventory_sha256": "0b764e81dcc2adf367903ac319b9363032fc25f427331c01632bce055e1ad518",
+        "mappings": {
+          "u001": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/identities/0/literal"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u002": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description",
+              "/events/0/phase"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u003": {
+            "disposition": "mismatched",
+            "operative_pointers": [
+              "/events/0/description"
+            ],
+            "reason": "Transition must occur in event semantic description. Evidence and coverage rationale are never assertion pointers."
+          }
+        }
+      },
+      "expected_mapping_status": "not_complete",
+      "expected_semantic_status": "unverified",
+      "private_canary": "REVIEW_PRIVATE_EXPECTATION_c91fbd:rule_assertion/evidence_only_negative"
+    },
+    {
+      "case_id": "rule_assertion/coverage_rationale_cannot_repair",
+      "classification": "Private supplied offline annotation, never a provider response or measured discovery",
+      "source_text": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+      "record": {
+        "schema_version": "round7.participation_record.v1",
+        "document_id": "synthetic-r9-rule",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "coverage": {
+          "status": "claimed_complete",
+          "rationale": "This record covers repeal of Chapters A and B and recreation of Chapter A.",
+          "evidence": [
+            {
+              "start": 0,
+              "end": 89,
+              "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "e_hearing",
+            "phase": "hearing",
+            "description": "Public hearing on Chapters A and B.",
+            "timing": [],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          }
+        ],
+        "routes": [],
+        "requirements": [],
+        "identities": [
+          {
+            "id": "i_agency",
+            "kind": "agency",
+            "literal": "Civic Board",
+            "relation": "canonical",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          },
+          {
+            "id": "i_rule",
+            "kind": "rule",
+            "literal": "Chapters A and B",
+            "relation": "canonical",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          }
+        ],
+        "uncertainties": [],
+        "alternative_groups": []
+      },
+      "inventory": {
+        "schema_version": "round10.source-inventory.v1",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "units": [
+          {
+            "id": "u001",
+            "kind": "identity",
+            "assertion": "Civic Board is issuing agency.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u002",
+            "kind": "fact",
+            "assertion": "Public hearing occurs.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u003",
+            "kind": "identity",
+            "assertion": "Both A and B are repealed and A is recreated in this proceeding.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          }
+        ]
+      },
+      "mapping_response": {
+        "schema_version": "round10.source-mapping.v1",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "record_sha256": "e9da064da7e77afef455ea778e289bc8ff446e900380ccdb18244c11dfb9be58",
+        "inventory_sha256": "0b764e81dcc2adf367903ac319b9363032fc25f427331c01632bce055e1ad518",
+        "mappings": {
+          "u001": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/identities/0/literal"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u002": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description",
+              "/events/0/phase"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u003": {
+            "disposition": "mismatched",
+            "operative_pointers": [
+              "/events/0/description"
+            ],
+            "reason": "Transition must occur in event semantic description. Evidence and coverage rationale are never assertion pointers."
+          }
+        }
+      },
+      "expected_mapping_status": "not_complete",
+      "expected_semantic_status": "unverified",
+      "private_canary": "REVIEW_PRIVATE_EXPECTATION_c91fbd:rule_assertion/coverage_rationale_cannot_repair"
+    },
+    {
+      "case_id": "rule_assertion/source_only_extra_negative",
+      "classification": "Private supplied offline annotation, never a provider response or measured discovery",
+      "source_text": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A. Written comments must be received by June 1, 2030.",
+      "record": {
+        "schema_version": "round7.participation_record.v1",
+        "document_id": "synthetic-r9-rule",
+        "source_text_sha256": "070a0f4c93e13c0709fe04722093e5d089a25ca9c4e2e1ee40a0db324ed900b7",
+        "coverage": {
+          "status": "claimed_complete",
+          "rationale": "Synthetic development fixture, not a real notice or a completeness oracle.",
+          "evidence": [
+            {
+              "start": 0,
+              "end": 89,
+              "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "e_hearing",
+            "phase": "hearing",
+            "description": "Public hearing to repeal Chapters A and B and recreate Chapter A.",
+            "timing": [],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          }
+        ],
+        "routes": [],
+        "requirements": [],
+        "identities": [
+          {
+            "id": "i_agency",
+            "kind": "agency",
+            "literal": "Civic Board",
+            "relation": "canonical",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          },
+          {
+            "id": "i_rule",
+            "kind": "rule",
+            "literal": "Chapters A and B",
+            "relation": "canonical",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ]
+          }
+        ],
+        "uncertainties": [],
+        "alternative_groups": []
+      },
+      "inventory": {
+        "schema_version": "round10.source-inventory.v1",
+        "source_text_sha256": "070a0f4c93e13c0709fe04722093e5d089a25ca9c4e2e1ee40a0db324ed900b7",
+        "units": [
+          {
+            "id": "u001",
+            "kind": "identity",
+            "assertion": "Civic Board is issuing agency.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u002",
+            "kind": "fact",
+            "assertion": "Public hearing occurs.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u003",
+            "kind": "identity",
+            "assertion": "Both A and B are repealed and A is recreated in this proceeding.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u004",
+            "kind": "fact",
+            "assertion": "Written comment participation phase.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A. Written comments must be received by June 1, 2030.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u005",
+            "kind": "fact",
+            "assertion": "Comments received by June1,2030; no inferred timezone.",
+            "modality": "mandatory",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A. Written comments must be received by June 1, 2030.",
+                "occurrence": 1
+              }
+            ]
+          }
+        ]
+      },
+      "mapping_response": {
+        "schema_version": "round10.source-mapping.v1",
+        "source_text_sha256": "070a0f4c93e13c0709fe04722093e5d089a25ca9c4e2e1ee40a0db324ed900b7",
+        "record_sha256": "d50e09a447e7ba9df6383e78d9eb469a69d54aeeca85121feeaebc90b52255f5",
+        "inventory_sha256": "84f92f108a857a1ef4d66c2ae1fb4783525444e989f8bc62fb402521c130b100",
+        "mappings": {
+          "u001": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/identities/0/literal"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u002": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description",
+              "/events/0/phase"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u003": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description"
+            ],
+            "reason": "Transition must occur in event semantic description. Evidence and coverage rationale are never assertion pointers."
+          },
+          "u004": {
+            "disposition": "missing",
+            "operative_pointers": [],
+            "reason": "Additional source-only obligation absent from unchanged candidate semantic fields and ID schedule."
+          },
+          "u005": {
+            "disposition": "missing",
+            "operative_pointers": [],
+            "reason": "Additional source-only obligation absent from unchanged candidate semantic fields and ID schedule."
+          }
+        }
+      },
+      "expected_mapping_status": "not_complete",
+      "expected_semantic_status": "unverified",
+      "private_canary": "REVIEW_PRIVATE_EXPECTATION_c91fbd:rule_assertion/source_only_extra_negative"
+    },
+    {
+      "case_id": "full_alternatives/full_group_positive",
+      "classification": "Private supplied offline annotation, never a provider response or measured discovery",
+      "source_text": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+      "record": {
+        "schema_version": "round7.participation_record.v1",
+        "document_id": "synthetic-r9-alternatives",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "coverage": {
+          "status": "claimed_complete",
+          "rationale": "Synthetic development fixture, not a real notice or a completeness oracle.",
+          "evidence": [
+            {
+              "start": 0,
+              "end": 180,
+              "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "e_hearing",
+            "phase": "hearing",
+            "description": "Public hearing H.",
+            "timing": [],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ]
+          }
+        ],
+        "routes": [
+          {
+            "id": "r_zoom",
+            "channel": "web",
+            "role": "other",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "alternative_group_id": "ag_access",
+            "components": [
+              {
+                "id": "c_zoom",
+                "kind": "endpoint",
+                "literal": "https://example.invalid/hearing",
+                "evidence": [
+                  {
+                    "start": 61,
+                    "end": 92,
+                    "quote": "https://example.invalid/hearing"
+                  }
+                ]
+              }
+            ],
+            "description": "Hearing access via zoom."
+          },
+          {
+            "id": "r_phone1",
+            "channel": "telephone",
+            "role": "other",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "alternative_group_id": "ag_access",
+            "components": [
+              {
+                "id": "c_phone1",
+                "kind": "endpoint",
+                "literal": "+1-202-555-0101",
+                "evidence": [
+                  {
+                    "start": 108,
+                    "end": 123,
+                    "quote": "+1-202-555-0101"
+                  }
+                ]
+              }
+            ],
+            "description": "Hearing access via phone1."
+          },
+          {
+            "id": "r_phone2",
+            "channel": "telephone",
+            "role": "other",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "alternative_group_id": "ag_access",
+            "components": [
+              {
+                "id": "c_phone2",
+                "kind": "endpoint",
+                "literal": "+1-202-555-0102",
+                "evidence": [
+                  {
+                    "start": 127,
+                    "end": 142,
+                    "quote": "+1-202-555-0102"
+                  }
+                ]
+              }
+            ],
+            "description": "Hearing access via phone2."
+          }
+        ],
+        "requirements": [],
+        "identities": [
+          {
+            "id": "i_agency",
+            "kind": "agency",
+            "literal": "Civic Board",
+            "relation": "canonical",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ]
+          }
+        ],
+        "uncertainties": [],
+        "alternative_groups": [
+          {
+            "id": "ag_access",
+            "purpose": "hearing_access",
+            "route_ids": [
+              "r_zoom",
+              "r_phone1",
+              "r_phone2"
+            ],
+            "event_ids": [
+              "e_hearing"
+            ],
+            "requirement_ids": [],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ]
+          }
+        ]
+      },
+      "inventory": {
+        "schema_version": "round10.source-inventory.v1",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "units": [
+          {
+            "id": "u001",
+            "kind": "identity",
+            "assertion": "Civic Board is agency.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u002",
+            "kind": "fact",
+            "assertion": "Hearing H.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u003",
+            "kind": "fact",
+            "assertion": "Hearing access endpoint https://example.invalid/hearing",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u004",
+            "kind": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0101",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u005",
+            "kind": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0102",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u006",
+            "kind": "relationship",
+            "assertion": "Zoom and both phones are one full hearing-access alternative group; every required endpoint is linked.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [
+              "u003",
+              "u004",
+              "u005"
+            ],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          }
+        ]
+      },
+      "mapping_response": {
+        "schema_version": "round10.source-mapping.v1",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "record_sha256": "ffe60a65f03fc748671c79d9c3d3fb082106f74c5c68abb11720cc301668c56f",
+        "inventory_sha256": "d8963c3bc5b73a2b8a970df7c9e638f77ddd8db4a83920b77502dcf5a25ae080",
+        "mappings": {
+          "u001": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/identities/0/literal"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u002": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description",
+              "/events/0/phase"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u003": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/routes/0/components/0/literal",
+              "/routes/0/event_ids",
+              "/routes/0/association"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u004": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/routes/1/components/0/literal",
+              "/routes/1/event_ids",
+              "/routes/1/association"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u005": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/routes/2/components/0/literal",
+              "/routes/2/event_ids",
+              "/routes/2/association"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u006": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/alternative_groups/0/route_ids",
+              "/alternative_groups/0/purpose",
+              "/alternative_groups/0/event_ids",
+              "/routes/0/alternative_group_id",
+              "/routes/1/alternative_group_id",
+              "/routes/2/alternative_group_id"
+            ],
+            "reason": "All3 endpoint units required. Phone-only subset fails; any unresolved endpoint propagates unknown."
+          }
+        }
+      },
+      "expected_mapping_status": "all_inventoried_units_matched",
+      "expected_semantic_status": "unverified",
+      "private_canary": "REVIEW_PRIVATE_EXPECTATION_c91fbd:full_alternatives/full_group_positive"
+    },
+    {
+      "case_id": "full_alternatives/phone_subgroup_negative",
+      "classification": "Private supplied offline annotation, never a provider response or measured discovery",
+      "source_text": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+      "record": {
+        "schema_version": "round7.participation_record.v1",
+        "document_id": "synthetic-r9-alternatives",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "coverage": {
+          "status": "claimed_complete",
+          "rationale": "Synthetic development fixture, not a real notice or a completeness oracle.",
+          "evidence": [
+            {
+              "start": 0,
+              "end": 180,
+              "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "e_hearing",
+            "phase": "hearing",
+            "description": "Public hearing H.",
+            "timing": [],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ]
+          }
+        ],
+        "routes": [
+          {
+            "id": "r_zoom",
+            "channel": "web",
+            "role": "other",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "alternative_group_id": null,
+            "components": [
+              {
+                "id": "c_zoom",
+                "kind": "endpoint",
+                "literal": "https://example.invalid/hearing",
+                "evidence": [
+                  {
+                    "start": 61,
+                    "end": 92,
+                    "quote": "https://example.invalid/hearing"
+                  }
+                ]
+              }
+            ],
+            "description": "Hearing access via zoom."
+          },
+          {
+            "id": "r_phone1",
+            "channel": "telephone",
+            "role": "other",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "alternative_group_id": "ag_access",
+            "components": [
+              {
+                "id": "c_phone1",
+                "kind": "endpoint",
+                "literal": "+1-202-555-0101",
+                "evidence": [
+                  {
+                    "start": 108,
+                    "end": 123,
+                    "quote": "+1-202-555-0101"
+                  }
+                ]
+              }
+            ],
+            "description": "Hearing access via phone1."
+          },
+          {
+            "id": "r_phone2",
+            "channel": "telephone",
+            "role": "other",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "alternative_group_id": "ag_access",
+            "components": [
+              {
+                "id": "c_phone2",
+                "kind": "endpoint",
+                "literal": "+1-202-555-0102",
+                "evidence": [
+                  {
+                    "start": 127,
+                    "end": 142,
+                    "quote": "+1-202-555-0102"
+                  }
+                ]
+              }
+            ],
+            "description": "Hearing access via phone2."
+          }
+        ],
+        "requirements": [],
+        "identities": [
+          {
+            "id": "i_agency",
+            "kind": "agency",
+            "literal": "Civic Board",
+            "relation": "canonical",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ]
+          }
+        ],
+        "uncertainties": [],
+        "alternative_groups": [
+          {
+            "id": "ag_access",
+            "purpose": "hearing_access",
+            "route_ids": [
+              "r_phone1",
+              "r_phone2"
+            ],
+            "event_ids": [
+              "e_hearing"
+            ],
+            "requirement_ids": [],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ]
+          }
+        ]
+      },
+      "inventory": {
+        "schema_version": "round10.source-inventory.v1",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "units": [
+          {
+            "id": "u001",
+            "kind": "identity",
+            "assertion": "Civic Board is agency.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u002",
+            "kind": "fact",
+            "assertion": "Hearing H.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u003",
+            "kind": "fact",
+            "assertion": "Hearing access endpoint https://example.invalid/hearing",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u004",
+            "kind": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0101",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u005",
+            "kind": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0102",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u006",
+            "kind": "relationship",
+            "assertion": "Zoom and both phones are one full hearing-access alternative group; every required endpoint is linked.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [
+              "u003",
+              "u004",
+              "u005"
+            ],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          }
+        ]
+      },
+      "mapping_response": {
+        "schema_version": "round10.source-mapping.v1",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "record_sha256": "4c19bacf26b277fe2040a7bd8af1d86946f02cbde58eef032c34c0d3b810da9d",
+        "inventory_sha256": "d8963c3bc5b73a2b8a970df7c9e638f77ddd8db4a83920b77502dcf5a25ae080",
+        "mappings": {
+          "u001": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/identities/0/literal"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u002": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description",
+              "/events/0/phase"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u003": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/routes/0/components/0/literal",
+              "/routes/0/event_ids",
+              "/routes/0/association"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u004": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/routes/1/components/0/literal",
+              "/routes/1/event_ids",
+              "/routes/1/association"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u005": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/routes/2/components/0/literal",
+              "/routes/2/event_ids",
+              "/routes/2/association"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u006": {
+            "disposition": "mismatched",
+            "operative_pointers": [
+              "/alternative_groups/0/route_ids",
+              "/alternative_groups/0/purpose",
+              "/alternative_groups/0/event_ids",
+              "/routes/0/alternative_group_id",
+              "/routes/1/alternative_group_id",
+              "/routes/2/alternative_group_id"
+            ],
+            "reason": "All3 endpoint units required. Phone-only subset fails; any unresolved endpoint propagates unknown."
+          }
+        }
+      },
+      "expected_mapping_status": "not_complete",
+      "expected_semantic_status": "unverified",
+      "private_canary": "REVIEW_PRIVATE_EXPECTATION_c91fbd:full_alternatives/phone_subgroup_negative"
+    },
+    {
+      "case_id": "full_alternatives/unknown_endpoint_blocks_group",
+      "classification": "Private supplied offline annotation, never a provider response or measured discovery",
+      "source_text": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+      "record": {
+        "schema_version": "round7.participation_record.v1",
+        "document_id": "synthetic-r9-alternatives",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "coverage": {
+          "status": "claimed_complete",
+          "rationale": "Synthetic development fixture, not a real notice or a completeness oracle.",
+          "evidence": [
+            {
+              "start": 0,
+              "end": 180,
+              "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "e_hearing",
+            "phase": "hearing",
+            "description": "Public hearing H.",
+            "timing": [],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ]
+          }
+        ],
+        "routes": [
+          {
+            "id": "r_zoom",
+            "channel": "web",
+            "role": "other",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "association": "uncertain",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "alternative_group_id": "ag_access",
+            "components": [
+              {
+                "id": "c_zoom",
+                "kind": "endpoint",
+                "literal": "https://example.invalid/hearing",
+                "evidence": [
+                  {
+                    "start": 61,
+                    "end": 92,
+                    "quote": "https://example.invalid/hearing"
+                  }
+                ]
+              }
+            ],
+            "description": "Hearing access via zoom."
+          },
+          {
+            "id": "r_phone1",
+            "channel": "telephone",
+            "role": "other",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "alternative_group_id": "ag_access",
+            "components": [
+              {
+                "id": "c_phone1",
+                "kind": "endpoint",
+                "literal": "+1-202-555-0101",
+                "evidence": [
+                  {
+                    "start": 108,
+                    "end": 123,
+                    "quote": "+1-202-555-0101"
+                  }
+                ]
+              }
+            ],
+            "description": "Hearing access via phone1."
+          },
+          {
+            "id": "r_phone2",
+            "channel": "telephone",
+            "role": "other",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "alternative_group_id": "ag_access",
+            "components": [
+              {
+                "id": "c_phone2",
+                "kind": "endpoint",
+                "literal": "+1-202-555-0102",
+                "evidence": [
+                  {
+                    "start": 127,
+                    "end": 142,
+                    "quote": "+1-202-555-0102"
+                  }
+                ]
+              }
+            ],
+            "description": "Hearing access via phone2."
+          }
+        ],
+        "requirements": [],
+        "identities": [
+          {
+            "id": "i_agency",
+            "kind": "agency",
+            "literal": "Civic Board",
+            "relation": "canonical",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ]
+          }
+        ],
+        "uncertainties": [
+          {
+            "id": "u_zoom",
+            "kind": "association",
+            "description": "Candidate record has not established endpoint association.",
+            "event_ids": [
+              "e_hearing"
+            ],
+            "route_ids": [
+              "r_zoom"
+            ],
+            "requirement_ids": [],
+            "identity_ids": [],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ]
+          }
+        ],
+        "alternative_groups": [
+          {
+            "id": "ag_access",
+            "purpose": "hearing_access",
+            "route_ids": [
+              "r_zoom",
+              "r_phone1",
+              "r_phone2"
+            ],
+            "event_ids": [
+              "e_hearing"
+            ],
+            "requirement_ids": [],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ]
+          }
+        ]
+      },
+      "inventory": {
+        "schema_version": "round10.source-inventory.v1",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "units": [
+          {
+            "id": "u001",
+            "kind": "identity",
+            "assertion": "Civic Board is agency.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u002",
+            "kind": "fact",
+            "assertion": "Hearing H.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u003",
+            "kind": "fact",
+            "assertion": "Hearing access endpoint https://example.invalid/hearing",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u004",
+            "kind": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0101",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u005",
+            "kind": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0102",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u006",
+            "kind": "relationship",
+            "assertion": "Zoom and both phones are one full hearing-access alternative group; every required endpoint is linked.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [
+              "u003",
+              "u004",
+              "u005"
+            ],
+            "evidence": [
+              {
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives.",
+                "occurrence": 1
+              }
+            ]
+          }
+        ]
+      },
+      "mapping_response": {
+        "schema_version": "round10.source-mapping.v1",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "record_sha256": "81cc86b8f28fd267ed7f4ace2b3910c12d6171ffe85e39db07a094b652b2937d",
+        "inventory_sha256": "d8963c3bc5b73a2b8a970df7c9e638f77ddd8db4a83920b77502dcf5a25ae080",
+        "mappings": {
+          "u001": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/identities/0/literal"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u002": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description",
+              "/events/0/phase"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u003": {
+            "disposition": "unknown",
+            "operative_pointers": [
+              "/routes/0/components/0/literal",
+              "/routes/0/event_ids",
+              "/routes/0/association"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u004": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/routes/1/components/0/literal",
+              "/routes/1/event_ids",
+              "/routes/1/association"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u005": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/routes/2/components/0/literal",
+              "/routes/2/event_ids",
+              "/routes/2/association"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u006": {
+            "disposition": "unknown",
+            "operative_pointers": [
+              "/alternative_groups/0/route_ids",
+              "/alternative_groups/0/purpose",
+              "/alternative_groups/0/event_ids",
+              "/routes/0/alternative_group_id",
+              "/routes/1/alternative_group_id",
+              "/routes/2/alternative_group_id"
+            ],
+            "reason": "All3 endpoint units required. Phone-only subset fails; any unresolved endpoint propagates unknown."
+          }
+        }
+      },
+      "expected_mapping_status": "unverified",
+      "expected_semantic_status": "unverified",
+      "private_canary": "REVIEW_PRIVATE_EXPECTATION_c91fbd:full_alternatives/unknown_endpoint_blocks_group"
+    },
+    {
+      "case_id": "modality_preservation/optional_positive",
+      "classification": "Private supplied offline annotation, never a provider response or measured discovery",
+      "source_text": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+      "record": {
+        "schema_version": "round7.participation_record.v1",
+        "document_id": "synthetic-r9-modality",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "coverage": {
+          "status": "claimed_complete",
+          "rationale": "Synthetic development fixture, not a real notice or a completeness oracle.",
+          "evidence": [
+            {
+              "start": 0,
+              "end": 132,
+              "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "e_comments",
+            "phase": "written_comment",
+            "description": "Written comment submission.",
+            "timing": [],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "routes": [
+          {
+            "id": "r_email",
+            "channel": "email",
+            "role": "submission",
+            "event_ids": [
+              "e_comments"
+            ],
+            "association": "source_resolved",
+            "alternative_group_id": null,
+            "description": "Written comment email.",
+            "components": [
+              {
+                "id": "c_email",
+                "kind": "endpoint",
+                "literal": "comments@example.invalid",
+                "evidence": [
+                  {
+                    "start": 40,
+                    "end": 64,
+                    "quote": "comments@example.invalid"
+                  }
+                ]
+              }
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "q_send",
+            "modality": "optional",
+            "semantic_class": "instruction",
+            "kind": "other",
+            "text": "Submission is optional; you should email comments to that address.",
+            "event_ids": [
+              "e_comments"
+            ],
+            "route_ids": [
+              "r_email"
+            ],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "identities": [
+          {
+            "id": "i_agency",
+            "kind": "agency",
+            "literal": "Civic Board",
+            "relation": "canonical",
+            "event_ids": [
+              "e_comments"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "uncertainties": [],
+        "alternative_groups": []
+      },
+      "inventory": {
+        "schema_version": "round10.source-inventory.v1",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "units": [
+          {
+            "id": "u001",
+            "kind": "identity",
+            "assertion": "Civic Board is agency.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u002",
+            "kind": "fact",
+            "assertion": "Written comments are accepted.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u003",
+            "kind": "fact",
+            "assertion": "Submission endpoint comments@example.invalid.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u004",
+            "kind": "instruction",
+            "assertion": "Submission is expressly optional and email wording advisory.",
+            "modality": "optional",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          }
+        ]
+      },
+      "mapping_response": {
+        "schema_version": "round10.source-mapping.v1",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "record_sha256": "1df3ba3ef5a7779388a7ecd7911418b77dacdaeb8738ec610454b3e451a4f4ab",
+        "inventory_sha256": "1579d396add1239aede117cf5adbec7cb12ce2210da438ccf2686fbef284dfe7",
+        "mappings": {
+          "u001": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/identities/0/literal"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u002": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description",
+              "/events/0/phase"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u003": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/routes/0/components/0/literal",
+              "/routes/0/role",
+              "/routes/0/event_ids"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u004": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/requirements/0/text",
+              "/requirements/0/modality",
+              "/requirements/0/route_ids"
+            ],
+            "reason": "Text and typed modality jointly preserve explicit source optionality; unclear cannot count preserved."
+          }
+        }
+      },
+      "expected_mapping_status": "all_inventoried_units_matched",
+      "expected_semantic_status": "unverified",
+      "private_canary": "REVIEW_PRIVATE_EXPECTATION_c91fbd:modality_preservation/optional_positive"
+    },
+    {
+      "case_id": "modality_preservation/unclear_negative",
+      "classification": "Private supplied offline annotation, never a provider response or measured discovery",
+      "source_text": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+      "record": {
+        "schema_version": "round7.participation_record.v1",
+        "document_id": "synthetic-r9-modality",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "coverage": {
+          "status": "claimed_complete",
+          "rationale": "Synthetic development fixture, not a real notice or a completeness oracle.",
+          "evidence": [
+            {
+              "start": 0,
+              "end": 132,
+              "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "e_comments",
+            "phase": "written_comment",
+            "description": "Written comment submission.",
+            "timing": [],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "routes": [
+          {
+            "id": "r_email",
+            "channel": "email",
+            "role": "submission",
+            "event_ids": [
+              "e_comments"
+            ],
+            "association": "source_resolved",
+            "alternative_group_id": null,
+            "description": "Written comment email.",
+            "components": [
+              {
+                "id": "c_email",
+                "kind": "endpoint",
+                "literal": "comments@example.invalid",
+                "evidence": [
+                  {
+                    "start": 40,
+                    "end": 64,
+                    "quote": "comments@example.invalid"
+                  }
+                ]
+              }
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "q_send",
+            "modality": "unclear",
+            "semantic_class": "instruction",
+            "kind": "other",
+            "text": "Submission is optional; you should email comments to that address.",
+            "event_ids": [
+              "e_comments"
+            ],
+            "route_ids": [
+              "r_email"
+            ],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "identities": [
+          {
+            "id": "i_agency",
+            "kind": "agency",
+            "literal": "Civic Board",
+            "relation": "canonical",
+            "event_ids": [
+              "e_comments"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "uncertainties": [],
+        "alternative_groups": []
+      },
+      "inventory": {
+        "schema_version": "round10.source-inventory.v1",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "units": [
+          {
+            "id": "u001",
+            "kind": "identity",
+            "assertion": "Civic Board is agency.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u002",
+            "kind": "fact",
+            "assertion": "Written comments are accepted.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u003",
+            "kind": "fact",
+            "assertion": "Submission endpoint comments@example.invalid.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u004",
+            "kind": "instruction",
+            "assertion": "Submission is expressly optional and email wording advisory.",
+            "modality": "optional",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          }
+        ]
+      },
+      "mapping_response": {
+        "schema_version": "round10.source-mapping.v1",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "record_sha256": "0a4138867c78804394c21fa4e20c5629c9bbb33fc8cc6979e7d1b58c508c8577",
+        "inventory_sha256": "1579d396add1239aede117cf5adbec7cb12ce2210da438ccf2686fbef284dfe7",
+        "mappings": {
+          "u001": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/identities/0/literal"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u002": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description",
+              "/events/0/phase"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u003": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/routes/0/components/0/literal",
+              "/routes/0/role",
+              "/routes/0/event_ids"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u004": {
+            "disposition": "unknown",
+            "operative_pointers": [
+              "/requirements/0/text",
+              "/requirements/0/modality",
+              "/requirements/0/route_ids"
+            ],
+            "reason": "Text and typed modality jointly preserve explicit source optionality; unclear cannot count preserved."
+          }
+        }
+      },
+      "expected_mapping_status": "unverified",
+      "expected_semantic_status": "unverified",
+      "private_canary": "REVIEW_PRIVATE_EXPECTATION_c91fbd:modality_preservation/unclear_negative"
+    },
+    {
+      "case_id": "modality_preservation/mandatory_negative",
+      "classification": "Private supplied offline annotation, never a provider response or measured discovery",
+      "source_text": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+      "record": {
+        "schema_version": "round7.participation_record.v1",
+        "document_id": "synthetic-r9-modality",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "coverage": {
+          "status": "claimed_complete",
+          "rationale": "Synthetic development fixture, not a real notice or a completeness oracle.",
+          "evidence": [
+            {
+              "start": 0,
+              "end": 132,
+              "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+            }
+          ]
+        },
+        "events": [
+          {
+            "id": "e_comments",
+            "phase": "written_comment",
+            "description": "Written comment submission.",
+            "timing": [],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "routes": [
+          {
+            "id": "r_email",
+            "channel": "email",
+            "role": "submission",
+            "event_ids": [
+              "e_comments"
+            ],
+            "association": "source_resolved",
+            "alternative_group_id": null,
+            "description": "Written comment email.",
+            "components": [
+              {
+                "id": "c_email",
+                "kind": "endpoint",
+                "literal": "comments@example.invalid",
+                "evidence": [
+                  {
+                    "start": 40,
+                    "end": 64,
+                    "quote": "comments@example.invalid"
+                  }
+                ]
+              }
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "q_send",
+            "modality": "mandatory",
+            "semantic_class": "instruction",
+            "kind": "other",
+            "text": "Submission is optional; you should email comments to that address.",
+            "event_ids": [
+              "e_comments"
+            ],
+            "route_ids": [
+              "r_email"
+            ],
+            "association": "source_resolved",
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "identities": [
+          {
+            "id": "i_agency",
+            "kind": "agency",
+            "literal": "Civic Board",
+            "relation": "canonical",
+            "event_ids": [
+              "e_comments"
+            ],
+            "evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ]
+          }
+        ],
+        "uncertainties": [],
+        "alternative_groups": []
+      },
+      "inventory": {
+        "schema_version": "round10.source-inventory.v1",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "units": [
+          {
+            "id": "u001",
+            "kind": "identity",
+            "assertion": "Civic Board is agency.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u002",
+            "kind": "fact",
+            "assertion": "Written comments are accepted.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u003",
+            "kind": "fact",
+            "assertion": "Submission endpoint comments@example.invalid.",
+            "modality": "informational",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          },
+          {
+            "id": "u004",
+            "kind": "instruction",
+            "assertion": "Submission is expressly optional and email wording advisory.",
+            "modality": "optional",
+            "applicability": "unconditional",
+            "uncertainty": "none",
+            "uncertainty_reason": "",
+            "required_unit_ids": [],
+            "evidence": [
+              {
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address.",
+                "occurrence": 1
+              }
+            ]
+          }
+        ]
+      },
+      "mapping_response": {
+        "schema_version": "round10.source-mapping.v1",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "record_sha256": "f8383e8305f27e9e7ce1a787d73c0e0f689dfb80143ac3b29fab2d2909fa3731",
+        "inventory_sha256": "1579d396add1239aede117cf5adbec7cb12ce2210da438ccf2686fbef284dfe7",
+        "mappings": {
+          "u001": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/identities/0/literal"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u002": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/events/0/description",
+              "/events/0/phase"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u003": {
+            "disposition": "matched",
+            "operative_pointers": [
+              "/routes/0/components/0/literal",
+              "/routes/0/role",
+              "/routes/0/event_ids"
+            ],
+            "reason": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+          },
+          "u004": {
+            "disposition": "mismatched",
+            "operative_pointers": [
+              "/requirements/0/text",
+              "/requirements/0/modality",
+              "/requirements/0/route_ids"
+            ],
+            "reason": "Text and typed modality jointly preserve explicit source optionality; unclear cannot count preserved."
+          }
+        }
+      },
+      "expected_mapping_status": "not_complete",
+      "expected_semantic_status": "unverified",
+      "private_canary": "REVIEW_PRIVATE_EXPECTATION_c91fbd:modality_preservation/mandatory_negative"
+    }
+  ]
+}

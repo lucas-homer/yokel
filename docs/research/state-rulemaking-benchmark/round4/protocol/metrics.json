@@ -1,0 +1,39 @@
+{
+  "version": "round4-metrics-v1",
+  "unit": "distinct applicable field-value instance, grouped by notice and role; report notice-level completeness separately",
+  "metrics": {
+    "original_source_candidate_recall": "Original-source in-scope required values represented by at least one exact correctly scoped candidate / all original-source in-scope required values; show DATE and EMAIL separately.",
+    "candidate_recall_given_faithful_parse": "Required values with faithful retained parser evidence that become candidates / all required values with faithful retained parser evidence; keeps parser loss separate from candidate selection loss.",
+    "correct_shadow_acceptance_coverage": "Original-source in-scope required values correctly accepted with role/conditions intact / all original-source in-scope required values; missing candidates, failures and stops unrecovered.",
+    "unsafe_acceptance_fraction": "Wrong-source, wrong-role, lost-condition, unsupported/out-of-scope, unresolved or unauditable terminal accepted values / all terminal accepted values; undefined when none.",
+    "accepted_source_conflicts": "Count of settled accepted values for unresolved source-conflicted roles; zero required.",
+    "normalization_fidelity": "Typed proposal values exactly derived under supported normalization rules / proposals assessed; preserve source raw form and page/spans.",
+    "parser_text_semantic_support": "Four-dimension judgment accuracy on retained text, separate from original-PDF fidelity; reviewed postrun, no gold fed to runtime.",
+    "document_source_completeness": "Notices with every required in-scope value correctly retained/accepted, no unsafe extras and correctly preserved unsupported/uncertain states / all12; also report resolvable subset.",
+    "runtime_false_readiness": "Runtime whole-notice ready declarations lacking supported required-field or absence coverage / all runtime ready declarations; undefined if no declarations.",
+    "fallback_escalation": "Notices requesting OCR / all12; record reason, submitted pages, outcome and unresolved/stopped notices.",
+    "unsupported_abstention": "Unsupported/relative/conditional/ambiguous source roles correctly left unaccepted / all such roles; not positive recovery.",
+    "cost_per_correct_field": "Known incremental runtime charge / correctly accepted source field-value instances; undefined if none; unknown billing shown separately."
+  },
+  "required_stage_accounting": [
+    "native extraction",
+    "native candidate finding",
+    "native semantic verification",
+    "OCR requested/not requested",
+    "fallback candidates and verification",
+    "terminal merge/disposition"
+  ],
+  "strata": [
+    "DATE",
+    "EMAIL",
+    "state",
+    "publication_template_family",
+    "scan_or_degradation_class",
+    "native_vs_fallback",
+    "conditional_relative_unsupported",
+    "source_uncertainty"
+  ],
+  "zero_denominators": "null with reason; never 100 percent by vacuity",
+  "statistics": "descriptive counts and paired stage outcomes; no national accuracy, independent-field binomial inference or calibration claim",
+  "all_terminal_acceptances_source_audited": true
+}

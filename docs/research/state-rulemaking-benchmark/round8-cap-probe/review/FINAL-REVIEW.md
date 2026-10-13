@@ -1,0 +1,11 @@
+# Cap-probe independent review
+
+**Approved for primary code freeze and native preflight. No open code blockers.** Approval covers the candidate hashes in `FINAL-REVIEW.json`; primary owns concrete A/S, authorization, native dependency/job/policy binding verification and the live run.
+
+The inventory request matches the retained failed Round 8 request exactly except `max_tokens: 6144 → 12288`. Both verifier bodies match the frozen builder. The single two-page Wisconsin source and descriptor are exact, with no source-label content in model requests. The prior $0.100166 debit is tied to the original frozen intent/E artifacts and counts against the shared $2 guard. Worst nominal aggregate is $0.406694. The ledger enforces one inventory, one Jev and one stronger call, without automatic retry or partial repair.
+
+Validation: 18 guarded tests pass (8 owner runtime, 6 independent controls, 4 owner adapter), plus four independent ledger boundary controls. These cover exact body delta, successful three-stage completion and no-call resume, pre-call shared-budget denial, postresponse completed-result retention/stop, failures at each stage, truncated inventory, both-arm admission before either dispatch, source/auth/debit rejection, fixed isolated native argv preparation and credential-free adapter checks. Transports were synthetic; no provider calls or credentials were used. All 1,011 independent baseline files and all 1,046 primary Round 8 baseline files remain unchanged. Candidate code dependencies were hash-verified.
+
+The owner corrected the draft manifest-preparation field mismatch before final tests; both owner and independent preparation fixtures now exercise the actual `documents` shape through native-job preparation. An initial independent assertion failure concerned `/var` versus `/private/var` aliases in a temporary path; canonicalizing the expected test path fixed it without an implementation change.
+
+This is a reused-source development reachability probe, not fresh-cohort accuracy evidence, human gold, action readiness or production approval. Concrete native policy/dependency artifacts and live outputs still require their scheduled primary/security and postrun checks.

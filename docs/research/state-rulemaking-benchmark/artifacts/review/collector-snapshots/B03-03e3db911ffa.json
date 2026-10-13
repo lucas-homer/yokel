@@ -1,0 +1,150 @@
+{
+  "fixture_id": "B03",
+  "state": "NC",
+  "bucket": "clean standalone PDFs",
+  "layout_features": [
+    "single-column notice",
+    "checkboxes",
+    "rule text attachment"
+  ],
+  "event_type": "proposal",
+  "source_url": "https://s3.amazonaws.com/dl.ncsbe.gov/Legal/Rules/2026%20Proposed%20Rules/Exempt%20Sales%20Plan%20Rule/CF%20Exempt%20Sales%20Rule%20Notice%20of%20Text.pdf",
+  "discovery_url": "https://www.ncsbe.gov/about-elections/legal-resources/rulemaking",
+  "retrieved_at": "2026-10-06T00:34:11.731328+00:00",
+  "source_title": "Exempt sales plan notice",
+  "selection_reason": "First currently open Notice of Text on agency listing; unchanged short original.",
+  "original_sha256": "9833b28e4b7e505895d1a57e18c0fe8141b9e8a0be5e7f01aaf62ff92e45c751",
+  "input_sha256": "9833b28e4b7e505895d1a57e18c0fe8141b9e8a0be5e7f01aaf62ff92e45c751",
+  "original_bytes": 165248,
+  "input_bytes": 165248,
+  "original_page_count": 2,
+  "input_page_count": 2,
+  "original_physical_pages": [
+    1,
+    2
+  ],
+  "package_limitations": "Unchanged publisher PDF.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency proposes the exempt sales rule?",
+      "expected_value": "State Board of Elections",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "TITLE 08 \u2013 STATE BOARD OF ELECTIONS",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "citation",
+      "question": "Which rule is proposed?",
+      "expected_value": "08 NCAC 21 .0605",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "21 .0605.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "event",
+      "question": "What action is proposed?",
+      "expected_value": "adoption",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "intends to adopt the rule",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "proposed_effective",
+      "question": "What proposed effective date is given?",
+      "expected_value": "2027-01-01",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "Proposed Effective Date:  January 1, 2027",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "comment_close",
+      "question": "What date closes this public comment period?",
+      "expected_value": "2026-11-16",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "Comment period ends:  November 16, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "hearing",
+      "question": "What hearing date/time is stated?",
+      "expected_value": {
+        "date": "2026-10-05",
+        "time": "10:00",
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "Date:  October 5, 2026 \nTime:  10:00 a.m.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "objection_condition",
+      "question": "What later objection deadline is described, separate from comment close?",
+      "expected_value": {
+        "time": "17:00",
+        "relative_anchor": "day following Commission approval",
+        "computed_date": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Legislative-review paragraph",
+      "source_quote": "until 5:00 p.m. on the day following the day the Commission approves the",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "close_clock",
+      "question": "Does the notice state a clock time for November 16 comment close?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Complete notice/rule input pages 1-2; 5 p.m. belongs to later legislative objections.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    },
+    {
+      "field_id": "timezone",
+      "question": "Does the notice explicitly state a hearing timezone?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "Complete notice/rule input pages 1-2.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    }
+  ],
+  "annotation_author": "Codex source collector agent; not human gold",
+  "visual_inspection": "All input pages inspected as rendered images by collector agent; source-only references, pending independent review.",
+  "shared_original_group": "NC-exempt-sales",
+  "template_family": "NC-agency-notice",
+  "page_derivation_validation": "Selected page content streams and media/crop boxes equal original mapped pages; rendered all input pages inspected."
+}

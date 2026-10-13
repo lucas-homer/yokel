@@ -1,0 +1,393 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "round9.semantic-audit-input.v1"
+      ]
+    },
+    "audit_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "document_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "source_text_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "record_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_reference_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_reference": {
+      "type": "object",
+      "properties": {
+        "document_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "source_text_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "synthetic_source_first_development",
+            "independent_source_only_review"
+          ]
+        },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "complete",
+                "partial",
+                "unknown"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "reviewed_start": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "reviewed_end": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "exclusions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "minItems": 0,
+              "maxItems": 100
+            },
+            "unresolved_questions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "minItems": 0,
+              "maxItems": 100
+            }
+          },
+          "required": [
+            "status",
+            "definition",
+            "reviewed_start",
+            "reviewed_end",
+            "exclusions",
+            "unresolved_questions"
+          ],
+          "additionalProperties": false
+        },
+        "units": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source_unit_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "category": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "assertion": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "source_evidence": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "end": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "quote": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 20000
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end",
+                    "quote"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 100
+              },
+              "required_source_unit_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "minItems": 0,
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "source_unit_id",
+              "category",
+              "assertion",
+              "source_evidence",
+              "required_source_unit_ids"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "document_id",
+        "source_text_sha256",
+        "origin",
+        "scope",
+        "units"
+      ],
+      "additionalProperties": false
+    },
+    "source_dispositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source_unit_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "disposition": {
+            "type": "string",
+            "enum": [
+              "matched",
+              "mismatched",
+              "omitted",
+              "unknown"
+            ]
+          },
+          "semantic_record_pointers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^/",
+              "maxLength": 1000
+            },
+            "minItems": 0,
+            "maxItems": 1000
+          },
+          "candidate_claim_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "minItems": 0,
+            "maxItems": 1000
+          },
+          "basis": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          }
+        },
+        "required": [
+          "source_unit_id",
+          "disposition",
+          "semantic_record_pointers",
+          "candidate_claim_ids",
+          "basis"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 1000
+    },
+    "claim_coverage": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "partial",
+            "unknown"
+          ]
+        },
+        "enumeration": {
+          "type": "string",
+          "enum": [
+            "r7-semantic-fields-v1"
+          ]
+        },
+        "unreviewed_pointers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^/",
+            "maxLength": 1000
+          },
+          "minItems": 0,
+          "maxItems": 10000
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        }
+      },
+      "required": [
+        "status",
+        "enumeration",
+        "unreviewed_pointers",
+        "notes"
+      ],
+      "additionalProperties": false
+    },
+    "candidate_claim_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "record_pointer": {
+            "type": "string",
+            "pattern": "^/",
+            "maxLength": 1000
+          },
+          "value_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "disposition": {
+            "type": "string",
+            "enum": [
+              "supported",
+              "unsupported",
+              "unknown"
+            ]
+          },
+          "source_unit_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "minItems": 0,
+            "maxItems": 1000
+          },
+          "basis": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          }
+        },
+        "required": [
+          "claim_id",
+          "record_pointer",
+          "value_sha256",
+          "disposition",
+          "source_unit_ids",
+          "basis"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 10000
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "proposed_manual_development_adjudication",
+            "independent_manual_adjudication"
+          ]
+        },
+        "independence_statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "limitations": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        }
+      },
+      "required": [
+        "author",
+        "method",
+        "independence_statement",
+        "limitations"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "audit_id",
+    "document_id",
+    "source_text_sha256",
+    "record_sha256",
+    "source_reference_sha256",
+    "source_reference",
+    "source_dispositions",
+    "claim_coverage",
+    "candidate_claim_checks",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Bounded offline R9 semantic audit input; schema validity is not approval or truth"
+}

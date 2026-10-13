@@ -1,0 +1,98 @@
+{
+  "lane": "wa",
+  "spec_version": "state-spike-v1",
+  "methods": [
+    "direct curl HTML GET",
+    "guarded offline Python div/text parser",
+    "Firecrawl markdown maxAge=0",
+    "Firecrawl prompt-only JSON maxAge=0 (no schema supplied)"
+  ],
+  "acquisition": {
+    "direct_public_pages": 3,
+    "firecrawl_pages": 2,
+    "firecrawl_calls": 3,
+    "failures": [
+      {
+        "method": "sandbox curl",
+        "error": "DNS could not resolve host",
+        "resolution": "public GET escalation succeeded"
+      }
+    ],
+    "timestamp_precision": "curl retrieved_at uses download file mtime; Firecrawl retrieved_at uses local response persistence time, an upper bound after acquisition, not a server fetch timestamp."
+  },
+  "counts": {
+    "observations": 10,
+    "deterministic": 10,
+    "model_observations": 0,
+    "manual_observations": 0,
+    "index_PROP_rows": 14,
+    "index_unique_PROP_ids": 13,
+    "evidence_quotes": 11
+  },
+  "tool_trials": [
+    {
+      "name": "withdrawal markdown",
+      "maxAge": 0,
+      "credits": 1,
+      "latency_ms": null
+    },
+    {
+      "name": "proposal markdown",
+      "maxAge": 0,
+      "credits": 1,
+      "latency_ms": 2457
+    },
+    {
+      "name": "withdrawal prompt-only JSON",
+      "maxAge": 0,
+      "credits": 5,
+      "latency_ms": 8359,
+      "shape_valid_for_prompt": false,
+      "semantic_support": "withdrawal target/scope correct; absent date fields are literal strings null, not JSON null"
+    }
+  ],
+  "validation": {
+    "offline_replay": "passed",
+    "quote_matching": "11/11",
+    "model_quote_matching": "4/4",
+    "unsupported_template": "rejected",
+    "inspected_examples": "expected roles/dates matched; not a blind benchmark",
+    "publication_readiness": "not established",
+    "shared_validator": "passed: 10 artifacts, 10 observations, 11 exact quotes; report shared-validation.json",
+    "canonical_event_types": "proposal and withdrawal; uppercase source labels preserved as exact evidence"
+  },
+  "comparison": {
+    "clean_text": "Retains both notices' relevant header/body dates and labels, with escaped brackets and RCW links. Local div text is simpler for exact quotations and parsing.",
+    "model_value": "Identifies partial withdrawal semantics and abstains semantically on future dates, but adds shape repair work. No operational need demonstrated for these two known templates.",
+    "metadata_timezone": "Firecrawl metadata says America/New_York; not source evidence for Washington filing/hearing timezone and ignored."
+  },
+  "source_specific_rules": [
+    "Index PROP is issue category, not event_type or an open-window assertion.",
+    "14 PROP rows refer to 13 native IDs; 26-18-066 appears under two agency listings.",
+    "Use WSR native ID parsed from notice header; URL identity tracked in manifest separately.",
+    "Agency name can span multiple divs.",
+    "Filing datetime timezone unstated: retain local_datetime without IANA/UTC.",
+    "Only labeled Submit Written Comments field supplies comment close; accommodation date is distinct even when equal.",
+    "Date of Intended Adoption is not effective_date; historical amendment effective dates are not current notice effectivity.",
+    "Partial withdrawal scope is independent of target native ID."
+  ],
+  "limitations": [
+    "Only one issue index and two selected notices; no statewide completeness.",
+    "Parser supports two guarded body-event templates and particular English date syntax; aborts on changes rather than silently guessing.",
+    "Withdrawal relation regex could need human review on different language.",
+    "No claim about legal authority, inclusive end-of-day cutoff, receipt/postmark, or later replacement filing.",
+    "No schema-constrained model trial performed; prompt-only connector accepted.",
+    "No corrections applied to raw model output; model output not merged into observations."
+  ],
+  "shared_format_change_requests": [
+    "Consider a dedicated intended_adoption_date predicate if future scope requires it; current SPEC lacks one, so no assertion emitted.",
+    "Consider issue-category metadata distinct from event_type; retained in index-enumeration.json for this spike."
+  ],
+  "unexpected_results": [
+    "Initial replay rejected proposal filing header because agency name occupied two divs; parser now locates guarded filing header and preserves agency evidence across divs.",
+    "First shared validator run rejected source_lineage arrays. Updated manifest generator to emit nonempty lineage identifier strings per primary guidance; rerun passed."
+  ],
+  "format_clarifications": [
+    "Primary-owned research clarification: canonical event_type values proposal/withdrawal mapped from guarded WSR body labels; source artifacts and expectations recorded before extraction remain unchanged."
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "expected_units": 20,
+  "pages_per_tier": 34,
+  "expected_parse_calls": 40,
+  "attempted_parse_calls": 4,
+  "completed_parse_calls": 0,
+  "timeout_calls": 4,
+  "unattempted_parse_calls": 36,
+  "uploaded_units": 2,
+  "max_observed_concurrency": 2,
+  "stop_trigger": {
+    "fixture_id": "A02",
+    "tier": "agentic",
+    "ended_at": "2026-10-06T00:56:07.696Z",
+    "completion_order": 3
+  },
+  "usage": "unknown unless explicitly present in raw responses",
+  "backend_completion": "unknown for timeouts; no blind retries",
+  "validation": "passed immutable envelope equality, input metadata pairing, uploaded file IDs, exact successful text, completion ordering and concurrency/stop limits",
+  "successful_latency_ms": {
+    "agentic": {
+      "count": 0,
+      "median": null,
+      "min": null,
+      "max": null
+    },
+    "agentic_plus": {
+      "count": 0,
+      "median": null,
+      "min": null,
+      "max": null
+    }
+  },
+  "failure_elapsed_ms": [
+    {
+      "fixture_id": "A01",
+      "tier": "agentic_plus",
+      "elapsed_ms": 123933
+    },
+    {
+      "fixture_id": "A01",
+      "tier": "agentic",
+      "elapsed_ms": 248102
+    },
+    {
+      "fixture_id": "A02",
+      "tier": "agentic",
+      "elapsed_ms": 123281
+    },
+    {
+      "fixture_id": "A02",
+      "tier": "agentic_plus",
+      "elapsed_ms": 246796
+    }
+  ]
+}

@@ -1,0 +1,4225 @@
+{
+  "schema_version": "rest-operations-active-snapshot-v1",
+  "snapshot_started_at_utc": "2026-10-07T03:24:09.144801+00:00",
+  "audited_at_utc": "2026-10-07T03:24:09.330639+00:00",
+  "state_snapshot_sha256": "e2885cdd9340832f1c0dfa15c144e4c35638caa830275d2ed1d9a8d386a33ebf",
+  "phase_final": false,
+  "planned_jobs": 28,
+  "completed_snapshot_jobs": 14,
+  "active_snapshot_jobs": [
+    {
+      "fixture_id": "B03",
+      "tier": "agentic_plus",
+      "phase": "accepted",
+      "job_id": "pjb-ciqmjztw1wpny9p6yuh7e4ret9wu"
+    }
+  ],
+  "pending_snapshot_jobs": 13,
+  "checks": [
+    {
+      "check_id": "freeze-digest",
+      "status": "pass",
+      "details": "900f21e8a75d50444f12a0e3814d665a4f401a0d689194465d0b00467a762946",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "141-frozen-artifacts",
+      "status": "pass",
+      "details": {
+        "count": 141,
+        "mismatches": []
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "runner-sha-before-pilot",
+      "status": "pass",
+      "details": {
+        "script_sha256": "916b6fc69f48bae0d95116929c96c275fec5ca87fe901c0d71dc73fd77f25770",
+        "amendment_adopted_at": "2026-10-07T03:19:27.368785+00:00"
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "runner-tls-and-barrier",
+      "status": "pass",
+      "details": "Code has default verified HTTPS and NoRedirect; pair barrier retained. Runtime CA repair is primary-reported, not independently reexecuted.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "remaining-plan-no-duplicates",
+      "status": "pass",
+      "details": "28 remaining pairs, excluding prior 12 completed; maximum two and stop three",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "resume-plan-hash",
+      "status": "pass",
+      "details": "Frozen resume plan digest matches",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "input-A06-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/02/dc-expanded-A06.pdf"
+      ]
+    },
+    {
+      "check_id": "input-A07-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/02/dc-expanded-A07.pdf"
+      ]
+    },
+    {
+      "check_id": "input-A08-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/03/dc-expanded-A08.pdf"
+      ]
+    },
+    {
+      "check_id": "input-A08-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/03/dc-expanded-A08.pdf"
+      ]
+    },
+    {
+      "check_id": "input-A09-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/03/dc-expanded-A09.pdf"
+      ]
+    },
+    {
+      "check_id": "input-A09-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/03/dc-expanded-A09.pdf"
+      ]
+    },
+    {
+      "check_id": "input-A10-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/04/dc-expanded-A10.pdf"
+      ]
+    },
+    {
+      "check_id": "input-A10-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/04/dc-expanded-A10.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B01-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/04/dc-expanded-B01.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B01-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/04/dc-expanded-B01.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B02-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/05/dc-expanded-B02.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B02-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/05/dc-expanded-B02.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B03-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/05/dc-expanded-B03.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B03-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/05/dc-expanded-B03.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B04-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/06/dc-expanded-B04.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B04-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/06/dc-expanded-B04.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B05-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/06/dc-expanded-B05.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B05-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/06/dc-expanded-B05.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B06-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/07/dc-expanded-B06.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B06-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/07/dc-expanded-B06.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B07-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/07/dc-expanded-B07.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B07-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/07/dc-expanded-B07.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B08-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/08/dc-expanded-B08.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B08-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/08/dc-expanded-B08.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B09-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/08/dc-expanded-B09.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B09-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/08/dc-expanded-B09.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B10-agentic",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/09/dc-expanded-B10.pdf"
+      ]
+    },
+    {
+      "check_id": "input-B10-agentic_plus",
+      "status": "pass",
+      "details": "Exact frozen input hash/bytes/page metadata",
+      "evidence_paths": [
+        "execution-dashboard-1/batches/09/dc-expanded-B10.pdf"
+      ]
+    },
+    {
+      "check_id": "http-body-00001",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00001.json",
+        "http/00001.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00001",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:19:39.436290+00:00",
+        "received_at_utc": "2026-10-07T03:19:39.749261+00:00",
+        "http_wall_ms": 313
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00002",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00002.json",
+        "http/00002.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00002",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:19:39.750076+00:00",
+        "received_at_utc": "2026-10-07T03:19:40.136640+00:00",
+        "http_wall_ms": 387
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00003",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00003.json",
+        "http/00003.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00003",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:19:40.689584+00:00",
+        "received_at_utc": "2026-10-07T03:19:41.795064+00:00",
+        "http_wall_ms": 1105
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00004",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00004.json",
+        "http/00004.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00004",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:19:41.796464+00:00",
+        "received_at_utc": "2026-10-07T03:19:42.105552+00:00",
+        "http_wall_ms": 309
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00005",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00005.json",
+        "http/00005.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00005",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:19:45.107246+00:00",
+        "received_at_utc": "2026-10-07T03:19:45.401423+00:00",
+        "http_wall_ms": 294
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00006",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00006.json",
+        "http/00006.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00006",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:19:48.403180+00:00",
+        "received_at_utc": "2026-10-07T03:19:48.685295+00:00",
+        "http_wall_ms": 282
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00007",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00007.json",
+        "http/00007.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00007",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:19:51.690664+00:00",
+        "received_at_utc": "2026-10-07T03:19:51.988980+00:00",
+        "http_wall_ms": 298
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00008",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00008.json",
+        "http/00008.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00008",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:19:54.994321+00:00",
+        "received_at_utc": "2026-10-07T03:19:55.298913+00:00",
+        "http_wall_ms": 305
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00009",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00009.json",
+        "http/00009.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00009",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:19:58.304283+00:00",
+        "received_at_utc": "2026-10-07T03:19:58.590655+00:00",
+        "http_wall_ms": 286
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00010",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00010.json",
+        "http/00010.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00010",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:01.596186+00:00",
+        "received_at_utc": "2026-10-07T03:20:02.360959+00:00",
+        "http_wall_ms": 765
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00011",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00011.json",
+        "http/00011.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00011",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:45.729675+00:00",
+        "received_at_utc": "2026-10-07T03:20:46.119747+00:00",
+        "http_wall_ms": 390
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00012",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00012.json",
+        "http/00012.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00012",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:46.121212+00:00",
+        "received_at_utc": "2026-10-07T03:20:46.485795+00:00",
+        "http_wall_ms": 365
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00013",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00013.json",
+        "http/00013.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00013",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:46.903925+00:00",
+        "received_at_utc": "2026-10-07T03:20:47.926901+00:00",
+        "http_wall_ms": 1023
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00014",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00014.json",
+        "http/00014.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00014",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:47.932374+00:00",
+        "received_at_utc": "2026-10-07T03:20:48.617001+00:00",
+        "http_wall_ms": 685
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00015",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00015.json",
+        "http/00015.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00015",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:48.619931+00:00",
+        "received_at_utc": "2026-10-07T03:20:48.897860+00:00",
+        "http_wall_ms": 278
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00016",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00016.json",
+        "http/00016.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00016",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:48.899000+00:00",
+        "received_at_utc": "2026-10-07T03:20:49.249033+00:00",
+        "http_wall_ms": 350
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00017",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00017.json",
+        "http/00017.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00017",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:49.702170+00:00",
+        "received_at_utc": "2026-10-07T03:20:50.147810+00:00",
+        "http_wall_ms": 446
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00018",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00018.json",
+        "http/00018.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00018",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:50.151893+00:00",
+        "received_at_utc": "2026-10-07T03:20:50.454642+00:00",
+        "http_wall_ms": 303
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00019",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00019.json",
+        "http/00019.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00019",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:50.454970+00:00",
+        "received_at_utc": "2026-10-07T03:20:50.746642+00:00",
+        "http_wall_ms": 292
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00020",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00020.json",
+        "http/00020.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00020",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:53.748213+00:00",
+        "received_at_utc": "2026-10-07T03:20:54.045539+00:00",
+        "http_wall_ms": 297
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00021",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00021.json",
+        "http/00021.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00021",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:54.047103+00:00",
+        "received_at_utc": "2026-10-07T03:20:54.373238+00:00",
+        "http_wall_ms": 326
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00022",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00022.json",
+        "http/00022.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00022",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:57.377409+00:00",
+        "received_at_utc": "2026-10-07T03:20:57.678241+00:00",
+        "http_wall_ms": 301
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00023",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00023.json",
+        "http/00023.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00023",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:20:57.678615+00:00",
+        "received_at_utc": "2026-10-07T03:20:57.982287+00:00",
+        "http_wall_ms": 304
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00024",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00024.json",
+        "http/00024.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00024",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:00.988765+00:00",
+        "received_at_utc": "2026-10-07T03:21:01.283445+00:00",
+        "http_wall_ms": 295
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00025",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00025.json",
+        "http/00025.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00025",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:01.284650+00:00",
+        "received_at_utc": "2026-10-07T03:21:02.194983+00:00",
+        "http_wall_ms": 910
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00026",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00026.json",
+        "http/00026.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00026",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:05.204086+00:00",
+        "received_at_utc": "2026-10-07T03:21:05.962226+00:00",
+        "http_wall_ms": 758
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00027",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00027.json",
+        "http/00027.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00027",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:08.971642+00:00",
+        "received_at_utc": "2026-10-07T03:21:10.001140+00:00",
+        "http_wall_ms": 1030
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00028",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00028.json",
+        "http/00028.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00028",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:10.005824+00:00",
+        "received_at_utc": "2026-10-07T03:21:10.763378+00:00",
+        "http_wall_ms": 758
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00029",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00029.json",
+        "http/00029.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00029",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:10.765579+00:00",
+        "received_at_utc": "2026-10-07T03:21:11.054826+00:00",
+        "http_wall_ms": 289
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00030",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00030.json",
+        "http/00030.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00030",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:11.055156+00:00",
+        "received_at_utc": "2026-10-07T03:21:11.391380+00:00",
+        "http_wall_ms": 336
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00031",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00031.json",
+        "http/00031.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00031",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:12.275215+00:00",
+        "received_at_utc": "2026-10-07T03:21:12.666745+00:00",
+        "http_wall_ms": 392
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00032",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00032.json",
+        "http/00032.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00032",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:12.667686+00:00",
+        "received_at_utc": "2026-10-07T03:21:12.958283+00:00",
+        "http_wall_ms": 291
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00033",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00033.json",
+        "http/00033.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00033",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:12.958622+00:00",
+        "received_at_utc": "2026-10-07T03:21:13.239621+00:00",
+        "http_wall_ms": 281
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00034",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00034.json",
+        "http/00034.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00034",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:16.245011+00:00",
+        "received_at_utc": "2026-10-07T03:21:16.534458+00:00",
+        "http_wall_ms": 289
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00035",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00035.json",
+        "http/00035.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00035",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:16.535119+00:00",
+        "received_at_utc": "2026-10-07T03:21:16.825376+00:00",
+        "http_wall_ms": 290
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00036",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00036.json",
+        "http/00036.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00036",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:19.828179+00:00",
+        "received_at_utc": "2026-10-07T03:21:20.124061+00:00",
+        "http_wall_ms": 296
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00037",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00037.json",
+        "http/00037.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00037",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:20.125225+00:00",
+        "received_at_utc": "2026-10-07T03:21:20.415774+00:00",
+        "http_wall_ms": 291
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00038",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00038.json",
+        "http/00038.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00038",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:23.422797+00:00",
+        "received_at_utc": "2026-10-07T03:21:23.707493+00:00",
+        "http_wall_ms": 285
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00039",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00039.json",
+        "http/00039.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00039",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:23.708292+00:00",
+        "received_at_utc": "2026-10-07T03:21:24.564502+00:00",
+        "http_wall_ms": 856
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00040",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00040.json",
+        "http/00040.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00040",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:27.576070+00:00",
+        "received_at_utc": "2026-10-07T03:21:27.873368+00:00",
+        "http_wall_ms": 297
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00041",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00041.json",
+        "http/00041.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00041",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:30.878171+00:00",
+        "received_at_utc": "2026-10-07T03:21:31.170076+00:00",
+        "http_wall_ms": 292
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00042",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00042.json",
+        "http/00042.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00042",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:34.175574+00:00",
+        "received_at_utc": "2026-10-07T03:21:34.482379+00:00",
+        "http_wall_ms": 307
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00043",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00043.json",
+        "http/00043.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00043",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:37.486794+00:00",
+        "received_at_utc": "2026-10-07T03:21:38.239944+00:00",
+        "http_wall_ms": 753
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00044",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00044.json",
+        "http/00044.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00044",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:41.244625+00:00",
+        "received_at_utc": "2026-10-07T03:21:41.991383+00:00",
+        "http_wall_ms": 747
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00045",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00045.json",
+        "http/00045.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00045",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:45.001268+00:00",
+        "received_at_utc": "2026-10-07T03:21:46.035923+00:00",
+        "http_wall_ms": 1035
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00046",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00046.json",
+        "http/00046.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00046",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:46.038731+00:00",
+        "received_at_utc": "2026-10-07T03:21:46.617942+00:00",
+        "http_wall_ms": 579
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00047",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00047.json",
+        "http/00047.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00047",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:46.619135+00:00",
+        "received_at_utc": "2026-10-07T03:21:46.921981+00:00",
+        "http_wall_ms": 303
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00048",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00048.json",
+        "http/00048.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00048",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:46.922570+00:00",
+        "received_at_utc": "2026-10-07T03:21:47.299162+00:00",
+        "http_wall_ms": 377
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00049",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00049.json",
+        "http/00049.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00049",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:47.773920+00:00",
+        "received_at_utc": "2026-10-07T03:21:48.256844+00:00",
+        "http_wall_ms": 483
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00050",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00050.json",
+        "http/00050.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00050",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:48.259803+00:00",
+        "received_at_utc": "2026-10-07T03:21:48.565829+00:00",
+        "http_wall_ms": 306
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00051",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00051.json",
+        "http/00051.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00051",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:48.566286+00:00",
+        "received_at_utc": "2026-10-07T03:21:48.847437+00:00",
+        "http_wall_ms": 281
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00052",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00052.json",
+        "http/00052.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00052",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:51.851020+00:00",
+        "received_at_utc": "2026-10-07T03:21:52.147030+00:00",
+        "http_wall_ms": 296
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00053",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00053.json",
+        "http/00053.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00053",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:52.147809+00:00",
+        "received_at_utc": "2026-10-07T03:21:52.457710+00:00",
+        "http_wall_ms": 310
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00054",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00054.json",
+        "http/00054.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00054",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:55.461957+00:00",
+        "received_at_utc": "2026-10-07T03:21:55.774658+00:00",
+        "http_wall_ms": 313
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00055",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00055.json",
+        "http/00055.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00055",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:55.775602+00:00",
+        "received_at_utc": "2026-10-07T03:21:56.065363+00:00",
+        "http_wall_ms": 290
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00056",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00056.json",
+        "http/00056.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00056",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:59.070776+00:00",
+        "received_at_utc": "2026-10-07T03:21:59.381248+00:00",
+        "http_wall_ms": 310
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00057",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00057.json",
+        "http/00057.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00057",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:21:59.383010+00:00",
+        "received_at_utc": "2026-10-07T03:22:00.080042+00:00",
+        "http_wall_ms": 697
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00058",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00058.json",
+        "http/00058.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00058",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:03.093359+00:00",
+        "received_at_utc": "2026-10-07T03:22:03.370380+00:00",
+        "http_wall_ms": 277
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00059",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00059.json",
+        "http/00059.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00059",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:06.375359+00:00",
+        "received_at_utc": "2026-10-07T03:22:06.668037+00:00",
+        "http_wall_ms": 293
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00060",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00060.json",
+        "http/00060.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00060",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:09.673738+00:00",
+        "received_at_utc": "2026-10-07T03:22:09.967638+00:00",
+        "http_wall_ms": 294
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00061",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00061.json",
+        "http/00061.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00061",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:12.974164+00:00",
+        "received_at_utc": "2026-10-07T03:22:13.736196+00:00",
+        "http_wall_ms": 762
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00062",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00062.json",
+        "http/00062.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00062",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:16.751462+00:00",
+        "received_at_utc": "2026-10-07T03:22:17.916711+00:00",
+        "http_wall_ms": 1165
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00063",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00063.json",
+        "http/00063.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00063",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:17.921651+00:00",
+        "received_at_utc": "2026-10-07T03:22:18.553526+00:00",
+        "http_wall_ms": 632
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00064",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00064.json",
+        "http/00064.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00064",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:18.556553+00:00",
+        "received_at_utc": "2026-10-07T03:22:18.825758+00:00",
+        "http_wall_ms": 269
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00065",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00065.json",
+        "http/00065.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00065",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:18.826653+00:00",
+        "received_at_utc": "2026-10-07T03:22:19.206529+00:00",
+        "http_wall_ms": 380
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00066",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00066.json",
+        "http/00066.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00066",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:19.752907+00:00",
+        "received_at_utc": "2026-10-07T03:22:20.270826+00:00",
+        "http_wall_ms": 518
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00067",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00067.json",
+        "http/00067.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00067",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:20.271970+00:00",
+        "received_at_utc": "2026-10-07T03:22:20.599583+00:00",
+        "http_wall_ms": 328
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00068",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00068.json",
+        "http/00068.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00068",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:20.601039+00:00",
+        "received_at_utc": "2026-10-07T03:22:20.886729+00:00",
+        "http_wall_ms": 286
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00069",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00069.json",
+        "http/00069.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00069",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:23.890793+00:00",
+        "received_at_utc": "2026-10-07T03:22:24.209514+00:00",
+        "http_wall_ms": 319
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00070",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00070.json",
+        "http/00070.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00070",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:24.210652+00:00",
+        "received_at_utc": "2026-10-07T03:22:24.513682+00:00",
+        "http_wall_ms": 303
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00071",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00071.json",
+        "http/00071.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00071",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:27.514904+00:00",
+        "received_at_utc": "2026-10-07T03:22:27.825950+00:00",
+        "http_wall_ms": 311
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00072",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00072.json",
+        "http/00072.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00072",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:27.826815+00:00",
+        "received_at_utc": "2026-10-07T03:22:28.520311+00:00",
+        "http_wall_ms": 694
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00073",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00073.json",
+        "http/00073.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00073",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:31.527764+00:00",
+        "received_at_utc": "2026-10-07T03:22:31.964949+00:00",
+        "http_wall_ms": 437
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00074",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00074.json",
+        "http/00074.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00074",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:31.966323+00:00",
+        "received_at_utc": "2026-10-07T03:22:32.738964+00:00",
+        "http_wall_ms": 773
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00075",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00075.json",
+        "http/00075.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00075",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:35.755258+00:00",
+        "received_at_utc": "2026-10-07T03:22:36.513274+00:00",
+        "http_wall_ms": 758
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00076",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00076.json",
+        "http/00076.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00076",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:39.520602+00:00",
+        "received_at_utc": "2026-10-07T03:22:40.367118+00:00",
+        "http_wall_ms": 847
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00077",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00077.json",
+        "http/00077.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00077",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:43.378048+00:00",
+        "received_at_utc": "2026-10-07T03:22:44.587053+00:00",
+        "http_wall_ms": 1209
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00078",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00078.json",
+        "http/00078.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00078",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:44.589026+00:00",
+        "received_at_utc": "2026-10-07T03:22:46.299235+00:00",
+        "http_wall_ms": 1710
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00079",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00079.json",
+        "http/00079.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00079",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:46.302284+00:00",
+        "received_at_utc": "2026-10-07T03:22:46.663018+00:00",
+        "http_wall_ms": 361
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00080",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00080.json",
+        "http/00080.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00080",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:46.664094+00:00",
+        "received_at_utc": "2026-10-07T03:22:47.189918+00:00",
+        "http_wall_ms": 526
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00081",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00081.json",
+        "http/00081.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00081",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:47.937571+00:00",
+        "received_at_utc": "2026-10-07T03:22:48.465542+00:00",
+        "http_wall_ms": 528
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00082",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00082.json",
+        "http/00082.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00082",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:48.468989+00:00",
+        "received_at_utc": "2026-10-07T03:22:48.782392+00:00",
+        "http_wall_ms": 313
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00083",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00083.json",
+        "http/00083.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00083",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:48.784199+00:00",
+        "received_at_utc": "2026-10-07T03:22:49.132792+00:00",
+        "http_wall_ms": 349
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00084",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00084.json",
+        "http/00084.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00084",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:52.133410+00:00",
+        "received_at_utc": "2026-10-07T03:22:52.471396+00:00",
+        "http_wall_ms": 338
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00085",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00085.json",
+        "http/00085.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00085",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:52.472465+00:00",
+        "received_at_utc": "2026-10-07T03:22:52.802350+00:00",
+        "http_wall_ms": 330
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00086",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00086.json",
+        "http/00086.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00086",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:55.804733+00:00",
+        "received_at_utc": "2026-10-07T03:22:56.115503+00:00",
+        "http_wall_ms": 311
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00087",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00087.json",
+        "http/00087.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00087",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:56.117151+00:00",
+        "received_at_utc": "2026-10-07T03:22:56.859576+00:00",
+        "http_wall_ms": 742
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00088",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00088.json",
+        "http/00088.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00088",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:22:59.869496+00:00",
+        "received_at_utc": "2026-10-07T03:23:00.230798+00:00",
+        "http_wall_ms": 361
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00089",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00089.json",
+        "http/00089.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00089",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:03.236378+00:00",
+        "received_at_utc": "2026-10-07T03:23:03.587319+00:00",
+        "http_wall_ms": 351
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00090",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00090.json",
+        "http/00090.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00090",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:06.591619+00:00",
+        "received_at_utc": "2026-10-07T03:23:07.450614+00:00",
+        "http_wall_ms": 859
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00091",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00091.json",
+        "http/00091.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00091",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:10.457835+00:00",
+        "received_at_utc": "2026-10-07T03:23:11.357602+00:00",
+        "http_wall_ms": 900
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00092",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00092.json",
+        "http/00092.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00092",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:14.370506+00:00",
+        "received_at_utc": "2026-10-07T03:23:15.354079+00:00",
+        "http_wall_ms": 984
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00093",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00093.json",
+        "http/00093.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00093",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:15.360404+00:00",
+        "received_at_utc": "2026-10-07T03:23:16.172577+00:00",
+        "http_wall_ms": 812
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00094",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00094.json",
+        "http/00094.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00094",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:16.176462+00:00",
+        "received_at_utc": "2026-10-07T03:23:16.460032+00:00",
+        "http_wall_ms": 284
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00095",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00095.json",
+        "http/00095.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00095",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:16.460535+00:00",
+        "received_at_utc": "2026-10-07T03:23:16.982112+00:00",
+        "http_wall_ms": 522
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00096",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00096.json",
+        "http/00096.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00096",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:18.026508+00:00",
+        "received_at_utc": "2026-10-07T03:23:18.527278+00:00",
+        "http_wall_ms": 501
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00097",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00097.json",
+        "http/00097.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00097",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:18.530605+00:00",
+        "received_at_utc": "2026-10-07T03:23:18.988021+00:00",
+        "http_wall_ms": 457
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00098",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00098.json",
+        "http/00098.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00098",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:18.989376+00:00",
+        "received_at_utc": "2026-10-07T03:23:19.320664+00:00",
+        "http_wall_ms": 331
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00099",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00099.json",
+        "http/00099.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00099",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:22.322106+00:00",
+        "received_at_utc": "2026-10-07T03:23:22.677079+00:00",
+        "http_wall_ms": 355
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00100",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00100.json",
+        "http/00100.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00100",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:22.677686+00:00",
+        "received_at_utc": "2026-10-07T03:23:23.006731+00:00",
+        "http_wall_ms": 329
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00101",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00101.json",
+        "http/00101.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00101",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:26.010137+00:00",
+        "received_at_utc": "2026-10-07T03:23:26.333386+00:00",
+        "http_wall_ms": 323
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00102",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00102.json",
+        "http/00102.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00102",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:26.334642+00:00",
+        "received_at_utc": "2026-10-07T03:23:26.661789+00:00",
+        "http_wall_ms": 327
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00103",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00103.json",
+        "http/00103.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00103",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:29.665554+00:00",
+        "received_at_utc": "2026-10-07T03:23:30.034621+00:00",
+        "http_wall_ms": 369
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00104",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00104.json",
+        "http/00104.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00104",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:30.036293+00:00",
+        "received_at_utc": "2026-10-07T03:23:30.729428+00:00",
+        "http_wall_ms": 693
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00105",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00105.json",
+        "http/00105.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00105",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:33.740750+00:00",
+        "received_at_utc": "2026-10-07T03:23:34.114711+00:00",
+        "http_wall_ms": 374
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00106",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00106.json",
+        "http/00106.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00106",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:37.123268+00:00",
+        "received_at_utc": "2026-10-07T03:23:37.456156+00:00",
+        "http_wall_ms": 333
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00107",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00107.json",
+        "http/00107.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00107",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:40.458161+00:00",
+        "received_at_utc": "2026-10-07T03:23:41.095857+00:00",
+        "http_wall_ms": 638
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00108",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00108.json",
+        "http/00108.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00108",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:44.115022+00:00",
+        "received_at_utc": "2026-10-07T03:23:45.016084+00:00",
+        "http_wall_ms": 901
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00109",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00109.json",
+        "http/00109.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00109",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:45.023129+00:00",
+        "received_at_utc": "2026-10-07T03:23:45.687965+00:00",
+        "http_wall_ms": 665
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00110",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00110.json",
+        "http/00110.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00110",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:45.690236+00:00",
+        "received_at_utc": "2026-10-07T03:23:45.966142+00:00",
+        "http_wall_ms": 276
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00111",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00111.json",
+        "http/00111.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00111",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:45.967240+00:00",
+        "received_at_utc": "2026-10-07T03:23:46.351667+00:00",
+        "http_wall_ms": 384
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00112",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00112.json",
+        "http/00112.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00112",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:46.985030+00:00",
+        "received_at_utc": "2026-10-07T03:23:47.400498+00:00",
+        "http_wall_ms": 415
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00113",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00113.json",
+        "http/00113.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00113",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:47.401572+00:00",
+        "received_at_utc": "2026-10-07T03:23:47.804139+00:00",
+        "http_wall_ms": 403
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00114",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00114.json",
+        "http/00114.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00114",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:47.805500+00:00",
+        "received_at_utc": "2026-10-07T03:23:48.092456+00:00",
+        "http_wall_ms": 287
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00115",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00115.json",
+        "http/00115.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00115",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:51.097940+00:00",
+        "received_at_utc": "2026-10-07T03:23:51.430268+00:00",
+        "http_wall_ms": 332
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00116",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00116.json",
+        "http/00116.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00116",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:51.431814+00:00",
+        "received_at_utc": "2026-10-07T03:23:51.726651+00:00",
+        "http_wall_ms": 295
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00117",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00117.json",
+        "http/00117.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00117",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:54.730424+00:00",
+        "received_at_utc": "2026-10-07T03:23:55.014759+00:00",
+        "http_wall_ms": 284
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00118",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00118.json",
+        "http/00118.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00118",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:55.015799+00:00",
+        "received_at_utc": "2026-10-07T03:23:55.337330+00:00",
+        "http_wall_ms": 322
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00119",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00119.json",
+        "http/00119.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00119",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:58.340990+00:00",
+        "received_at_utc": "2026-10-07T03:23:58.639435+00:00",
+        "http_wall_ms": 298
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00120",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00120.json",
+        "http/00120.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00120",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:23:58.640096+00:00",
+        "received_at_utc": "2026-10-07T03:23:59.323353+00:00",
+        "http_wall_ms": 683
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00121",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00121.json",
+        "http/00121.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00121",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:24:02.332020+00:00",
+        "received_at_utc": "2026-10-07T03:24:02.624898+00:00",
+        "http_wall_ms": 293
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "http-body-00122",
+      "status": "pass",
+      "details": "Retained response JSON equals receipt object; preservation/sanitization flags agree",
+      "evidence_paths": [
+        "http/00122.json",
+        "http/00122.response.json"
+      ]
+    },
+    {
+      "check_id": "http-timing-00122",
+      "status": "pass",
+      "details": {
+        "actual_dispatch_at_utc": "2026-10-07T03:24:05.626853+00:00",
+        "received_at_utc": "2026-10-07T03:24:05.999264+00:00",
+        "http_wall_ms": 372
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "post-job-uniqueness",
+      "status": "pass",
+      "details": "One retained accepted POST per unique parse job ID",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "state-job-intent-uniqueness",
+      "status": "pass",
+      "details": "Unique job IDs; 28 durable intents",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "file-identities",
+      "status": "pass",
+      "details": "File IDs distinct across fixtures; sharing across tiers is expected",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "remote-input-proof-A06",
+      "status": "pass",
+      "details": "State retains downloaded remote input hash proof; remote bytes are not persisted",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "remote-input-proof-A07",
+      "status": "pass",
+      "details": "State retains downloaded remote input hash proof; remote bytes are not persisted",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "remote-input-proof-A08",
+      "status": "pass",
+      "details": "State retains downloaded remote input hash proof; remote bytes are not persisted",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "remote-input-proof-A09",
+      "status": "pass",
+      "details": "State retains downloaded remote input hash proof; remote bytes are not persisted",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "remote-input-proof-A10",
+      "status": "pass",
+      "details": "State retains downloaded remote input hash proof; remote bytes are not persisted",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "remote-input-proof-B01",
+      "status": "pass",
+      "details": "State retains downloaded remote input hash proof; remote bytes are not persisted",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "remote-input-proof-B02",
+      "status": "pass",
+      "details": "State retains downloaded remote input hash proof; remote bytes are not persisted",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "remote-input-proof-B03",
+      "status": "pass",
+      "details": "State retains downloaded remote input hash proof; remote bytes are not persisted",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "remote-input-proof-B04",
+      "status": "pass",
+      "details": "State retains downloaded remote input hash proof; remote bytes are not persisted",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-A06-agentic_plus",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-A06-agentic_plus",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-A06-agentic_plus",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/A06/agentic_plus/capture.json",
+        "http/00010.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-A06-agentic_plus",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A06-agentic_plus-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A06/agentic_plus/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A06-agentic_plus-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A06/agentic_plus/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-A06-agentic_plus",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-A06-agentic_plus",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-A06-agentic_plus",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-A07-agentic_plus",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-A07-agentic_plus",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-A07-agentic_plus",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/A07/agentic_plus/capture.json",
+        "http/00026.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-A07-agentic_plus",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A07-agentic_plus-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A07/agentic_plus/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A07-agentic_plus-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A07/agentic_plus/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-A07-agentic_plus",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-A07-agentic_plus",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-A07-agentic_plus",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-A08-agentic",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-A08-agentic",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-A08-agentic",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/A08/agentic/capture.json",
+        "http/00025.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-A08-agentic",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A08-agentic-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A08/agentic/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A08-agentic-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A08/agentic/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-A08-agentic",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-A08-agentic",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-A08-agentic",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-A08-agentic_plus",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-A08-agentic_plus",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-A08-agentic_plus",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/A08/agentic_plus/capture.json",
+        "http/00044.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-A08-agentic_plus",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A08-agentic_plus-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A08/agentic_plus/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A08-agentic_plus-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A08/agentic_plus/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-A08-agentic_plus",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-A08-agentic_plus",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-A08-agentic_plus",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-A09-agentic",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-A09-agentic",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-A09-agentic",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/A09/agentic/capture.json",
+        "http/00039.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-A09-agentic",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A09-agentic-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A09/agentic/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A09-agentic-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A09/agentic/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-A09-agentic",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-A09-agentic",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-A09-agentic",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-A09-agentic_plus",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-A09-agentic_plus",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-A09-agentic_plus",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/A09/agentic_plus/capture.json",
+        "http/00061.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-A09-agentic_plus",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A09-agentic_plus-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A09/agentic_plus/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A09-agentic_plus-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A09/agentic_plus/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-A09-agentic_plus",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-A09-agentic_plus",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-A09-agentic_plus",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-A10-agentic",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-A10-agentic",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-A10-agentic",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/A10/agentic/capture.json",
+        "http/00057.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-A10-agentic",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A10-agentic-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A10/agentic/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A10-agentic-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A10/agentic/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-A10-agentic",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-A10-agentic",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-A10-agentic",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-A10-agentic_plus",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-A10-agentic_plus",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-A10-agentic_plus",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/A10/agentic_plus/capture.json",
+        "http/00076.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-A10-agentic_plus",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-A10-agentic_plus-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A10/agentic_plus/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-A10-agentic_plus-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/A10/agentic_plus/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-A10-agentic_plus",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-A10-agentic_plus",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-A10-agentic_plus",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-B01-agentic",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-B01-agentic",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-B01-agentic",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/B01/agentic/capture.json",
+        "http/00074.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-B01-agentic",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B01-agentic-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B01/agentic/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B01-agentic-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B01/agentic/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-B01-agentic",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-B01-agentic",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-B01-agentic",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-B01-agentic_plus",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-B01-agentic_plus",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-B01-agentic_plus",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/B01/agentic_plus/capture.json",
+        "http/00091.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-B01-agentic_plus",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B01-agentic_plus-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B01/agentic_plus/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B01-agentic_plus-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B01/agentic_plus/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-B01-agentic_plus",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-B01-agentic_plus",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-B01-agentic_plus",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-B02-agentic",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-B02-agentic",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-B02-agentic",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/B02/agentic/capture.json",
+        "http/00087.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-B02-agentic",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B02-agentic-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B02/agentic/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B02-agentic-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B02/agentic/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-B02-agentic",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-B02-agentic",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-B02-agentic",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-B02-agentic_plus",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-B02-agentic_plus",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-B02-agentic_plus",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/B02/agentic_plus/capture.json",
+        "http/00107.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-B02-agentic_plus",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B02-agentic_plus-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B02/agentic_plus/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B02-agentic_plus-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B02/agentic_plus/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-B02-agentic_plus",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-B02-agentic_plus",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-B02-agentic_plus",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-B03-agentic",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-B03-agentic",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-B03-agentic",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/B03/agentic/capture.json",
+        "http/00104.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-B03-agentic",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B03-agentic-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B03/agentic/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B03-agentic-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B03/agentic/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-B03-agentic",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-B03-agentic",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-B03-agentic",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-B03-agentic_plus",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-B03-agentic_plus",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "request-config-B04-agentic",
+      "status": "pass",
+      "details": "Exact plan config, latest, no limits/prompts. Request is durable state object; receipt does not retain wire request body.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "accepted-receipt-B04-agentic",
+      "status": "pass",
+      "details": "POST response IDs, intent/hash/tier metadata and prospective authorization agree",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-capture-B04-agentic",
+      "status": "pass",
+      "details": "Terminal raw/sanitized response, state, capture and input mappings agree",
+      "evidence_paths": [
+        "runs/B04/agentic/capture.json",
+        "http/00120.json"
+      ]
+    },
+    {
+      "check_id": "page-evidence-B04-agentic",
+      "status": "pass",
+      "details": "Expanded Markdown page count/ordinals/success cover input",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "output-hash-B04-agentic-.md",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B04/agentic/output.md"
+      ]
+    },
+    {
+      "check_id": "output-hash-B04-agentic-.json",
+      "status": "pass",
+      "details": "Output hash and byte count agree",
+      "evidence_paths": [
+        "runs/B04/agentic/output.json"
+      ]
+    },
+    {
+      "check_id": "exact-markdown-B04-agentic",
+      "status": "pass",
+      "details": "Whole provider string preserved byte-for-byte, not reassembled from pages",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "usage-B04-agentic",
+      "status": "pass",
+      "details": "Returned usage retained unchanged; absence remains unavailable",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "terminal-order-B04-agentic",
+      "status": "pass",
+      "details": "Submission before backend completion before terminal observation/state completion",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "snapshot-concurrency",
+      "status": "pass",
+      "details": {
+        "post-dispatch-to-terminal-observation_upper_bound": 2,
+        "active_in_state_snapshot": 1
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "observed-dispatch-slot-bound",
+      "status": "pass",
+      "details": "No dispatch observed while two prior jobs lack terminal observations; pilot/invocation boundaries retained",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "snapshot-stop-ledger",
+      "status": "pass",
+      "details": "No failures so far; threshold not exercised. Scheduler code and offline checks are separate evidence.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "prior-dashboard-eight-preserved",
+      "status": "pass",
+      "details": {
+        "prior_checks": 110,
+        "changed_snapshot_paths": []
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "snapshot-secret-pattern-scan",
+      "status": "pass",
+      "details": {
+        "findings": []
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "pilot-gate-before-expansion",
+      "status": "pass",
+      "details": "Pilot completed with90 returned credits and passing gate before completed expansion jobs submitted",
+      "evidence_paths": [
+        "primary-pilot-gate.json"
+      ]
+    }
+  ],
+  "failed_checks": [],
+  "jobs": [
+    {
+      "fixture_id": "A06",
+      "tier": "agentic_plus",
+      "job_id": "pjb-xizo3rx7ffqgeiyrpf1itwd9bj4y",
+      "file_id": "38b2519c-6b78-478a-a11f-c4e7766daa7e",
+      "started_at_utc": "2026-10-07T03:19:40.689111+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:20:02.362417+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:20:02.362718+00:00",
+      "reported_usage": {
+        "credits": 90.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:19:41.689679Z",
+        "throttled_at": "2026-10-07T03:19:41.913838Z",
+        "running_at": "2026-10-07T03:19:42.115413Z",
+        "completed_at": "2026-10-07T03:20:01.046756Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 4777,
+        "agent_ms": 10682,
+        "output_ms": 237,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 19211
+      },
+      "http_body_unmodified": false,
+      "http_object_unmodified": false,
+      "redaction_exception": "Key/transient URLs excluded; no Authorization header persisted"
+    },
+    {
+      "fixture_id": "A07",
+      "tier": "agentic_plus",
+      "job_id": "pjb-abnijhey2zsrcgeywxgb7gvkdrso",
+      "file_id": "b923a3aa-569d-4c63-8e56-0bbe81d20ac0",
+      "started_at_utc": "2026-10-07T03:20:46.902383+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:21:05.966765+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:21:05.967802+00:00",
+      "reported_usage": {
+        "credits": 90.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:20:47.843741Z",
+        "throttled_at": "2026-10-07T03:20:47.997735Z",
+        "running_at": "2026-10-07T03:20:48.194735Z",
+        "completed_at": "2026-10-07T03:21:04.442000Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 4445,
+        "agent_ms": 10045,
+        "output_ms": 297,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 16489
+      },
+      "http_body_unmodified": true,
+      "http_object_unmodified": true,
+      "redaction_exception": null
+    },
+    {
+      "fixture_id": "A08",
+      "tier": "agentic",
+      "job_id": "pjb-8vzyx27t827atpabb809r4aic33m",
+      "file_id": "8513989b-8342-45f3-8f85-dde86267d65a",
+      "started_at_utc": "2026-10-07T03:20:49.700412+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:21:02.201515+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:21:02.202215+00:00",
+      "reported_usage": {
+        "credits": 40.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:20:50.045810Z",
+        "throttled_at": "2026-10-07T03:20:50.190429Z",
+        "running_at": "2026-10-07T03:20:50.386544Z",
+        "completed_at": "2026-10-07T03:20:59.522898Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 4803,
+        "agent_ms": 2118,
+        "output_ms": 226,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 9322
+      },
+      "http_body_unmodified": true,
+      "http_object_unmodified": true,
+      "redaction_exception": null
+    },
+    {
+      "fixture_id": "A08",
+      "tier": "agentic_plus",
+      "job_id": "pjb-u90yjluoisdqpkopa5x53vjq9qrx",
+      "file_id": "8513989b-8342-45f3-8f85-dde86267d65a",
+      "started_at_utc": "2026-10-07T03:21:08.970575+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:21:41.994489+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:21:41.994804+00:00",
+      "reported_usage": {
+        "credits": 180.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:21:09.908148Z",
+        "throttled_at": "2026-10-07T03:21:10.055572Z",
+        "running_at": "2026-10-07T03:21:10.197071Z",
+        "completed_at": "2026-10-07T03:21:38.220601Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 6939,
+        "agent_ms": 12691,
+        "output_ms": 351,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 28188
+      },
+      "http_body_unmodified": true,
+      "http_object_unmodified": true,
+      "redaction_exception": null
+    },
+    {
+      "fixture_id": "A09",
+      "tier": "agentic",
+      "job_id": "pjb-k799sjv2rvem86rit8y91h9ukvc3",
+      "file_id": "4640fe43-4113-4bbd-8164-f079fdd81e96",
+      "started_at_utc": "2026-10-07T03:21:12.274696+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:21:24.571261+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:21:24.572072+00:00",
+      "reported_usage": {
+        "credits": 10.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:21:12.584346Z",
+        "throttled_at": "2026-10-07T03:21:12.707717Z",
+        "running_at": "2026-10-07T03:21:12.841057Z",
+        "completed_at": "2026-10-07T03:21:23.382760Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 4528,
+        "agent_ms": 3996,
+        "output_ms": 332,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 10703
+      },
+      "http_body_unmodified": true,
+      "http_object_unmodified": true,
+      "redaction_exception": null
+    },
+    {
+      "fixture_id": "A09",
+      "tier": "agentic_plus",
+      "job_id": "pjb-23bldt6vdhvbml7p4323kvere7mh",
+      "file_id": "4640fe43-4113-4bbd-8164-f079fdd81e96",
+      "started_at_utc": "2026-10-07T03:21:45.000013+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:22:13.742922+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:22:13.743660+00:00",
+      "reported_usage": {
+        "credits": 45.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:21:45.955309Z",
+        "throttled_at": "2026-10-07T03:21:46.075877Z",
+        "running_at": "2026-10-07T03:21:46.206228Z",
+        "completed_at": "2026-10-07T03:22:12.283636Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 4027,
+        "agent_ms": 20252,
+        "output_ms": 246,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 26228
+      },
+      "http_body_unmodified": true,
+      "http_object_unmodified": true,
+      "redaction_exception": null
+    },
+    {
+      "fixture_id": "A10",
+      "tier": "agentic",
+      "job_id": "pjb-27lck2onjgd3ndc4wl0tk2kb25vc",
+      "file_id": "60168655-dfc9-43cc-b7bf-e1b71d268110",
+      "started_at_utc": "2026-10-07T03:21:47.772178+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:22:00.086087+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:22:00.086877+00:00",
+      "reported_usage": {
+        "credits": 10.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:21:48.148224Z",
+        "throttled_at": "2026-10-07T03:21:48.407890Z",
+        "running_at": "2026-10-07T03:21:48.621543Z",
+        "completed_at": "2026-10-07T03:21:57.186629Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 4571,
+        "agent_ms": 1948,
+        "output_ms": 299,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 8850
+      },
+      "http_body_unmodified": true,
+      "http_object_unmodified": true,
+      "redaction_exception": null
+    },
+    {
+      "fixture_id": "A10",
+      "tier": "agentic_plus",
+      "job_id": "pjb-q7yl03pdnls23n07k8e1k6jl92ea",
+      "file_id": "60168655-dfc9-43cc-b7bf-e1b71d268110",
+      "started_at_utc": "2026-10-07T03:22:16.748045+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:22:40.369031+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:22:40.369274+00:00",
+      "reported_usage": {
+        "credits": 45.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:22:17.801277Z",
+        "throttled_at": "2026-10-07T03:22:18.025824Z",
+        "running_at": "2026-10-07T03:22:18.319154Z",
+        "completed_at": "2026-10-07T03:22:39.161596Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 4750,
+        "agent_ms": 14134,
+        "output_ms": 338,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 21169
+      },
+      "http_body_unmodified": true,
+      "http_object_unmodified": true,
+      "redaction_exception": null
+    },
+    {
+      "fixture_id": "B01",
+      "tier": "agentic",
+      "job_id": "pjb-gcezmitwtbts56r9zxdqru0tglw5",
+      "file_id": "b32c8f8d-a4a5-4fa5-b430-35ff91b7bec1",
+      "started_at_utc": "2026-10-07T03:22:19.750873+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:22:32.746099+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:22:32.747186+00:00",
+      "reported_usage": {
+        "credits": 20.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:22:20.149451Z",
+        "throttled_at": "2026-10-07T03:22:20.315029Z",
+        "running_at": "2026-10-07T03:22:20.508581Z",
+        "completed_at": "2026-10-07T03:22:28.232681Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 4478,
+        "agent_ms": 1689,
+        "output_ms": 234,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 7923
+      },
+      "http_body_unmodified": true,
+      "http_object_unmodified": true,
+      "redaction_exception": null
+    },
+    {
+      "fixture_id": "B01",
+      "tier": "agentic_plus",
+      "job_id": "pjb-sqc3d7l7lrn1ffyq29s0bsbbq33w",
+      "file_id": "b32c8f8d-a4a5-4fa5-b430-35ff91b7bec1",
+      "started_at_utc": "2026-10-07T03:22:43.375082+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:23:11.362143+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:23:11.362738+00:00",
+      "reported_usage": {
+        "credits": 90.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:22:44.487470Z",
+        "throttled_at": "2026-10-07T03:22:44.675714Z",
+        "running_at": "2026-10-07T03:22:44.874821Z",
+        "completed_at": "2026-10-07T03:23:07.379592Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 5808,
+        "agent_ms": 14784,
+        "output_ms": 307,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 22719
+      },
+      "http_body_unmodified": false,
+      "http_object_unmodified": false,
+      "redaction_exception": "Key/transient URLs excluded; no Authorization header persisted"
+    },
+    {
+      "fixture_id": "B02",
+      "tier": "agentic",
+      "job_id": "pjb-uyzr3zf4pu7v8je9h4cuw8m4z1hw",
+      "file_id": "d80cd373-26a7-4099-80ab-37ce5d664de3",
+      "started_at_utc": "2026-10-07T03:22:47.936883+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:22:56.865421+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:22:56.866098+00:00",
+      "reported_usage": {
+        "credits": 30.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:22:48.379022Z",
+        "throttled_at": "2026-10-07T03:22:48.567590Z",
+        "running_at": "2026-10-07T03:22:48.705105Z",
+        "completed_at": "2026-10-07T03:22:56.325219Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 4305,
+        "agent_ms": 1719,
+        "output_ms": 259,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 7831
+      },
+      "http_body_unmodified": true,
+      "http_object_unmodified": true,
+      "redaction_exception": null
+    },
+    {
+      "fixture_id": "B02",
+      "tier": "agentic_plus",
+      "job_id": "pjb-cvq1pjsd6aep8j3iqbeel5kiyctp",
+      "file_id": "d80cd373-26a7-4099-80ab-37ce5d664de3",
+      "started_at_utc": "2026-10-07T03:23:14.366360+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:23:41.102067+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:23:41.102669+00:00",
+      "reported_usage": {
+        "credits": 135.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:23:15.256616Z",
+        "throttled_at": "2026-10-07T03:23:15.394439Z",
+        "running_at": "2026-10-07T03:23:15.538151Z",
+        "completed_at": "2026-10-07T03:23:40.642198Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 5272,
+        "agent_ms": 17998,
+        "output_ms": 224,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 25269
+      },
+      "http_body_unmodified": false,
+      "http_object_unmodified": false,
+      "redaction_exception": "Key/transient URLs excluded; no Authorization header persisted"
+    },
+    {
+      "fixture_id": "B03",
+      "tier": "agentic",
+      "job_id": "pjb-5cmb4ety67fm8hgdj5wncnyh7aij",
+      "file_id": "5e4acfd3-e8b3-4a4f-b42f-1cf76af868dd",
+      "started_at_utc": "2026-10-07T03:23:18.024435+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:23:30.734246+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:23:30.734944+00:00",
+      "reported_usage": {
+        "credits": 20.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:23:18.435392Z",
+        "throttled_at": "2026-10-07T03:23:18.572086Z",
+        "running_at": "2026-10-07T03:23:18.708901Z",
+        "completed_at": "2026-10-07T03:23:28.953582Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 5604,
+        "agent_ms": 2975,
+        "output_ms": 251,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 10406
+      },
+      "http_body_unmodified": true,
+      "http_object_unmodified": true,
+      "redaction_exception": null
+    },
+    {
+      "fixture_id": "B04",
+      "tier": "agentic",
+      "job_id": "pjb-sn1iqiyv9de7yq8r3h44gbuitzun",
+      "file_id": "45050620-6426-4433-af6d-92443c42465c",
+      "started_at_utc": "2026-10-07T03:23:46.983351+00:00",
+      "terminal_observed_at_utc": "2026-10-07T03:23:59.325528+00:00",
+      "state_completed_observed_at_utc": "2026-10-07T03:23:59.325828+00:00",
+      "reported_usage": {
+        "credits": 20.0
+      },
+      "backend_state_transitions": {
+        "pending_at": "2026-10-07T03:23:47.296822Z",
+        "throttled_at": "2026-10-07T03:23:47.523125Z",
+        "running_at": "2026-10-07T03:23:47.807430Z",
+        "completed_at": "2026-10-07T03:23:58.136144Z",
+        "failed_at": null,
+        "cancelled_at": null
+      },
+      "returned_latency": {
+        "decode_ms": 6136,
+        "agent_ms": 2002,
+        "output_ms": 240,
+        "page_throttle_wall_ms": 0,
+        "page_throttle_sum_ms": 0,
+        "page_throttle_max_ms": 0,
+        "page_throttle_waits": 1,
+        "job_throttle_ms": 0,
+        "total_ms": 10647
+      },
+      "http_body_unmodified": true,
+      "http_object_unmodified": true,
+      "redaction_exception": null
+    }
+  ],
+  "retained_http_receipts_as_of_snapshot": 122,
+  "accepted_post_receipts_as_of_snapshot": 15,
+  "known_completed_credit_subtotal": 825.0,
+  "jobs_with_returned_credits": 14,
+  "total_phase_billing_measured": false,
+  "gaps": [
+    {
+      "fixture_id": "A06",
+      "tier": "agentic_plus",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "A06",
+      "tier": "agentic_plus",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "A07",
+      "tier": "agentic_plus",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "A07",
+      "tier": "agentic_plus",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "A08",
+      "tier": "agentic",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "A08",
+      "tier": "agentic",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "A08",
+      "tier": "agentic_plus",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "A08",
+      "tier": "agentic_plus",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "A09",
+      "tier": "agentic",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "A09",
+      "tier": "agentic",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "A09",
+      "tier": "agentic_plus",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "A09",
+      "tier": "agentic_plus",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "A10",
+      "tier": "agentic",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "A10",
+      "tier": "agentic",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "A10",
+      "tier": "agentic_plus",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "A10",
+      "tier": "agentic_plus",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "B01",
+      "tier": "agentic",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "B01",
+      "tier": "agentic",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "B01",
+      "tier": "agentic_plus",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "B01",
+      "tier": "agentic_plus",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "B02",
+      "tier": "agentic",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "B02",
+      "tier": "agentic",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "B02",
+      "tier": "agentic_plus",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "B02",
+      "tier": "agentic_plus",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "B03",
+      "tier": "agentic",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "B03",
+      "tier": "agentic",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    },
+    {
+      "fixture_id": "B04",
+      "tier": "agentic",
+      "gap": "Terminal result lacks direct file_id; mapping relies on durable request, file proof and POST intent/hash echo"
+    },
+    {
+      "fixture_id": "B04",
+      "tier": "agentic",
+      "gap": "Backend resolved version unavailable; latest requested only"
+    }
+  ],
+  "secret_findings": [],
+  "limitations": [
+    "Active snapshot; later captures/receipts can exist outside the initial state cut. Final completeness awaits primary notice.",
+    "HTTP receipts retain response bodies with explicit preservation/sanitization flags; no request headers or complete wire request bodies retained.",
+    "Remote input bytes are verified by runner and hash proof retained in state; raw downloaded remote input bytes are not independently available.",
+    "Sanitized expanded result may redact transient URLs; Markdown is independently exact against retained provider string.",
+    "Returned job file_id/resolved version may be absent; do not infer direct availability or release pin.",
+    "Provider backend timing, actual HTTP dispatch latency, and wrapper observation elapsed remain distinct.",
+    "Completed usage credits are provider-returned subtotal, not final account bill or currency cost.",
+    "No credential access, provider/browser calls, jobs or retries by this audit; prior review baselines preserved."
+  ]
+}

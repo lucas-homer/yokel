@@ -1,0 +1,222 @@
+{
+  "contract_version": "expanded-parse-evidence-v1",
+  "status": "accepted_scoring_design; source-only annotation review and corpus freeze pending",
+  "prepared_at_utc": "2026-10-06T00:33:30Z",
+  "local_research_date": "2026-10-05",
+  "protocol_path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/PROTOCOL.md",
+  "protocol_sha256": "fa908d86eee3482bcf65d1d7832824dec3b04e04ef404bb018811183dbc9daf7",
+  "estimand": "Reviewer-assessed preservation of predeclared critical source evidence on selected notice units; not automated field-extractor precision or national accuracy.",
+  "arms": [
+    "native",
+    "firecrawl_local_parse",
+    "llama_agentic",
+    "llama_agentic_plus"
+  ],
+  "evaluation_unit": "notice unit; all arm comparisons paired by fixture_id and input_sha256",
+  "corpus_constraints": {
+    "target_notice_units": 20,
+    "minimum_states": 6,
+    "maximum_units_per_state": 4,
+    "maximum_units_per_register_issue": 2,
+    "primary_buckets": {
+      "clean_standalone_pdf": 5,
+      "scanned_filled_form": 5,
+      "dense_register_layout": 5,
+      "lifecycle_change": 5
+    },
+    "maximum_input_pages_per_unit": 4,
+    "maximum_unique_corpus_input_pages": 80,
+    "calibration_pdf_excluded": "ac95c240653690261eb7a6fef83bd80a04310cf49c15c37256569bbc70315955",
+    "maximum_cloud_parse_page_exposure_if_all_three_arms_complete": 240,
+    "quota_shortfall_policy": "Record and freeze any unmet quota; never fill or replace using vendor performance."
+  },
+  "reference_rules": {
+    "allowed_answerability": [
+      "present",
+      "explicit_negative",
+      "not_stated",
+      "uncertain"
+    ],
+    "criticality": "Freeze before vendor outputs; critical when loss/wrong association can change notice identity/lifecycle, participation opportunity, date role/precision, deadline condition, eligibility or withdrawal scope. Do not make agency/contact/lexical trivia critical merely to meet a quota.",
+    "independent_questions_means": "Nonduplicate semantic questions, not statistically independent observations.",
+    "field_grouping": "Keep value/date/time/zone facets of one date role in one compound field when practicable; otherwise assign the same semantic_group_id and show group counts. Repeated mentions are evidence for one field, not extra successes.",
+    "absence_scope": "Specify all relevant input pages/columns/sections plus boundaries. not_stated means not in retained notice scope, not absent from full proceeding/package.",
+    "no_legal_inference": true,
+    "reference_changes_after_freeze": "Retain initial and amended versions, reason and hashes; no silent editing. A source-only correction must be applied symmetrically to every arm, with initial/adjudicated results separated if any output was already viewed.",
+    "supplement_ownership": "Reviewer-owned adjudicated reference files only; collector fixture.json schema unchanged. Preserve collector originals and hashes, then add reviewer supplements and adjudications alongside them.",
+    "reviewer_adjudication_supplements": [
+      "semantic_group_id",
+      "critical_reason",
+      "expected_value_shape",
+      "accepted_equivalences",
+      "decisive_evidence",
+      "notice_scope_boundaries",
+      "absence_scope_if_applicable",
+      "collector_annotation_hash",
+      "adjudicated_annotation_hash"
+    ]
+  },
+  "outcome_definitions": {
+    "supported": "Output preserves the expected value and decisive role/mark/scope relation, including relevant precision/conditions; exact retained output evidence exists. Correct words alone do not suffice.",
+    "partial_ambiguous": "Some relevant source evidence survives, but decisive role, scope, mark association, condition or precision is unresolved. Correct answer reconstructed by reviewer does not upgrade it.",
+    "missing": "Required evidence is omitted on a completed parse, including absent-field scope lost or not preserved.",
+    "incorrect": "Output positively contradicts source value/role/selection/scope or invents unsupported critical information. Distinguish transcription error, role/association error and unsupported assertion subtypes.",
+    "safe_abstention": "Explicit abstention or correctly preserved blank/unselected state. For not_stated references, full relevant scope must survive. For a determinate present/explicit_negative answer, an abstention is a safe miss and cannot pass its evidence gate.",
+    "not_assessable": "Reference uncertainty, operational failure/no result, provider-stop nonattempt, or inaccessible output. reason_code required; never a successful abstention."
+  },
+  "field_gate_rules": {
+    "present": [
+      "supported"
+    ],
+    "explicit_negative": [
+      "supported"
+    ],
+    "not_stated": [
+      "safe_abstention"
+    ],
+    "uncertain": [],
+    "additional_requirements": [
+      "No contradictory rendition elsewhere in the same notice scope.",
+      "For not_stated: scope_coverage=complete and absence_evidence_checked=true.",
+      "For visual selection: preserved state attached to correct option group and section/column; both incompatible checked states fail.",
+      "For temporal claims: exact role and stated precision retained; no inferred zone, anchor or absolute deadline."
+    ],
+    "ambiguous_blank_reference": "Adjudicate explicit_negative versus not_stated before output review. A checked not-scheduled option is explicit_negative; a blank effective-date option is not_stated."
+  },
+  "document_gate": {
+    "strict_gate_label": "strict predeclared critical-evidence gate, not complete-document accuracy",
+    "primary_recommended_reference_eligibility": "Accepted strict-reference policy: at least four determinate, nonduplicate critical questions and no unresolved critical reference questions for an unqualified strict pass. Retain units with insufficient reference coverage in the all-scheduled corpus denominator; report restricted-scope results separately.",
+    "low_reference_coverage_policy": "Do not fabricate a fourth question. Retain the selected unit, report insufficient_reference separately, and optionally show restricted-scope results; it cannot inflate strict passes.",
+    "formula": "PASS iff reference gate eligible AND completed nonempty parse output AND every eligible critical field passes its answerability-specific gate AND no critical incorrect assertion found in the notice-wide extra-assertion audit.",
+    "outcomes": [
+      "pass",
+      "content_fail",
+      "operational_unusable",
+      "not_attempted_provider_stop",
+      "insufficient_reference"
+    ],
+    "denominators": [
+      "All frozen selected notice units for overall paired gate table.",
+      "Reference-eligible notice units as an explicitly secondary denominator, identical across arms."
+    ],
+    "uncertain_reference_policy": "List uncertain fields separately; no vacuous all-fields pass. If any critical reference remains uncertain, this strict gate is insufficient_reference; show determinate-field diagnostics separately."
+  },
+  "extra_assertion_audit": {
+    "required": true,
+    "scope": "Bounded sweep of the complete retained notice output for added/contradictory participation dates, lifecycle/withdrawal scope, temporal anchors, and checked/unchecked selections. Include critical facts outside the 6-10 reference questions.",
+    "not_an_assertion": "Merely reproducing visibly unselected form labels is not a false assertion. Lost states may be ambiguous; label them as such.",
+    "records_require": [
+      "assertion_id",
+      "fixture_id",
+      "arm",
+      "assertion_text",
+      "output_artifact",
+      "output_locator",
+      "source_scope",
+      "error_type",
+      "critical",
+      "reason"
+    ],
+    "deduplication": "Count one underlying wrong assertion once even when it fails multiple related fields; additionally report documents with >=1 critical incorrect assertion.",
+    "precision_claim_prohibited": "No extracted-assertion precision unless a separately defined exhaustive extraction mechanism and denominator are actually run."
+  },
+  "operation_statuses": [
+    "completed_nonempty",
+    "completed_empty",
+    "malformed_output",
+    "timeout_backend_unknown",
+    "failed_before_job",
+    "provider_error",
+    "not_attempted_provider_stop"
+  ],
+  "operation_policy": {
+    "content_coverage": "A successful HTTP/MCP call is not full evidence coverage; missing regions in returned text remain content errors.",
+    "timeout": "No field-quality score; output fields not_assessable with operational reason; document operational_unusable; billing unknown unless reported.",
+    "stop_censoring": "Nonattempts after provider stop are separate from attempted failures, but stay in scheduled paired notice denominators.",
+    "pair_scheduling": "Freeze a corpus order and arm/version settings; use the same fixture order where practicable so provider-stop effects are visible rather than performance-driven.",
+    "provider_stop_definition": "Consecutive operational failures counted by completion order per provider; both Llama tiers share the Llama provider counter. A success resets its failure streak. After the third consecutive failure, submit no new calls. Retain outcomes of at most two already in flight; do not silently retry timed-out jobs."
+  },
+  "metrics": {
+    "headline": "Paired document-gate outcomes over all frozen units, plus all-scheduled critical positive evidence yield with operational failures/nonattempts separately counted.",
+    "positive_critical_recovery": "Use the explicitly named evidence_yield and successful_output_content_score metrics; never present an unlabeled denominator.",
+    "negative_scope_preservation": "Among completed nonempty output: safe_abstention critical not_stated fields with full scope divided by eligible critical not_stated references. Exclude service failures and uncertain references; never pool with positive recovery without showing both components.",
+    "conditional_content_diagnostic": "Same category counts restricted to successful nonempty output, with its distinct denominator plainly labeled.",
+    "field_yield_warning": "Field totals are descriptive only; correlated within notice/template and not binomial trials.",
+    "paired_gain_loss": "For each fixed pair of arms, display both-pass / left-only-pass / right-only-pass / both-content-fail / one-or-both-operationally-unusable / reference-insufficient. For usable pairs also show corrected versus newly incorrect critical fields without inferring significance.",
+    "strata": [
+      "state",
+      "primary_bucket",
+      "layout_feature",
+      "event_type"
+    ],
+    "stratum_rules": "State and primary bucket are mutually exclusive allocation strata; layout features may overlap and must not be summed as independent totals. Always include notice denominators and reference critical-group counts.",
+    "clustering": "Retain original_pdf_id/hash, register_issue_id, template_family_id and agency; show distinct counts and repeat-template results. Units/pages/fields from one original are not independent evidence of breadth.",
+    "statistics": "Counts and paired tables; no national confidence intervals, p-values or pseudo-precise cross-state accuracy inference from purposive n=20.",
+    "timing": "Successful-call median, min/max, count and input pages; failures/timeouts and nonattempts shown separately. State whether upload included. No inference from one call/unit.",
+    "cost": "Actual returned usage only; unknown stays unknown. Published prices separate, units vendor-specific; timed-out backend charges unknown. Unique input page cap is not total billable pages.",
+    "evidence_yield": "Supported determinate critical present/explicit_negative fields divided by all such reference fields scheduled for that arm. Operationally unusable/nonattempted items contribute no recovered evidence and remain separately identified; uncertain references excluded. This is operationally inclusive evidence yield, never automated extraction accuracy.",
+    "successful_output_content_score": "Among completed nonempty outputs, supported critical present/explicit_negative fields divided by determinate eligible critical present/explicit_negative reference fields. Operational failures/nonattempts excluded from this conditional denominator and reported separately; uncertain references excluded."
+  },
+  "evaluation_record_required": [
+    "fixture_id",
+    "input_sha256",
+    "reference_version_hash",
+    "field_id",
+    "semantic_group_id",
+    "arm",
+    "operation_status",
+    "outcome",
+    "reason_code",
+    "scope_coverage",
+    "reference_source_locator",
+    "output_artifact_hash",
+    "output_locator",
+    "exact_output_quote_or_omission_scope",
+    "decisive_relation_preserved",
+    "critical",
+    "reviewer_id",
+    "adjudication_note"
+  ],
+  "blinding": "Prefer neutral arm codes during evidence scoring if feasible; do not claim blinded review when output format reveals provider. Freeze references before viewing any vendor parse output.",
+  "readiness_gates": [
+    "All input/source hashes and physical page maps checked.",
+    "All source-reference questions independently reviewed against every relevant rendered input page.",
+    "All conflicts adjudicated or explicitly uncertain, with collector versions retained.",
+    "Corpus quotas/selection ledger/overlap/template counts known.",
+    "Scoring ambiguities accepted or amended by primary before freeze.",
+    "Immutable source/reference/scoring-contract hash manifest saved."
+  ],
+  "forbidden_claims": [
+    "Human gold standard",
+    "Automated extractor precision from reviewer interpretation",
+    "National/state coverage estimate",
+    "Complete legal deadline correctness",
+    "General vendor winner based on this corpus",
+    "Actual billing inferred from published price or timeout"
+  ],
+  "previous_reviewed_protocol_sha256": "fa908d86eee3482bcf65d1d7832824dec3b04e04ef404bb018811183dbc9daf7",
+  "accepted_protocol_clarifications": [
+    "Safe abstention on a visibly present field is a safe miss, not gate success.",
+    "Extra critical assertions outside selected reference fields are retained and fail the strict gate.",
+    "Operational failures and uncertain references excluded from conditional field-quality denominator; operational/document denominators remain explicit."
+  ],
+  "decisions_needed_before_freeze": [],
+  "primary_acceptance": {
+    "source": "primary task delegation in this reviewer chat",
+    "local_date": "2026-10-05",
+    "substantive_design_accepted": true,
+    "clarifications": [
+      "All-scheduled positive-field ratio is evidence yield, not accuracy; operationally unusable included as unrecovered with separate counts.",
+      "Successful-output content scores use their own denominator; neither metric is automated extraction accuracy.",
+      "Provider stop counts failure completions across both Llama tiers; at most two already in flight.",
+      "Reference supplements belong in reviewer adjudicated files; do not add collector requirements midstream.",
+      "Parent freezes only after complete source-only review."
+    ]
+  },
+  "remaining_readiness_work": [
+    "Independently inspect all source annotations and all relevant rendered pages for A01-A10 and B01-B10.",
+    "Record reviewer-only supplements, disagreements and adjudicated references; no new vendor outputs read.",
+    "Check corpus quotas, page budget, duplicate/template/issue counts and full-scope absence evidence.",
+    "Parent saves immutable corpus/reference/contract freeze after source review."
+  ]
+}

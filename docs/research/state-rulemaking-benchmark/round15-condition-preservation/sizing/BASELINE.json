@@ -1,0 +1,673 @@
+{
+  "budget": {
+    "R14_reservation_and_charge_nanousd": 200000000,
+    "another_200000000_reservation_fits": false,
+    "budget_policy": "Do not replace conservative charges with lower reported/estimated costs or silently lower reservation. R15 is offline only; a new paid experiment requires explicit primary/user admission and sufficient approved budget.",
+    "cache_write_premium_verified": false,
+    "cache_write_tokens_reported": 6727,
+    "ceiling_nanousd": 2000000000,
+    "cumulative_conservative_charge_nanousd": 1905990718,
+    "invoice_verified": false,
+    "nominal_estimate_includes_cache_write_premium": false,
+    "nominal_usage_rate_estimated_nanousd": 85770000,
+    "prior_before_R14_nanousd": 1705990718,
+    "provider_report_minus_nominal_estimate_nanousd": 3363500,
+    "provider_reported_cost_nanousd": 89133500,
+    "provider_reported_cost_usd": 0.0891335,
+    "remaining_conservative_nanousd": 94009282,
+    "remaining_conservative_usd": "0.094009282",
+    "shortfall_for_same_reservation_nanousd": 105990718
+  },
+  "byte_sensitivities": {
+    "kind": "illustrative byte estimates, not observed token usage or matched tokenizer",
+    "rows": {
+      "2": {
+        "canonical_bytes_per_token_assumption": 2,
+        "content_estimated_tokens_ceil": 11343,
+        "illustrative_plus_256_allowance_tokens": 11599,
+        "residual_of_8192_after_illustrative_allowance": -3407
+      },
+      "3": {
+        "canonical_bytes_per_token_assumption": 3,
+        "content_estimated_tokens_ceil": 7562,
+        "illustrative_plus_256_allowance_tokens": 7818,
+        "residual_of_8192_after_illustrative_allowance": 374
+      },
+      "4": {
+        "canonical_bytes_per_token_assumption": 4,
+        "content_estimated_tokens_ceil": 5672,
+        "illustrative_plus_256_allowance_tokens": 5928,
+        "residual_of_8192_after_illustrative_allowance": 2264
+      }
+    }
+  },
+  "compact_array_fields": {
+    "b": {
+      "at_cap_unit_ids": [],
+      "measured_max_items": 5,
+      "schema_max_items": 16,
+      "sum_items": 9
+    },
+    "d": {
+      "at_cap_unit_ids": [],
+      "measured_max_items": 5,
+      "schema_max_items": 16,
+      "sum_items": 151
+    },
+    "e": {
+      "at_cap_unit_ids": [
+        110
+      ],
+      "measured_max_items": 6,
+      "schema_max_items": 6,
+      "sum_items": 157
+    }
+  },
+  "compact_text_fields": {
+    "c": {
+      "at_cap_unit_ids": [
+        88,
+        95,
+        96,
+        98
+      ],
+      "at_or_above_90_percent_cap_unit_ids": [
+        88,
+        95,
+        96,
+        98,
+        99
+      ],
+      "empty_unit_count": 57,
+      "exceeding_cap_unit_ids": [],
+      "measured_max_characters": 180,
+      "measured_max_utf8_bytes": 184,
+      "measured_p95_characters_nearest_rank": 159,
+      "schema_max_characters": 180,
+      "sum_characters": 4176,
+      "sum_json_string_value_bytes": 4400,
+      "sum_key_colon_value_bytes": 4840,
+      "sum_utf8_bytes": 4180
+    },
+    "r": {
+      "at_cap_unit_ids": [],
+      "at_or_above_90_percent_cap_unit_ids": [],
+      "empty_unit_count": 95,
+      "exceeding_cap_unit_ids": [],
+      "measured_max_characters": 93,
+      "measured_max_utf8_bytes": 93,
+      "measured_p95_characters_nearest_rank": 71,
+      "schema_max_characters": 180,
+      "sum_characters": 914,
+      "sum_json_string_value_bytes": 1134,
+      "sum_key_colon_value_bytes": 1574,
+      "sum_utf8_bytes": 914
+    },
+    "s": {
+      "at_cap_unit_ids": [],
+      "at_or_above_90_percent_cap_unit_ids": [],
+      "empty_unit_count": 0,
+      "exceeding_cap_unit_ids": [],
+      "measured_max_characters": 230,
+      "measured_max_utf8_bytes": 230,
+      "measured_p95_characters_nearest_rank": 154,
+      "schema_max_characters": 280,
+      "sum_characters": 8642,
+      "sum_json_string_value_bytes": 8862,
+      "sum_key_colon_value_bytes": 9302,
+      "sum_utf8_bytes": 8642
+    }
+  },
+  "input": {
+    "guard_allowance_bytes": 1024,
+    "guard_max_bytes": 40000,
+    "guard_residual_bytes": 10669,
+    "guarded_request_bytes": 29331,
+    "inner_user_envelope_additive_accounting": {
+      "braces_and_commas_bytes": 5,
+      "member_key_colon_value_bytes": {
+        "source_text": 7331,
+        "source_text_sha256": 87,
+        "span_table": 9632,
+        "span_table_sha256": 86
+      },
+      "total_canonical_bytes": 17141
+    },
+    "inner_user_envelope_utf8_bytes": 17141,
+    "outer_user_content_json_string_bytes": 17813,
+    "overhead_measurement_note": "Nested component sizes are separate measurement layers, not an additive total. source appears literally in source_text and exact span rows; outer JSON encoding adds escaping. No candidate/schema omission was performed.",
+    "request_bytes": 28307,
+    "response_format_canonical_bytes": 1879,
+    "schema_canonical_bytes": 1790,
+    "schema_evidence_enum_canonical_bytes": 649,
+    "schema_evidence_enum_count": 108,
+    "source_characters": 7208,
+    "source_text_json_string_bytes": 7317,
+    "source_utf8_bytes": 7208,
+    "span_count": 108,
+    "span_row_exact_text_utf8_sum": 7208,
+    "span_table_canonical_bytes": 9619,
+    "system_content_json_string_bytes": 8294,
+    "system_content_utf8_bytes": 8268,
+    "top_level_additive_accounting": {
+      "braces_and_commas_bytes": 8,
+      "member_key_colon_value_bytes": {
+        "max_tokens": 17,
+        "messages": 26175,
+        "model": 28,
+        "provider": 140,
+        "reasoning": 28,
+        "response_format": 1897,
+        "stream": 14
+      },
+      "total_canonical_bytes": 28307
+    }
+  },
+  "integration_constraints": [
+    "Import the exact reviewed protocol after verifying READY/file pins; use its build, validate_response, expand and contract directly.",
+    "Preserve exact immutable source/UTF-8 hash and whole source-only envelope; regenerate source-instantiated request/schema/table and full guarded size for an R15 candidate.",
+    "Preserve condition/uncertainty evidence, literal strings, codes, ordering, explicit empties and exact compact-expanded inverse; any field/condition references require explicit schema/codec/review changes, no defaults or silently inferred scopes.",
+    "R14 c/r caps are180 characters and s cap280; bounds are characters, not UTF-8 bytes/tokens. Essential qualifiers cannot be clipped/dropped to fit.",
+    "Only complete stop output passes. Capacity160, truncation, malformed output or missing bindings stop intact; no retry, prefix repair, fallback or alternate representation.",
+    "Keep native executor/core unchanged; preserve primary late-binding CLI and yokel.research-job.v1 shape, isolated six-argument entry and explicit pinned dependency closure <=10000. R15 schemas/authorization/job ID require distinct prospectively reviewed bindings, not edits to R14.",
+    "Neutral charge ledger and separate completed/stop outcomes stay distinct; reserve and conservatively charge recoverable overruns, retain provider reports/usage/cache metadata without invoice or premium claims.",
+    "Use only separately labelled authored fixtures for transformed R14 outputs. A size delta cannot establish semantic/structural improvement, model behavior or unseen-source generalization.",
+    "No new provider experiment is authorized in this offline task; current remaining budget cannot admit another unchanged200000000 reserve."
+  ],
+  "measurement_script_sha256": "2f62798fb4d5d0c5862a7c442918d27e53fa2e0f60caed7b8985b3a9286f7247",
+  "observed_output": {
+    "bytes_per_token_interpretation": "Retrospective ratio including reported completion accounting; not a matched tokenizer or transferable conversion.",
+    "canonical_compact_bytes": 22686,
+    "completion_cap_tokens": 8192,
+    "completion_minus_reasoning_arithmetic": 7174,
+    "expanded_inventory_bytes": 82741,
+    "finish_reason": "stop",
+    "native_response_bytes": 29722,
+    "observed_canonical_bytes_per_reported_completion_token": 3.137325404508367,
+    "observed_completion_cap_residual_tokens": 961,
+    "observed_completion_fraction_of_cap": 0.8826904296875,
+    "observed_completion_tokens": 7231,
+    "observed_raw_content_bytes_per_reported_completion_token": 3.1384317521781218,
+    "observed_usage": {
+      "completion_tokens": 7231,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "image_tokens": 0,
+        "reasoning_tokens": 57
+      },
+      "cost": 0.0891335,
+      "cost_details": {
+        "upstream_inference_completions_cost": 0.07231,
+        "upstream_inference_cost": 0.0891335,
+        "upstream_inference_prompt_cost": 0.0168235
+      },
+      "is_byok": false,
+      "prompt_tokens": 6730,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 6727,
+        "cached_tokens": 0,
+        "video_tokens": 0
+      },
+      "total_tokens": 13961
+    },
+    "original_content_bytes": 22694,
+    "raw_minus_canonical_content_bytes": 8,
+    "reasoning_tokens_reported": 57,
+    "token_interpretation": "Observed provider usage for this single frozen R14 request; arithmetic subtraction is not a separately tokenized visible-content count or a future-fit guarantee.",
+    "unit_count": 110
+  },
+  "prior_freeze_verified_files": 221,
+  "protocol_interface": {
+    "ID_max": 160,
+    "accepted_unit_count_max": 159,
+    "build_result_keys": [
+      "body",
+      "table",
+      "body_bytes",
+      "guarded_bytes",
+      "request_sha256"
+    ],
+    "capacity_sentinel_units": 160,
+    "closed_schema_keyword_validator": "type/properties/required/additionalProperties/enum/minimum/maximum/minLength/maxLength/items/minItems/maxItems only; runtime check_schema fails unsupported keywords",
+    "expanded_version": "round14.expanded-inventory.v2",
+    "functions": [
+      {
+        "name": "require",
+        "signature": "ok, message"
+      },
+      {
+        "name": "canonical",
+        "signature": "value"
+      },
+      {
+        "name": "digest",
+        "signature": "value"
+      },
+      {
+        "name": "source_hash",
+        "signature": "source"
+      },
+      {
+        "name": "closed",
+        "signature": "obj, keys"
+      },
+      {
+        "name": "strict_load",
+        "signature": "raw"
+      },
+      {
+        "name": "span_table",
+        "signature": "source"
+      },
+      {
+        "name": "validate_table",
+        "signature": "source, table"
+      },
+      {
+        "name": "reconstruct",
+        "signature": "source, table"
+      },
+      {
+        "name": "schema",
+        "signature": "source, table"
+      },
+      {
+        "name": "validate",
+        "signature": "value, source, table, finish_reason='stop'"
+      },
+      {
+        "name": "expand",
+        "signature": "value, source, table, finish_reason='stop'"
+      },
+      {
+        "name": "contract",
+        "signature": "value, source, table"
+      },
+      {
+        "name": "build",
+        "signature": "source"
+      },
+      {
+        "name": "validate_response",
+        "signature": "raw_content, finish_reason, source, table"
+      }
+    ],
+    "required_compact_envelope_keys": [
+      "h",
+      "t",
+      "u",
+      "v",
+      "z"
+    ],
+    "settings": {
+      "max_tokens": 8192,
+      "model": "openai/gpt-6.1-sol",
+      "provider": {
+        "allow_fallbacks": false,
+        "max_price": {
+          "completion": 10,
+          "prompt": 2
+        },
+        "only": [
+          "openai"
+        ],
+        "order": [
+          "openai"
+        ],
+        "require_parameters": true
+      },
+      "reasoning": {
+        "effort": "low"
+      },
+      "stream": false
+    },
+    "span_table_version": "r14.spans.2",
+    "unit_required_keys": [
+      "i",
+      "k",
+      "s",
+      "m",
+      "c",
+      "d",
+      "b",
+      "e",
+      "q",
+      "r"
+    ],
+    "validate_response_result_keys": [
+      "compact",
+      "expanded"
+    ],
+    "version": "r14.2"
+  },
+  "qualification_repetition": {
+    "distinct_nonempty_values": 40,
+    "exact_repeated_value_groups": 8,
+    "groups": [
+      {
+        "characters_per_occurrence": 95,
+        "json_string_bytes_per_occurrence": 97,
+        "literal_duplicate_utf8_bytes_beyond_first": 380,
+        "occurrences": 5,
+        "unit_ids": [
+          105,
+          106,
+          107,
+          108,
+          109
+        ],
+        "utf8_bytes_per_occurrence": 95,
+        "utf8_bytes_total": 475,
+        "value_sha256": "ed9656fd2a5527efb55082b8d075149877461d91076a5115f4df4adaf4794e40"
+      },
+      {
+        "characters_per_occurrence": 131,
+        "json_string_bytes_per_occurrence": 133,
+        "literal_duplicate_utf8_bytes_beyond_first": 131,
+        "occurrences": 2,
+        "unit_ids": [
+          92,
+          93
+        ],
+        "utf8_bytes_per_occurrence": 131,
+        "utf8_bytes_total": 262,
+        "value_sha256": "f9dba5411521102f044d2320cba3b1a60c111c43455210d336b375490de40732"
+      },
+      {
+        "characters_per_occurrence": 129,
+        "json_string_bytes_per_occurrence": 131,
+        "literal_duplicate_utf8_bytes_beyond_first": 129,
+        "occurrences": 2,
+        "unit_ids": [
+          104,
+          110
+        ],
+        "utf8_bytes_per_occurrence": 129,
+        "utf8_bytes_total": 258,
+        "value_sha256": "71467b4676649e88d47b38b937dd1b2b61293ecd40597ed8ef956771d896a725"
+      },
+      {
+        "characters_per_occurrence": 82,
+        "json_string_bytes_per_occurrence": 84,
+        "literal_duplicate_utf8_bytes_beyond_first": 82,
+        "occurrences": 2,
+        "unit_ids": [
+          45,
+          46
+        ],
+        "utf8_bytes_per_occurrence": 82,
+        "utf8_bytes_total": 164,
+        "value_sha256": "e8501843711b100c312ac0aa3e8926bf03e7c2d46c5476e579ef9803237dd731"
+      },
+      {
+        "characters_per_occurrence": 46,
+        "json_string_bytes_per_occurrence": 48,
+        "literal_duplicate_utf8_bytes_beyond_first": 46,
+        "occurrences": 2,
+        "unit_ids": [
+          48,
+          49
+        ],
+        "utf8_bytes_per_occurrence": 46,
+        "utf8_bytes_total": 92,
+        "value_sha256": "7ac6c4202ee4dcdecd547eaa0e30811ca6c84064aea4acdc290aa92b08093fa5"
+      },
+      {
+        "characters_per_occurrence": 23,
+        "json_string_bytes_per_occurrence": 25,
+        "literal_duplicate_utf8_bytes_beyond_first": 46,
+        "occurrences": 3,
+        "unit_ids": [
+          52,
+          53,
+          54
+        ],
+        "utf8_bytes_per_occurrence": 23,
+        "utf8_bytes_total": 69,
+        "value_sha256": "9e308a2cb3817d63097c8a7d7bc53828221802382787bdf3c39774f07233f564"
+      },
+      {
+        "characters_per_occurrence": 20,
+        "json_string_bytes_per_occurrence": 22,
+        "literal_duplicate_utf8_bytes_beyond_first": 40,
+        "occurrences": 3,
+        "unit_ids": [
+          5,
+          10,
+          34
+        ],
+        "utf8_bytes_per_occurrence": 20,
+        "utf8_bytes_total": 60,
+        "value_sha256": "19eef0a212591457b9021cbc2e01d91157e802efc214818c63d4d0132026bdad"
+      },
+      {
+        "characters_per_occurrence": 38,
+        "json_string_bytes_per_occurrence": 40,
+        "literal_duplicate_utf8_bytes_beyond_first": 38,
+        "occurrences": 2,
+        "unit_ids": [
+          50,
+          51
+        ],
+        "utf8_bytes_per_occurrence": 38,
+        "utf8_bytes_total": 76,
+        "value_sha256": "14843ba9471cb59a57dc054f439a9ed905bb5ee30b30b9626c899e1736e2a624"
+      }
+    ],
+    "interpretation": "Exact text repetition measurement only. Duplicate bytes are not achievable savings, semantic redundancy or removable conditions; dictionary/reference/scope costs and meaning require separate evaluation.",
+    "literal_duplicate_utf8_bytes_beyond_first": 892,
+    "nonempty_occurrences": 53,
+    "repeated_nonempty_occurrences": 21
+  },
+  "schema_version": "round15.r14-sizing-baseline.v1",
+  "source_pins": {
+    "round14-semantic-contract/execution/READY.json": {
+      "bytes": 2105,
+      "sha256": "7dcc687e83f9341949e9b0a62e2749afdb37df74fd0ffada9fbd7219d58af254"
+    },
+    "round14-semantic-contract/execution/STOP.json": {
+      "bytes": 1371,
+      "sha256": "10a320bd6775aea4682e09f35ed1b6a78db47a68b2e685caa6b7c912df3fc238"
+    },
+    "round14-semantic-contract/execution/run/completed.json": {
+      "bytes": 986,
+      "sha256": "ea0a54b69e5384d98a775e50c8b2468b4ce7e6b31fdd63873572e07ca6d3d599"
+    },
+    "round14-semantic-contract/execution/run/content.body": {
+      "bytes": 22694,
+      "sha256": "ea2657b5fe87849d753bade38178043e4ff1ae24d7a2be6abd77d01c70d76b95"
+    },
+    "round14-semantic-contract/execution/run/expanded.json": {
+      "bytes": 82741,
+      "sha256": "82dfa339edfe923349abd0d622baccbd64ed448bb12a765ee789f6b7d3ab3886"
+    },
+    "round14-semantic-contract/execution/run/intent.json": {
+      "bytes": 767,
+      "sha256": "8a1707f72789fccb724ffd9391ad0e653220aaad541b6b1dd3b80e4d36058e4c"
+    },
+    "round14-semantic-contract/execution/run/ledger.json": {
+      "bytes": 347,
+      "sha256": "82e5c799787086f840873b3c0b0d26676632cf4bcd4abaefdea9c1344584d0af"
+    },
+    "round14-semantic-contract/execution/run/request.json": {
+      "bytes": 28307,
+      "sha256": "91ed8a79712125caf66b1672e625b8e57e557b81eccfa485396171cc10d54c4f"
+    },
+    "round14-semantic-contract/execution/run/response.body": {
+      "bytes": 29722,
+      "sha256": "80b96698027e3ca1690462a96044533afa91a1c49c752f6f6778de270eda6c71"
+    },
+    "round14-semantic-contract/execution/run/result.json": {
+      "bytes": 1743,
+      "sha256": "b18fd3a0b74eeb3b46556dd123d7e48345de8ab92552e325dae66bac3e1592a3"
+    },
+    "round14-semantic-contract/execution/run/span-table.json": {
+      "bytes": 9619,
+      "sha256": "65ff2d00ba7ff8350a97fc144a1fe5c51aa0ce5a900854658d156ba09fd449b1"
+    },
+    "round14-semantic-contract/execution/run/status.json": {
+      "bytes": 104,
+      "sha256": "9365409d4e86462ada6cce1088d054e283bddaf95539a8682486cf666b3f9b1d"
+    },
+    "round14-semantic-contract/execution/run/validated.json": {
+      "bytes": 22686,
+      "sha256": "919275c5aa6ecace07b970bae1c2024bb3179c397bdba4e757ff48246e7b98d9"
+    },
+    "round14-semantic-contract/protocol-revised/READY.json": {
+      "bytes": 3491,
+      "sha256": "478d8cb4aaaeea97dd3a33b751c373847fe457a1e789212999b11c7224280500"
+    },
+    "round14-semantic-contract/protocol-revised/REPORT.md": {
+      "bytes": 2475,
+      "sha256": "7a1b458c437ac26ff4d9037e1a435abf336ed306bc691f55e2b9b4cee09de7bd"
+    },
+    "round14-semantic-contract/protocol-revised/SPEC.md": {
+      "bytes": 13650,
+      "sha256": "5be645080155dfe8ee30e6e04d2f3ebc2def9cba6eb584d5ee638c75e363c16f"
+    },
+    "round14-semantic-contract/protocol-revised/compact.py": {
+      "bytes": 9147,
+      "sha256": "faaf16b6a1ff816e8342b9afefbdb0734e7ee8a7686f98f24205d78b43ea533f"
+    },
+    "round14-semantic-contract/protocol-revised/fictional-negatives.json": {
+      "bytes": 19535,
+      "sha256": "e9c353564fdaf58a8422233f261767d61d5e48f26050827461fc1ae3ab3d893a"
+    },
+    "round14-semantic-contract/protocol-revised/fictional-positive.json": {
+      "bytes": 3966,
+      "sha256": "f7014568482ba4210f04c15cfa5d922b7cd8a279ea164e5389d6c547d359e7ef"
+    },
+    "round14-semantic-contract/protocol-revised/fictional_controls.py": {
+      "bytes": 4834,
+      "sha256": "3dfbb350d1be7074d357b655ed7d789de570fc4f30a76da428a44714d26fa174"
+    },
+    "round14-semantic-contract/protocol-revised/illustration-leakage.json": {
+      "bytes": 585,
+      "sha256": "d4289186d2b795db420e8c4d48c54bbd4489fed55ac5b39416b86d7faf838e58"
+    },
+    "round14-semantic-contract/protocol-revised/offline-request.json": {
+      "bytes": 11583,
+      "sha256": "85a95222ab35172a632813c17d125a4c9deed9f9149f2ab90ac10538720fe21e"
+    },
+    "round14-semantic-contract/protocol-revised/offline-results.json": {
+      "bytes": 1375,
+      "sha256": "7bf22b6cc90476c9fdfbbea1d46c271633b2c936f312e80bed7d424e865702c2"
+    },
+    "round14-semantic-contract/protocol-revised/offline_checks.py": {
+      "bytes": 2842,
+      "sha256": "e6d346603c3333eb23787201e96d8463ffe9512e504000f2a69badb09aee8a3f"
+    },
+    "round14-semantic-contract/protocol-revised/original-freeze.json": {
+      "bytes": 2213,
+      "sha256": "79a46e78ab863ff227e17edfb262f0586401356bdb97a3ae099201db75822231"
+    },
+    "round14-semantic-contract/protocol-revised/overflow-controls.json": {
+      "bytes": 2132,
+      "sha256": "b76815734c7aabce7e06919920ae8f14776360847e9cd9d773fa11ae07d49dfd"
+    },
+    "round14-semantic-contract/protocol-revised/representative32.json": {
+      "bytes": 6035,
+      "sha256": "586fb347e15384093a47a977e9b0a4e5afcf8f97d3610928b7be60620729389e"
+    },
+    "round14-semantic-contract/protocol-revised/representative64.json": {
+      "bytes": 11471,
+      "sha256": "e5f7ee41ad617d7d6e9d1714f8e95f167e3651469929d89bfe6b1cf16bfe168e"
+    },
+    "round14-semantic-contract/protocol-revised/request-settings.json": {
+      "bytes": 342,
+      "sha256": "43d3b4f7886d84c528a07ff3ba0901a2be1ff42a6b503853ee87e1e6985b1ac2"
+    },
+    "round14-semantic-contract/protocol-revised/revision_controls.py": {
+      "bytes": 1487,
+      "sha256": "24f7c2df8baa7f88a0a4498a7c400475d4d2c052d5880faf704a19af59484723"
+    },
+    "round14-semantic-contract/protocol-revised/schema.json": {
+      "bytes": 1194,
+      "sha256": "646167a574de34d157f1bf21174f4d0ff85dddc0a2edb47df03f7144dceca57d"
+    },
+    "round14-semantic-contract/protocol-revised/semantic-controls.json": {
+      "bytes": 3862,
+      "sha256": "474518ce5b1fc6ea267333235e512ba244f9389f7dd15548db1338eb578c874b"
+    },
+    "round14-semantic-contract/protocol-revised/span-table.json": {
+      "bytes": 834,
+      "sha256": "30c10173a6ad2f7a306352dcb233940a1b4ef370a45b740dac4cfd14d70bb8c9"
+    },
+    "round14-semantic-contract/protocol-revised/stage-a.system.txt": {
+      "bytes": 8268,
+      "sha256": "da2b282f15a14778b6e83598d53cb4dff767e61ed0b0140cc6cd950359b8409d"
+    },
+    "round14-semantic-contract/protocol-revised/stressed128.json": {
+      "bytes": 60177,
+      "sha256": "eba6dc5eb3581f461484a1b1a178ea9fb6a69a7253075e71c60ddc64f690e0f7"
+    },
+    "round14-semantic-contract/protocol-revised/stressed96.json": {
+      "bytes": 45064,
+      "sha256": "22751cc9caf4bd082663468621802821f47289ff58081783acbb27c62f82c142"
+    },
+    "round14-semantic-contract/protocol-revised/test-output.txt": {
+      "bytes": 3695,
+      "sha256": "0b8b5cca2ec04ae0a26546d38a27073bd22b0e62a0f552c12ed70bdf9f282221"
+    },
+    "round14-semantic-contract/protocol-revised/test_compact.py": {
+      "bytes": 5835,
+      "sha256": "471cfc937862631bdea776362055109b740c2fbd500455f27a0d5e98d3ec728a"
+    },
+    "round14-semantic-contract/protocol-revised/test_revision.py": {
+      "bytes": 3461,
+      "sha256": "2623093fe52bfcbdaafc6ef24cab64a480a6c8140c3761f17fa1efa6139674ca"
+    },
+    "round14-semantic-contract/protocol-revised/test_semantic_contract.py": {
+      "bytes": 3691,
+      "sha256": "68eaf3695ec3dd13a24944ec8f04c29b12486740c2d772cb60b0ddeab52c3c88"
+    },
+    "round14-semantic-contract/runtime/READY.json": {
+      "bytes": 9017,
+      "sha256": "1308fcc8bb0e9a255817e362b5f2361fcbfca147d4328e6951eb4b4b32b442d2"
+    },
+    "round14-semantic-contract/runtime/adapter.py": {
+      "bytes": 20251,
+      "sha256": "1aeadf4312b9ed8713403798255b9a66e83e709961792a5a0546938a87442803"
+    },
+    "round14-semantic-contract/runtime/common.py": {
+      "bytes": 5581,
+      "sha256": "a341e11b6b0d49b130c28d8881ef4b71748161bcfc0d15c41384bc150f35bdc5"
+    },
+    "round14-semantic-contract/runtime/contract.py": {
+      "bytes": 1764,
+      "sha256": "f85205edc8ab62b23dd3f88363d845d762b83c61e0ece1ecddf35e4970d3869c"
+    },
+    "round14-semantic-contract/runtime/prepare_bindings.py": {
+      "bytes": 2822,
+      "sha256": "f67ec9d6c7bac2018fe0d4a94bd50ac4547af5a84c5b5d9de84ae417dfc6e250"
+    },
+    "round14-semantic-contract/source/READY.json": {
+      "bytes": 3428,
+      "sha256": "9f73ded9eb6de4a9a26efd8e376ea9b618693306915f350fa4e715b3cf7a6b74"
+    },
+    "round14-semantic-contract/source/parsed-body.txt": {
+      "bytes": 7208,
+      "sha256": "5b8b221224c799e4950dbddf6df8bbf0652ee90db7150f1ed16a332b137df55f"
+    },
+    "round15-condition-preservation/primary/R14-FREEZE.json": {
+      "bytes": 29703,
+      "sha256": "6e8f052b3aee27f1561e3384fed394aba9d05602bbd25f4240d094f4566a1ce3"
+    }
+  },
+  "status": "FROZEN_OBSERVED_BASELINE_OFFLINE_ONLY",
+  "verification": {
+    "action_ready": false,
+    "all_prior_R14_freeze_hashes_rechecked": true,
+    "canonical_content_matches_validated": true,
+    "credentials_read": false,
+    "exact_current_source_build_matches_recorded_request": true,
+    "execution_and_completion_hashes_verified": true,
+    "expanded_inverse_roundtrip_exact": true,
+    "prior_artifacts_changed": false,
+    "production_eligible": false,
+    "provider_calls": 0,
+    "raw_content_matches_native_message": true,
+    "signer_executor_invoked": false
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "status": "NOT_MET_no_recovered_fields_and_incomplete_full_notice_cohort",
+  "required_coverage_minimum": 0.25,
+  "full_cohort_coverage": {
+    "DATE": {
+      "numerator": 0,
+      "denominator": 7,
+      "value": null,
+      "undefined_reason": "source_labels_incomplete; counts cover known labels only"
+    },
+    "EMAIL": {
+      "numerator": 0,
+      "denominator": 5,
+      "value": null,
+      "undefined_reason": "source_labels_incomplete; counts cover known labels only"
+    },
+    "pooled": {
+      "numerator": 0,
+      "denominator": 12,
+      "value": null,
+      "undefined_reason": "source_labels_incomplete; counts cover known labels only"
+    }
+  },
+  "complete_notice_subset_coverage": {
+    "DATE": {
+      "numerator": 0,
+      "denominator": 3,
+      "value": 0.0
+    },
+    "EMAIL": {
+      "numerator": 0,
+      "denominator": 4,
+      "value": 0.0
+    },
+    "pooled": {
+      "numerator": 0,
+      "denominator": 7,
+      "value": 0.0
+    }
+  },
+  "zero_unsafe_accepted_claim_count": true,
+  "unsafe_acceptance_rate": null,
+  "unsafe_rate_reason": "zero terminal acceptances; no evidence of safe acceptance",
+  "accepted_source_conflicts": 0,
+  "all12_scheduled_inputs_accounted": true,
+  "complete_single_notice_inputs": 5,
+  "required12_complete_notices_met": false,
+  "known_source_resolvable_fields": 12,
+  "known_fields_recovered": 0,
+  "jev_cases": 0,
+  "classifier_comparison": "not performed: zero Jev cases",
+  "deterministic_blocking_issue_counts_overlapping": {
+    "case_overlimit": 6,
+    "condition_scope_requires_semantic_verification": 23,
+    "multiple_notice_or_rule_scopes": 11,
+    "multiple_same_role_values_scope_unresolved": 3,
+    "source_scope_incomplete_or_unknown": 9,
+    "lifecycle_scope_unresolved": 7,
+    "competing_temporal_role_cues": 1,
+    "date_year_order_or_range_unresolved": 1,
+    "replacement_character": 2
+  },
+  "unsupported_abstention_interpretation": "32/32 labeled out-of-scope/uncertain groups remain unaccepted because all terminal observations are review. This includes source-scope uncertainty and other-role facts; it is not32 independently verified classifier successes.",
+  "next_step_boundary": "No permission or rationale to alter this frozen run. Any routing/parser revision must be a new development version and requires a later fresh cohort to evaluate transfer."
+}

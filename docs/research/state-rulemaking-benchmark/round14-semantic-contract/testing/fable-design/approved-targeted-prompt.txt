@@ -1,0 +1,204 @@
+Role: Fable independent offline test designer. Source-only reference is frozen in a separate session; do not see or change it. Propose a bounded Python unittest file (no network, no writes, no external libraries) using the supplied synthetic fixture and structural API. The host will execute your exact proposed code, importing compact and fictional_controls via sys.path. Design 8-12 useful tests aligned with your generic plan: deadline missing vs present vs ambiguous dimensions, affected rule vs historical filing, independent recoverability/decomposition, ambiguous force, hash/span/id/cycle/terminal invariants and semantic-vs-structural separation. Structural validator cannot judge semantic facts; do not falsely claim bad semantics must be rejected structurally. Broad spans permitted. Fixed atomicity requirement belongs to the extraction prompt, while completeness comparison should retain bundled-but-recoverable facts. Preserve uncertainties and accept contested force with reasons. No live model tests.
+Inspect the existing fictional negatives as examples, not oracle labels: identify any label overclaim (e.g. bundled facts are retained despite atomicity issue). Return JSON with compact findings and a complete python_test_file string. Tests should exercise mutations/integrity and explicitly distinguish fixture preservation from proof of model discovery. Never assert schema extension. Do not edit source or create a provider output. Test code must not invoke build() since that reads prompt/settings; use validate/expand/contract/span_table/digest and synthetic fixture only.
+SOURCE DATA: structural Python API, offline implementation
+"""Standalone offline inventory contract. No provider, credentials or execution adapter."""
+import copy
+import hashlib
+import json
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parent
+VERSION='r14.1'
+KINDS=['identity','rule_transition','phase','timing','endpoint','endpoint_role','instruction','relationship','background']
+MODALITIES=['informational','mandatory','advisory','optional','prohibited','unknown','not_applicable']
+UNCERTAINTIES=['none','source_ambiguous','reference_unresolved','function_unresolved']
+UNIT_KEYS=['i','k','s','m','c','d','b','e','q','r']
+
+def require(ok,message):
+    if not ok:raise ValueError(message)
+def canonical(value):return json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(',',':'),allow_nan=False).encode('utf-8')
+def digest(value):return hashlib.sha256(canonical(value)).hexdigest()
+def source_hash(source):return hashlib.sha256(source.encode('utf-8')).hexdigest()
+def closed(obj,keys):require(isinstance(obj,dict) and set(obj)==set(keys),'closed keys')
+def strict_load(raw):
+    def pairs(items):
+        result={}
+        for key,value in items:
+            require(key not in result,'duplicate key');result[key]=value
+        return result
+    def constant(value):raise ValueError('nonfinite constant')
+    value=json.loads(raw,object_pairs_hook=pairs,parse_constant=constant);canonical(value);return value
+
+def span_table(source):
+    require(isinstance(source,str) and bool(source.strip()),'nonempty source')
+    # Python splitlines preserves each exact line separator with keepends=True.
+    parts=source.splitlines(keepends=True);rows=[];start=0
+    for index,part in enumerate(parts,1):
+        rows.append([f's{index}',start,start+len(part),part]);start+=len(part)
+    require(start==len(source),'partition coverage')
+    return dict(v='r14.spans.1',h=source_hash(source),rows=rows)
+
+def validate_table(source,table):
+    require(table==span_table(source) and canonical(table)==canonical(span_table(source)),'exact host span table')
+
+def reconstruct(source,table):
+    validate_table(source,table)
+    result=''.join(source[start:end] for _,start,end,_ in table['rows'])
+    require(result==source and result.encode()==source.encode(),'source reconstruction')
+    return result
+
+def schema(source,table):
+    validate_table(source,table)
+    def text(cap,empty=False):return dict(type='string',minLength=0 if empty else 1,maxLength=cap)
+    def obj(props):return dict(type='object',properties=props,required=list(props),additionalProperties=False)
+    unit=obj({'i':dict(type='integer',minimum=1,maximum=160),'k':dict(type='integer',minimum=0,maximum=8),'s':text(280),'m':dict(type='integer',minimum=0,maximum=6),'c':text(180,True),'d':dict(type='array',items=dict(type='integer',minimum=1,maximum=160),maxItems=16),'b':dict(type='array',items=dict(type='integer',minimum=1,maximum=160),maxItems=16),'e':dict(type='array',items=dict(type='string',enum=[row[0] for row in table['rows']]),minItems=1,maxItems=6),'q':dict(type='integer',minimum=0,maximum=3),'r':text(180,True)})
+    return obj({'v':dict(type='string',enum=[VERSION]),'h':dict(type='string',enum=[source_hash(source)]),'t':dict(type='string',enum=[digest(table)]),'u':dict(type='array',items=unit,minItems=1,maxItems=160),'z':dict(type='string',enum=['END'])})
+
+def validate(value,source,table,finish_reason='stop'):
+    require(finish_reason=='stop','non-stop/truncated response')
+    validate_table(source,table);closed(value,['v','h','t','u','z'])
+    require(value['v']==VERSION and value['h']==source_hash(source) and value['t']==digest(table),'binding/version')
+    require(value['z']=='END','terminal marker')
+    require(isinstance(value['u'],list) and 1<=len(value['u'])<160,'inventory bound/capacity reached')
+    evidence_ids={row[0] for row in table['rows']};units={}
+    for unit in value['u']:
+        closed(unit,UNIT_KEYS)
+        for key,maximum in [('i',160),('k',8),('m',6),('q',3)]:
+            require(type(unit[key]) is int and (1 if key=='i' else 0)<=unit[key]<=maximum,'integer code/ID')
+        require(unit['i'] not in units,'duplicate unit ID');units[unit['i']]=unit
+        for key,cap,empty in [('s',280,False),('c',180,True),('r',180,True)]:
+            require(isinstance(unit[key],str) and len(unit[key])<=cap and ((empty and unit[key]=='') or bool(unit[key].strip())),'text bound')
+        for key,cap in [('d',16),('b',16),('e',6)]:
+            arr=unit[key];require(isinstance(arr,list) and len(arr)<=cap,'list bound')
+            if key in ['d','b']:require(all(type(i) is int and 1<=i<=160 for i in arr),'dependency IDs')
+            else:require(bool(arr) and all(isinstance(i,str) and i in evidence_ids for i in arr),'unknown evidence ID')
+            require(len(arr)==len(set(arr)),'duplicate references')
+        require((unit['q']==0)==(unit['r']==''),'uncertainty/reason contradiction')
+        require(unit['m']!=5 or unit['q']!=0,'unknown modality without uncertainty')
+    done=set();visiting=set()
+    def visit(uid):
+        require(uid not in visiting,'dependency cycle')
+        if uid in done:return
+        visiting.add(uid)
+        for dep in units[uid]['d']:
+            require(dep in units,'unknown dependency');visit(dep)
+        visiting.remove(uid);done.add(uid)
+    for uid,unit in units.items():
+        visit(uid)
+        if unit['k']==5:require(bool(unit['d']) and units[unit['d'][0]]['k']==4,'role endpoint dependency')
+        if unit['k']==7:require(len(unit['b'])>=2 and all(member in units and member!=uid for member in unit['b']),'relationship members')
+        else:require(unit['b']==[],'members on nonrelationship')
+    return value
+
+def expand(value,source,table,finish_reason='stop'):
+    validate(value,source,table,finish_reason)
+    spans={sid:(start,end) for sid,start,end,_ in table['rows']}
+    units=[]
+    for u in value['u']:
+        evidence=[]
+        for sid in u['e']:
+            start,end=spans[sid];quote=source[start:end]
+            occurrence=sum(source.startswith(quote,pos) for pos in range(start+1))
+            evidence.append(dict(span_id=sid,start=start,end=end,quote=quote,occurrence=occurrence))
+        units.append(dict(id=u['i'],kind=KINDS[u['k']],assertion=u['s'],modality=MODALITIES[u['m']],applicability=u['c'],required_unit_ids=copy.deepcopy(u['d']),relationship_member_ids=copy.deepcopy(u['b']),uncertainty=UNCERTAINTIES[u['q']],uncertainty_reason=u['r'],evidence=evidence))
+    return dict(schema_version='round14.expanded-inventory.v1',source_text_sha256=value['h'],span_table_sha256=value['t'],units=units,terminal_marker=value['z'],source_inventory_completeness='unverified',production_eligible=False,action_ready=False)
+
+def contract(value,source,table):
+    # Public inverse verifies every expanded field and resolved evidence against source.
+    closed(value,['schema_version','source_text_sha256','span_table_sha256','units','terminal_marker','source_inventory_completeness','production_eligible','action_ready'])
+    require(value.get('schema_version')=='round14.expanded-inventory.v1','expanded version')
+    units=[]
+    for u in value['units']:
+        closed(u,['id','kind','assertion','modality','applicability','required_unit_ids','relationship_member_ids','uncertainty','uncertainty_reason','evidence'])
+        for e in u['evidence']:closed(e,['span_id','start','end','quote','occurrence'])
+        units.append(dict(i=u['id'],k=KINDS.index(u['kind']),s=u['assertion'],m=MODALITIES.index(u['modality']),c=u['applicability'],d=u['required_unit_ids'],b=u['relationship_member_ids'],e=[e['span_id'] for e in u['evidence']],q=UNCERTAINTIES.index(u['uncertainty']),r=u['uncertainty_reason']))
+    result=dict(v=VERSION,h=value['source_text_sha256'],t=value['span_table_sha256'],u=units,z=value['terminal_marker'])
+    require(expand(result,source,table)==value and canonical(expand(result,source,table))==canonical(value),'expanded evidence/field equality')
+    return result
+
+def build(source):
+    table=span_table(source)
+    user=dict(source_text=source,source_text_sha256=source_hash(source),span_table=table,span_table_sha256=digest(table))
+    settings=strict_load((ROOT/'request-settings.json').read_text())
+    body=copy.deepcopy(settings)
+    body.update(messages=[dict(role='system',content=(ROOT/'stage-a.system.txt').read_text()),dict(role='user',content=canonical(user).decode())],response_format=dict(type='json_schema',json_schema=dict(name='compact_inventory',strict=True,schema=schema(source,table))))
+    raw=canonical(body)
+    require(len(raw)+1024<=40000,'full request overflow')
+    return dict(body=body,table=table,body_bytes=len(raw),guarded_bytes=len(raw)+1024,request_sha256=hashlib.sha256(raw).hexdigest())
+
+
+def validate_response(raw_content,finish_reason,source,table):
+    require(isinstance(raw_content,str),"raw content must be text")
+    value=strict_load(raw_content)
+    validate(value,source,table,finish_reason)
+    return dict(compact=value,expanded=expand(value,source,table,finish_reason))
+
+SOURCE DATA: synthetic fictional fixtures
+"""Authored offline controls; never provider responses or semantic oracle results."""
+import copy
+from compact import VERSION, source_hash, span_table, digest
+SOURCE = ('Send remarks by April 9, 2031.\r\n'
+          'Applications must be received by 5 p.m. Eastern on May 12, 2031.\n'
+          'Dispatch requests by June 3, 2031; dispatch controls timeliness.\n'
+          'Amend Rule Q-8 (previous filing F-17, filed January 6, 2029, effective February 2, 2029).\n'
+          'The office is in Alder City, North Province.\n'
+          'Readers should consult the archive for background.\n'
+          'Unlabeled item: Ω e\u0301 🫧.\n'
+          'The commission was founded in 1964.\n'
+          'Arrive in person by 09:00 UTC on July 4, 2031.\n'
+          'Requests are due August 2, 2031; cutoff is 12:00 or 13:00 UTC, unresolved by this notice.')
+
+def fixture():
+    units=[]
+    def add(k,s,e,m=0,c='',d=None,q=0,r=''):
+        units.append(dict(i=len(units)+1,k=k,s=s,m=m,c=c,d=d or [],b=[],e=[e],q=q,r=r))
+    add(3,'Remarks deadline date is April 9, 2031.','s1',5,
+        'Cutoff clock unknown; timezone unknown; receipt-versus-dispatch unknown.',q=1,
+        r='Source gives only a date; cutoff clock, timezone, timeliness basis and directive force remain unknown.')
+    add(6,'Send remarks by the deadline.','s1',5,d=[1],q=1,r='Bare directive does not settle mandatory versus advisory force.')
+    add(3,'Applications deadline date is May 12, 2031.','s2',1,
+        'Cutoff clock 5 p.m.; timezone Eastern; timeliness basis receipt.')
+    add(3,'Applications cutoff clock is 5 p.m.','s2',1,d=[3])
+    add(3,'Applications cutoff timezone is Eastern.','s2',1,d=[3])
+    add(6,'Applications must be received by the deadline.','s2',1,d=[3])
+    add(3,'Requests deadline date is June 3, 2031.','s3',5,
+        'Cutoff clock unknown; timezone unknown; timeliness basis dispatch.',q=1,
+        r='Clock, timezone and directive force are unspecified; dispatch basis is explicit.')
+    add(6,'Dispatch controls request timeliness.','s3',d=[7])
+    add(0,'Affected rule identity is Rule Q-8.','s4')
+    add(0,'Historical filing identity is F-17.','s4')
+    add(1,'The amendment affects Rule Q-8; F-17 is the previous filing context.','s4',d=[9,10])
+    add(3,'Historical filing F-17 was filed January 6, 2029.','s4',d=[10])
+    add(3,'Historical filing F-17 became effective February 2, 2029.','s4',d=[10])
+    add(0,'The office city is Alder City.','s5')
+    add(0,'The office province is North Province.','s5')
+    add(6,'Readers should consult the archive for background.','s6',2)
+    add(8,'The function of the unlabeled item is unresolved.','s7',5,q=3,r='Source does not identify this item’s function.')
+    add(8,'The commission was founded in 1964.','s8')
+    add(3,'In-person arrival deadline date is July 4, 2031.','s9',5,
+        'Cutoff clock 09:00; timezone UTC; receipt-versus-dispatch not applicable: in-person arrival.',q=1,
+        r='Bare arrival directive force is ambiguous; clock and timezone are stated, timeliness function is arrival.')
+    add(3,'Requests deadline date is August 2, 2031.','s10',5,
+        'Cutoff clock stated but ambiguous: 12:00 or 13:00; timezone UTC; receipt-versus-dispatch not stated (unknown).',q=1,
+        r='Source leaves two cutoff clocks unresolved; timeliness basis is absent, directive force unknown.')
+    table=span_table(SOURCE)
+    return dict(v=VERSION,h=source_hash(SOURCE),t=digest(table),u=units,z='END')
+
+def semantic_negative_controls():
+    # All are structurally admissible. Independent review, not validate(), rejects them.
+    base=fixture(); out={}
+    v=copy.deepcopy(base);v['u'][0].update(c='',q=0,r='',m=2)
+    out['silently_missing_deadline_dimensions']=v
+    v=copy.deepcopy(base);v['u'][10]['s']='The amendment affects filing F-17.'
+    out['historical_filing_replaces_affected_rule']=v
+    v=copy.deepcopy(base);v['u'][13]['s']='The office is in Alder City, North Province.';del v['u'][14]
+    out['independently_lossy_facts_bundled']=v
+    v=copy.deepcopy(base);v['u'][1].update(m=1,q=0,r='')
+    out['unsupported_force_certainty']=v
+    v=copy.deepcopy(base);v['u']=[u for u in v['u'] if u['i']!=18]
+    out['background_dropped_but_all_spans_still_cited']=v
+    # Keep s8 covered while omitting its assertion: broad evidence coverage is insufficient.
+    out['background_dropped_but_all_spans_still_cited']['u'][-1]['e'].append('s8')
+    return out
+
+END SOURCE DATA

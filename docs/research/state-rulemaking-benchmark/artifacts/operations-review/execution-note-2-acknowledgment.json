@@ -1,0 +1,35 @@
+{
+  "status": "acknowledged_pending_final_verification",
+  "note_path": "execution-note-2.json",
+  "note_sha256": "821d37044cc54be32d4329fb82fe46e0bcad5164db1d5383ce35cde2b72ee36b",
+  "decision": "Use observed request-rate pacing and permit one recovery for explicit pre-job rate-limit rejection only.",
+  "constraints": [
+    "Complete frozen corpus with unchanged bytes/settings/references; no outcome-driven replacements.",
+    "Pace subsequent requests and respect observed reset instructions; no purchase or credential change.",
+    "One separately recorded recovery per explicitly rate-rejected input after initial sweep; retain first attempt as rate rejection.",
+    "Never retry timeout or unknown acceptance/billing state.",
+    "Final report distinguishes initial successful captures, rate-recovered captures, initial local harness failures and remaining provider failures."
+  ],
+  "primary_notice": {
+    "final_endpoint_rate_rejections": [
+      "A05",
+      "A06",
+      "B01",
+      "B02"
+    ],
+    "setup_stage_rate_rejections": [
+      "B03",
+      "B04"
+    ],
+    "continuation": "Pace setup and final requests below observed ten-per-minute budget; finish never-submitted B05-B10, then one separate recovery only for the six explicit pre-job rejections.",
+    "llama": "Four actual timeouts; zero parse outputs; 36 unattempted; in-flight settled. Read-only dashboard recovery pending user sign-in, with no new parse jobs."
+  },
+  "final_review_requirements": [
+    "Distinguish authorization in note from primary notice extending named rejection set; verify evidence for all six inputs.",
+    "Inspect first sweep, paced continuation, and rate-recovery phases separately; preserve initial stop history.",
+    "Verify explicit rejection evidence and absence of accepted job identifiers before each single recovery; no timeout or unknown-state retry.",
+    "Reconstruct combined setup and final endpoint request pacing against returned reset instructions.",
+    "Verify no new Llama parse jobs after timeout stop; distinguish recovered dashboard artifacts from new requests.",
+    "Account for all attempted, unattempted, recovered, and unresolved calls without extraction scoring."
+  ]
+}

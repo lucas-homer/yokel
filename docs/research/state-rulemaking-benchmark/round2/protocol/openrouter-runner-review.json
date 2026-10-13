@@ -1,0 +1,43 @@
+{
+  "reviewed_at_pacific_date": "2026-10-06",
+  "runner": "../openrouter/run_ocr.py",
+  "runner_sha256": "7451886afe8de8aed4288988af81e8274e90952966cb65170f998b9e4dcd6c07",
+  "read_only": true,
+  "network_calls_by_reviewer": 0,
+  "dry_run": {
+    "inputs_verified": 20,
+    "pages": 34,
+    "execute": false
+  },
+  "pilot_assessment": "No remaining blocker found for one A01 job after matching bounded authorization is created; this review does not itself create authorization.",
+  "resolved_findings": [
+    "Authorization now checks model, engine, corpus and runner hashes, allowed inputs and page bounds",
+    "parse_output_usable separate from wrapper_succeeded",
+    "Exact annotation text serialization map recorded"
+  ],
+  "remaining_integration_findings": [
+    {
+      "priority": "P2",
+      "scope": "before expansion across both cloud arms",
+      "issue": "Runner sums only its own state usage.cost; aggregate USD5 applies to LlamaParse plus OpenRouter.",
+      "recommendation": "Primary maintains aggregate ledger or assigns disjoint provider sub-budgets totaling <=USD5. Missing component costs stay unknown; nominal cap does not prove final invoice bound."
+    },
+    {
+      "priority": "P2",
+      "scope": "capture reliability",
+      "issue": "Non-JSON HTTP responses or unexpected annotation shapes may raise after response retention and leave submitting intent. This safely blocks further POSTs but needs explicit reconciliation.",
+      "recommendation": "Preserve failure classification during reconciliation; never delete intent or retry an uncertain paid request."
+    },
+    {
+      "priority": "P3",
+      "scope": "timing labels",
+      "issue": "urllib timeout=180 is a socket-operation timeout, not a guaranteed180-second whole-job wall deadline.",
+      "recommendation": "Describe actual timeout accurately; add an external elapsed deadline if a hard wall limit is required."
+    }
+  ],
+  "method_notes": [
+    "Only annotation text scored; downstream OK answer excluded",
+    "OCR engine release unresolved; no direct-Mistral/OCR4.1 equivalence",
+    "No edits to runner, no credential access, no live requests"
+  ]
+}

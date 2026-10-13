@@ -1,0 +1,207 @@
+{
+  "schema_version": "research-sketch-1",
+  "status": "Manually reviewed illustrative mappings; not an accepted contract or production records.",
+  "research_date_utc": "2026-09-30",
+  "limitations": [
+    "Example IDs are local research labels, not official or proposed production identity grammar.",
+    "Linked markdown is transformed acquisition output and may contain parsing artifacts.",
+    "These examples do not settle jurisdiction-wide legal interpretation or establish coverage."
+  ],
+  "examples": [
+    {
+      "example_id": "wa-partial-withdrawal",
+      "jurisdiction": "US-WA",
+      "source_native_notice_id": "WSR 26-18-058",
+      "event": {
+        "type": "withdrawal",
+        "target_source_id": "WSR 26-15-113",
+        "scope": "CR-102 portion only"
+      },
+      "filing": {
+        "local_date": "2026-08-31",
+        "local_time": "10:59",
+        "zone_raw": null
+      },
+      "effective_at": null,
+      "new_comment_window": null,
+      "new_hearing": null,
+      "evidence": [
+        {
+          "source_id": "wa-notice",
+          "snapshot": "fixtures/wa-notice.md",
+          "line": 13,
+          "exact_text": "The withdrawal is only for the CR-102 portion of the rule making.",
+          "locator_kind": "transformed_markdown_line",
+          "limitation": "A transformed-text locator is not an original document page/bounding box."
+        },
+        {
+          "source_id": "wa-notice",
+          "snapshot": "fixtures/wa-notice.md",
+          "line": 13,
+          "exact_text": "A new CR-102 will be filed with a new public hearing date and comment period in the coming weeks.",
+          "locator_kind": "transformed_markdown_line",
+          "limitation": "A transformed-text locator is not an original document page/bounding box."
+        }
+      ],
+      "normalization_rule": "Link the partial withdrawal to its target. Do not close unrelated windows or invent future dates."
+    },
+    {
+      "example_id": "ma-explicit-local-time",
+      "jurisdiction": "US-MA",
+      "source_native_notice_id": null,
+      "affected_instruments": [
+        "205 CMR 116.08",
+        "205 CMR 229.01"
+      ],
+      "comment_window": {
+        "channel": "written_email",
+        "deadline": {
+          "kind": "explicit_local_datetime",
+          "local_date": "2026-10-05",
+          "local_time": "17:00",
+          "zone_raw": "EST",
+          "resolved_iana_zone": null,
+          "resolved_utc_instant": null,
+          "submission_condition": "received_by",
+          "review_status": "zone_interpretation_required"
+        }
+      },
+      "hearing": {
+        "local_date": "2026-10-06",
+        "local_time": "09:30",
+        "zone_raw": "EST",
+        "resolved_utc_instant": null
+      },
+      "evidence": [
+        {
+          "source_id": "ma-pdf",
+          "snapshot": "fixtures/ma-pdf.md",
+          "line": 45,
+          "exact_text": "comments must be received by 5:00 PM EST on October 5, 2026.",
+          "locator_kind": "transformed_markdown_line",
+          "limitation": "A transformed-text locator is not an original document page/bounding box."
+        }
+      ],
+      "normalization_rule": "Preserve stated wall time and zone wording. Local seasonal time and literal EST may differ; do not silently choose an offset."
+    },
+    {
+      "example_id": "ms-relative-conditions",
+      "jurisdiction": "US-MS",
+      "source_document_filename": "00027305a.pdf",
+      "affected_instruments": [
+        "Rule 5.29"
+      ],
+      "proposal_type": "amendment",
+      "filing_date": "2023-12-27",
+      "conditions": [
+        {
+          "purpose": "request_oral_proceeding",
+          "kind": "relative",
+          "duration_days": 20,
+          "anchor_type": "filing_of_notice_of_proposed_rule_adoption",
+          "anchor_is_explicit": true,
+          "day_count_basis": null,
+          "computed_close": null
+        },
+        {
+          "purpose": "submit_written_comments",
+          "kind": "relative",
+          "duration_days": 25,
+          "anchor_type": null,
+          "anchor_is_explicit": false,
+          "day_count_basis": null,
+          "computed_close": null
+        }
+      ],
+      "hearing": {
+        "status": "not_scheduled"
+      },
+      "effective_at": null,
+      "evidence": [
+        {
+          "source_id": "ms-pdf",
+          "snapshot": "fixtures/ms-pdf.md",
+          "line": 20,
+          "exact_text": "within twenty (20) days after the filing of this notice of proposed rule adoption",
+          "locator_kind": "transformed_markdown_line",
+          "limitation": "A transformed-text locator is not an original document page/bounding box."
+        },
+        {
+          "source_id": "ms-pdf",
+          "snapshot": "fixtures/ms-pdf.md",
+          "line": 20,
+          "exact_text": "within the twenty-five (25) day public comment period",
+          "locator_kind": "transformed_markdown_line",
+          "limitation": "A transformed-text locator is not an original document page/bounding box."
+        }
+      ],
+      "visual_evidence": {
+        "artifact": "fixtures/ms-00027305a.pdf",
+        "page": 1,
+        "observations": [
+          "No oral proceeding scheduled is checked.",
+          "Amendment is checked.",
+          "Filing stamp says DEC 27 2023."
+        ]
+      },
+      "normalization_rule": "Keep distinct purposes and unresolved counting rules. Blank final-action fields are not assertions; no calculated deadline is approved."
+    },
+    {
+      "example_id": "ct-multiple-cycles",
+      "jurisdiction": "US-CT",
+      "source_native_proceeding_id": "PR2024-059",
+      "historical_window": {
+        "reported_open_date": "2025-02-25",
+        "reported_closed_date": "2025-03-27",
+        "precision": "date"
+      },
+      "current_window": {
+        "reported_open_date": "2026-09-01",
+        "reported_close": {
+          "source_epoch_milliseconds": 1790996400000,
+          "decoded_instant": "2026-10-03T03:00:00Z",
+          "displayed_local_date": "2026-10-02",
+          "displayed_local_time": "23:00",
+          "comparison_zone": "America/New_York",
+          "representation_check": "consistent",
+          "publication_approval": "pending_notice_and_source_semantics_review"
+        }
+      },
+      "separate_instrument_event": {
+        "type": "operational_policy_effectiveness",
+        "stated_date": "2026-09-01"
+      },
+      "evidence": [
+        {
+          "source_id": "ct-record-rendered",
+          "snapshot": "fixtures/ct-record-rendered.md",
+          "line": 59,
+          "exact_text": "Comments Period Ends | 10/02/2026 11:00 PM",
+          "locator_kind": "transformed_markdown_line",
+          "limitation": "A transformed-text locator is not an original document page/bounding box."
+        },
+        {
+          "source_id": "ct-record-rendered",
+          "snapshot": "fixtures/ct-record-rendered.md",
+          "line": 75,
+          "exact_text": "03/27/2025 | Comment Period Closed",
+          "locator_kind": "transformed_markdown_line",
+          "limitation": "A transformed-text locator is not an original document page/bounding box."
+        },
+        {
+          "source_id": "ct-record-rendered",
+          "snapshot": "fixtures/ct-record-rendered.md",
+          "line": 79,
+          "exact_text": "09/01/2026 | Comment Period Opened",
+          "locator_kind": "transformed_markdown_line",
+          "limitation": "A transformed-text locator is not an original document page/bounding box."
+        }
+      ],
+      "source_lineage": [
+        "ct-endpoint",
+        "ct-record-rendered"
+      ],
+      "normalization_rule": "Retain both windows and the operational-policy event. Two displays of the same backend are not independent authority."
+    }
+  ]
+}

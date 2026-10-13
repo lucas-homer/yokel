@@ -1,0 +1,111 @@
+{
+  "version": "heldout-adapter-audit-v1",
+  "audited_at_utc": "2026-10-07T04:20:33.737776+00:00",
+  "status": "no_execution_blocker_found_with_documented_operational_limits",
+  "scope": "Independent read-only adapter/preflight audit, no held-out parser-output or native-content inspection; no provider calls. Writes only to this new audit directory.",
+  "artifacts": {
+    "heldout-execution/freeze.json": {
+      "sha256": "9947fb211688ba7010e6e0491fadf88296bd2607cfae877e43b9b9782dc176c7",
+      "bytes": 37513
+    },
+    "heldout-execution/run_openrouter.py": {
+      "sha256": "9abe92ed587f1454e29194c48b9a7cf3ab0f004c2f56ad55daa8ed235fe12114",
+      "bytes": 7135
+    },
+    "heldout-execution/run_docling.py": {
+      "sha256": "806f1f8e24e7ca61a7276da8eb3d42ccd7135ad3c14525254a2c554dc54d59b2",
+      "bytes": 7664
+    },
+    "heldout-execution/run_llama.py": {
+      "sha256": "94adcdfd9f1cce5b3614cb271e75ee7c1e39708f8b3aff80710bf5f9edbc0ace",
+      "bytes": 1750
+    },
+    "heldout-execution/extract_native.py": {
+      "sha256": "6f40122196daa8713b3e9a280b9db74c44fbfa7ee421f6440b29f0e95dbc504a",
+      "bytes": 1127
+    },
+    "heldout-execution/openrouter/pilot-authorization.json": {
+      "sha256": "4c3df93eae63f0ab726702085665ff42d6586222eafa29fca6b7b0887d3d0fba",
+      "bytes": 613
+    },
+    "llama-cost-effective/run_cost_effective.py": {
+      "sha256": "b05803050e0200784f3947114258768212fc977c30e3494c6dfa2509a33c9963",
+      "bytes": 25428
+    },
+    "docling/runtime.json": {
+      "sha256": "631462698d73925e8d94add7ee9b3576e908c4023f4a477165dfb695092acc21",
+      "bytes": 6452
+    },
+    "docling/model-cache-manifest.json": {
+      "sha256": "b38036dadf0e81f837e9c1d26060d5999590299b7b5fa2a5b5bddc32cb6d2789",
+      "bytes": 9201
+    }
+  },
+  "checks": {
+    "python_ast_parse": "four adapters passed",
+    "common_freeze_files_verified": 127,
+    "common_freeze_sha256": "9947fb211688ba7010e6e0491fadf88296bd2607cfae877e43b9b9782dc176c7",
+    "openrouter_actual_dry_run": {
+      "exit_code": 0,
+      "inputs_verified": 8,
+      "pages": 22,
+      "execute": false
+    },
+    "llama_in_memory_plan_validation": {
+      "jobs": 8,
+      "pages": 22,
+      "provider_calls": 0,
+      "files_written": 0,
+      "method": "runpy with non-main run name and Python -B; evaluate adapter plan only"
+    },
+    "docling_diagnostic_cache_entries_checked_against_live": 42,
+    "docling_cache_mismatches": [],
+    "openrouter_diagnostic_jobs": 20,
+    "openrouter_diagnostic_returned_cost_usd": 0.070601774,
+    "openrouter_heldout_observed_cost_stop_usd": 4.4,
+    "native_binary_version_verified": "pdftotext 26.05.0"
+  },
+  "controls_confirmed": [
+    "Exact frozen input SHA-256 and byte lengths validated by shared manifest; common freeze binds runner source, references and source corpus.",
+    "OpenRouter authorization binds model, engine, runner hash, freeze hash, fixture subset and page cap; 22-second start spacing, serialized requests, durable intent, no blind retry and exact annotation text serialization.",
+    "OpenRouter HTTP/error bodies and annotations retained; conversational response unscored; malformed/non-JSON response leaves unresolved intent that blocks further POSTs.",
+    "Llama adapter pins diagnostic engine SHA-256, builds exactly eight jobs/22 pages and separate lane/run tag, retains the verified-upload and durable-intent state machine, at most two active jobs and completion-order three-failure stop.",
+    "Llama scores provider markdown_full string only and verifies page ordinals/success plus returned job identity/file/tier where exposed. No reconstructed JSON rescue.",
+    "Docling version/settings match the diagnostic configuration: 2.134.0, Apple Vision accurate en-US OCR, full-page OCR false, CPU four threads, tables enabled, 300-second document timeout. All 42 existing cache entries match diagnostic manifest at audit time.",
+    "Native adapter invokes the verified absolute Poppler binary with -layout -enc UTF-8; retains exact bytes, hashes, elapsed extraction subprocess time and form-feed character offsets. Native timing excludes the separate version-query subprocess."
+  ],
+  "limitations": [
+    {
+      "id": "budget",
+      "severity": "operational_limit",
+      "finding": "OpenRouter threshold is a pre-request observed-cost stop, not a reservation for the next call. It sums only the current held-out lane. Authorization allocates 4.40, and the diagnostic returned total 0.070601774 is below its reserved 0.10. Unknown rejected-attempt charge and delayed/overshooting charges remain unknown; not a hard invoice guarantee. Llama wrapper has no credit/USD stop; the reserved 0.50 relies on bounded 22-page held-out scope plus primary monitoring of actual usage."
+    },
+    {
+      "id": "version_aliases",
+      "severity": "interpretation_limit",
+      "finding": "Llama requests latest and Mistral exposes an engine alias without an OCR version. Same request settings do not prove an unchanged underlying hosted model. Preserve returned version evidence and state unknown alias resolution."
+    },
+    {
+      "id": "cache_guard",
+      "severity": "monitor",
+      "finding": "Docling runner does not itself preflight the diagnostic cache manifest; this audit checked all 42 entries before its run. Compare post-run cache and runtime metadata before claiming unchanged models. A changed artifact must be disclosed, not repaired silently in frozen inputs."
+    },
+    {
+      "id": "native_pages",
+      "severity": "postrun_check",
+      "finding": "Native helper records form-feed offset spans but does not assert expected page count, nonempty content or native success classification. Post-run integration must check expected input-page coverage. Blank native extraction from an image-only source is not OCR evidence."
+    },
+    {
+      "id": "timeouts",
+      "severity": "operational_limit",
+      "finding": "urllib socket timeouts are not hard end-to-end deadlines; Docling has a pipeline document timeout but no subprocess hard kill. Preserve incomplete/uncertain states; never infer zero billing or retry safety from timeout."
+    }
+  ],
+  "required_postrun_checks": [
+    "Validate native output hashes and page-map counts against eight frozen inputs; retain newly measured timing separately from historical diagnostic native baseline.",
+    "Compare final Docling runtime/model manifest with diagnostic and preflight evidence; retain differences explicitly.",
+    "Reconcile actual returned cloud usage across both diagnostic and held-out lanes; retain failed-attempt billing as unknown.",
+    "Check all frozen hashes again and score against the frozen adjudicated references."
+  ],
+  "heldout_output_quality_reviewed": false
+}

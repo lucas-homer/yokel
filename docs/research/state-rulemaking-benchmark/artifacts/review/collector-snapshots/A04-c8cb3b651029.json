@@ -1,0 +1,134 @@
+{
+  "fixture_id": "A04",
+  "state": "US-WA",
+  "bucket": "lifecycle changes",
+  "layout_features": [
+    "native-text letter",
+    "signature and bottom filing-stamp graphic"
+  ],
+  "event_type": "withdrawal",
+  "source_url": "https://leg.wa.gov/media/0khlud2v/wsr-25-08-088.pdf",
+  "discovery_url": "https://leg.wa.gov/state-laws-and-rules/washington-state-register/rule-making-activity/cro-activity/",
+  "retrieved_at": "2026-10-06T00:33:41.135353+00:00",
+  "source_title": "Withdrawal of CR-105 WSR 25-03-112",
+  "selection_reason": "First linked withdrawal on official CRO topic listing; complete one-page letter with prior target and current stamp.",
+  "original_sha256": "95ac7a80eba8b41e9fd03b34cb9b495036a5303f5f2de993b14de55d20dc0923",
+  "input_sha256": "95ac7a80eba8b41e9fd03b34cb9b495036a5303f5f2de993b14de55d20dc0923",
+  "original_byte_length": 42230,
+  "input_byte_length": 42230,
+  "original_physical_pages": [
+    1
+  ],
+  "original_page_count": 1,
+  "input_page_count": 1,
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim."
+  ],
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which office withdraws the rulemaking?",
+      "expected_value": "Office of the Code Reviser",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "body",
+      "source_quote": "The office of the code reviser",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "notice_id",
+      "question": "Which current WSR identifier is shown in the filing stamp?",
+      "expected_value": "WSR 25-08-088",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "bottom right filing stamp",
+      "source_quote": "WSR 25-08-088",
+      "basis": "visual_mark"
+    },
+    {
+      "field_id": "lifecycle",
+      "question": "What action is taken on the identified CR-105?",
+      "expected_value": "withdrawal",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "central paragraph",
+      "source_quote": "is withdrawing CR-105 expedited rule making",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "withdrawal_target_scope",
+      "question": "Which prior notice/form and rule chapter are withdrawn?",
+      "expected_value": {
+        "target": "WSR 25-03-112",
+        "form": "CR-105 expedited rule making",
+        "scope": "chapter 1-21 WAC"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "central paragraph",
+      "source_quote": "withdrawing CR-105 expedited rule making for chapter 1-21 \nWAC, filed on January 20, 2025, and published as WSR 25-03-112.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "target_filing_date",
+      "question": "When was the withdrawn rulemaking filed?",
+      "expected_value": {
+        "date": "2025-01-20"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "central paragraph",
+      "source_quote": "filed on January 20, 2025",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "current_filing_clock",
+      "question": "What filing date and time are stamped for this withdrawal, retaining unstated timezone?",
+      "expected_value": {
+        "date": "2025-04-02",
+        "time": "08:56",
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "bottom right filing stamp",
+      "source_quote": "DATE: April 02, 2025 TIME: 8:56 AM",
+      "basis": "visual_mark"
+    },
+    {
+      "field_id": "new_comment_close",
+      "question": "Does this withdrawal letter state a new comment close?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "entire one-page withdrawal letter and stamp inspected",
+      "source_quote": "",
+      "basis": "full_scope_absence"
+    }
+  ],
+  "collector": "source-a Codex task; source-only annotation before vendor parsing",
+  "reference_version": "collector-v1",
+  "discovery_method": "Official listing link or targeted official register PDF search, documented in selection-log.json",
+  "shared_original_group": null,
+  "template_group": null,
+  "visual_inspection": {
+    "all_input_pages_inspected": true,
+    "renderer": "bundled PDFium scale1.8; earlier Poppler previews for first forms",
+    "scope": "complete input pages, including columns, selected marks, stamps, footers, continuation"
+  },
+  "reference_basis_note": "Image-only forms: source_text quotes are manual rendered-image transcriptions; visual_mark identifies actual selected choice. Born-digital quotes retain exact native substrings when available. Full-scope absence applies only to specified target and retained input."
+}

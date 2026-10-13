@@ -1,0 +1,313 @@
+[
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "wa-26-18-058-event_type",
+    "jurisdiction": "US-WA",
+    "source_record_id": "26-18-058",
+    "subject": {
+      "kind": "notice",
+      "id": "wa:wsr:26-18-058"
+    },
+    "predicate": "event_type",
+    "value": "withdrawal",
+    "evidence": [
+      {
+        "artifact_id": "wa-withdrawal-text",
+        "locator": "line 2",
+        "quote": "WITHDRAWAL OF PROPOSED RULES",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "wsr-guarded-div-fields",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": []
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "wa-26-18-058-agency",
+    "jurisdiction": "US-WA",
+    "source_record_id": "26-18-058",
+    "subject": {
+      "kind": "notice",
+      "id": "wa:wsr:26-18-058"
+    },
+    "predicate": "agency",
+    "value": "DEPARTMENT OF COMMERCE",
+    "evidence": [
+      {
+        "artifact_id": "wa-withdrawal-text",
+        "locator": "line 3",
+        "quote": "DEPARTMENT OF COMMERCE",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "wsr-guarded-div-fields",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": []
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "wa-26-18-058-filing_date",
+    "jurisdiction": "US-WA",
+    "source_record_id": "26-18-058",
+    "subject": {
+      "kind": "notice",
+      "id": "wa:wsr:26-18-058"
+    },
+    "predicate": "filing_date",
+    "value": {
+      "kind": "local_datetime",
+      "date": "2026-08-31",
+      "time": "10:59",
+      "timezone_text": null,
+      "iana_zone": null,
+      "utc_instant": null
+    },
+    "evidence": [
+      {
+        "artifact_id": "wa-withdrawal-text",
+        "locator": "line 4",
+        "quote": "[Filed August 31, 2026, 10:59 a.m.]",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "wsr-guarded-div-fields",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": [
+      "Timezone not stated; no UTC conversion."
+    ]
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "wa-26-18-058-withdraws",
+    "jurisdiction": "US-WA",
+    "source_record_id": "26-18-058",
+    "subject": {
+      "kind": "notice",
+      "id": "wa:wsr:26-18-058"
+    },
+    "predicate": "withdraws",
+    "value": {
+      "target_source_record_id": "26-15-113",
+      "scope": "CR-102 portion of the rule making"
+    },
+    "evidence": [
+      {
+        "artifact_id": "wa-withdrawal-text",
+        "locator": "line 5",
+        "quote": "withdraw WSR 26-15-113 from its filing.",
+        "support": "text_exact"
+      },
+      {
+        "artifact_id": "wa-withdrawal-text",
+        "locator": "scope sentence",
+        "quote": "The withdrawal is only for the CR-102 portion of the rule making.",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "wsr-guarded-div-fields",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": []
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "wa-26-18-032-event_type",
+    "jurisdiction": "US-WA",
+    "source_record_id": "26-18-032",
+    "subject": {
+      "kind": "notice",
+      "id": "wa:wsr:26-18-032"
+    },
+    "predicate": "event_type",
+    "value": "proposal",
+    "evidence": [
+      {
+        "artifact_id": "wa-proposal-text",
+        "locator": "line 2",
+        "quote": "PROPOSED RULES",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "wsr-guarded-div-fields",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": []
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "wa-26-18-032-agency",
+    "jurisdiction": "US-WA",
+    "source_record_id": "26-18-032",
+    "subject": {
+      "kind": "notice",
+      "id": "wa:wsr:26-18-032"
+    },
+    "predicate": "agency",
+    "value": "COUNTY ROAD ADMINISTRATION BOARD",
+    "evidence": [
+      {
+        "artifact_id": "wa-proposal-text",
+        "locator": "line 3",
+        "quote": "COUNTY ROAD\nADMINISTRATION BOARD",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "wsr-guarded-div-fields",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": []
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "wa-26-18-032-filing_date",
+    "jurisdiction": "US-WA",
+    "source_record_id": "26-18-032",
+    "subject": {
+      "kind": "notice",
+      "id": "wa:wsr:26-18-032"
+    },
+    "predicate": "filing_date",
+    "value": {
+      "kind": "local_datetime",
+      "date": "2026-08-26",
+      "time": "09:45",
+      "timezone_text": null,
+      "iana_zone": null,
+      "utc_instant": null
+    },
+    "evidence": [
+      {
+        "artifact_id": "wa-proposal-text",
+        "locator": "line 5",
+        "quote": "[Filed August 26, 2026, 9:45 a.m.]",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "wsr-guarded-div-fields",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": [
+      "Timezone not stated; no UTC conversion."
+    ]
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "wa-26-18-032-title",
+    "jurisdiction": "US-WA",
+    "source_record_id": "26-18-032",
+    "subject": {
+      "kind": "notice",
+      "id": "wa:wsr:26-18-032"
+    },
+    "predicate": "title",
+    "value": "Amending the standards of good practice for county road departments, lapsing requirements for the rural arterial program (RAP), and clarifying eligibility for the county road administration board's (CRAB) various grant programs.",
+    "evidence": [
+      {
+        "artifact_id": "wa-proposal-text",
+        "locator": "line 8",
+        "quote": "Title of Rule and Other Identifying Information: Amending the standards of good practice for county road departments, lapsing requirements for the rural arterial program (RAP), and clarifying eligibility for the county road administration board's (CRAB) various grant programs.",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "wsr-guarded-div-fields",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": []
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "wa-26-18-032-comment_close:written-comments",
+    "jurisdiction": "US-WA",
+    "source_record_id": "26-18-032",
+    "subject": {
+      "kind": "participation_window",
+      "id": "wa:wsr:26-18-032:written-comments"
+    },
+    "predicate": "comment_close",
+    "value": {
+      "kind": "date",
+      "date": "2026-10-09"
+    },
+    "evidence": [
+      {
+        "artifact_id": "wa-proposal-text",
+        "locator": "line 11",
+        "quote": "Submit Written Comments to: Drew Woods, 2404 Chandler Court S.W., Suite 240, Olympia, WA 98504, email drew.woods@crab.wa.gov, by October 9, 2026.",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "wsr-guarded-div-fields",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": [
+      "No clock time or receipt/postmark condition stated."
+    ]
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "wa-26-18-032-hearing_time:hearing-1",
+    "jurisdiction": "US-WA",
+    "source_record_id": "26-18-032",
+    "subject": {
+      "kind": "hearing",
+      "id": "wa:wsr:26-18-032:hearing-1"
+    },
+    "predicate": "hearing_time",
+    "value": {
+      "kind": "local_datetime",
+      "date": "2026-10-15",
+      "time": "09:00",
+      "timezone_text": null,
+      "iana_zone": null,
+      "utc_instant": null
+    },
+    "evidence": [
+      {
+        "artifact_id": "wa-proposal-text",
+        "locator": "line 9",
+        "quote": "Hearing Location(s): On October 15, 2026, at 9:00 a.m., at Friday Harbor Suites, 680 Spring Street, Friday Harbor, WA. Virtual attendance is available.",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "wsr-guarded-div-fields",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": [
+      "Timezone not stated; no UTC conversion."
+    ]
+  }
+]

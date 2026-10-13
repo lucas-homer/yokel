@@ -1,0 +1,401 @@
+{
+  "case": {
+    "source": "The rule protects wetlands. Written comments are due May 3. For questions only call 555-0100. For accommodation requests email access@example.test.",
+    "inventory": [
+      {
+        "id": "b",
+        "kind": "background",
+        "value": "The rule protects wetlands.",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "The rule protects wetlands.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "d",
+        "kind": "timing",
+        "value": "May 3",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "Written comments are due May 3.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "p",
+        "kind": "endpoint",
+        "value": "555-0100",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "555-0100",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "q",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "p",
+          "purpose": "questions"
+        },
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [
+          "questions only"
+        ],
+        "dependencies": [
+          "p"
+        ],
+        "evidence": [
+          {
+            "quote": "For questions only call 555-0100.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "a",
+        "kind": "endpoint",
+        "value": "access@example.test",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "access@example.test",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "ar",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "a",
+          "purpose": "accommodations"
+        },
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "a"
+        ],
+        "evidence": [
+          {
+            "quote": "For accommodation requests email access@example.test.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      }
+    ],
+    "classified_inventory": [
+      {
+        "id": "b",
+        "kind": "background",
+        "value": "The rule protects wetlands.",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "The rule protects wetlands.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "d",
+        "kind": "timing",
+        "value": "May 3",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "Written comments are due May 3.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "p",
+        "kind": "endpoint",
+        "value": "555-0100",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "555-0100",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "q",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "p",
+          "purpose": "questions"
+        },
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [
+          "questions only"
+        ],
+        "dependencies": [
+          "p"
+        ],
+        "evidence": [
+          {
+            "quote": "For questions only call 555-0100.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "a",
+        "kind": "endpoint",
+        "value": "access@example.test",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "access@example.test",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "ar",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "a",
+          "purpose": "accommodations"
+        },
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "a"
+        ],
+        "evidence": [
+          {
+            "quote": "For accommodation requests email access@example.test.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      }
+    ],
+    "scopes": {
+      "b": {
+        "category": "retained_background",
+        "basis": "substantive_background_only",
+        "reason": "Synthetic source-only adjudication of background",
+        "evidence": [
+          {
+            "quote": "The rule protects wetlands.",
+            "occurrence": 1
+          }
+        ]
+      },
+      "d": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of timing",
+        "evidence": [
+          {
+            "quote": "Written comments are due May 3.",
+            "occurrence": 1
+          }
+        ]
+      },
+      "p": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint",
+        "evidence": [
+          {
+            "quote": "555-0100",
+            "occurrence": 1
+          }
+        ]
+      },
+      "q": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint_role",
+        "evidence": [
+          {
+            "quote": "For questions only call 555-0100.",
+            "occurrence": 1
+          }
+        ]
+      },
+      "a": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint",
+        "evidence": [
+          {
+            "quote": "access@example.test",
+            "occurrence": 1
+          }
+        ]
+      },
+      "ar": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint_role",
+        "evidence": [
+          {
+            "quote": "For accommodation requests email access@example.test.",
+            "occurrence": 1
+          }
+        ]
+      }
+    },
+    "operative": {
+      "b": {
+        "condition": "unconditional",
+        "kind": "background",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": "The rule protects wetlands."
+      },
+      "d": {
+        "condition": "unconditional",
+        "kind": "timing",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": "May 3"
+      },
+      "p": {
+        "condition": "unconditional",
+        "kind": "endpoint",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": "555-0100"
+      },
+      "q": {
+        "condition": "unconditional",
+        "kind": "endpoint_role",
+        "modality": "descriptive",
+        "qualifications": [
+          "questions only"
+        ],
+        "value": {
+          "endpoint": "p",
+          "purpose": "questions"
+        }
+      },
+      "a": {
+        "condition": "unconditional",
+        "kind": "endpoint",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": "access@example.test"
+      },
+      "ar": {
+        "condition": "unconditional",
+        "kind": "endpoint_role",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": {
+          "endpoint": "a",
+          "purpose": "accommodations"
+        }
+      }
+    },
+    "mappings": {
+      "b": {
+        "status": "matched",
+        "refs": [
+          "b"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      },
+      "p": {
+        "status": "matched",
+        "refs": [
+          "p"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      },
+      "q": {
+        "status": "matched",
+        "refs": [
+          "q"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      },
+      "a": {
+        "status": "matched",
+        "refs": [
+          "a"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      },
+      "ar": {
+        "status": "matched",
+        "refs": [
+          "ar"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      }
+    },
+    "source_review": {
+      "status": "source_only_frozen",
+      "source_sha256": "fd445aa316a1f1ef4666e0e2cf6f278a3ebbe537b11edfb5958ef639dc117f76",
+      "inventory_sha256": "a698d9a05c392131f935425e58cd1419403de7cac1b89a9203910b742c0347e2",
+      "scopes_sha256": "d83ad625931a1e1700d16f0469353700c3e1168404d8667dee458340d348b204"
+    },
+    "record_audit": {
+      "status": "not_run",
+      "reviewed_refs": [],
+      "unsupported_refs": [],
+      "unknown_refs": []
+    }
+  },
+  "name": "deleted-mapping",
+  "expected": "Reject inconsistent supplied annotation.",
+  "actual": {
+    "accepted": false,
+    "error": "mapping_totality"
+  },
+  "expectation_met": true
+}

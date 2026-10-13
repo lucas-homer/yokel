@@ -1,0 +1,66 @@
+{
+  "schema_version": "round8-cap-probe.cost_audit.v1",
+  "incremental_probe": {
+    "extraction": {
+      "usage_estimate_usd": 0.088534,
+      "conservative_charge_usd": 0.161608,
+      "provider_reported_usd": 0.0900085
+    },
+    "jev": {
+      "usage_estimate_usd": 0,
+      "conservative_charge_usd": 0,
+      "provider_reported_usd": 0
+    },
+    "stronger": {
+      "usage_estimate_usd": 0,
+      "conservative_charge_usd": 0,
+      "provider_reported_usd": 0
+    }
+  },
+  "prior_attempt": {
+    "provider_reported_usd": 0.0688185,
+    "conservative_charge_usd": 0.100166,
+    "usage_estimate_usd": 0.067344
+  },
+  "combined_same_notice_attempts": {
+    "provider_reported_usd": 0.158827,
+    "conservative_charge_usd": 0.261774,
+    "usage_estimate_usd": 0.155878
+  },
+  "native_response_usage": {
+    "prompt_tokens": 2952,
+    "completion_tokens": 8263,
+    "total_tokens": 11215,
+    "cost": 0.0900085,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 2949,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.0900085,
+      "upstream_inference_prompt_cost": 0.0073785,
+      "upstream_inference_completions_cost": 0.08263
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 61,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "response_sha256": "60d39e5f35a639520f89ac3bd110da34ebff7b649ef84ae0dcbc8397f03a4b25",
+  "prior_response_sha256": "793c3693c5c03da6c451a45a7a2ec9d2bc392b5608e17b0f01a6aa3d0a4e5b4c",
+  "intent_sha256": "437398b04892739a7e3b5cb8707bb87c3fdff6829750e33f899c7666aabbf5a5",
+  "prior_intent_sha256": "cc16ac2d8614b80271b9a75576300978b5bfa0a3b52e8b2fcd8bea9c8868b6e6",
+  "pinned_prices": {
+    "completion": 1e-05,
+    "jev": 4.2e-08,
+    "prompt": 2e-06
+  },
+  "float_note": "Runtime binary-float reservations .16160800000000003 and combined .26177400000000006 are shown at exact configured decimal precision.",
+  "invoice_verified": false,
+  "verifier_zero_basis": "Exactly one inventory intent/result and no verifier operation exists in frozen complete run.",
+  "evaluation_cost_scope": "Incremental probe only; combined experiment costs reported separately, never added to the probe observation."
+}

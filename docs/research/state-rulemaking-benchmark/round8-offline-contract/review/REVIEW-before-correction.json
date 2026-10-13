@@ -1,0 +1,36 @@
+{
+  "schema_version": "round8-offline-contract.review.v1",
+  "verdict": "one_prompt_contract_correction_required",
+  "blockers": [
+    {
+      "file": "prompt-delta.txt",
+      "line": 3,
+      "issue": "Unresolved source association automatically implies uncertain inventory coverage, conflating fully represented source ambiguity with unestablished completeness.",
+      "requested_change": "Distinguish incomplete/unestablished inventory coverage from completely inventoried source uncertainty; retain all source uncertainty review gates."
+    }
+  ],
+  "passed_tests": 18,
+  "owner_tests": 11,
+  "independent_tests": 7,
+  "all_full_body_fixtures_recomputed": 8,
+  "prior_files_verified": 1158,
+  "handoff_sha256": "dc26772f21277151243519231ec5468a8b72310931c15b1c8393503dcca07984",
+  "reviewed_files": {
+    "README.md": "5d7d143f97226261bd05de5fdcf53fc9a61e0014dbc1fde92e6c35024a2c8018",
+    "REPORT.json": "caba8abc5e0fc7af01302098279c8d5a5918e4041e001473d54ccb64a6609f0f",
+    "candidate.py": "024ff423f071d2b4d471158a824a214a5c0ff50944ea9ffc501f336f0bf92953",
+    "fixtures.py": "ff088ad108693f734a63e694a685a1bb3da4d7254b7f358d1422e3db6a47ac4e",
+    "input-pins.json": "c0548300abf51685bc54a9ef256d2ba39af1efc98a6cbaf772c6fe37c7e65c91",
+    "prompt-delta.txt": "b078d85edfbf52fb0d4450e4f3f831c622987f710ffd857a012410308cae38e8",
+    "test-output.txt": "cbbb7a042707021283d76d508e57db29b377a1c0689daa40e082ce9808947d51",
+    "test_candidate.py": "a7f3376756e4c1a3a2924da0af150953ea4ab0c0270cb6c0a5e346222c627029",
+    "verify_offline.py": "6a66bdb90824ac5c3ac24afe715485acaa5a012f5924460510b6da2569e5318b"
+  },
+  "inventory_candidate_estimate": 21676,
+  "prior_debit_usd": 0.261774,
+  "future_nominal_aggregate_usd": 0.578302,
+  "no_live_authorization": true,
+  "provider_calls": 0,
+  "generation_improvement_measured": false,
+  "semantic_accuracy_measured": false
+}

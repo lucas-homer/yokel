@@ -1,0 +1,19 @@
+{
+  "schema_version": "round6.observed-boundary-note.v1",
+  "original_observed_path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round6/execution/postrun-audit/observed.json",
+  "original_observed_sha256": "b91d6fdc783ff8cc06074e11959c53930dfef8e21a1a7231e6901d3668e0881c",
+  "original_READY_sha256": "9a45c39ca110fdc7cfc33e5c8d37c749ecb1160456e77fd11fb2e5f4410fbe0a",
+  "published_artifacts_modified": false,
+  "issue": "Original observed maps pre-verifier system review gates to verifier arm review. Frozen evaluator evaluate.py lines110-111 requires nonnull normalized record and common payload for review status; all four notices lack those artifacts, so original observed is incompatible with that evaluator boundary.",
+  "correct_interpretation": {
+    "system_review_documents": 4,
+    "verifier_arms": "not_started",
+    "verifier_dispatches": 0,
+    "provider_service_errors": 0,
+    "original_gate_reasons": "preserve request_size_review or assembly_review and exact errors as separate runtime_gate/failure_reason metadata"
+  },
+  "primary_authorized_derivation": "D creates an evaluator-compatible observed copy with arm status not_started, preserving all original artifact hashes, gate reasons and original observed provenance SHA. This is a boundary representation correction; no outcomes, costs, models, frozen evaluator, reference or published audit artifacts change.",
+  "D_derived_observed_path": null,
+  "D_derived_observed_status": "not present in file inventory at append time; use D published derived observation with original provenance binding once available",
+  "note": "Do not infer a provider service failure from an uncalled verifier arm. Original cost/integrity checks remain valid; original observed status fields must not be passed unchanged to frozen evaluator."
+}

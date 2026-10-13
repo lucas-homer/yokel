@@ -1,0 +1,1427 @@
+{
+  "schema_version": "operations-audit-v1",
+  "phase": "completed_phases_review_pending_final_firecrawl_recovery",
+  "reviewed_at_utc": "2026-10-06T01:06:34.260912+00:00",
+  "freeze_sha256": "900f21e8a75d50444f12a0e3814d665a4f401a0d689194465d0b00467a762946",
+  "checks": [
+    {
+      "check_id": "freeze-checksum",
+      "status": "pass",
+      "evidence_paths": [
+        "corpus-freeze.json"
+      ],
+      "details": "Checksum compared to primary-provided immutable manifest digest."
+    },
+    {
+      "check_id": "frozen-source-reference-files",
+      "status": "pass",
+      "evidence_paths": [
+        "corpus-freeze.json/files"
+      ],
+      "details": {
+        "frozen_files": 141,
+        "mismatches": []
+      }
+    },
+    {
+      "check_id": "frozen-input-pairing",
+      "status": "pass",
+      "evidence_paths": [
+        "corpus-freeze.json/units"
+      ],
+      "details": {
+        "units": 20,
+        "unique_input_hashes": 20,
+        "input_page_instances": 34
+      }
+    },
+    {
+      "check_id": "llama-ledger-coverage",
+      "status": "pass",
+      "details": "40 unique frozen fixture/tier pairs",
+      "evidence_paths": [
+        "llama/call-ledger.json"
+      ]
+    },
+    {
+      "check_id": "llama-ledger-inputs",
+      "status": "pass",
+      "details": "All ledger inputs match freeze",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "llama-capture-A01-agentic",
+      "status": "pass",
+      "details": "Input/upload IDs, exact request/envelope/text and elapsed time match",
+      "evidence_paths": [
+        "llama/runs/A01/agentic/capture.json"
+      ]
+    },
+    {
+      "check_id": "llama-capture-A01-agentic_plus",
+      "status": "pass",
+      "details": "Input/upload IDs, exact request/envelope/text and elapsed time match",
+      "evidence_paths": [
+        "llama/runs/A01/agentic_plus/capture.json"
+      ]
+    },
+    {
+      "check_id": "llama-capture-A02-agentic",
+      "status": "pass",
+      "details": "Input/upload IDs, exact request/envelope/text and elapsed time match",
+      "evidence_paths": [
+        "llama/runs/A02/agentic/capture.json"
+      ]
+    },
+    {
+      "check_id": "llama-capture-A02-agentic_plus",
+      "status": "pass",
+      "details": "Input/upload IDs, exact request/envelope/text and elapsed time match",
+      "evidence_paths": [
+        "llama/runs/A02/agentic_plus/capture.json"
+      ]
+    },
+    {
+      "check_id": "llama-retained-hash-ledger",
+      "status": "pass",
+      "details": {
+        "entries": 22
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "llama-concurrency-stop",
+      "status": "pass",
+      "details": {
+        "concurrency": {
+          "intervals": 4,
+          "peak_concurrent": 2,
+          "maximum_two_observed": true
+        },
+        "stop": {
+          "completion_ids": [
+            "A01:agentic_plus",
+            "A01:agentic",
+            "A02:agentic",
+            "A02:agentic_plus"
+          ],
+          "trigger": {
+            "fixture_id": "A02",
+            "ended_at": "2026-10-06T00:56:07.696Z",
+            "sequence": 3
+          },
+          "no_dispatch_after_trigger": true
+        }
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "llama-completion-order",
+      "status": "pass",
+      "details": "Sequence agrees with retained end timestamps",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "firecrawl-preflight-original",
+      "status": "pass",
+      "details": {
+        "fixtures": 20,
+        "schema_mismatch_resolved": true
+      },
+      "evidence_paths": [
+        "firecrawl/preflight.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-original-A01",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/A01/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-original-no-submission-A01",
+      "status": "pass",
+      "details": "No HTTP upload receipt or final request/response retained; original failure stage is upload",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "firecrawl-outcome-original-A03",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/A03/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-original-no-submission-A03",
+      "status": "pass",
+      "details": "No HTTP upload receipt or final request/response retained; original failure stage is upload",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "firecrawl-outcome-original-A02",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/A02/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-original-no-submission-A02",
+      "status": "pass",
+      "details": "No HTTP upload receipt or final request/response retained; original failure stage is upload",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "firecrawl-outcome-original-A04",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/A04/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-original-no-submission-A04",
+      "status": "pass",
+      "details": "No HTTP upload receipt or final request/response retained; original failure stage is upload",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "firecrawl-stop-original",
+      "status": "pass",
+      "details": {
+        "completion_ids": [
+          "A01",
+          "A03",
+          "A02",
+          "A04"
+        ],
+        "trigger": {
+          "fixture_id": "A02",
+          "ended_at": "2026-10-06T00:50:19.896Z",
+          "sequence": 3
+        },
+        "no_dispatch_after_trigger": true
+      },
+      "evidence_paths": [
+        "firecrawl/results.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-preflight-recovery-1",
+      "status": "pass",
+      "details": {
+        "fixtures": 20,
+        "schema_mismatch_resolved": true
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/preflight.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-A01",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A01/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-A01",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 52308,
+        "local_wall_ms": 16855,
+        "http_elapsed_ms": 403.59762497246265
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/A01/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-A01",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A01/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-recovery-1-A01",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A01/markdown.md",
+        "firecrawl/recovery-1/A01/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-A02",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A02/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-A02",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 398478,
+        "local_wall_ms": 13918,
+        "http_elapsed_ms": 567.1670000301674
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/A02/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-A02",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A02/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-recovery-1-A02",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A02/markdown.md",
+        "firecrawl/recovery-1/A02/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-A04",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A04/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-A04",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 42230,
+        "local_wall_ms": 7981,
+        "http_elapsed_ms": 274.9745000619441
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/A04/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-A04",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A04/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-recovery-1-A04",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A04/markdown.md",
+        "firecrawl/recovery-1/A04/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-A03",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A03/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-A03",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 408959,
+        "local_wall_ms": 9381,
+        "http_elapsed_ms": 606.8308328976855
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/A03/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-A03",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A03/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-recovery-1-A03",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A03/markdown.md",
+        "firecrawl/recovery-1/A03/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-A05",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A05/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-A05",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 71316,
+        "local_wall_ms": 7866,
+        "http_elapsed_ms": 311.59841699991375
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/A05/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-A05",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A05/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-A06",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A06/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-A06",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 80187,
+        "local_wall_ms": 8032,
+        "http_elapsed_ms": 326.2016250519082
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/A06/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-A06",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A06/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-A07",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A07/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-A07",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 72590,
+        "local_wall_ms": 6472,
+        "http_elapsed_ms": 314.022499951534
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/A07/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-A07",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A07/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-recovery-1-A07",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A07/markdown.md",
+        "firecrawl/recovery-1/A07/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-A08",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A08/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-A08",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 151940,
+        "local_wall_ms": 8149,
+        "http_elapsed_ms": 417.26420796476305
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/A08/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-A08",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A08/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-recovery-1-A08",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A08/markdown.md",
+        "firecrawl/recovery-1/A08/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-A09",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A09/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-A09",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 112805,
+        "local_wall_ms": 6846,
+        "http_elapsed_ms": 377.3302079644054
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/A09/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-A09",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A09/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-recovery-1-A09",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A09/markdown.md",
+        "firecrawl/recovery-1/A09/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-A10",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A10/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-A10",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 89129,
+        "local_wall_ms": 6543,
+        "http_elapsed_ms": 340.50849999766797
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/A10/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-A10",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A10/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-recovery-1-A10",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/recovery-1/A10/markdown.md",
+        "firecrawl/recovery-1/A10/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-B01",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/B01/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-B01",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 197047,
+        "local_wall_ms": 7437,
+        "http_elapsed_ms": 441.06145901605487
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/B01/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-B01",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/B01/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-B03",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/B03/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-B02",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/B02/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-recovery-1-B02",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 215110,
+        "local_wall_ms": 7142,
+        "http_elapsed_ms": 462.883707950823
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/B02/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-recovery-1-B02",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/B02/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-recovery-1-B04",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/recovery-1/B04/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-stop-recovery-1",
+      "status": "fail",
+      "details": {
+        "completion_ids": [
+          "A01",
+          "A02",
+          "A04",
+          "A03",
+          "A05",
+          "A06",
+          "A07",
+          "A08",
+          "A09",
+          "A10",
+          "B01",
+          "B03",
+          "B02",
+          "B04"
+        ],
+        "trigger": {
+          "fixture_id": "B02",
+          "ended_at": "2026-10-06T00:56:57.477Z",
+          "sequence": 13
+        },
+        "no_dispatch_after_trigger": false
+      },
+      "evidence_paths": [
+        "firecrawl/recovery-1/results.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-preflight-initial-remaining",
+      "status": "pass",
+      "details": {
+        "fixtures": 6,
+        "schema_mismatch_resolved": true
+      },
+      "evidence_paths": [
+        "firecrawl/initial-remaining/preflight.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-initial-remaining-B05",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B05/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-initial-remaining-B05",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 254081,
+        "local_wall_ms": 11405,
+        "http_elapsed_ms": 674.4566669221967
+      },
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B05/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-initial-remaining-B05",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B05/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-initial-remaining-B05",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B05/markdown.md",
+        "firecrawl/initial-remaining/B05/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-initial-remaining-B06",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B06/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-initial-remaining-B06",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 241628,
+        "local_wall_ms": 8474,
+        "http_elapsed_ms": 493.8455839874223
+      },
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B06/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-initial-remaining-B06",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B06/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-initial-remaining-B06",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B06/markdown.md",
+        "firecrawl/initial-remaining/B06/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-initial-remaining-B07",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B07/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-initial-remaining-B07",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 235896,
+        "local_wall_ms": 9963,
+        "http_elapsed_ms": 518.3681659400463
+      },
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B07/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-initial-remaining-B07",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B07/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-initial-remaining-B07",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B07/markdown.md",
+        "firecrawl/initial-remaining/B07/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-initial-remaining-B08",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B08/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-initial-remaining-B08",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 71439,
+        "local_wall_ms": 8768,
+        "http_elapsed_ms": 308.3765839692205
+      },
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B08/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-initial-remaining-B08",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B08/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-initial-remaining-B08",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B08/markdown.md",
+        "firecrawl/initial-remaining/B08/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-initial-remaining-B09",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B09/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-initial-remaining-B09",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 505669,
+        "local_wall_ms": 8693,
+        "http_elapsed_ms": 630.384000018239
+      },
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B09/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-initial-remaining-B09",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B09/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-initial-remaining-B09",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B09/markdown.md",
+        "firecrawl/initial-remaining/B09/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-outcome-initial-remaining-B10",
+      "status": "pass",
+      "details": "Result ledger, setup input metadata, and total pipeline elapsed match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B10/outcome.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-upload-initial-remaining-B10",
+      "status": "pass",
+      "details": {
+        "uploaded_bytes": 79978,
+        "local_wall_ms": 9644,
+        "http_elapsed_ms": 368.1932920590043
+      },
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B10/upload-receipt.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-parse-initial-remaining-B10",
+      "status": "pass",
+      "details": "Frozen input, redacted request, capture settings and timed interval match",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B10/parse-capture.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-exact-text-initial-remaining-B10",
+      "status": "pass",
+      "details": "Derived markdown exactly matches retained response string/hash/length/newline",
+      "evidence_paths": [
+        "firecrawl/initial-remaining/B10/markdown.md",
+        "firecrawl/initial-remaining/B10/parse-response.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-stop-initial-remaining",
+      "status": "pass",
+      "details": {
+        "completion_ids": [
+          "B05",
+          "B06",
+          "B07",
+          "B08",
+          "B09",
+          "B10"
+        ],
+        "trigger": null,
+        "no_dispatch_after_trigger": true
+      },
+      "evidence_paths": [
+        "firecrawl/initial-remaining/results.json"
+      ]
+    },
+    {
+      "check_id": "firecrawl-completed-global-concurrency",
+      "status": "pass",
+      "details": {
+        "pipelines": {
+          "intervals": 24,
+          "peak_concurrent": 2,
+          "maximum_two_observed": true
+        },
+        "final_parse_intervals": {
+          "intervals": 18,
+          "peak_concurrent": 2,
+          "maximum_two_observed": true
+        }
+      },
+      "evidence_paths": []
+    },
+    {
+      "check_id": "firecrawl-six-explicit-rejections",
+      "status": "pass",
+      "details": [
+        {
+          "fixture_id": "A05",
+          "phase": "recovery-1",
+          "stage": "parse",
+          "explicit_rate_rejection": true,
+          "accepted_job_id_returned": false
+        },
+        {
+          "fixture_id": "A06",
+          "phase": "recovery-1",
+          "stage": "parse",
+          "explicit_rate_rejection": true,
+          "accepted_job_id_returned": false
+        },
+        {
+          "fixture_id": "B01",
+          "phase": "recovery-1",
+          "stage": "parse",
+          "explicit_rate_rejection": true,
+          "accepted_job_id_returned": false
+        },
+        {
+          "fixture_id": "B03",
+          "phase": "recovery-1",
+          "stage": "phase_one",
+          "explicit_rate_rejection": true,
+          "accepted_job_id_returned": false
+        },
+        {
+          "fixture_id": "B02",
+          "phase": "recovery-1",
+          "stage": "parse",
+          "explicit_rate_rejection": true,
+          "accepted_job_id_returned": false
+        },
+        {
+          "fixture_id": "B04",
+          "phase": "recovery-1",
+          "stage": "phase_one",
+          "explicit_rate_rejection": true,
+          "accepted_job_id_returned": false
+        }
+      ],
+      "evidence_paths": []
+    },
+    {
+      "check_id": "firecrawl-historical-canonical-coverage",
+      "status": "pass",
+      "details": "Historical snapshot after recovery-1: 8 captures, 6 rejections, 6 unattempted. Completed initial-remaining adds 6 verified captures.",
+      "evidence_paths": []
+    },
+    {
+      "check_id": "completed-evidence-secret-scan",
+      "status": "pass",
+      "details": {
+        "scanned_files": 208,
+        "findings": []
+      },
+      "evidence_paths": []
+    }
+  ],
+  "issue_check_ids": [
+    "firecrawl-stop-recovery-1"
+  ],
+  "llama": {
+    "final": true,
+    "attempted": 4,
+    "timeouts": 4,
+    "outputs": 0,
+    "unattempted": 36,
+    "uploaded_units": 2,
+    "concurrency": {
+      "intervals": 4,
+      "peak_concurrent": 2,
+      "maximum_two_observed": true
+    },
+    "stop": {
+      "completion_ids": [
+        "A01:agentic_plus",
+        "A01:agentic",
+        "A02:agentic",
+        "A02:agentic_plus"
+      ],
+      "trigger": {
+        "fixture_id": "A02",
+        "ended_at": "2026-10-06T00:56:07.696Z",
+        "sequence": 3
+      },
+      "no_dispatch_after_trigger": true
+    },
+    "returned_usage": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "actual_cost": null,
+    "backend_completion": "unknown after tool timeouts",
+    "successful_latency_ms": null,
+    "failure_elapsed_ms": [
+      248102,
+      123933,
+      123281,
+      246796
+    ]
+  },
+  "firecrawl": {
+    "final": false,
+    "completed_phases": [
+      {
+        "directory": "firecrawl",
+        "pipelines": 4,
+        "successes": 0,
+        "failures": 4,
+        "concurrency": {
+          "intervals": 4,
+          "peak_concurrent": 2,
+          "maximum_two_observed": true
+        },
+        "stop": {
+          "completion_ids": [
+            "A01",
+            "A03",
+            "A02",
+            "A04"
+          ],
+          "trigger": {
+            "fixture_id": "A02",
+            "ended_at": "2026-10-06T00:50:19.896Z",
+            "sequence": 3
+          },
+          "no_dispatch_after_trigger": true
+        }
+      },
+      {
+        "directory": "firecrawl/recovery-1",
+        "pipelines": 14,
+        "successes": 8,
+        "failures": 6,
+        "concurrency": {
+          "intervals": 14,
+          "peak_concurrent": 2,
+          "maximum_two_observed": true
+        },
+        "stop": {
+          "completion_ids": [
+            "A01",
+            "A02",
+            "A04",
+            "A03",
+            "A05",
+            "A06",
+            "A07",
+            "A08",
+            "A09",
+            "A10",
+            "B01",
+            "B03",
+            "B02",
+            "B04"
+          ],
+          "trigger": {
+            "fixture_id": "B02",
+            "ended_at": "2026-10-06T00:56:57.477Z",
+            "sequence": 13
+          },
+          "no_dispatch_after_trigger": false
+        }
+      },
+      {
+        "directory": "firecrawl/initial-remaining",
+        "pipelines": 6,
+        "successes": 6,
+        "failures": 0,
+        "concurrency": {
+          "intervals": 6,
+          "peak_concurrent": 2,
+          "maximum_two_observed": true
+        },
+        "stop": {
+          "completion_ids": [
+            "B05",
+            "B06",
+            "B07",
+            "B08",
+            "B09",
+            "B10"
+          ],
+          "trigger": null,
+          "no_dispatch_after_trigger": true
+        }
+      }
+    ],
+    "setup_requests": 24,
+    "successful_http_uploads": 18,
+    "final_parse_requests": 18,
+    "successful_captures": 14,
+    "reported_credits_on_successes": 22,
+    "total_usage_known": false,
+    "actual_cost": null,
+    "success_details": [
+      {
+        "fixture_id": "A01",
+        "phase": "recovery-1",
+        "parse_interval_including_queue_ms": 3039,
+        "pipeline_ms": 28096,
+        "credits_reported": 1
+      },
+      {
+        "fixture_id": "A02",
+        "phase": "recovery-1",
+        "parse_interval_including_queue_ms": 3293,
+        "pipeline_ms": 28097,
+        "credits_reported": 1
+      },
+      {
+        "fixture_id": "A04",
+        "phase": "recovery-1",
+        "parse_interval_including_queue_ms": 786,
+        "pipeline_ms": 18234,
+        "credits_reported": 1
+      },
+      {
+        "fixture_id": "A03",
+        "phase": "recovery-1",
+        "parse_interval_including_queue_ms": 3245,
+        "pipeline_ms": 18307,
+        "credits_reported": 1
+      },
+      {
+        "fixture_id": "A07",
+        "phase": "recovery-1",
+        "parse_interval_including_queue_ms": 3910,
+        "pipeline_ms": 14514,
+        "credits_reported": 2
+      },
+      {
+        "fixture_id": "A08",
+        "phase": "recovery-1",
+        "parse_interval_including_queue_ms": 3929,
+        "pipeline_ms": 17785,
+        "credits_reported": 4
+      },
+      {
+        "fixture_id": "A09",
+        "phase": "recovery-1",
+        "parse_interval_including_queue_ms": 2064,
+        "pipeline_ms": 15244,
+        "credits_reported": 1
+      },
+      {
+        "fixture_id": "A10",
+        "phase": "recovery-1",
+        "parse_interval_including_queue_ms": 2173,
+        "pipeline_ms": 19230,
+        "credits_reported": 1
+      },
+      {
+        "fixture_id": "B05",
+        "phase": "initial-remaining",
+        "parse_interval_including_queue_ms": 6941,
+        "pipeline_ms": 22035,
+        "credits_reported": 3
+      },
+      {
+        "fixture_id": "B06",
+        "phase": "initial-remaining",
+        "parse_interval_including_queue_ms": 5279,
+        "pipeline_ms": 27322,
+        "credits_reported": 2
+      },
+      {
+        "fixture_id": "B07",
+        "phase": "initial-remaining",
+        "parse_interval_including_queue_ms": 7430,
+        "pipeline_ms": 29488,
+        "credits_reported": 2
+      },
+      {
+        "fixture_id": "B08",
+        "phase": "initial-remaining",
+        "parse_interval_including_queue_ms": 3858,
+        "pipeline_ms": 28113,
+        "credits_reported": 1
+      },
+      {
+        "fixture_id": "B09",
+        "phase": "initial-remaining",
+        "parse_interval_including_queue_ms": 5483,
+        "pipeline_ms": 29091,
+        "credits_reported": 1
+      },
+      {
+        "fixture_id": "B10",
+        "phase": "initial-remaining",
+        "parse_interval_including_queue_ms": 2920,
+        "pipeline_ms": 28168,
+        "credits_reported": 1
+      }
+    ],
+    "explicit_rate_rejections": [
+      {
+        "fixture_id": "A05",
+        "phase": "recovery-1",
+        "stage": "parse",
+        "explicit_rate_rejection": true,
+        "accepted_job_id_returned": false
+      },
+      {
+        "fixture_id": "A06",
+        "phase": "recovery-1",
+        "stage": "parse",
+        "explicit_rate_rejection": true,
+        "accepted_job_id_returned": false
+      },
+      {
+        "fixture_id": "B01",
+        "phase": "recovery-1",
+        "stage": "parse",
+        "explicit_rate_rejection": true,
+        "accepted_job_id_returned": false
+      },
+      {
+        "fixture_id": "B03",
+        "phase": "recovery-1",
+        "stage": "phase_one",
+        "explicit_rate_rejection": true,
+        "accepted_job_id_returned": false
+      },
+      {
+        "fixture_id": "B02",
+        "phase": "recovery-1",
+        "stage": "parse",
+        "explicit_rate_rejection": true,
+        "accepted_job_id_returned": false
+      },
+      {
+        "fixture_id": "B04",
+        "phase": "recovery-1",
+        "stage": "phase_one",
+        "explicit_rate_rejection": true,
+        "accepted_job_id_returned": false
+      }
+    ],
+    "response_provenance": [
+      {
+        "path": "firecrawl/recovery-1/A01/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/recovery-1/A02/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/recovery-1/A04/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/recovery-1/A03/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/recovery-1/A05/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/recovery-1/A06/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/recovery-1/A07/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/recovery-1/A08/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/recovery-1/A09/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/recovery-1/A10/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/recovery-1/B01/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/recovery-1/B02/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/initial-remaining/B05/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/initial-remaining/B06/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/initial-remaining/B07/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/initial-remaining/B08/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/initial-remaining/B09/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      },
+      {
+        "path": "firecrawl/initial-remaining/B10/parse-response.json",
+        "response_unmodified_claim": true,
+        "redaction_exception_declared": false
+      }
+    ],
+    "concurrency": {
+      "intervals": 24,
+      "peak_concurrent": 2,
+      "maximum_two_observed": true
+    },
+    "final_parse_concurrency": {
+      "intervals": 18,
+      "peak_concurrent": 2,
+      "maximum_two_observed": true
+    }
+  },
+  "execution_authorizations": [
+    {
+      "path": "execution-amendment-1.json",
+      "sha256": "c19b50ef490ae7f5a2c354eee76f29bca2137c7d0a804c3ce1ad82b2fb171740",
+      "decision": "Resume Firecrawl after proven pre-job local transport failure; one corrected upload recovery for A01-A04, initial attempts for A05-B10."
+    },
+    {
+      "path": "execution-note-2.json",
+      "sha256": "821d37044cc54be32d4329fb82fe46e0bcad5164db1d5383ce35cde2b72ee36b",
+      "decision": "Use observed request-rate pacing and permit one recovery for explicit pre-job rate-limit rejection only."
+    },
+    {
+      "path": "execution-note-3.json",
+      "sha256": "77d605d69d0d90a3e066e1a9383d5ebe07f0669f2ca53a1ec92cd202b4e9449b",
+      "decision": "Fresh upload is permitted for a single known rate-limit recovery if the earlier transient uploadRef is unavailable, not only expired. No need to wait for expiry."
+    }
+  ],
+  "security_findings": [],
+  "limitations": [
+    "Firecrawl final six recoveries are excluded and completeness remains pending.",
+    "No independent HTTP wire bytes exist; JSON response object preservation is recorded, and exact markdown equivalence is independently checked against retained objects.",
+    "Firecrawl response_unmodified is a capture claim; no separate original tool envelope is retained for independent original-object comparison.",
+    "Signed upload instructions and uploadRefs were intentionally not retained; file hashes/bytes and receipts support mappings but direct replay of transient URLs is unavailable.",
+    "Paced harness timestamps precede pacing waits, so parse/phase-one intervals include queue delay; actual endpoint dispatch spacing and pure vendor latency cannot be reconstructed from these timestamps. Code inspection shows a shared 7000ms dispatch gate in paced continuation.",
+    "Original Firecrawl no-upload/no-final-submission assertion is supported by local failure artifacts and absence of corresponding receipts; absence alone cannot independently prove a network negative.",
+    "Recovery-1 launched B04 17ms after B02 ended at the third consecutive failure; timestamp-based stop compliance fails. Scheduler may have consumed B03 and launched B04 before consuming already-completed B02; no completion-consumption timestamps establish this boundary. Original finding is retained for primary interpretation.",
+    "Llama timeouts leave backend completion and billing unknown. No parse-quality conclusion follows from zero returned outputs.",
+    "Latest is requested rather than a verified backend release pin; published price assumptions are not actual bills."
+  ]
+}

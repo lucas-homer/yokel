@@ -1,0 +1,54 @@
+{
+ "status": "READY_INDEPENDENT_WIRE_TESTS",
+ "round": "round16-wire-compat",
+ "role": "independent adversarial tester (blind)",
+ "frozen": "2026-10-13",
+ "blind": {
+  "protocol_dir_read": false,
+  "note": "protocol/wire.py was imported by path at run time only; its source, SPEC.md, test_wire.py, verify.py and receipt were not read. One black-box probe of build() on an oversize source and of the plan key set informed EXPECTATIONS.md item 7."
+ },
+ "run": {
+  "command": "python3 -I -S -B test_independent.py",
+  "python": "3.13.7",
+  "tests": 55,
+  "result_with_wire_py": "OK (55 passed)",
+  "result_without_wire_py": "OK (6 passed, 49 skipped) in a temp mirror without protocol/",
+  "network_calls": 0,
+  "provider_calls": 0,
+  "credentials_read": false,
+  "commits": 0
+ },
+ "counts": {
+  "checker_caught_negatives": 51,
+  "host_only_negatives": 31,
+  "fixtures": 18,
+  "ambiguities_recorded": 18
+ },
+ "oracles": {
+  "design/DESIGN.md": "53e43e3001550829e5586a50ca99a2c63d996a6edc96424ec0346bc5a19d5743",
+  "design/schema.draft.json": "0d69a1eadc62d21f8d248286bb97d53fa3a5286e46e1a2901bc689d766c3cc9b",
+  "design/READY.json": "f880092bc06465049df463463d6ad079394fea863c4a0c7af1bac896d73790d5",
+  "round15 protocol-revised/compact.py": "8e7faec0d3c3fd5d16cabf58977804a401ca904f441f535af2e59fda9163ff6a",
+  "round15 protocol-revised/fixtures/positive.json": "89c1e876d102111161f5c1f62052c25a7b000a1d4198a48c3af548b4d254e487",
+  "round15 protocol-revised/fixtures/expanded.json": "99d95caefed656d116d9eca2dcb4c9983e7b1213f70e47edfd7d0d3943c887ff",
+  "round14 runtime/common.py": "a341e11b6b0d49b130c28d8881ef4b71748161bcfc0d15c41384bc150f35bdc5"
+ },
+ "files": {
+  "TEST-PLAN.md": {
+   "sha256": "a4d518d1328b0ec0b279ab8dccdfc56ef00bfc245330549f4ebe57a72e7981a6",
+   "bytes": 6897
+  },
+  "test_independent.py": {
+   "sha256": "8b4403071b91008af3030cdc6362a56c49f7b0c40ba3084b2c1eb56d27f2ec30",
+   "bytes": 62686
+  },
+  "EXPECTATIONS.md": {
+   "sha256": "e0eeaaacfb3d9bf6ce519120818c298a5c283f26adff9d271ec2b4b400c94f14",
+   "bytes": 5801
+  },
+  "test-output.txt": {
+   "sha256": "1ff0156f39a476e62f37493d1ace4b1f7873c6f4be8e798d5d9377a914446617",
+   "bytes": 12585
+  }
+ }
+}

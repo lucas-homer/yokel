@@ -1,0 +1,112 @@
+<file name="doc-03fab2becee5.pdf">
+
+NOTICE OF PUBLIC HEARING ON PROPOSED ADMINISTRATIVE RULES
+OFFICE OF ELECTIONS
+STATE OF HAWAII
+
+Notice is given that the Chief Election Officer, under the authority of section 11-4, Hawaii Revised Statutes ("HRS"), and pursuant to Chapter 91, HRS, and Chapter 3-171, Hawaii Administrative Rules ("HAR"), will hold a public hearing to afford all interested persons an opportunity to submit oral or written testimony on the proposed repeal of HAR, Title 3, Chapters 171 through 176, and adoption of HAR Title 3, Chapter 177.
+
+SCHEDULE OF PUBLIC HEARING
+
+The public hearing is scheduled at the following time and location:
+
+July 6, 2020
+9:00 a.m.
+
+Office of Elections
+802 Lehua Avenue
+Pearl City, Hawaii 96782
+
+All persons in attendance are encouraged to wear a cloth face covering as described and recommended by the Centers for Disease Control and Prevention. The public hearing will be conducted consistent with all applicable social distancing requirements or other safeguards associated with COVID-19. Such measures may include, but are not limited to, ensuring that all persons maintain a minimum of six feet of physical separation from other persons to the extent possible.
+
+Additionally, telephone conferencing will be made available.
+
+Telephone Number: (808) 829-4853
+Conference ID: 145 524 670#
+
+If, for technical reasons, the telephone conference cannot be made and/or is disrupted, the hearing will continue. All interested persons are therefore encouraged to submit written testimony in advance of the hearing.
+
+AGENDA OF PUBLIC HEARING
+
+I. Call to Order
+II. Purpose of the Public Hearing
+III. Outline of Procedures
+
+IV. Testimony
+V. Announcement of Decision
+VI. Adjournment
+
+# TOPICS OF RULES PROPOSED TO BE REPEALED AND ADOPTED
+
+The Chief Election Officer proposes to repeal Hawaii Administrative Rules, Title 3, Chapters 171 through 176, and adopt Hawaii Administrative Rules Title 3, Chapter 177.
+
+The repeal of Title 3, Chapters 171 through 176, and adoption of Title 3, Chapter 177 is necessary to address the migration to elections by mail, changes in the administration of elections, and to make housekeeping changes.
+
+The subjects involved in the repeal of Title 3, Chapters 171 through 176 are as follows:
+
+a. The process for the adoption, amendment, or repeal of rules by the Chief Election Officer (Chapter 171).
+b. Voting procedures (Chapter 172). The chapter includes 12 subchapters of rules covering the following areas: (1) general provisions; (2) voter education; (3) voter registration; (4) voter challenges and appeals; (5) political parties; (6) precinct officials and watchers; (7) ballot printing and delivery; (8) voting procedures at polling places; (9) vote disposition; (10) presidential petitions; and (11) access to government records.
+c. Nomination paper procedures (Chapter 173).
+d. Absentee voting procedures (Chapter 174).
+e. Elections by mail procedures (Chapter 175).
+f. Voting systems (Chapter 176).
+
+The subjects involved in the adoption of Title 3, Chapters 177 are as follows:
+
+a. Establish and clarify process for the adoption, amendment, or repeal of rules by the Chief Election Officer (Subchapter 1). The proposed rules include the following: (1) initiation of the adoption, amendment, or repeal of rules by the Chief Election Officer; (2) petitions for the adoption, amendment, or repeal of rules; (3) adoption, amendment, or repeal of rules; (4) conduct of hearing; (5) the decision and taking effect of rules; and (6) emergency rule making.
+
+b. Establish and clarify general provisions (Subchapter 2). The proposed rules include the following: (1) purpose and general applicability of the rules; (2) construction of laws; (3) election officials; (4) office of the clerk; (5) office of the chief election officer; (6) format of election documents; (7) receipt, filing, or accessibility of election documents; (8) districts, precincts, polling places, and ballot types; (9) Saturday, deadlines; (10) postponement of elections; natural disaster; (11) compensation for election day officials; and (12) security of ballots and election supplies.
+
+c. Establish and clarify procedures relating to voter education (Subchapter 3). The proposed rules include the following: (1) purpose; (2) voter pamphlet; and (3) election equipment loans.
+
+d. Establish and clarify procedures relating to voter registration (Subchapter 4). The proposed rules include the following: (1) voter registration and related forms; (2) voter registration forms; distribution; (3) voter registration forms; collection; (4) voter registration forms; electronic transmission by government agencies; (5) transfer or change of registration initiated by the voter; (6) clerk's approval; when voter becomes registered; (7) determination of residence; (8) National Voter Registration Act of 1993, as amended; general program to remove ineligible voters, using change of address information supplied by the postal service; (9) transfer or change of registration initiated by the clerk; (10) confidential registration; and (11) voter registration information; prohibited uses.
+
+e. Establish and clarify procedures relating to voter challenges and appeals (Subchapter 5). The proposed rules include the following: (1) prerequisites and grounds for challenge; (2) challenges in writing not occurring in a voter service center; procedure; (3) appeal to the board from a clerk's ruling on a challenge in writing not occurring in a voter service center; (4) challenge at the voter service center; procedure; (5) appeal to the board from decision at the voter service center; (6) challenge to confidential registration; special procedure; (7) correction of errors; appeal to the board of registration from clerk's ruling; and (8) challenged ballot; electronic.
+
+f. Establish and clarify procedures relating to access to government records (Subchapter 6). The proposed rule addresses access to election documents; general procedures.
+
+g. Establish and clarify procedures relating to presidential petitions (Subchapter 7). The proposed rules include the following: (1) presidential petitions; issuing; (2) presidential petitions; withdrawal of signatures; and (3) presidential petitions; verification of signatories.
+
+h. Establish and clarify procedures relating to political parties (Subchapter 8). The proposed rules include the following: (1) political parties; qualification; (2) party petitions; issuing; (3) party petitions; withdrawal of signatures; and (4) party petitions; verification of signatories.
+
+i. Establish and clarify procedures relating to nomination papers (Subchapter 9). The proposed rules include the following: (1) nomination papers; when available, application, and format; (2) nomination papers; withdrawal of signature; (3) nomination papers; verification of signatories; (4) nomination papers; candidate name on ballot; (5) nomination papers; candidate's name; office and district; political party affiliation or nonpartisan designation; and (6) filing fee; payment of.
+
+j. Establish and clarify procedures relating to ballots (Subchapter 10). The proposed rules include the following: (1) ballot definition; (2) ballot design and arrangement; candidate vacancies; (3) ballots for voter service centers; (4) accountability and security of ballots; and (5) electronic voting systems; marking of marksense ballot.
+
+k. Establish and clarify procedures relating to voter service centers and places of deposit, generally (Subchapter 11). The proposed rules include the following: (1) voter service center; general operation and services; (2) voter service center; security and regulation of activities; (3) voter service center; collection of voting materials; (4) voter service center; return of materials; (5) voter service center; officials; (6) voter service center; watchers; (7) places of deposit; generally; (8) voter service center and place of deposit; campaign activities; and (9) voter service center and place of deposit; non-campaign activities.
+
+l. Establish and clarify procedures relating to voter service centers and places of deposit, voting procedure (Subchapter 12). The proposed rules include the following: (1) voter service center; verification of the identity of currently registered voters; (2) voter service center; verification of the identity of applicants registering in person to vote; (3) demonstration ballots; (4) voter service center; marksense ballots; spoiled; and (5) provisional voting; general procedures.
+
+m. Establish and clarify procedures relating to ballot package procedures (Subchapter 13). The proposed rules include the following: (1) ballot packages; contents; eligibility; (2) ballot packages; timing of transmittal, generally; (3) ballot packages; timing of transmittal, military and overseas voter requests; (4) ballot packages; timing of transmittal, absentee requests; (5) ballot packages; timing of transmittal, replacement requests to be transmitted by mail; (6) ballot packages; timing of transmittal, in-person pick up; (7) ballot packages; timing of transmittal, replacement requests to be transmitted by electronic transmission; and (8) ballot packages; replacement and absentee requests, form.
+
+n. Establish and clarify procedures relating to return identification envelope procedures (Subchapter 14). The proposed rules include the following: (1) return and receipt of return identification envelopes; manner, location, and time of receipt; (2) return identification envelopes; general preparing of ballots for counting; (3) return identification envelopes; signature validation; (4) return identification envelopes; signature device; and (5) return identification envelopes; notification and correction of
+
+deficiencies.
+
+o. Establish and clarify procedures relating to voting systems (Subchapter 15). The proposed rules include the following: (1) voting system requirements; (2) approval of all voting equipment, materials, and procedures; (3) county elections; assistance; (4) elections services; provision and charges; (5) testing the vote counting system; electronic voting systems; (6) experimental voting systems; rules and procedures; (7) electronic voting systems; generally; and (8) electronic voting systems; marksense voting system.
+
+p. Establish and clarify procedures relating to vote disposition (Subchapter 16). The proposed rules include the following: (1) electronic voting systems; documentation of overages and underages; records; (2) electronic voting systems; centralized and decentralized counting; (3) electronic voting systems; marksense voting system; disposition of marks; (4) electronic voting systems, transmission, receipt, and tabulation of votes; (5) electronic voting systems; marksense ballot voting system results; (6) electronic voting systems; direct recording electronic voting system results; (7) electronic voting systems; inspection, audit, and experimental testing; (8) electronic voting system; counting center procedures; (9) electronic voting system centralized counting; receipt at counting center; (10) electronic voting system counting; duplication procedure; (11) electronic voting system decentralized counting; receipt at counting center; (12) electronic voting system; handling of vote data storage media; (13) electronic voting system; auditing; (14) electronic voting system; recount; (15) challenged voter's ballot; disposition of at counting center; (16) election results; certification of; (17) certificate of election and certificate of results, form; (18) processing of voted ballots at the counting center; return identification envelopes; centralized counting; (19) processing of uncounted voted ballots from voter service centers; and (20) reconciliation of voted ballots.
+
+q. Establish and clarify procedures relating to paper ballot voting system (Subchapter 17). The proposed rules include the following: (1) paper ballot voting system; voting procedure at the voter service center; and (2) paper ballot voting system; counting ballots.
+
+All interested persons wishing to testify on the proposed repeal and adoption of rules should submit written testimony to the Chief Election Officer, at least twenty-four hours prior to the hearing. Written testimony may be submitted by facsimile to (808) 453-6006, by email to elections@hawaii.gov, by mail to Office of Elections, 802 Lehua Avenue, Pearl City, Hawaii 96782, or by delivering the written testimony in person to the Office of Elections.
+
+Any person submitting written testimony on the day of the hearing shall furnish 10 copies of such testimony to the Chief Election Officer's staff.
+
+The Chief Election Officer may impose a time limit for each person presenting testimony at the hearing.
+
+In addition, or in lieu of written testimony, any person may file with the Chief Election Officer within two days following the close of the public hearing a written protest or other comments or recommendations in support of or in opposition to the proposed rule making. Such persons shall notify the Chief Election Officer at the time of the hearing that they intend to file written materials after the hearing. The period for filing written protests, comments, or recommendations may be extended by the Chief Election Officer for good cause.
+
+A copy of the proposed rules to be adopted and the rules proposed to be repealed will be available to be reviewed in person between the hours of 7:45 a.m. to 4:30 p.m., Mondays through Fridays (excluding holidays or other days that the office is legally closed), at the Office of Elections, 802 Lehua Avenue, Pearl City, Hawaii 96782, through the day the public hearing is held.
+
+A copy of the proposed rules to be adopted and the rules proposed to be repealed will be mailed to any interested person who requests a copy and pays the required fees for the copy and the postage. A requestor may, in lieu of paying postage, pick up the copy in person at the Office of Elections by paying the applicable copying cost of 10 cents per page.
+
+Requests may be made by calling the Office of Elections at (808) 453-VOTE (8683) or 1-800-442-VOTE (8683) (neighbor islands), or by asking in person at the Office of Elections. In addition, requests may be made in writing by submitting the request by facsimile to (808) 453-6006, by email to elections@hawaii.gov, or by mail to Office of Elections, 802 Lehua Avenue, Pearl City, Hawaii 96782.
+
+The request should include the name, address, and telephone number of the requester. Contact information will be used by the Office of Elections to inform requestors of applicable fees for copy and postage. Upon receipt of payment the rules will be mailed to the requester.
+
+The proposed rules to be adopted and the rules proposed to be repealed are also available at the Office of Elections' website at https://elections.hawaii.gov.
+
+Any person(s) with a disability desiring special accommodations should contact the Office of Elections at least 10 days before the scheduled public hearing.
+
+</file>

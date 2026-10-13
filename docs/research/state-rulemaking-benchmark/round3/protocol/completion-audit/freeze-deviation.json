@@ -1,0 +1,41 @@
+{
+  "artifact": "protocol/challenge-label-review.json",
+  "freeze_recorded_sha256": "b26055f47c2ba9c487ad839c66528d1a97ce3ffb9554623ea4925ab9ce56d27a",
+  "current_sha256": "6cd05c984f003f61c8a590b32f9b5b084fa9f8ba397f1efea02109d5be6c3dc6",
+  "freeze_created_utc": "2026-10-07T04:49:01.641271+00:00",
+  "note_update_recorded_utc": "2026-10-07T04:49:02.385199+00:00",
+  "seconds_after_freeze": 0.743928,
+  "first_request_intent_utc": "2026-10-07T04:49:16.232740+00:00",
+  "seconds_before_first_request": 13.847541,
+  "exact_changes": [
+    {
+      "path": "/status",
+      "before": "conditional_approval_after_primary_resolution",
+      "after": "approved_after_pre_run_corrections"
+    },
+    {
+      "path": "/final_resolution",
+      "before": "absent",
+      "after": {
+        "recorded_at_utc": "2026-10-07T04:49:02.385199+00:00",
+        "C002_role": "insufficient",
+        "C005_role": "insufficient",
+        "C015_condition": "omitted_or_changed",
+        "C006_role_alternatives": [
+          "mismatched",
+          "insufficient"
+        ],
+        "C016": "Ambiguous primary-gate exclusion plus accepted alternate tuple recorded",
+        "evaluation_sha256": "3d334a924bff14e54964de6e976f0ab0905a12ba08dbdecbe2034d528f1972ad",
+        "material_open_issues": [],
+        "provider_responses_inspected": false
+      }
+    }
+  ],
+  "previous_bytes_reconstructed_exactly": true,
+  "reconstruction_artifact": "reconstructed-frozen-review-note.json",
+  "cause": "This reviewer finalized the ancillary review note while primary created the freeze; a 0.744-second coordination race. Do not describe all freeze files as unchanged.",
+  "runtime_labels_code_or_rubrics_changed": false,
+  "historical_freeze_modified": false,
+  "current_note_preserved": true
+}

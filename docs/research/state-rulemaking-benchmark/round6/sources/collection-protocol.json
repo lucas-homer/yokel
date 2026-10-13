@@ -1,0 +1,77 @@
+{
+  "schema_version": "round6.collection-protocol.v1",
+  "status": "PREPARED_COLLECTION_ON_HOLD",
+  "release_gate": {
+    "required": "Explicit primary code/protocol-freeze release before any fresh query, candidate inspection or acquisition. Primary release receipt must bind preparation.READY SHA256, verbatim release message/locator, implementation and policy freeze hashes, and timestamp/timezone.",
+    "receipt_path": "freeze-release.json",
+    "receipt_created": false
+  },
+  "target": {
+    "notices": 8,
+    "minimum_states": 6,
+    "max_per_state": 2,
+    "max_total_pages": 40,
+    "general_comment": 6,
+    "controls": 2
+  },
+  "source_strata": {
+    "general_comment": "Complete proposed rulemaking notice inviting public comment, without explicit conditional/relative participation terms or negative lifecycle.",
+    "conditional_control": "Source expressly conditions/extends comment or hearing participation, or supplies event-relative participation timing. Routine generic possible rule modification after comments, accessibility-request timing, or statutes quoted incidentally do not alone establish a control.",
+    "negative_lifecycle_control": "Source notice expressly records cancellation, withdrawal, termination, or comparable negative rulemaking lifecycle.",
+    "precedence": "Actual source stratum overrides planned query stratum. First qualifying control of either type fills available control slot; no minimum of each subtype. Strata are source sampling categories, not reference answers."
+  },
+  "selection": "Sequential bounded displayed-result order. Do not select for substantive deadline/email/channel/clock/timezone field presence, exact values, ease of parsing, outputs or verifier behavior. Missing fields remain eligible; only predeclared control stratum may depend on participation/lifecycle terms.",
+  "scope": "Accept only complete unchanged official publisher individual notice PDFs or a single complete publisher regulation filing that includes its notice and required integrated filing sections. A coherent individual proposed rule order is eligible including judicial rulemaking. Publisher labeling alone does not establish completeness: record mechanical opening/continuation/end boundaries for one proceeding. Reject multi-notice register issues, mixed packets, unrelated attachments, scans without native text, slice/unknown scopes. Several coordinated rules within one single notice are allowed. Never invent notice boundaries or remove pages.",
+  "native_caps": {
+    "max_codepoints": 30000,
+    "max_pdf_bytes": 25000000,
+    "render_dpi": 150,
+    "utf8": "strict nonempty UTF-8; no replacement characters or material native-text damage; FF count must equal all PDF pages",
+    "extractor": "pdftotext -layout -enc UTF-8; exact bytes; no OCR, repair, reflow, truncation or excerpt",
+    "validation_order": "Check all native/PDF/page budgets and dedup before any retention. Native acquisition is not provisional selection. Serialized case-size eligibility remains for primary runtime freeze; no runtime case generation in collector."
+  },
+  "quota_rule": "Before acceptance require current stratum capacity, total <8, per-state <2, aggregate pages<=40, and new distinct-state count + remaining slots >=6. Reject candidate if any condition fails. Do not reserve or skip a feasible earlier source for an imagined future distribution. After success stop immediately even within a query; log unprocessed bounded candidates as skipped_success_stop.",
+  "discovery": "Exactly 24 predeclared query strings; sequential; at most first 3 distinct direct official PDF candidates each, fixed from that one full response. Preserve raw result and all ordered title/URL/reference metadata before candidate resolution. Candidate URL must be direct PDF/document route under official query domain; dynamic PDF routes qualify when verified application/pdf and PDF magic. No HTML-link expansion, follow-on discovery, rank reconstruction, or altered/repeated queries.",
+  "access": "At most one ordinary retry per candidate, including prior failed inspection/access attempts. Preserve every attempt headers/status/final URL/content-type/errors. No bypass. No tools/providers/credentials for parsing/verification/labels.",
+  "stopping": "Success at exact eight, six general plus two controls, >=six states, <=two/state and <=40 pages. Otherwise after Q24 bounded candidates stop and disclose shortfall. No replacements after source freeze.",
+  "artifacts": "Preserve all exclusions and acquired originals/diagnostics/native bytes. Retained input PDF byte-identical to original. Render every retained page at150DPI. Hash all artifacts and each PNG; preserve versions, acquisition timestamps UTC, official URL, HTTP, identity/boundary/dedup evidence and source anomalies. Keep selection audit outside runtime and blind inventory.",
+  "runtime_manifest": {
+    "schema_version": "round4.sources.v1",
+    "exact_keys": [
+      "document_id",
+      "channel",
+      "text_path",
+      "text_sha256",
+      "pdf_path",
+      "pdf_sha256",
+      "pdf_pages",
+      "scope",
+      "native_page_map_known"
+    ],
+    "document_id": "doc- plus first12 original SHA256",
+    "channel": "native",
+    "scope": "full_notice",
+    "paths": "relative to sources root",
+    "labels": "none"
+  },
+  "blinded_image_inventory": {
+    "schema_version": "round6.blinded-images.v1",
+    "document_keys": [
+      "document_id",
+      "pdf_pages",
+      "pages"
+    ],
+    "page_keys": [
+      "page",
+      "image_path",
+      "image_sha256"
+    ],
+    "excludes": "native text, URLs, titles, source categories, candidate decisions, expected fields, evidence hints, decisive spans, labels and runtime outputs. All pages only; IDs match opaque runtime IDs."
+  },
+  "audit_limits": [
+    "Native-only, individual-publisher-PDF and frozen-search-ranking coverage biases disclosed.",
+    "No representative-sample claim.",
+    "Natural controls only; no synthetic controls or provider-assisted collection."
+  ],
+  "prior_rounds": "Immutable; dedup includes all known originals and excluded bytes; no labels consulted."
+}

@@ -1,0 +1,35 @@
+{
+  "version": "round5-native-routing-1",
+  "soft_issues": [
+    "competing_temporal_role_cues",
+    "condition_scope_requires_semantic_verification",
+    "multiple_date_candidates_require_role_resolution",
+    "multiple_email_candidates_require_role_resolution",
+    "submission_role_unverified",
+    "written_comment_role_unverified"
+  ],
+  "hard_issues": [
+    "case_overlimit",
+    "conditional_deadline_unresolved",
+    "date_year_order_or_range_unresolved",
+    "email_syntax_outside_supported_subset",
+    "empty_text",
+    "invalid_calendar_date",
+    "multiple_notice_scopes",
+    "multiple_same_role_values_scope_unresolved",
+    "page_count_mismatch",
+    "participation_lifecycle_unresolved",
+    "relative_participation_window_unresolved",
+    "replacement_character",
+    "source_overlimit",
+    "source_scope_incomplete_or_unknown",
+    "value_crosses_context_boundary"
+  ],
+  "unknown_issue_default": "hard review",
+  "date_claim": "actual unconditional absolute close, date precision only; printing a conditional quote is not permission to accept a bare DATE",
+  "relative_and_conditional_date_issues": "Hard for DATE. EMAIL can be independently verified with local applicable route limitations preserved.",
+  "condition_selection": "Candidate sentence/paragraph and adjacent form header only. All other source qualifications remain in full source_text and qualification_cues; no truncation.",
+  "lifecycle": "Asserted participation/notice lifecycle changes hard; potential modality or subject/unbound references retained in cue provenance/full source, not silently interpreted as settled window state.",
+  "multiplicity": "Explicit distinct close proposals hard. Ambiguous role/form alternatives can reach verifier; only unique supported value plus every alternative positively wrong-role can survive runtime resolution.",
+  "production_eligible": false
+}

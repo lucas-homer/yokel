@@ -1,0 +1,238 @@
+{
+  "recovery_date_pacific": "2026-10-05",
+  "recovered_at_utc": "2026-10-06T04:54:24.343495+00:00",
+  "recovery_method": "Read-only signed-in Chrome LlamaParse UI; purpose-built connector has no exposed parse-job status/result operation.",
+  "scope": "Four existing parse jobs only. No new uploads, parse/extract submissions, credentials, plan changes or retries.",
+  "corpus_freeze_sha256": "900f21e8a75d50444f12a0e3814d665a4f401a0d689194465d0b00467a762946",
+  "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+  "project_connector_verification": {
+    "tool": "llamaparse.getUserProjects",
+    "projects": [
+      {
+        "projectId": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+        "name": "Default",
+        "isDefault": true
+      }
+    ]
+  },
+  "dashboard_config_values_source": "Primary transcription of visible browser diagnostics and configuration; not a raw vendor API response.",
+  "version_limitation": "UI configuration reports latest; resolved dated parser/model version was not exposed.",
+  "job_created_at_limitation": "Exact creation/completion timestamps were not exposed in inspected UI. Do not derive completion timestamps from rounded durations.",
+  "usage_export": {
+    "path": "usage-export.json",
+    "sha256": "88d05d45fe0eee0c31c94fd9bd22b0c6da2586518faff3b6ff47c3a7aa16f48a",
+    "record_count": 8,
+    "scope": "All eight account/project usage rows exported by UI for Oct5-Oct6; four matched expanded-benchmark parse jobs totaled separately.",
+    "matched_four_job_credits": 110,
+    "account_export_total_credits": 190
+  },
+  "dashboard_retention_notice": "Results are stored for 48 hours.",
+  "download_tool_note": "First waitForEvent(download) timed out, but ordinary browser download wrote input.md. Later exports used the same visible download action; filesystem copies checked by hash.",
+  "remaining_unattempted_calls": 36,
+  "jobs": [
+    {
+      "fixture_id": "A01",
+      "tier": "agentic",
+      "job_id": "pjb-j7cicmk55rj6rluexqgnmjzfakw2",
+      "job_url": "https://cloud.llamaindex.ai/project/38d2f4b9-55df-461b-8b19-d2c53ac67523/parse/pjb-j7cicmk55rj6rluexqgnmjzfakw2?fileName=input.pdf",
+      "dashboard_status": "SUCCESS",
+      "dashboard_configuration_observation": {
+        "file_id": "63ba479f-dba9-420e-9c32-06ce6eea1e2f",
+        "file_size_bytes": 52308,
+        "tier": "agentic",
+        "version": "latest",
+        "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+        "file_name": "input.pdf",
+        "high_res_ocr": true,
+        "output_tables_as_HTML": true,
+        "adaptive_long_table": true
+      },
+      "matching_basis": "Exact file_id plus byte length plus tier in visible Diagnostics > Configuration > View all; project independently matched to connector getuserprojects. Input hash is from original retained upload, not a new dashboard PDF download. One matching job per file_id/tier among the four input.pdf jobs.",
+      "input_sha256": "1518ccb9f0c0a0c042e61f0b67d51e9f3114db178a8de1fcc0bae8c0042ca950",
+      "original_capture": "llama/runs/A01/agentic/capture.json",
+      "original_capture_sha256": "579266ef45562610f74ccf55a15b25e7d82555d03f6e0f07be34e1d7b6525137",
+      "original_connector_status": "timeout_backend_unknown",
+      "dashboard_timing_seconds_rounded": {
+        "total": 11.5,
+        "model_inference": 4.5,
+        "post_processing": 7.0
+      },
+      "dashboard_pages": 1,
+      "dashboard_logs": "No errors or warnings.",
+      "reported_usage_record_id": "001b1d53-3e77-48d7-aa45-8f9e8f7d9cfd",
+      "reported_credits": 10,
+      "reported_usage_day": "2026-10-06",
+      "outputs": [
+        {
+          "path": "A01/agentic/output.md",
+          "sha256": "97fb6c9ee32fe208abd0b1ce409b8799aff7c11913b3e5fca5081d7fc954220b",
+          "byte_length": 3953,
+          "download_path": "/Users/home/Downloads/input (2).md",
+          "download_modified_at_utc": "2026-10-06T04:49:53.208976+00:00",
+          "acquisition": "Browser UI More actions > Download for selected output format; retained bytes unchanged"
+        },
+        {
+          "path": "A01/agentic/output.json",
+          "sha256": "8d4435adb6ca7941add92b780ce489cb04b3b0e0baddee7c428c258dbbc3e459",
+          "byte_length": 12846,
+          "download_path": "/Users/home/Downloads/input (2).json",
+          "download_modified_at_utc": "2026-10-06T04:49:55.300915+00:00",
+          "acquisition": "Browser UI More actions > Download for selected output format; retained bytes unchanged"
+        }
+      ]
+    },
+    {
+      "fixture_id": "A01",
+      "tier": "agentic_plus",
+      "job_id": "pjb-lm9ihq4dk08j0925cx7byipx6hdt",
+      "job_url": "https://cloud.llamaindex.ai/project/38d2f4b9-55df-461b-8b19-d2c53ac67523/parse/pjb-lm9ihq4dk08j0925cx7byipx6hdt?fileName=input.pdf",
+      "dashboard_status": "SUCCESS",
+      "dashboard_configuration_observation": {
+        "file_id": "63ba479f-dba9-420e-9c32-06ce6eea1e2f",
+        "file_size_bytes": 52308,
+        "tier": "agentic_plus",
+        "version": "latest",
+        "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+        "file_name": "input.pdf",
+        "high_res_ocr": true,
+        "output_tables_as_HTML": true,
+        "adaptive_long_table": true
+      },
+      "matching_basis": "Exact file_id plus byte length plus tier in visible Diagnostics > Configuration > View all; project independently matched to connector getuserprojects. Input hash is from original retained upload, not a new dashboard PDF download. One matching job per file_id/tier among the four input.pdf jobs.",
+      "input_sha256": "1518ccb9f0c0a0c042e61f0b67d51e9f3114db178a8de1fcc0bae8c0042ca950",
+      "original_capture": "llama/runs/A01/agentic_plus/capture.json",
+      "original_capture_sha256": "78408ad1564d6068540cc671bd3497a534564250e3b3a1c7c0edc2ea82bdcb9a",
+      "original_connector_status": "timeout_backend_unknown",
+      "dashboard_timing_seconds_rounded": {
+        "total": 32.2,
+        "model_inference": 27.1,
+        "post_processing": 5.1
+      },
+      "dashboard_pages": 1,
+      "dashboard_logs": "No errors or warnings.",
+      "reported_usage_record_id": "4d2d6624-b83a-4d76-b768-d1df53f235c8",
+      "reported_credits": 45,
+      "reported_usage_day": "2026-10-06",
+      "outputs": [
+        {
+          "path": "A01/agentic_plus/output.md",
+          "sha256": "8ff69dd634f12b2dad1db08d24a3b853ac9630fe4a953ebf2b4d3f3ebf4cd4a0",
+          "byte_length": 4495,
+          "download_path": "/Users/home/Downloads/input (3).md",
+          "download_modified_at_utc": "2026-10-06T04:51:44.691374+00:00",
+          "acquisition": "Browser UI More actions > Download for selected output format; retained bytes unchanged"
+        },
+        {
+          "path": "A01/agentic_plus/output.json",
+          "sha256": "e34e1ae0470f923c1e1d382e8c9fb5eb8feb421ec4d08cd12929e36f6d5ac819",
+          "byte_length": 14688,
+          "download_path": "/Users/home/Downloads/input (3).json",
+          "download_modified_at_utc": "2026-10-06T04:51:46.899535+00:00",
+          "acquisition": "Browser UI More actions > Download for selected output format; retained bytes unchanged"
+        }
+      ]
+    },
+    {
+      "fixture_id": "A02",
+      "tier": "agentic",
+      "job_id": "pjb-au25tpbchf6wi98wrkw6s3dip9yo",
+      "job_url": "https://cloud.llamaindex.ai/project/38d2f4b9-55df-461b-8b19-d2c53ac67523/parse/pjb-au25tpbchf6wi98wrkw6s3dip9yo?fileName=input.pdf",
+      "dashboard_status": "SUCCESS",
+      "dashboard_configuration_observation": {
+        "file_id": "5bde351c-5fd2-40c9-aa0e-0dce42c2d0c0",
+        "file_size_bytes": 398478,
+        "tier": "agentic",
+        "version": "latest",
+        "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+        "file_name": "input.pdf",
+        "high_res_ocr": true,
+        "output_tables_as_HTML": true,
+        "adaptive_long_table": true
+      },
+      "matching_basis": "Exact file_id plus byte length plus tier in visible Diagnostics > Configuration > View all; project independently matched to connector getuserprojects. Input hash is from original retained upload, not a new dashboard PDF download. One matching job per file_id/tier among the four input.pdf jobs.",
+      "input_sha256": "6738db08f6233b37320da7864bee379bbdf0771eb6f36e5b243cdd3d028cc8b5",
+      "original_capture": "llama/runs/A02/agentic/capture.json",
+      "original_capture_sha256": "4166bf486b8118d012abf1a393016f4063b45af8af52e9f7e3178889bbb261ae",
+      "original_connector_status": "timeout_backend_unknown",
+      "dashboard_timing_seconds_rounded": {
+        "total": 7.4,
+        "model_inference": 2.9,
+        "post_processing": 4.5
+      },
+      "dashboard_pages": 1,
+      "dashboard_logs": "No errors or warnings.",
+      "reported_usage_record_id": "30a82c28-6652-4e83-a8c9-443afcd0ecf4",
+      "reported_credits": 10,
+      "reported_usage_day": "2026-10-06",
+      "outputs": [
+        {
+          "path": "A02/agentic/output.md",
+          "sha256": "954fd4fa35d3c10333c60ce94be56ad294d0f7f641822626cfc502ee06ffc20e",
+          "byte_length": 4877,
+          "download_path": "/Users/home/Downloads/input (1).md",
+          "download_modified_at_utc": "2026-10-06T04:48:12.854489+00:00",
+          "acquisition": "Browser UI More actions > Download for selected output format; retained bytes unchanged"
+        },
+        {
+          "path": "A02/agentic/output.json",
+          "sha256": "86f431b9d75f77c2330bd5f032655f241c3ef447ffafe323ad097a15808214a9",
+          "byte_length": 17282,
+          "download_path": "/Users/home/Downloads/input (1).json",
+          "download_modified_at_utc": "2026-10-06T04:48:23.358345+00:00",
+          "acquisition": "Browser UI More actions > Download for selected output format; retained bytes unchanged"
+        }
+      ]
+    },
+    {
+      "fixture_id": "A02",
+      "tier": "agentic_plus",
+      "job_id": "pjb-ek9x1nsqb1jjsyskpwsixj771mrp",
+      "job_url": "https://cloud.llamaindex.ai/project/38d2f4b9-55df-461b-8b19-d2c53ac67523/parse/pjb-ek9x1nsqb1jjsyskpwsixj771mrp?fileName=input.pdf",
+      "dashboard_status": "SUCCESS",
+      "dashboard_configuration_observation": {
+        "file_id": "5bde351c-5fd2-40c9-aa0e-0dce42c2d0c0",
+        "file_size_bytes": 398478,
+        "tier": "agentic_plus",
+        "version": "latest",
+        "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+        "file_name": "input.pdf",
+        "high_res_ocr": true,
+        "output_tables_as_HTML": true,
+        "adaptive_long_table": true
+      },
+      "matching_basis": "Exact file_id plus byte length plus tier in visible Diagnostics > Configuration > View all; project independently matched to connector getuserprojects. Input hash is from original retained upload, not a new dashboard PDF download. One matching job per file_id/tier among the four input.pdf jobs.",
+      "input_sha256": "6738db08f6233b37320da7864bee379bbdf0771eb6f36e5b243cdd3d028cc8b5",
+      "original_capture": "llama/runs/A02/agentic_plus/capture.json",
+      "original_capture_sha256": "631f183eb4d0b8e72ee6050c70174cbc3c03fc8d2db0db15f2b34ee195afb2ff",
+      "original_connector_status": "timeout_backend_unknown",
+      "dashboard_timing_seconds_rounded": {
+        "total": 23.8,
+        "model_inference": 22.6,
+        "post_processing": 1.2
+      },
+      "dashboard_pages": 1,
+      "dashboard_logs": "No errors or warnings.",
+      "reported_usage_record_id": "e758c158-1eb0-449e-8409-3dfe58b8c15e",
+      "reported_credits": 45,
+      "reported_usage_day": "2026-10-06",
+      "outputs": [
+        {
+          "path": "A02/agentic_plus/output.md",
+          "sha256": "661604fcbfb087bbee70fd828c9bd5147209aa329b51d452dea69449305506da",
+          "byte_length": 5505,
+          "download_path": "/Users/home/Downloads/input.md",
+          "download_modified_at_utc": "2026-10-06T04:46:00.532924+00:00",
+          "acquisition": "Browser UI More actions > Download for selected output format; retained bytes unchanged"
+        },
+        {
+          "path": "A02/agentic_plus/output.json",
+          "sha256": "8c0dc81cc6835a8c10c7fee5f5ebd603f427181b11402f23ebf5a1b2a2f87f11",
+          "byte_length": 17708,
+          "download_path": "/Users/home/Downloads/input.json",
+          "download_modified_at_utc": "2026-10-06T04:47:20.320167+00:00",
+          "acquisition": "Browser UI More actions > Download for selected output format; retained bytes unchanged"
+        }
+      ]
+    }
+  ]
+}

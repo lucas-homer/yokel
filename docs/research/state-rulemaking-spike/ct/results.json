@@ -1,0 +1,224 @@
+{
+  "lane": "ct",
+  "status": "bounded_offline_research_complete",
+  "methods": [
+    "JSON parser for native open-list and native history fields",
+    "Guarded regex parser for retained Firecrawl Markdown tables; no model-generated field extraction",
+    "Exact quote lookup against saved UTF-8 evidence"
+  ],
+  "counts": {
+    "fresh_successful_source_calls": 7,
+    "failed_network_attempts": 1,
+    "normalized_observations": 23,
+    "open_list_records": 4,
+    "inspected_detail_records": 2,
+    "native_historical_windows": 2,
+    "firecrawl_credits_reported": 3
+  },
+  "attempts": [
+    {
+      "collector": "curl",
+      "url": "https://eregulations.ct.gov/eRegsPortal/Browse/getOpenCommentPeriods",
+      "success": false,
+      "elapsed_seconds": 4.1e-05,
+      "error": "Sandbox DNS resolution failure (curl exit 6); not source unavailability"
+    },
+    {
+      "collector": "curl escalated public GET",
+      "artifact": "captures/open.json",
+      "success": true,
+      "http_status": 200,
+      "elapsed_seconds": 0.415252
+    },
+    {
+      "collector": "Firecrawl",
+      "artifact": "captures/fc059.json",
+      "success": true,
+      "http_status": 200,
+      "semantic_acquisition": "Partial shell: no substantive summary/history",
+      "elapsed_ms": 7055,
+      "credits": 1,
+      "parameters": {
+        "maxAge": 0,
+        "formats": [
+          "markdown",
+          "html"
+        ]
+      }
+    },
+    {
+      "collector": "Firecrawl",
+      "artifact": "captures/fc059retry.json",
+      "success": true,
+      "http_status": 200,
+      "semantic_acquisition": "Summary and history present",
+      "elapsed_ms": 8609,
+      "credits": 1,
+      "parameters": {
+        "maxAge": 0,
+        "formats": [
+          "markdown",
+          "html"
+        ],
+        "waitFor": 3000,
+        "onlyMainContent": false
+      },
+      "retry_changes": [
+        "waitFor set to 3000 milliseconds",
+        "onlyMainContent set to false"
+      ]
+    },
+    {
+      "collector": "Firecrawl",
+      "artifact": "captures/fc014.json",
+      "success": true,
+      "http_status": 200,
+      "elapsed_ms": 8242,
+      "credits": 1,
+      "parameters": {
+        "maxAge": 0,
+        "formats": [
+          "markdown",
+          "html"
+        ],
+        "waitFor": 3000,
+        "onlyMainContent": false
+      }
+    },
+    {
+      "collector": "curl escalated public GET",
+      "artifact": "captures/detail059.html",
+      "success": true,
+      "http_status": 200,
+      "elapsed_seconds": 0.619069
+    },
+    {
+      "collector": "curl escalated public GET",
+      "artifact": "captures/detail014.html",
+      "success": true,
+      "http_status": 200,
+      "elapsed_seconds": 1.941084
+    },
+    {
+      "collector": "curl escalated public GET",
+      "artifact": "captures/history059.json",
+      "success": true,
+      "http_status": 200,
+      "elapsed_seconds": 0.919424,
+      "reason": "One additional useful GET beyond roughly six-call target; route discovered in native detail HTML; verifies native window identity and timestamps"
+    }
+  ],
+  "acquisition": {
+    "native_json": "Accessible with approved network escalation; current open list and historical detail history returned JSON",
+    "native_html": "Accessible server HTML contains endpoint wiring and empty dynamic widgets, not populated history",
+    "rendering": "Initial successful HTTP response was incomplete; retry changed both wait and full-page settings and recovered substantive data"
+  },
+  "extraction": {
+    "shape_validity": "23 candidates; unique observation IDs; no unsupported predicates; no hearing-widget assertions; no history Posted Date participation boundaries",
+    "semantic_support": "Exact quotes verified; source-specific interpretation is still candidate research",
+    "publication_readiness": false
+  },
+  "source_specific_rules": [
+    "Native /Date(milliseconds)/ values decode as source UTC instants, with millisecond precision retained.",
+    "History AssociatedDetails DetailType 1 plus Comment Period Opened contains period GUID and start/end; namespace by proceeding and period GUID.",
+    "Open list has no native period GUID; current candidate window IDs use a provisional list/deadline identity.",
+    "Do not derive closure/withdrawal from list absence. This detail instead explicitly records Comment Period Closed.",
+    "Rendered history Posted Date values remain metadata in captures/results; no participation-boundary or publication assertion is emitted.",
+    "Generic Public Hearing Details widget is not a hearing assertion; notice title mentioning hearing does not establish hearing time.",
+    "Null Section(s) Affected and empty JSON SectionNumber are abstentions, not affirmative empty citations.",
+    "Operational policy effective description has a separate instrument/date predicate, not comment close.",
+    "Firecrawl timezone metadata is collector metadata; it is not the page's stated timezone."
+  ],
+  "unexpected_results": [
+    "PR2024-059 disappeared from open list since earlier audit; fresh detail explicitly has a Comment Period Closed row with Oct 2 Posted Date, retained as posting metadata.",
+    "Initial Firecrawl scrape omitted all substantive fields despite HTTP 200.",
+    "Native history closes 2025 period 2025-03-28T03:00:00Z and 2026 period 2026-10-03T03:00:00Z; distinct GUIDs survive.",
+    "Native history timestamps have actual subsecond start clocks, not midnight; do not conflate with rendered dates.",
+    "Inherited preliminary JSON structurally matches fresh open list; retained with null retrieval timestamp and not used as primary evidence."
+  ],
+  "limitations": [
+    "No underlying notice PDFs or legal authority inspected.",
+    "No endpoint documentation/support guarantees were inspected; public accessibility and portal wiring do not establish supported API contract.",
+    "No statewide completeness or production readiness claim.",
+    "Current record native history route not fetched; current window identity remains provisional and no opening observation is emitted from rendered Posted Date.",
+    "Seven successful source calls slightly exceeds roughly six-useful-call target; eighth network attempt failed in sandbox.",
+    "Firecrawl retrieval wall times were not reported; manifest timestamps rounded to collection minute, tool elapsed milliseconds retained. Native retrieval timestamps use server Date header."
+  ],
+  "firecrawl": {
+    "necessary_for_core_native_path": false,
+    "earned_use": "Rendered comparison, source date-role checks and explicit current Notes deadline; exposed successful-but-incomplete initial response.",
+    "before_unattended_use": [
+      "Fetch native summary/notes/current history endpoints with explicit shape checks.",
+      "Verify period GUID identity for every candidate and handle extensions/reopenings.",
+      "Define evidence policy for exact start clocks vs posted dates and legal notice text.",
+      "Measure repeated acquisition, field drift and staleness, preserve failures, and require review on conflicting precision/values."
+    ]
+  },
+  "validation": {
+    "shared_validator_passed": true,
+    "retained_report": "validation.json",
+    "offline_replay_identical": true,
+    "normalizer_replay_seconds": 0.026959124952554703,
+    "inspected_expectations": "10 source-grounded checks retained; Posted Date check explicitly scoped to metadata, with five inspected metadata rows verified."
+  },
+  "source_specific_checks": {
+    "history_posting_metadata": [
+      {
+        "source_record_id": "PR2024-059",
+        "history_row": 5,
+        "posted_date": "2025-02-25",
+        "description": "Comment Period Opened",
+        "artifact_id": "ct-fc059retry.md",
+        "quote": "| 5 | 02/25/2025 | Comment Period Opened | No Published Comments |",
+        "role": "history_posting_metadata_only"
+      },
+      {
+        "source_record_id": "PR2024-059",
+        "history_row": 6,
+        "posted_date": "2025-03-27",
+        "description": "Comment Period Closed",
+        "artifact_id": "ct-fc059retry.md",
+        "quote": "| 6 | 03/27/2025 | Comment Period Closed | No Details Available |",
+        "role": "history_posting_metadata_only"
+      },
+      {
+        "source_record_id": "PR2024-059",
+        "history_row": 10,
+        "posted_date": "2026-09-01",
+        "description": "Comment Period Opened",
+        "artifact_id": "ct-fc059retry.md",
+        "quote": "| 10 | 09/01/2026 | Comment Period Opened | No Published Comments |",
+        "role": "history_posting_metadata_only"
+      },
+      {
+        "source_record_id": "PR2024-059",
+        "history_row": 11,
+        "posted_date": "2026-10-02",
+        "description": "Comment Period Closed",
+        "artifact_id": "ct-fc059retry.md",
+        "quote": "| 11 | 10/02/2026 | Comment Period Closed | No Details Available |",
+        "role": "history_posting_metadata_only"
+      },
+      {
+        "source_record_id": "PR2026-014",
+        "history_row": 5,
+        "posted_date": "2026-09-09",
+        "description": "Comment Period Opened",
+        "artifact_id": "ct-fc014.md",
+        "quote": "| 5 | 09/09/2026 | Comment Period Opened | No Published Comments |",
+        "role": "history_posting_metadata_only"
+      }
+    ],
+    "posted_dates_emitted_as_boundaries": false,
+    "rendered_dates_relabelled_as_publication": false,
+    "rendered_timezone_inferred": false
+  },
+  "integration_correction": {
+    "reason": "History Posted Date does not establish the participation boundary date, even at date-only precision.",
+    "before_observations": 28,
+    "after_observations": 23,
+    "removed_observations": 5,
+    "native_associated_details_unchanged": true,
+    "captures_unchanged": true
+  }
+}

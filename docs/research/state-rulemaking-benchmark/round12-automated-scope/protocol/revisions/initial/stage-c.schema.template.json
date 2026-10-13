@@ -1,0 +1,101 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "round12.source-scope.v1"
+      ]
+    },
+    "source_text_sha256": {
+      "type": "string",
+      "enum": [
+        "__SOURCE_SHA256__"
+      ]
+    },
+    "inventory_sha256": {
+      "type": "string",
+      "enum": [
+        "__INVENTORY_SHA256__"
+      ]
+    },
+    "scopes": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "source_text_sha256",
+    "inventory_sha256",
+    "scopes"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "e": {
+      "type": "object",
+      "properties": {
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 320
+        },
+        "occurrence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        }
+      },
+      "required": [
+        "quote",
+        "occurrence"
+      ],
+      "additionalProperties": false
+    },
+    "s": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "required_participation",
+            "identifying_context",
+            "retained_background",
+            "unresolved_scope"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "enum": [
+            "participation_function",
+            "identifies_proceeding",
+            "substantive_background_only",
+            "uncertain_source_function"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 360
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/e"
+          },
+          "minItems": 1,
+          "maxItems": 3
+        }
+      },
+      "required": [
+        "category",
+        "basis",
+        "reason",
+        "evidence"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

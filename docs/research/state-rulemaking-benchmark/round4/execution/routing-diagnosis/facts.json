@@ -1,0 +1,496 @@
+{
+  "status": "completed_run_read_only_diagnosis",
+  "completed_sha256": "d925139a9501d7f6a971392c6c86e28e98e8af8a960d47d93a1ba4c1d4a92cb0",
+  "scheduled_documents": 12,
+  "terminal_documents": 12,
+  "scope_counts": {
+    "unknown": 5,
+    "full_notice": 5,
+    "slice": 2
+  },
+  "channel_records": 17,
+  "candidate_rows": 23,
+  "native_candidates": 16,
+  "fallback_candidates": 7,
+  "candidate_rows_not_attempted": 23,
+  "gate_blocker_counts": {
+    "case_overlimit": 6,
+    "condition_scope_requires_semantic_verification": 23,
+    "multiple_notice_or_rule_scopes": 11,
+    "multiple_same_role_values_scope_unresolved": 3,
+    "source_scope_incomplete_or_unknown": 9,
+    "lifecycle_scope_unresolved": 7,
+    "competing_temporal_role_cues": 1,
+    "date_year_order_or_range_unresolved": 1,
+    "replacement_character": 2
+  },
+  "terminal_shadow_status_counts": {
+    "review": 23
+  },
+  "routing_decisions": {
+    "source_review": 7,
+    "acquire_mistral_ocr": 5
+  },
+  "runtime_totals": {
+    "budget_charge_usd": 0.153,
+    "jev_cases": 0,
+    "nominal_reserved_usd": 0.15300000000000002,
+    "observed_accounted_usd": 0.05665504,
+    "ocr_pages": 14,
+    "operations": 5
+  },
+  "new_provider_calls": 0,
+  "source_label_files_read": 0,
+  "source_PDF_visual_review": false,
+  "records": [
+    {
+      "document_id": "doc-0511d79a7aa6",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-0511d79a7aa6/native/pipeline-record.json",
+      "scope": "unknown",
+      "candidates": 4,
+      "routes": [
+        "parser_fallback_scope_incomplete_or_unknown",
+        "parser_fallback_wrapped_destination_signal",
+        "review_candidate_comment_deadline",
+        "review_candidate_submission_email",
+        "review_multiple_comment_deadline_values",
+        "review_multiple_notice_or_rule_scopes"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-437dce40ee7f8f84",
+          "blocking_issues": [
+            "case_overlimit",
+            "condition_scope_requires_semantic_verification",
+            "multiple_notice_or_rule_scopes",
+            "multiple_same_role_values_scope_unresolved",
+            "source_scope_incomplete_or_unknown"
+          ],
+          "operation_status": "not_attempted"
+        },
+        {
+          "case_id": "case-b44d228ea0e726f0",
+          "blocking_issues": [
+            "case_overlimit",
+            "condition_scope_requires_semantic_verification",
+            "multiple_notice_or_rule_scopes",
+            "multiple_same_role_values_scope_unresolved",
+            "source_scope_incomplete_or_unknown"
+          ],
+          "operation_status": "not_attempted"
+        },
+        {
+          "case_id": "case-67e82f9c0edbe9ab",
+          "blocking_issues": [
+            "case_overlimit",
+            "condition_scope_requires_semantic_verification",
+            "multiple_notice_or_rule_scopes",
+            "multiple_same_role_values_scope_unresolved",
+            "source_scope_incomplete_or_unknown"
+          ],
+          "operation_status": "not_attempted"
+        },
+        {
+          "case_id": "case-f08d623968a0086c",
+          "blocking_issues": [
+            "case_overlimit",
+            "condition_scope_requires_semantic_verification",
+            "multiple_notice_or_rule_scopes",
+            "source_scope_incomplete_or_unknown"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-7035335ec6ae",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-7035335ec6ae/native/pipeline-record.json",
+      "scope": "full_notice",
+      "candidates": 2,
+      "routes": [
+        "review_candidate_comment_deadline",
+        "review_candidate_submission_email"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-224365d5ae776867",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification"
+          ],
+          "operation_status": "not_attempted"
+        },
+        {
+          "case_id": "case-b375da9ce9670778",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-7035335ec6ae",
+      "channel": "fallback",
+      "record_path": "execution/run/documents/doc-7035335ec6ae/fallback/pipeline-record.json",
+      "scope": "full_notice",
+      "candidates": 2,
+      "routes": [
+        "review_candidate_comment_deadline",
+        "review_candidate_submission_email"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-9fd95315c7310f29",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification"
+          ],
+          "operation_status": "not_attempted"
+        },
+        {
+          "case_id": "case-17f5ae7000aa29f7",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-6de1104bdc54",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-6de1104bdc54/native/pipeline-record.json",
+      "scope": "full_notice",
+      "candidates": 1,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_unresolved_participation_date_evidence",
+        "review_candidate_submission_email",
+        "review_lifecycle_scope"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-dbee3284f41072c5",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification",
+            "lifecycle_scope_unresolved"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-6de1104bdc54",
+      "channel": "fallback",
+      "record_path": "execution/run/documents/doc-6de1104bdc54/fallback/pipeline-record.json",
+      "scope": "full_notice",
+      "candidates": 1,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_unresolved_participation_date_evidence",
+        "review_candidate_submission_email",
+        "review_lifecycle_scope"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-faef0814574f4e80",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification",
+            "lifecycle_scope_unresolved"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-cc8a5c237cc2",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-cc8a5c237cc2/native/pipeline-record.json",
+      "scope": "full_notice",
+      "candidates": 2,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "review_candidate_submission_email"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-c15394e29d50386a",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification"
+          ],
+          "operation_status": "not_attempted"
+        },
+        {
+          "case_id": "case-ed670361d4c88944",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-cc8a5c237cc2",
+      "channel": "fallback",
+      "record_path": "execution/run/documents/doc-cc8a5c237cc2/fallback/pipeline-record.json",
+      "scope": "full_notice",
+      "candidates": 2,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "review_candidate_submission_email"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-1a4cf2034735da53",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification"
+          ],
+          "operation_status": "not_attempted"
+        },
+        {
+          "case_id": "case-e7baa3b6f369cbc3",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-27f924e9b9d3",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-27f924e9b9d3/native/pipeline-record.json",
+      "scope": "slice",
+      "candidates": 1,
+      "routes": [
+        "parser_fallback_missing_submission_email_candidate",
+        "parser_fallback_scope_incomplete_or_unknown",
+        "review_candidate_comment_deadline"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-434593be38406dcb",
+          "blocking_issues": [
+            "case_overlimit",
+            "competing_temporal_role_cues",
+            "condition_scope_requires_semantic_verification",
+            "date_year_order_or_range_unresolved",
+            "source_scope_incomplete_or_unknown"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-6d4517336d61",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-6d4517336d61/native/pipeline-record.json",
+      "scope": "unknown",
+      "candidates": 1,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_scope_incomplete_or_unknown",
+        "parser_fallback_unresolved_participation_date_evidence",
+        "review_candidate_submission_email",
+        "review_lifecycle_scope",
+        "review_multiple_notice_or_rule_scopes"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-eace79eb83d83c84",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification",
+            "lifecycle_scope_unresolved",
+            "multiple_notice_or_rule_scopes",
+            "source_scope_incomplete_or_unknown"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-bab42aac1958",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-bab42aac1958/native/pipeline-record.json",
+      "scope": "slice",
+      "candidates": 1,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_scope_incomplete_or_unknown",
+        "parser_fallback_unresolved_participation_date_evidence",
+        "review_candidate_submission_email"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-830e6108b8705974",
+          "blocking_issues": [
+            "case_overlimit",
+            "condition_scope_requires_semantic_verification",
+            "source_scope_incomplete_or_unknown"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-eb83abf91c18",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-eb83abf91c18/native/pipeline-record.json",
+      "scope": "unknown",
+      "candidates": 2,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_scope_incomplete_or_unknown",
+        "parser_fallback_text_corruption_signal",
+        "parser_fallback_unresolved_participation_date_evidence",
+        "review_candidate_submission_email",
+        "review_multiple_notice_or_rule_scopes",
+        "review_multiple_submission_email_values"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-93d0e0d31f9865ec",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification",
+            "multiple_notice_or_rule_scopes",
+            "replacement_character",
+            "source_scope_incomplete_or_unknown"
+          ],
+          "operation_status": "not_attempted"
+        },
+        {
+          "case_id": "case-cefed1bbd03a1187",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification",
+            "multiple_notice_or_rule_scopes",
+            "replacement_character",
+            "source_scope_incomplete_or_unknown"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-09c6b865024f",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-09c6b865024f/native/pipeline-record.json",
+      "scope": "full_notice",
+      "candidates": 0,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_missing_submission_email_candidate",
+        "parser_fallback_unresolved_participation_date_evidence"
+      ],
+      "gate_blockers": []
+    },
+    {
+      "document_id": "doc-09c6b865024f",
+      "channel": "fallback",
+      "record_path": "execution/run/documents/doc-09c6b865024f/fallback/pipeline-record.json",
+      "scope": "full_notice",
+      "candidates": 0,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_missing_submission_email_candidate",
+        "parser_fallback_unresolved_participation_date_evidence"
+      ],
+      "gate_blockers": []
+    },
+    {
+      "document_id": "doc-03fab2becee5",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-03fab2becee5/native/pipeline-record.json",
+      "scope": "full_notice",
+      "candidates": 2,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_unresolved_participation_date_evidence",
+        "review_candidate_submission_email",
+        "review_lifecycle_scope",
+        "review_multiple_notice_or_rule_scopes"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-a0f4fbe1a4b744eb",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification",
+            "lifecycle_scope_unresolved",
+            "multiple_notice_or_rule_scopes"
+          ],
+          "operation_status": "not_attempted"
+        },
+        {
+          "case_id": "case-0ca75edd6585f2ac",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification",
+            "lifecycle_scope_unresolved",
+            "multiple_notice_or_rule_scopes"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-03fab2becee5",
+      "channel": "fallback",
+      "record_path": "execution/run/documents/doc-03fab2becee5/fallback/pipeline-record.json",
+      "scope": "full_notice",
+      "candidates": 2,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_unresolved_participation_date_evidence",
+        "review_candidate_submission_email",
+        "review_lifecycle_scope",
+        "review_multiple_notice_or_rule_scopes"
+      ],
+      "gate_blockers": [
+        {
+          "case_id": "case-6778430914c1854a",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification",
+            "lifecycle_scope_unresolved",
+            "multiple_notice_or_rule_scopes"
+          ],
+          "operation_status": "not_attempted"
+        },
+        {
+          "case_id": "case-4ec4976033a3f3ee",
+          "blocking_issues": [
+            "condition_scope_requires_semantic_verification",
+            "lifecycle_scope_unresolved",
+            "multiple_notice_or_rule_scopes"
+          ],
+          "operation_status": "not_attempted"
+        }
+      ]
+    },
+    {
+      "document_id": "doc-de7ceb52736b",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-de7ceb52736b/native/pipeline-record.json",
+      "scope": "unknown",
+      "candidates": 0,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_missing_submission_email_candidate",
+        "parser_fallback_scope_incomplete_or_unknown"
+      ],
+      "gate_blockers": []
+    },
+    {
+      "document_id": "doc-b00441b94ff1",
+      "channel": "native",
+      "record_path": "execution/run/documents/doc-b00441b94ff1/native/pipeline-record.json",
+      "scope": "unknown",
+      "candidates": 0,
+      "routes": [
+        "parser_fallback_missing_comment_deadline_candidate",
+        "parser_fallback_missing_submission_email_candidate",
+        "parser_fallback_scope_incomplete_or_unknown",
+        "review_multiple_notice_or_rule_scopes"
+      ],
+      "gate_blockers": []
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "version": "round4-source-labels-v1",
+  "status": "evaluator_only_never_runtime_input",
+  "notice_required": [
+    "opaque_document_id",
+    "original_pdf_sha256",
+    "retained_pdf_sha256",
+    "official_url",
+    "physical_page_mapping",
+    "all_source_pages_viewed",
+    "complete_notice_scope",
+    "source_states_for_both_fields",
+    "required_field_values",
+    "scan_degradation_basis",
+    "reviewer_identity",
+    "reviewed_at_utc"
+  ],
+  "field_required": [
+    "field_id",
+    "field_type_DATE_or_EMAIL",
+    "source_state",
+    "raw_literal",
+    "page_region",
+    "exact_source_quote",
+    "role",
+    "conditions",
+    "supported_scope",
+    "distinct_value_group",
+    "uncertainty_reason_if_any"
+  ],
+  "source_states": [
+    "present_in_scope",
+    "present_out_of_scope",
+    "not_stated",
+    "explicit_negative",
+    "unresolved_conflict",
+    "unresolved_uncertainty"
+  ],
+  "rules": [
+    "No parser text or model output used to assign source truth.",
+    "All retained pages inspected; boundaries and continuations explicitly verified.",
+    "Repeated identical values grouped; multiple distinct valid destinations retained.",
+    "DATE: explicit year/month/day; scope excludes conditional/relative unsupported or ambiguous forms.",
+    "EMAIL: distinguish direct submission role from incidental contacts.",
+    "Absence scoped to complete notice, not broader proceeding; no absent-field inference from missing candidates.",
+    "Source conflicts remain conflicts; no legal precedence or date arithmetic.",
+    "Labels READY before runtime outputs; all amendments versioned."
+  ]
+}

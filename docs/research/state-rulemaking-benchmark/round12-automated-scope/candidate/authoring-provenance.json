@@ -1,0 +1,43 @@
+{
+  "status": "FROZEN",
+  "frozen_utc": "2026-10-12T16:39:32.075391Z",
+  "authoring": "AI-assisted Codex candidate, not independent gold",
+  "document": "WSR 26-19-016",
+  "source_only": true,
+  "model_source": {
+    "path": "../source/26-19-016.txt",
+    "sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+    "bytes": 3876
+  },
+  "source_ready": {
+    "path": "../source/READY.json",
+    "sha256": "b58d292e94326b60181010ce51aef192097c19cfa59efc41a85ff50a082235f8",
+    "status": "READY"
+  },
+  "official_url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-016.htm",
+  "original_html_sha256": "6e22c0f271f5113761a3e81dc94f76ec4262e37aece83b804dab8e229f98b62d",
+  "inputs_read": [
+    "repository AGENTS.md",
+    "source/26-19-016.txt",
+    "source/READY.json (initial and final)",
+    "round10-source-first/protocol/stage-b.operative-record.json (shape only)"
+  ],
+  "excluded_inputs": [
+    "reference/",
+    "currentprotocol/",
+    "runtime/",
+    "execution/",
+    "assessment and expected-defect content"
+  ],
+  "method": "Source-only best-effort normalization with human-readable stable IDs and declared general-participation scope; compacted before freeze. No planted defects, provider API calls, credentials, signing, external resolution or post-verification repair.",
+  "validation": {
+    "json_parse": true,
+    "globally_unique_ids": true,
+    "referential_integrity": true,
+    "alternative_group_membership": true,
+    "exact_evidence_substrings": true,
+    "source_archive_hashes_match_final_ready": true,
+    "candidate_bytes": 11771
+  },
+  "limitation": "Structural-shape consistency checked locally; no runtime schema, semantic scorer or model outputs inspected."
+}

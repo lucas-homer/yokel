@@ -1,0 +1,43 @@
+{
+  "execution_note": "../../execution-note-2.json",
+  "units": [
+    {
+      "fixture_id": "A05",
+      "rate_rejection_path": "firecrawl/recovery-1/A05/parse-response.json",
+      "original_upload_expires_at": "2026-10-06T01:05:52.277Z",
+      "fresh_setup_reason": "Earlier transient uploadRef unavailable after completed isolated run; fresh upload expressly authorized before expiry"
+    },
+    {
+      "fixture_id": "A06",
+      "rate_rejection_path": "firecrawl/recovery-1/A06/parse-response.json",
+      "original_upload_expires_at": "2026-10-06T01:05:52.811Z",
+      "fresh_setup_reason": "Earlier transient uploadRef unavailable after completed isolated run; fresh upload expressly authorized before expiry"
+    },
+    {
+      "fixture_id": "B01",
+      "rate_rejection_path": "firecrawl/recovery-1/B01/parse-response.json",
+      "original_upload_expires_at": "2026-10-06T01:06:39.735Z",
+      "fresh_setup_reason": "Earlier transient uploadRef unavailable after completed isolated run; fresh upload expressly authorized before expiry"
+    },
+    {
+      "fixture_id": "B02",
+      "rate_rejection_path": "firecrawl/recovery-1/B02/parse-response.json",
+      "original_upload_expires_at": "2026-10-06T01:06:49.288Z",
+      "fresh_setup_reason": "Earlier transient uploadRef unavailable after completed isolated run; fresh upload expressly authorized before expiry"
+    },
+    {
+      "fixture_id": "B03",
+      "rate_rejection_path": "firecrawl/recovery-1/B03/phase-one-response.redacted.json",
+      "original_upload_expires_at": null,
+      "fresh_setup_reason": "Original phase-one request was rate rejected; no upload reference was issued"
+    },
+    {
+      "fixture_id": "B04",
+      "rate_rejection_path": "firecrawl/recovery-1/B04/phase-one-response.redacted.json",
+      "original_upload_expires_at": null,
+      "fresh_setup_reason": "Original phase-one request was rate rejected; no upload reference was issued"
+    }
+  ],
+  "policy": "One attempt per explicit pre-job rate rejection; no accepted parse retry; 7-second setup/parse start spacing; fresh upload allowed for expired or unavailable transient reference.",
+  "expiry_wait_cancelled_before_provider_calls": true
+}

@@ -1,0 +1,116 @@
+{
+  "schema_version": "round8.stronger-cap.semantic-findings.v1",
+  "document_id": "doc-92211b8c7ba0",
+  "freeze_E_sha256": "33837085a3fde23e7323372de77c31cc694a532865c49799d4457668826aa1c6",
+  "record_sha256": "315ddda2dd8012856463df1f31122dc8952dfcc050e152fcd6055bb3e2d0368a",
+  "reference_audit_sha256": "295b0cea69077f928f97adbfd59f8de4cd9e6b31701a2622b6bfebe1dc15cd11",
+  "status": "invalid_response_qualitative_analysis_only",
+  "cap_only_request_change_verified": true,
+  "response": {
+    "http_status": 200,
+    "finish_reason": "stop",
+    "completion_tokens": 6026,
+    "max_tokens": 8192,
+    "parseable_json": true,
+    "exact_item_validation_valid": false,
+    "normalized_verdict": null,
+    "required_ids": 70,
+    "returned_assessments": 71,
+    "missing_ids": [],
+    "extra_ids": [
+      "coverage"
+    ],
+    "duplicate_ids": {},
+    "all_required_ids_present_once": true,
+    "validation_error": "verdict must assess exactly every record item id"
+  },
+  "qualitative_global_review": {
+    "raw_completeness_label": "complete",
+    "assessment": "contradicted_by_unchanged_prior_audit",
+    "basis": "Prior source units rule and access_alternatives remain partially represented. Raw missing_items is empty and global complete/extra coverage row credit topical presence and evidence, not complete structured recovery. No valid completeness verdict is adopted.",
+    "raw_source_identity_label": "resolved",
+    "source_identity_assessment": "locally_consistent",
+    "source_identity_basis": "One notice/agency/order is resolved; partial rule-detail recovery is distinct from conflicting identity.",
+    "raw_missing_items": [],
+    "raw_contradictions": [],
+    "specific_known_defects_reported": {
+      "repeal_recreation_loss": false,
+      "full_zoom_phone_alternative_loss": false,
+      "unclear_comment_modality": "noticed but explicitly excused as conservative",
+      "accessibility_contact_uncertainty": true
+    }
+  },
+  "useful_explanations": [
+    {
+      "ids": [
+        "q_access_aids",
+        "t_access_request",
+        "t_advance",
+        "u_access_timing"
+      ],
+      "finding": "Correctly recognizes all named aid formats and unquantified timing; does not repeat prior aid-format omission or invent a precise interval."
+    },
+    {
+      "ids": [
+        "q_equal_weight"
+      ],
+      "finding": "Correctly distinguishes equal-consideration disclosure from publication/confidentiality and mandatory instruction."
+    },
+    {
+      "ids": [
+        "r_form_email",
+        "c_form_email",
+        "r_query",
+        "c_query_phone",
+        "r_coordinator"
+      ],
+      "finding": "Correctly separates form registration, questions and coordinator roles from comment submission."
+    },
+    {
+      "ids": [
+        "q_preregister",
+        "q_receipt"
+      ],
+      "finding": "Correctly distinguishes optional preregistration encouragement from mandatory comment receipt cutoff."
+    },
+    {
+      "ids": [
+        "q_access_request",
+        "r_access_contact",
+        "c_access_reference",
+        "u_access_contact"
+      ],
+      "finding": "Specifically identifies unresolved accessibility association; interpret alongside reference caveat, not as a clean gold match."
+    }
+  ],
+  "per_assessment_review_artifact": "explanation-review.json",
+  "evidence_selectors_checked": 84,
+  "all_returned_evidence_selectors_resolve": true,
+  "policy_disposition": {
+    "runtime_status": "review",
+    "accepted": false,
+    "source_coverage_complete": false,
+    "adapter_dimensions": "all uncertain are validator fallback values, not raw model-selected dimensions",
+    "independent_guards": [
+      "explicit_source_uncertainties",
+      "route_channel_unresolved",
+      "association_unresolved",
+      "requirement_modality_unresolved"
+    ],
+    "important_distinction": "Exact-ID validation blocks a valid verdict; deterministic uncertainty guards independently force review. Neither proves successful detection of known completeness defects."
+  },
+  "recommendation": {
+    "immediate": "Retain invalid status and raw output; do not delete coverage, salvage70rows, retry, or promote complete as a verdict.",
+    "future_offline_work": "Before any separately authorized run, make the exact allowed70ID schedule explicit or schema-enumerated and test rejection of extra coverage/duplicate/missing IDs. Keep coverage only in designated global sections. Add semantic regression checks for evidence-only repeal/recreation recovery and incomplete alternative groups; unresolved modality must not become preserved by being called conservative.",
+    "cap_observation": "No evidence this response needs a larger cap: it ended normally at6026 below8192. The remaining obstacles are exact output-contract compliance and semantic assessment."
+  },
+  "limits": [
+    "One reused known-incomplete development record, not fresh accuracy.",
+    "Invalid full response; no partial-score/acceptance/accuracy metric.",
+    "Historical Jev labels are not a fresh paired invocation; no comparative accuracy conclusion.",
+    "Original I/l image-reference caveat unchanged; supplementary PDF evidence distinct.",
+    "Returned local reasons are qualitative source checks only, not a replacement source audit or validation bypass."
+  ],
+  "production_eligible": false,
+  "action_ready": false
+}

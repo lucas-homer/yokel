@@ -1,0 +1,39 @@
+test_alternate_source_rejected (offline_checks.Controls.test_alternate_source_rejected) ... ok
+test_authorization_scope_rejected_before_dispatch (offline_checks.Controls.test_authorization_scope_rejected_before_dispatch) ... ok
+test_both_verifier_bodies_admit_before_either_call (offline_checks.Controls.test_both_verifier_bodies_admit_before_either_call) ... {"operation": "doc-92211b8c7ba0-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-92211b8c7ba0-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.16160800000000003, "observed_accounted_usd": 0.0012, "new_budget_charge_usd": 0.16160800000000003, "prior_budget_debit_usd": 0.100166, "budget_charge_usd": 0.26177400000000006}}
+ok
+test_exact_source_and_hard_limits (offline_checks.Controls.test_exact_source_and_hard_limits) ... {"operation": "first", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "first", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.001, "observed_accounted_usd": 0, "new_budget_charge_usd": 0.001, "prior_budget_debit_usd": 0.100166, "budget_charge_usd": 0.101166}}
+{"operation": "first", "kind": "jev", "state": "single_POST_started"}
+{"operation": "first", "state": "completed", "totals": {"operations": 1, "jev_cases": 1, "inventory_cases": 0, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.001, "observed_accounted_usd": 0, "new_budget_charge_usd": 0.001, "prior_budget_debit_usd": 0.100166, "budget_charge_usd": 0.101166}}
+{"operation": "first", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "first", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 0, "stronger_cases": 1, "ocr_pages": 0, "nominal_reserved_usd": 0.001, "observed_accounted_usd": 0, "new_budget_charge_usd": 0.001, "prior_budget_debit_usd": 0.100166, "budget_charge_usd": 0.101166}}
+ok
+test_final_inventory_delta_is_only_output_cap (offline_checks.Controls.test_final_inventory_delta_is_only_output_cap) ... ok
+test_full3_calls_and_completed_resume_with_prior_debit (offline_checks.Controls.test_full3_calls_and_completed_resume_with_prior_debit) ... {"operation": "doc-92211b8c7ba0-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-92211b8c7ba0-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.16160800000000003, "observed_accounted_usd": 0.0012, "new_budget_charge_usd": 0.16160800000000003, "prior_budget_debit_usd": 0.100166, "budget_charge_usd": 0.26177400000000006}}
+{"operation": "doc-92211b8c7ba0-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-92211b8c7ba0-jev", "state": "completed", "totals": {"operations": 2, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.16239848200000004, "observed_accounted_usd": 0.0012041999999999999, "new_budget_charge_usd": 0.16239848200000004, "prior_budget_debit_usd": 0.100166, "budget_charge_usd": 0.26256448200000004}}
+{"operation": "doc-92211b8c7ba0-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-92211b8c7ba0-stronger", "state": "completed", "totals": {"operations": 3, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 1, "ocr_pages": 0, "nominal_reserved_usd": 0.23621048200000003, "observed_accounted_usd": 0.0024042, "new_budget_charge_usd": 0.23621048200000003, "prior_budget_debit_usd": 0.100166, "budget_charge_usd": 0.33637648200000003}}
+ok
+test_prior_debit_tamper_rejected (offline_checks.Controls.test_prior_debit_tamper_rejected) ... ok
+test_uncertain_and_postresponse_overrun_latch (offline_checks.Controls.test_uncertain_and_postresponse_overrun_latch) ... {"operation": "doc-92211b8c7ba0-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-92211b8c7ba0-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-92211b8c7ba0-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.16160800000000003, "observed_accounted_usd": 1.95, "new_budget_charge_usd": 1.95, "prior_budget_debit_usd": 0.100166, "budget_charge_usd": 2.050166}}
+ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.304s
+
+OK
+test_check_never_reads_credentials (test_adapter.Controls.test_check_never_reads_credentials) ... ok
+test_cli_error_does_not_echo_input (test_adapter.Controls.test_cli_error_does_not_echo_input) ... ok
+test_existing_run_denied_before_credentials (test_adapter.Controls.test_existing_run_denied_before_credentials) ... ok
+test_preparer_released_manifest_pins_external_source_targets (test_adapter.Controls.test_preparer_released_manifest_pins_external_source_targets) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.006s
+
+OK

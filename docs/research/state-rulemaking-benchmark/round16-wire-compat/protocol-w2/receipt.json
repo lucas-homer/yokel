@@ -1,0 +1,246 @@
+{
+  "carried_over_tests": 75,
+  "corpus": {
+    "cases": 37,
+    "invalid": [
+      {
+        "case": "sizing/leaf-fragments9",
+        "r15_error": "array_bound"
+      },
+      {
+        "case": "sizing/depth13",
+        "r15_error": "graph_depth"
+      },
+      {
+        "case": "sizing/nodes400-links399",
+        "r15_error": "capacity_review_g"
+      },
+      {
+        "case": "sizing/nodes399-links400",
+        "r15_error": "capacity_review_l"
+      },
+      {
+        "case": "revised-control/authored-399-node-chain-recursion-limit600",
+        "r15_error": "graph_depth"
+      }
+    ],
+    "valid": 32
+  },
+  "credentials_accessed": false,
+  "envelope_version": "r16.e2",
+  "errors": 0,
+  "failures": 0,
+  "frozen_benchmark": {
+    "manifest_sha256": "26baa3b62f8e29d772c571164359c3791d55dabb07bb46b196167891f99e74f1",
+    "payload_files": 7491,
+    "unchanged": true
+  },
+  "frozen_inputs_unchanged": true,
+  "independent_suite": {
+    "accepted": true,
+    "errors": [],
+    "failures": [
+      {
+        "reason": "Intended r16.e2 delta: source_text removed; exact source remains in span-table rows.",
+        "test": "frozen_independent.BuildTests.test_user_envelope_is_pinned_and_source_exact",
+        "traceback": "Traceback (most recent call last):\n  File \"/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round16-wire-compat/testing/test_independent.py\", line 1021, in test_user_envelope_is_pinned_and_source_exact\n    self.assertEqual(set(user), {'source_text', 'source_text_sha256', 'span_table', 'span_table_sha256'})\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Items in the second set but not the first:\n'source_text'\n"
+      }
+    ],
+    "intended_failures": 1,
+    "invocation": "python3 -I -S -B protocol-w2/run_independent.py",
+    "raw_suite_success": false,
+    "skipped": 0,
+    "suite_sha256": "8b4403071b91008af3030cdc6362a56c49f7b0c40ba3084b2c1eb56d27f2ec30",
+    "suite_unchanged": true,
+    "tests_passed": 54,
+    "tests_run": 55,
+    "unexpected_failures": [],
+    "wire_path": "protocol-w2/wire.py"
+  },
+  "input_sha256": {
+    "round14-semantic-contract/runtime/common.py": "a341e11b6b0d49b130c28d8881ef4b71748161bcfc0d15c41384bc150f35bdc5",
+    "round14-semantic-contract/source/parsed-body.txt": "5b8b221224c799e4950dbddf6df8bbf0652ee90db7150f1ed16a332b137df55f",
+    "round15-condition-preservation/protocol-revised/READY.json": "dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50",
+    "round15-condition-preservation/protocol-revised/REPORT.md": "2c99cec0493b6f60b6d5dcf99b88ed5c1630b1bee0e9d1269e0288b51f89f155",
+    "round15-condition-preservation/protocol-revised/SPEC.md": "38c5ca0131d58a59183bff4d8a6d2fdcfebd1f5e8433352453e30d6c2cf866b6",
+    "round15-condition-preservation/protocol-revised/bound-policy.json": "0bd69600a782c8746318bcac4ada7990e84de6c19afa24121f1e5e7652959482",
+    "round15-condition-preservation/protocol-revised/compact.py": "8e7faec0d3c3fd5d16cabf58977804a401ca904f441f535af2e59fda9163ff6a",
+    "round15-condition-preservation/protocol-revised/fictional_controls.py": "a99925b177473c351c8d6863c3fb471f4538571973bddfc1b8d09169499f0fce",
+    "round15-condition-preservation/protocol-revised/fixtures/expanded.json": "99d95caefed656d116d9eca2dcb4c9983e7b1213f70e47edfd7d0d3943c887ff",
+    "round15-condition-preservation/protocol-revised/fixtures/expected.json": "217970aa3fc2aaad58af20fc714fab468bd75c9b0f09bba98c6755516f416ae9",
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint1-full-clause.json": "6f21f93e11b525f5847e90d3d9696e951b77fc7054e1bc7aa14b3d629d777b4d",
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint1-graph.json": "d6a7d95cd5487d08c3f2267d4cecf6fd6db1954c48d330d7cd434373a4fabea2",
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint1-source.txt": "a31184487fa2adfc48636ebbc9a8f2c7ea867761bd04b80ac1b0df27f8ab90e6",
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint16-full-clause.json": "d0d141df47888caaa07cd113f6e69457b2a4e72e0193ac6a31acab031c72b5bf",
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint16-graph.json": "928a09b56b73be3f4da5a3e7b00ec4633ca00cc6c85ba16d9eb54ac97e107162",
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint16-source.txt": "4cb0ddad2f1662b96ba3181a371965433c9c633c56eeb9b68c7509aa564fc794",
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint8-full-clause.json": "e0efbf60210227dbe22d14dc9f2c2e91e4cce0145e59be15a7eee9851d7b7943",
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint8-graph.json": "c027afa50a6b3e70b9beb7c05f9dc7fb6b644617569e08c99e4c9516e7c76972",
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint8-source.txt": "11de1c85bfc61b3b154e6e3e36982131b163efbc888c44ea88a8cbb02e3ca10c",
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared64-full-clause.json": "cccddd3fb059c0a1eda4b0b5d0d2b42c7e24b86cf967060bc52976876b9593ff",
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared64-graph.json": "68b240ffbcc61b9309350b46396c2b6bbea52d3076f870d067ee2da956c1e908",
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared64-source.txt": "a31184487fa2adfc48636ebbc9a8f2c7ea867761bd04b80ac1b0df27f8ab90e6",
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared8-full-clause.json": "cf389928b4466aaa51ea829d05bd6d57529a719ccbf12cc383b64463a663e9cf",
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared8-graph.json": "7f824e7d1f7f3e643152791b801787aefeb55bdb11a1ca5c3b18c22fd26898cb",
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared8-source.txt": "a31184487fa2adfc48636ebbc9a8f2c7ea867761bd04b80ac1b0df27f8ab90e6",
+    "round15-condition-preservation/protocol-revised/fixtures/positive.json": "89c1e876d102111161f5c1f62052c25a7b000a1d4198a48c3af548b4d254e487",
+    "round15-condition-preservation/protocol-revised/fixtures/semantic-negatives.json": "0cddb6b91e2a0d9fbfb6f42cad7cdae03b9d205ded4155a6d0e992c2b4423500",
+    "round15-condition-preservation/protocol-revised/fixtures/source.txt": "67f31a4bd0c271be7f2b101046215c88069a8699de6a7ebc4e1e1b84de18d440",
+    "round15-condition-preservation/protocol-revised/implementation-preflight.md": "b1b82748fc1bbb59b8a793ac0c2ff2920c29173674fdfbb54a59b7231a964637",
+    "round15-condition-preservation/protocol-revised/offline-request.json": "83a9e06f885c06a52e2ab051ed94d5f975f2b747736326981c8351009a997a5e",
+    "round15-condition-preservation/protocol-revised/offline-results.json": "6120ae050b5440af4da983f53f61ce57eedf99b622ffeea4a4db3f093f3b199e",
+    "round15-condition-preservation/protocol-revised/offline_checks.py": "881832d54e94a7a7b15879f958b1188d2531e2a281746ec33e51aee0c420ab80",
+    "round15-condition-preservation/protocol-revised/original-hardening-evidence.json": "af6cc0ac95ea5545a71edce63bb117d947c5ebb77768ca67307b60cd01448cd4",
+    "round15-condition-preservation/protocol-revised/pre-fix-test-output.txt": "8d8674a56fe0b3a7df76df440829eb05c189ab858fc8387a27f2b98dc817a450",
+    "round15-condition-preservation/protocol-revised/provenance.json": "17627efb8711ebc1ff4618b1d2306fbf6edf60b235d115ad06b09947fffe1fb7",
+    "round15-condition-preservation/protocol-revised/request-settings.json": "43d3b4f7886d84c528a07ff3ba0901a2be1ff42a6b503853ee87e1e6985b1ac2",
+    "round15-condition-preservation/protocol-revised/schema.json": "42114ee35755e4f39fa0a10c3f4b065e11f550d6ba96658d5caa17663a32a9f1",
+    "round15-condition-preservation/protocol-revised/span-table.json": "63052f42bf7b3c3beb405e479a97e5df52f1cfcda39750272a4661540582ffd1",
+    "round15-condition-preservation/protocol-revised/stage-a.system.txt": "49edae001b41ac63f32a5a049484544b219b5f1bf68a0b7f3dbc3e5dc5196f70",
+    "round15-condition-preservation/protocol-revised/test-output.txt": "5cb00cf3949a9869ec3def89f72fd2532f5c0387826e16c75404512bf770c8ce",
+    "round15-condition-preservation/protocol-revised/test_capacity.py": "19f0ee0c7577aa2c5846a3edb253bcb19d2312fe0d03afea26ab65c69ee96c9d",
+    "round15-condition-preservation/protocol-revised/test_compact.py": "41f72099f21e4f37b67beb8750f04693a2c6e75439d80115b42fc40cb6fe95c6",
+    "round15-condition-preservation/protocol-revised/test_hardening.py": "b66e5b264f930120563ed5e3c75a5c122216cbffe9dfeab45ac035a5266760b2",
+    "round15-condition-preservation/sizing/authored-profiles.json": "b3bb69845fdd7a8b20f46191a716e1abe51b24993812ff4574036a1c8d4c23b9",
+    "round15-condition-preservation/sizing/revised/authored-controls.json": "defa002abc60d71507619fc6f17b39adf771bbd96e5087406f0a5fadd0e12fba",
+    "round16-wire-compat/design/DESIGN.md": "53e43e3001550829e5586a50ca99a2c63d996a6edc96424ec0346bc5a19d5743",
+    "round16-wire-compat/design/READY.json": "f880092bc06465049df463463d6ad079394fea863c4a0c7af1bac896d73790d5",
+    "round16-wire-compat/design/probe-results.json": "1a553149c01d7e3ee44dc5d7028c2f9400da5d6e28b60cd6dfff7e122bf711a4",
+    "round16-wire-compat/design/probe.py": "938069e26e976a1115aac37329b82985486a1f9386b0fb7a0d62338a8822836e",
+    "round16-wire-compat/design/schema.draft.json": "0d69a1eadc62d21f8d248286bb97d53fa3a5286e46e1a2901bc689d766c3cc9b",
+    "round16-wire-compat/envelope-check/FINDINGS.md": "302315bf5b12e159d9f6bc5da6399f8c995237174f502151f56080702aa3915f",
+    "round16-wire-compat/envelope-check/READY.json": "2240549bce4cc21b1c5fa53995751824abf89710aa512cc8c51c1a6b62e9229f",
+    "round16-wire-compat/envelope-check/probe-output.json": "5480f27a4dc4716b2850547f4f9fd535799774d6b5c479d4ec6fc7871bb01c29",
+    "round16-wire-compat/envelope-check/probe.py": "4707238a1e37090eaf29927590c4beeefbf1fa902c0e905068ecd12645bc88ba",
+    "round16-wire-compat/inventory/INVENTORY.md": "adc300631238c67475e6fccb621890eaa4316243507cce1c95c62d7c22ae0ffe",
+    "round16-wire-compat/inventory/READY.json": "226eba20ba0b0d30d0c1d6616dba7a4727a624d424f8278b4bf8693a0c467f32",
+    "round16-wire-compat/protocol/READY.json": "95fab8b77d390dff7b21cbab2dbe0b0da137ff7b7fc43998ebffd7d100566587",
+    "round16-wire-compat/protocol/SPEC.md": "bff838b1d0e050a7ca36589562c4186ce7ece1e629552808fd9ecf6d8d498a55",
+    "round16-wire-compat/protocol/receipt.json": "74c2236dc967821a0d958b68f471d4b1937dfd8db2c50ba3aebb422a8da001ba",
+    "round16-wire-compat/protocol/test-output.txt": "9bc82569a64529ccb1e6dc5b29404b2d4101abd3db13a4c7efecc2438780a2e7",
+    "round16-wire-compat/protocol/test_wire.py": "81267958cdf451664cde58ac2c2b6e5775d354ec91d0f468b1db8e5804627297",
+    "round16-wire-compat/protocol/verify.py": "8d48ea29dfd580c0d0a012372ee6bd670798466904918e4079d358dcd94d4874",
+    "round16-wire-compat/protocol/wire.py": "a751a2ab6c7cec5f1285316c49201f363f4211215f1297990b5f2629cb602a3e",
+    "round16-wire-compat/review/READY.json": "881bda97ac95483b20af9a2987f57e942dc4bb7f17cb199e25368d02b194ddd1",
+    "round16-wire-compat/review/REVIEW.md": "1f5e37d1d0f2dfd37f60002897defb5ba231e65f8c2b8a078d2d7421883f4f4d",
+    "round16-wire-compat/review/repro_probes.py": "aa067551e5e3f0fc0655dcebfe38e2aeb5f3e6b7b810942804fd84ef2b66b7c0",
+    "round16-wire-compat/testing/EXPECTATIONS.md": "e0eeaaacfb3d9bf6ce519120818c298a5c283f26adff9d271ec2b4b400c94f14",
+    "round16-wire-compat/testing/READY.json": "9735c6d516df9a2398eab97274db995165fb470ec18e711d05d8f0e35d39104d",
+    "round16-wire-compat/testing/TEST-PLAN.md": "a4d518d1328b0ec0b279ab8dccdfc56ef00bfc245330549f4ebe57a72e7981a6",
+    "round16-wire-compat/testing/test-output.txt": "1ff0156f39a476e62f37493d1ace4b1f7873c6f4be8e798d5d9377a914446617",
+    "round16-wire-compat/testing/test_independent.py": "8b4403071b91008af3030cdc6362a56c49f7b0c40ba3084b2c1eb56d27f2ec30"
+  },
+  "invocation": "python3 -I -S -B protocol-w2/verify.py",
+  "new_tests": 15,
+  "provider_calls": 0,
+  "revision": "r16.w2",
+  "schema": {
+    "full": {
+      "depth": 8,
+      "enum_values": 30,
+      "nodes": 87,
+      "objects": 13,
+      "properties": 73
+    },
+    "opaque": {
+      "depth": 8,
+      "enum_values": 25,
+      "nodes": 87,
+      "objects": 13,
+      "properties": 73
+    }
+  },
+  "sizing": {
+    "disjoint600_u24": {
+      "body_bytes": 27978,
+      "envelope_version": "r16.e2",
+      "guard_limit": 40000,
+      "guarded_bytes": 29002,
+      "profile": "full",
+      "profiles": {
+        "full": {
+          "body_bytes": 27978,
+          "envelope_version": "r16.e2",
+          "guard_limit": 40000,
+          "guarded_bytes": 29002,
+          "profile": "full",
+          "request_sha256": "24a17337a9f82b6bf743d32b68a4a1daa3e40e009d9861a43c7a383b1d0f66e7",
+          "residual_guard_bytes": 10998,
+          "schema_bytes": 5085,
+          "source_bytes": 14423,
+          "spans": 24,
+          "under_guard": true,
+          "version": "r16.w1"
+        },
+        "opaque": {
+          "body_bytes": 28163,
+          "envelope_version": "r16.e2",
+          "guard_limit": 40000,
+          "guarded_bytes": 29187,
+          "profile": "opaque",
+          "request_sha256": "021057f0617d863b2dc6e4a8694d5a9488c6089b8e74f9b865887f512eef83ce",
+          "residual_guard_bytes": 10813,
+          "schema_bytes": 5056,
+          "source_bytes": 14423,
+          "spans": 24,
+          "under_guard": true,
+          "version": "r16.w1"
+        }
+      },
+      "request_sha256": "24a17337a9f82b6bf743d32b68a4a1daa3e40e009d9861a43c7a383b1d0f66e7",
+      "residual_guard_bytes": 10998,
+      "schema_bytes": 5085,
+      "source_bytes": 14423,
+      "spans": 24,
+      "under_guard": true,
+      "version": "r16.w1"
+    },
+    "prior_source": {
+      "body_bytes": 22967,
+      "envelope_version": "r16.e2",
+      "guard_limit": 40000,
+      "guarded_bytes": 23991,
+      "profile": "full",
+      "profiles": {
+        "full": {
+          "body_bytes": 22967,
+          "envelope_version": "r16.e2",
+          "guard_limit": 40000,
+          "guarded_bytes": 23991,
+          "profile": "full",
+          "request_sha256": "513136187cb828a1949c6ac5f88d3414a1dbbbe1c87d1541f9c38b48a2287220",
+          "residual_guard_bytes": 16009,
+          "schema_bytes": 5085,
+          "source_bytes": 7208,
+          "spans": 108,
+          "under_guard": true,
+          "version": "r16.w1"
+        },
+        "opaque": {
+          "body_bytes": 23152,
+          "envelope_version": "r16.e2",
+          "guard_limit": 40000,
+          "guarded_bytes": 24176,
+          "profile": "opaque",
+          "request_sha256": "8d6b74f0bea02d0897c006b9dfbf3e5798083d18474471866daf702c264bb32d",
+          "residual_guard_bytes": 15824,
+          "schema_bytes": 5056,
+          "source_bytes": 7208,
+          "spans": 108,
+          "under_guard": true,
+          "version": "r16.w1"
+        }
+      },
+      "request_sha256": "513136187cb828a1949c6ac5f88d3414a1dbbbe1c87d1541f9c38b48a2287220",
+      "residual_guard_bytes": 16009,
+      "schema_bytes": 5085,
+      "source_bytes": 7208,
+      "spans": 108,
+      "under_guard": true,
+      "version": "r16.w1"
+    }
+  },
+  "tests_passed": 90,
+  "tests_run": 90,
+  "version": "r16.w1"
+}

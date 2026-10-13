@@ -1,0 +1,70 @@
+{
+  "status": "REVIEW_COMPLETE_DECISIONS_REQUIRED",
+  "version_reviewed": "r14.1",
+  "authentication": "claude.ai",
+  "subscription": "max",
+  "model_requested": "fable",
+  "actual_model": "claude-fable-5-1",
+  "provider": "firstParty",
+  "effort": "client default; no override",
+  "sessionId": "aa1048d4-b115-4f93-ae9c-400bc4434fb5",
+  "neutral_cwd": "/private/tmp/r14-claude-advisory.EGG7lO",
+  "stopReason": "success",
+  "is_error": false,
+  "payload_files": [
+    "compact.py",
+    "stage-a.system.txt",
+    "request-settings.json",
+    "schema.json",
+    "fictional_controls.py",
+    "fictional-positive.json",
+    "fictional-negatives.json",
+    "semantic-controls.json",
+    "span-table.json",
+    "test_compact.py",
+    "test_semantic_contract.py",
+    "test-output.txt",
+    "offline_checks.py",
+    "offline-results.json"
+  ],
+  "source_file_pins": {
+    "compact.py": "7312e31f0d4a27ecb96c85f3c91b15a61ac2ef61c41d7da27ed2ad485784b320",
+    "stage-a.system.txt": "ba4b4298a02a3dc7c98abfc071244e5cff1d51d5f3c0d9daaa0ef4bd64fd10b2",
+    "request-settings.json": "43d3b4f7886d84c528a07ff3ba0901a2be1ff42a6b503853ee87e1e6985b1ac2",
+    "schema.json": "86658c7bcf7388a5d5fa020d60c7204bcf408aaf097b93c073b9a9f8721ad94e",
+    "fictional_controls.py": "3a50df6408c101535a24e09cb29c1cb78a2829ee8cfcfc3f31aa41cd4cb600b2",
+    "fictional-positive.json": "888502bebd0b0cbafe1c3ef9085ed4ddf34e43adb840dafd95ab731b793a4e3d",
+    "fictional-negatives.json": "ff021b06010aace103e13c1ce38248f92f2b586883e132527552f1cacd33e4da",
+    "semantic-controls.json": "ccc0c0fbceef8ae4972ebd3cb470364ae37f42e122966bb313d63a6d4b2b88d9",
+    "span-table.json": "184a54d2a1e46550a2ac77c4bf556cdeaf2c0f5decd8fb4a94628a2a65e2783e",
+    "test_compact.py": "f1d1ab09794c15b4735cbdfaf49f88a21fc6ef2ba0212912baca9d5200d89692",
+    "test_semantic_contract.py": "68eaf3695ec3dd13a24944ec8f04c29b12486740c2d772cb60b0ddeab52c3c88",
+    "test-output.txt": "cfb46ea84fc64a2242498b34ae2f36544555eb81589bbad055c945da63dbca0a",
+    "offline_checks.py": "a4c209713582e844f603298466eba7a09d5ec309aea8123248ebe04befe3b167",
+    "offline-results.json": "c777db0d68f71b69205acc32e88cf3d350c957c7354ac045529f8d87bb389d2c"
+  },
+  "all_pins_verified_after_review": true,
+  "authorization": "User explicitly approved this specific R14 protocol code/extraction prompt/fictional fixtures/test results export to Claude.ai Max; exclusions preserved",
+  "claude_tools": "Built-ins disabled, safe-mode, strict empty MCP; initialization tool inventory not exposed by bridge",
+  "claude_edits_or_tests": false,
+  "codex_validation": "Offline inspection, malformed inverse probe, Python separator probe, fixture structure/length checks, SHA256 pins; no full test rerun",
+  "dispatch_approved": false,
+  "semantic_completeness_verified": false,
+  "sha256": {
+    "protocol-review-prompt.txt": "e9d21f24c7e54c7d681640d1b79c6764f1f8b33cd262c5ccbdfdc2603dff5356",
+    "protocol-review-result.json": "37cdd5f16958f5abaa7c837fd526e624423a75a01909b2b244762d2f63ed50ee",
+    "protocol-payload-pins.json": "26c212f3fc13564b2ba4c49e2687f81d5d7de6b4cde9926ff77d6b7745eaded1",
+    "codex-verification.json": "0216983de6285513bdc18384702d298fd3d4c14e9072f544b563ff08a9b0152b",
+    "REVIEW.md": "f19628caf23800903934d71800c8f480f54a2399f7a4ef1f9e21d4d26996989c"
+  },
+  "standing_user_constraints": {
+    "claude_route": "Existing Claude.ai Max subscription via isolated official Claude Code bridge only",
+    "prohibited_routes": [
+      "OpenRouter Fable",
+      "Anthropic API billing",
+      "Any API fallback"
+    ],
+    "on_bridge_unavailable": "Fail and report blocker; do not substitute route",
+    "model_name_is_not_route_authorization": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": "HELD_SEALED_COMPANION_REPLAY_DEFECT",
+  "query_id": "Q21",
+  "pending_candidate": {
+    "query_id": "Q21",
+    "display_order": 8,
+    "url": "https://rules.sd.gov/rulesguide.pdf",
+    "candidate_order": 2
+  },
+  "source_access_repeated": false,
+  "query_reruns": 0,
+  "original_source_files_unchanged": 503,
+  "freeze_A_files_unchanged": 69,
+  "diagnosis": "replay treats every aggregate-only exclusion as pending; this was intended for historical physical exclusions, but applies to new definitive own-ledger mechanical exclusions too. Retrying was refused at existing candidate mkdir before curl.",
+  "proposed_minimal_change": {
+    "file": "companion.py",
+    "old": "if reasons and all('would exceed retained aggregate page cap'==r for r in reasons):",
+    "new": "if o['physical_event']['path']=='search-access-ledger.jsonl' and reasons and all('would exceed retained aggregate page cap'==r for r in reasons):"
+  },
+  "source_evidence": "Q21 rank8 rulesguide.pdf is28pages; selected cohort17pages; aggregate45 exceeds40. Native49codepoints/28formfeeds; no retained notice/body review.",
+  "requires_primary": "Authorize and repin static companion before continuation; do not rewrite original source ledger or query response."
+}

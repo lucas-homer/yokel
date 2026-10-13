@@ -1,0 +1,85 @@
+{
+  "classification": "Artificial size sensitivity only, not semantic inventories or output predictions. Distinct source-local spans, ordinary and heavy assertion/quote/dependency cases; full actual B guard mandatory.",
+  "operative_projection_bytes": 16278,
+  "operative_pointer_count": 310,
+  "stage_a_guarded_bytes": 8674,
+  "stage_b_probes": [
+    {
+      "unit_count": 16,
+      "scenario": "100-char assertion,80-char quote,no dependencies",
+      "body_bytes": 27254,
+      "guarded_bytes": 28278,
+      "headroom_bytes": 11722,
+      "fits": true,
+      "canonical_inventory_roundtrip": true
+    },
+    {
+      "unit_count": 32,
+      "scenario": "100-char assertion,80-char quote,no dependencies",
+      "body_bytes": 30897,
+      "guarded_bytes": 31921,
+      "headroom_bytes": 8079,
+      "fits": true,
+      "canonical_inventory_roundtrip": true
+    },
+    {
+      "unit_count": 48,
+      "scenario": "100-char assertion,80-char quote,no dependencies",
+      "body_bytes": 34561,
+      "guarded_bytes": 35585,
+      "headroom_bytes": 4415,
+      "fits": true,
+      "canonical_inventory_roundtrip": true
+    },
+    {
+      "unit_count": 50,
+      "scenario": "100-char assertion,80-char quote,no dependencies",
+      "body_bytes": 35019,
+      "guarded_bytes": 36043,
+      "headroom_bytes": 3957,
+      "fits": true,
+      "canonical_inventory_roundtrip": true
+    },
+    {
+      "unit_count": 64,
+      "scenario": "100-char assertion,80-char quote,no dependencies",
+      "body_bytes": 38225,
+      "guarded_bytes": 39249,
+      "headroom_bytes": 751,
+      "fits": true,
+      "canonical_inventory_roundtrip": true
+    },
+    {
+      "unit_count": 32,
+      "scenario": "140-char assertion,160-char quote,relationship units with2 dependencies where available",
+      "body_bytes": 32938,
+      "guarded_bytes": 33962,
+      "headroom_bytes": 6038,
+      "fits": true,
+      "canonical_inventory_roundtrip": true
+    },
+    {
+      "unit_count": 48,
+      "scenario": "140-char assertion,160-char quote,relationship units with2 dependencies where available",
+      "body_bytes": 37642,
+      "guarded_bytes": 38666,
+      "headroom_bytes": 1334,
+      "fits": true,
+      "canonical_inventory_roundtrip": true
+    },
+    {
+      "unit_count": 64,
+      "scenario": "140-char assertion,160-char quote,relationship units with2 dependencies where available",
+      "body_bytes": 42346,
+      "guarded_bytes": 43370,
+      "headroom_bytes": -3370,
+      "fits": false,
+      "canonical_inventory_roundtrip": true
+    }
+  ],
+  "actual_B_guard_required": true,
+  "rejected_design": "Full record lossless evidence-table envelope plus pointer list measured 48532/56020/70996 guarded bytes at16/32/64 artificial units. Replaced prospectively with primary-authorized complete operative projection. Pointer-value projection plus object inventory also exceeded at32 units(41410). Selected recursive evidence/coverage removal retaining IDs and a lossless tuple inventory prospectively.",
+  "operative_record_bytes": 13344,
+  "selected_wire": "round10.inventory-span-tuples.v1",
+  "reproduction": "PYTHONDONTWRITEBYTECODE=1 python3 authoring_checks.py"
+}

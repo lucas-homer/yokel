@@ -1,0 +1,69 @@
+{
+  "schema_version": "round9.exact-id-completeness.protocol.v1",
+  "status": "proposed_ready_for_primary_and_independent_review_not_implementation_release",
+  "scope": "Offline research protocol/specification and development fixtures only",
+  "unchanged_record_schema": "round7.participation_record.v1",
+  "dynamic_constraints": [
+    "assessments object properties exactly expected IDs; required all; additionalProperties false",
+    "assessment values retain existing fields except item_id omitted; raw key supplies identity",
+    "contradiction item_ids enum equals schedule",
+    "document_id and payload_sha256 single-value enums"
+  ],
+  "host_checks": [
+    "input IDs unique globally, nonempty, no reserved coverage ID,1<=N<=1000",
+    "response IDs exactly schedule and unique",
+    "all payload/document/schema bindings correct",
+    "all source evidence resolves without clipping/repair",
+    "complete plus missing_items invalid",
+    "unknown relation/channel/modality never promoted to preserved/complete"
+  ],
+  "record_item_categories": [
+    "events",
+    "routes",
+    "requirements",
+    "identities",
+    "uncertainties",
+    "alternative_groups"
+  ],
+  "nested_items": {
+    "events": "timing",
+    "routes": "components"
+  },
+  "not_items": [
+    "coverage",
+    "evidence",
+    "source_text",
+    "metadata"
+  ],
+  "global_coverage_location": "existing top-level completeness and missing_items; reason explicitly evaluates record.coverage claim; no assessment row named coverage",
+  "source_first_oracle": "Independent source-unit universe and frozen artifact assessment, not derived from record IDs, provider coverage, or verifier missing_items",
+  "fixture_suite": "development-fixtures.json",
+  "syntactic_suite": "response-fixtures.json",
+  "no_provider_calls": true,
+  "no_production_or_shared_contract_changes": true,
+  "production_eligible": false,
+  "action_ready": false,
+  "selected_response_design": "exact-ID keyed assessment object; minimal lossless wire-only adaptation",
+  "provider_wire_schema_version": "round9.exact-id.record_verdict.v1",
+  "normalized_host_verdict_shape": "round7.record_verdict.v1",
+  "strict_parse_policy": "Reject duplicate member keys at every depth before construction of dict/object; reject nonstandard NaN/Infinity and malformed/trailing JSON. Never last-key-wins.",
+  "normalization": "After strict parse and wire validation only, iterate expected sorted IDs, add item_id from each key, preserve all assessment values/global fields exactly, change only schema_version to round7.record_verdict.v1; then existing host validation. No dropping/repair.",
+  "semantic_audit_schema": "semantic-audit-input.schema.json",
+  "semantic_audit_normative_spec": "SEMANTIC-AUDIT-CONTRACT.md",
+  "offline_review_schema": "offline-audit-review.schema.json",
+  "semantic_result_states": [
+    "complete_supported",
+    "not_complete",
+    "unverified"
+  ],
+  "missing_unknown_unapproved_audit": "unverified; review_required=true; complete_supported=false",
+  "audit_truth_limit": "Local reviewed artifact and hashes establish recorded review and binding, not semantic truth or authenticated authority.",
+  "arbitrary_assert_complete_bypass": false,
+  "wire_local_ref_allowlist": [
+    "#/$defs/a",
+    "#/$defs/e"
+  ],
+  "wire_ref_validation": "Explicit bounded known-local expansion before existing schema validation; no unresolved refs, remote lookup or ignored keywords.",
+  "offline_request_guarded_bytes": 39456,
+  "input_byte_guard_unchanged": 40000
+}

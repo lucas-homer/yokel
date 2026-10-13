@@ -1,0 +1,58 @@
+{
+  "schema_version": "round8-contract-probe.cost_audit.v1",
+  "incremental_probe": {
+    "extraction": {
+      "usage_estimate_usd": 0.088724,
+      "provider_reported_usd": 0.090426,
+      "conservative_charge_usd": 0.167162
+    },
+    "jev": {
+      "usage_estimate_usd": 0,
+      "provider_reported_usd": 0,
+      "conservative_charge_usd": 0
+    },
+    "stronger": {
+      "usage_estimate_usd": 0,
+      "provider_reported_usd": 0,
+      "conservative_charge_usd": 0
+    }
+  },
+  "prior_two_attempts": {
+    "provider_reported_usd": 0.158827,
+    "conservative_charge_usd": 0.261774
+  },
+  "combined_three_attempts": {
+    "provider_reported_usd": 0.249253,
+    "conservative_charge_usd": 0.428936
+  },
+  "usage": {
+    "prompt_tokens": 3407,
+    "completion_tokens": 8191,
+    "total_tokens": 11598,
+    "cost": 0.090426,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 3404,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.090426,
+      "upstream_inference_prompt_cost": 0.008516,
+      "upstream_inference_completions_cost": 0.08191
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 79,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "response_sha256": "7a754474b4c6f8c47249ca9aa1d13c2785cf5082acbe61ca3ffc4a474edab473",
+  "intent_sha256": "a69e04a7ba1e89ac4ad7769bbafff08840a2b545fb99a3441702f46847af568c",
+  "prior_debit_sha256": "2dc9ff194922e02f3b17176e77237a5fa23a5a0b527a373bbf8c0a3ad42e6c61",
+  "invoice_verified": false,
+  "verifier_zero_basis": "Frozen complete run has one inventory intent/result and no verifier operations.",
+  "evaluation_cost_scope": "Incremental contract probe only; prior costs are separate.",
+  "future_guard_carry_forward_usd": 0.428936
+}

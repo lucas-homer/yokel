@@ -1,0 +1,104 @@
+{
+  "sessionId": "52edcc3c-3a7e-43f6-bd68-27caba45eb8d",
+  "stopReason": "success",
+  "text": "```json\n{\n  \"plan\": \"rulemaking-notice extraction, four semantic cases plus invariants, offline synthetic\",\n  \"conventions\": {\n    \"no_imposed_schema\": \"Expectations are observable properties; any representation passes if an evaluator can recover the property from output plus spans.\",\n    \"spans\": \"Exact offsets into the hashed fixture. A broad span may ground several facts. No subspan or split count is required.\",\n    \"unknown_vs_justified\": \"Where source is silent, absence or an unknown value both pass. Where source is ambiguous, a justified label with explicit uncertainty passes; so does unknown. Neither is an error.\"\n  },\n  \"cases\": [\n    {\n      \"id\": \"C1-deadline-date-only\",\n      \"input\": \"\\\"Written comments must be postmarked no later than April 15, 2026. Electronic comments must be received by that date.\\\" No clock or timezone anywhere.\",\n      \"positive\": [\n        \"Date 2026-04-15 recovered as a calendar date, not an instant.\",\n        \"Clock and timezone absent or unknown.\",\n        \"Postmark semantics for written comments and receipt semantics for electronic comments, each recoverable; one span covering both sentences is acceptable.\",\n        \"Spans match source text exactly.\"\n      ],\n      \"negative\": [\n        \"Any clock, offset, or midnight instant without a source span.\",\n        \"Postmark and receipt collapsed into one semantics for both channels.\",\n        \"Date shifted by timezone assumption.\"\n      ],\n      \"tolerance\": \"Zero on date and spans. Unknown accepted for clock and timezone. If a fixture variant omits all submission language, receipt-vs-postmark unknown is correct and any asserted value fails.\"\n    },\n    {\n      \"id\": \"C2-amended-rule-vs-historical-filing\",\n      \"input\": \"\\\"AMENDATORY SECTION (Amending WSR 20-01-001, filed 1/2/20, effective 2/2/20). WAC 123-45-067 Eligibility.\\\"\",\n      \"positive\": [\n        \"Two distinct entities: the affected current rule WAC 123-45-067 and the historical filing WSR 20-01-001.\",\n        \"Filed date 2020-01-02 and effective date 2020-02-02 attached only to the historical filing.\",\n        \"A directed relationship from the present amendatory action to WSR 20-01-001 meaning 'amends', and an association from the action to WAC 123-45-067 as the affected section. A single span over the whole snippet may ground all of these.\",\n        \"Title 'Eligibility' attached to the WAC section.\",\n        \"No effective date for the present action asserted, since the snippet gives none.\"\n      ],\n      \"negative\": [\n        \"WAC and WSR merged into one entity, or the WSR treated as the operative rule.\",\n        \"2020 dates attached to WAC 123-45-067 or to the present action.\",\n        \"Relationship direction reversed or endpoint unresolvable.\",\n        \"Present-action effective date invented.\"\n      ],\n      \"tolerance\": \"Relationship label synonyms accepted when direction and endpoints are correct. Two-digit year expansion to 2020 accepted; other century fails.\"\n    },\n    {\n      \"id\": \"C3-proposed-intent-from-prose\",\n      \"input\": \"\\\"We propose to remove paragraph (b) and revise paragraph (c) to read as set forth below.\\\" Fixture is plain text with no insertion or deletion markup; paragraph (b) text does not appear.\",\n      \"positive\": [\n        \"Proposed intent to remove paragraph (b) recovered, grounded in the prose span.\",\n        \"Proposed intent to revise paragraph (c) recovered.\",\n        \"The text of paragraph (b) is absent or explicitly marked unavailable; its status is proposed-removal by intent, not a deleted text segment.\",\n        \"If a variant fixture supplies explicit markers, marked segments take status exactly from the markers; prose and markers may both ground status and must not conflict.\",\n        \"Nothing is labeled current, proposed, or deleted beyond what prose or supplied markers state.\"\n      ],\n      \"negative\": [\n        \"A deleted text body for paragraph (b) fabricated.\",\n        \"Markup facts imported that the plain-text fixture does not contain.\",\n        \"Paragraph (c) replacement text asserted when 'set forth below' is not in the fixture.\",\n        \"Proposed intent rejected solely because no markup exists.\"\n      ],\n      \"tolerance\": \"Status may be grounded in prose, markers, or both. Missing markup never supplies facts and never blocks prose-grounded intent.\"\n    },\n    {\n      \"id\": \"C4-directive-force-with-uncertainty\",\n      \"input\": \"Three sentences: \\\"Each comment must include the docket number.\\\" \\\"Commenters are encouraged to attach supporting data.\\\" \\\"Comments are to be submitted through the docket, addressed as described in ADDRESSES.\\\" An ADDRESSES block exists elsewhere in the fixture.\",\n      \"positive\": [\n        \"Sentence 1: mandatory force, span on the modal.\",\n        \"Sentence 2: non-mandatory or hortatory force.\",\n        \"Sentence 3: either an explicit unknown, or a justified label such as 'likely mandatory' or 'hortatory' carrying an explicit uncertainty indication and the verbatim modal phrase; both pass.\",\n        \"A structural link from sentence 3 to the ADDRESSES block, labeled reference or dependency, with no force of its own.\"\n      ],\n      \"negative\": [\n        \"Sentence 2 labeled mandatory, or sentence 1 downgraded to unknown.\",\n        \"Sentence 3 given a force label with no uncertainty indication and no verbatim phrase.\",\n        \"Sentence 3's label treated by the evaluator as a definite error merely because reviewers could debate it.\",\n        \"The ADDRESSES link emitted as a must or should, or the ADDRESSES block assigned directive force.\"\n      ],\n      \"tolerance\": \"Explicit modals: zero tolerance. Ambiguous modals: any label passes if uncertainty is explicit and the phrase is preserved; unknown also passes. Evaluator records debated items as 'contested', not failed.\"\n    }\n  ],\n  \"invariants\": [\n    \"Output carries the fixture hash; a one-byte fixture change produces a mismatch.\",\n    \"Every span slices the fixture to the exact quoted text; broad spans allowed, paraphrase not.\",\n    \"Identifiers unique; every reference resolves to an emitted identifier.\",\n    \"Relationship and dependency graph acyclic.\",\n    \"Completion marker consistent: not claimed while any unit is pending.\",\n    \"Structural links carry no force attribute and are never treated as prerequisites for a fact to count.\",\n    \"Every stated value has a span or is explicitly unknown or explicitly uncertain.\",\n    \"No fixed unit count: evaluator asserts per-fact recoverability, never decomposition shape.\",\n    \"Coverage metric, if emitted, is reported separately and never consulted by semantic verdicts.\"\n  ],\n  \"freeze_procedure\": {\n    \"label\": \"AI assessment, source-only, not gold\",\n    \"steps\": [\n      \"Hash each fixture and seal it.\",\n      \"Reading only the fixture, list atomic facts in plain words with one or more exact spans; mark silence as unknown and ambiguity as uncertain, with the verbatim phrase.\",\n      \"Record relationships and structural links as directed pairs over listed facts, each with a span.\",\n      \"Keep it compact and many-to-many: facts may share spans, spans may ground many facts, no schema or count.\",\n      \"Add header with label, author, date, fixture hash. Hash the reference and store both hashes.\",\n      \"Never edit; corrections become a new version with a new hash.\",\n      \"Only then run the extractor and compare by per-fact recoverability.\"\n    ],\n    \"exposure_rule\": \"Reference is never shown to the extractor or revised after output inspection within a version.\"\n  },\n  \"execution\": \"Local only, plain text fixtures, no network, credentials, real dockets, or private data.\"\n}\n```",
+  "result": {
+    "duration_api_ms": 129040,
+    "stop_reason": "end_turn",
+    "session_id": "52edcc3c-3a7e-43f6-bd68-27caba45eb8d",
+    "total_cost_usd": 0.6438740000000001,
+    "usage": {
+      "input_tokens": 2,
+      "cache_creation_input_tokens": 7256,
+      "cache_read_input_tokens": 4343,
+      "output_tokens": 2705,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 7256,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "global",
+      "iterations": [
+        {
+          "input_tokens": 2,
+          "output_tokens": 2705,
+          "cache_read_input_tokens": 4343,
+          "cache_creation_input_tokens": 7256,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 7256
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "modelUsage": {
+      "claude-fable-5-1": {
+        "inputTokens": 4,
+        "outputTokens": 9524,
+        "thinkingTokens": 1632,
+        "cacheReadInputTokens": 7656,
+        "cacheCreationInputTokens": 8286,
+        "webSearchRequests": 0,
+        "costUSD": 0.6438740000000001,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000,
+        "canonicalModel": "claude-fable-5-1",
+        "provider": "firstParty",
+        "costBasis": "list"
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "fast_mode_disabled_reason": "sdk_opt_in_required",
+    "subagent_stats": {
+      "spawned": 0,
+      "requested": {
+        "background": 0,
+        "foreground": 0,
+        "unset": 0
+      },
+      "started_in_background": 0,
+      "max_depth": 0,
+      "spawned_by_subagents": 0,
+      "completed": 0,
+      "failed": 0,
+      "killed": {
+        "parent": 0,
+        "user": 0,
+        "system": 0
+      },
+      "refused": {
+        "depth_limit": 0,
+        "concurrency_limit": 0,
+        "budget": 0
+      },
+      "by_type": {}
+    },
+    "safety_stops": 0,
+    "is_error": false,
+    "num_turns": 1,
+    "subtype": "success",
+    "api_error_status": null,
+    "result": "```json\n{\n  \"plan\": \"rulemaking-notice extraction, four semantic cases plus invariants, offline synthetic\",\n  \"conventions\": {\n    \"no_imposed_schema\": \"Expectations are observable properties; any representation passes if an evaluator can recover the property from output plus spans.\",\n    \"spans\": \"Exact offsets into the hashed fixture. A broad span may ground several facts. No subspan or split count is required.\",\n    \"unknown_vs_justified\": \"Where source is silent, absence or an unknown value both pass. Where source is ambiguous, a justified label with explicit uncertainty passes; so does unknown. Neither is an error.\"\n  },\n  \"cases\": [\n    {\n      \"id\": \"C1-deadline-date-only\",\n      \"input\": \"\\\"Written comments must be postmarked no later than April 15, 2026. Electronic comments must be received by that date.\\\" No clock or timezone anywhere.\",\n      \"positive\": [\n        \"Date 2026-04-15 recovered as a calendar date, not an instant.\",\n        \"Clock and timezone absent or unknown.\",\n        \"Postmark semantics for written comments and receipt semantics for electronic comments, each recoverable; one span covering both sentences is acceptable.\",\n        \"Spans match source text exactly.\"\n      ],\n      \"negative\": [\n        \"Any clock, offset, or midnight instant without a source span.\",\n        \"Postmark and receipt collapsed into one semantics for both channels.\",\n        \"Date shifted by timezone assumption.\"\n      ],\n      \"tolerance\": \"Zero on date and spans. Unknown accepted for clock and timezone. If a fixture variant omits all submission language, receipt-vs-postmark unknown is correct and any asserted value fails.\"\n    },\n    {\n      \"id\": \"C2-amended-rule-vs-historical-filing\",\n      \"input\": \"\\\"AMENDATORY SECTION (Amending WSR 20-01-001, filed 1/2/20, effective 2/2/20). WAC 123-45-067 Eligibility.\\\"\",\n      \"positive\": [\n        \"Two distinct entities: the affected current rule WAC 123-45-067 and the historical filing WSR 20-01-001.\",\n        \"Filed date 2020-01-02 and effective date 2020-02-02 attached only to the historical filing.\",\n        \"A directed relationship from the present amendatory action to WSR 20-01-001 meaning 'amends', and an association from the action to WAC 123-45-067 as the affected section. A single span over the whole snippet may ground all of these.\",\n        \"Title 'Eligibility' attached to the WAC section.\",\n        \"No effective date for the present action asserted, since the snippet gives none.\"\n      ],\n      \"negative\": [\n        \"WAC and WSR merged into one entity, or the WSR treated as the operative rule.\",\n        \"2020 dates attached to WAC 123-45-067 or to the present action.\",\n        \"Relationship direction reversed or endpoint unresolvable.\",\n        \"Present-action effective date invented.\"\n      ],\n      \"tolerance\": \"Relationship label synonyms accepted when direction and endpoints are correct. Two-digit year expansion to 2020 accepted; other century fails.\"\n    },\n    {\n      \"id\": \"C3-proposed-intent-from-prose\",\n      \"input\": \"\\\"We propose to remove paragraph (b) and revise paragraph (c) to read as set forth below.\\\" Fixture is plain text with no insertion or deletion markup; paragraph (b) text does not appear.\",\n      \"positive\": [\n        \"Proposed intent to remove paragraph (b) recovered, grounded in the prose span.\",\n        \"Proposed intent to revise paragraph (c) recovered.\",\n        \"The text of paragraph (b) is absent or explicitly marked unavailable; its status is proposed-removal by intent, not a deleted text segment.\",\n        \"If a variant fixture supplies explicit markers, marked segments take status exactly from the markers; prose and markers may both ground status and must not conflict.\",\n        \"Nothing is labeled current, proposed, or deleted beyond what prose or supplied markers state.\"\n      ],\n      \"negative\": [\n        \"A deleted text body for paragraph (b) fabricated.\",\n        \"Markup facts imported that the plain-text fixture does not contain.\",\n        \"Paragraph (c) replacement text asserted when 'set forth below' is not in the fixture.\",\n        \"Proposed intent rejected solely because no markup exists.\"\n      ],\n      \"tolerance\": \"Status may be grounded in prose, markers, or both. Missing markup never supplies facts and never blocks prose-grounded intent.\"\n    },\n    {\n      \"id\": \"C4-directive-force-with-uncertainty\",\n      \"input\": \"Three sentences: \\\"Each comment must include the docket number.\\\" \\\"Commenters are encouraged to attach supporting data.\\\" \\\"Comments are to be submitted through the docket, addressed as described in ADDRESSES.\\\" An ADDRESSES block exists elsewhere in the fixture.\",\n      \"positive\": [\n        \"Sentence 1: mandatory force, span on the modal.\",\n        \"Sentence 2: non-mandatory or hortatory force.\",\n        \"Sentence 3: either an explicit unknown, or a justified label such as 'likely mandatory' or 'hortatory' carrying an explicit uncertainty indication and the verbatim modal phrase; both pass.\",\n        \"A structural link from sentence 3 to the ADDRESSES block, labeled reference or dependency, with no force of its own.\"\n      ],\n      \"negative\": [\n        \"Sentence 2 labeled mandatory, or sentence 1 downgraded to unknown.\",\n        \"Sentence 3 given a force label with no uncertainty indication and no verbatim phrase.\",\n        \"Sentence 3's label treated by the evaluator as a definite error merely because reviewers could debate it.\",\n        \"The ADDRESSES link emitted as a must or should, or the ADDRESSES block assigned directive force.\"\n      ],\n      \"tolerance\": \"Explicit modals: zero tolerance. Ambiguous modals: any label passes if uncertainty is explicit and the phrase is preserved; unknown also passes. Evaluator records debated items as 'contested', not failed.\"\n    }\n  ],\n  \"invariants\": [\n    \"Output carries the fixture hash; a one-byte fixture change produces a mismatch.\",\n    \"Every span slices the fixture to the exact quoted text; broad spans allowed, paraphrase not.\",\n    \"Identifiers unique; every reference resolves to an emitted identifier.\",\n    \"Relationship and dependency graph acyclic.\",\n    \"Completion marker consistent: not claimed while any unit is pending.\",\n    \"Structural links carry no force attribute and are never treated as prerequisites for a fact to count.\",\n    \"Every stated value has a span or is explicitly unknown or explicitly uncertain.\",\n    \"No fixed unit count: evaluator asserts per-fact recoverability, never decomposition shape.\",\n    \"Coverage metric, if emitted, is reported separately and never consulted by semantic verdicts.\"\n  ],\n  \"freeze_procedure\": {\n    \"label\": \"AI assessment, source-only, not gold\",\n    \"steps\": [\n      \"Hash each fixture and seal it.\",\n      \"Reading only the fixture, list atomic facts in plain words with one or more exact spans; mark silence as unknown and ambiguity as uncertain, with the verbatim phrase.\",\n      \"Record relationships and structural links as directed pairs over listed facts, each with a span.\",\n      \"Keep it compact and many-to-many: facts may share spans, spans may ground many facts, no schema or count.\",\n      \"Add header with label, author, date, fixture hash. Hash the reference and store both hashes.\",\n      \"Never edit; corrections become a new version with a new hash.\",\n      \"Only then run the extractor and compare by per-fact recoverability.\"\n    ],\n    \"exposure_rule\": \"Reference is never shown to the extractor or revised after output inspection within a version.\"\n  },\n  \"execution\": \"Local only, plain text fixtures, no network, credentials, real dockets, or private data.\"\n}\n```",
+    "ttft_ms": 36499,
+    "type": "result",
+    "duration_ms": 36525,
+    "uuid": "0e4ee940-68bf-4ad3-8f9c-b4b818a121c4",
+    "ttft_stream_ms": 2430,
+    "time_to_request_ms": 24,
+    "first_content_frame_ms": 2430,
+    "queued_turn_count": 0,
+    "result_index": 0
+  }
+}

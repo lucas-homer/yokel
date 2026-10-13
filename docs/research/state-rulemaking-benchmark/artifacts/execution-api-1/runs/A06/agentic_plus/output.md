@@ -1,0 +1,47 @@
+![logo: California Department of Fish & Wildlife](page_1_image_1_v2.jpg)
+
+STATE OF CALIFORNIA
+DEPARTMENT OF FISH AND WILDLIFE
+*GAVIN NEWSOM, Governor*
+*MEGHAN HERTEL, Director*
+
+P.O. Box 944209
+Sacramento, CA 94244-2090
+<u>wildlife.ca.gov</u>
+
+# NOTICE OF PROPOSED REGULATIONS
+
+## **Invasive Mussels [Revision]**
+
+September 2, 2026
+
+15-DAY CONTINUATION OF NOTICE IS HEREBY GIVEN that the Department proposes amendments to sections 650, 672, 672.1, and 672.2 to Title 14, California Code of Regulations (CCR), for Invasive Mussels.
+
+The full text of the resulting amendment with the change clearly indicated, shall be made available to the public for at least 15 days before the agency amends, or repeals the resulting regulation. Any written comments received regarding the change will be responded to in the final statement of reasons required by Section 11346.9.
+
+On July 3, 2026, a notice of proposed action (NOPA) to adopt the above referenced regulations was distributed and noticed in compliance with Government Code section 11346.4. The NOPA stated that the Department was proposing to amend sections 650, 672, 672.1, and 672.2 to Title 14 of the CCR to expand the scope of the existing regulations to encompass all invasive mussel species, thereby ensuring consistency with the revised Fish and Game Code 2301, 2302, and new Fish and Game Code 2303 established by Assembly Bill 149. The proposed amendments incorporate components of prevention and containment to limit the spread of invasive mussels in California and to other states. Additionally, the proposal amends the Invasive Mussel Permit Application Form (DFW 1014), the Quarantine Notice Form (DFW 1015), the Administrative Penalty Form (DFW 1016), and creates a new Department Business List Request Form (DFW 1013).
+
+The comment period for the proposed regulation ended on August 18, 2026. Consideration of input received resulted in modification to the originally proposed text in the paragraph of subsection 672.1(c)(1) to clarify who may conduct inspections of conveyances, and is provided with this notice in accordance with Government Code section 11346.8(c) and Title 1, Section 44 CCR.
+
+The regulation with the proposed changes indicated in double underline (for added text) and single strikeout (for removed text) is attached to this notice.
+
+*Conserving California’s Wildlife Since 1870*
+
+---
+
+## **<u>WRITTEN COMMENT PERIOD</u>**
+
+Any interested person, or his or her authorized representative, may submit written comments on the proposed action to the Department. All written comments must be received by the Department via mail, or e-mail, no later than Thursday, September 17, 2026, to the contact as follows:
+
+California Department of Fish and Wildlife
+Regulations Unit
+Attn: Daphne Nandino, Regulatory Scientist
+P.O. Box 944209
+Sacramento, CA 94244-2090
+Email: <u>Regulations@wildlife.ca.gov</u>
+
+All written comments received by September 17, 2026, which pertain to the indicated changes will be considered by the Department and will be summarized and responded to in the Final Statement of Reasons.
+
+## **<u>AVAILABILITY OF DOCUMENTS</u>**
+
+Copies of the documents related to this rulemaking can be accessed via the Departments website at <u>https://wildlife.ca.gov/Notices/Regulations/Invasive-Mussels.</u>

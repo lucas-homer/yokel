@@ -1,0 +1,129 @@
+{
+  "fixture_id": "B10",
+  "state": "CO",
+  "bucket": "lifecycle changes",
+  "layout_features": [
+    "single-column notice",
+    "label/value layout",
+    "lifecycle event"
+  ],
+  "event_type": "permanent_adoption",
+  "source_url": "https://www.sos.state.co.us/CCR/RegisterPdfContents.do?publicationDay=09/10/2026",
+  "discovery_url": "https://www.sos.state.co.us/CCR/RegisterHome.do",
+  "retrieved_at": "2026-10-06T00:34:06.952629+00:00",
+  "source_title": "Retail marijuana tax permanent adoption notice",
+  "selection_reason": "First permanent-adoption notice header in Sept 10 issue; bounded one-page lifecycle notice, adopted rule text excluded; second and last from issue.",
+  "original_sha256": "bfe49e110bbba501b4c19fb8d466827adf277e54274cbbca0afd2cbe8ba9df2c",
+  "input_sha256": "c6c69896b550f6d5098b1c2e6a26a74d6e401d147c55514fd7b2486cb45e740c",
+  "original_bytes": 8719779,
+  "input_bytes": 79978,
+  "original_page_count": 1222,
+  "input_page_count": 1,
+  "original_physical_pages": [
+    233
+  ],
+  "package_limitations": "Derived contiguous complete notice/form excerpt. Full original retained; attachments/rule text outside selected notice are excluded; whole physical pages may contain neighboring notice material.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency adopted the retail marijuana tax rule?",
+      "expected_value": "Taxation Division",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 233,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "Taxation Division",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "citation",
+      "question": "Which CCR number belongs to the adopted rule?",
+      "expected_value": "1 CCR 201-18",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 233,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "1 CCR 201-18",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "event",
+      "question": "Which lifecycle event does this notice identify?",
+      "expected_value": "permanent adoption",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 233,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "Permanent Rules Adopted",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "effective",
+      "question": "What date is labeled Effective Date?",
+      "expected_value": "2026-09-30",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 233,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "09/30/2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "publication",
+      "question": "What is the register publication date?",
+      "expected_value": "2026-09-10",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 233,
+      "input_page": 1,
+      "region": "Register footer",
+      "source_quote": "September 10, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "comment_close",
+      "question": "Does this permanent-adoption notice state a comment-close date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 233,
+      "input_page": 1,
+      "region": "Entire one-page adopted-notice header, original physical page 233; attached adopted-rule text excluded.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    },
+    {
+      "field_id": "hearing",
+      "question": "Does this permanent-adoption notice state a hearing date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 233,
+      "input_page": 1,
+      "region": "Entire one-page adopted-notice header, original physical page 233.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    },
+    {
+      "field_id": "filing",
+      "question": "Does this permanent-adoption notice state a filing date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 233,
+      "input_page": 1,
+      "region": "Entire one-page adopted-notice header, original physical page 233.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    }
+  ],
+  "annotation_author": "Codex source collector agent; not human gold",
+  "visual_inspection": "All input pages inspected as rendered images by collector agent; source-only references, pending independent review.",
+  "shared_original_group": "CO-49-17",
+  "template_family": "CO-Permanent-Rules-Adopted",
+  "page_derivation_validation": "Selected page content streams and media/crop boxes equal original mapped pages; rendered all input pages inspected."
+}

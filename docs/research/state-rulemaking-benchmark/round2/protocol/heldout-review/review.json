@@ -1,0 +1,151 @@
+{
+  "reference_version": "independent-source-v1",
+  "reviewed_at_utc": "2026-10-07T04:15:57.138710+00:00",
+  "status": "approved_for_common_reference_freeze",
+  "independent_agent_review_not_human_gold": true,
+  "heldout_parser_outputs_inspected": false,
+  "heldout_native_content_inspected": false,
+  "all_22_input_source_images_viewed": true,
+  "collector_freeze_sha256": "e935c2c8f43612c8689bed00d0d1ee7fb8eb4c989cadd4da07137dd9284a8456",
+  "summary": {
+    "notice_units": 8,
+    "input_pages": 22,
+    "states": 8,
+    "original_pdfs": 8,
+    "template_families": 8,
+    "reference_fields": 74,
+    "critical_fields": 65,
+    "critical_semantic_groups": 53,
+    "critical_answerability": {
+      "present": 48,
+      "not_stated": 15,
+      "explicit_negative": 1,
+      "uncertain": 1
+    },
+    "reference_eligible_units": 7,
+    "primary_bucket_counts": {
+      "lifecycle_change": 1,
+      "scanned_filled_form": 2,
+      "clean_standalone_pdf": 2,
+      "dense_register_layout": 3
+    },
+    "image_only_scan_units": 0
+  },
+  "fixtures": [
+    {
+      "fixture_id": "H01",
+      "fields": 9,
+      "critical_fields": 8,
+      "critical_semantic_groups": 7,
+      "critical_answerability": {
+        "present": 6,
+        "not_stated": 2
+      },
+      "reference_gate_eligible": true,
+      "uncertain_critical_fields": [],
+      "reference_path": "H01/adjudicated-reference.json"
+    },
+    {
+      "fixture_id": "H02",
+      "fields": 9,
+      "critical_fields": 7,
+      "critical_semantic_groups": 6,
+      "critical_answerability": {
+        "present": 4,
+        "explicit_negative": 1,
+        "not_stated": 2
+      },
+      "reference_gate_eligible": true,
+      "uncertain_critical_fields": [],
+      "reference_path": "H02/adjudicated-reference.json"
+    },
+    {
+      "fixture_id": "H03",
+      "fields": 9,
+      "critical_fields": 8,
+      "critical_semantic_groups": 6,
+      "critical_answerability": {
+        "present": 6,
+        "not_stated": 2
+      },
+      "reference_gate_eligible": true,
+      "uncertain_critical_fields": [],
+      "reference_path": "H03/adjudicated-reference.json"
+    },
+    {
+      "fixture_id": "H04",
+      "fields": 9,
+      "critical_fields": 8,
+      "critical_semantic_groups": 7,
+      "critical_answerability": {
+        "present": 6,
+        "not_stated": 2
+      },
+      "reference_gate_eligible": true,
+      "uncertain_critical_fields": [],
+      "reference_path": "H04/adjudicated-reference.json"
+    },
+    {
+      "fixture_id": "H05",
+      "fields": 8,
+      "critical_fields": 7,
+      "critical_semantic_groups": 5,
+      "critical_answerability": {
+        "present": 5,
+        "not_stated": 2
+      },
+      "reference_gate_eligible": true,
+      "uncertain_critical_fields": [],
+      "reference_path": "H05/adjudicated-reference.json"
+    },
+    {
+      "fixture_id": "H06",
+      "fields": 10,
+      "critical_fields": 9,
+      "critical_semantic_groups": 8,
+      "critical_answerability": {
+        "present": 7,
+        "uncertain": 1,
+        "not_stated": 1
+      },
+      "reference_gate_eligible": false,
+      "uncertain_critical_fields": [
+        "extension_max_conflict"
+      ],
+      "reference_path": "H06/adjudicated-reference.json"
+    },
+    {
+      "fixture_id": "H07",
+      "fields": 10,
+      "critical_fields": 9,
+      "critical_semantic_groups": 8,
+      "critical_answerability": {
+        "present": 7,
+        "not_stated": 2
+      },
+      "reference_gate_eligible": true,
+      "uncertain_critical_fields": [],
+      "reference_path": "H07/adjudicated-reference.json"
+    },
+    {
+      "fixture_id": "H08",
+      "fields": 10,
+      "critical_fields": 9,
+      "critical_semantic_groups": 6,
+      "critical_answerability": {
+        "present": 7,
+        "not_stated": 2
+      },
+      "reference_gate_eligible": true,
+      "uncertain_critical_fields": [],
+      "reference_path": "H08/adjudicated-reference.json"
+    }
+  ],
+  "strict_gate_implication": "H06 is insufficient_reference in every arm. All seven eligible notices must pass to meet the adopted 7-pass shadow-pilot threshold; all eight scheduled notices remain in headline denominator.",
+  "limitations": [
+    "Purposive selection, not preregistered; collector used native text for navigation/transcription before freeze. Independent adjudication used page images.",
+    "Bucket allocation is clean 2, filled form 2, dense register 3, lifecycle 1; target 2 per bucket not achieved. Both filled forms are born-digital; no image-only scan.",
+    "Source-only reference approval does not authorize provider calls, imply parser quality, or establish legal precedence.",
+    "H06 conflict is unresolved by design; no replacement based on parser performance."
+  ]
+}

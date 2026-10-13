@@ -1,0 +1,48 @@
+{
+  "version": "round2-operational-amendments-v1",
+  "recorded_at_utc": "2026-10-07T04:16:40.252583+00:00",
+  "authority": "Primary chat instructions in this independent review chat; this records primary authorization, not an independent provider-call authorization.",
+  "base_contract_sha256": "3fe4e0f46a8a1a45dfe289b898baddcd3cce827dec1c188430452d8b254bdda3",
+  "openrouter_rate_limit_recovery": {
+    "applies_to": "diagnostic OpenRouter run only",
+    "reason": "A04 returned HTTP 400 explicitly reporting parsing failure because the engine was rate limited, without id, annotations or usage.",
+    "completed_before_failure": [
+      "A01",
+      "A02",
+      "A03"
+    ],
+    "retain_original_attempt": true,
+    "retained_directory": "../openrouter/rejected-attempts/A04-attempt1",
+    "one_explicit_recovery_authorized": true,
+    "max_diagnostic_http_requests": 21,
+    "max_distinct_diagnostic_units": 20,
+    "recovery_batch_requests": 17,
+    "minimum_request_start_interval_seconds": 22,
+    "completed_units_rerun": false,
+    "automatic_or_uncertain_retries_authorized": false,
+    "stop_on_another_failure": true,
+    "initial_runner_and_prestate_retained_as_reported_by_primary": true,
+    "billing": "Failed attempt charge unknown. Account-key usage 0 lagged known returned response costs of USD 0.00628; do not equate missing usage with zero charge.",
+    "basis": "Primary report; retained failure artifacts not re-audited by this source-only reviewer."
+  },
+  "budget_allocation": {
+    "aggregate_observed_charge_ceiling_usd": 5,
+    "openrouter_observed_charge_stop_usd": 4.5,
+    "llama_reserved_usd": 0.5,
+    "llama_projected_max_pages": 58,
+    "llama_projected_credits": 174,
+    "llama_projected_price_usd": 0.2175,
+    "estimate_is_not_actual_billing": true,
+    "unknown_or_delayed_billing_precludes_invoice_guarantee": true,
+    "scheduled_unit_arm_observations_unchanged": 112,
+    "original_scheduled_cloud_unit_jobs": 56,
+    "one_diagnostic_recovery_additional_request": 1,
+    "maximum_cloud_http_attempts_if_all_scheduled_complete": 57
+  },
+  "native_timing": {
+    "diagnostic": "Historical native text copied byte-identically by execution owner; frozen evidence scores may be reused. No fresh native extraction occurred and no fresh diagnostic native timing may be claimed.",
+    "heldout": "Fresh pdftotext -layout extraction planned only after common reference freeze. Record actual version, command, input/output hashes and wall timing; do not combine fresh timing with absent historical timing.",
+    "independent_review": "Held-out native content was not inspected. Byte hashing frozen collector native files validates preservation only and is not content review."
+  },
+  "precedence": "These explicit exceptions supplement round2-v1. All other reference/scoring, no outcome-driven replacement, and provider authorization requirements remain. Include this amendment hash in the primary experiment freeze."
+}

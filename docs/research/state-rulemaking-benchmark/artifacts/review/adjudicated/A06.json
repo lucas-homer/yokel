@@ -1,0 +1,346 @@
+{
+  "fixture_id": "A06",
+  "reference_version": "reviewer-source-v1",
+  "collector_annotation_hash": "54e43d2e646be835a2dad89e3a1b0054c7f135941f7caa408fd58feb7640b438",
+  "collector_snapshot": "/private/tmp/docketclock-expanded-benchmark-2026-10-05/review/collector-snapshots/A06-54e43d2e646b.json",
+  "input_sha256": "9bd708c86641ecc89157b3620b60f5886ae7a5db7ee2a9892eeb800930c83747",
+  "reviewer_kind": "independent agent, not human gold standard",
+  "new_vendor_outputs_inspected": false,
+  "state": "CA",
+  "primary_bucket": "clean standalone PDFs",
+  "layout_features": [
+    "clean born-digital two-page letter",
+    "current and prior comment close roles"
+  ],
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Clean-PDF allocation describes layout; content also contains lifecycle change. Related regulatory text/attachments are not included."
+  ],
+  "notice_scope_boundaries": "Both pages of complete continuation notice, excluding separately linked proposed text.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which department issues the Invasive Mussels Revision notice?",
+      "expected_value": "California Department of Fish and Wildlife",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "letterhead",
+      "source_quote": "DEPARTMENT OF FISH AND WILDLIFE",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete continuation notice, excluding separately linked proposed text.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife; Invasive Mussels revision; 15-day continuation dated September 2, 2026. Title14 sections650,672,672.1,672.2; modification672.1(c)(1).",
+        "Prior NOPA July3,2026 and original comment close August18,2026.",
+        "Current written comments must be received by mail/email no later than Thursday September17,2026; date only, no clock or timezone.",
+        "Comments restricted to indicated changes. No hearing or final effective date on both pages. Documents separately linked."
+      ]
+    },
+    {
+      "field_id": "lifecycle",
+      "question": "What notice action is announced?",
+      "expected_value": "15-day continuation with changes to proposed regulations",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "15-DAY CONTINUATION OF NOTICE IS HEREBY GIVEN",
+      "basis": "source_text",
+      "semantic_group_id": "lifecycle",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete continuation notice, excluding separately linked proposed text.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife; Invasive Mussels revision; 15-day continuation dated September 2, 2026. Title14 sections650,672,672.1,672.2; modification672.1(c)(1).",
+        "Prior NOPA July3,2026 and original comment close August18,2026.",
+        "Current written comments must be received by mail/email no later than Thursday September17,2026; date only, no clock or timezone.",
+        "Comments restricted to indicated changes. No hearing or final effective date on both pages. Documents separately linked."
+      ]
+    },
+    {
+      "field_id": "rule_identity",
+      "question": "Which CCR title and sections are proposed for amendment?",
+      "expected_value": {
+        "title": 14,
+        "sections": [
+          "650",
+          "672",
+          "672.1",
+          "672.2"
+        ]
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "sections 650, 672, 672.1, and 672.2 to Title 14",
+      "basis": "source_text",
+      "semantic_group_id": "rule_identity",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete continuation notice, excluding separately linked proposed text.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife; Invasive Mussels revision; 15-day continuation dated September 2, 2026. Title14 sections650,672,672.1,672.2; modification672.1(c)(1).",
+        "Prior NOPA July3,2026 and original comment close August18,2026.",
+        "Current written comments must be received by mail/email no later than Thursday September17,2026; date only, no clock or timezone.",
+        "Comments restricted to indicated changes. No hearing or final effective date on both pages. Documents separately linked."
+      ]
+    },
+    {
+      "field_id": "notice_date",
+      "question": "What date is printed beneath the notice title?",
+      "expected_value": {
+        "date": "2026-09-02"
+      },
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "title date",
+      "source_quote": "September 2, 2026",
+      "basis": "source_text",
+      "semantic_group_id": "notice_date",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete continuation notice, excluding separately linked proposed text.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife; Invasive Mussels revision; 15-day continuation dated September 2, 2026. Title14 sections650,672,672.1,672.2; modification672.1(c)(1).",
+        "Prior NOPA July3,2026 and original comment close August18,2026.",
+        "Current written comments must be received by mail/email no later than Thursday September17,2026; date only, no clock or timezone.",
+        "Comments restricted to indicated changes. No hearing or final effective date on both pages. Documents separately linked."
+      ]
+    },
+    {
+      "field_id": "prior_comment_close",
+      "question": "Which ending date belongs to the prior comment period?",
+      "expected_value": {
+        "date": "2026-08-18",
+        "role": "prior proposed regulation comment period"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "lower first page",
+      "source_quote": "The comment period for the proposed regulation ended on August 18, 2026.",
+      "basis": "source_text",
+      "semantic_group_id": "prior_comment_close",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete continuation notice, excluding separately linked proposed text.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife; Invasive Mussels revision; 15-day continuation dated September 2, 2026. Title14 sections650,672,672.1,672.2; modification672.1(c)(1).",
+        "Prior NOPA July3,2026 and original comment close August18,2026.",
+        "Current written comments must be received by mail/email no later than Thursday September17,2026; date only, no clock or timezone.",
+        "Comments restricted to indicated changes. No hearing or final effective date on both pages. Documents separately linked."
+      ]
+    },
+    {
+      "field_id": "current_comment_close",
+      "question": "What is the current written-comment deadline, with stated precision?",
+      "expected_value": {
+        "date": "2026-09-17",
+        "time": null,
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "Written Comment Period",
+      "source_quote": "no later than Thursday, September 17, 2026",
+      "basis": "source_text",
+      "semantic_group_id": "current_comment_deadline",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete continuation notice, excluding separately linked proposed text.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife; Invasive Mussels revision; 15-day continuation dated September 2, 2026. Title14 sections650,672,672.1,672.2; modification672.1(c)(1).",
+        "Prior NOPA July3,2026 and original comment close August18,2026.",
+        "Current written comments must be received by mail/email no later than Thursday September17,2026; date only, no clock or timezone.",
+        "Comments restricted to indicated changes. No hearing or final effective date on both pages. Documents separately linked."
+      ]
+    },
+    {
+      "field_id": "receipt_condition",
+      "question": "What submission condition and routes apply to current comments?",
+      "expected_value": {
+        "condition": "received by Department",
+        "routes": [
+          "mail",
+          "email"
+        ]
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "Written Comment Period",
+      "source_quote": "All written comments must be received by the \nDepartment via mail, or e-mail",
+      "basis": "source_text",
+      "semantic_group_id": "current_comment_deadline",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete continuation notice, excluding separately linked proposed text.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife; Invasive Mussels revision; 15-day continuation dated September 2, 2026. Title14 sections650,672,672.1,672.2; modification672.1(c)(1).",
+        "Prior NOPA July3,2026 and original comment close August18,2026.",
+        "Current written comments must be received by mail/email no later than Thursday September17,2026; date only, no clock or timezone.",
+        "Comments restricted to indicated changes. No hearing or final effective date on both pages. Documents separately linked."
+      ]
+    },
+    {
+      "field_id": "comment_scope",
+      "question": "Which comments does the revision notice say will be considered?",
+      "expected_value": "comments pertaining to the indicated changes",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "second comments paragraph",
+      "source_quote": "which pertain to the indicated \nchanges will be considered by the Department",
+      "basis": "source_text",
+      "semantic_group_id": "comment_scope",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete continuation notice, excluding separately linked proposed text.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA Fish and Wildlife; Invasive Mussels revision; 15-day continuation dated September 2, 2026. Title14 sections650,672,672.1,672.2; modification672.1(c)(1).",
+        "Prior NOPA July3,2026 and original comment close August18,2026.",
+        "Current written comments must be received by mail/email no later than Thursday September17,2026; date only, no clock or timezone.",
+        "Comments restricted to indicated changes. No hearing or final effective date on both pages. Documents separately linked."
+      ]
+    },
+    {
+      "field_id": "new_hearing_clock",
+      "question": "Does this complete continuation notice specify a new hearing date/time?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "entire two-page continuation notice inspected",
+      "source_quote": "",
+      "basis": "full_scope_absence",
+      "semantic_group_id": "new_hearing_clock",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "No value is supplied in the retained target scope. Safe abstention requires complete relevant output scope; omitted scope cannot establish absence. Do not infer from neighboring notices or metadata.",
+      "notice_scope_boundaries": "Both pages of complete continuation notice, excluding separately linked proposed text.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": "Both pages of complete continuation notice, excluding separately linked proposed text.",
+      "reviewer_source_note": [
+        "CA Fish and Wildlife; Invasive Mussels revision; 15-day continuation dated September 2, 2026. Title14 sections650,672,672.1,672.2; modification672.1(c)(1).",
+        "Prior NOPA July3,2026 and original comment close August18,2026.",
+        "Current written comments must be received by mail/email no later than Thursday September17,2026; date only, no clock or timezone.",
+        "Comments restricted to indicated changes. No hearing or final effective date on both pages. Documents separately linked."
+      ]
+    }
+  ],
+  "adjudications": [],
+  "critical_determinate_groups": 6,
+  "critical_uncertain_fields": [],
+  "reference_gate_eligible": true,
+  "collector_ready_confirmed": true,
+  "original_sha256": "9bd708c86641ecc89157b3620b60f5886ae7a5db7ee2a9892eeb800930c83747",
+  "original_physical_pages": [
+    1,
+    2
+  ],
+  "collector_shared_original_group": null,
+  "collector_template_family": null,
+  "agency_reference": "California Department of Fish and Wildlife"
+}

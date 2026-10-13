@@ -1,0 +1,77 @@
+{
+  "schema_version": "round3.verifier.v1",
+  "description": "Runtime JSONL: one source/candidate field per line. Evaluation labels must be in a separate file, never included in runtime input.",
+  "example": {
+    "case_id": "example-01",
+    "source_text": "Rule R1. Written comments close October 31, 2026, if a hearing is requested.",
+    "candidate": {
+      "field": "comment_deadline",
+      "value": "2026-10-31",
+      "claim": "Written comments for Rule R1 close October 31, 2026 if a hearing is requested.",
+      "target": "Rule R1",
+      "role": "written_comment_close",
+      "conditions": [
+        "if a hearing is requested"
+      ]
+    },
+    "evidence": [
+      {
+        "quote": "Written comments close October 31, 2026, if a hearing is requested.",
+        "start": 9,
+        "end": 76
+      }
+    ]
+  },
+  "required": [
+    "case_id",
+    "source_text",
+    "candidate",
+    "evidence"
+  ],
+  "candidate_required": [
+    "field",
+    "value",
+    "claim",
+    "target",
+    "role",
+    "conditions"
+  ],
+  "evidence_required": [
+    "quote",
+    "start",
+    "end"
+  ],
+  "offsets": "Zero-based Unicode code point offsets in source_text, half-open [start,end). Must satisfy source_text[start:end] == quote exactly. No normalization.",
+  "optional_source_metadata": "source_id and source_locator strings only; evidence may include locator string. These are metadata, not substitute evidence.",
+  "output_dimensions": {
+    "support": [
+      "supported",
+      "contradicted",
+      "insufficient"
+    ],
+    "role": [
+      "matched",
+      "mismatched",
+      "insufficient"
+    ],
+    "condition": [
+      "preserved",
+      "omitted_or_changed",
+      "insufficient"
+    ],
+    "conflict": [
+      "present",
+      "absent",
+      "insufficient"
+    ]
+  },
+  "abstention": "insufficient is explicit abstention on a dimension; invalid citations block all dimensions. No whole-document trust score.",
+  "limits": {
+    "source_text_codepoints": 30000,
+    "case_serialized_utf8_bytes": 50000,
+    "evidence_spans": 12,
+    "pilot_cases": 20
+  },
+  "candidate_value_type": "bounded JSON: string, null, finite number, boolean, list or object (<=4 nested levels, <=16 elements per container, <=4000 serialized UTF-8 bytes). Null is candidate abstention; compound semantics are judged against actual JSON, never flattened.",
+  "evidence_empty": "Allowed, but deterministic missing_evidence abstains without provider call."
+}

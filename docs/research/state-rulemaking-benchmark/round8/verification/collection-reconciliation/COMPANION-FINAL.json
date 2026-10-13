@@ -1,0 +1,40 @@
+{
+  "disposition": "APPROVE_BOUNDED_RECONCILIATION_COMPANION_FOR_PRIMARY_AMENDMENT_RELEASE",
+  "independent_tests": 6,
+  "owner_tests": 7,
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 docs/research/state-rulemaking-benchmark/round8/verification/collection-reconciliation/test_companion_independent.py",
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 docs/research/state-rulemaking-benchmark/round8/sources/reconciliation/test_companion.py",
+      "exit_code": 0
+    }
+  ],
+  "pins": {
+    "companion_preparation_READY_sha256": "778011039420ec9085a4dd4093ff2037c9420112d4898583793e356acf4ff9b1",
+    "companion_sha256": "159af144ee3ef3660266d088d1a4ca4402b3de8ecdac24bf86dd60de560e4b33",
+    "export_bundle_sha256": "56b9588bcfdd66e096b00c36836381e76734746f9aed5eb2f15c6a6c41f60c1f",
+    "plan_amendment_sha256": "aaa8697f4e6bc4c15bd3da4a90983d00df34e6c4c8640db55ef17c9927cdf030",
+    "original_ledger_sha256": "acc9eb2441f4a3cced7f3c0f1710f184aecc13b06d899b44887a9d2d9ad1ef53",
+    "original_source_preparation_sha256": "b27525e91cf7f7c75355fb11f5f8fcf539702fb44e94025f1ecadf95477d8c4a",
+    "original_freeze_A_sha256": "68ec942ed6be59a4a455fab4543bfb25609ea2969dfcedf90375ae11123956f7",
+    "independent_tests_sha256": "41f3adf4fe9b83562600f747b7ce7da10162816a094807eefdcbfe5cb4284017"
+  },
+  "static_pins_verified": 8,
+  "original_source_files_unchanged": 503,
+  "freeze_A_files_unchanged": 69,
+  "all14_raw_record_pins_verified": true,
+  "amendment_release_absent": true,
+  "ledgers_empty": true,
+  "fresh_access": 0,
+  "provider_calls": 0,
+  "remaining_blockers": [],
+  "operational_requirements": [
+    "Before catch-up, primary creates amendment-release receipt and correction-ledger root seed binding the approved preparation, plan and original ledger.",
+    "Before Q15, finish original bounded Q05 work and checkpoint corrected Q01-Q14 logical selection; use corrected view for subsequent quotas.",
+    "Before source freeze, byte-identically promote generated runtime/blinded-image/source-metadata files into their absent SOURCES top-level paths required by fixed runtime; bind source and destination hashes in promotion receipt/final S freeze. Do not change manifests relative paths.",
+    "Carry protocol-deviation corrected and physical_access_order_restored:false into final audit; final exporter was reviewed statically/manifest interface, not executed before collection."
+  ]
+}

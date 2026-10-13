@@ -1,0 +1,649 @@
+{
+  "plan": {
+    "schema": 2,
+    "benchmark_run": "round2-heldout-cost-effective",
+    "freeze_sha256": "9947fb211688ba7010e6e0491fadf88296bd2607cfae877e43b9b9782dc176c7",
+    "jobs": [
+      {
+        "fixture_id": "H01",
+        "tier": "cost_effective",
+        "input_path": "heldout/H01/input.pdf",
+        "input_sha256": "fad42e0aae0832165fd39086afee87dd6003a719ad23c00eacc737c2ad75bbf9",
+        "input_bytes": 132965,
+        "pages": 2,
+        "candidate_file_id": null
+      },
+      {
+        "fixture_id": "H02",
+        "tier": "cost_effective",
+        "input_path": "heldout/H02/input.pdf",
+        "input_sha256": "958e8e08165906108961fc50aeda5ba3e8b082ef06b4adf64c41181ecefb51a8",
+        "input_bytes": 225506,
+        "pages": 2,
+        "candidate_file_id": null
+      },
+      {
+        "fixture_id": "H03",
+        "tier": "cost_effective",
+        "input_path": "heldout/H03/input.pdf",
+        "input_sha256": "4c4b8742dec0ced968d0e74a91f4dada7fa54c2d8110b6424fbcd288c7298349",
+        "input_bytes": 127890,
+        "pages": 3,
+        "candidate_file_id": null
+      },
+      {
+        "fixture_id": "H04",
+        "tier": "cost_effective",
+        "input_path": "heldout/H04/input.pdf",
+        "input_sha256": "6b9a5d4cf30fabd5548634c9fd868179fb6d5202d4b6bced4fd7ace1fb057d63",
+        "input_bytes": 63786,
+        "pages": 2,
+        "candidate_file_id": null
+      },
+      {
+        "fixture_id": "H05",
+        "tier": "cost_effective",
+        "input_path": "heldout/H05/input.pdf",
+        "input_sha256": "2ede892be0ade18e26a535460ee0a75a018ebc385fd9c0ef075a04bbf4ffdac1",
+        "input_bytes": 152258,
+        "pages": 2,
+        "candidate_file_id": null
+      },
+      {
+        "fixture_id": "H06",
+        "tier": "cost_effective",
+        "input_path": "heldout/H06/input.pdf",
+        "input_sha256": "e33ab6d2e713f61e7d09955f8e7fef62139102d7620d1465675f878d3c427fe4",
+        "input_bytes": 318756,
+        "pages": 4,
+        "candidate_file_id": null
+      },
+      {
+        "fixture_id": "H07",
+        "tier": "cost_effective",
+        "input_path": "heldout/H07/input.pdf",
+        "input_sha256": "64f63d076db8ae2e8d9f1cf8cde84ae60f4a7d13c6efe3c59d356291e0427295",
+        "input_bytes": 255569,
+        "pages": 3,
+        "candidate_file_id": null
+      },
+      {
+        "fixture_id": "H08",
+        "tier": "cost_effective",
+        "input_path": "heldout/H08/input.pdf",
+        "input_sha256": "af006f694c8e9e4f38139dd0332a1740b7ba323220b9b86028da2d44f51f706d",
+        "input_bytes": 113552,
+        "pages": 4,
+        "candidate_file_id": null
+      }
+    ],
+    "max_active": 2,
+    "stop_consecutive_failures": 3,
+    "version": "latest",
+    "input_pages": 22,
+    "nominal_credits": 66,
+    "config_template": {
+      "file_id": "<verified-file-id>",
+      "tier": "cost_effective",
+      "version": "latest",
+      "disable_cache": false,
+      "processing_options": {
+        "cost_optimizer": {
+          "enable": false
+        },
+        "ignore": {
+          "ignore_text_in_image": false
+        }
+      },
+      "output_options": {
+        "images_to_save": [
+          "screenshot"
+        ],
+        "markdown": {
+          "inline_images": false,
+          "tables": {
+            "output_tables_as_markdown": false,
+            "merge_continued_tables": false
+          }
+        },
+        "spatial_text": {
+          "preserve_very_small_text": false
+        }
+      },
+      "user_metadata": {
+        "benchmark_run": "round2-heldout-cost-effective",
+        "intent_token": "<token>",
+        "input_sha256": "<sha>",
+        "tier": "cost_effective"
+      }
+    },
+    "interface_differences": [
+      "REST v2 nested configuration replaces dashboard legacy fields.",
+      "No documented v2 equivalent verified for high_res_ocr or hide_headers/hide_footers; those legacy fields are omitted.",
+      "Full Markdown uses expand=markdown_full; no page joining or JSON-based score rescue.",
+      "Cache stays enabled; cost optimizer disabled; screenshots saved, HTML tables requested; no prompts.",
+      "API times and usage are captured separately from dashboard/connector wrapper times."
+    ]
+  },
+  "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+  "jobs": [
+    {
+      "fixture_id": "H01",
+      "tier": "cost_effective",
+      "input_path": "heldout/H01/input.pdf",
+      "input_sha256": "fad42e0aae0832165fd39086afee87dd6003a719ad23c00eacc737c2ad75bbf9",
+      "input_bytes": 132965,
+      "pages": 2,
+      "candidate_file_id": null,
+      "phase": "completed",
+      "intent_token": "0487aa5667104e81aef7ddff8ef3470c",
+      "file_id": "d979671d-4d50-40da-8f27-948dade1b5af",
+      "submit_started_at_utc": "2026-10-07T04:19:19.695417+00:00",
+      "request": {
+        "file_id": "d979671d-4d50-40da-8f27-948dade1b5af",
+        "tier": "cost_effective",
+        "version": "latest",
+        "disable_cache": false,
+        "processing_options": {
+          "cost_optimizer": {
+            "enable": false
+          },
+          "ignore": {
+            "ignore_text_in_image": false
+          }
+        },
+        "output_options": {
+          "images_to_save": [
+            "screenshot"
+          ],
+          "markdown": {
+            "inline_images": false,
+            "tables": {
+              "output_tables_as_markdown": false,
+              "merge_continued_tables": false
+            }
+          },
+          "spatial_text": {
+            "preserve_very_small_text": false
+          }
+        },
+        "user_metadata": {
+          "benchmark_run": "round2-heldout-cost-effective",
+          "intent_token": "0487aa5667104e81aef7ddff8ef3470c",
+          "input_sha256": "fad42e0aae0832165fd39086afee87dd6003a719ad23c00eacc737c2ad75bbf9",
+          "tier": "cost_effective"
+        }
+      },
+      "job_id": "pjb-yzq6kcuo1tg8nt0pnfg0n8dr9g4x",
+      "accepted_at_utc": "2026-10-07T04:19:20.168876+00:00",
+      "observed_at_utc": "2026-10-07T04:19:37.511050+00:00",
+      "capture": "runs/H01/cost_effective/capture.json"
+    },
+    {
+      "fixture_id": "H02",
+      "tier": "cost_effective",
+      "input_path": "heldout/H02/input.pdf",
+      "input_sha256": "958e8e08165906108961fc50aeda5ba3e8b082ef06b4adf64c41181ecefb51a8",
+      "input_bytes": 225506,
+      "pages": 2,
+      "candidate_file_id": null,
+      "phase": "completed",
+      "intent_token": "1139d232c8f94ea5af8a97f1492c463d",
+      "file_id": "95823f66-3bb7-4eb8-9a45-aa2b2669f7f1",
+      "submit_started_at_utc": "2026-10-07T04:19:22.044843+00:00",
+      "request": {
+        "file_id": "95823f66-3bb7-4eb8-9a45-aa2b2669f7f1",
+        "tier": "cost_effective",
+        "version": "latest",
+        "disable_cache": false,
+        "processing_options": {
+          "cost_optimizer": {
+            "enable": false
+          },
+          "ignore": {
+            "ignore_text_in_image": false
+          }
+        },
+        "output_options": {
+          "images_to_save": [
+            "screenshot"
+          ],
+          "markdown": {
+            "inline_images": false,
+            "tables": {
+              "output_tables_as_markdown": false,
+              "merge_continued_tables": false
+            }
+          },
+          "spatial_text": {
+            "preserve_very_small_text": false
+          }
+        },
+        "user_metadata": {
+          "benchmark_run": "round2-heldout-cost-effective",
+          "intent_token": "1139d232c8f94ea5af8a97f1492c463d",
+          "input_sha256": "958e8e08165906108961fc50aeda5ba3e8b082ef06b4adf64c41181ecefb51a8",
+          "tier": "cost_effective"
+        }
+      },
+      "job_id": "pjb-ms4ruq352h9a52omnmh0bamxr3v4",
+      "accepted_at_utc": "2026-10-07T04:19:22.448026+00:00",
+      "observed_at_utc": "2026-10-07T04:19:38.216598+00:00",
+      "capture": "runs/H02/cost_effective/capture.json"
+    },
+    {
+      "fixture_id": "H03",
+      "tier": "cost_effective",
+      "input_path": "heldout/H03/input.pdf",
+      "input_sha256": "4c4b8742dec0ced968d0e74a91f4dada7fa54c2d8110b6424fbcd288c7298349",
+      "input_bytes": 127890,
+      "pages": 3,
+      "candidate_file_id": null,
+      "phase": "completed",
+      "intent_token": "d0413c9008554cef90672548901c013b",
+      "file_id": "5c398c34-f3a7-425b-b019-50407e6ccc52",
+      "submit_started_at_utc": "2026-10-07T04:19:43.401742+00:00",
+      "request": {
+        "file_id": "5c398c34-f3a7-425b-b019-50407e6ccc52",
+        "tier": "cost_effective",
+        "version": "latest",
+        "disable_cache": false,
+        "processing_options": {
+          "cost_optimizer": {
+            "enable": false
+          },
+          "ignore": {
+            "ignore_text_in_image": false
+          }
+        },
+        "output_options": {
+          "images_to_save": [
+            "screenshot"
+          ],
+          "markdown": {
+            "inline_images": false,
+            "tables": {
+              "output_tables_as_markdown": false,
+              "merge_continued_tables": false
+            }
+          },
+          "spatial_text": {
+            "preserve_very_small_text": false
+          }
+        },
+        "user_metadata": {
+          "benchmark_run": "round2-heldout-cost-effective",
+          "intent_token": "d0413c9008554cef90672548901c013b",
+          "input_sha256": "4c4b8742dec0ced968d0e74a91f4dada7fa54c2d8110b6424fbcd288c7298349",
+          "tier": "cost_effective"
+        }
+      },
+      "job_id": "pjb-pypzsg1se5xgw5x6f6tjg5fzsxa8",
+      "accepted_at_utc": "2026-10-07T04:19:43.836640+00:00",
+      "observed_at_utc": "2026-10-07T04:19:53.801548+00:00",
+      "capture": "runs/H03/cost_effective/capture.json"
+    },
+    {
+      "fixture_id": "H04",
+      "tier": "cost_effective",
+      "input_path": "heldout/H04/input.pdf",
+      "input_sha256": "6b9a5d4cf30fabd5548634c9fd868179fb6d5202d4b6bced4fd7ace1fb057d63",
+      "input_bytes": 63786,
+      "pages": 2,
+      "candidate_file_id": null,
+      "phase": "completed",
+      "intent_token": "d9d8d3ec1fb04c688832d21cbb784117",
+      "file_id": "cd88d081-17ca-4bcc-b84e-3c2065a49450",
+      "submit_started_at_utc": "2026-10-07T04:19:45.462943+00:00",
+      "request": {
+        "file_id": "cd88d081-17ca-4bcc-b84e-3c2065a49450",
+        "tier": "cost_effective",
+        "version": "latest",
+        "disable_cache": false,
+        "processing_options": {
+          "cost_optimizer": {
+            "enable": false
+          },
+          "ignore": {
+            "ignore_text_in_image": false
+          }
+        },
+        "output_options": {
+          "images_to_save": [
+            "screenshot"
+          ],
+          "markdown": {
+            "inline_images": false,
+            "tables": {
+              "output_tables_as_markdown": false,
+              "merge_continued_tables": false
+            }
+          },
+          "spatial_text": {
+            "preserve_very_small_text": false
+          }
+        },
+        "user_metadata": {
+          "benchmark_run": "round2-heldout-cost-effective",
+          "intent_token": "d9d8d3ec1fb04c688832d21cbb784117",
+          "input_sha256": "6b9a5d4cf30fabd5548634c9fd868179fb6d5202d4b6bced4fd7ace1fb057d63",
+          "tier": "cost_effective"
+        }
+      },
+      "job_id": "pjb-51p0tsclrlx3ghww784gy8s9bytt",
+      "accepted_at_utc": "2026-10-07T04:19:45.879541+00:00",
+      "observed_at_utc": "2026-10-07T04:19:54.481922+00:00",
+      "capture": "runs/H04/cost_effective/capture.json"
+    },
+    {
+      "fixture_id": "H05",
+      "tier": "cost_effective",
+      "input_path": "heldout/H05/input.pdf",
+      "input_sha256": "2ede892be0ade18e26a535460ee0a75a018ebc385fd9c0ef075a04bbf4ffdac1",
+      "input_bytes": 152258,
+      "pages": 2,
+      "candidate_file_id": null,
+      "phase": "completed",
+      "intent_token": "b5ea3416e4b2427d9637da7f8a203b57",
+      "file_id": "b1370975-fa70-4592-9850-f28cdf87d28d",
+      "submit_started_at_utc": "2026-10-07T04:19:59.837014+00:00",
+      "request": {
+        "file_id": "b1370975-fa70-4592-9850-f28cdf87d28d",
+        "tier": "cost_effective",
+        "version": "latest",
+        "disable_cache": false,
+        "processing_options": {
+          "cost_optimizer": {
+            "enable": false
+          },
+          "ignore": {
+            "ignore_text_in_image": false
+          }
+        },
+        "output_options": {
+          "images_to_save": [
+            "screenshot"
+          ],
+          "markdown": {
+            "inline_images": false,
+            "tables": {
+              "output_tables_as_markdown": false,
+              "merge_continued_tables": false
+            }
+          },
+          "spatial_text": {
+            "preserve_very_small_text": false
+          }
+        },
+        "user_metadata": {
+          "benchmark_run": "round2-heldout-cost-effective",
+          "intent_token": "b5ea3416e4b2427d9637da7f8a203b57",
+          "input_sha256": "2ede892be0ade18e26a535460ee0a75a018ebc385fd9c0ef075a04bbf4ffdac1",
+          "tier": "cost_effective"
+        }
+      },
+      "job_id": "pjb-h32zkirxzlkeajh4ufpov7gzcwno",
+      "accepted_at_utc": "2026-10-07T04:20:00.246490+00:00",
+      "observed_at_utc": "2026-10-07T04:20:10.652954+00:00",
+      "capture": "runs/H05/cost_effective/capture.json"
+    },
+    {
+      "fixture_id": "H06",
+      "tier": "cost_effective",
+      "input_path": "heldout/H06/input.pdf",
+      "input_sha256": "e33ab6d2e713f61e7d09955f8e7fef62139102d7620d1465675f878d3c427fe4",
+      "input_bytes": 318756,
+      "pages": 4,
+      "candidate_file_id": null,
+      "phase": "completed",
+      "intent_token": "b6f2d8dd52db4f0981aea059961d2899",
+      "file_id": "f71e4456-8a6c-4e0c-b65c-7dcff4e1ed9b",
+      "submit_started_at_utc": "2026-10-07T04:20:02.210422+00:00",
+      "request": {
+        "file_id": "f71e4456-8a6c-4e0c-b65c-7dcff4e1ed9b",
+        "tier": "cost_effective",
+        "version": "latest",
+        "disable_cache": false,
+        "processing_options": {
+          "cost_optimizer": {
+            "enable": false
+          },
+          "ignore": {
+            "ignore_text_in_image": false
+          }
+        },
+        "output_options": {
+          "images_to_save": [
+            "screenshot"
+          ],
+          "markdown": {
+            "inline_images": false,
+            "tables": {
+              "output_tables_as_markdown": false,
+              "merge_continued_tables": false
+            }
+          },
+          "spatial_text": {
+            "preserve_very_small_text": false
+          }
+        },
+        "user_metadata": {
+          "benchmark_run": "round2-heldout-cost-effective",
+          "intent_token": "b6f2d8dd52db4f0981aea059961d2899",
+          "input_sha256": "e33ab6d2e713f61e7d09955f8e7fef62139102d7620d1465675f878d3c427fe4",
+          "tier": "cost_effective"
+        }
+      },
+      "job_id": "pjb-4key8mh7astotr22gn7fets2xvja",
+      "accepted_at_utc": "2026-10-07T04:20:02.614120+00:00",
+      "observed_at_utc": "2026-10-07T04:20:18.458326+00:00",
+      "capture": "runs/H06/cost_effective/capture.json"
+    },
+    {
+      "fixture_id": "H07",
+      "tier": "cost_effective",
+      "input_path": "heldout/H07/input.pdf",
+      "input_sha256": "64f63d076db8ae2e8d9f1cf8cde84ae60f4a7d13c6efe3c59d356291e0427295",
+      "input_bytes": 255569,
+      "pages": 3,
+      "candidate_file_id": null,
+      "phase": "completed",
+      "intent_token": "e93f202cfee8445e8adda78db90d77a8",
+      "file_id": "92e89862-9111-49b3-b069-8397d476a89c",
+      "submit_started_at_utc": "2026-10-07T04:20:24.165593+00:00",
+      "request": {
+        "file_id": "92e89862-9111-49b3-b069-8397d476a89c",
+        "tier": "cost_effective",
+        "version": "latest",
+        "disable_cache": false,
+        "processing_options": {
+          "cost_optimizer": {
+            "enable": false
+          },
+          "ignore": {
+            "ignore_text_in_image": false
+          }
+        },
+        "output_options": {
+          "images_to_save": [
+            "screenshot"
+          ],
+          "markdown": {
+            "inline_images": false,
+            "tables": {
+              "output_tables_as_markdown": false,
+              "merge_continued_tables": false
+            }
+          },
+          "spatial_text": {
+            "preserve_very_small_text": false
+          }
+        },
+        "user_metadata": {
+          "benchmark_run": "round2-heldout-cost-effective",
+          "intent_token": "e93f202cfee8445e8adda78db90d77a8",
+          "input_sha256": "64f63d076db8ae2e8d9f1cf8cde84ae60f4a7d13c6efe3c59d356291e0427295",
+          "tier": "cost_effective"
+        }
+      },
+      "job_id": "pjb-63z94xm9wpky56wq77caesx8dzi9",
+      "accepted_at_utc": "2026-10-07T04:20:24.571411+00:00",
+      "observed_at_utc": "2026-10-07T04:20:37.096175+00:00",
+      "capture": "runs/H07/cost_effective/capture.json"
+    },
+    {
+      "fixture_id": "H08",
+      "tier": "cost_effective",
+      "input_path": "heldout/H08/input.pdf",
+      "input_sha256": "af006f694c8e9e4f38139dd0332a1740b7ba323220b9b86028da2d44f51f706d",
+      "input_bytes": 113552,
+      "pages": 4,
+      "candidate_file_id": null,
+      "phase": "completed",
+      "intent_token": "2caac598776a4beabc57b5aee123bdf6",
+      "file_id": "06724c33-6563-407c-9cb3-8a3285a9af8a",
+      "submit_started_at_utc": "2026-10-07T04:20:26.297872+00:00",
+      "request": {
+        "file_id": "06724c33-6563-407c-9cb3-8a3285a9af8a",
+        "tier": "cost_effective",
+        "version": "latest",
+        "disable_cache": false,
+        "processing_options": {
+          "cost_optimizer": {
+            "enable": false
+          },
+          "ignore": {
+            "ignore_text_in_image": false
+          }
+        },
+        "output_options": {
+          "images_to_save": [
+            "screenshot"
+          ],
+          "markdown": {
+            "inline_images": false,
+            "tables": {
+              "output_tables_as_markdown": false,
+              "merge_continued_tables": false
+            }
+          },
+          "spatial_text": {
+            "preserve_very_small_text": false
+          }
+        },
+        "user_metadata": {
+          "benchmark_run": "round2-heldout-cost-effective",
+          "intent_token": "2caac598776a4beabc57b5aee123bdf6",
+          "input_sha256": "af006f694c8e9e4f38139dd0332a1740b7ba323220b9b86028da2d44f51f706d",
+          "tier": "cost_effective"
+        }
+      },
+      "job_id": "pjb-isuw3ywvokpeq14cmfj53zcmzf8n",
+      "accepted_at_utc": "2026-10-07T04:20:26.775042+00:00",
+      "observed_at_utc": "2026-10-07T04:20:41.570025+00:00",
+      "capture": "runs/H08/cost_effective/capture.json"
+    }
+  ],
+  "files": {
+    "H01": {
+      "phase": "verified",
+      "file_id": "d979671d-4d50-40da-8f27-948dade1b5af",
+      "download_sha256": "fad42e0aae0832165fd39086afee87dd6003a719ad23c00eacc737c2ad75bbf9",
+      "checked_at_utc": "2026-10-07T04:19:19.694612+00:00",
+      "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+      "reused_dashboard_file": false
+    },
+    "H02": {
+      "phase": "verified",
+      "file_id": "95823f66-3bb7-4eb8-9a45-aa2b2669f7f1",
+      "download_sha256": "958e8e08165906108961fc50aeda5ba3e8b082ef06b4adf64c41181ecefb51a8",
+      "checked_at_utc": "2026-10-07T04:19:22.044348+00:00",
+      "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+      "reused_dashboard_file": false
+    },
+    "H03": {
+      "phase": "verified",
+      "file_id": "5c398c34-f3a7-425b-b019-50407e6ccc52",
+      "download_sha256": "4c4b8742dec0ced968d0e74a91f4dada7fa54c2d8110b6424fbcd288c7298349",
+      "checked_at_utc": "2026-10-07T04:19:43.401204+00:00",
+      "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+      "reused_dashboard_file": false
+    },
+    "H04": {
+      "phase": "verified",
+      "file_id": "cd88d081-17ca-4bcc-b84e-3c2065a49450",
+      "download_sha256": "6b9a5d4cf30fabd5548634c9fd868179fb6d5202d4b6bced4fd7ace1fb057d63",
+      "checked_at_utc": "2026-10-07T04:19:45.461862+00:00",
+      "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+      "reused_dashboard_file": false
+    },
+    "H05": {
+      "phase": "verified",
+      "file_id": "b1370975-fa70-4592-9850-f28cdf87d28d",
+      "download_sha256": "2ede892be0ade18e26a535460ee0a75a018ebc385fd9c0ef075a04bbf4ffdac1",
+      "checked_at_utc": "2026-10-07T04:19:59.836329+00:00",
+      "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+      "reused_dashboard_file": false
+    },
+    "H06": {
+      "phase": "verified",
+      "file_id": "f71e4456-8a6c-4e0c-b65c-7dcff4e1ed9b",
+      "download_sha256": "e33ab6d2e713f61e7d09955f8e7fef62139102d7620d1465675f878d3c427fe4",
+      "checked_at_utc": "2026-10-07T04:20:02.209566+00:00",
+      "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+      "reused_dashboard_file": false
+    },
+    "H07": {
+      "phase": "verified",
+      "file_id": "92e89862-9111-49b3-b069-8397d476a89c",
+      "download_sha256": "64f63d076db8ae2e8d9f1cf8cde84ae60f4a7d13c6efe3c59d356291e0427295",
+      "checked_at_utc": "2026-10-07T04:20:24.164654+00:00",
+      "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+      "reused_dashboard_file": false
+    },
+    "H08": {
+      "phase": "verified",
+      "file_id": "06724c33-6563-407c-9cb3-8a3285a9af8a",
+      "download_sha256": "af006f694c8e9e4f38139dd0332a1740b7ba323220b9b86028da2d44f51f706d",
+      "checked_at_utc": "2026-10-07T04:20:26.296960+00:00",
+      "project_id": "38d2f4b9-55df-461b-8b19-d2c53ac67523",
+      "reused_dashboard_file": false
+    }
+  },
+  "consecutive_failures": 0,
+  "stopped": false,
+  "completion_order": [
+    [
+      "H01",
+      "cost_effective"
+    ],
+    [
+      "H02",
+      "cost_effective"
+    ],
+    [
+      "H03",
+      "cost_effective"
+    ],
+    [
+      "H04",
+      "cost_effective"
+    ],
+    [
+      "H05",
+      "cost_effective"
+    ],
+    [
+      "H06",
+      "cost_effective"
+    ],
+    [
+      "H07",
+      "cost_effective"
+    ],
+    [
+      "H08",
+      "cost_effective"
+    ]
+  ]
+}

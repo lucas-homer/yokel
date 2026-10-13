@@ -1,0 +1,54 @@
+{
+  "status": "PAUSED_FOR_PRIMARY_HANDOFF_AT_Q04_BOUNDARY",
+  "last_completed_query": "Q04 (Ohio), exact planned query with filetype:pdf; query returned 18 results.",
+  "last_completed_candidate": "Q04 candidate 3, rank 3, https://www.registerofohio.state.oh.us/hearings/hearingsSearch/results/937070/393149; excluded because Q04 already reached the maximum two retained notices for Ohio. Q04 candidates 1 and 2 were retained after full original retrieval/native extraction/rendering.",
+  "retained": {
+    "count": 4,
+    "input_pages": 24,
+    "states": [
+      "Kentucky",
+      "Ohio"
+    ],
+    "strata": {
+      "general_comment": 4,
+      "controls": 0
+    },
+    "documents": [
+      "documents/doc-cdc84f3180fe/",
+      "documents/doc-a97c415f9644/",
+      "documents/doc-ad2425138393/",
+      "documents/doc-7d9d82dcb9a8/"
+    ]
+  },
+  "completed_queries": [
+    "Q01 Georgia: no eligible standalone notice among first three PDF candidates; all excluded as annual compilations.",
+    "Q02 Virginia: no eligible standalone PDF among first three official PDF candidates; includes multi-notice Register issues/style manual. Search result metadata file is partial because intermediate returned records were not preserved in the preceding turn; no requery performed.",
+    "Q03 Kentucky: first two complete one-rule notices retained (12p and 8p); third excluded by per-state cap.",
+    "Q04 Ohio: first two complete standalone notices retained (2p each); third excluded by per-state cap."
+  ],
+  "pending_next_operation": "Start Q05 Michigan using the frozen exact query in sources/search-plan.json. Process only that response and its first three official publisher PDF candidates sequentially; preserve native-only scope, max 2/state, 8 total, >=6 states, 6 general + 2 controls, <=40 pages. Continue through Q24 only if needed. No query beyond Q24.",
+  "authorization_pins": {
+    "freeze_A_sha256": "3d8c36e16eb81bba63761e938b6b9f7cf112ebe966125067fed654ab9b752713",
+    "runtime_implementation_pins_READY_sha256": "1c6c04badde7600672b74f88ada498ddbf4279929fbe6b38c0b38bd297e4845d",
+    "native_acquisition_config": "../execution/native-acquisition-config.json"
+  },
+  "audit_deviations": [
+    "Primary audit note reports that executed Q01-Q03 web query strings omitted the planned trailing filetype:pdf term; appended audit-deviation-Q01-Q03.json and ledger event; do not rerun or replace results. The raw Q03 web tool call in this child transcript visibly contains filetype:pdf, so treat the exact executed-string status for Q03 as unresolved pending primary reconciliation. Q04 includes filetype:pdf.",
+    "Q02-search.json preserves observed candidate metadata but not every intermediate metadata record from the search response; no rerun performed."
+  ],
+  "key_paths": [
+    "search-access-ledger.jsonl",
+    "source-inputs.json",
+    "Q01-search.txt",
+    "Q02-search.json",
+    "Q03-search.json",
+    "Q04-search.json",
+    "audit-deviation-Q01-Q03.json",
+    "documents/doc-cdc84f3180fe/provenance.json",
+    "documents/doc-a97c415f9644/provenance.json",
+    "documents/doc-ad2425138393/provenance.json",
+    "documents/doc-7d9d82dcb9a8/provenance.json"
+  ],
+  "source_prep_immutable": true,
+  "ready_freeze_not_created": true
+}

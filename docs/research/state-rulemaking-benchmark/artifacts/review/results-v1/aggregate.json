@@ -1,0 +1,447 @@
+{
+  "review_type": "independent agent, not blinded or human gold; raw evidence preservation, not downstream extractor accuracy",
+  "all_complete": true,
+  "arms": {
+    "native": {
+      "scheduled_documents": 20,
+      "completed_documents": 20,
+      "document_gates": {
+        "operational_unusable": 3,
+        "content_fail": 2,
+        "pass": 14,
+        "insufficient_reference": 1
+      },
+      "operations": {
+        "completed_empty": 3,
+        "completed_nonempty": 17
+      },
+      "critical_field_outcomes": {
+        "not_assessable": 25,
+        "missing": 3,
+        "supported": 91,
+        "safe_abstention": 22,
+        "partial_ambiguous": 1
+      },
+      "evidence_yield": {
+        "supported": 91,
+        "all_scheduled_determinate_positive_critical": 118
+      },
+      "successful_output_content_score": {
+        "supported": 91,
+        "usable_determinate_positive_critical": 94
+      },
+      "negative_scope_preservation": {
+        "safe_abstention": 22,
+        "usable_critical_not_stated": 23
+      },
+      "successful_parse_wrapper_latency_ms": {
+        "count": 0,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "critical_failure_categories": {
+        "native_no_embedded_text": 24,
+        "filing_stamp_omitted": 2,
+        "absence_scope_incomplete": 1,
+        "reference_uncertainty": 1,
+        "selected_mark_association_lost": 1
+      }
+    },
+    "firecrawl_local_parse": {
+      "scheduled_documents": 20,
+      "completed_documents": 20,
+      "document_gates": {
+        "content_fail": 9,
+        "pass": 10,
+        "insufficient_reference": 1
+      },
+      "operations": {
+        "completed_nonempty": 20
+      },
+      "critical_field_outcomes": {
+        "supported": 109,
+        "partial_ambiguous": 3,
+        "missing": 12,
+        "safe_abstention": 17,
+        "not_assessable": 1
+      },
+      "evidence_yield": {
+        "supported": 109,
+        "all_scheduled_determinate_positive_critical": 118
+      },
+      "successful_output_content_score": {
+        "supported": 109,
+        "usable_determinate_positive_critical": 118
+      },
+      "negative_scope_preservation": {
+        "safe_abstention": 17,
+        "usable_critical_not_stated": 23
+      },
+      "successful_parse_wrapper_latency_ms": {
+        "count": 20,
+        "median": 3269.0,
+        "min": 720,
+        "max": 10063
+      },
+      "critical_failure_categories": {
+        "selected_mark_association_lost": 3,
+        "selected_effective_option_omitted": 1,
+        "filing_stamp_omitted": 2,
+        "absence_scope_incomplete": 6,
+        "reference_uncertainty": 1,
+        "notice_identifier_omitted": 1,
+        "publication_footer_omitted": 2
+      }
+    },
+    "llama_agentic": {
+      "scheduled_documents": 20,
+      "completed_documents": 20,
+      "document_gates": {
+        "operational_unusable": 2,
+        "not_attempted_provider_stop": 17,
+        "insufficient_reference": 1
+      },
+      "operations": {
+        "timeout_backend_unknown": 2,
+        "not_attempted_provider_stop": 18
+      },
+      "critical_field_outcomes": {
+        "not_assessable": 142
+      },
+      "evidence_yield": {
+        "supported": 0,
+        "all_scheduled_determinate_positive_critical": 118
+      },
+      "successful_output_content_score": {
+        "supported": 0,
+        "usable_determinate_positive_critical": 0
+      },
+      "negative_scope_preservation": {
+        "safe_abstention": 0,
+        "usable_critical_not_stated": 0
+      },
+      "successful_parse_wrapper_latency_ms": {
+        "count": 0,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "critical_failure_categories": {
+        "timeout_backend_unknown": 16,
+        "not_attempted_provider_stop": 126
+      }
+    },
+    "llama_agentic_plus": {
+      "scheduled_documents": 20,
+      "completed_documents": 20,
+      "document_gates": {
+        "operational_unusable": 2,
+        "not_attempted_provider_stop": 17,
+        "insufficient_reference": 1
+      },
+      "operations": {
+        "timeout_backend_unknown": 2,
+        "not_attempted_provider_stop": 18
+      },
+      "critical_field_outcomes": {
+        "not_assessable": 142
+      },
+      "evidence_yield": {
+        "supported": 0,
+        "all_scheduled_determinate_positive_critical": 118
+      },
+      "successful_output_content_score": {
+        "supported": 0,
+        "usable_determinate_positive_critical": 0
+      },
+      "negative_scope_preservation": {
+        "safe_abstention": 0,
+        "usable_critical_not_stated": 0
+      },
+      "successful_parse_wrapper_latency_ms": {
+        "count": 0,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "critical_failure_categories": {
+        "timeout_backend_unknown": 16,
+        "not_attempted_provider_stop": 126
+      }
+    }
+  },
+  "document_gates": [
+    {
+      "fixture_id": "A01",
+      "native": "operational_unusable",
+      "firecrawl_local_parse": "content_fail",
+      "llama_agentic": "operational_unusable",
+      "llama_agentic_plus": "operational_unusable"
+    },
+    {
+      "fixture_id": "A02",
+      "native": "operational_unusable",
+      "firecrawl_local_parse": "content_fail",
+      "llama_agentic": "operational_unusable",
+      "llama_agentic_plus": "operational_unusable"
+    },
+    {
+      "fixture_id": "A03",
+      "native": "operational_unusable",
+      "firecrawl_local_parse": "content_fail",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "A04",
+      "native": "content_fail",
+      "firecrawl_local_parse": "content_fail",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "A05",
+      "native": "pass",
+      "firecrawl_local_parse": "pass",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "A06",
+      "native": "pass",
+      "firecrawl_local_parse": "pass",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "A07",
+      "native": "insufficient_reference",
+      "firecrawl_local_parse": "insufficient_reference",
+      "llama_agentic": "insufficient_reference",
+      "llama_agentic_plus": "insufficient_reference"
+    },
+    {
+      "fixture_id": "A08",
+      "native": "pass",
+      "firecrawl_local_parse": "pass",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "A09",
+      "native": "pass",
+      "firecrawl_local_parse": "content_fail",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "A10",
+      "native": "pass",
+      "firecrawl_local_parse": "pass",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "B01",
+      "native": "pass",
+      "firecrawl_local_parse": "pass",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "B02",
+      "native": "pass",
+      "firecrawl_local_parse": "pass",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "B03",
+      "native": "pass",
+      "firecrawl_local_parse": "pass",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "B04",
+      "native": "content_fail",
+      "firecrawl_local_parse": "content_fail",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "B05",
+      "native": "pass",
+      "firecrawl_local_parse": "pass",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "B06",
+      "native": "pass",
+      "firecrawl_local_parse": "content_fail",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "B07",
+      "native": "pass",
+      "firecrawl_local_parse": "content_fail",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "B08",
+      "native": "pass",
+      "firecrawl_local_parse": "pass",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "B09",
+      "native": "pass",
+      "firecrawl_local_parse": "pass",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    },
+    {
+      "fixture_id": "B10",
+      "native": "pass",
+      "firecrawl_local_parse": "content_fail",
+      "llama_agentic": "not_attempted_provider_stop",
+      "llama_agentic_plus": "not_attempted_provider_stop"
+    }
+  ],
+  "paired": [
+    {
+      "left": "native",
+      "right": "firecrawl_local_parse",
+      "document_counts": {
+        "one_or_both_operationally_unusable": 3,
+        "both_content_fail": 2,
+        "both_pass": 10,
+        "reference_insufficient": 1,
+        "left_only_pass": 4
+      },
+      "usable_pair_critical_field_changes": [
+        {
+          "fixture_id": "A09",
+          "field_id": "notice_id",
+          "left": "supported",
+          "right": "missing",
+          "gate_direction": "right_loses"
+        },
+        {
+          "fixture_id": "B04",
+          "field_id": "event_selected",
+          "left": "partial_ambiguous",
+          "right": "supported",
+          "gate_direction": "right_recovers"
+        },
+        {
+          "fixture_id": "B04",
+          "field_id": "close_clock",
+          "left": "safe_abstention",
+          "right": "missing",
+          "gate_direction": "right_loses"
+        },
+        {
+          "fixture_id": "B04",
+          "field_id": "timezone",
+          "left": "safe_abstention",
+          "right": "missing",
+          "gate_direction": "right_loses"
+        },
+        {
+          "fixture_id": "B06",
+          "field_id": "publication",
+          "left": "supported",
+          "right": "missing",
+          "gate_direction": "right_loses"
+        },
+        {
+          "fixture_id": "B07",
+          "field_id": "publication",
+          "left": "supported",
+          "right": "missing",
+          "gate_direction": "right_loses"
+        },
+        {
+          "fixture_id": "B10",
+          "field_id": "comment_close",
+          "left": "safe_abstention",
+          "right": "missing",
+          "gate_direction": "right_loses"
+        },
+        {
+          "fixture_id": "B10",
+          "field_id": "hearing",
+          "left": "safe_abstention",
+          "right": "missing",
+          "gate_direction": "right_loses"
+        },
+        {
+          "fixture_id": "B10",
+          "field_id": "filing",
+          "left": "safe_abstention",
+          "right": "missing",
+          "gate_direction": "right_loses"
+        }
+      ]
+    },
+    {
+      "left": "native",
+      "right": "llama_agentic",
+      "document_counts": {
+        "one_or_both_operationally_unusable": 19,
+        "reference_insufficient": 1
+      },
+      "usable_pair_critical_field_changes": []
+    },
+    {
+      "left": "native",
+      "right": "llama_agentic_plus",
+      "document_counts": {
+        "one_or_both_operationally_unusable": 19,
+        "reference_insufficient": 1
+      },
+      "usable_pair_critical_field_changes": []
+    },
+    {
+      "left": "firecrawl_local_parse",
+      "right": "llama_agentic",
+      "document_counts": {
+        "one_or_both_operationally_unusable": 19,
+        "reference_insufficient": 1
+      },
+      "usable_pair_critical_field_changes": []
+    },
+    {
+      "left": "firecrawl_local_parse",
+      "right": "llama_agentic_plus",
+      "document_counts": {
+        "one_or_both_operationally_unusable": 19,
+        "reference_insufficient": 1
+      },
+      "usable_pair_critical_field_changes": []
+    },
+    {
+      "left": "llama_agentic",
+      "right": "llama_agentic_plus",
+      "document_counts": {
+        "one_or_both_operationally_unusable": 19,
+        "reference_insufficient": 1
+      },
+      "usable_pair_critical_field_changes": []
+    }
+  ],
+  "limitations": [
+    "Purposive20-unit correlated-template corpus; no national inference or general vendor ranking.",
+    "A07 unresolved critical source date excluded from determinate fields and unqualified strict gates.",
+    "Llama timeout backend completion and charges unknown.",
+    "Firecrawl recorded parse-wrapper times may include local pacing/queue delay; no provider-speed comparison. Separate upload/setup is excluded from wrapper field.",
+    "Post-freeze A03 extra-assertion scoring error corrected; frozen files retained, see score-correction-history.json.",
+    "Absence grades require full predeclared relevant scope; missing source footer/stamp cannot count as complete-scope absence."
+  ]
+}

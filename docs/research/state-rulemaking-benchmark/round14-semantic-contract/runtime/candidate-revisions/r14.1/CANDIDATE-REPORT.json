@@ -1,0 +1,84 @@
+{
+  "action_ready": false,
+  "candidate_or_reference_input": false,
+  "check": {
+    "aggregate_max_nanousd": 1905990718,
+    "body_bytes": 27411,
+    "credentials_read": false,
+    "guarded_bytes": 28435,
+    "prior": {
+      "baseline_rows": 7063,
+      "historical_rounds": [
+        {
+          "operations": [
+            {
+              "budget_charge_nanousd": 161920000,
+              "reserved_nanousd": 161920000,
+              "stage": "stage-a",
+              "state": "validated_frozen"
+            },
+            {
+              "budget_charge_nanousd": 161920000,
+              "reserved_nanousd": 161920000,
+              "stage": "stage-b",
+              "state": "validated_frozen"
+            }
+          ],
+          "round": "round10-source-first"
+        },
+        {
+          "operations": [
+            {
+              "budget_charge_nanousd": 161920000,
+              "reserved_nanousd": 161920000,
+              "stage": "D",
+              "state": "failed_or_uncertain"
+            },
+            {
+              "budget_charge_nanousd": 161920000,
+              "reserved_nanousd": 161920000,
+              "stage": "A",
+              "state": "failed_or_uncertain"
+            }
+          ],
+          "round": "round12-automated-scope"
+        },
+        {
+          "budget_charge_nanousd": 200000000,
+          "round": "round13-compact-inventory",
+          "state": "validated_frozen"
+        }
+      ],
+      "invoice_verified": false,
+      "prior_nanousd": 1705990718
+    },
+    "provider_calls": 0,
+    "release_preflight_passed": false,
+    "request_sha256": "4a95208fd38dea51594a64237a7a2531c4a40fdeb4fb471c108aed071dcf688a",
+    "source_ready_sha256": "9f73ded9eb6de4a9a26efd8e376ea9b618693306915f350fa4e715b3cf7a6b74",
+    "source_sha256": "5b8b221224c799e4950dbddf6df8bbf0652ee90db7150f1ed16a332b137df55f",
+    "span_count": 108,
+    "state": "candidate_checked"
+  },
+  "check_output_sha256": "bf720781934f492e2d4455c9bb910c990f50ef09bd1d7a1cf8c31f27f341c8c4",
+  "credentials_read": false,
+  "dependency_files": 8775,
+  "fixtures": "complete synthetic structural outputs rebound to fresh source spans, not reference assertions or model discovery",
+  "imported_protocol": "exact pinned protocol/compact.py; validate_response + expand + contract",
+  "ledger_semantics": "charge_recorded; completed.json or stop.json is the separate outcome attestation; no hash cycle",
+  "native_executor_check": "pending_primary",
+  "passed": true,
+  "production_eligible": false,
+  "provider_calls": 0,
+  "provider_compatibility": "unverified",
+  "pure_unsigned_proposal_validation_passed": true,
+  "release_preflight_passed": false,
+  "runtime_drift_entries": 0,
+  "runtime_test_methods": 20,
+  "schema_version": "round14.compact.offline-report.v1",
+  "semantic_status": "unverified",
+  "signer_executor_invoked": false,
+  "source_inventory_completeness": "unverified",
+  "status": "CANDIDATE_CHECKED_NOT_RELEASED",
+  "test_output_sha256": "c80ef85aff93b2f13957670bc99f80504fbfcf87e91f0a890150622029fc33ca"
+}

@@ -1,0 +1,625 @@
+{
+  "schema_version": "round8.truth.v1",
+  "reviewer": "Independent AI image-only reference; not human-adjudicated gold",
+  "documents": [
+    {
+      "document_id": "doc-92211b8c7ba0",
+      "pdf_sha256": "92211b8c7ba076dc059edf299719967c2b56b37b8945cfbc39c51a03a1255005",
+      "scope_status": "complete",
+      "all_pages_viewed": true,
+      "universe_complete": true,
+      "domains": {
+        "fact": "present",
+        "relationship": "present",
+        "instruction": "present",
+        "disclosure": "present",
+        "ancillary": "present",
+        "identity": "present",
+        "uncertainty": "absent"
+      },
+      "units": [
+        {
+          "id": "agency",
+          "category": "identity",
+          "subtype": "agency",
+          "description": "Rulemaking agency",
+          "raw_value": "Department of Natural Resources",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "opening",
+              "quote": "The Department of Natural Resources announces that it will hold a public hearing"
+            }
+          ]
+        },
+        {
+          "id": "rule",
+          "category": "identity",
+          "subtype": "rule_identity",
+          "description": "Aquatic plant management permanent-rule repeal/recreation",
+          "raw_value": "chs. NR 107 and 109; ch. NR 107",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "opening",
+              "quote": "permanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107"
+            }
+          ]
+        },
+        {
+          "id": "order",
+          "category": "identity",
+          "subtype": "proceeding_identifier",
+          "description": "NRB order identifies rule",
+          "raw_value": "WY-20-23",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "rule access",
+              "quote": "The rule may be viewed Under NRB Order number WY-20-23 at:"
+            }
+          ]
+        },
+        {
+          "id": "hearing",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Public hearing with public testimony opportunity",
+          "raw_value": "public hearing",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "opening and appearances",
+              "quote": "The public has the opportunity to testify at the hearing."
+            }
+          ]
+        },
+        {
+          "id": "hearing_time",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Hearing date and clock time; no timezone stated",
+          "raw_value": "April 22, 2026; 1:00 PM",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Hearing Information",
+              "quote": "Date: April 22, 2026\nTime: 1:00 PM"
+            }
+          ]
+        },
+        {
+          "id": "zoom",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Virtual Zoom registration/access URL",
+          "raw_value": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrIdGeo84g",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Hearing Information",
+              "quote": "Virtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrIdGeo84g"
+            }
+          ]
+        },
+        {
+          "id": "meeting_id",
+          "category": "fact",
+          "subtype": "access_component",
+          "description": "Zoom meeting identifier",
+          "raw_value": "896 2745 6939",
+          "modality": "descriptive",
+          "targets": [
+            "zoom"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Hearing Information",
+              "quote": "Meeting ID: 896 2745 6939"
+            }
+          ]
+        },
+        {
+          "id": "phone1",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "First dial-in access number with meeting code",
+          "raw_value": "+13052241968, 89627456939# US",
+          "modality": "descriptive",
+          "targets": [
+            "hearing",
+            "meeting_id"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Join by phone",
+              "quote": "+13052241968, 89627456939# US"
+            }
+          ]
+        },
+        {
+          "id": "phone2",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Second dial-in access number with meeting code",
+          "raw_value": "+13092053325, 89627456939# US",
+          "modality": "descriptive",
+          "targets": [
+            "hearing",
+            "meeting_id"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Join by phone",
+              "quote": "+13092053325, 89627456939# US"
+            }
+          ]
+        },
+        {
+          "id": "access_alternatives",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Zoom and two telephone access alternatives",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "zoom",
+            "phone1",
+            "phone2"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Hearing Information",
+              "quote": "Virtual Zoom Link:"
+            },
+            {
+              "page": 1,
+              "region": "Hearing Information",
+              "quote": "Join by phone:"
+            }
+          ]
+        },
+        {
+          "id": "zoom_register",
+          "category": "instruction",
+          "subtype": "registration",
+          "description": "Zoom attendees asked to register or preregister through link and enter Hearing Appearance form information",
+          "raw_value": null,
+          "modality": "mandatory",
+          "targets": [
+            "zoom"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Appearances",
+              "quote": "To join via Zoom, please register or pre-register using the link above, which will prompt you to enter information required on the Hearing Appearance form."
+            }
+          ]
+        },
+        {
+          "id": "spoken_preregister",
+          "category": "instruction",
+          "subtype": "recommendation",
+          "description": "Pre-registration strongly encouraged for intended spoken commenters, not an absolute advance cutoff",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "hearing",
+            "zoom_register"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Appearances",
+              "quote": "Pre-registration is strongly encouraged if you plan to provide spoken comments during the hearing."
+            }
+          ]
+        },
+        {
+          "id": "appearance_form",
+          "category": "ancillary",
+          "subtype": "form_link",
+          "description": "Visible fillable Hearing Appearance form label; hidden target unavailable",
+          "raw_value": "Hearing Appearance form",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Appearances",
+              "quote": "please download and complete the fillable Hearing Appearance form"
+            }
+          ]
+        },
+        {
+          "id": "signup_email",
+          "category": "fact",
+          "subtype": "signup_route",
+          "description": "Email for phoning attendees to send appearance form",
+          "raw_value": "Sarah.wood@wisconsin.gov",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Appearances",
+              "quote": "send it to Sarah.wood@wisconsin.gov."
+            }
+          ]
+        },
+        {
+          "id": "phone_form",
+          "category": "instruction",
+          "subtype": "conditional_requirement",
+          "description": "Phone participants asked to download, complete and email appearance form",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "phone1",
+            "phone2",
+            "appearance_form",
+            "signup_email"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Appearances",
+              "quote": "For those who plan to phone in, please download and complete the fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+            }
+          ]
+        },
+        {
+          "id": "written",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Written comments on proposed rule",
+          "raw_value": "Written comments",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "Written comments may be submitted by U.S. mail, E-mail, or through the internet"
+            }
+          ]
+        },
+        {
+          "id": "written_cutoff",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Receipt cutoff, date only",
+          "raw_value": "April 30, 2026",
+          "modality": "mandatory",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "Comments on the proposed rule must be received on or before April 30, 2026."
+            }
+          ]
+        },
+        {
+          "id": "mail",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Madi Johansen postal route for written comments",
+          "raw_value": "Department of Natural Resources; Attn: Madi Johansen; 3550 Mormon Coulee Road, La Crosse, WI",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "comment contact",
+              "quote": "Department of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI"
+            }
+          ]
+        },
+        {
+          "id": "email1",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Contact email accepts written comments",
+          "raw_value": "Madison.johansen@wisconsin.gov",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "comment contact",
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:"
+            },
+            {
+              "page": 2,
+              "region": "comment contact",
+              "quote": "608-712-2798, Madison.johansen@wisconsin.gov"
+            }
+          ]
+        },
+        {
+          "id": "email2",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Additional comment email",
+          "raw_value": "DNRAdministrativeRulesComments@wisconsin.gov",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "comment email",
+              "quote": "Comments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov."
+            }
+          ]
+        },
+        {
+          "id": "portal",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Online comment route also provides rule review",
+          "raw_value": "http://docs.legis.wisconsin.gov/code/chr/hearings",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "rule/comment access",
+              "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings."
+            }
+          ]
+        },
+        {
+          "id": "written_alternatives",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Postal, email and internet submission alternatives",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "mail",
+            "email1",
+            "email2",
+            "portal"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "Written comments may be submitted by U.S. mail, E-mail, or through the internet"
+            }
+          ]
+        },
+        {
+          "id": "equal_weight",
+          "category": "disclosure",
+          "subtype": "consideration_policy",
+          "description": "Written comments have same weight/effect as oral statements",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "written",
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "will have the same weight and effect as oral statements presented at the public hearing."
+            }
+          ]
+        },
+        {
+          "id": "rule_view",
+          "category": "ancillary",
+          "subtype": "rule_access",
+          "description": "Rule access link under order WY-20-23",
+          "raw_value": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html",
+          "modality": "descriptive",
+          "targets": [
+            "order"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "rule access",
+              "quote": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html."
+            }
+          ]
+        },
+        {
+          "id": "query_contact",
+          "category": "ancillary",
+          "subtype": "information_contact",
+          "description": "Madi Johansen receives questions as well as comments",
+          "raw_value": "Madi Johansen",
+          "modality": "descriptive",
+          "targets": [
+            "mail",
+            "email1"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "comment contact",
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:"
+            }
+          ]
+        },
+        {
+          "id": "query_phone",
+          "category": "ancillary",
+          "subtype": "information_phone",
+          "description": "Contact telephone; not a written-submission endpoint",
+          "raw_value": "608-712-2798",
+          "modality": "descriptive",
+          "targets": [
+            "query_contact"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "comment contact",
+              "quote": "608-712-2798, Madison.johansen@wisconsin.gov"
+            }
+          ]
+        },
+        {
+          "id": "aid",
+          "category": "ancillary",
+          "subtype": "accessibility",
+          "description": "DNR provides aids to maximum extent possible with reasonable advance notice; includes interpreter and alternative document formats",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Accessibility",
+              "quote": "DNR will, to the maximum extent possible and with reasonable advance notice, provide aids including an interpreter, or a non-English, large-print, or recorded version of hearing documents."
+            }
+          ]
+        },
+        {
+          "id": "aid_request",
+          "category": "instruction",
+          "subtype": "accessibility_request",
+          "description": "Request accessibility resources as soon as possible at email or phone listed below",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "aid",
+            "email1",
+            "query_phone"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Accessibility",
+              "quote": "To access these resources, please contact the email address or phone number listed below as soon as possible."
+            }
+          ]
+        },
+        {
+          "id": "coordinator",
+          "category": "ancillary",
+          "subtype": "small_business_contact",
+          "description": "Agency Small Business Regulatory Coordinator",
+          "raw_value": "Emma Esch",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "Agency Small Business Regulatory Coordinator",
+              "quote": "Emma Esch (608) 266-1959"
+            }
+          ]
+        },
+        {
+          "id": "coord_phone",
+          "category": "ancillary",
+          "subtype": "contact_component",
+          "description": "Small-business coordinator telephone",
+          "raw_value": "(608) 266-1959",
+          "modality": "descriptive",
+          "targets": [
+            "coordinator"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "coordinator",
+              "quote": "Emma Esch (608) 266-1959"
+            }
+          ]
+        },
+        {
+          "id": "coord_email",
+          "category": "ancillary",
+          "subtype": "contact_component",
+          "description": "Small-business coordinator email",
+          "raw_value": "emma.esch@wisconsin.gov",
+          "modality": "descriptive",
+          "targets": [
+            "coordinator"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "coordinator",
+              "quote": "emma.esch@wisconsin.gov"
+            }
+          ]
+        }
+      ],
+      "acceptance_blockers": [],
+      "exclusions": [
+        {
+          "pages": [
+            1,
+            2
+          ],
+          "rationale": "Exclude substantive APM program description, policy rationale and Initial Regulatory Flexibility Analysis; retain notice identity and all participation/contact information. No hidden Hearing Appearance form href certified."
+        }
+      ],
+      "reviewer": "Independent AI image-reference reviewer, thread 01a10e68-225d-7cf3-ad93-ad51715a9887; not human-adjudicated gold",
+      "review_evidence": {
+        "method": "Direct visual inspection of every listed full-page image; no OCR/native text or hidden link targets.",
+        "physical_pages_viewed": [
+          1,
+          2
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "status": "READY_FOR_INDEPENDENT_PROTOCOL_REVIEW_EDITS_STOPPED",
+  "implementation_release": false,
+  "live_release": false,
+  "files": {
+    "PROVENANCE.json": "3a515c01157fdf3640ee6847080001b3e9e1a5687782069be7fe132a96104966",
+    "SPEC.md": "05cdacf75fa4cb458f7c56000a2c150b429440c57dd4916bd428bc6444a47439",
+    "authoring-checks.json": "0e558bee5f4e98ca8bff1c7199a43f6c8021b55c1fe7c4f942f0c66996cdcb1d",
+    "authoring_checks.py": "4a6623b1cd07d00f173af37c4cd1b9b961bd97fb64d39bba0abe3e36bca0e38b",
+    "input-pins.json": "c5548def7860db8d470159827bbeda556b595d43571695409cd366a4f256f678",
+    "inventory-wire-contract.json": "5954bf0991091ca2774d3904a80e9d46b2e91852e0e196962f45cb085be5ac51",
+    "offline-regressions.json": "5dac6067e65dbbf17062182c0e5629aee28cb3b85761522fe231071eb6bbbfce",
+    "operative-pointers.json": "f2b71ace3e5bbd4559c0b2512b93c1145e752acd3eab0da4df516a138543d9a9",
+    "request-settings.json": "43d3b4f7886d84c528a07ff3ba0901a2be1ff42a6b503853ee87e1e6985b1ac2",
+    "size-probes.json": "69b23c8b1111dff74a53164befdd39b3120c54fff30e308361b960e3e62c4002",
+    "stage-a.offline-request.json": "4898c2be067694fcd5339871a4ecf516b8fd404ae25cffe227e29fd073db2815",
+    "stage-a.schema.json": "9b2437a5a0aab6a691886753ee3e153429795fa4bec09931487b23bf6c493647",
+    "stage-a.system.txt": "b5e7644c58bda2157b6cb671b593870e15509f9b14ff9ed839e05a58057a134e",
+    "stage-b.operative-projection.json": "10156082a1535cc7a14d1f1bd813c375bf75696b6437802b9286737625cb89e7",
+    "stage-b.operative-record.json": "0c11e04a363979a272a1c770673471f92775ada217c54273525c43645d826896",
+    "stage-b.schema.template.json": "92b59c78ff698bca345713faddbe54bfe8a593909222a1367a02b1bf622feffc",
+    "stage-b.system.txt": "887a7be4a120ac54b94e3942a34a3f17987e687bc1ca7844db52d277190ef7b4"
+  },
+  "unresolved": [
+    "Stage B actual inventory, request hash and size unavailable until validated A; fail closed if over guard.",
+    "Schemas use bounded new refs and require explicit runtime validation support.",
+    "Independent review of protocol and offline fixture expectations required.",
+    "48-unit heavy span probe fits with1334 guarded bytes headroom;64-unit heavy probe exceeds. Actual B must still pass unchanged guard.",
+    "Lossless span reconstruction is host-verified; model interpretation of source offsets remains semantically unverified."
+  ],
+  "provider_calls": 0
+}

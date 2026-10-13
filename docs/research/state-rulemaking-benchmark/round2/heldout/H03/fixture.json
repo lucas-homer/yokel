@@ -1,0 +1,306 @@
+{
+  "fixture_id": "H03",
+  "state": "IA",
+  "source_url": "https://www.legis.iowa.gov/docs/aco/arc/0619D.pdf",
+  "discovery_url": "https://rules.iowa.gov/Notice/Details/0619D",
+  "retrieved_at": "2026-10-07T04:06:36.706396+00:00",
+  "retrieval_exit": 0,
+  "retrieval_error": "",
+  "replacement_reason": "Tennessee official PDF returned HTTP403; no access-control bypass attempted.",
+  "original_page_count": 3,
+  "original_sha256": "4c4b8742dec0ced968d0e74a91f4dada7fa54c2d8110b6424fbcd288c7298349",
+  "original_bytes": 127890,
+  "input_page_count": 3,
+  "input_sha256": "4c4b8742dec0ced968d0e74a91f4dada7fa54c2d8110b6424fbcd288c7298349",
+  "input_bytes": 127890,
+  "original_physical_pages": [
+    1,
+    2,
+    3
+  ],
+  "input_is_publisher_original": true,
+  "source_title": "Iowa ARC0619D state unit on aging and area agency contracts",
+  "template_family": "IA-ARC-standalone-notice-intended-action",
+  "primary_bucket": "clean_standalone_pdf",
+  "bucket": "clean_standalone_pdf",
+  "layout_features": [
+    "born-digital standalone",
+    "hearing time/location columns",
+    "underlined additions and struck deletions"
+  ],
+  "event_type": "notice of intended action / proposed amendments",
+  "notice_scope_boundaries": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+  "package_limitations": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+  "selection_reason": "Purposive accessible official example from a new state/publication family; chosen from source content before round2 parser output exposure.",
+  "reference_path": "H03/collector-reference.json",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which department proposes the amendments?",
+      "expected_value": "Department of Health and Human Services / Human Services Department[441]",
+      "answerability": "present",
+      "critical": false,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Heading",
+      "source_quote": "HUMAN SERVICES DEPARTMENT[441]",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting agency or source context; not included in strict critical gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "source_id",
+      "question": "What ARC identifier is printed?",
+      "expected_value": "ARC0619D",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Top right",
+      "source_quote": "ARC 0619D",
+      "basis": "source_text",
+      "semantic_group_id": "source_id",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "event",
+      "question": "What action and stage are proposed?",
+      "expected_value": "Notice of Intended Action; amend Chapters226 and227",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Heading",
+      "source_quote": "Notice of Intended Action",
+      "basis": "source_text",
+      "semantic_group_id": "event",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Opening paragraph proposes amendments to both named chapters; no final adoption.",
+      "notice_scope_boundaries": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": [
+        {
+          "input_page": 1,
+          "original_page": 1,
+          "source_quote": "proposes to amend Chapter 226",
+          "quote_transcription": "visual source transcription; whitespace/line wraps normalized"
+        },
+        {
+          "input_page": 1,
+          "original_page": 1,
+          "source_quote": "and Chapter 227",
+          "quote_transcription": "visual source transcription; whitespace/line wraps normalized"
+        }
+      ]
+    },
+    {
+      "field_id": "comment_close",
+      "question": "When must comments be received?",
+      "expected_value": "October20,2026 at4:30p.m.",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 2,
+      "original_page": 2,
+      "region": "Public Comment",
+      "source_quote": "must be received by the Department no later than 4:30 p.m. on October 20, 2026.",
+      "basis": "source_text",
+      "semantic_group_id": "comment_close",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "hearing",
+      "question": "When is the current public hearing?",
+      "expected_value": "October20,2026,10–10:30a.m.",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 2,
+      "original_page": 2,
+      "region": "Public Hearing",
+      "source_quote": "October 20, 2026\n10 to 10:30 a.m.",
+      "basis": "source_text",
+      "semantic_group_id": "hearing",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "prior_hearing",
+      "question": "When was the earlier regulatory-analysis hearing?",
+      "expected_value": "September8,2026",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Regulatory Analysis",
+      "source_quote": "A public hearing was held on the following date(s):\n   September 8, 2026",
+      "basis": "source_text",
+      "semantic_group_id": "prior_hearing",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Historical analysis hearing, not current hearing.",
+      "notice_scope_boundaries": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "analysis_publication",
+      "question": "When was the Regulatory Analysis published?",
+      "expected_value": "August19,2026",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Regulatory Analysis",
+      "source_quote": "A Regulatory Analysis for this rulemaking was published in the Iowa Administrative Bulletin on \nAugust 19, 2026.",
+      "basis": "source_text",
+      "semantic_group_id": "analysis_publication",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Publication of analysis; not the current notice publication date.",
+      "notice_scope_boundaries": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "timezone",
+      "question": "Does this notice state the comment/hearing timezone?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "input_page": 2,
+      "original_page": 2,
+      "region": "Complete target notice",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "timezone",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Relevant complete notice scope must survive; silence alone is insufficient.",
+      "notice_scope_boundaries": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3
+      ],
+      "absence_scope_if_applicable": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+      "additional_decisive_evidence": []
+    },
+    {
+      "field_id": "effective",
+      "question": "Does the notice assign a final effective date to these amendments?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Complete target notice",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "effective",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "No final effective date; background State Plan45-day submission and federal October1,2025 references are not this rulemaking effective date.",
+      "notice_scope_boundaries": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+      "source_pages_viewed": [
+        1,
+        2,
+        3
+      ],
+      "absence_scope_if_applicable": "Entire three-page official ARC PDF including proposed rule text. Regulatory-analysis historical dates must not become notice publication or current hearing dates.",
+      "additional_decisive_evidence": []
+    }
+  ],
+  "critical_fields": 8,
+  "reference_gate_eligible": true,
+  "uncertain_critical_fields": []
+}

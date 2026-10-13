@@ -1,0 +1,388 @@
+{
+  "bindings": {
+    "candidate_path": "candidate/candidate.json",
+    "candidate_sha256": "934c3c999c203f44756416b103519e36d73a9b807b8ca0a104a67f1820b9c1a7",
+    "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+    "reference_ready_sha256": "f06a07ab23a42b55f6977582d872359d65e218363e6a16bdfcdce68117628a24",
+    "reference_inventory_sha256": "253c49288c932b22414fb9f3b11810d5b6528cc987fb2b1c672b6ce096297566",
+    "reference_scope_sha256": "6279875b25749672b9e6e63abc7906728e4057b2f20f7ad2f81912298f917f0a"
+  },
+  "metadata": [
+    {
+      "pointer": "/schema_version",
+      "value": "round7.participation_record.v1",
+      "value_sha256": "d6c387f7aa72aaaee3b94f06061b85d9bc4b45744575b2d6996e2697d5026ffe",
+      "status": "supported",
+      "reason": "Technical schema label is provenance, not source content.",
+      "operative": false
+    },
+    {
+      "pointer": "/document_id",
+      "value": "wsr-26-19-016",
+      "value_sha256": "a6d785a2eb9416251722db16b5404296eee9ebeabe151a4798d713ff6d77cf65",
+      "status": "supported",
+      "reason": "Normalized identifier preserves WSR 26-19-016.",
+      "operative": false
+    },
+    {
+      "pointer": "/source_text_sha256",
+      "value": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+      "value_sha256": "6d0dc98516e4edd9e1af5c52de0b61a20ecd94b1a330a37f7ae4d043c3a476be",
+      "status": "supported",
+      "reason": "Exact UTF-8 source-byte hash verified.",
+      "operative": false
+    },
+    {
+      "pointer": "/evidence",
+      "value": [
+        {
+          "quote": "beginning August 7, 2026, by October 20, 2026."
+        },
+        {
+          "quote": "Olympia, WA 98504 [98501]"
+        },
+        {
+          "quote": "Preproposal statement of inquiry was filed as WSR 26-15-[0]21."
+        },
+        {
+          "quote": "and via Microsoft Teams. See the board of tax appeals (board) website for Microsoft Teams call in information."
+        }
+      ],
+      "value_sha256": "bcdd5fb40fa2c355dc800100abfcb92a402017606f3b2250aec92a201ffc16cc",
+      "status": "supported",
+      "reason": "Every evidence quote is exact source text; evidence alone does not recover an omitted operative assertion.",
+      "operative": false
+    }
+  ],
+  "semantic_notes": [
+    {
+      "pointer": "/record_notes/0",
+      "value": "Scope: public rulemaking comments, hearing access, disability assistance, adoption/filing, identifiers, purpose, authority and agency recommendation.",
+      "value_sha256": "7de5cd9b70e0e028abc33a28ed3e012efed2a656301f310dccc49af1b727f540",
+      "assertion": "Candidate declares a scope covering public comments, hearing, assistance, adoption/filing, identifiers, purpose, authority and recommendations.",
+      "status": "supported",
+      "reason": "Accurately describes included sections; not a completeness claim.",
+      "source_evidence": [
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Submit Written Comments to: Keri Lamb, 1110 Capitol Way South, Suite 300*, Olympia, WA 98504 [98501], email bta@bta.wa.gov, fax 360-586-9020, beginning August 7, 2026, by October 20, 2026.",
+          "occurrence": 1,
+          "start_char": 537,
+          "end_char": 725
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Hearing Location(s): On November 3, 2026, at 10:00 a.m., at 1110 Capitol Way South, Suite 300*, Olympia, WA 98504; and via Microsoft Teams. See the board of tax appeals (board) website for Microsoft Teams call in information.",
+          "occurrence": 1,
+          "start_char": 266,
+          "end_char": 491
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Assistance for Persons with Disabilities: Contact Keri Lamb, phone 360-753-5446, fax 360-586-9020, email bta@bta.wa.gov, by October 20, 2026.",
+          "occurrence": 1,
+          "start_char": 726,
+          "end_char": 867
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Date of Intended Adoption: December 2, 2026.",
+          "occurrence": 1,
+          "start_char": 492,
+          "end_char": 536
+        }
+      ],
+      "operative": false
+    },
+    {
+      "pointer": "/record_notes/1",
+      "value": "Outside scope: fiscal/exemption analysis, drafting/implementation personnel and signature block; amendatory WAC party-specific adjudication duties (exception, service, response, proof, evidence, briefs/oral argument). Prior amendment retained as context.",
+      "value_sha256": "28766a9f96c114cac12a6ffc3cf46c8aa130c485d931fc50d3df0d41f4b20023",
+      "assertion": "Drafting and implementation personnel are outside participation scope.",
+      "status": "unsupported",
+      "reason": "Conflicts with the frozen source-only policy judgment: named responsibility contacts serve an ancillary participation/contact function. Notes do not repair the omitted operative contacts.",
+      "source_evidence": [
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Name of Agency Personnel Responsible for Drafting: Keri Lamb, board of tax appeals, 360-753-5446; Implementation and Enforcement: Board of tax appeals, 360-753-5446.",
+          "occurrence": 1,
+          "start_char": 1673,
+          "end_char": 1838
+        }
+      ],
+      "operative": false
+    },
+    {
+      "pointer": "/record_notes/1",
+      "value": "Outside scope: fiscal/exemption analysis, drafting/implementation personnel and signature block; amendatory WAC party-specific adjudication duties (exception, service, response, proof, evidence, briefs/oral argument). Prior amendment retained as context.",
+      "value_sha256": "28766a9f96c114cac12a6ffc3cf46c8aa130c485d931fc50d3df0d41f4b20023",
+      "assertion": "Fiscal/exemption analysis and signature block are background rather than participation obligations.",
+      "status": "supported",
+      "reason": "Consistent with frozen source-only scope; their omission still remains reported as background loss.",
+      "source_evidence": [
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "A school district fiscal impact statement is not required under RCW 28A.305.135.",
+          "occurrence": 1,
+          "start_char": 1839,
+          "end_char": 1919
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "A cost-benefit analysis is not required under RCW 34.05.328. Changes have no fiscal impact.",
+          "occurrence": 1,
+          "start_char": 1920,
+          "end_char": 2011
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "This rule proposal, or portions of the proposal, is exempt from requirements of the Regulatory Fairness Act because the proposal:",
+          "occurrence": 1,
+          "start_char": 2012,
+          "end_char": 2141
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Is exempt under RCW 19.85.025(3) as the rules only correct typographical errors, make address or name changes, or clarify language of a rule without changing its effect.",
+          "occurrence": 1,
+          "start_char": 2142,
+          "end_char": 2311
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Scope of exemption for rule proposal:",
+          "occurrence": 1,
+          "start_char": 2312,
+          "end_char": 2349
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Is fully exempt.",
+          "occurrence": 1,
+          "start_char": 2350,
+          "end_char": 2366
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "The proposed rule does not impose more-than-minor costs on businesses. Following is a summary of the agency's analysis showing how costs were calculated. [No information supplied by agency.]",
+          "occurrence": 1,
+          "start_char": 2367,
+          "end_char": 2557
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "August 7, 2026",
+          "occurrence": 1,
+          "start_char": 689,
+          "end_char": 703
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Matthew Randazzo",
+          "occurrence": 1,
+          "start_char": 2573,
+          "end_char": 2589
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Chair",
+          "occurrence": 1,
+          "start_char": 2590,
+          "end_char": 2595
+        }
+      ],
+      "operative": false
+    },
+    {
+      "pointer": "/record_notes/1",
+      "value": "Outside scope: fiscal/exemption analysis, drafting/implementation personnel and signature block; amendatory WAC party-specific adjudication duties (exception, service, response, proof, evidence, briefs/oral argument). Prior amendment retained as context.",
+      "value_sha256": "28766a9f96c114cac12a6ffc3cf46c8aa130c485d931fc50d3df0d41f4b20023",
+      "assertion": "Party-specific exception/service/response/proof/evidence/brief/oral-argument duties belong to proposed tax adjudication, outside public rulemaking participation.",
+      "status": "supported",
+      "reason": "Agrees with frozen domain distinction. These substantive duties are retained background, not erased source content.",
+      "source_evidence": [
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "WAC 456-10-730Exceptions to proposed decisions.",
+          "occurrence": 1,
+          "start_char": 2684,
+          "end_char": 2731
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "(1) Any party may petition for review of a proposed decision. A petition for review of a proposed decision is referred to as an exception.",
+          "occurrence": 1,
+          "start_char": 2732,
+          "end_char": 2870
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "(2) An exception must be transmitted to the board and served on all parties within 20 calendar days of the date the proposed decision was transmitted, unless otherwise specified. Proof of service must be filed with the board as outlined in WAC 456-10-410.",
+          "occurrence": 1,
+          "start_char": 2871,
+          "end_char": 3126
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "(3) An exception must indicate which portions of or what evidence in the record supports the exception. The exception must be based on evidence in the hearing record, and no new evidence or arguments may be raised ((unless the written decision is based on a fact or facts that the parties did not already have an opportunity to address)).",
+          "occurrence": 1,
+          "start_char": 3127,
+          "end_char": 3465
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "(4) ((Any))The nonmoving party may respond to an exception. The response must be sent or transmitted to the board within 14 calendar days of the date the exception was served, together with proof of service outlined in WAC 456-10-410.",
+          "occurrence": 1,
+          "start_char": 3466,
+          "end_char": 3700
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "(5) The board will address an exception in a written order. The board may require the parties to submit written briefs or to appear and present oral argument on the exception.",
+          "occurrence": 1,
+          "start_char": 3701,
+          "end_char": 3876
+        }
+      ],
+      "operative": false
+    },
+    {
+      "pointer": "/record_notes/1",
+      "value": "Outside scope: fiscal/exemption analysis, drafting/implementation personnel and signature block; amendatory WAC party-specific adjudication duties (exception, service, response, proof, evidence, briefs/oral argument). Prior amendment retained as context.",
+      "value_sha256": "28766a9f96c114cac12a6ffc3cf46c8aa130c485d931fc50d3df0d41f4b20023",
+      "assertion": "Prior amendment is retained as context.",
+      "status": "unknown",
+      "reason": "Candidate retains a prior-rule reference and dates but not an explicit amendment action; interpreting this as preservation of the transition is unsupported.",
+      "source_evidence": [
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "AMENDATORY SECTION(Amending WSR 22-13-111, filed 6/15/22, effective 7/16/22)",
+          "occurrence": 1,
+          "start_char": 2607,
+          "end_char": 2683
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "WAC 456-10-730Exceptions to proposed decisions.",
+          "occurrence": 1,
+          "start_char": 2684,
+          "end_char": 2731
+        }
+      ],
+      "operative": false
+    },
+    {
+      "pointer": "/record_notes/2",
+      "value": "AI-assisted source-only candidate, not independent gold. No external resolution or post-verification repair. Co-listed contact channels modeled as alternatives.",
+      "value_sha256": "7c3fb8f541c6e37a3951a63fce2edff552ddb30fcac89e73896e22281aced7c8",
+      "assertion": "Candidate is AI-assisted and not independent gold.",
+      "status": "unknown",
+      "reason": "Authorship is a provenance assertion, not established by the notice. Authoring provenance reports it; no independent verification of authorship performed.",
+      "source_evidence": [
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "WSR 26-19-016",
+          "occurrence": 1,
+          "start_char": 0,
+          "end_char": 13
+        }
+      ],
+      "operative": false
+    },
+    {
+      "pointer": "/record_notes/2",
+      "value": "AI-assisted source-only candidate, not independent gold. No external resolution or post-verification repair. Co-listed contact channels modeled as alternatives.",
+      "value_sha256": "7c3fb8f541c6e37a3951a63fce2edff552ddb30fcac89e73896e22281aced7c8",
+      "assertion": "No external resolution or post-verification repair occurred.",
+      "status": "unknown",
+      "reason": "Candidate preserves source uncertainties and provenance self-reports this workflow, but the notice cannot establish process history.",
+      "source_evidence": [
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Hearing Location(s): On November 3, 2026, at 10:00 a.m., at 1110 Capitol Way South, Suite 300*, Olympia, WA 98504; and via Microsoft Teams. See the board of tax appeals (board) website for Microsoft Teams call in information.",
+          "occurrence": 1,
+          "start_char": 266,
+          "end_char": 491
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Submit Written Comments to: Keri Lamb, 1110 Capitol Way South, Suite 300*, Olympia, WA 98504 [98501], email bta@bta.wa.gov, fax 360-586-9020, beginning August 7, 2026, by October 20, 2026.",
+          "occurrence": 1,
+          "start_char": 537,
+          "end_char": 725
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Preproposal statement of inquiry was filed as WSR 26-15-[0]21.",
+          "occurrence": 1,
+          "start_char": 105,
+          "end_char": 167
+        }
+      ],
+      "operative": false
+    },
+    {
+      "pointer": "/record_notes/2",
+      "value": "AI-assisted source-only candidate, not independent gold. No external resolution or post-verification repair. Co-listed contact channels modeled as alternatives.",
+      "value_sha256": "7c3fb8f541c6e37a3951a63fce2edff552ddb30fcac89e73896e22281aced7c8",
+      "assertion": "Co-listed channels are modeled as alternatives.",
+      "status": "unknown",
+      "reason": "True as candidate representation, but the semantic claim is underspecified. Independent permissions are supported; full substitution or equivalent capabilities are not established.",
+      "source_evidence": [
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Submit Written Comments to: Keri Lamb, 1110 Capitol Way South, Suite 300*, Olympia, WA 98504 [98501], email bta@bta.wa.gov, fax 360-586-9020, beginning August 7, 2026, by October 20, 2026.",
+          "occurrence": 1,
+          "start_char": 537,
+          "end_char": 725
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Hearing Location(s): On November 3, 2026, at 10:00 a.m., at 1110 Capitol Way South, Suite 300*, Olympia, WA 98504; and via Microsoft Teams. See the board of tax appeals (board) website for Microsoft Teams call in information.",
+          "occurrence": 1,
+          "start_char": 266,
+          "end_char": 491
+        },
+        {
+          "source": "source/26-19-016.txt",
+          "source_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+          "quote": "Assistance for Persons with Disabilities: Contact Keri Lamb, phone 360-753-5446, fax 360-586-9020, email bta@bta.wa.gov, by October 20, 2026.",
+          "occurrence": 1,
+          "start_char": 726,
+          "end_char": 867
+        }
+      ],
+      "operative": false
+    }
+  ],
+  "unsupported_notes_are_separate_from_operative_claims": true
+}

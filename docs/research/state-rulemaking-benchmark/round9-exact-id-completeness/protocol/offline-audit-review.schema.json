@@ -1,0 +1,85 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "round9.offline-audit-review.v1"
+      ]
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "audit_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "audit_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "source_reference_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "record_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "source_text_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "approved",
+              "pending",
+              "rejected"
+            ]
+          },
+          "primary_reviewer": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "independent_reviewer": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "review_note": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          }
+        },
+        "required": [
+          "audit_id",
+          "audit_sha256",
+          "source_reference_sha256",
+          "record_sha256",
+          "source_text_sha256",
+          "decision",
+          "primary_reviewer",
+          "independent_reviewer",
+          "review_note"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 100
+    }
+  },
+  "required": [
+    "schema_version",
+    "entries"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

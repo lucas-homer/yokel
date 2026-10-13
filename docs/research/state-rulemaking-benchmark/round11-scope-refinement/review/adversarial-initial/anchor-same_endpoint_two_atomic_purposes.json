@@ -1,0 +1,250 @@
+{
+  "case": {
+    "source": "Send written comments or questions to office@example.test.",
+    "inventory": [
+      {
+        "id": "e",
+        "kind": "endpoint",
+        "value": "office@example.test",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "office@example.test",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "wr",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "e",
+          "purpose": "submit_written"
+        },
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "e"
+        ],
+        "evidence": [
+          {
+            "quote": "Send written comments or questions to office@example.test.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "qr",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "e",
+          "purpose": "questions"
+        },
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "e"
+        ],
+        "evidence": [
+          {
+            "quote": "Send written comments or questions to office@example.test.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      }
+    ],
+    "classified_inventory": [
+      {
+        "id": "e",
+        "kind": "endpoint",
+        "value": "office@example.test",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "office@example.test",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "wr",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "e",
+          "purpose": "submit_written"
+        },
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "e"
+        ],
+        "evidence": [
+          {
+            "quote": "Send written comments or questions to office@example.test.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "qr",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "e",
+          "purpose": "questions"
+        },
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "e"
+        ],
+        "evidence": [
+          {
+            "quote": "Send written comments or questions to office@example.test.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      }
+    ],
+    "scopes": {
+      "e": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint",
+        "evidence": [
+          {
+            "quote": "office@example.test",
+            "occurrence": 1
+          }
+        ]
+      },
+      "wr": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint_role",
+        "evidence": [
+          {
+            "quote": "Send written comments or questions to office@example.test.",
+            "occurrence": 1
+          }
+        ]
+      },
+      "qr": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint_role",
+        "evidence": [
+          {
+            "quote": "Send written comments or questions to office@example.test.",
+            "occurrence": 1
+          }
+        ]
+      }
+    },
+    "operative": {
+      "e": {
+        "condition": "unconditional",
+        "kind": "endpoint",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": "office@example.test"
+      },
+      "wr": {
+        "condition": "unconditional",
+        "kind": "endpoint_role",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": {
+          "endpoint": "e",
+          "purpose": "submit_written"
+        }
+      },
+      "qr": {
+        "condition": "unconditional",
+        "kind": "endpoint_role",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": {
+          "endpoint": "e",
+          "purpose": "questions"
+        }
+      }
+    },
+    "mappings": {
+      "e": {
+        "status": "matched",
+        "refs": [
+          "e"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      },
+      "wr": {
+        "status": "matched",
+        "refs": [
+          "wr"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      },
+      "qr": {
+        "status": "matched",
+        "refs": [
+          "qr"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      }
+    },
+    "source_review": {
+      "status": "source_only_frozen",
+      "source_sha256": "5acf3a31a510e050f8e17ef9da940aaf6f4d8de2666e31bf74ad01936cc9365e",
+      "inventory_sha256": "170a3eb3e0a7ec87be18d361d79c98369dc089bfe91749a68d58f640d4ea9e91",
+      "scopes_sha256": "53641d4ad4ed50cd80c8bf707bd23c05c912b40ec3160963586277cefc19aa8f"
+    },
+    "record_audit": {
+      "status": "not_run",
+      "reviewed_refs": [],
+      "unsupported_refs": [],
+      "unknown_refs": []
+    }
+  },
+  "name": "anchor-same_endpoint_two_atomic_purposes",
+  "expected": {
+    "valid": true,
+    "required_scope_status": "all_required_inventoried_units_matched"
+  },
+  "actual": {
+    "accepted": true,
+    "result": {
+      "required_scope_status": "all_required_inventoried_units_matched",
+      "unresolved_scope": [],
+      "required_unknown": [],
+      "required_defects": [],
+      "effective_mappings": {
+        "e": "matched",
+        "wr": "matched",
+        "qr": "matched"
+      },
+      "background_diagnostics": {},
+      "source_completeness": "reviewer_attestation_only",
+      "record_fidelity": "unverified",
+      "unsupported_record_refs": [],
+      "production_ready": false,
+      "live_compatibility": "unverified"
+    }
+  },
+  "expectation_met": true
+}

@@ -1,0 +1,113 @@
+{
+  "author": "Fable via Claude.ai Max subscription bridge",
+  "actual_model": [
+    "claude-fable-5-1"
+  ],
+  "requested_effort": "high",
+  "semantic_plan": {
+    "plan": "rulemaking-notice extraction, four semantic cases plus invariants, offline synthetic",
+    "conventions": {
+      "no_imposed_schema": "Expectations are observable properties; any representation passes if an evaluator can recover the property from output plus spans.",
+      "spans": "Exact offsets into the hashed fixture. A broad span may ground several facts. No subspan or split count is required.",
+      "unknown_vs_justified": "Where source is silent, absence or an unknown value both pass. Where source is ambiguous, a justified label with explicit uncertainty passes; so does unknown. Neither is an error."
+    },
+    "cases": [
+      {
+        "id": "C1-deadline-date-only",
+        "input": "\"Written comments must be postmarked no later than April 15, 2026. Electronic comments must be received by that date.\" No clock or timezone anywhere.",
+        "positive": [
+          "Date 2026-04-15 recovered as a calendar date, not an instant.",
+          "Clock and timezone absent or unknown.",
+          "Postmark semantics for written comments and receipt semantics for electronic comments, each recoverable; one span covering both sentences is acceptable.",
+          "Spans match source text exactly."
+        ],
+        "negative": [
+          "Any clock, offset, or midnight instant without a source span.",
+          "Postmark and receipt collapsed into one semantics for both channels.",
+          "Date shifted by timezone assumption."
+        ],
+        "tolerance": "Zero on date and spans. Unknown accepted for clock and timezone. If a fixture variant omits all submission language, receipt-vs-postmark unknown is correct and any asserted value fails."
+      },
+      {
+        "id": "C2-amended-rule-vs-historical-filing",
+        "input": "\"AMENDATORY SECTION (Amending WSR 20-01-001, filed 1/2/20, effective 2/2/20). WAC 123-45-067 Eligibility.\"",
+        "positive": [
+          "Two distinct entities: the affected current rule WAC 123-45-067 and the historical filing WSR 20-01-001.",
+          "Filed date 2020-01-02 and effective date 2020-02-02 attached only to the historical filing.",
+          "A directed relationship from the present amendatory action to WSR 20-01-001 meaning 'amends', and an association from the action to WAC 123-45-067 as the affected section. A single span over the whole snippet may ground all of these.",
+          "Title 'Eligibility' attached to the WAC section.",
+          "No effective date for the present action asserted, since the snippet gives none."
+        ],
+        "negative": [
+          "WAC and WSR merged into one entity, or the WSR treated as the operative rule.",
+          "2020 dates attached to WAC 123-45-067 or to the present action.",
+          "Relationship direction reversed or endpoint unresolvable.",
+          "Present-action effective date invented."
+        ],
+        "tolerance": "Relationship label synonyms accepted when direction and endpoints are correct. Two-digit year expansion to 2020 accepted; other century fails."
+      },
+      {
+        "id": "C3-proposed-intent-from-prose",
+        "input": "\"We propose to remove paragraph (b) and revise paragraph (c) to read as set forth below.\" Fixture is plain text with no insertion or deletion markup; paragraph (b) text does not appear.",
+        "positive": [
+          "Proposed intent to remove paragraph (b) recovered, grounded in the prose span.",
+          "Proposed intent to revise paragraph (c) recovered.",
+          "The text of paragraph (b) is absent or explicitly marked unavailable; its status is proposed-removal by intent, not a deleted text segment.",
+          "If a variant fixture supplies explicit markers, marked segments take status exactly from the markers; prose and markers may both ground status and must not conflict.",
+          "Nothing is labeled current, proposed, or deleted beyond what prose or supplied markers state."
+        ],
+        "negative": [
+          "A deleted text body for paragraph (b) fabricated.",
+          "Markup facts imported that the plain-text fixture does not contain.",
+          "Paragraph (c) replacement text asserted when 'set forth below' is not in the fixture.",
+          "Proposed intent rejected solely because no markup exists."
+        ],
+        "tolerance": "Status may be grounded in prose, markers, or both. Missing markup never supplies facts and never blocks prose-grounded intent."
+      },
+      {
+        "id": "C4-directive-force-with-uncertainty",
+        "input": "Three sentences: \"Each comment must include the docket number.\" \"Commenters are encouraged to attach supporting data.\" \"Comments are to be submitted through the docket, addressed as described in ADDRESSES.\" An ADDRESSES block exists elsewhere in the fixture.",
+        "positive": [
+          "Sentence 1: mandatory force, span on the modal.",
+          "Sentence 2: non-mandatory or hortatory force.",
+          "Sentence 3: either an explicit unknown, or a justified label such as 'likely mandatory' or 'hortatory' carrying an explicit uncertainty indication and the verbatim modal phrase; both pass.",
+          "A structural link from sentence 3 to the ADDRESSES block, labeled reference or dependency, with no force of its own."
+        ],
+        "negative": [
+          "Sentence 2 labeled mandatory, or sentence 1 downgraded to unknown.",
+          "Sentence 3 given a force label with no uncertainty indication and no verbatim phrase.",
+          "Sentence 3's label treated by the evaluator as a definite error merely because reviewers could debate it.",
+          "The ADDRESSES link emitted as a must or should, or the ADDRESSES block assigned directive force."
+        ],
+        "tolerance": "Explicit modals: zero tolerance. Ambiguous modals: any label passes if uncertainty is explicit and the phrase is preserved; unknown also passes. Evaluator records debated items as 'contested', not failed."
+      }
+    ],
+    "invariants": [
+      "Output carries the fixture hash; a one-byte fixture change produces a mismatch.",
+      "Every span slices the fixture to the exact quoted text; broad spans allowed, paraphrase not.",
+      "Identifiers unique; every reference resolves to an emitted identifier.",
+      "Relationship and dependency graph acyclic.",
+      "Completion marker consistent: not claimed while any unit is pending.",
+      "Structural links carry no force attribute and are never treated as prerequisites for a fact to count.",
+      "Every stated value has a span or is explicitly unknown or explicitly uncertain.",
+      "No fixed unit count: evaluator asserts per-fact recoverability, never decomposition shape.",
+      "Coverage metric, if emitted, is reported separately and never consulted by semantic verdicts."
+    ],
+    "freeze_procedure": {
+      "label": "AI assessment, source-only, not gold",
+      "steps": [
+        "Hash each fixture and seal it.",
+        "Reading only the fixture, list atomic facts in plain words with one or more exact spans; mark silence as unknown and ambiguity as uncertain, with the verbatim phrase.",
+        "Record relationships and structural links as directed pairs over listed facts, each with a span.",
+        "Keep it compact and many-to-many: facts may share spans, spans may ground many facts, no schema or count.",
+        "Add header with label, author, date, fixture hash. Hash the reference and store both hashes.",
+        "Never edit; corrections become a new version with a new hash.",
+        "Only then run the extractor and compare by per-fact recoverability."
+      ],
+      "exposure_rule": "Reference is never shown to the extractor or revised after output inspection within a version."
+    },
+    "execution": "Local only, plain text fixtures, no network, credentials, real dockets, or private data."
+  },
+  "independently_lossy_case": "Initial Fable design L1/L2 retained as additional required case; see fable-design/initial-result.json.",
+  "status": "awaiting_source_reference_freeze_before_protocol_tests"
+}

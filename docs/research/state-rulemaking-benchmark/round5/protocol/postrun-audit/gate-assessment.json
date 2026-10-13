@@ -1,0 +1,86 @@
+{
+  "status": "NOT_MET",
+  "cohort": {
+    "scheduled": 8,
+    "terminal": 8,
+    "pages": 22,
+    "states": 6,
+    "complete_notice_scope": 7,
+    "eight_complete_requirement_met": false
+  },
+  "runtime": {
+    "candidates": 22,
+    "jev_POSTs": 9,
+    "accepted_rows": 6,
+    "distinct_accepted_claims": 5,
+    "all_accepted_rows_audited": true,
+    "correct_distinct_facts": 2,
+    "unsafe_distinct_claims": 3,
+    "accepted_source_uncertainty": 1,
+    "accepted_value_conflicts": 0,
+    "action_ready_declarations": 0
+  },
+  "whole_cohort_coverage": {
+    "DATE": {
+      "numerator": 1,
+      "denominator": 7,
+      "value": null,
+      "undefined_reason": "source_labels_incomplete; counts cover known labels only"
+    },
+    "EMAIL": {
+      "numerator": 1,
+      "denominator": 7,
+      "value": null,
+      "undefined_reason": "source_labels_incomplete; counts cover known labels only"
+    },
+    "pooled": {
+      "numerator": 2,
+      "denominator": 14,
+      "value": null,
+      "undefined_reason": "source_labels_incomplete; counts cover known labels only"
+    }
+  },
+  "complete7subset_coverage": {
+    "DATE": {
+      "numerator": 1,
+      "denominator": 5,
+      "value": 0.2,
+      "undefined_reason": null
+    },
+    "EMAIL": {
+      "numerator": 1,
+      "denominator": 6,
+      "value": 0.16666666666666666,
+      "undefined_reason": null
+    },
+    "pooled": {
+      "numerator": 2,
+      "denominator": 11,
+      "value": 0.18181818181818182,
+      "undefined_reason": null
+    }
+  },
+  "gates": {
+    "zero_unsafe_accepts": false,
+    "pooled_recovery_at_least_25_percent": "not established for whole cohort; complete subset18.18% below threshold",
+    "eight_complete_notices": false
+  },
+  "cost": {
+    "jev_POSTs": 9,
+    "input_tokens_provider_reported": 26638,
+    "output_tokens_provider_reported": 1547,
+    "pinned_input_usd_per_million": 0.042,
+    "provider_reported_invoice_or_cost": null,
+    "usage_times_pinned_rate_estimate_usd": 0.001118796,
+    "conservative_budget_charge_usd": 0.005140464000000001,
+    "nominal_reserved_usd": 0.005140464000000001,
+    "correct_distinct_accepted_fields": 2,
+    "usage_estimate_usd_per_correct_distinct_field": 0.000559398,
+    "conservative_budget_charge_usd_per_correct_distinct_field": 0.0025702320000000004,
+    "cost_numerator_scope": "all9 run requests including duplicate and nonaccepted cases",
+    "OCR_calls": 0
+  },
+  "next_decision": "No progression on this gate; preserve frozen results. A future separately authorized version would need qualification-preserving claims and corrected scope/relative routing, with new frozen evaluation sources.",
+  "evaluator_unchanged": true,
+  "provider_calls_by_reviewer": 0
+}

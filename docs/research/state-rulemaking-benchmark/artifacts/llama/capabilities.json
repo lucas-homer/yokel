@@ -1,0 +1,44 @@
+{
+  "inspected_at": "2026-10-06T00:33:00.863Z",
+  "relevant_tools": [
+    {
+      "name": "mcp__codex_apps__llamaparse_getuploadurl",
+      "description": "Document processing for agents\n\nGet a pre-signed URL to upload a file to the LlamaParse S3 storage. Not available when authenticating with an API key — use uploadFileByUrl instead. This tool is part of plugin `LlamaParse`.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__codex_apps__llamaparse_getuploadurl(args: {\n  // Project ID that the tool should use. Uses the default project if not provided.\n  projectId?: string;\n  // Expected downstream processing workload for the file to upload. Allowed values: 'user_data', 'parse', 'extract', 'split', 'classify', 'sheet', 'agent_app'. Defaults to 'parse' if not provided.\n  purpose?: string;\n}): Promise<CallToolResult>; };\n```"
+    },
+    {
+      "name": "mcp__codex_apps__llamaparse_parsefile",
+      "description": "Document processing for agents\n\nParse a file providing its file ID, retrieving markdown or plain text content of the file. Use with file IDs obtained with the getUploadUrl/uploadFileByUrl tool or that the user provided. This tool is part of plugin `LlamaParse`.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__codex_apps__llamaparse_parsefile(args: {\n  // ID of the file to parse, as returned by the file upload tool or provided by the user\n  fileId: string;\n  // Whether to extract markdown or plain text. Defaults to true (extract markdown).\n  markdown?: boolean;\n  // Specific pages to limit the parsing operation to\n  pages?: Array<number>;\n  // Project ID that the tool should use. Uses the default project if not provided.\n  projectId?: string;\n  // Parsing mode to use. While agentic or agentic_plus are recommended, this parameter defaults to cost_effective if not specified.\n  tier?: \"cost_effective\" | \"agentic\" | \"agentic_plus\";\n  // API version to use. Defaults to `latest` if not specified.\n  version?: \"latest\" | string;\n}): Promise<CallToolResult>; };\n```"
+    }
+  ],
+  "available_tool_names": [
+    "mcp__codex_apps__llamaparse_addfilestodirectory",
+    "mcp__codex_apps__llamaparse_classifyfile",
+    "mcp__codex_apps__llamaparse_createdirectory",
+    "mcp__codex_apps__llamaparse_createextractionconfigfromschema",
+    "mcp__codex_apps__llamaparse_createindex",
+    "mcp__codex_apps__llamaparse_createprojectapikey",
+    "mcp__codex_apps__llamaparse_estimatefilecomplexity",
+    "mcp__codex_apps__llamaparse_extractfile",
+    "mcp__codex_apps__llamaparse_extractfileturbo",
+    "mcp__codex_apps__llamaparse_findfilesinindex",
+    "mcp__codex_apps__llamaparse_generateextractionconfig",
+    "mcp__codex_apps__llamaparse_getindexstatus",
+    "mcp__codex_apps__llamaparse_getschematemplate",
+    "mcp__codex_apps__llamaparse_getuploadurl",
+    "mcp__codex_apps__llamaparse_getuserprojects",
+    "mcp__codex_apps__llamaparse_grepfilefromindex",
+    "mcp__codex_apps__llamaparse_listdirectories",
+    "mcp__codex_apps__llamaparse_listdirectory",
+    "mcp__codex_apps__llamaparse_listindexes",
+    "mcp__codex_apps__llamaparse_parsefile",
+    "mcp__codex_apps__llamaparse_parsewithliteparse",
+    "mcp__codex_apps__llamaparse_readfilefromindex",
+    "mcp__codex_apps__llamaparse_retrievefromindex",
+    "mcp__codex_apps__llamaparse_searchschematemplates",
+    "mcp__codex_apps__llamaparse_splitfile",
+    "mcp__codex_apps__llamaparse_syncindex",
+    "mcp__codex_apps__llamaparse_uploadfilebyurl"
+  ],
+  "version_discovery": "No released-version listing/metadata tool exposed. parseFile accepts latest|string but no verified release identifier is available. Use latest consistently; retain any version returned without assuming it.",
+  "forms_and_regions": "parseFile does not expose forms enrichment, expand, or bounding-box options."
+}

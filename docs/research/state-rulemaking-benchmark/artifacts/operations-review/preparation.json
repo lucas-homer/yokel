@@ -1,0 +1,119 @@
+{
+  "schema_version": "operations-audit-v1",
+  "phase": "prepared_pending_run_complete",
+  "prepared_at_utc": "2026-10-06T00:51:10.609953+00:00",
+  "freeze_sha256": "900f21e8a75d50444f12a0e3814d665a4f401a0d689194465d0b00467a762946",
+  "checks": [
+    {
+      "check_id": "freeze-checksum",
+      "status": "pass",
+      "evidence_paths": [
+        "corpus-freeze.json"
+      ],
+      "details": "Checksum compared to primary-provided immutable manifest digest."
+    },
+    {
+      "check_id": "frozen-source-reference-files",
+      "status": "pass",
+      "evidence_paths": [
+        "corpus-freeze.json/files"
+      ],
+      "details": {
+        "frozen_files": 141,
+        "mismatches": []
+      }
+    },
+    {
+      "check_id": "frozen-input-pairing",
+      "status": "pass",
+      "evidence_paths": [
+        "corpus-freeze.json/units"
+      ],
+      "details": {
+        "units": 20,
+        "unique_input_hashes": 20,
+        "input_page_instances": 34
+      }
+    },
+    {
+      "check_id": "shared-parser-input-list",
+      "status": "pass",
+      "evidence_paths": [
+        "parser-inputs.json"
+      ],
+      "details": {
+        "entries": 20,
+        "mismatch_fixture_ids": []
+      }
+    },
+    {
+      "check_id": "llama-planned-paired-settings",
+      "status": "pass",
+      "evidence_paths": [
+        "llama/execution-plan.json"
+      ],
+      "details": {
+        "planned_calls": 40,
+        "mismatches": [],
+        "requested_version": "latest",
+        "pages": "omitted: full bounded input",
+        "hints": "not part of planned request"
+      }
+    },
+    {
+      "check_id": "firecrawl-preflight-schema",
+      "status": "fail",
+      "evidence_paths": [
+        "firecrawl/verify_freeze.py",
+        "corpus-freeze.json"
+      ],
+      "details": "Observed preflight expects passing corpus.fixtures shape; immutable manifest is top-level units/files/counts. Execution lane must reconcile without altering frozen source/reference files."
+    },
+    {
+      "check_id": "firecrawl-planned-settings",
+      "status": "pass",
+      "evidence_paths": [
+        "firecrawl/PLAN.md",
+        "firecrawl/capture_harness.mjs"
+      ],
+      "details": {
+        "formats": [
+          "markdown"
+        ],
+        "parsers": [
+          "pdf"
+        ],
+        "onlyMainContent": false,
+        "maxPages": "frozen input_page_count",
+        "max_concurrent": 2,
+        "stop_after_consecutive_failures": 3,
+        "timeout_retry": false,
+        "actual_requests": "pending run-complete audit"
+      }
+    }
+  ],
+  "provider_plans": {
+    "firecrawl": {
+      "parse_calls": 20,
+      "input_hash_source": "shared parser-inputs.json / frozen units",
+      "actual_mapping": "pending"
+    },
+    "llama": {
+      "parse_calls": 40,
+      "tiers": [
+        "agentic",
+        "agentic_plus"
+      ],
+      "inputs_per_tier": 20,
+      "actual_mapping": "pending"
+    }
+  },
+  "call_results": [],
+  "security_findings": [],
+  "limitations": [
+    "Final operational results intentionally not assessed before primary run-complete notice.",
+    "Preparation is a static snapshot; provider scripts may be updated while runs are ongoing.",
+    "Requested latest is not a verified released backend version pin.",
+    "JSON tool-object preservation does not establish original HTTP transport-byte preservation."
+  ]
+}

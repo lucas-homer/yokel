@@ -1,0 +1,30 @@
+{
+  "schema_version": "round8-contract-probe.primary-native-validation.v1",
+  "created_utc": "2026-10-11T22:04:25.276537+00:00",
+  "status": "ready_waiting_for_v5_keychain_authorization",
+  "provider_calls": 0,
+  "prior_files_verified": 1172,
+  "native_binary": "/Users/home/.local/libexec/yokel/research-credentials-v5",
+  "native_binary_sha256": "02b8a5c694c0ac9b9464fc468e10d3ef6b4b20c68e6c8d4abc50fe97d09406af",
+  "native_source_sha256": "b40d294dd46b44a3ced0313d60425863aa3e9fef7c49922869c5d85232e6bcce",
+  "build_script_sha256": "0f935757c1227a8a21085ca43ab224652f4697559989752a45e14364fcb74779",
+  "build_exit_code": 0,
+  "native_self_test_exit_code": 0,
+  "adapter_check_exit_code": 0,
+  "job_file_pins_verified": 1706,
+  "v5_noninteractive_identity_exit_code": 1,
+  "v4_comparison_identity_exit_code": 0,
+  "interpretation": "Previously trusted v4 identity works; new v5 fails immediately. New executable Keychain trust is the likely remaining boundary; no raw Keychain status or secret inspected.",
+  "required_user_step": "Run ~/.local/libexec/yokel/research-credentials-v5 rotate-local in a normal Mini Terminal, paste existing service-account token at hidden prompt and approve exact v5 executable.",
+  "next_after_user_step": "Verify v5 identity and smoke; execute fixed round8-contract-probe-initial once; freeze and independently audit outputs.",
+  "artifact_hashes": {
+    "execution/service-account/policy-v5.json": "288d377cf10c12b52372009a3bc7b5434fd314cc5b801b780ca664a259794aac",
+    "execution/service-account/native-job.json": "7a4a940ad32d5b164af5093afd2bbcd42534af91921b126d6f12ee34fbb29a94",
+    "execution/service-account/binding.json": "ae5fa38982e374b8459b2a0d4be33c7e5a1e3708a9d27aa33fc20dda7e005675",
+    "execution/service-account/dependencies.json": "1fe83678b9c440cf1653f90602ca1de683fc6f51a5cbc0a25b3a4da8b6de5d8b",
+    "runtime/implementation.json": "2f40f7d167466e0aee8542e3cd3d7eb8280aa0e3e584a496641be670b16f2865",
+    "execution/live-authorization.json": "1b650c00de32d1be4068a02ede7801003d29bba2837823b5133852f4b09867bb",
+    "execution/freeze-A.json": "1450ee0f611047e2524441c6013239891b6c2e89ee8b3805f62ad768f58ae605",
+    "execution/freeze-S.json": "6b2d9de4a69fa55a9df850e2482f9de27a9eb80e4c18ce7b74bf87d50ba6a0d3"
+  }
+}

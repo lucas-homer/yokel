@@ -1,0 +1,504 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "round7.observed.v1"
+      ]
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "document_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "runtime_gate": {
+            "type": "string",
+            "enum": [
+              "source_review",
+              "assembly_review",
+              "request_size_review",
+              "paired_verification_completed",
+              "verification_failed",
+              "inventory_failed"
+            ]
+          },
+          "gate_reasons": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "inventory_sha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "record_sha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "payload_sha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "provider_service_error": {
+            "type": "boolean"
+          },
+          "review_reasons": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "arms": {
+            "type": "object",
+            "properties": {
+              "jev": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "accepted_complete",
+                      "review",
+                      "failed",
+                      "not_started"
+                    ]
+                  },
+                  "called": {
+                    "type": "boolean"
+                  },
+                  "payload_sha256": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "source_coverage_complete": {
+                    "type": "boolean"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "judgment": {
+                    "type": "object",
+                    "properties": {
+                      "arm": {
+                        "type": "string",
+                        "enum": [
+                          "jev",
+                          "stronger"
+                        ]
+                      },
+                      "common_dimensions": {
+                        "type": "object",
+                        "properties": {
+                          "support": {
+                            "type": "string",
+                            "enum": [
+                              "pass",
+                              "fail",
+                              "uncertain"
+                            ]
+                          },
+                          "association": {
+                            "type": "string",
+                            "enum": [
+                              "pass",
+                              "fail",
+                              "uncertain"
+                            ]
+                          },
+                          "requirements": {
+                            "type": "string",
+                            "enum": [
+                              "pass",
+                              "fail",
+                              "uncertain"
+                            ]
+                          },
+                          "source_identity": {
+                            "type": "string",
+                            "enum": [
+                              "pass",
+                              "fail",
+                              "uncertain"
+                            ]
+                          },
+                          "completeness": {
+                            "type": "string",
+                            "enum": [
+                              "pass",
+                              "fail",
+                              "uncertain"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "support",
+                          "association",
+                          "requirements",
+                          "source_identity",
+                          "completeness"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "complete_record_shadow_accepted": {
+                        "type": "boolean"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "accepted_complete",
+                          "review"
+                        ]
+                      },
+                      "validation_errors": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "deterministic_review_reasons": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "generative_omission_explanations_available": {
+                        "type": "boolean"
+                      },
+                      "action_ready": {
+                        "type": "boolean",
+                        "enum": [
+                          false
+                        ]
+                      },
+                      "production_eligible": {
+                        "type": "boolean",
+                        "enum": [
+                          false
+                        ]
+                      },
+                      "source_fidelity": {
+                        "type": "string"
+                      },
+                      "notice_completeness": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "common_dimensions",
+                      "complete_record_shadow_accepted",
+                      "status",
+                      "validation_errors",
+                      "deterministic_review_reasons",
+                      "action_ready",
+                      "production_eligible"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "status",
+                  "called",
+                  "payload_sha256",
+                  "source_coverage_complete",
+                  "reason"
+                ],
+                "additionalProperties": false
+              },
+              "stronger": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "accepted_complete",
+                      "review",
+                      "failed",
+                      "not_started"
+                    ]
+                  },
+                  "called": {
+                    "type": "boolean"
+                  },
+                  "payload_sha256": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "source_coverage_complete": {
+                    "type": "boolean"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "judgment": {
+                    "type": "object",
+                    "properties": {
+                      "arm": {
+                        "type": "string",
+                        "enum": [
+                          "jev",
+                          "stronger"
+                        ]
+                      },
+                      "common_dimensions": {
+                        "type": "object",
+                        "properties": {
+                          "support": {
+                            "type": "string",
+                            "enum": [
+                              "pass",
+                              "fail",
+                              "uncertain"
+                            ]
+                          },
+                          "association": {
+                            "type": "string",
+                            "enum": [
+                              "pass",
+                              "fail",
+                              "uncertain"
+                            ]
+                          },
+                          "requirements": {
+                            "type": "string",
+                            "enum": [
+                              "pass",
+                              "fail",
+                              "uncertain"
+                            ]
+                          },
+                          "source_identity": {
+                            "type": "string",
+                            "enum": [
+                              "pass",
+                              "fail",
+                              "uncertain"
+                            ]
+                          },
+                          "completeness": {
+                            "type": "string",
+                            "enum": [
+                              "pass",
+                              "fail",
+                              "uncertain"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "support",
+                          "association",
+                          "requirements",
+                          "source_identity",
+                          "completeness"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "complete_record_shadow_accepted": {
+                        "type": "boolean"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "accepted_complete",
+                          "review"
+                        ]
+                      },
+                      "validation_errors": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "deterministic_review_reasons": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "generative_omission_explanations_available": {
+                        "type": "boolean"
+                      },
+                      "action_ready": {
+                        "type": "boolean",
+                        "enum": [
+                          false
+                        ]
+                      },
+                      "production_eligible": {
+                        "type": "boolean",
+                        "enum": [
+                          false
+                        ]
+                      },
+                      "source_fidelity": {
+                        "type": "string"
+                      },
+                      "notice_completeness": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "common_dimensions",
+                      "complete_record_shadow_accepted",
+                      "status",
+                      "validation_errors",
+                      "deterministic_review_reasons",
+                      "action_ready",
+                      "production_eligible"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "status",
+                  "called",
+                  "payload_sha256",
+                  "source_coverage_complete",
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "jev",
+              "stronger"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "document_id",
+          "runtime_gate",
+          "gate_reasons",
+          "inventory_sha256",
+          "record_sha256",
+          "payload_sha256",
+          "provider_service_error",
+          "review_reasons",
+          "arms"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "costs": {
+      "type": "object",
+      "properties": {
+        "extraction": {
+          "type": "object",
+          "properties": {
+            "usage_estimate_usd": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "conservative_charge_usd": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "provider_reported_usd": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "jev": {
+          "type": "object",
+          "properties": {
+            "usage_estimate_usd": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "conservative_charge_usd": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "provider_reported_usd": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "stronger": {
+          "type": "object",
+          "properties": {
+            "usage_estimate_usd": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "conservative_charge_usd": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "provider_reported_usd": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "documents"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,13 @@
+# Independent prototype review — 2026-10-11
+
+Verdict: accepted as a synthetic demonstration of stable executor bytes with external signed jobs. This is not production approval or proof of macOS Keychain continuity.
+
+The owner's recorded choice, “Primary releases reviewed jobs within my authorized scope and budgets,” resolves the authority question raised by the earlier ASSESSMENT.md. The primary is the delegated signer. This review does not demand independent signing authority or per-job owner confirmation. Same-user custody and reviewed-code budget enforcement remain explicit trust assumptions.
+
+The stopped HANDOFF.json binds the source, test harness, README, result and active synthetic fixture files. I independently verified every listed size/digest, both original manifest digests against the persistent claims, and the unchanged executor digest across the two recorded successful jobs. Independent Python cryptography verified the retained valid signatures and rejected the wrong-key/tampered fixtures. The existing native executable accepted the valid beta job in read-only check mode and rejected duplicate JSON, altered/unsigned/untrusted manifests, 16 policy violations, traversal/invalid IDs, an arbitrary command and mismatched cross-stage hash. The artifact files stayed unchanged. Full results are in prototype-controls.json; reproducible checks are in prototype_controls.py. No compilation, dispatch, credential access or provider request occurred in this independent review.
+
+The owner's 27-control run demonstrates the two actual synthetic dispatches and replay refusals. Those dispatches were not independently rerun because their one-shot claims are already consumed. The final alpha fixture was deliberately replaced by the changed-definition replay test; its current digest differs from the accepted digest, as documented by the owner. This is not an unexplained provenance discrepancy. The temporary stale README seen during authoring is resolved in the stopped handoff.
+
+Known prototype limitations are accurately disclosed: no credential bridge, production reference subset enforcement, real Keychain continuity, production dependency/root validation, complete descendant timeout cleanup, stdin sanitization, expiry/revocation, cumulative budget ledger or hostile-user rollback resistance. The production candidate must be reviewed separately for the existing token protections and fixed dispatch boundary. The synthetic prototype does not support production approval by itself.
+
+At this review point the new tools/research-credentials-stable directory contains INTERFACE.md only. Production source/build and operational trust changes remain held for the primary's release process.

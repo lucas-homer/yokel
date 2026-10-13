@@ -1,0 +1,173 @@
+{
+  "fixture_id": "A06",
+  "state": "US-CA",
+  "bucket": "clean standalone PDFs",
+  "layout_features": [
+    "clean born-digital two-page letter",
+    "current and prior comment close roles"
+  ],
+  "event_type": "proposed modification/continuation",
+  "source_url": "https://nrm.dfg.ca.gov/FileHandler.ashx?DocumentID=247277&inline=",
+  "discovery_url": "https://wildlife.ca.gov/Notices/Regulations/Invasive-Mussels",
+  "retrieved_at": "2026-10-06T00:33:55.258921+00:00",
+  "source_title": "Invasive Mussels Revision 15-day continuation",
+  "selection_reason": "First short complete notice on current wildlife listing after >4-page DMV notices rejected.",
+  "original_sha256": "9bd708c86641ecc89157b3620b60f5886ae7a5db7ee2a9892eeb800930c83747",
+  "input_sha256": "9bd708c86641ecc89157b3620b60f5886ae7a5db7ee2a9892eeb800930c83747",
+  "original_byte_length": 80187,
+  "input_byte_length": 80187,
+  "original_physical_pages": [
+    1,
+    2
+  ],
+  "original_page_count": 2,
+  "input_page_count": 2,
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Clean-PDF allocation describes layout; content also contains lifecycle change. Related regulatory text/attachments are not included."
+  ],
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which department issues the Invasive Mussels Revision notice?",
+      "expected_value": "California Department of Fish and Wildlife",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "letterhead",
+      "source_quote": "DEPARTMENT OF FISH AND WILDLIFE",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "lifecycle",
+      "question": "What notice action is announced?",
+      "expected_value": "15-day continuation with changes to proposed regulations",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "15-DAY CONTINUATION OF NOTICE IS HEREBY GIVEN",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "rule_identity",
+      "question": "Which CCR title and sections are proposed for amendment?",
+      "expected_value": {
+        "title": 14,
+        "sections": [
+          "650",
+          "672",
+          "672.1",
+          "672.2"
+        ]
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "sections 650, 672, 672.1, and 672.2 to Title 14",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "notice_date",
+      "question": "What date is printed beneath the notice title?",
+      "expected_value": {
+        "date": "2026-09-02"
+      },
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "title date",
+      "source_quote": "September 2, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "prior_comment_close",
+      "question": "Which ending date belongs to the prior comment period?",
+      "expected_value": {
+        "date": "2026-08-18",
+        "role": "prior proposed regulation comment period"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "lower first page",
+      "source_quote": "The comment period for the proposed regulation ended on August 18, 2026.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "current_comment_close",
+      "question": "What is the current written-comment deadline, with stated precision?",
+      "expected_value": {
+        "date": "2026-09-17",
+        "time": null,
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "Written Comment Period",
+      "source_quote": "no later than Thursday, September 17, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "receipt_condition",
+      "question": "What submission condition and routes apply to current comments?",
+      "expected_value": {
+        "condition": "received by Department",
+        "routes": [
+          "mail",
+          "email"
+        ]
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "Written Comment Period",
+      "source_quote": "All written comments must be received by the \nDepartment via mail, or e-mail",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "comment_scope",
+      "question": "Which comments does the revision notice say will be considered?",
+      "expected_value": "comments pertaining to the indicated changes",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 2,
+      "input_page": 2,
+      "region": "second comments paragraph",
+      "source_quote": "which pertain to the indicated \nchanges will be considered by the Department",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "new_hearing_clock",
+      "question": "Does this complete continuation notice specify a new hearing date/time?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "entire two-page continuation notice inspected",
+      "source_quote": "",
+      "basis": "full_scope_absence"
+    }
+  ],
+  "collector": "source-a Codex task; source-only annotation before vendor parsing",
+  "reference_version": "collector-v1",
+  "discovery_method": "Official listing link or targeted official register PDF search, documented in selection-log.json",
+  "shared_original_group": null,
+  "template_group": null,
+  "visual_inspection": {
+    "all_input_pages_inspected": true,
+    "renderer": "bundled PDFium scale1.8; earlier Poppler previews for first forms",
+    "scope": "complete input pages, including columns, selected marks, stamps, footers, continuation"
+  },
+  "reference_basis_note": "Image-only forms: source_text quotes are manual rendered-image transcriptions; visual_mark identifies actual selected choice. Born-digital quotes retain exact native substrings when available. Full-scope absence applies only to specified target and retained input."
+}

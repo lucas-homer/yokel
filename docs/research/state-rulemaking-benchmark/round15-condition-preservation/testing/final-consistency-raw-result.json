@@ -1,0 +1,104 @@
+{
+  "sessionId": "2eb35352-c48a-4b3c-83de-6b3aefb496c6",
+  "stopReason": "success",
+  "text": "{\n  \"meta\": {\n    \"authoring\": \"Fable 5.1 compact fixture corrections via the Claude.ai Max bridge. Both prior advisory results are retained unchanged as history. No R15 implementation or design supplied; no tools used; no files written; no provider experiment. Fictional test data corrections only. Execution pending.\",\n    \"scope\": \"Replaces only the fields/variants named below. All other FX-A2 and FX-C2 content stands as previously authored.\"\n  },\n  \"fixture_corrections\": {\n    \"FX-A2\": {\n      \"replace_variants\": {\n        \"A2-scope-contradiction\": {\n          \"spec\": \"Replace the third sentence with: 'If the district's hardship review board has issued a written hardship waiver to a family, the published-schedule condition and the separate-accounting condition do not apply to that family's fee; every other condition and the no-fee protections continue to apply to that family, and the separate-accounting condition continues to apply to that family.' Keep the fourth sentence ('Offering a hardship review does not by itself constitute a waiver.') unchanged.\",\n          \"reason\": \"The prior wording relied on reading 'every other condition' as including separate accounting, which it naturally excludes. The source must itself state that separate accounting both does not apply and continues to apply under W.\",\n          \"expected\": {\n            \"waived_under_W\": \"A3 (published schedule) unambiguously; A6 (separate accounting) CONTRADICTORY — source states both 'do not apply' and 'continues to apply' for the same family under the same trigger\",\n            \"still_required_under_W\": \"A1, A2, A4, A5 explicitly; A6 contradictory, not asserted either way\",\n            \"X1..X3\": \"still block\",\n            \"trigger\": \"W = issued written hardship waiver; A5 offering ≠ W (fourth sentence retained)\",\n            \"atom_coverage\": \"all baseline atoms A1..A6, X1..X3 and W present\",\n            \"outcomes\": \"PRESERVED only if both A6 statements are carried with an uncertainty/contradiction marker; choosing either A6 reading silently is COLLAPSED; dropping one statement is SILENT-LOSS; treating 'every other condition' phrasing as the contradiction is not a basis for any verdict\"\n          },\n          \"checks\": {\"automatic\": [\"both A6 statements present (grounded spans)\", \"A6 marked contradictory/uncertain\", \"A3 waived under W\", \"A1, A2, A4, A5 still required\", \"W ≠ A5\"], \"advisory\": [\"form and wording of the contradiction marker\"]}\n        },\n        \"A2-scope-coherent\": {\n          \"spec\": \"Replace the third sentence with: 'If the district's hardship review board has issued a written hardship waiver to a family, the published-schedule condition and the separate-accounting condition do not apply to that family's fee; the district-eligibility condition, the state-funded-classroom condition, the written-notice condition, the hardship-review-offer condition, and the no-fee protections continue to apply to that family.' Keep the fourth sentence unchanged.\",\n          \"reason\": \"States every retained condition explicitly so the coherent scope change does not depend on interpreting 'other'.\",\n          \"expected\": {\n            \"waived_under_W\": \"A3, A6\",\n            \"still_required_under_W\": \"A1, A2, A4, A5 (each named in source)\",\n            \"X1..X3\": \"still block\",\n            \"trigger\": \"W; A5 ≠ W\",\n            \"atom_coverage\": \"all baseline atoms, X1..X3 and W present; no contradiction marker expected\",\n            \"outcomes\": \"PRESERVED if waived set = {A3, A6} and retained set = {A1, A2, A4, A5}; A6 appearing in the retained set is INVERTED; a contradiction marker on A6 here is a false-uncertainty finding, recorded for advisory review\"\n          },\n          \"checks\": {\"automatic\": [\"waived-set equality\", \"retained-set equality\", \"W ≠ A5\"], \"advisory\": [\"representation of waived state\"]}\n        }\n      },\n      \"unchanged_variants\": [\"A2-trigger-conflate\", \"A2-district-wide-leak\"],\n      \"unchanged_fields\": [\"source (base text)\", \"expected (base)\", \"checks (base)\"]\n    },\n    \"FX-C2\": {\n      \"choice\": \"Option 1: change the fourth sentence to a grammatical bare imperative while keeping the proposed-only umbrella.\",\n      \"replace_source\": \"Each of the following four requirements is part of the proposed rule and is not currently in effect. First, organizations must submit annual records if they served more than twenty participants and received state funds. Second, organizations receiving only private funds may submit records voluntarily. Third, organizations should retain supporting worksheets. Fourth, send requests to the office by the stated date.\",\n      \"reason\": \"The prior fourth sentence ('organizations send requests ...') was declarative prose, not a bare imperative, so it could not test imperative-force ambiguity. The umbrella sentence is retained so proposed status for all four items remains explicit.\",\n      \"replace_expected\": {\n        \"status\": \"proposed for all four items, explicit via umbrella; 'not currently in effect' preserved as a separate fact\",\n        \"modals\": {\n          \"C1\": \"must (mandatory)\",\n          \"C2\": \"may (voluntary)\",\n          \"C3\": \"should (recommended, not mandatory)\",\n          \"C4\": \"bare imperative. Allowed labels: unspecified | mandatory-with-explicit-ambiguity | advisory-with-explicit-ambiguity | imperative-unlabeled. Forbidden: a force label without an ambiguity marker; dropping the directive; labeling C4 (or C2, C3) mandatory on the basis that the umbrella calls the items 'requirements'\"\n        },\n        \"umbrella_rule\": \"The word 'requirements' in the umbrella sentence fixes status (proposed, not in effect), not force. Force is read per item from its own modal or imperative. An inventory that upgrades C2 'may' or C3 'should' or C4 to mandatory because of the heading is INVERTED.\",\n        \"operator_C1\": \"AND\",\n        \"comparator\": \">20 strict\",\n        \"deadline_ref_C4\": \"'the stated date' unresolved; identifier retained; no date fabricated\"\n      },\n      \"variants_adjust\": {\n        \"C2-partial-scope\": {\"note\": \"unchanged spec; with the new fourth sentence, C4 status becomes unspecified under this variant and its force expectation is unchanged\"},\n        \"C2-status-contradiction\": {\"note\": \"unchanged\"},\n        \"add\": {\n          \"v\": \"C2-heading-force-bait\",\n          \"spec\": \"Replace 'four requirements' in the umbrella with 'four mandatory requirements'; leave items unchanged.\",\n          \"expected\": \"Umbrella force claim ('mandatory') and per-item modals ('may', 'should', bare imperative) are both preserved; C2/C3/C4 force marked CONTRADICTORY or uncertain rather than silently upgraded to mandatory; C1 unaffected. COLLAPSED if items are uniformly labeled mandatory without uncertainty.\",\n          \"checks\": {\"automatic\": [\"per-item modal retained\", \"umbrella claim present\", \"contradiction/uncertainty marker on C2, C3, C4\"], \"advisory\": [\"marker wording\"]}\n        }\n      },\n      \"unchanged_fields\": [\"families\", \"checks (base)\"]\n    }\n  },\n  \"status\": \"Fictional fixture corrections only. No additional test families, no reference labels, no implementation approval, no performance claim. Execution remains pending supply of an implementation.\"\n}",
+  "result": {
+    "duration_api_ms": 406781,
+    "stop_reason": "end_turn",
+    "session_id": "2eb35352-c48a-4b3c-83de-6b3aefb496c6",
+    "total_cost_usd": 2.33935525,
+    "usage": {
+      "input_tokens": 2,
+      "cache_creation_input_tokens": 15069,
+      "cache_read_input_tokens": 22962,
+      "output_tokens": 2560,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 15069,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "global",
+      "iterations": [
+        {
+          "input_tokens": 2,
+          "output_tokens": 2560,
+          "cache_read_input_tokens": 22962,
+          "cache_creation_input_tokens": 15069,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 15069
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "modelUsage": {
+      "claude-fable-5-1": {
+        "inputTokens": 6,
+        "outputTokens": 32737,
+        "thinkingTokens": 5421,
+        "cacheReadInputTokens": 32341,
+        "cacheCreationInputTokens": 34718,
+        "webSearchRequests": 0,
+        "costUSD": 2.33935525,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000,
+        "canonicalModel": "claude-fable-5-1",
+        "provider": "firstParty",
+        "costBasis": "list"
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "fast_mode_disabled_reason": "sdk_opt_in_required",
+    "subagent_stats": {
+      "spawned": 0,
+      "requested": {
+        "background": 0,
+        "foreground": 0,
+        "unset": 0
+      },
+      "started_in_background": 0,
+      "max_depth": 0,
+      "spawned_by_subagents": 0,
+      "completed": 0,
+      "failed": 0,
+      "killed": {
+        "parent": 0,
+        "user": 0,
+        "system": 0
+      },
+      "refused": {
+        "depth_limit": 0,
+        "concurrency_limit": 0,
+        "budget": 0
+      },
+      "by_type": {}
+    },
+    "safety_stops": 0,
+    "is_error": false,
+    "num_turns": 1,
+    "subtype": "success",
+    "api_error_status": null,
+    "result": "{\n  \"meta\": {\n    \"authoring\": \"Fable 5.1 compact fixture corrections via the Claude.ai Max bridge. Both prior advisory results are retained unchanged as history. No R15 implementation or design supplied; no tools used; no files written; no provider experiment. Fictional test data corrections only. Execution pending.\",\n    \"scope\": \"Replaces only the fields/variants named below. All other FX-A2 and FX-C2 content stands as previously authored.\"\n  },\n  \"fixture_corrections\": {\n    \"FX-A2\": {\n      \"replace_variants\": {\n        \"A2-scope-contradiction\": {\n          \"spec\": \"Replace the third sentence with: 'If the district's hardship review board has issued a written hardship waiver to a family, the published-schedule condition and the separate-accounting condition do not apply to that family's fee; every other condition and the no-fee protections continue to apply to that family, and the separate-accounting condition continues to apply to that family.' Keep the fourth sentence ('Offering a hardship review does not by itself constitute a waiver.') unchanged.\",\n          \"reason\": \"The prior wording relied on reading 'every other condition' as including separate accounting, which it naturally excludes. The source must itself state that separate accounting both does not apply and continues to apply under W.\",\n          \"expected\": {\n            \"waived_under_W\": \"A3 (published schedule) unambiguously; A6 (separate accounting) CONTRADICTORY — source states both 'do not apply' and 'continues to apply' for the same family under the same trigger\",\n            \"still_required_under_W\": \"A1, A2, A4, A5 explicitly; A6 contradictory, not asserted either way\",\n            \"X1..X3\": \"still block\",\n            \"trigger\": \"W = issued written hardship waiver; A5 offering ≠ W (fourth sentence retained)\",\n            \"atom_coverage\": \"all baseline atoms A1..A6, X1..X3 and W present\",\n            \"outcomes\": \"PRESERVED only if both A6 statements are carried with an uncertainty/contradiction marker; choosing either A6 reading silently is COLLAPSED; dropping one statement is SILENT-LOSS; treating 'every other condition' phrasing as the contradiction is not a basis for any verdict\"\n          },\n          \"checks\": {\"automatic\": [\"both A6 statements present (grounded spans)\", \"A6 marked contradictory/uncertain\", \"A3 waived under W\", \"A1, A2, A4, A5 still required\", \"W ≠ A5\"], \"advisory\": [\"form and wording of the contradiction marker\"]}\n        },\n        \"A2-scope-coherent\": {\n          \"spec\": \"Replace the third sentence with: 'If the district's hardship review board has issued a written hardship waiver to a family, the published-schedule condition and the separate-accounting condition do not apply to that family's fee; the district-eligibility condition, the state-funded-classroom condition, the written-notice condition, the hardship-review-offer condition, and the no-fee protections continue to apply to that family.' Keep the fourth sentence unchanged.\",\n          \"reason\": \"States every retained condition explicitly so the coherent scope change does not depend on interpreting 'other'.\",\n          \"expected\": {\n            \"waived_under_W\": \"A3, A6\",\n            \"still_required_under_W\": \"A1, A2, A4, A5 (each named in source)\",\n            \"X1..X3\": \"still block\",\n            \"trigger\": \"W; A5 ≠ W\",\n            \"atom_coverage\": \"all baseline atoms, X1..X3 and W present; no contradiction marker expected\",\n            \"outcomes\": \"PRESERVED if waived set = {A3, A6} and retained set = {A1, A2, A4, A5}; A6 appearing in the retained set is INVERTED; a contradiction marker on A6 here is a false-uncertainty finding, recorded for advisory review\"\n          },\n          \"checks\": {\"automatic\": [\"waived-set equality\", \"retained-set equality\", \"W ≠ A5\"], \"advisory\": [\"representation of waived state\"]}\n        }\n      },\n      \"unchanged_variants\": [\"A2-trigger-conflate\", \"A2-district-wide-leak\"],\n      \"unchanged_fields\": [\"source (base text)\", \"expected (base)\", \"checks (base)\"]\n    },\n    \"FX-C2\": {\n      \"choice\": \"Option 1: change the fourth sentence to a grammatical bare imperative while keeping the proposed-only umbrella.\",\n      \"replace_source\": \"Each of the following four requirements is part of the proposed rule and is not currently in effect. First, organizations must submit annual records if they served more than twenty participants and received state funds. Second, organizations receiving only private funds may submit records voluntarily. Third, organizations should retain supporting worksheets. Fourth, send requests to the office by the stated date.\",\n      \"reason\": \"The prior fourth sentence ('organizations send requests ...') was declarative prose, not a bare imperative, so it could not test imperative-force ambiguity. The umbrella sentence is retained so proposed status for all four items remains explicit.\",\n      \"replace_expected\": {\n        \"status\": \"proposed for all four items, explicit via umbrella; 'not currently in effect' preserved as a separate fact\",\n        \"modals\": {\n          \"C1\": \"must (mandatory)\",\n          \"C2\": \"may (voluntary)\",\n          \"C3\": \"should (recommended, not mandatory)\",\n          \"C4\": \"bare imperative. Allowed labels: unspecified | mandatory-with-explicit-ambiguity | advisory-with-explicit-ambiguity | imperative-unlabeled. Forbidden: a force label without an ambiguity marker; dropping the directive; labeling C4 (or C2, C3) mandatory on the basis that the umbrella calls the items 'requirements'\"\n        },\n        \"umbrella_rule\": \"The word 'requirements' in the umbrella sentence fixes status (proposed, not in effect), not force. Force is read per item from its own modal or imperative. An inventory that upgrades C2 'may' or C3 'should' or C4 to mandatory because of the heading is INVERTED.\",\n        \"operator_C1\": \"AND\",\n        \"comparator\": \">20 strict\",\n        \"deadline_ref_C4\": \"'the stated date' unresolved; identifier retained; no date fabricated\"\n      },\n      \"variants_adjust\": {\n        \"C2-partial-scope\": {\"note\": \"unchanged spec; with the new fourth sentence, C4 status becomes unspecified under this variant and its force expectation is unchanged\"},\n        \"C2-status-contradiction\": {\"note\": \"unchanged\"},\n        \"add\": {\n          \"v\": \"C2-heading-force-bait\",\n          \"spec\": \"Replace 'four requirements' in the umbrella with 'four mandatory requirements'; leave items unchanged.\",\n          \"expected\": \"Umbrella force claim ('mandatory') and per-item modals ('may', 'should', bare imperative) are both preserved; C2/C3/C4 force marked CONTRADICTORY or uncertain rather than silently upgraded to mandatory; C1 unaffected. COLLAPSED if items are uniformly labeled mandatory without uncertainty.\",\n          \"checks\": {\"automatic\": [\"per-item modal retained\", \"umbrella claim present\", \"contradiction/uncertainty marker on C2, C3, C4\"], \"advisory\": [\"marker wording\"]}\n        }\n      },\n      \"unchanged_fields\": [\"families\", \"checks (base)\"]\n    }\n  },\n  \"status\": \"Fictional fixture corrections only. No additional test families, no reference labels, no implementation approval, no performance claim. Execution remains pending supply of an implementation.\"\n}",
+    "ttft_ms": 30082,
+    "type": "result",
+    "duration_ms": 30106,
+    "uuid": "30ff6a7e-ed85-44e7-8340-5221f6ad0ddc",
+    "ttft_stream_ms": 1437,
+    "time_to_request_ms": 28,
+    "first_content_frame_ms": 1438,
+    "queued_turn_count": 0,
+    "result_index": 0
+  }
+}

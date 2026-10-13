@@ -1,0 +1,85 @@
+{
+  "status": "read_only_diagnosis_not_source_acceptance_audit",
+  "document_id": "doc-de09ce82c4c7",
+  "pipeline_version": "round6-participation-record-1.0.2",
+  "source_text_sha256": "2527bde221f292839729f0f6031037f7e0356d823b20b88989f282badd6db7c6",
+  "terminal_state": "assembly_review",
+  "terminal_arms": {},
+  "record_is_null": true,
+  "assembly_errors_reproduced_unchanged": true,
+  "errors": [
+    "tm_hearing_date: absolute date must normalize from explicit complete literal",
+    "tm_written_date: absolute date must normalize from explicit complete literal",
+    "route_header_address: literal not contained in its evidence"
+  ],
+  "inventory_item_counts": {
+    "events": 4,
+    "routes": 10,
+    "requirements": 6,
+    "identities": 4,
+    "uncertainties": 1
+  },
+  "timing_items": 5,
+  "inventory_operation": {
+    "model": "openai/gpt-6.1-sol",
+    "provider": "OpenAI",
+    "operation_status": "completed",
+    "observed_cost_usd": 0.048171,
+    "cost_basis": "OpenRouter response-reported usage.cost; estimate separate, not invoice verified"
+  },
+  "findings": [
+    {
+      "item_id": "tm_hearing_date",
+      "classification": "assembler_literal_grammar_gap",
+      "raw": "Monday, July 13, 2026",
+      "value": "2026-07-13",
+      "source_span": {
+        "start": 1060,
+        "end": 1087,
+        "quote": "DATE: Monday, July 13, 2026"
+      },
+      "printed_raw_normalizer_result": null,
+      "named_date_component_normalizer_result": "2026-07-13",
+      "diagnostic_only_component": "July 13, 2026"
+    },
+    {
+      "item_id": "tm_written_date",
+      "classification": "assembler_literal_grammar_gap",
+      "raw": "Friday, July 10, 2026",
+      "value": "2026-07-10",
+      "source_span": {
+        "start": 2413,
+        "end": 2529,
+        "quote": "Written comments received in\nthe Commission’s offices by 5:00 p.m. on Friday, July 10, 2026 will also be considered."
+      },
+      "printed_raw_normalizer_result": null,
+      "named_date_component_normalizer_result": "2026-07-10",
+      "diagnostic_only_component": "July 10, 2026"
+    },
+    {
+      "item_id": "route_header_address",
+      "classification": "model_composite_literal_violates_exact_contract",
+      "literal": "30 West Spring Street, L3; Columbus, Ohio 43215-2256",
+      "source_span": {
+        "start": 514,
+        "end": 646,
+        "quote": "30 West Spring Street, L3\nMary M. Ross-Dolen                                                               Columbus, Ohio 43215-2256"
+      },
+      "literal_contained_in_evidence": false,
+      "literal_anywhere_in_full_source": false
+    }
+  ],
+  "input_sha256": {
+    "execution/run/documents/doc-de09ce82c4c7/source.json": "b7cc86399aed24ff858451395613606bf6fb4202346296e1e48d330ce55ee389",
+    "execution/run/documents/doc-de09ce82c4c7/assembled.json": "bc84db28ec6e090b2a509f29e118ed71de1dfbabda8d1affe2b581c8f756520c",
+    "execution/run/documents/doc-de09ce82c4c7/terminal.json": "c0460ba1b29c5559ec0083157b05dd2661454c5ec250aad5073015ace2926320",
+    "execution/run/documents/doc-de09ce82c4c7/inventory-plan.json": "9d2520ead1c6d87dc155506e8d9f2a93f385d879893903d0ffb937d3b69852d7",
+    "execution/run/operations/inventory-751e9d026108779650088350/identity.json": "751e9d0261087796500883503a656a021b4495da137016db742b4be12616d060",
+    "execution/run/operations/inventory-751e9d026108779650088350/result.json": "27386dc6c7e1ef392e2bbd6ba813958afda929c249e3c65c6d2ded95dd6164a6",
+    "pipeline/pipeline.py": "2220f2cb751521f822cfe65062dcaf87bb87560c428c24be7f47b66dc9b4a680"
+  },
+  "new_provider_calls": 0,
+  "frozen_data_changed": false,
+  "independent_source_labels_read": false,
+  "other_pending_result_outputs_read": false
+}

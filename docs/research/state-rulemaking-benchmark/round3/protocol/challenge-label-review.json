@@ -1,0 +1,129 @@
+{
+  "version": "round3-pre-run-label-review-v1",
+  "created_at_utc": "2026-10-07T04:46:35.897778+00:00",
+  "status": "approved_after_pre_run_corrections",
+  "runtime_sha256": "c46d280babcadfd91c66922191c6bffca6e1cb4c933cbdae98629bdc013e6e82",
+  "evaluation_sha256": "1c8bd58d1b4ed6fa79287a22eadad41c00a9b23c95abcb9f082d72d6e0dfc104",
+  "adapter_contract_sha256": "2e0022f97d2ebbdb0a2381b1813a120164de0e5ec40e558cf500be1047c648f5",
+  "verifier_sha256": "83df2f85d920ebba49fc3d62e98d5f460c472037bd991ef8cc5f660fb6940cc2",
+  "scope": "Inspected all candidate values/labels and decisive provided-text passages; no new all-16 source-image adjudication, no model responses or provider calls. No challenge/adapter/score files edited.",
+  "recommendations": [
+    {
+      "case_id": "C002",
+      "dimension": "role",
+      "current": "matched",
+      "recommended": "insufficient",
+      "severity": "label_correction",
+      "reason": "The actual candidate email with missing d is absent from the supplied correct-email text. Its role is not established; no source evidence assigns that exact wrong string another role, so mismatched is less precise. Support=contradicted still guarantees escalation."
+    },
+    {
+      "case_id": "C005",
+      "dimension": "role",
+      "current": "matched",
+      "recommended": "insufficient",
+      "severity": "label_correction",
+      "reason": "The actual candidate literal July 2223 is not the observed July 22–23 range. Under the rubric about actual candidate.value, matched is not established. Support=contradicted preserves the escalation gate."
+    },
+    {
+      "case_id": "C015",
+      "dimension": "condition",
+      "current": "preserved",
+      "recommended": "omitted_or_changed",
+      "severity": "label_correction",
+      "reason": "The supplied source conditions the post-hearing window on a hearing. candidate.conditions includes if hearing held, but claim asserts an unambiguous maximum without that qualification; rubric requires material conditions in BOTH fields. Conflicting day units already ensure escalation."
+    },
+    {
+      "case_id": "C016",
+      "dimension": "support_and_role_and_gate",
+      "current": {
+        "support": "insufficient",
+        "role": "insufficient",
+        "gate": "review"
+      },
+      "recommended": "Gate-ambiguous diagnostic; exclude from primary resolved-gate accuracy/detection denominator, retain scheduled and source-fidelity tables. Predeclare supported/insufficient and matched/insufficient as plausible dimension alternatives.",
+      "severity": "material_ambiguity",
+      "reason": "The dangling sentence announces hearing date(s), followed later by the sole September 8 bullet after unrelated headings. Heading displacement degrades parse association, but a text reader can plausibly reconnect the unique bullet to that sentence without consulting gold. Round-two fidelity failure is not uniquely an insufficient semantic-verifier answer. Do not force one outcome after responses."
+    },
+    {
+      "case_id": "C004",
+      "dimension": "candidate.value",
+      "current": "array of ISO dates",
+      "recommended": "Serialize a declared range string preserving both endpoints, then validate and re-freeze.",
+      "severity": "input_schema_blocker",
+      "reason": "Published adapter accepts string or null only."
+    },
+    {
+      "case_id": "C015",
+      "dimension": "candidate.value",
+      "current": "object with days and basis",
+      "recommended": "Serialize literal 20 working days string, then validate and re-freeze.",
+      "severity": "input_schema_blocker",
+      "reason": "Published adapter accepts string or null only."
+    },
+    {
+      "case_id": "C006",
+      "dimension": "role",
+      "current": "mismatched",
+      "recommended": "Use predeclared accepted set {mismatched, insufficient} for dimension diagnostics; unique gate remains escalation.",
+      "severity": "secondary_ambiguity",
+      "reason": "Same date appears as SUBMIT DATE while the filing-stamp region lacks it. Borrowing the role is a mismatch reading; absence of evidence that it cannot also be the filing date supports insufficient. No supported official-stamp claim follows."
+    },
+    {
+      "case_id": "C003",
+      "dimension": "all_text_dimensions",
+      "current": {
+        "support": "supported",
+        "role": "matched",
+        "condition": "preserved",
+        "conflict": "absent"
+      },
+      "recommended": "Retain text-accept expectation and incorrect original-source fidelity; label as scoped single-channel blind spot.",
+      "severity": "confirmed_limit",
+      "reason": "The supplied snippet explicitly contains the corrupted destination. Rejection is not semantic recovery unless justified by evidence actually supplied. The target association is stipulated by selected-snippet provenance, not independently established by that one-line source."
+    },
+    {
+      "case_id": "ALL",
+      "dimension": "target_scope",
+      "recommended": "Declare reviewer-selected excerpts scoped to their associated notice for the pilot; keep target segmentation outside measured capability. If target identity must be proved from source_text, several snippets need added identifying context and re-freezing.",
+      "severity": "scope_clarification",
+      "reason": "Several snippets omit their target ID. Treating them as self-contained proof of target identity while labeling matched would be inconsistent; common task scoping is legitimate when disclosed."
+    },
+    {
+      "case_id": "C004",
+      "dimension": "condition_scope",
+      "recommended": "Freeze that announced hearing dates exclude the separate conditional extension; evaluate full July 24 conditions in C012. Otherwise C004 must repeat all extension qualifications it mentions.",
+      "severity": "scope_clarification",
+      "reason": "The field targets initial July 22–23 dates and explicitly separates July 24. Rubric material-to-field scope should not shift after seeing responses."
+    }
+  ],
+  "primary_metric_recommendation": "Fixed four-label conjunction, confidence diagnostic only. Score unique gate decisions primarily; dimension labels may be set-valued. Keep source-fidelity safety separate from text entailment.",
+  "remaining_cases": "No additional material issue identified in C001,C007,C008,C009,C010,C011,C012,C013,C014 under scoped-context convention. This does not certify original-source correctness beyond prior evidence.",
+  "followup": {
+    "recorded_at_utc": "2026-10-07T04:48:35.146967+00:00",
+    "primary_adopted": [
+      "C002 role insufficient",
+      "C016 gate ambiguity excluded before outputs"
+    ],
+    "schema_issues_resolved": "Updated bounded JSON adapter validates all16; C004/C015 no longer need stringification. Preserve original recommendations as history.",
+    "remaining_secondary_dimension_recommendations": [
+      "C005 role insufficient",
+      "C015 condition omitted_or_changed",
+      "C006 allow mismatched/insufficient diagnostic labels"
+    ],
+    "all_remaining_recommended_gate_outcomes_unchanged": true
+  },
+  "final_resolution": {
+    "recorded_at_utc": "2026-10-07T04:49:02.385199+00:00",
+    "C002_role": "insufficient",
+    "C005_role": "insufficient",
+    "C015_condition": "omitted_or_changed",
+    "C006_role_alternatives": [
+      "mismatched",
+      "insufficient"
+    ],
+    "C016": "Ambiguous primary-gate exclusion plus accepted alternate tuple recorded",
+    "evaluation_sha256": "3d334a924bff14e54964de6e976f0ab0905a12ba08dbdecbe2034d528f1972ad",
+    "material_open_issues": [],
+    "provider_responses_inspected": false
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "source_root": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike",
+  "formal_json_schema_engine_executed": false,
+  "schema_check_scope": "Static definitions review plus targeted required/property/pattern checks on actual observations; not full JSON Schema validation.",
+  "commands": [
+    {
+      "command": "python3 -B replay.py",
+      "exit_code": 0,
+      "stdout": "{\"passed\": true, \"observation_count\": 41, \"artifact_count\": 37, \"method_counts\": {\"deterministic\": 37, \"manual_visual\": 4, \"manual_text\": 0, \"model\": 0}}\n",
+      "stderr": ""
+    },
+    {
+      "command": "python3 -B review/audit_lanes.py . ./validate.py",
+      "exit_code": 0,
+      "stdout": "{\n  \"checks\": 42,\n  \"failed_checks\": [],\n  \"lane_counts\": {\n    \"ct\": 23,\n    \"wa\": 10,\n    \"pdf\": 8\n  },\n  \"mutations\": [\n    {\n      \"label\": \"missing_comment_label\",\n      \"returncode\": 1,\n      \"count\": 10,\n      \"validator_pass\": null\n    },\n    {\n      \"label\": \"missing_public_comment_clause_with_valid_hash\",\n      \"returncode\": 1,\n      \"count\": 7,\n      \"validator_pass\": null\n    },\n    {\n      \"label\": \"missing_hearing_clause_with_valid_hash\",\n      \"returncode\": 1,\n      \"count\": 7,\n      \"validator_pass\": null\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": "python3 -B review/adversarial.py ./validate.py",
+      "exit_code": 0,
+      "stdout": "accept control                    valid_baseline\nreject control                    missing_quote\nreject control                    hash_tampering\nreject control                    invalid_date\nreject control                    duplicate_id\nreject control                    path_escape\naccept contract_gap               provenance_fields_wrong_types\naccept contract_gap               fresh_artifact_has_no_retrieval_time\naccept contract_gap               unresolved_zone_but_claimed_instant\naccept consistency_gap            zone_and_instant_contradict\naccept contract_gap               infinite_relative_duration\naccept semantic_review_required   wrong_date_role_with_exact_quote\naccept semantic_review_required   wrong_locator_with_exact_quote\naccept semantic_review_required   twenty_vs_twentyfive_swap\naccept semantic_review_required   partial_withdrawal_becomes_full\naccept contract_gap               visual_claim_without_saved_review_note\ncrash  robustness_gap             nonobject_observation_crashes\ncrash  robustness_gap             nonobject_manifest_crashes\n",
+      "stderr": ""
+    }
+  ],
+  "schema_shape_checks": [
+    {
+      "observation_id": "ct-001",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-002",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-003",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-004",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-005",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-006",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-007",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-008",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-009",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-010",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-011",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-012",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-013",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-014",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-015",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-016",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-017",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-018",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-019",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-020",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-021",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-022",
+      "passed": true
+    },
+    {
+      "observation_id": "ct-023",
+      "passed": true
+    },
+    {
+      "observation_id": "wa-26-18-058-event_type",
+      "passed": true
+    },
+    {
+      "observation_id": "wa-26-18-058-agency",
+      "passed": true
+    },
+    {
+      "observation_id": "wa-26-18-058-filing_date",
+      "passed": true
+    },
+    {
+      "observation_id": "wa-26-18-058-withdraws",
+      "passed": true
+    },
+    {
+      "observation_id": "wa-26-18-032-event_type",
+      "passed": true
+    },
+    {
+      "observation_id": "wa-26-18-032-agency",
+      "passed": true
+    },
+    {
+      "observation_id": "wa-26-18-032-filing_date",
+      "passed": true
+    },
+    {
+      "observation_id": "wa-26-18-032-title",
+      "passed": true
+    },
+    {
+      "observation_id": "wa-26-18-032-comment_close:written-comments",
+      "passed": true
+    },
+    {
+      "observation_id": "wa-26-18-032-hearing_time:hearing-1",
+      "passed": true
+    },
+    {
+      "observation_id": "pdf-agency",
+      "passed": true
+    },
+    {
+      "observation_id": "pdf-rule_citations",
+      "passed": true
+    },
+    {
+      "observation_id": "pdf-hearing_request_duration",
+      "passed": true
+    },
+    {
+      "observation_id": "pdf-comment_duration",
+      "passed": true
+    },
+    {
+      "observation_id": "pdf-event_type",
+      "passed": true
+    },
+    {
+      "observation_id": "pdf-hearing_status",
+      "passed": true
+    },
+    {
+      "observation_id": "pdf-filing_date",
+      "passed": true
+    },
+    {
+      "observation_id": "pdf-rule_action",
+      "passed": true
+    }
+  ],
+  "combined_outputs_unchanged_after_documented_replay": true,
+  "combined_before_hashes": {
+    "observations.json": "a0f364c5791db353735a0b98b54bfd147c522edf9369a7b7feaf57e620c62db7",
+    "artifacts.json": "ad2949f0dbd843dbf62eadfc6d2526e50d5e4727337e3fc2761e14a482328467",
+    "validation-report.json": "ddcce4cd89a5f787ab647f8283a752feadfd6779732b799da5f6ef0a9596b4d0"
+  },
+  "combined_after_hashes": {
+    "observations.json": "a0f364c5791db353735a0b98b54bfd147c522edf9369a7b7feaf57e620c62db7",
+    "artifacts.json": "ad2949f0dbd843dbf62eadfc6d2526e50d5e4727337e3fc2761e14a482328467",
+    "validation-report.json": "ddcce4cd89a5f787ab647f8283a752feadfd6779732b799da5f6ef0a9596b4d0"
+  },
+  "reviewed_file_hashes": {
+    "README.md": "af22f34afa095ed4d6caed3c9d22c9df5c0b3d16061935bd6ec3e0038a5958c6",
+    "observation.schema.json": "aeac38a3f41246dcd9058b5d431cbabe943e17a119ac2c36dc9141699cbee7af",
+    "replay.py": "d00b15c0e90d35f48c1c6886444d71f55e976859a48fded5b59aa75db8d9d3d6",
+    "validate.py": "5de3cc3d4a405c5dce8a3911a564c3f090df4472140bba361a20d2aadbef8153",
+    "SPEC.md": "99624ddaf5030830fed47decfd2bff0fff441f3136170fd4218f12af7c3c993f",
+    "task-coordination.json": "421a1d48bbcdf752431ab5e2768413f4be6373e9cb67115449d7fed670c3038f"
+  }
+}

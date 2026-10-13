@@ -1,0 +1,98 @@
+{
+  "version": "round5.source-preparation.v1",
+  "status": "AWAITING_PRIMARY_IMPLEMENTATION_FREEZE",
+  "authorization_gate": {
+    "required": "Primary sends explicit implementation-freeze message before any fresh search, candidate selection, retrieval or inspection.",
+    "status": "not_received",
+    "receipt_file": "freeze-receipt.json",
+    "receipt_fields": [
+      "exact primary freeze notice or verbatim locator",
+      "freeze artifact path and SHA256",
+      "runtime implementation and policy pin SHA256 list",
+      "receipt timestamp/timezone",
+      "preparation manifest SHA256"
+    ]
+  },
+  "target": {
+    "accepted_notices": 8,
+    "minimum_states": 6,
+    "maximum_retained_input_pdf_pages": 40,
+    "native_text": "Exact UTF-8 pdftotext extraction from retained input PDF; no OCR or alteration.",
+    "strata": {
+      "general_proposed_comment_notices": 6,
+      "conditional_or_negative_controls": 2
+    },
+    "field_presence": "Do not select for deadline or email presence, values or parser friendliness. Absent and conditional cases remain eligible.",
+    "runtime": "No answers, adjudications, labels, decisive spans, verifier output or expected values in runtime manifest."
+  },
+  "strict_eligibility": {
+    "complete_notice": "Only publisher-original PDF which itself is a complete standalone rulemaking notice, or official publisher-issued PDF corresponding to one complete notice with mechanically clear boundaries. Runtime scope full_notice.",
+    "registers": "Never excerpt multi-notice registers, grouped issues or mixed packets. A notice in a register is eligible only if publisher distributes it as an individual complete notice PDF. Otherwise exclude and log.",
+    "no_substitution": "No slice/unknown scopes to meet quotas. Do not truncate a notice. Report shortfall.",
+    "strata": "General: proposed rulemaking notice inviting public comment. Control: explicitly conditional/relative comment/hearing terms or lifecycle cancellation, withdrawal, termination or related negative outcome. Stratum categories are not evaluation labels.",
+    "native_only": "Empty, inaccessible, damaged native text, page-map mismatch or frozen input-contract size violation => exclude before runtime freeze. No OCR."
+  },
+  "deduplication": {
+    "reject": "Earlier-round underlying notice, exact original PDF SHA256, or rehosted copy from Rounds 1–4. Compare source/docket identifiers, date, issuer, title, URL, hash and page identity.",
+    "family": "Distinct notices/PDFs may recur within a publisher template family; disclose. Unknown family does not establish novelty."
+  },
+  "budget": {
+    "aggregate_input_pages_max": 40,
+    "input": "Complete, unchanged publisher original PDF; no excerpts or page reduction."
+  },
+  "retention": [
+    "official publisher/discovery URLs and retrieval URL",
+    "timestamp/timezone, HTTP status, headers/errors",
+    "unaltered original PDF bytes, hash, byte length",
+    "exact-copy input PDF, hash and page count",
+    "native.txt exact extraction bytes and hash",
+    "all pages rendered at >=150 DPI with tool version",
+    "pdfinfo/pdffonts/pdfimages diagnostics and versions",
+    "complete notice identity/boundary evidence",
+    "dedup basis and known template-family recurrence"
+  ],
+  "manifest": {
+    "schema_version": "round4.sources.v1",
+    "contract_path": "round4/pipeline/source-input.schema.json",
+    "exact_fields": [
+      "document_id",
+      "channel",
+      "text_path",
+      "text_sha256",
+      "pdf_path",
+      "pdf_sha256",
+      "pdf_pages",
+      "scope",
+      "native_page_map_known"
+    ],
+    "document_id": "doc- plus first12 lowercase hex original SHA256",
+    "channel": "native",
+    "scope": "full_notice",
+    "native_page_map_known": "true only when form-feed page count equals PDF page count"
+  },
+  "bounded_operation": {
+    "queries": 24,
+    "official_pdf_candidates_per_query": 3,
+    "retries": "At most one ordinary retry; no access-control bypass.",
+    "after_q24": "Resolve only that query’s already-bounded first-three candidate set and stop. No new search or continued queue processing."
+  },
+  "exclusion_log_reasons": [
+    "incomplete/unclear notice boundary",
+    "multi-notice register or mixed packet",
+    "prior notice/PDF duplicate",
+    "native text absent, damaged or over contract size",
+    "page map mismatch",
+    "would exceed40-page budget",
+    "access failure/non-PDF",
+    "nonofficial/non-rulemaking source",
+    "no eligible candidate within bounded plan"
+  ],
+  "preparation_counts": {
+    "prior_notice_records": 40,
+    "queries_planned": 24,
+    "query_states": 24,
+    "fresh_queries_executed": 0,
+    "sources_downloaded": 0,
+    "provider_calls": 0
+  }
+}

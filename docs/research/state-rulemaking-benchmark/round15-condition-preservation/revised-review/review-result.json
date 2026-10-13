@@ -1,0 +1,104 @@
+{
+  "sessionId": "1b4d00f1-2aa2-4fa5-8ff5-3660b96b08bf",
+  "stopReason": "success",
+  "text": "**Verdict (offline hardening scope only):** no material defect found in the reviewed traversal rewrite, the inverse deep-copy change, or the new hardening tests. The iterative DFS is behaviorally equivalent to the recursive version for cycle, dangling, shared-node, and postorder-depth semantics, and the tests discriminate the controlled failures the change was meant to produce.\n\n**Traversal correctness, walked against the diff**\n\n- **Cycle detection is sound.** A node enters `visiting` when its enter frame pops and leaves it only when its exit frame pops. Because the walk is LIFO, every frame above a node's exit frame was pushed by that node or one of its in-progress descendants. So an enter frame for a node already in `visiting` can only arise from a path back to itself. The converse holds too: any cycle must eventually pop an enter frame for a node still on the path. The 399-cycle test at recursion limit 600 confirms the controlled `node_cycle` error.\n- **Shared nodes are not false cycles.** A node reached a second time after finishing is out of `visiting` and in `depths`, so the `if nid in depths: continue` branch skips it. The diamond test (c4 shared by c2 and c3) and the roundtrip equality confirm this.\n- **Postorder depth is complete before use.** Every child enter frame is pushed after the parent's exit frame and pops before it. Each child therefore either computes a depth, is already memoized, or raises `node_cycle`. The exit-frame `max` over `depths[child]` cannot hit a missing key.\n- **Child order and error precedence match r15.0.** Children are pushed reversed so the first child pops first, and the dangling check precedes the cycle check at every pop, exactly as the recursive version ordered them. Nodes already in `depths` are skipped at the outer loop, matching the old memo path.\n- **Order independence of deepest path** follows from memoized postorder. The three orderings in the order-independence test, including leaf-first, all yield 12 accepted and 13 rejected with `graph_depth`.\n\n**Recursion sensitivity is actually removed, not just hidden.** The 600-limit subtests are the discriminating ones. The old recursive version spent two Python frames per level (the function frame plus the generator frame inside `max`), so a 399-chain needed roughly 800 frames and could not pass at 600. The new tests assert `ValueError` with exact `^graph_depth$` and `^node_cycle$` patterns, so a `RecursionError` regression would fail rather than slip through. The 1000-limit subtest alone would not distinguish old from new, which is fine since both limits are covered.\n\n**Inverse aliasing fix.** The three deep copies on `required_unit_ids`, `relationship_member_ids`, and `args` are the only mutable list fields copied straight from expanded input in the shown constructors. `e` is a fresh comprehension, and the remaining fields are strings or ints. The alias test proves identity separation with `assertIsNot`, then mutates in both directions and checks equality against snapshots. `copy.deepcopy` is heavier than needed for flat scalar lists, but it is correct and not a defect.\n\n**Masked-error tests.** Both tests are structured correctly to avoid the earlier masking: the deadline test uses informational modality so `unknown_modality` does not fire first, and the applicability test retargets the link to `obj` so no qual invariant preempts `applicability_links`. Their correctness depends on the unseen fixture layout, noted below.\n\n**Non-material observations**\n\n- The dangling check also runs on exit frames, where it is redundant. Harmless.\n- The diff bumps `SPAN_VERSION` and `EXPANDED_VERSION` alongside `VERSION`. This is consistent with the stated contract version change but is broader than the traversal and copy edits themselves. Worth confirming it was intended.\n- The depth lookup on link roots assumes link node IDs were validated to exist earlier. That check is outside the diff.\n\n**Evidence limits**\n\n- The fixture, `envelope`, `node`, `link`, and `unit` helpers are unseen, so the masked-error and index-based alias assertions are accepted on the supplied run, not independently verified.\n- `inverse_evidence` is outside the diff. Its returned structures are assumed fresh and are not covered by the alias proof.\n- Pre-traversal checks (unique IDs, arities, duplicate and self children, link node existence) are outside the diff and assumed as stated.\n- Unit dependency traversal remains recursive and bounded at 159 levels. It is out of scope and unchanged.\n- The 31-test run is self-reported by the implementation side. No execution occurred in this review.",
+  "result": {
+    "duration_api_ms": 97694,
+    "stop_reason": "end_turn",
+    "session_id": "1b4d00f1-2aa2-4fa5-8ff5-3660b96b08bf",
+    "total_cost_usd": 0.50655825,
+    "usage": {
+      "input_tokens": 2,
+      "cache_creation_input_tokens": 7443,
+      "cache_read_input_tokens": 3313,
+      "output_tokens": 7137,
+      "output_tokens_details": {
+        "thinking_tokens": 5576
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 7443,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "global",
+      "iterations": [
+        {
+          "input_tokens": 2,
+          "output_tokens": 7137,
+          "cache_read_input_tokens": 3313,
+          "cache_creation_input_tokens": 7443,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 7443
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "modelUsage": {
+      "claude-fable-5-1": {
+        "inputTokens": 2,
+        "outputTokens": 7137,
+        "cacheReadInputTokens": 3313,
+        "cacheCreationInputTokens": 7443,
+        "webSearchRequests": 0,
+        "costUSD": 0.50655825,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000,
+        "thinkingTokens": 5576,
+        "canonicalModel": "claude-fable-5-1",
+        "provider": "firstParty",
+        "costBasis": "list"
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "fast_mode_disabled_reason": "sdk_opt_in_required",
+    "subagent_stats": {
+      "spawned": 0,
+      "requested": {
+        "background": 0,
+        "foreground": 0,
+        "unset": 0
+      },
+      "started_in_background": 0,
+      "max_depth": 0,
+      "spawned_by_subagents": 0,
+      "completed": 0,
+      "failed": 0,
+      "killed": {
+        "parent": 0,
+        "user": 0,
+        "system": 0
+      },
+      "refused": {
+        "depth_limit": 0,
+        "concurrency_limit": 0,
+        "budget": 0
+      },
+      "by_type": {}
+    },
+    "safety_stops": 0,
+    "is_error": false,
+    "num_turns": 1,
+    "subtype": "success",
+    "api_error_status": null,
+    "result": "**Verdict (offline hardening scope only):** no material defect found in the reviewed traversal rewrite, the inverse deep-copy change, or the new hardening tests. The iterative DFS is behaviorally equivalent to the recursive version for cycle, dangling, shared-node, and postorder-depth semantics, and the tests discriminate the controlled failures the change was meant to produce.\n\n**Traversal correctness, walked against the diff**\n\n- **Cycle detection is sound.** A node enters `visiting` when its enter frame pops and leaves it only when its exit frame pops. Because the walk is LIFO, every frame above a node's exit frame was pushed by that node or one of its in-progress descendants. So an enter frame for a node already in `visiting` can only arise from a path back to itself. The converse holds too: any cycle must eventually pop an enter frame for a node still on the path. The 399-cycle test at recursion limit 600 confirms the controlled `node_cycle` error.\n- **Shared nodes are not false cycles.** A node reached a second time after finishing is out of `visiting` and in `depths`, so the `if nid in depths: continue` branch skips it. The diamond test (c4 shared by c2 and c3) and the roundtrip equality confirm this.\n- **Postorder depth is complete before use.** Every child enter frame is pushed after the parent's exit frame and pops before it. Each child therefore either computes a depth, is already memoized, or raises `node_cycle`. The exit-frame `max` over `depths[child]` cannot hit a missing key.\n- **Child order and error precedence match r15.0.** Children are pushed reversed so the first child pops first, and the dangling check precedes the cycle check at every pop, exactly as the recursive version ordered them. Nodes already in `depths` are skipped at the outer loop, matching the old memo path.\n- **Order independence of deepest path** follows from memoized postorder. The three orderings in the order-independence test, including leaf-first, all yield 12 accepted and 13 rejected with `graph_depth`.\n\n**Recursion sensitivity is actually removed, not just hidden.** The 600-limit subtests are the discriminating ones. The old recursive version spent two Python frames per level (the function frame plus the generator frame inside `max`), so a 399-chain needed roughly 800 frames and could not pass at 600. The new tests assert `ValueError` with exact `^graph_depth$` and `^node_cycle$` patterns, so a `RecursionError` regression would fail rather than slip through. The 1000-limit subtest alone would not distinguish old from new, which is fine since both limits are covered.\n\n**Inverse aliasing fix.** The three deep copies on `required_unit_ids`, `relationship_member_ids`, and `args` are the only mutable list fields copied straight from expanded input in the shown constructors. `e` is a fresh comprehension, and the remaining fields are strings or ints. The alias test proves identity separation with `assertIsNot`, then mutates in both directions and checks equality against snapshots. `copy.deepcopy` is heavier than needed for flat scalar lists, but it is correct and not a defect.\n\n**Masked-error tests.** Both tests are structured correctly to avoid the earlier masking: the deadline test uses informational modality so `unknown_modality` does not fire first, and the applicability test retargets the link to `obj` so no qual invariant preempts `applicability_links`. Their correctness depends on the unseen fixture layout, noted below.\n\n**Non-material observations**\n\n- The dangling check also runs on exit frames, where it is redundant. Harmless.\n- The diff bumps `SPAN_VERSION` and `EXPANDED_VERSION` alongside `VERSION`. This is consistent with the stated contract version change but is broader than the traversal and copy edits themselves. Worth confirming it was intended.\n- The depth lookup on link roots assumes link node IDs were validated to exist earlier. That check is outside the diff.\n\n**Evidence limits**\n\n- The fixture, `envelope`, `node`, `link`, and `unit` helpers are unseen, so the masked-error and index-based alias assertions are accepted on the supplied run, not independently verified.\n- `inverse_evidence` is outside the diff. Its returned structures are assumed fresh and are not covered by the alias proof.\n- Pre-traversal checks (unique IDs, arities, duplicate and self children, link node existence) are outside the diff and assumed as stated.\n- Unit dependency traversal remains recursive and bounded at 159 levels. It is out of scope and unchanged.\n- The 31-test run is self-reported by the implementation side. No execution occurred in this review.",
+    "ttft_ms": 76469,
+    "type": "result",
+    "duration_ms": 97746,
+    "uuid": "d701b799-2a08-45c9-bf65-d76cbe7f0eb5",
+    "ttft_stream_ms": 1051,
+    "time_to_request_ms": 42,
+    "first_content_frame_ms": 1051,
+    "queued_turn_count": 0,
+    "result_index": 0
+  }
+}

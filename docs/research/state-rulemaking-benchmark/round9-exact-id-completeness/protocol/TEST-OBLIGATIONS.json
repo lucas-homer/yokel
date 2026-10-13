@@ -1,0 +1,118 @@
+{
+  "schema_version": "round9.test-obligations.v1",
+  "status": "specification_only_implementation_tests_not_run",
+  "tests": [
+    {
+      "id": "ID-01",
+      "must": "Derive exactly70 unique IDs from unchanged WI record, including5 timings and26 components, excluding coverage."
+    },
+    {
+      "id": "ID-02",
+      "must": "Generated schema equals checked-in wi70-response.schema.json modulo permitted formatting; neither schema nor request source includes fixture oracle labels."
+    },
+    {
+      "id": "ID-03",
+      "must": "All13 active raw JSON fixtures produce expected boundary outcome; positive uncertain controls remain review."
+    },
+    {
+      "id": "ID-04",
+      "must": "Reject duplicate keys at all object depths before permissive parsing. Keyed schema enforces required exact membership; keep old array balanced-duplicate case as design comparison, not active schema."
+    },
+    {
+      "id": "ID-05",
+      "must": "Reject input duplicate/cross-category collision, reserved coverage item ID, empty schedule orN>1000 before generating a request; no truncation/renaming."
+    },
+    {
+      "id": "SEM-01",
+      "must": "Every semantic fixture record passes unchanged record JSON shape and exact evidence checks, while negative semantic outcomes remain noncomplete."
+    },
+    {
+      "id": "SEM-02",
+      "must": "Rule positive/evidence-only pair differs only event description; identical exact source/evidence/IDs cannot justify same semantic completeness."
+    },
+    {
+      "id": "SEM-03",
+      "must": "Coverage-rationale-only repair remains negative; source-only additional phase/deadline adds oracle omissions despite unchanged candidate ID set."
+    },
+    {
+      "id": "SEM-04",
+      "must": "Full access group positive, phone subgroup negative, unresolved endpoint unknown with relationship closure; do not infer full alternatives from co-listing."
+    },
+    {
+      "id": "SEM-05",
+      "must": "Optional positive versus unclear/mandatory variants: unclear cannot preserved, mandatory is changed. Identical quote/text is insufficient."
+    },
+    {
+      "id": "SEM-06",
+      "must": "Aggregation consumes independently reviewed source dispositions and all claim statuses, not verifier label or response ID completeness. Missing/unfinished oracle assessment yields unavailable semantic conclusion and review."
+    },
+    {
+      "id": "ISO-01",
+      "must": "Construct provider input only from explicit allowlist. Assert no expected fields, source-unit oracle, sibling variants, prior audit findings or known-defect hints in serialized request."
+    },
+    {
+      "id": "INT-01",
+      "must": "Old hashes unchanged; any transformed/deduplicated wire payload roundtrips byte-canonical source/record; quote checks are separate from semantic correctness."
+    },
+    {
+      "id": "LIMIT-01",
+      "must": "No paid calls, credentials, local installs/builds or production/shared-schema edits. No model-accuracy claim from fixture assertions."
+    },
+    {
+      "id": "ID-06",
+      "must": "Wire→array normalization is lossless up to object order/schema tag, with no embedded item_id or unknown keys; normalized verdict also passes existing strict host checks."
+    },
+    {
+      "id": "SEM-07",
+      "must": "Each source-unit oracle row has supported semantic field pointers and provenance. No pointer into evidence/coverage/source metadata can count as normalized assertion. Independent reviewer must inspect proposed mappings before they become fixed oracle."
+    },
+    {
+      "id": "AUD-01",
+      "must": "Validate all10 proposed audit inputs and pending review file against bounded schemas; exact44 source rows and214 computed semantic field rows, valid source/record/reference/value/audit hashes and evidence. All current pending inputs return unverified."
+    },
+    {
+      "id": "AUD-02",
+      "must": "After actual primary/independent review approves an isolated test review fixture, test three complete_supported, five not_complete, two unverified conditional development outcomes. Do not derive semantic rows from expected labels or copy a provider verdict. No runtime approve/assert_complete flag."
+    },
+    {
+      "id": "AUD-03",
+      "must": "Missing audit/review, pending/rejected review, duplicate approval, absent/same/author reviewer identities, changed audit after review, or stale source/record/reference/value hashes each return unverified."
+    },
+    {
+      "id": "AUD-04",
+      "must": "Partial/unknown source scope, nonzero reviewed_start, truncated reviewed_end, scope exclusion or unresolved question each returns unverified even with all source rows matched."
+    },
+    {
+      "id": "AUD-05",
+      "must": "Remove/add/duplicate a source row or candidate field row; mark claimcoverage partial/unknown or leave unreviewed pointer: unverified, never complete. Add unsupported candidate field with no source mapping: not_complete after independent review, not ignored."
+    },
+    {
+      "id": "AUD-06",
+      "must": "Reject pointers into evidence/coverage/IDs, unresolved pointers, wrong value hash, incorrect evidence quote/offset, broken reverse claim link, nonexistent dependencies, self/cyclic dependencies, or matched parent with nonmatched required endpoint as unverified."
+    },
+    {
+      "id": "AUD-07",
+      "must": "Any unknown source/claim status or unresolved record guard returns unverified, including coexistence with a definite defect. Do not turn conservative uncertainty into supported recovery."
+    },
+    {
+      "id": "AUD-08",
+      "must": "Coverage claimed_complete is derived-corroborated/contradicted/unverified only after independent aggregation; modifying coverage.rationale cannot fix missing semantic assertion. Whole record change requires new record/audit/review bindings."
+    },
+    {
+      "id": "AUD-09",
+      "must": "Provider input excludes audit files, source-unit scope and dispositions, candidate-check labels, review decisions, conditional expected outcomes and provenance. Approval artifacts never originate from provider/candidate data."
+    },
+    {
+      "id": "AUD-10",
+      "must": "Audit rows containing an extra asserted_complete/trusted/result field fail closed additionalProperties. Positive result is computed solely from validated reviewed inputs and guards; record/verdict validation and production/action flags remain separate."
+    },
+    {
+      "id": "ID-07",
+      "must": "Bounded local-ref expansion of compact schema equals prior expanded canonical hash in wire-size-check.json. Test supported a/e refs and reject unknown/external/missing/sibling/cyclic/depth>8 refs. Never pass unresolved refs to old validator."
+    },
+    {
+      "id": "SIZE-01",
+      "must": "Reconstruct exact offline WI request fixture using neutral keyed instruction and unchanged payload; canonical UTF8 request38432 + allowance1024 =39456 <40000. Preserve guard and all source/evidence; new request aboveguard is preflight rejection. This does not establish provider schema support."
+    }
+  ]
+}

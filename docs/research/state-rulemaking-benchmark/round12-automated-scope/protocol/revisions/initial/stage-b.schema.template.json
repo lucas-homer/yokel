@@ -1,0 +1,94 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "round12.source-mapping.v1"
+      ]
+    },
+    "source_text_sha256": {
+      "type": "string",
+      "enum": [
+        "__SOURCE_SHA256__"
+      ]
+    },
+    "record_sha256": {
+      "type": "string",
+      "enum": [
+        "__RECORD_SHA256__"
+      ]
+    },
+    "operative_record_sha256": {
+      "type": "string",
+      "enum": [
+        "__OPERATIVE_SHA256__"
+      ]
+    },
+    "inventory_sha256": {
+      "type": "string",
+      "enum": [
+        "__INVENTORY_SHA256__"
+      ]
+    },
+    "scope_sha256": {
+      "type": "string",
+      "enum": [
+        "__SCOPE_SHA256__"
+      ]
+    },
+    "mappings": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "source_text_sha256",
+    "record_sha256",
+    "operative_record_sha256",
+    "inventory_sha256",
+    "scope_sha256",
+    "mappings"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "m": {
+      "type": "object",
+      "properties": {
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "matched",
+            "missing",
+            "mismatched",
+            "unknown"
+          ]
+        },
+        "operative_pointers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "minItems": 0,
+          "maxItems": 12
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 420
+        }
+      },
+      "required": [
+        "disposition",
+        "operative_pointers",
+        "reason"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

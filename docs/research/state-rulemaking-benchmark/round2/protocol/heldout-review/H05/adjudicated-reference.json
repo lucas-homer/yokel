@@ -1,0 +1,278 @@
+{
+  "fixture_id": "H05",
+  "reference_version": "independent-source-v1",
+  "collector_kind": "agent source annotations, not human gold labels",
+  "independent_review_status": "approved",
+  "new_vendor_outputs_inspected": false,
+  "native_text_used_for_navigation_and_quote_transcription": true,
+  "complete_input_images_inspected": true,
+  "input_sha256": "2ede892be0ade18e26a535460ee0a75a018ebc385fd9c0ef075a04bbf4ffdac1",
+  "state": "OR",
+  "primary_bucket": "scanned_filled_form",
+  "template_family": "OR-SOS-OARD-proposed-rulemaking-fiscal-form",
+  "notice_scope_boundaries": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+  "package_limitations": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which board is named?",
+      "expected_value": "Oregon Board of Licensed Professional Counselors and Therapists",
+      "answerability": "present",
+      "critical": false,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Agency header",
+      "source_quote": "OREGON BOARD OF LICENSED PROFESSIONAL COUNSELORS AND THERAPISTS",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting agency or source context; not included in strict critical gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": [],
+      "independent_source_review": "confirmed",
+      "reviewer_source_note": "Filed April 9 at 11:32 AM, May 21 comments at 5 PM, and May 21 hearing at 9–11 AM have different roles. Absence scope ends after the notice/fiscal material and RULES PROPOSED list, excluding attached rule text."
+    },
+    {
+      "field_id": "citation",
+      "question": "What rules are listed as proposed?",
+      "expected_value": [
+        "833-020-0041",
+        "833-020-0081",
+        "833-050-0011",
+        "833-110-0031"
+      ],
+      "answerability": "present",
+      "critical": true,
+      "input_page": 2,
+      "original_page": 2,
+      "region": "Rules proposed list",
+      "source_quote": "RULES PROPOSED: \n833-020-0041, 833-020-0081, 833-050-0011, 833-110-0031",
+      "basis": "source_text",
+      "semantic_group_id": "citation",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "list",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": [],
+      "independent_source_review": "confirmed",
+      "reviewer_source_note": "Filed April 9 at 11:32 AM, May 21 comments at 5 PM, and May 21 hearing at 9–11 AM have different roles. Absence scope ends after the notice/fiscal material and RULES PROPOSED list, excluding attached rule text."
+    },
+    {
+      "field_id": "event",
+      "question": "What stage is stated by the document heading?",
+      "expected_value": "Notice of Proposed Rulemaking",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Heading",
+      "source_quote": "NOTICE OF PROPOSED RULEMAKING",
+      "basis": "source_text",
+      "semantic_group_id": "event",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": [],
+      "independent_source_review": "confirmed",
+      "reviewer_source_note": "Filed April 9 at 11:32 AM, May 21 comments at 5 PM, and May 21 hearing at 9–11 AM have different roles. Absence scope ends after the notice/fiscal material and RULES PROPOSED list, excluding attached rule text."
+    },
+    {
+      "field_id": "filing",
+      "question": "What timestamp is labeled FILED?",
+      "expected_value": "April9,2026 11:32AM",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Boxed stamp",
+      "source_quote": "FILED\n04/09/2026 11:32 AM",
+      "basis": "visual_mark",
+      "semantic_group_id": "filing",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": [],
+      "independent_source_review": "confirmed",
+      "reviewer_source_note": "Filed April 9 at 11:32 AM, May 21 comments at 5 PM, and May 21 hearing at 9–11 AM have different roles. Absence scope ends after the notice/fiscal material and RULES PROPOSED list, excluding attached rule text."
+    },
+    {
+      "field_id": "comment_close",
+      "question": "What is the last day/time to offer comment?",
+      "expected_value": "May21,2026 5:00PM",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Comment deadline",
+      "source_quote": "LAST DAY AND TIME TO OFFER COMMENT TO AGENCY: 05/21/2026 5:00 PM",
+      "basis": "source_text",
+      "semantic_group_id": "participation_schedule",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": [],
+      "independent_source_review": "confirmed",
+      "reviewer_source_note": "Filed April 9 at 11:32 AM, May 21 comments at 5 PM, and May 21 hearing at 9–11 AM have different roles. Absence scope ends after the notice/fiscal material and RULES PROPOSED list, excluding attached rule text."
+    },
+    {
+      "field_id": "hearing",
+      "question": "What hearing date and time range are stated?",
+      "expected_value": "May21,2026 9:00AM–11:00AM",
+      "answerability": "present",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Hearing fields",
+      "source_quote": "DATE: 05/21/2026 \nTIME: 9:00 AM - 11:00 AM",
+      "basis": "source_text",
+      "semantic_group_id": "participation_schedule",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve value with stated role and target scope.",
+      "notice_scope_boundaries": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "additional_decisive_evidence": [],
+      "independent_source_review": "confirmed",
+      "reviewer_source_note": "Filed April 9 at 11:32 AM, May 21 comments at 5 PM, and May 21 hearing at 9–11 AM have different roles. Absence scope ends after the notice/fiscal material and RULES PROPOSED list, excluding attached rule text."
+    },
+    {
+      "field_id": "timezone",
+      "question": "Does the notice explicitly state a deadline/hearing timezone?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Complete target notice",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "participation_schedule",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Relevant complete notice scope must survive; silence alone is insufficient.",
+      "notice_scope_boundaries": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+      "additional_decisive_evidence": [],
+      "independent_source_review": "confirmed",
+      "reviewer_source_note": "Filed April 9 at 11:32 AM, May 21 comments at 5 PM, and May 21 hearing at 9–11 AM have different roles. Absence scope ends after the notice/fiscal material and RULES PROPOSED list, excluding attached rule text."
+    },
+    {
+      "field_id": "effective",
+      "question": "Does the retained notice state an effective date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "input_page": 1,
+      "original_page": 1,
+      "region": "Complete target notice",
+      "source_quote": null,
+      "basis": "full_scope_absence",
+      "semantic_group_id": "effective",
+      "critical_reason": "Preserves target identity, lifecycle, date role, precision or participation condition.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date/time/number/capitalization/whitespace forms preserving role, precision, conditions and scope.",
+        "No inferred timezone, calculated relative date, changed proposed/final status or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Relevant complete notice scope must survive; silence alone is insufficient.",
+      "notice_scope_boundaries": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": "Complete two-page notice/need/fiscal-impact section through RULES PROPOSED list. First attached rule heading appears at page2 bottom; substantive rule text original3–6 excluded. Absences apply to notice, not rule attachment.",
+      "additional_decisive_evidence": [],
+      "independent_source_review": "confirmed",
+      "reviewer_source_note": "Filed April 9 at 11:32 AM, May 21 comments at 5 PM, and May 21 hearing at 9–11 AM have different roles. Absence scope ends after the notice/fiscal material and RULES PROPOSED list, excluding attached rule text."
+    }
+  ],
+  "collector_annotation_hash": "657f61d7067e9c1f98a34b2c3f4e3be4d86a5ee8a43e6cd5bd7a7ef203cf83cc",
+  "collector_annotation_path": "round2/heldout/H05/collector-reference.json",
+  "reviewer_id": "independent-source-review-chat",
+  "reviewer_new_heldout_parser_outputs_inspected": false,
+  "reviewer_native_text_used_for_reference_adjudication": false,
+  "reviewer_source_note": "Filed April 9 at 11:32 AM, May 21 comments at 5 PM, and May 21 hearing at 9–11 AM have different roles. Absence scope ends after the notice/fiscal material and RULES PROPOSED list, excluding attached rule text.",
+  "source_images_reviewed": [
+    {
+      "fixture_id": "H05",
+      "input_page": 1,
+      "original_physical_page": 1,
+      "image_sha256": "9fe8fcd977b36ed23d36e0b647b113da3d59c367effce85bbe0970e54435d3d5",
+      "original_page_render_matches_input_image": true
+    },
+    {
+      "fixture_id": "H05",
+      "input_page": 2,
+      "original_physical_page": 2,
+      "image_sha256": "b7e6c98c5bf21534c436e492d17c95bcab31249d571c9ea653238329a1adc07a",
+      "original_page_render_matches_input_image": true
+    }
+  ],
+  "reference_gate_eligible": true,
+  "uncertain_critical_fields": []
+}

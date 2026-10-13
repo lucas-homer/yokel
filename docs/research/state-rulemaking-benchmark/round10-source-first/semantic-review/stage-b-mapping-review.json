@@ -1,0 +1,1372 @@
+{
+  "schema_version": "round10.semantic.stage-b-review.v1",
+  "mapping_sha256": "79212e224fc904c1187f24ecef8b0cce8c486996b896acfa032154c9a65209a8",
+  "all_mapping_reasons_reviewed": 46,
+  "all_cited_pointer_values_reviewed": true,
+  "rows": [
+    {
+      "unit_id": "u001",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/identities/0/literal",
+          "/identities/0/event_ids",
+          "/events/0/description"
+        ],
+        "reason": "The agency identity is associated with the public hearing on the permanent rule."
+      },
+      "operative_values": [
+        {
+          "pointer": "/identities/0/literal",
+          "value": "Department of Natural Resources",
+          "value_sha256": "32b93b140e19ee3fb6c48876ab0d4e332e45faa877a202597072f785c101a663"
+        },
+        {
+          "pointer": "/identities/0/event_ids",
+          "value": [
+            "e_hearing",
+            "e_comments",
+            "e_registration",
+            "e_accessibility"
+          ],
+          "value_sha256": "47fb3d96f3790565e3e44745790ac0592e97c0cae4438747c6debb10bc1ef469"
+        },
+        {
+          "pointer": "/events/0/description",
+          "value": "Public hearing and opportunity for oral testimony on the permanent aquatic plant management rule.",
+          "value_sha256": "bea12e23fc9d4796794986f6c51ee9f745b5e0dba52f1f7cdc7dd8cf03df1982"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Agency identity and hearing description establish the asserted event/identity together.",
+      "original_source_units": [
+        "agency",
+        "hearing"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u002",
+      "model_mapping": {
+        "disposition": "mismatched",
+        "operative_pointers": [
+          "/identities/1/literal"
+        ],
+        "reason": "The chapters are named, but repeal of both chapters and recreation of NR 107 are not asserted."
+      },
+      "operative_values": [
+        {
+          "pointer": "/identities/1/literal",
+          "value": "chs. NR 107 and 109",
+          "value_sha256": "4f4f37c0f3f3fb00ee4dc182c30c0b8035340dc314bafdfbe925d56ff51a6fff"
+        }
+      ],
+      "independent_finding": "correct_primary_loss_detection",
+      "independent_basis": "Only chapter names remain at cited identity literal; no operative field asserts repeal/recreation. Correctly avoids prior evidence-only overcredit.",
+      "original_source_units": [
+        "rule"
+      ],
+      "runtime_effective_disposition": "mismatched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u003",
+      "model_mapping": {
+        "disposition": "mismatched",
+        "operative_pointers": [
+          "/events/0/description"
+        ],
+        "reason": "Aquatic plant management is retained, but the other specified regulatory subjects are omitted."
+      },
+      "operative_values": [
+        {
+          "pointer": "/events/0/description",
+          "value": "Public hearing and opportunity for oral testimony on the permanent aquatic plant management rule.",
+          "value_sha256": "bea12e23fc9d4796794986f6c51ee9f745b5e0dba52f1f7cdc7dd8cf03df1982"
+        }
+      ],
+      "independent_finding": "supported_additional_topic_detail_loss",
+      "independent_basis": "Cited hearing description retains aquatic plant management only. Other opening subjects are absent. This is a finer qualitative identity/topic loss, not an added frozen source unit.",
+      "original_source_units": [
+        "rule"
+      ],
+      "runtime_effective_disposition": "mismatched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u004",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/events/0/timing/0/raw",
+          "/events/0/timing/0/role"
+        ],
+        "reason": "The hearing start date is April 22, 2026."
+      },
+      "operative_values": [
+        {
+          "pointer": "/events/0/timing/0/raw",
+          "value": "April 22, 2026",
+          "value_sha256": "233672d1ff57faa8317f5655c261750e641e0c65670a231ea8bd23b416fa4052"
+        },
+        {
+          "pointer": "/events/0/timing/0/role",
+          "value": "hearing_start",
+          "value_sha256": "f335189a39e8b1c7af510d96e9280c1e870bf460db5cd15ec67c91493413200f"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Exact date and hearing-start role establish this assertion.",
+      "original_source_units": [
+        "hearing_time"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u005",
+      "model_mapping": {
+        "disposition": "unknown",
+        "operative_pointers": [
+          "/events/0/timing/1/raw",
+          "/uncertainties/2/description"
+        ],
+        "reason": "The clock time is retained, but its timezone remains unspecified in the source."
+      },
+      "operative_values": [
+        {
+          "pointer": "/events/0/timing/1/raw",
+          "value": "1:00 PM",
+          "value_sha256": "f205acb4ff8ba570430e82b6d6d6abcb81c53861c310b2931329370f92a8c60b"
+        },
+        {
+          "pointer": "/uncertainties/2/description",
+          "value": "The hearing clock time has no printed timezone.",
+          "value_sha256": "a26bcb1f868e2bbff08111980c4a60dd801f1ec7a3417c4b9b2116ba30b42fba"
+        }
+      ],
+      "independent_finding": "correct_uncertainty_preservation",
+      "independent_basis": "Time and explicit absence-of-timezone uncertainty are faithfully retained. Unknown follows A uncertainty and frozen B rule; this is not proof the clock fact is missing.",
+      "original_source_units": [
+        "hearing_time"
+      ],
+      "runtime_effective_disposition": "unknown",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u006",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/routes/0/components/0/literal",
+          "/requirements/0/text"
+        ],
+        "reason": "The exact Zoom URL and its use to join via Zoom are retained."
+      },
+      "operative_values": [
+        {
+          "pointer": "/routes/0/components/0/literal",
+          "value": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g",
+          "value_sha256": "b8c157afb304d1c2ab61f450ee197345633318ac4dc1f06f89c57abadc91cbb8"
+        },
+        {
+          "pointer": "/requirements/0/text",
+          "value": "To join via Zoom, register or pre-register through the link and enter the information required on the Hearing Appearance form.",
+          "value_sha256": "e1f06b0dbf95a1d095ca3d3242d55ce0852343d369f2bcb8f62c83e4e775678c"
+        }
+      ],
+      "independent_finding": "native_match_with_original_reference_limit",
+      "independent_basis": "Literal and Zoom joining instruction match native A. Original image I/l unknown is unchanged; not clean image-reference recovery.",
+      "original_source_units": [
+        "zoom"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u007",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/routes/1/components/0/literal",
+          "/routes/1/description"
+        ],
+        "reason": "The hearing meeting identifier is retained exactly."
+      },
+      "operative_values": [
+        {
+          "pointer": "/routes/1/components/0/literal",
+          "value": "896 2745 6939",
+          "value_sha256": "5629c9e55b61639ef2cfe2ace6e4e8aaba26b711f65f802969b9f4ff9eebbedd"
+        },
+        {
+          "pointer": "/routes/1/description",
+          "value": "Virtual Zoom hearing meeting identifier.",
+          "value_sha256": "1c957e8341048899756fbcaea0848210cf393b4f809fe8ca31206efe54bde878"
+        }
+      ],
+      "independent_finding": "local_match_with_original_dependency_limit",
+      "independent_basis": "Meeting ID and virtual hearing purpose exact. Prior zoom dependency uncertainty remains outside A graph.",
+      "original_source_units": [
+        "meeting_id"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u008",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/routes/2/components/0/literal",
+          "/routes/2/components/1/literal",
+          "/routes/2/components/2/literal",
+          "/routes/2/description"
+        ],
+        "reason": "The first US telephone access endpoint and meeting code are retained."
+      },
+      "operative_values": [
+        {
+          "pointer": "/routes/2/components/0/literal",
+          "value": "+13052241968",
+          "value_sha256": "28ee2309940fd0e5aae954410ece5a3810f18b4d06b8475ec8d48bad59aedc87"
+        },
+        {
+          "pointer": "/routes/2/components/1/literal",
+          "value": "89627456939#",
+          "value_sha256": "18bcaf5f777468035606ad243667b6363eabf0644b9f6bb8dc4a2a9edb77c876"
+        },
+        {
+          "pointer": "/routes/2/components/2/literal",
+          "value": "US",
+          "value_sha256": "b5e86cefc9cfb8c972b2ede02131e8a270e7fbc4216e7be80bf800aea5de029b"
+        },
+        {
+          "pointer": "/routes/2/description",
+          "value": "US telephone hearing access.",
+          "value_sha256": "d3967ae1fb1d002ecf3cfbd9844c48b12d5b76267a1e8af250d9573a0d445670"
+        }
+      ],
+      "independent_finding": "local_match_with_original_dependency_limit",
+      "independent_basis": "Number, code, region and hearing role exact; original endpoint-closure uncertainty not erased.",
+      "original_source_units": [
+        "phone1"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u009",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/routes/3/components/0/literal",
+          "/routes/3/components/1/literal",
+          "/routes/3/components/2/literal",
+          "/routes/3/description"
+        ],
+        "reason": "The second US telephone access endpoint and meeting code are retained."
+      },
+      "operative_values": [
+        {
+          "pointer": "/routes/3/components/0/literal",
+          "value": "+13092053325",
+          "value_sha256": "237a5bcb3f12d291d113cad5e22d8ae7c81de456e86fb8b3f2c28569559e4fdf"
+        },
+        {
+          "pointer": "/routes/3/components/1/literal",
+          "value": "89627456939#",
+          "value_sha256": "18bcaf5f777468035606ad243667b6363eabf0644b9f6bb8dc4a2a9edb77c876"
+        },
+        {
+          "pointer": "/routes/3/components/2/literal",
+          "value": "US",
+          "value_sha256": "b5e86cefc9cfb8c972b2ede02131e8a270e7fbc4216e7be80bf800aea5de029b"
+        },
+        {
+          "pointer": "/routes/3/description",
+          "value": "US telephone hearing access.",
+          "value_sha256": "d3967ae1fb1d002ecf3cfbd9844c48b12d5b76267a1e8af250d9573a0d445670"
+        }
+      ],
+      "independent_finding": "local_match_with_original_dependency_limit",
+      "independent_basis": "Second number, code, region and hearing role exact; same frozen dependency caveat.",
+      "original_source_units": [
+        "phone2"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u010",
+      "model_mapping": {
+        "disposition": "mismatched",
+        "operative_pointers": [
+          "/alternative_groups/1/route_ids",
+          "/alternative_groups/1/purpose",
+          "/requirements/0/text",
+          "/requirements/2/text"
+        ],
+        "reason": "Only the phone endpoints are grouped; the full qualified relationship encompassing Zoom and both phone endpoints is not asserted."
+      },
+      "operative_values": [
+        {
+          "pointer": "/alternative_groups/1/route_ids",
+          "value": [
+            "r_phone1",
+            "r_phone2"
+          ],
+          "value_sha256": "cb5ad5d1f97feed9bd43b471530812d70aff81742f1bc1b87798c55181027ee6"
+        },
+        {
+          "pointer": "/alternative_groups/1/purpose",
+          "value": "hearing_access",
+          "value_sha256": "b188256cceddb393a6e30c6833f856761cca21d87bb9d3f4cc763b7e899a0407"
+        },
+        {
+          "pointer": "/requirements/0/text",
+          "value": "To join via Zoom, register or pre-register through the link and enter the information required on the Hearing Appearance form.",
+          "value_sha256": "e1f06b0dbf95a1d095ca3d3242d55ce0852343d369f2bcb8f62c83e4e775678c"
+        },
+        {
+          "pointer": "/requirements/2/text",
+          "value": "Those planning to phone in are asked to download and complete the fillable Hearing Appearance form and email it to Sarah.wood@wisconsin.gov; no form-download endpoint is printed.",
+          "value_sha256": "3c9c0d41b3b91599d9cde58e8ba07a11ddb4872be61d5f1ed5fb782871e1b8ba"
+        }
+      ],
+      "independent_finding": "correct_primary_loss_detection",
+      "independent_basis": "Pointers resolve to two-phone group and separate procedural texts. They do not assert full Zoom/phone access relation; mismatch correctly identifies original loss.",
+      "original_source_units": [
+        "access_alternatives"
+      ],
+      "runtime_effective_disposition": "mismatched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u011",
+      "model_mapping": {
+        "disposition": "missing",
+        "operative_pointers": [],
+        "reason": "No operative assertion describes the program's control scope and native plant community purpose."
+      },
+      "operative_values": [],
+      "independent_finding": "true_absence_outside_original_scope",
+      "independent_basis": "Program purpose is absent, but original audit explicitly excluded this substantive background. False-positive participation failure if promoted to that scope.",
+      "original_source_units": [],
+      "runtime_effective_disposition": "missing",
+      "A_scope_excluded_from_original_participation": true
+    },
+    {
+      "unit_id": "u012",
+      "model_mapping": {
+        "disposition": "missing",
+        "operative_pointers": [],
+        "reason": "No operative assertion assigns chemical control regulation to NR 107."
+      },
+      "operative_values": [],
+      "independent_finding": "true_absence_outside_original_scope",
+      "independent_basis": "NR 107 regulatory assignment absent; excluded program background.",
+      "original_source_units": [],
+      "runtime_effective_disposition": "missing",
+      "A_scope_excluded_from_original_participation": true
+    },
+    {
+      "unit_id": "u013",
+      "model_mapping": {
+        "disposition": "missing",
+        "operative_pointers": [],
+        "reason": "No operative assertion assigns the listed control methods to NR 109."
+      },
+      "operative_values": [],
+      "independent_finding": "true_absence_outside_original_scope",
+      "independent_basis": "NR 109 control-method assignment absent; excluded program background.",
+      "original_source_units": [],
+      "runtime_effective_disposition": "missing",
+      "A_scope_excluded_from_original_participation": true
+    },
+    {
+      "unit_id": "u014",
+      "model_mapping": {
+        "disposition": "mismatched",
+        "operative_pointers": [
+          "/identities/1/literal"
+        ],
+        "reason": "Chapter names alone do not assert the current two-rule regulatory relationship; required units u011–u013 are missing."
+      },
+      "operative_values": [
+        {
+          "pointer": "/identities/1/literal",
+          "value": "chs. NR 107 and 109",
+          "value_sha256": "4f4f37c0f3f3fb00ee4dc182c30c0b8035340dc314bafdfbe925d56ff51a6fff"
+        }
+      ],
+      "independent_finding": "true_absence_outside_original_scope",
+      "independent_basis": "Chapter names do not assert current regulatory structure; dependencies absent and runtime marks effective incomplete. Excluded substantive background.",
+      "original_source_units": [],
+      "runtime_effective_disposition": "incomplete",
+      "A_scope_excluded_from_original_participation": true
+    },
+    {
+      "unit_id": "u015",
+      "model_mapping": {
+        "disposition": "missing",
+        "operative_pointers": [],
+        "reason": "No operative assertion retains unification of controls or alignment with state and federal law."
+      },
+      "operative_values": [],
+      "independent_finding": "true_absence_outside_original_scope",
+      "independent_basis": "Policy unification/alignment absent; excluded policy rationale.",
+      "original_source_units": [],
+      "runtime_effective_disposition": "missing",
+      "A_scope_excluded_from_original_participation": true
+    },
+    {
+      "unit_id": "u016",
+      "model_mapping": {
+        "disposition": "missing",
+        "operative_pointers": [],
+        "reason": "No operative assertion retains the described administrative and customer-service improvements."
+      },
+      "operative_values": [],
+      "independent_finding": "true_absence_outside_original_scope",
+      "independent_basis": "Administrative benefits absent; excluded policy rationale.",
+      "original_source_units": [],
+      "runtime_effective_disposition": "missing",
+      "A_scope_excluded_from_original_participation": true
+    },
+    {
+      "unit_id": "u017",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/10/text"
+        ],
+        "reason": "The text retains the beneficiaries, definite provision commitment, feasibility qualification, and reasonable advance notice."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/10/text",
+          "value": "For hearing- or visually impaired people, non-English speakers, or others whose personal circumstances make meeting/hearing communication difficult, DNR will provide aids to the maximum extent possible and with reasonable advance notice, including an interpreter or non-English, large-print, or recorded hearing documents.",
+          "value_sha256": "bb8eb7eeab3f6a1a2ceddd77636b2347944b713907f310847ecd5aea0acf6a38"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Operative q_access_aids text preserves commitment/beneficiaries/feasibility/notice conditions. Informational service typing can retain conditional provision; not a mandatory user instruction mismatch.",
+      "original_source_units": [
+        "aid"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u018",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/10/text"
+        ],
+        "reason": "An interpreter is included among the qualified aid options; u017 matches."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/10/text",
+          "value": "For hearing- or visually impaired people, non-English speakers, or others whose personal circumstances make meeting/hearing communication difficult, DNR will provide aids to the maximum extent possible and with reasonable advance notice, including an interpreter or non-English, large-print, or recorded hearing documents.",
+          "value_sha256": "bb8eb7eeab3f6a1a2ceddd77636b2347944b713907f310847ecd5aea0acf6a38"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Interpreter and parent conditions explicit in same operative service text.",
+      "original_source_units": [
+        "aid"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u019",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/10/text"
+        ],
+        "reason": "Non-English hearing documents are included under the retained accessibility conditions."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/10/text",
+          "value": "For hearing- or visually impaired people, non-English speakers, or others whose personal circumstances make meeting/hearing communication difficult, DNR will provide aids to the maximum extent possible and with reasonable advance notice, including an interpreter or non-English, large-print, or recorded hearing documents.",
+          "value_sha256": "bb8eb7eeab3f6a1a2ceddd77636b2347944b713907f310847ecd5aea0acf6a38"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Non-English option and parent conditions explicit.",
+      "original_source_units": [
+        "aid"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u020",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/10/text"
+        ],
+        "reason": "Large-print hearing documents are included under the retained accessibility conditions."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/10/text",
+          "value": "For hearing- or visually impaired people, non-English speakers, or others whose personal circumstances make meeting/hearing communication difficult, DNR will provide aids to the maximum extent possible and with reasonable advance notice, including an interpreter or non-English, large-print, or recorded hearing documents.",
+          "value_sha256": "bb8eb7eeab3f6a1a2ceddd77636b2347944b713907f310847ecd5aea0acf6a38"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Large-print option and parent conditions explicit.",
+      "original_source_units": [
+        "aid"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u021",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/10/text"
+        ],
+        "reason": "Recorded hearing documents are included under the retained accessibility conditions."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/10/text",
+          "value": "For hearing- or visually impaired people, non-English speakers, or others whose personal circumstances make meeting/hearing communication difficult, DNR will provide aids to the maximum extent possible and with reasonable advance notice, including an interpreter or non-English, large-print, or recorded hearing documents.",
+          "value_sha256": "bb8eb7eeab3f6a1a2ceddd77636b2347944b713907f310847ecd5aea0acf6a38"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Recorded option and parent conditions explicit.",
+      "original_source_units": [
+        "aid"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u022",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/10/text"
+        ],
+        "reason": "All aid alternatives and their provision qualifications are retained, and all dependencies match."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/10/text",
+          "value": "For hearing- or visually impaired people, non-English speakers, or others whose personal circumstances make meeting/hearing communication difficult, DNR will provide aids to the maximum extent possible and with reasonable advance notice, including an interpreter or non-English, large-print, or recorded hearing documents.",
+          "value_sha256": "bb8eb7eeab3f6a1a2ceddd77636b2347944b713907f310847ecd5aea0acf6a38"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Single semantic sentence explicitly states full aid-options relationship and qualifications; no separate group container is inherently required.",
+      "original_source_units": [
+        "aid"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u023",
+      "model_mapping": {
+        "disposition": "unknown",
+        "operative_pointers": [
+          "/requirements/11/text",
+          "/routes/12/description"
+        ],
+        "reason": "The request instruction is retained, but the intended downstream contact remains unresolved."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/11/text",
+          "value": "To request accessibility resources, contact the email address or phone number listed below as soon as possible. The notice does not explicitly identify which downstream contact is intended.",
+          "value_sha256": "7a1fda04147809c33fb320335f3f0c49de54417c08da199b62c5983a49607ab2"
+        },
+        {
+          "pointer": "/routes/12/description",
+          "value": "Accessibility request contact referenced by location only; specific endpoint association is unresolved.",
+          "value_sha256": "76c6f4fc6a9e0afa75f233592c2d55734f6e1e07ce7ba42bc6c38df9e03a9ffb"
+        }
+      ],
+      "independent_finding": "correct_reference_uncertainty_preservation",
+      "independent_basis": "Placeholder request and urgency remain, original Madi association not settled. Unknown is warranted; no claim of exact endpoint recovery.",
+      "original_source_units": [
+        "aid_request"
+      ],
+      "runtime_effective_disposition": "unknown",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u024",
+      "model_mapping": {
+        "disposition": "unknown",
+        "operative_pointers": [
+          "/requirements/11/text",
+          "/routes/12/components/0/literal"
+        ],
+        "reason": "Email is referenced as a request channel, but the intended address remains unresolved."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/11/text",
+          "value": "To request accessibility resources, contact the email address or phone number listed below as soon as possible. The notice does not explicitly identify which downstream contact is intended.",
+          "value_sha256": "7a1fda04147809c33fb320335f3f0c49de54417c08da199b62c5983a49607ab2"
+        },
+        {
+          "pointer": "/routes/12/components/0/literal",
+          "value": "the email address or phone number listed below",
+          "value_sha256": "0531967f742b7a56f56dc488b00a2a4ed435383ebc8e671de676ff82498b37e8"
+        }
+      ],
+      "independent_finding": "correct_reference_uncertainty_preservation",
+      "independent_basis": "Email reference literal exists, specific endpoint ownership unresolved.",
+      "original_source_units": [
+        "aid_request"
+      ],
+      "runtime_effective_disposition": "unknown",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u025",
+      "model_mapping": {
+        "disposition": "unknown",
+        "operative_pointers": [
+          "/requirements/11/text",
+          "/routes/12/components/0/literal"
+        ],
+        "reason": "Phone is referenced as a request channel, but the intended number remains unresolved."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/11/text",
+          "value": "To request accessibility resources, contact the email address or phone number listed below as soon as possible. The notice does not explicitly identify which downstream contact is intended.",
+          "value_sha256": "7a1fda04147809c33fb320335f3f0c49de54417c08da199b62c5983a49607ab2"
+        },
+        {
+          "pointer": "/routes/12/components/0/literal",
+          "value": "the email address or phone number listed below",
+          "value_sha256": "0531967f742b7a56f56dc488b00a2a4ed435383ebc8e671de676ff82498b37e8"
+        }
+      ],
+      "independent_finding": "correct_reference_uncertainty_preservation",
+      "independent_basis": "Phone reference literal exists, specific endpoint ownership unresolved.",
+      "original_source_units": [
+        "aid_request"
+      ],
+      "runtime_effective_disposition": "unknown",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u026",
+      "model_mapping": {
+        "disposition": "unknown",
+        "operative_pointers": [
+          "/requirements/11/text"
+        ],
+        "reason": "The alternatives and urgency are repeated, but their endpoints and required dependencies remain unresolved."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/11/text",
+          "value": "To request accessibility resources, contact the email address or phone number listed below as soon as possible. The notice does not explicitly identify which downstream contact is intended.",
+          "value_sha256": "7a1fda04147809c33fb320335f3f0c49de54417c08da199b62c5983a49607ab2"
+        }
+      ],
+      "independent_finding": "correct_reference_uncertainty_preservation",
+      "independent_basis": "Email-or-phone and timing text exists but specific endpoints/dependencies unresolved; unknown preserves source caveat.",
+      "original_source_units": [
+        "aid_request"
+      ],
+      "runtime_effective_disposition": "unknown",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u027",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/events/0/description",
+          "/routes/4/description",
+          "/routes/4/role"
+        ],
+        "reason": "The public hearing offers oral testimony as a participation route."
+      },
+      "operative_values": [
+        {
+          "pointer": "/events/0/description",
+          "value": "Public hearing and opportunity for oral testimony on the permanent aquatic plant management rule.",
+          "value_sha256": "bea12e23fc9d4796794986f6c51ee9f745b5e0dba52f1f7cdc7dd8cf03df1982"
+        },
+        {
+          "pointer": "/routes/4/description",
+          "value": "Oral testimony at the hearing.",
+          "value_sha256": "5fae6d8995bdf8a2cb806b1f31022d8abc5bfcf1ba2400ee4745cec0b9e44d53"
+        },
+        {
+          "pointer": "/routes/4/role",
+          "value": "submission",
+          "value_sha256": "eea61bcf4e6447ef836a628bcf14a013eebe22a2756ad808fcd91605e3c6748c"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Hearing/testimony descriptions and submission role support participation opportunity.",
+      "original_source_units": [
+        "hearing"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u028",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/0/text",
+          "/requirements/0/modality",
+          "/requirements/0/route_ids"
+        ],
+        "reason": "The conditional Zoom registration instruction, linked route, and required form information are retained."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/0/text",
+          "value": "To join via Zoom, register or pre-register through the link and enter the information required on the Hearing Appearance form.",
+          "value_sha256": "e1f06b0dbf95a1d095ca3d3242d55ce0852343d369f2bcb8f62c83e4e775678c"
+        },
+        {
+          "pointer": "/requirements/0/modality",
+          "value": "conditional",
+          "value_sha256": "c1e2aa5c07548e5df4c6ae909941b717e3bc08e407168cba2d01c9d2f9dde7a6"
+        },
+        {
+          "pointer": "/requirements/0/route_ids",
+          "value": [
+            "r_zoom_signup"
+          ],
+          "value_sha256": "88c4230a3359a29b858668ad4c84821d1b6d18c50342a157b198c71139afc893"
+        }
+      ],
+      "independent_finding": "supported_local_match_with_reference_limit",
+      "independent_basis": "Conditional procedure, route linkage and required appearance information explicit; native URL support does not change original glyph caveat.",
+      "original_source_units": [
+        "zoom_register"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u029",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/1/text"
+        ],
+        "reason": "The text explicitly retains strong encouragement for those planning spoken comments."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/1/text",
+          "value": "Pre-registration is strongly encouraged for those planning spoken comments during the hearing.",
+          "value_sha256": "a5a4086cbbf2f6f2ac43196deaf3e55c7198ade960ecd1c8e40020c9028d4934"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Strong encouragement text preserves advisory force despite record optional enum; no mandatory cutoff introduced. Original endpoint dependency uncertainty unchanged.",
+      "original_source_units": [
+        "spoken_preregister"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u030",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/2/text",
+          "/requirements/2/modality"
+        ],
+        "reason": "The phone-participant condition, fillable form steps, and exact email destination are retained."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/2/text",
+          "value": "Those planning to phone in are asked to download and complete the fillable Hearing Appearance form and email it to Sarah.wood@wisconsin.gov; no form-download endpoint is printed.",
+          "value_sha256": "3c9c0d41b3b91599d9cde58e8ba07a11ddb4872be61d5f1ed5fb782871e1b8ba"
+        },
+        {
+          "pointer": "/requirements/2/modality",
+          "value": "conditional",
+          "value_sha256": "c1e2aa5c07548e5df4c6ae909941b717e3bc08e407168cba2d01c9d2f9dde7a6"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Explicit phone condition, fillable steps and exact recipient are operative. Original phone endpoint closure remains separate from this local supported judgment.",
+      "original_source_units": [
+        "appearance_form",
+        "signup_email",
+        "phone_form"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u031",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/3/text",
+          "/requirements/3/modality"
+        ],
+        "reason": "The mandatory receipt deadline is retained exactly."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/3/text",
+          "value": "Comments must be received on or before April 30, 2026.",
+          "value_sha256": "e49899a3d35bc008df4036a5bfa51c7a2dc604b400b7f0acb11abd20fc525d48"
+        },
+        {
+          "pointer": "/requirements/3/modality",
+          "value": "mandatory",
+          "value_sha256": "36067e9f5c81336bfc388d29391f4c5f240cc167e7f6fc6303e807a1cf651410"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Exact receipt cutoff and mandatory modality explicit.",
+      "original_source_units": [
+        "written",
+        "written_cutoff"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u032",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/4/text",
+          "/requirements/4/modality"
+        ],
+        "reason": "U.S. mail is expressly permitted for written comments."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/4/text",
+          "value": "Written comments may be submitted by U.S. mail, email, or internet.",
+          "value_sha256": "bc6e47ab7c5b6312aadbaa422fa25a0b09b620619dcb5e5d3329239fa3ded210"
+        },
+        {
+          "pointer": "/requirements/4/modality",
+          "value": "optional",
+          "value_sha256": "47d1d0b33374b93a697dddf5b4b1947f2247dccef58b3eab195e7678da749d52"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Postal option explicit in q_channels; no exclusive obligation.",
+      "original_source_units": [
+        "written"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u033",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/4/text",
+          "/requirements/4/modality"
+        ],
+        "reason": "Email is expressly permitted for written comments."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/4/text",
+          "value": "Written comments may be submitted by U.S. mail, email, or internet.",
+          "value_sha256": "bc6e47ab7c5b6312aadbaa422fa25a0b09b620619dcb5e5d3329239fa3ded210"
+        },
+        {
+          "pointer": "/requirements/4/modality",
+          "value": "optional",
+          "value_sha256": "47d1d0b33374b93a697dddf5b4b1947f2247dccef58b3eab195e7678da749d52"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Email option explicit.",
+      "original_source_units": [
+        "written"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u034",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/4/text",
+          "/requirements/4/modality"
+        ],
+        "reason": "Internet submission is expressly permitted for written comments."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/4/text",
+          "value": "Written comments may be submitted by U.S. mail, email, or internet.",
+          "value_sha256": "bc6e47ab7c5b6312aadbaa422fa25a0b09b620619dcb5e5d3329239fa3ded210"
+        },
+        {
+          "pointer": "/requirements/4/modality",
+          "value": "optional",
+          "value_sha256": "47d1d0b33374b93a697dddf5b4b1947f2247dccef58b3eab195e7678da749d52"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Internet option explicit.",
+      "original_source_units": [
+        "written"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u035",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/4/text",
+          "/requirements/3/text",
+          "/requirements/3/route_ids",
+          "/requirements/4/route_ids"
+        ],
+        "reason": "All three alternatives share the mandatory receipt deadline, and their dependencies match."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/4/text",
+          "value": "Written comments may be submitted by U.S. mail, email, or internet.",
+          "value_sha256": "bc6e47ab7c5b6312aadbaa422fa25a0b09b620619dcb5e5d3329239fa3ded210"
+        },
+        {
+          "pointer": "/requirements/3/text",
+          "value": "Comments must be received on or before April 30, 2026.",
+          "value_sha256": "e49899a3d35bc008df4036a5bfa51c7a2dc604b400b7f0acb11abd20fc525d48"
+        },
+        {
+          "pointer": "/requirements/3/route_ids",
+          "value": [
+            "r_mail",
+            "r_comment_email",
+            "r_general_email",
+            "r_comment_web"
+          ],
+          "value_sha256": "6805be5c6d30a2380e2b98aaf2b5d1cabd8ce8890c5a1b0876daa41624230a48"
+        },
+        {
+          "pointer": "/requirements/4/route_ids",
+          "value": [
+            "r_mail",
+            "r_comment_email",
+            "r_general_email",
+            "r_comment_web"
+          ],
+          "value_sha256": "6805be5c6d30a2380e2b98aaf2b5d1cabd8ce8890c5a1b0876daa41624230a48"
+        }
+      ],
+      "independent_finding": "supported_match_to_coarse_inventory_not_full_universe",
+      "independent_basis": "Channel alternatives and common receipt cutoff plus shared route IDs are explicit. Correct relative to A u035; cannot certify A omitted endpoint-level dependency relationships.",
+      "original_source_units": [
+        "written",
+        "written_alternatives"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u036",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/5/text"
+        ],
+        "reason": "Equal weight and effect for written and oral comments are explicit; all dependencies match."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/5/text",
+          "value": "Written comments have the same weight and effect as oral statements presented at the public hearing.",
+          "value_sha256": "d5c3e71f5ce5676619fd2da76f73d9bd4645ada304df8c8924d8b7cfbfead5d2"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Equal consideration is explicit operative disclosure; no publication/confidentiality obligation invented.",
+      "original_source_units": [
+        "equal_weight"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u037",
+      "model_mapping": {
+        "disposition": "mismatched",
+        "operative_pointers": [
+          "/requirements/6/text",
+          "/requirements/6/modality",
+          "/requirements/7/text",
+          "/routes/10/components/0/literal",
+          "/routes/10/components/1/literal",
+          "/routes/10/components/2/literal",
+          "/routes/10/components/3/literal",
+          "/routes/10/components/4/literal"
+        ],
+        "reason": "Contact details survive, but comment modality is unclear and questions are merely informational rather than subject to the source's submission advice."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/6/text",
+          "value": "Written comments should be submitted to the listed Department of Natural Resources contact, Attn: Madi Johansen.",
+          "value_sha256": "906eb9e70bbe7b7d082d3ab3a0d45cd0d8c556a3f035a80c01969fd0e53a87b3"
+        },
+        {
+          "pointer": "/requirements/6/modality",
+          "value": "unclear",
+          "value_sha256": "683144a12969e0fd85512737e57b4db93ed15ee760906165a5516d581a77889a"
+        },
+        {
+          "pointer": "/requirements/7/text",
+          "value": "The Department of Natural Resources contact, Attn: Madi Johansen, is listed for questions on the proposed rules, with postal, telephone, and email contact details.",
+          "value_sha256": "34fdedcafc345556234abd82ed3277d9cf29df1b8c72b24a2f5705a590a2b6b7"
+        },
+        {
+          "pointer": "/routes/10/components/0/literal",
+          "value": "Department of Natural Resources",
+          "value_sha256": "32b93b140e19ee3fb6c48876ab0d4e332e45faa877a202597072f785c101a663"
+        },
+        {
+          "pointer": "/routes/10/components/1/literal",
+          "value": "Attn: Madi Johansen",
+          "value_sha256": "6566e6da65269988f71b2b29ab1b0a5931c3a5b21c64f3087ec7d3884046a1ff"
+        },
+        {
+          "pointer": "/routes/10/components/2/literal",
+          "value": "3550 Mormon Coulee Road, La Crosse, WI",
+          "value_sha256": "4c281d348585cf3887a4c7fa1d384e68a2c8328b65e84b6b535bf31ae0fadcef"
+        },
+        {
+          "pointer": "/routes/10/components/3/literal",
+          "value": "608-712-2798",
+          "value_sha256": "3602e72446b1af2761c47b1a1d488c5c7137263cface431a0e3a920da31d6d6c"
+        },
+        {
+          "pointer": "/routes/10/components/4/literal",
+          "value": "Madison.johansen@wisconsin.gov",
+          "value_sha256": "0da0b23ea2a5ef14ed91ae69eed9f86bf3c3b4b6e5137df7f3cebfe2b3a1481e"
+        }
+      ],
+      "independent_finding": "correct_modality_concern_with_secondary_question_finding",
+      "independent_basis": "Actual pointers retain contact values but q_comment_contact modality is unclear and q_questions is informational directory text. Correctly flags advisory loss without claiming exclusive/mandatory route. Primary modality issue supported; question issue remains secondary qualitative, prior labels unchanged. A bundled phone-role ambiguity remains unexamined by B.",
+      "original_source_units": [
+        "written",
+        "mail",
+        "email1",
+        "written_alternatives",
+        "query_contact",
+        "query_phone"
+      ],
+      "runtime_effective_disposition": "mismatched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u038",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/8/text",
+          "/routes/11/components/0/literal"
+        ],
+        "reason": "The viewing option, order number, and exact DNR URL are retained."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/8/text",
+          "value": "The rule can be viewed under NRB Order number WY-20-23 on the DNR proposed permanent rules page.",
+          "value_sha256": "749c2c234702a626827a9936053606bea4d03695eaa2b1aff2ff4958163a28a9"
+        },
+        {
+          "pointer": "/routes/11/components/0/literal",
+          "value": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html",
+          "value_sha256": "3f5a86b95e40f0311865356842329cee0024bf75fa133c53ebe664fef28d33ce"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Order-specific viewing text plus URL supports assertion.",
+      "original_source_units": [
+        "order",
+        "rule_view"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u039",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/routes/8/components/0/literal",
+          "/routes/8/description",
+          "/routes/8/role",
+          "/requirements/4/text"
+        ],
+        "reason": "The exact address is an additional permitted email comment destination."
+      },
+      "operative_values": [
+        {
+          "pointer": "/routes/8/components/0/literal",
+          "value": "DNRAdministrativeRulesComments@wisconsin.gov",
+          "value_sha256": "51733d56cf3314f3d20d4cc56471735a5be838228dfe72be6dc2a1961bf729d0"
+        },
+        {
+          "pointer": "/routes/8/description",
+          "value": "Additional email destination for comments.",
+          "value_sha256": "231e444852ba7ac77ec7a206b7e9b9e731f94137e774e0e0a6070ce0306d5330"
+        },
+        {
+          "pointer": "/routes/8/role",
+          "value": "submission",
+          "value_sha256": "eea61bcf4e6447ef836a628bcf14a013eebe22a2756ad808fcd91605e3c6748c"
+        },
+        {
+          "pointer": "/requirements/4/text",
+          "value": "Written comments may be submitted by U.S. mail, email, or internet.",
+          "value_sha256": "bc6e47ab7c5b6312aadbaa422fa25a0b09b620619dcb5e5d3329239fa3ded210"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Additional email literal, submission role and optional channels preserve permission.",
+      "original_source_units": [
+        "email2",
+        "written_alternatives"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u040",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/9/text",
+          "/routes/9/components/0/literal"
+        ],
+        "reason": "Rule review at the exact legislative hearings URL is retained."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/9/text",
+          "value": "The legislative hearings page supports both rule review and comments.",
+          "value_sha256": "59bf53893bf85610bfb71016615bbfd4dd3b4a7c681dfa00936568058c861691"
+        },
+        {
+          "pointer": "/routes/9/components/0/literal",
+          "value": "http://docs.legis.wisconsin.gov/code/chr/hearings",
+          "value_sha256": "965a27eacfb678a955967fa4bdef9968d80a9d74efdd4913326fa0396363ecc7"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Semantic text and URL establish rule review.",
+      "original_source_units": [
+        "portal"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u041",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/9/text",
+          "/requirements/9/modality",
+          "/routes/9/components/0/literal"
+        ],
+        "reason": "The legislative hearings page is explicitly an optional comment route."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/9/text",
+          "value": "The legislative hearings page supports both rule review and comments.",
+          "value_sha256": "59bf53893bf85610bfb71016615bbfd4dd3b4a7c681dfa00936568058c861691"
+        },
+        {
+          "pointer": "/requirements/9/modality",
+          "value": "optional",
+          "value_sha256": "47d1d0b33374b93a697dddf5b4b1947f2247dccef58b3eab195e7678da749d52"
+        },
+        {
+          "pointer": "/routes/9/components/0/literal",
+          "value": "http://docs.legis.wisconsin.gov/code/chr/hearings",
+          "value_sha256": "965a27eacfb678a955967fa4bdef9968d80a9d74efdd4913326fa0396363ecc7"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Semantic text, optional modality and URL establish comments.",
+      "original_source_units": [
+        "portal",
+        "written_alternatives"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u042",
+      "model_mapping": {
+        "disposition": "mismatched",
+        "operative_pointers": [
+          "/requirements/8/text",
+          "/requirements/9/text",
+          "/routes/11/description",
+          "/routes/9/description"
+        ],
+        "reason": "Both sites and their functions survive, but their relationship as additional review alternatives is not asserted."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/8/text",
+          "value": "The rule can be viewed under NRB Order number WY-20-23 on the DNR proposed permanent rules page.",
+          "value_sha256": "749c2c234702a626827a9936053606bea4d03695eaa2b1aff2ff4958163a28a9"
+        },
+        {
+          "pointer": "/requirements/9/text",
+          "value": "The legislative hearings page supports both rule review and comments.",
+          "value_sha256": "59bf53893bf85610bfb71016615bbfd4dd3b4a7c681dfa00936568058c861691"
+        },
+        {
+          "pointer": "/routes/11/description",
+          "value": "DNR link for viewing the proposed rule under NRB Order number WY-20-23, not explicitly a submission route.",
+          "value_sha256": "dc576989085462cc5f5df16d38f96fea05bc28dca8913ae7c188495c9c185d8f"
+        },
+        {
+          "pointer": "/routes/9/description",
+          "value": "Rule review and internet comment route.",
+          "value_sha256": "50c538eb00e943cc8f71b23d5b189c4bfde9379a3d3faa73b42e7276e3b9c358"
+        }
+      ],
+      "independent_finding": "possible_overstrict_additional_relationship_mismatch",
+      "independent_basis": "Both sites and distinct viewing/comment functions are already explicit operative assertions. No separate review-alternative relation is asserted, so B strict reading is understandable; however additional review choice is also inferable from those same-purpose permissions, without interchangeable submission procedures. Do not certify this as a new original participation defect or require a dedicated group container. Treat as representation-dependent secondary concern/false-positive risk.",
+      "original_source_units": [
+        "rule_view"
+      ],
+      "runtime_effective_disposition": "mismatched",
+      "A_scope_excluded_from_original_participation": false
+    },
+    {
+      "unit_id": "u043",
+      "model_mapping": {
+        "disposition": "missing",
+        "operative_pointers": [],
+        "reason": "No operative assertion retains reduced small-business compliance or reporting requirements."
+      },
+      "operative_values": [],
+      "independent_finding": "true_absence_outside_original_scope",
+      "independent_basis": "Small-business compliance analysis absent; explicitly excluded original scope.",
+      "original_source_units": [],
+      "runtime_effective_disposition": "missing",
+      "A_scope_excluded_from_original_participation": true
+    },
+    {
+      "unit_id": "u044",
+      "model_mapping": {
+        "disposition": "missing",
+        "operative_pointers": [],
+        "reason": "No operative assertion retains less stringent small-business schedules or deadlines."
+      },
+      "operative_values": [],
+      "independent_finding": "true_absence_outside_original_scope",
+      "independent_basis": "Small-business compliance schedules absent; not a comment/hearing deadline and excluded original scope.",
+      "original_source_units": [],
+      "runtime_effective_disposition": "missing",
+      "A_scope_excluded_from_original_participation": true
+    },
+    {
+      "unit_id": "u045",
+      "model_mapping": {
+        "disposition": "missing",
+        "operative_pointers": [],
+        "reason": "No operative assertion retains consolidation or simplification of reporting requirements."
+      },
+      "operative_values": [],
+      "independent_finding": "true_absence_outside_original_scope",
+      "independent_basis": "Reporting simplification absent; explicitly excluded original scope.",
+      "original_source_units": [],
+      "runtime_effective_disposition": "missing",
+      "A_scope_excluded_from_original_participation": true
+    },
+    {
+      "unit_id": "u046",
+      "model_mapping": {
+        "disposition": "matched",
+        "operative_pointers": [
+          "/requirements/12/text",
+          "/routes/13/components/0/literal",
+          "/routes/13/components/1/literal",
+          "/routes/13/components/2/literal"
+        ],
+        "reason": "The coordinator's name, role, telephone number, and email address are retained."
+      },
+      "operative_values": [
+        {
+          "pointer": "/requirements/12/text",
+          "value": "Emma Esch is the Agency Small Business Regulatory Coordinator; telephone and email contacts are provided, not identified as comment-submission destinations.",
+          "value_sha256": "843d4a9ebb11aa7b17c5378550794248c7d43676f3d669fc417dc2ac5316b86c"
+        },
+        {
+          "pointer": "/routes/13/components/0/literal",
+          "value": "Emma Esch",
+          "value_sha256": "2f71acad1eee7f4e2a32c94551183cd74a71c131f511b786522aaefc9cea695d"
+        },
+        {
+          "pointer": "/routes/13/components/1/literal",
+          "value": "(608) 266-1959",
+          "value_sha256": "7434306593f414675796537b86e5fbaefaee913e73740ae484295f423c4d282f"
+        },
+        {
+          "pointer": "/routes/13/components/2/literal",
+          "value": "emma.esch@wisconsin.gov",
+          "value_sha256": "8a75a0f5a8c4df09d9105fccd6195fc6a5704d3d6114262e1ef7f84139ef8b21"
+        }
+      ],
+      "independent_finding": "supported_local_match",
+      "independent_basis": "Name, role and both components explicitly preserved; no submission authority invented.",
+      "original_source_units": [
+        "coordinator",
+        "coord_phone",
+        "coord_email"
+      ],
+      "runtime_effective_disposition": "matched",
+      "A_scope_excluded_from_original_participation": false
+    }
+  ],
+  "counts_are_model_claims": {
+    "matched": 27,
+    "mismatched": 6,
+    "unknown": 5,
+    "missing": 8
+  },
+  "new_gold_labels": false
+}

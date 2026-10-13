@@ -1,0 +1,181 @@
+test_actual_document_and_pdf_page_caps_before_any_dispatch (offline_checks.Controls.test_actual_document_and_pdf_page_caps_before_any_dispatch) ... ok
+test_completed_durable_resume_does_not_post_again (offline_checks.Controls.test_completed_durable_resume_does_not_post_again) ... {"operation": "dev-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "dev-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.1, "observed_accounted_usd": 0.001, "budget_charge_usd": 0.1}}
+ok
+test_completed_response_tamper_stops_and_authorization_drift_never_dispatches (offline_checks.Controls.test_completed_response_tamper_stops_and_authorization_drift_never_dispatches) ... {"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 0.0012, "budget_charge_usd": 0.09277}}
+{"operation": "doc-000000000001-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000001-jev", "state": "completed", "totals": {"operations": 2, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09327853600000001, "observed_accounted_usd": 0.0012041999999999999, "budget_charge_usd": 0.09327853600000001}}
+{"operation": "doc-000000000001-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000001-stronger", "state": "completed", "totals": {"operations": 3, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 1, "ocr_pages": 0, "nominal_reserved_usd": 0.153528536, "observed_accounted_usd": 0.0024042, "budget_charge_usd": 0.153528536}}
+ok
+test_http_failure_and_invalid_stronger_schedule_have_distinct_states (offline_checks.Controls.test_http_failure_and_invalid_stronger_schedule_have_distinct_states) ... {"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 0.0012, "budget_charge_usd": 0.09277}}
+{"operation": "doc-000000000001-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000001-jev", "state": "completed", "totals": {"operations": 2, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09327853600000001, "observed_accounted_usd": 0.0012041999999999999, "budget_charge_usd": 0.09327853600000001}}
+{"operation": "doc-000000000001-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000001-stronger", "state": "completed", "totals": {"operations": 3, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 1, "ocr_pages": 0, "nominal_reserved_usd": 0.153528536, "observed_accounted_usd": 0.0024042, "budget_charge_usd": 0.153528536}}
+ok
+test_pause_after_inventory_then_resume_and_real_uncertain_failure (offline_checks.Controls.test_pause_after_inventory_then_resume_and_real_uncertain_failure) ... {"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 0.0012, "budget_charge_usd": 0.09277}}
+{"operation": "doc-000000000001-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000001-jev", "state": "completed", "totals": {"operations": 2, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09327853600000001, "observed_accounted_usd": 0.0012041999999999999, "budget_charge_usd": 0.09327853600000001}}
+{"operation": "doc-000000000001-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000001-stronger", "state": "completed", "totals": {"operations": 3, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 1, "ocr_pages": 0, "nominal_reserved_usd": 0.153528536, "observed_accounted_usd": 0.0024042, "budget_charge_usd": 0.153528536}}
+{"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 0.0012, "budget_charge_usd": 0.09277}}
+{"operation": "doc-000000000001-jev", "kind": "jev", "state": "single_POST_started"}
+ok
+test_real_runner_mock_eight_docs_full24_and_no_repost (offline_checks.Controls.test_real_runner_mock_eight_docs_full24_and_no_repost) ... {"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 0.0012, "budget_charge_usd": 0.09277}}
+{"operation": "doc-000000000001-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000001-jev", "state": "completed", "totals": {"operations": 2, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09327853600000001, "observed_accounted_usd": 0.0012041999999999999, "budget_charge_usd": 0.09327853600000001}}
+{"operation": "doc-000000000001-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000001-stronger", "state": "completed", "totals": {"operations": 3, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 1, "ocr_pages": 0, "nominal_reserved_usd": 0.153528536, "observed_accounted_usd": 0.0024042, "budget_charge_usd": 0.153528536}}
+{"operation": "doc-000000000002-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000002-inventory", "state": "completed", "totals": {"operations": 4, "jev_cases": 1, "inventory_cases": 2, "stronger_cases": 1, "ocr_pages": 0, "nominal_reserved_usd": 0.246298536, "observed_accounted_usd": 0.0036041999999999997, "budget_charge_usd": 0.246298536}}
+{"operation": "doc-000000000002-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000002-jev", "state": "completed", "totals": {"operations": 5, "jev_cases": 2, "inventory_cases": 2, "stronger_cases": 1, "ocr_pages": 0, "nominal_reserved_usd": 0.24680707200000002, "observed_accounted_usd": 0.0036084, "budget_charge_usd": 0.24680707200000002}}
+{"operation": "doc-000000000002-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000002-stronger", "state": "completed", "totals": {"operations": 6, "jev_cases": 2, "inventory_cases": 2, "stronger_cases": 2, "ocr_pages": 0, "nominal_reserved_usd": 0.307057072, "observed_accounted_usd": 0.0048084, "budget_charge_usd": 0.307057072}}
+{"operation": "doc-000000000003-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000003-inventory", "state": "completed", "totals": {"operations": 7, "jev_cases": 2, "inventory_cases": 3, "stronger_cases": 2, "ocr_pages": 0, "nominal_reserved_usd": 0.399827072, "observed_accounted_usd": 0.0060084, "budget_charge_usd": 0.399827072}}
+{"operation": "doc-000000000003-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000003-jev", "state": "completed", "totals": {"operations": 8, "jev_cases": 3, "inventory_cases": 3, "stronger_cases": 2, "ocr_pages": 0, "nominal_reserved_usd": 0.400335608, "observed_accounted_usd": 0.0060126, "budget_charge_usd": 0.400335608}}
+{"operation": "doc-000000000003-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000003-stronger", "state": "completed", "totals": {"operations": 9, "jev_cases": 3, "inventory_cases": 3, "stronger_cases": 3, "ocr_pages": 0, "nominal_reserved_usd": 0.46058560800000004, "observed_accounted_usd": 0.0072126, "budget_charge_usd": 0.46058560800000004}}
+{"operation": "doc-000000000004-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000004-inventory", "state": "completed", "totals": {"operations": 10, "jev_cases": 3, "inventory_cases": 4, "stronger_cases": 3, "ocr_pages": 0, "nominal_reserved_usd": 0.553355608, "observed_accounted_usd": 0.0084126, "budget_charge_usd": 0.553355608}}
+{"operation": "doc-000000000004-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000004-jev", "state": "completed", "totals": {"operations": 11, "jev_cases": 4, "inventory_cases": 4, "stronger_cases": 3, "ocr_pages": 0, "nominal_reserved_usd": 0.5538641440000001, "observed_accounted_usd": 0.008416799999999999, "budget_charge_usd": 0.5538641440000001}}
+{"operation": "doc-000000000004-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000004-stronger", "state": "completed", "totals": {"operations": 12, "jev_cases": 4, "inventory_cases": 4, "stronger_cases": 4, "ocr_pages": 0, "nominal_reserved_usd": 0.614114144, "observed_accounted_usd": 0.0096168, "budget_charge_usd": 0.6141141440000001}}
+{"operation": "doc-000000000005-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000005-inventory", "state": "completed", "totals": {"operations": 13, "jev_cases": 4, "inventory_cases": 5, "stronger_cases": 4, "ocr_pages": 0, "nominal_reserved_usd": 0.706884144, "observed_accounted_usd": 0.0108168, "budget_charge_usd": 0.7068841440000001}}
+{"operation": "doc-000000000005-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000005-jev", "state": "completed", "totals": {"operations": 14, "jev_cases": 5, "inventory_cases": 5, "stronger_cases": 4, "ocr_pages": 0, "nominal_reserved_usd": 0.70739268, "observed_accounted_usd": 0.010820999999999999, "budget_charge_usd": 0.7073926800000001}}
+{"operation": "doc-000000000005-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000005-stronger", "state": "completed", "totals": {"operations": 15, "jev_cases": 5, "inventory_cases": 5, "stronger_cases": 5, "ocr_pages": 0, "nominal_reserved_usd": 0.76764268, "observed_accounted_usd": 0.012020999999999999, "budget_charge_usd": 0.7676426800000001}}
+{"operation": "doc-000000000006-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000006-inventory", "state": "completed", "totals": {"operations": 16, "jev_cases": 5, "inventory_cases": 6, "stronger_cases": 5, "ocr_pages": 0, "nominal_reserved_usd": 0.86041268, "observed_accounted_usd": 0.013220999999999998, "budget_charge_usd": 0.8604126800000002}}
+{"operation": "doc-000000000006-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000006-jev", "state": "completed", "totals": {"operations": 17, "jev_cases": 6, "inventory_cases": 6, "stronger_cases": 5, "ocr_pages": 0, "nominal_reserved_usd": 0.860921216, "observed_accounted_usd": 0.0132252, "budget_charge_usd": 0.8609212160000002}}
+{"operation": "doc-000000000006-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000006-stronger", "state": "completed", "totals": {"operations": 18, "jev_cases": 6, "inventory_cases": 6, "stronger_cases": 6, "ocr_pages": 0, "nominal_reserved_usd": 0.9211712160000001, "observed_accounted_usd": 0.0144252, "budget_charge_usd": 0.9211712160000002}}
+{"operation": "doc-000000000007-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000007-inventory", "state": "completed", "totals": {"operations": 19, "jev_cases": 6, "inventory_cases": 7, "stronger_cases": 6, "ocr_pages": 0, "nominal_reserved_usd": 1.013941216, "observed_accounted_usd": 0.0156252, "budget_charge_usd": 1.013941216}}
+{"operation": "doc-000000000007-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000007-jev", "state": "completed", "totals": {"operations": 20, "jev_cases": 7, "inventory_cases": 7, "stronger_cases": 6, "ocr_pages": 0, "nominal_reserved_usd": 1.014449752, "observed_accounted_usd": 0.015629399999999998, "budget_charge_usd": 1.0144497520000002}}
+{"operation": "doc-000000000007-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000007-stronger", "state": "completed", "totals": {"operations": 21, "jev_cases": 7, "inventory_cases": 7, "stronger_cases": 7, "ocr_pages": 0, "nominal_reserved_usd": 1.0746997520000001, "observed_accounted_usd": 0.016829399999999998, "budget_charge_usd": 1.0746997520000001}}
+{"operation": "doc-000000000008-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000008-inventory", "state": "completed", "totals": {"operations": 22, "jev_cases": 7, "inventory_cases": 8, "stronger_cases": 7, "ocr_pages": 0, "nominal_reserved_usd": 1.1674697520000001, "observed_accounted_usd": 0.018029399999999998, "budget_charge_usd": 1.167469752}}
+{"operation": "doc-000000000008-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000008-jev", "state": "completed", "totals": {"operations": 23, "jev_cases": 8, "inventory_cases": 8, "stronger_cases": 7, "ocr_pages": 0, "nominal_reserved_usd": 1.167978288, "observed_accounted_usd": 0.018033599999999997, "budget_charge_usd": 1.167978288}}
+{"operation": "doc-000000000008-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000008-stronger", "state": "completed", "totals": {"operations": 24, "jev_cases": 8, "inventory_cases": 8, "stronger_cases": 8, "ocr_pages": 0, "nominal_reserved_usd": 1.228228288, "observed_accounted_usd": 0.0192336, "budget_charge_usd": 1.228228288}}
+ok
+test_receipt_hash_and_referenced_stop_tamper_reject (offline_checks.Controls.test_receipt_hash_and_referenced_stop_tamper_reject) ... {"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 0.0012, "budget_charge_usd": 0.09277}}
+{"operation": "doc-000000000001-jev", "kind": "jev", "state": "single_POST_started"}
+ok
+test_reported_cost_overrun_preserves_completed_inventory_and_stops_next_call (offline_checks.Controls.test_reported_cost_overrun_preserves_completed_inventory_and_stops_next_call) ... {"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 3.0, "budget_charge_usd": 3.0}}
+ok
+test_stage_and_budget_limits_before_intent_and_tamper_refusal (offline_checks.Controls.test_stage_and_budget_limits_before_intent_and_tamper_refusal) ... {"operation": "0", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "0", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.001, "observed_accounted_usd": 0, "budget_charge_usd": 0.001}}
+{"operation": "1", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "1", "state": "completed", "totals": {"operations": 2, "jev_cases": 0, "inventory_cases": 2, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.002, "observed_accounted_usd": 0, "budget_charge_usd": 0.002}}
+{"operation": "2", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "2", "state": "completed", "totals": {"operations": 3, "jev_cases": 0, "inventory_cases": 3, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.003, "observed_accounted_usd": 0, "budget_charge_usd": 0.003}}
+{"operation": "3", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "3", "state": "completed", "totals": {"operations": 4, "jev_cases": 0, "inventory_cases": 4, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.004, "observed_accounted_usd": 0, "budget_charge_usd": 0.004}}
+{"operation": "4", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "4", "state": "completed", "totals": {"operations": 5, "jev_cases": 0, "inventory_cases": 5, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.005, "observed_accounted_usd": 0, "budget_charge_usd": 0.005}}
+{"operation": "5", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "5", "state": "completed", "totals": {"operations": 6, "jev_cases": 0, "inventory_cases": 6, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.006, "observed_accounted_usd": 0, "budget_charge_usd": 0.006}}
+{"operation": "6", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "6", "state": "completed", "totals": {"operations": 7, "jev_cases": 0, "inventory_cases": 7, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.007, "observed_accounted_usd": 0, "budget_charge_usd": 0.007}}
+{"operation": "7", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "7", "state": "completed", "totals": {"operations": 8, "jev_cases": 0, "inventory_cases": 8, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.008, "observed_accounted_usd": 0, "budget_charge_usd": 0.008}}
+{"operation": "0", "kind": "jev", "state": "single_POST_started"}
+{"operation": "0", "state": "completed", "totals": {"operations": 1, "jev_cases": 1, "inventory_cases": 0, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.001, "observed_accounted_usd": 0, "budget_charge_usd": 0.001}}
+{"operation": "1", "kind": "jev", "state": "single_POST_started"}
+{"operation": "1", "state": "completed", "totals": {"operations": 2, "jev_cases": 2, "inventory_cases": 0, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.002, "observed_accounted_usd": 0, "budget_charge_usd": 0.002}}
+{"operation": "2", "kind": "jev", "state": "single_POST_started"}
+{"operation": "2", "state": "completed", "totals": {"operations": 3, "jev_cases": 3, "inventory_cases": 0, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.003, "observed_accounted_usd": 0, "budget_charge_usd": 0.003}}
+{"operation": "3", "kind": "jev", "state": "single_POST_started"}
+{"operation": "3", "state": "completed", "totals": {"operations": 4, "jev_cases": 4, "inventory_cases": 0, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.004, "observed_accounted_usd": 0, "budget_charge_usd": 0.004}}
+{"operation": "4", "kind": "jev", "state": "single_POST_started"}
+{"operation": "4", "state": "completed", "totals": {"operations": 5, "jev_cases": 5, "inventory_cases": 0, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.005, "observed_accounted_usd": 0, "budget_charge_usd": 0.005}}
+{"operation": "5", "kind": "jev", "state": "single_POST_started"}
+{"operation": "5", "state": "completed", "totals": {"operations": 6, "jev_cases": 6, "inventory_cases": 0, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.006, "observed_accounted_usd": 0, "budget_charge_usd": 0.006}}
+{"operation": "6", "kind": "jev", "state": "single_POST_started"}
+{"operation": "6", "state": "completed", "totals": {"operations": 7, "jev_cases": 7, "inventory_cases": 0, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.007, "observed_accounted_usd": 0, "budget_charge_usd": 0.007}}
+{"operation": "7", "kind": "jev", "state": "single_POST_started"}
+{"operation": "7", "state": "completed", "totals": {"operations": 8, "jev_cases": 8, "inventory_cases": 0, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.008, "observed_accounted_usd": 0, "budget_charge_usd": 0.008}}
+{"operation": "0", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "0", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 0, "stronger_cases": 1, "ocr_pages": 0, "nominal_reserved_usd": 0.001, "observed_accounted_usd": 0, "budget_charge_usd": 0.001}}
+{"operation": "1", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "1", "state": "completed", "totals": {"operations": 2, "jev_cases": 0, "inventory_cases": 0, "stronger_cases": 2, "ocr_pages": 0, "nominal_reserved_usd": 0.002, "observed_accounted_usd": 0, "budget_charge_usd": 0.002}}
+{"operation": "2", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "2", "state": "completed", "totals": {"operations": 3, "jev_cases": 0, "inventory_cases": 0, "stronger_cases": 3, "ocr_pages": 0, "nominal_reserved_usd": 0.003, "observed_accounted_usd": 0, "budget_charge_usd": 0.003}}
+{"operation": "3", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "3", "state": "completed", "totals": {"operations": 4, "jev_cases": 0, "inventory_cases": 0, "stronger_cases": 4, "ocr_pages": 0, "nominal_reserved_usd": 0.004, "observed_accounted_usd": 0, "budget_charge_usd": 0.004}}
+{"operation": "4", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "4", "state": "completed", "totals": {"operations": 5, "jev_cases": 0, "inventory_cases": 0, "stronger_cases": 5, "ocr_pages": 0, "nominal_reserved_usd": 0.005, "observed_accounted_usd": 0, "budget_charge_usd": 0.005}}
+{"operation": "5", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "5", "state": "completed", "totals": {"operations": 6, "jev_cases": 0, "inventory_cases": 0, "stronger_cases": 6, "ocr_pages": 0, "nominal_reserved_usd": 0.006, "observed_accounted_usd": 0, "budget_charge_usd": 0.006}}
+{"operation": "6", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "6", "state": "completed", "totals": {"operations": 7, "jev_cases": 0, "inventory_cases": 0, "stronger_cases": 7, "ocr_pages": 0, "nominal_reserved_usd": 0.007, "observed_accounted_usd": 0, "budget_charge_usd": 0.007}}
+{"operation": "7", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "7", "state": "completed", "totals": {"operations": 8, "jev_cases": 0, "inventory_cases": 0, "stronger_cases": 8, "ocr_pages": 0, "nominal_reserved_usd": 0.008, "observed_accounted_usd": 0, "budget_charge_usd": 0.008}}
+{"operation": "once", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "once", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.001, "observed_accounted_usd": 0, "budget_charge_usd": 0.001}}
+ok
+test_structural_and_actual_paired_admission_gates (offline_checks.Controls.test_structural_and_actual_paired_admission_gates) ... {"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 0.0012, "budget_charge_usd": 0.09277}}
+{"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 0.0012, "budget_charge_usd": 0.09277}}
+ok
+test_unavailable_observation_boundary_blocks_first_dispatch (offline_checks.Controls.test_unavailable_observation_boundary_blocks_first_dispatch) ... ok
+test_uncertain_post_latches_no_resume (offline_checks.Controls.test_uncertain_post_latches_no_resume) ... {"operation": "dev-inventory", "kind": "inventory", "state": "single_POST_started"}
+ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 1.094s
+
+OK
+test_check_never_reads_credentials (test_adapter.Controls.test_check_never_reads_credentials) ... ok
+test_cli_error_does_not_echo_input (test_adapter.Controls.test_cli_error_does_not_echo_input) ... ok
+test_existing_run_denied_before_credentials (test_adapter.Controls.test_existing_run_denied_before_credentials) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK
+test_false_service_and_impossible_states_reject (test_evaluate.Controls.test_false_service_and_impossible_states_reject) ... ok
+test_inventory_http_and_transport_distinct (test_evaluate.Controls.test_inventory_http_and_transport_distinct) ... ok
+test_numeric_unknown_costs (test_evaluate.Controls.test_numeric_unknown_costs) ... ok
+test_partial_failure_preserves_prior_arm (test_evaluate.Controls.test_partial_failure_preserves_prior_arm) ... ok
+test_postresponse_budget_stop_preserves_completed_result (test_evaluate.Controls.test_postresponse_budget_stop_preserves_completed_result) ... ok
+test_retained_judgment_and_hash_consistency (test_evaluate.Controls.test_retained_judgment_and_hash_consistency) ... ok
+test_safe_pause_before_each_stage (test_evaluate.Controls.test_safe_pause_before_each_stage) ... ok
+test_shortfall_missing_rows_costs_versions (test_evaluate.Controls.test_shortfall_missing_rows_costs_versions) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.008s
+
+OK
+{"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 3, "budget_charge_usd": 3.0}}
+{"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 0.0012, "budget_charge_usd": 0.09277}}
+{"operation": "doc-000000000001-jev", "kind": "jev", "state": "single_POST_started"}
+{"operation": "doc-000000000001-jev", "state": "completed", "totals": {"operations": 2, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09327853600000001, "observed_accounted_usd": 0.0012041999999999999, "budget_charge_usd": 0.09327853600000001}}
+{"operation": "doc-000000000001-stronger", "kind": "stronger", "state": "single_POST_started"}
+{"operation": "doc-000000000001-stronger", "state": "completed", "totals": {"operations": 3, "jev_cases": 1, "inventory_cases": 1, "stronger_cases": 1, "ocr_pages": 0, "nominal_reserved_usd": 0.153528536, "observed_accounted_usd": 3.0012041999999997, "budget_charge_usd": 3.0932785359999997}}
+{"operation": "doc-000000000001-inventory", "kind": "inventory", "state": "single_POST_started"}
+{"operation": "doc-000000000001-inventory", "state": "completed", "totals": {"operations": 1, "jev_cases": 0, "inventory_cases": 1, "stronger_cases": 0, "ocr_pages": 0, "nominal_reserved_usd": 0.09277, "observed_accounted_usd": 0.0012, "budget_charge_usd": 0.09277}}
+{"operation": "doc-000000000001-jev", "kind": "jev", "state": "single_POST_started"}

@@ -1,0 +1,42 @@
+{
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"success\":true,\"mode\":\"hosted-upload-ref-awaiting-upload\",\"message\":\"Hosted MCP cannot read local files. Run the local upload command, then call firecrawl_parse again with uploadRef. No Firecrawl API key is included in this command.\",\"upload\":{\"command\":\"[REDACTED_UPLOAD_INSTRUCTIONS]\",\"method\":\"POST\",\"headers\":\"[REDACTED_UPLOAD_INSTRUCTIONS]\",\"fields\":\"[REDACTED_UPLOAD_INSTRUCTIONS]\",\"uploadUrl\":\"[REDACTED_UPLOAD_INSTRUCTIONS]\",\"uploadRef\":\"[REDACTED_UPLOAD_INSTRUCTIONS]\",\"expiresAt\":\"2026-10-06T01:14:20.312Z\",\"maxSizeBytes\":52428800},\"nextToolCall\":{\"name\":\"firecrawl_parse\",\"arguments\":{\"uploadRef\":\"[REDACTED_UPLOAD_INSTRUCTIONS]\"}},\"notes\":[\"Run the curl command on the machine that can read filePath.\",\"After the PUT succeeds, use nextToolCall as the second MCP tool call.\",\"Clients without a local upload mechanism cannot complete hosted parse for local files.\"]}"
+      }
+    ],
+    "structuredContent": {
+      "success": true,
+      "mode": "hosted-upload-ref-awaiting-upload",
+      "message": "Hosted MCP cannot read local files. Run the local upload command, then call firecrawl_parse again with uploadRef. No Firecrawl API key is included in this command.",
+      "upload": {
+        "command": "[REDACTED_UPLOAD_INSTRUCTIONS]",
+        "method": "POST",
+        "headers": "[REDACTED_UPLOAD_INSTRUCTIONS]",
+        "fields": "[REDACTED_UPLOAD_INSTRUCTIONS]",
+        "uploadUrl": "[REDACTED_UPLOAD_INSTRUCTIONS]",
+        "uploadRef": "[REDACTED_UPLOAD_INSTRUCTIONS]",
+        "expiresAt": "2026-10-06T01:14:20.312Z",
+        "maxSizeBytes": 52428800
+      },
+      "nextToolCall": {
+        "name": "firecrawl_parse",
+        "arguments": {
+          "uploadRef": "[REDACTED_UPLOAD_INSTRUCTIONS]"
+        }
+      },
+      "notes": [
+        "Run the curl command on the machine that can read filePath.",
+        "After the PUT succeeds, use nextToolCall as the second MCP tool call.",
+        "Clients without a local upload mechanism cannot complete hosted parse for local files."
+      ]
+    },
+    "isError": false
+  },
+  "redaction": "Upload URLs, references, commands, headers and form credentials redacted; transient original existed in memory only.",
+  "elapsed_ms": 7447,
+  "started_at": "2026-10-06T01:04:12.947Z",
+  "ended_at": "2026-10-06T01:04:20.483Z"
+}
+

@@ -1,0 +1,521 @@
+{
+  "schema_version": "round8.evaluation.report.v1",
+  "scheduled_notices": 1,
+  "runtime_gates": {
+    "request_size_review": 1
+  },
+  "missing_observations": 0,
+  "arm_invocations": {
+    "jev": {
+      "called": 0,
+      "uncalled": 1
+    },
+    "stronger": {
+      "called": 0,
+      "uncalled": 1
+    }
+  },
+  "source_truth_complete": true,
+  "missing_truth_ids": [],
+  "cohort_adequacy": false,
+  "quality": {
+    "inventory": {
+      "claim_precision_by_category": {
+        "fact": {
+          "numerator": 33,
+          "denominator": 34,
+          "value": 0.9705882352941176,
+          "undefined_reason": null
+        },
+        "relationship": {
+          "numerator": 3,
+          "denominator": 3,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "instruction": {
+          "numerator": 15,
+          "denominator": 18,
+          "value": 0.8333333333333334,
+          "undefined_reason": null
+        },
+        "disclosure": {
+          "numerator": 3,
+          "denominator": 3,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "ancillary": {
+          "numerator": 27,
+          "denominator": 28,
+          "value": 0.9642857142857143,
+          "undefined_reason": null
+        },
+        "identity": {
+          "numerator": 3,
+          "denominator": 3,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "uncertainty": {
+          "numerator": 3,
+          "denominator": 9,
+          "value": 0.3333333333333333,
+          "undefined_reason": null
+        }
+      },
+      "source_coverage_by_category": {
+        "fact": {
+          "numerator": 9,
+          "denominator": 13,
+          "value": 0.6923076923076923,
+          "undefined_reason": null
+        },
+        "relationship": {
+          "numerator": 1,
+          "denominator": 2,
+          "value": 0.5,
+          "undefined_reason": null
+        },
+        "instruction": {
+          "numerator": 0,
+          "denominator": 4,
+          "value": 0.0,
+          "undefined_reason": null
+        },
+        "disclosure": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "ancillary": {
+          "numerator": 8,
+          "denominator": 8,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "identity": {
+          "numerator": 2,
+          "denominator": 3,
+          "value": 0.6666666666666666,
+          "undefined_reason": null
+        },
+        "uncertainty": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "undefined_reason": "zero_denominator"
+        }
+      },
+      "source_fact_coverage_by_subtype": {
+        "access_component": {
+          "numerator": 0,
+          "denominator": 1,
+          "value": 0.0,
+          "undefined_reason": null
+        },
+        "direct_route": {
+          "numerator": 4,
+          "denominator": 4,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "hearing_access": {
+          "numerator": 0,
+          "denominator": 3,
+          "value": 0.0,
+          "undefined_reason": null
+        },
+        "phase": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "signup_route": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "timing": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "undefined_reason": null
+        }
+      },
+      "literal_accuracy": {
+        "date": {
+          "numerator": 3,
+          "denominator": 3,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "email": {
+          "numerator": 6,
+          "denominator": 6,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "other": {
+          "numerator": 26,
+          "denominator": 27,
+          "value": 0.9629629629629629,
+          "undefined_reason": null
+        }
+      },
+      "claimed_semantic_units": 80,
+      "incorrect_claims": 1,
+      "unknown_claims": 6,
+      "claim_precision": {
+        "numerator": 73,
+        "denominator": 80,
+        "value": 0.9125,
+        "undefined_reason": null
+      },
+      "complete_records": 0,
+      "missing_or_incomplete_audits": 0
+    },
+    "record": {
+      "claim_precision_by_category": {
+        "fact": {
+          "numerator": 33,
+          "denominator": 34,
+          "value": 0.9705882352941176,
+          "undefined_reason": null
+        },
+        "relationship": {
+          "numerator": 3,
+          "denominator": 3,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "instruction": {
+          "numerator": 15,
+          "denominator": 18,
+          "value": 0.8333333333333334,
+          "undefined_reason": null
+        },
+        "disclosure": {
+          "numerator": 3,
+          "denominator": 3,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "ancillary": {
+          "numerator": 27,
+          "denominator": 28,
+          "value": 0.9642857142857143,
+          "undefined_reason": null
+        },
+        "identity": {
+          "numerator": 3,
+          "denominator": 3,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "uncertainty": {
+          "numerator": 3,
+          "denominator": 9,
+          "value": 0.3333333333333333,
+          "undefined_reason": null
+        }
+      },
+      "source_coverage_by_category": {
+        "fact": {
+          "numerator": 9,
+          "denominator": 13,
+          "value": 0.6923076923076923,
+          "undefined_reason": null
+        },
+        "relationship": {
+          "numerator": 1,
+          "denominator": 2,
+          "value": 0.5,
+          "undefined_reason": null
+        },
+        "instruction": {
+          "numerator": 0,
+          "denominator": 4,
+          "value": 0.0,
+          "undefined_reason": null
+        },
+        "disclosure": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "ancillary": {
+          "numerator": 8,
+          "denominator": 8,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "identity": {
+          "numerator": 2,
+          "denominator": 3,
+          "value": 0.6666666666666666,
+          "undefined_reason": null
+        },
+        "uncertainty": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "undefined_reason": "zero_denominator"
+        }
+      },
+      "source_fact_coverage_by_subtype": {
+        "access_component": {
+          "numerator": 0,
+          "denominator": 1,
+          "value": 0.0,
+          "undefined_reason": null
+        },
+        "direct_route": {
+          "numerator": 4,
+          "denominator": 4,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "hearing_access": {
+          "numerator": 0,
+          "denominator": 3,
+          "value": 0.0,
+          "undefined_reason": null
+        },
+        "phase": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "signup_route": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "timing": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "undefined_reason": null
+        }
+      },
+      "literal_accuracy": {
+        "date": {
+          "numerator": 3,
+          "denominator": 3,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "email": {
+          "numerator": 6,
+          "denominator": 6,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "other": {
+          "numerator": 26,
+          "denominator": 27,
+          "value": 0.9629629629629629,
+          "undefined_reason": null
+        }
+      },
+      "claimed_semantic_units": 80,
+      "incorrect_claims": 1,
+      "unknown_claims": 6,
+      "claim_precision": {
+        "numerator": 73,
+        "denominator": 80,
+        "value": 0.9125,
+        "undefined_reason": null
+      },
+      "complete_records": 0,
+      "missing_or_incomplete_audits": 0
+    }
+  },
+  "arms": {
+    "jev": {
+      "status_counts": {
+        "not_started": 1
+      },
+      "accepted_records": 0,
+      "correct_complete_accepted": 0,
+      "unsafe_accepted": 0,
+      "unsafe_acceptance_fraction": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null,
+        "undefined_reason": "zero_denominator"
+      },
+      "useful_coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0,
+        "undefined_reason": null
+      },
+      "review_or_unserved_fraction": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0,
+        "undefined_reason": null
+      },
+      "unsafe_reason_counts": {},
+      "outcomes": {
+        "doc-92211b8c7ba0": "not_started"
+      },
+      "gate_passed": false
+    },
+    "stronger": {
+      "status_counts": {
+        "not_started": 1
+      },
+      "accepted_records": 0,
+      "correct_complete_accepted": 0,
+      "unsafe_accepted": 0,
+      "unsafe_acceptance_fraction": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null,
+        "undefined_reason": "zero_denominator"
+      },
+      "useful_coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0,
+        "undefined_reason": null
+      },
+      "review_or_unserved_fraction": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0,
+        "undefined_reason": null
+      },
+      "unsafe_reason_counts": {},
+      "outcomes": {
+        "doc-92211b8c7ba0": "not_started"
+      },
+      "gate_passed": false
+    }
+  },
+  "paired_notice_outcomes": [
+    {
+      "jev": "not_started",
+      "stronger": "not_started",
+      "count": 1
+    }
+  ],
+  "notices": [
+    {
+      "document_id": "doc-92211b8c7ba0",
+      "source_complete": true,
+      "record_complete": false,
+      "acceptance_blockers": [],
+      "jev": "not_started",
+      "stronger": "not_started"
+    }
+  ],
+  "costs": {
+    "extraction": {
+      "usage_estimate_usd": 0.088724,
+      "conservative_charge_usd": 0.167162,
+      "provider_reported_usd": 0.090426
+    },
+    "jev": {
+      "usage_estimate_usd": 0,
+      "conservative_charge_usd": 0,
+      "provider_reported_usd": 0,
+      "scenario_cost_per_correct_complete_record": {
+        "usage_estimate_usd": null,
+        "conservative_charge_usd": null,
+        "provider_reported_usd": null
+      }
+    },
+    "stronger": {
+      "usage_estimate_usd": 0,
+      "conservative_charge_usd": 0,
+      "provider_reported_usd": 0,
+      "scenario_cost_per_correct_complete_record": {
+        "usage_estimate_usd": null,
+        "conservative_charge_usd": null,
+        "provider_reported_usd": null
+      }
+    },
+    "experiment_total": {
+      "usage_estimate_usd": 0.088724,
+      "conservative_charge_usd": 0.167162,
+      "provider_reported_usd": 0.090426
+    }
+  },
+  "limitations": [
+    "Semantic judgments come from independent audit, never model self-scores.",
+    "1-notice observed cohort; target eight notices; atoms/relations are clustered descriptive counts.",
+    "Matching audit completeness and pre-extraction blinding require external source/runtime evidence.",
+    "Unknown costs are not zero; runtime enforces reservation/stop policy.",
+    "Human review time and population accuracy are unmeasured.",
+    "Independent AI image reference, not human-adjudicated gold.",
+    "Called includes uncertain attempted POSTs bound to durable intents; HTTP-error counts do not establish provider outage.",
+    "Reused single Wisconsin notice: descriptive development reachability probe; not fresh unseen accuracy or production approval.",
+    "Experiment costs contain incremental contract-probe costs only. Combined three-attempt costs are separately reported in postrun-audit/cost-audit.json.",
+    "A structurally valid record was emitted with explicit uncertainties. Both verifier requests failed local admission before dispatch; neither arm produced a judgment.",
+    "The same original PDF hyperlink annotation supports lowercase-l in the Zoom URL. The uppercase-I image-reference glyph remains ambiguous; frozen scoring is retained and any such mismatch must not be called established fabrication."
+  ],
+  "production_eligible": false,
+  "operational_failures": {
+    "http_error": 0,
+    "transport_uncertain": 0,
+    "invalid_response": 0,
+    "budget_stop": 0,
+    "operator_pause": 0,
+    "local_error": 0
+  },
+  "provider_service_errors": 0,
+  "version_adapter": {
+    "schema_version": "round8.r7_scoring_adapter.v1",
+    "changes": "top-level input/report version tags and R8 strict live-state validation only; original judgments, states, flags, hashes and costs preserved",
+    "original_canonical_sha256": {
+      "schedule": "56f70b13948113b7e9a64019ab88bb2df00aa4be9187435a0fd141b4ce3df9dd",
+      "truth": "f5dcf8fe0e0a5b960880004681ce5c6fa4a9e72f1775638ca136763657298f01",
+      "audit": "02a88f55f2f8ec77c158d59021140ec3ec9c80bd1e0a866c39b1ca42a562e4e6",
+      "observed": "c8919e5c1fcb34170295d142bde7a622f7df03b09665ebe31dfbbf806f08bbca"
+    },
+    "projection_canonical_sha256": {
+      "schedule": "04b02262793955ce37d1d0e6825c8c12b7a03de63da10c24702088cba90cb2ca",
+      "truth": "ba644b6ded97d465201d82e1fc629a7142552c51468acc4b1384d4ad7c1c2338",
+      "audit": "2bd42054082bbd327696590721112c22406dcb97398619896dd757a368533ed8",
+      "observed": "87433ddecb305aad5d42809357b1eff58812e78783a75cf451270edca9c75df1"
+    },
+    "scoring_code_sha256": "89b661f3bb7092972cc514aabd80f7cec56d24235b5d50768f6d4c803419836e"
+  },
+  "input_file_sha256": {
+    "schedule": "f67f505049bb3d82e5a7d28c52929c24d6eaec1dbeb09b16c0a2d3180dc07139",
+    "truth": "721d5cfdb5eaa0eff9061099d0bc6f6fa7823116027425f3fdcf37cf96a11c66",
+    "audit": "295b0cea69077f928f97adbfd59f8de4cd9e6b31701a2622b6bfebe1dc15cd11",
+    "observed": "a50ad06c1e38fb7202d5eb5319f1a9931381166a717f0710750c96d14a80f2cf"
+  },
+  "supplementary_reference_caveat": {
+    "prior_audit_path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/execution/postrun-audit/reference-caveat.json",
+    "prior_audit_sha256": "027384d20529b11eb5dc2f43660506c844025aceca14028a23c62c3ca614129e",
+    "caveat": {
+      "schema_version": "round8-cap-probe.reference_caveat.v1",
+      "sidecar_path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8-cap-probe/execution/supplementary-pdf-link.json",
+      "sidecar_sha256": "26bff39b22082cfe59183b2a36e7832c365d767080c4178a14e8dc974898367b",
+      "pdf_sha256": "92211b8c7ba076dc059edf299719967c2b56b37b8945cfbc39c51a03a1255005",
+      "annotation_independently_verified": [
+        {
+          "page": 1,
+          "uri": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g"
+        }
+      ],
+      "interpretation": "Post-output PDF link annotation supports the lowercase-l spelling. The frozen image reference uppercase-I distinction is a reference ambiguity; a mismatch against that reference must not be characterized as model fabrication.",
+      "frozen_truth_changed": false,
+      "claim_matching_changed": false,
+      "scope": "Supplementary provenance and metric caveat only; semantic mapping remains separately owned."
+    },
+    "scope": "Same original WI PDF; carried forward provenance caveat, no rematching or truth modification."
+  }
+}

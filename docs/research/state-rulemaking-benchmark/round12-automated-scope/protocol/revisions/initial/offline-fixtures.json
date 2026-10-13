@@ -1,0 +1,311 @@
+{
+  "version": "round12.protocol.offline-fixtures.v1",
+  "interpretation": "Authoring isolation checks and prospective contract/semantic regressions; no model behavior or live validation claim.",
+  "boundary_cases": [
+    {
+      "id": "D_exact",
+      "stage": "D",
+      "input_fields": [
+        "source_text",
+        "source_text_sha256",
+        "record_sha256",
+        "operative_record",
+        "operative_record_sha256"
+      ],
+      "expected_valid": true
+    },
+    {
+      "id": "D_leak",
+      "stage": "D",
+      "input_fields": [
+        "source_text",
+        "source_text_sha256",
+        "record_sha256",
+        "operative_record",
+        "operative_record_sha256",
+        "independent_reference"
+      ],
+      "expected_valid": false
+    },
+    {
+      "id": "A_exact",
+      "stage": "A",
+      "input_fields": [
+        "source_text",
+        "source_text_sha256"
+      ],
+      "expected_valid": true
+    },
+    {
+      "id": "A_leak",
+      "stage": "A",
+      "input_fields": [
+        "source_text",
+        "source_text_sha256",
+        "operative_record"
+      ],
+      "expected_valid": false
+    },
+    {
+      "id": "C_exact",
+      "stage": "C",
+      "input_fields": [
+        "source_text",
+        "source_text_sha256",
+        "inventory_wire",
+        "inventory_sha256"
+      ],
+      "expected_valid": true
+    },
+    {
+      "id": "C_leak",
+      "stage": "C",
+      "input_fields": [
+        "source_text",
+        "source_text_sha256",
+        "inventory_wire",
+        "inventory_sha256",
+        "operative_record"
+      ],
+      "expected_valid": false
+    },
+    {
+      "id": "B_exact",
+      "stage": "B",
+      "input_fields": [
+        "source_text",
+        "source_text_sha256",
+        "record_sha256",
+        "operative_record",
+        "operative_record_sha256",
+        "inventory_wire",
+        "inventory_sha256",
+        "scope",
+        "scope_sha256"
+      ],
+      "expected_valid": true
+    },
+    {
+      "id": "B_leak",
+      "stage": "B",
+      "input_fields": [
+        "source_text",
+        "source_text_sha256",
+        "record_sha256",
+        "operative_record",
+        "operative_record_sha256",
+        "inventory_wire",
+        "inventory_sha256",
+        "scope",
+        "scope_sha256",
+        "independent_reference"
+      ],
+      "expected_valid": false
+    }
+  ],
+  "prospective_contract_cases": [
+    {
+      "id": "C_missing_ID",
+      "mutation": "Remove one A ID from scopes",
+      "expected": "reject; B not dispatched",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "C_extra_ID",
+      "mutation": "Add ID absent from frozen A",
+      "expected": "reject; B not dispatched",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "C_inventory_mutation",
+      "mutation": "Builder passes rewritten A assertion or drops background row",
+      "expected": "reject hash/equality; B not dispatched",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "C_scope_contradiction",
+      "mutation": "required_participation with uncertain_source_function basis",
+      "expected": "reject; B not dispatched",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "C_required_exclusion",
+      "mutation": "Current notice participation deadline/instruction marked retained_background, contrasting with proposed-rule regulated duties",
+      "expected": "Scope shape may validate; independent semantic review must identify false exclusion. Kind alone cannot reject legitimate background duties.",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "C_unknown_scope",
+      "mutation": "valid unresolved_scope decision on an A unit",
+      "expected": "C valid; B may run; all-inventory match cannot become complete",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "B_same_unit_loss_unknown",
+      "mutation": "relationship raw mismatched while member unknown",
+      "expected": "effective unknown plus preserved raw defect; overall unverified",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "D_candidate_only_mutation",
+      "mutation": "Same source different candidate deadline under same pointer",
+      "expected": "D source scope policy unchanged; mapping may change; semantic independent review required",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "A_source_only_addition",
+      "mutation": "Source adds instruction with unchanged candidate",
+      "expected": "A must discover added unit; D must report loss; semantic expectation not deterministic discovery",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "evidence_overlap_unicode",
+      "mutation": "aa quote occurrence2 in aaa, composed/decomposed mismatch, bool occurrence",
+      "expected": "accept exact overlap; reject normalization/malformed selectors",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "operative_projection",
+      "mutation": "Drop an ID/operative field or add evidence-only recovery pointer",
+      "expected": "reject projection/ID equality or operative allowlist",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "reverse_audit_stale",
+      "mutation": "Change same-ref values or source after reverse-review hash binding",
+      "expected": "reject stale attestation; whole-record fidelity unverified",
+      "execution_status": "specified_not_executed"
+    },
+    {
+      "id": "bounds_overflow",
+      "mutation": "valid completion requires more units/output bytes than fixed bounds",
+      "expected": "stop/no repair/clip; attempted reservation retained",
+      "execution_status": "specified_not_executed"
+    }
+  ],
+  "semantic_reference_cases": [
+    {
+      "round11_fixture_id": "background_missing_not_participation_defect",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "exclusion_hides_deadline",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "same_endpoint_two_atomic_purposes",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "phone_questions_only_not_submission",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "shared_contact_ambiguous_scope",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "coordinator_heading_does_not_demote",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "conditional_advisory_positive",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "condition_loss",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "rule_identifier_without_transition",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "substitution_with_qualifications_positive",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "relationship_subset_not_full",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "independent_view_permissions_no_group_required",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "glyph_and_reference_closure_unknown",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    },
+    {
+      "round11_fixture_id": "unsupported_addition_separate_reviewed_audit",
+      "source": "../../round11-scope-refinement/protocol/fixtures.json",
+      "adaptation": "Use source and independently supplied annotations as contract controls; represent assertions in round12 nine-column shape. Never send fixture outcomes to paid stages.",
+      "execution_status": "specified_not_executed_in_round12"
+    }
+  ],
+  "function_scope_cases": [
+    {
+      "id": "proposed_regulated_duty_background",
+      "source": "The proposed regulation says future permit holders must submit quarterly reports. Public comments on the proposal close September 1.",
+      "kind": "instruction",
+      "assertion": "Future permit holders must submit quarterly reports.",
+      "expected_category": "retained_background",
+      "expected_basis": "substantive_background_only",
+      "reason": "Regulated conduct under proposed rule, not current rulemaking participation."
+    },
+    {
+      "id": "notice_comment_deadline_required",
+      "source": "The proposed regulation says future permit holders must submit quarterly reports. Public comments on the proposal close September 1.",
+      "kind": "timing",
+      "assertion": "Public comments on the proposal close September 1.",
+      "expected_category": "required_participation",
+      "expected_basis": "participation_function",
+      "reason": "Current rulemaking comment cutoff."
+    },
+    {
+      "id": "proposed_operational_deadline_background",
+      "source": "Under the proposed rule, future operators must renew permits by April 1 each year. To speak at the rulemaking hearing, advance registration is encouraged.",
+      "kind": "timing",
+      "assertion": "Future operators must renew permits by April 1 each year.",
+      "expected_category": "retained_background",
+      "expected_basis": "substantive_background_only",
+      "reason": "Deadline for future regulated actors, not current notice participation."
+    },
+    {
+      "id": "notice_advisory_registration_required_scope",
+      "source": "Under the proposed rule, future operators must renew permits by April 1 each year. To speak at the rulemaking hearing, advance registration is encouraged.",
+      "kind": "instruction",
+      "assertion": "Advance registration is encouraged for rulemaking hearing speakers.",
+      "expected_category": "required_participation",
+      "expected_basis": "participation_function",
+      "reason": "Current participation function despite advisory force."
+    }
+  ],
+  "function_scope_interpretation": "Source-supported synthetic judgment controls, not host keyword classification or observed model performance. Swapping proposed-regulated and current-participation scope must be independently identified as wrong even if syntax passes."
+}

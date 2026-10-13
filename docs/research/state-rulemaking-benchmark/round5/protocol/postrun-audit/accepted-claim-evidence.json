@@ -1,0 +1,296 @@
+{
+  "reviewed_at_utc": "2026-10-07T18:49:36.769568+00:00",
+  "accepted_rows": 6,
+  "distinct_claim_groups": 5,
+  "items": [
+    {
+      "document_id": "doc-1276066c75b8",
+      "case_id": "case-49369e6a22d2b1ce",
+      "candidate": {
+        "claim": "The actual unconditional absolute written-comment close date in the supplied notice is October 1, 2022 (date precision only).",
+        "conditions": [],
+        "field": "comment_deadline",
+        "role": "written_comment_close",
+        "target": "doc-1276066c75b8",
+        "value": "2022-10-01"
+      },
+      "frozen_source_field": {
+        "field_id": "date-close",
+        "field_type": "DATE",
+        "source_state": "present_in_scope",
+        "raw_literal": "October 1, 2022",
+        "page_region": "page2 middle paragraph",
+        "exact_source_quote": "Comments on the proposal may be submitted by October 1, 2022",
+        "role": "written_comment_close",
+        "conditions": [
+          "When filing a comment, please refer to ADM File No. 2021-29."
+        ],
+        "supported_scope": true,
+        "distinct_value_group": "date-close",
+        "uncertainty_reason_if_any": null,
+        "normalized_value": "2022-10-01",
+        "source_precision": "date"
+      },
+      "audit": {
+        "document_id": "doc-1276066c75b8",
+        "case_id": "case-49369e6a22d2b1ce",
+        "channel": "native",
+        "claim_group": "date-close",
+        "source_field_id": "date-close",
+        "source_value": "correct",
+        "role": "matched",
+        "conditions": "lost_or_changed",
+        "precision": "date_only",
+        "scope": "matched",
+        "reviewer_identity": "Independent image/source reviewer chat01a10e68-225d-7cf3-ad93-ad51715a9887",
+        "basis": "Source page2 and frozen field label require referring to ADM File No. 2021-29 when filing. Actual candidate.conditions is empty and claim omits this qualification. The numerical date and written-close role are correct; this is a qualification-preservation failure under the frozen label/rubric, not a wrong calendar value."
+      },
+      "pipeline_record_sha256": "44066417693e79ee7edf92499ecebc6d3c33a1f2a57cab691970693b0c14fb54",
+      "terminal_record_sha256": "f0a7a138716b34066f9bf79d060593b7db46e977ace43b8927b748a1605755d6",
+      "postrun_images_reviewed": [
+        2
+      ]
+    },
+    {
+      "document_id": "doc-1276066c75b8",
+      "case_id": "case-51af07423c028672",
+      "candidate": {
+        "claim": "The literal email address for written-comment/testimony submission in the supplied notice is ADMcomment@courts.mi.gov.",
+        "conditions": [],
+        "field": "submission_email",
+        "role": "written_comment_submission_email",
+        "target": "doc-1276066c75b8",
+        "value": "ADMcomment@courts.mi.gov"
+      },
+      "frozen_source_field": {
+        "field_id": "email-direct",
+        "field_type": "EMAIL",
+        "source_state": "present_in_scope",
+        "raw_literal": "ADMcomment@courts.mi.gov",
+        "page_region": "page2 middle paragraph",
+        "exact_source_quote": "You may also submit a comment in writing at P.O. Box 30052, Lansing, MI 48909 or via email at ADMcomment@courts.mi.gov.",
+        "role": "written_comment_submission_email",
+        "conditions": [
+          "When filing a comment, please refer to ADM File No. 2021-29.",
+          "Your comments and the comments of others will be posted under the chapter affected by this proposal."
+        ],
+        "supported_scope": true,
+        "distinct_value_group": "email-direct",
+        "uncertainty_reason_if_any": null,
+        "normalized_value": "ADMcomment@courts.mi.gov",
+        "source_precision": "literal_email"
+      },
+      "audit": {
+        "document_id": "doc-1276066c75b8",
+        "case_id": "case-51af07423c028672",
+        "channel": "native",
+        "claim_group": "email-direct",
+        "source_field_id": "email-direct",
+        "source_value": "correct",
+        "role": "matched",
+        "conditions": "lost_or_changed",
+        "precision": "exact_literal",
+        "scope": "matched",
+        "reviewer_identity": "Independent image/source reviewer chat01a10e68-225d-7cf3-ad93-ad51715a9887",
+        "basis": "Source page2 and frozen field label require referring to ADM File No. 2021-29 when filing. Actual candidate.conditions is empty and claim omits this qualification. It also omits the frozen public-posting statement. Correct literal and direct email role do not establish preservation of filing qualifications."
+      },
+      "pipeline_record_sha256": "44066417693e79ee7edf92499ecebc6d3c33a1f2a57cab691970693b0c14fb54",
+      "terminal_record_sha256": "f0a7a138716b34066f9bf79d060593b7db46e977ace43b8927b748a1605755d6",
+      "postrun_images_reviewed": [
+        2
+      ]
+    },
+    {
+      "document_id": "doc-1c5c46ddcd64",
+      "case_id": "case-97d922700c28af45",
+      "candidate": {
+        "claim": "The literal email address for written-comment/testimony submission in the supplied notice is prc.records@prc.nm.gov. Qualifications retained verbatim: All written comments will be posted\non the Commission’s e-Docket website within three days of their receipt by the Commission’s Records Management\nBureau.",
+        "conditions": [
+          "All written comments will be posted\non the Commission’s e-Docket website within three days of their receipt by the Commission’s Records Management\nBureau."
+        ],
+        "field": "submission_email",
+        "role": "written_comment_submission_email",
+        "target": "doc-1c5c46ddcd64",
+        "value": "prc.records@prc.nm.gov"
+      },
+      "frozen_source_field": {
+        "field_id": "email-records",
+        "field_type": "EMAIL",
+        "source_state": "present_in_scope",
+        "raw_literal": "prc.records@prc.nm.gov",
+        "page_region": "page1 How a person may comment section",
+        "exact_source_quote": "Comments may be electronically filed by sending them in PDF format to prc.records@prc.nm.gov.",
+        "role": "written_comment_submission_email",
+        "conditions": [
+          "Filed comments shall refer to Docket No. 23-00119-UT.",
+          "Comments may be electronically filed by sending them in PDF format to prc.records@prc.nm.gov.",
+          "All written comments will be posted on the Commission’s e-Docket website within three days of their receipt by the Commission’s Records Management Bureau."
+        ],
+        "supported_scope": true,
+        "distinct_value_group": "email-records",
+        "uncertainty_reason_if_any": null,
+        "normalized_value": "prc.records@prc.nm.gov",
+        "source_precision": "literal_email"
+      },
+      "audit": {
+        "document_id": "doc-1c5c46ddcd64",
+        "case_id": "case-97d922700c28af45",
+        "channel": "native",
+        "claim_group": "email-records",
+        "source_field_id": "email-records",
+        "source_value": "correct",
+        "role": "matched",
+        "conditions": "lost_or_changed",
+        "precision": "exact_literal",
+        "scope": "unknown",
+        "reviewer_identity": "Independent image/source reviewer chat01a10e68-225d-7cf3-ad93-ad51715a9887",
+        "basis": "Page1 explicitly requires PDF-format electronic filing and reference to Docket No. 23-00119-UT. Candidate claim/conditions preserve only the publication statement, omitting PDF format and docket reference. Page2 footer instead says23-00188-UT; frozen complete_notice_scope=false remains unresolved. Literal/route are supported locally on page1 but whole-input target scope is unknown."
+      },
+      "pipeline_record_sha256": "e4ed885ff9f4e69682d2f8ba55fa48453e76eb743ac637e6e46402e391a79e77",
+      "terminal_record_sha256": "cb3f33a2fab858cc1dd907a4919bfd43c7c37ce5c64108329ed0228dc016f39e",
+      "postrun_images_reviewed": [
+        1,
+        2
+      ]
+    },
+    {
+      "document_id": "doc-6c6360609d68",
+      "case_id": "case-1347c6c0183db7a8",
+      "candidate": {
+        "claim": "The actual unconditional absolute written-comment close date in the supplied notice is September 26, 2022 (date precision only).",
+        "conditions": [],
+        "field": "comment_deadline",
+        "role": "written_comment_close",
+        "target": "doc-6c6360609d68",
+        "value": "2022-09-26"
+      },
+      "frozen_source_field": {
+        "field_id": "date-close",
+        "field_type": "DATE",
+        "source_state": "present_in_scope",
+        "raw_literal": "September 26, 2022",
+        "page_region": "middle participation paragraph",
+        "exact_source_quote": "The deadline to submit any such written comments for consideration by this Board is September 26, 2022.",
+        "role": "written_comment_close",
+        "conditions": [],
+        "supported_scope": true,
+        "distinct_value_group": "date-close",
+        "uncertainty_reason_if_any": null,
+        "normalized_value": "2022-09-26",
+        "source_precision": "date"
+      },
+      "audit": {
+        "document_id": "doc-6c6360609d68",
+        "case_id": "case-1347c6c0183db7a8",
+        "channel": "native",
+        "claim_group": "date-close",
+        "source_field_id": "date-close",
+        "source_value": "correct",
+        "role": "matched",
+        "conditions": "preserved",
+        "precision": "date_only",
+        "scope": "matched",
+        "reviewer_identity": "Independent image/source reviewer chat01a10e68-225d-7cf3-ad93-ad51715a9887",
+        "basis": "Full one-page SD source explicitly designates September26,2022 written close and elections@state.sd.us direct route. Frozen applicable conditions are empty. Candidate has correct date-only/literal value and role with matched notice scope."
+      },
+      "pipeline_record_sha256": "747635882ae4c78d22d33ef92ea16e17663e91c58605b9fa38b3125910894fbf",
+      "terminal_record_sha256": "ce54e4f97b61b67db1bc52aec647fa632d28646b48f9c242a35d5dc4a5fd8a31",
+      "postrun_images_reviewed": [
+        1
+      ]
+    },
+    {
+      "document_id": "doc-6c6360609d68",
+      "case_id": "case-c8d8e413616b1e66",
+      "candidate": {
+        "claim": "The literal email address for written-comment/testimony submission in the supplied notice is elections@state.sd.us.",
+        "conditions": [],
+        "field": "submission_email",
+        "role": "written_comment_submission_email",
+        "target": "doc-6c6360609d68",
+        "value": "elections@state.sd.us"
+      },
+      "frozen_source_field": {
+        "field_id": "email-direct",
+        "field_type": "EMAIL",
+        "source_state": "present_in_scope",
+        "raw_literal": "elections@state.sd.us",
+        "page_region": "middle participation paragraph; repeated lower copies contact",
+        "exact_source_quote": "or mail or e-mail them to the Secretary of State, 500 East Capitol, Pierre, South Dakota 57501 or elections@state.sd.us.",
+        "role": "written_comment_submission_email",
+        "conditions": [],
+        "supported_scope": true,
+        "distinct_value_group": "email-direct",
+        "uncertainty_reason_if_any": null,
+        "normalized_value": "elections@state.sd.us",
+        "source_precision": "literal_email"
+      },
+      "audit": {
+        "document_id": "doc-6c6360609d68",
+        "case_id": "case-c8d8e413616b1e66",
+        "channel": "native",
+        "claim_group": "email-direct",
+        "source_field_id": "email-direct",
+        "source_value": "correct",
+        "role": "matched",
+        "conditions": "preserved",
+        "precision": "exact_literal",
+        "scope": "matched",
+        "reviewer_identity": "Independent image/source reviewer chat01a10e68-225d-7cf3-ad93-ad51715a9887",
+        "basis": "Full one-page SD source explicitly designates September26,2022 written close and elections@state.sd.us direct route. Frozen applicable conditions are empty. Candidate has correct date-only/literal value and role with matched notice scope."
+      },
+      "pipeline_record_sha256": "747635882ae4c78d22d33ef92ea16e17663e91c58605b9fa38b3125910894fbf",
+      "terminal_record_sha256": "ce54e4f97b61b67db1bc52aec647fa632d28646b48f9c242a35d5dc4a5fd8a31",
+      "postrun_images_reviewed": [
+        1
+      ]
+    },
+    {
+      "document_id": "doc-6c6360609d68",
+      "case_id": "case-b32dc9ce483b1ea0",
+      "candidate": {
+        "claim": "The literal email address for written-comment/testimony submission in the supplied notice is elections@state.sd.us.",
+        "conditions": [],
+        "field": "submission_email",
+        "role": "written_comment_submission_email",
+        "target": "doc-6c6360609d68",
+        "value": "elections@state.sd.us"
+      },
+      "frozen_source_field": {
+        "field_id": "email-direct",
+        "field_type": "EMAIL",
+        "source_state": "present_in_scope",
+        "raw_literal": "elections@state.sd.us",
+        "page_region": "middle participation paragraph; repeated lower copies contact",
+        "exact_source_quote": "or mail or e-mail them to the Secretary of State, 500 East Capitol, Pierre, South Dakota 57501 or elections@state.sd.us.",
+        "role": "written_comment_submission_email",
+        "conditions": [],
+        "supported_scope": true,
+        "distinct_value_group": "email-direct",
+        "uncertainty_reason_if_any": null,
+        "normalized_value": "elections@state.sd.us",
+        "source_precision": "literal_email"
+      },
+      "audit": {
+        "document_id": "doc-6c6360609d68",
+        "case_id": "case-b32dc9ce483b1ea0",
+        "channel": "native",
+        "claim_group": "email-direct",
+        "source_field_id": "email-direct",
+        "source_value": "correct",
+        "role": "matched",
+        "conditions": "preserved",
+        "precision": "exact_literal",
+        "scope": "matched",
+        "reviewer_identity": "Independent image/source reviewer chat01a10e68-225d-7cf3-ad93-ad51715a9887",
+        "basis": "Full one-page SD source explicitly designates September26,2022 written close and elections@state.sd.us direct route. Frozen applicable conditions are empty. Candidate has correct date-only/literal value and role with matched notice scope. This occurrence is in the copies-contact block, but identical full-source route evidence establishes the same exact address as direct submission; its claim equals the other email claim and is grouped with that fact."
+      },
+      "pipeline_record_sha256": "747635882ae4c78d22d33ef92ea16e17663e91c58605b9fa38b3125910894fbf",
+      "terminal_record_sha256": "ce54e4f97b61b67db1bc52aec647fa632d28646b48f9c242a35d5dc4a5fd8a31",
+      "postrun_images_reviewed": [
+        1
+      ]
+    }
+  ],
+  "frozen_labels_unchanged": true
+}

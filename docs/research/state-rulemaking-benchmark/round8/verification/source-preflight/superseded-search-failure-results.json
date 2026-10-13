@@ -1,0 +1,16 @@
+{
+  "tests": 3,
+  "passed": false,
+  "failures": [
+    [
+      "test_explicit_complete_zero_result_registration_advances_without_requery (__main__.SearchFailureControls.test_explicit_complete_zero_result_registration_advances_without_requery)",
+      "Traceback (most recent call last):\n  File \"/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8/verification/source-preflight/test_search_failures.py\", line 16, in test_explicit_complete_zero_result_registration_advances_without_requery\n    c.register('Q01',path)\n  File \"/var/folders/7w/yjwplnp54dlcwbkwfmh7pygh0000gn/T/r8-search-failure-rt1g38ku/sources/collect-native.py\", line 82, in register\n    results=record['results'];assert headers,'Unrecognized raw search format; hold registration for primary review without rerun.'\n                                     ^^^^^^^\nAssertionError: Unrecognized raw search format; hold registration for primary review without rerun.\n"
+    ],
+    [
+      "test_query_request_persists_one_shot_intent_before_external_search (__main__.SearchFailureControls.test_query_request_persists_one_shot_intent_before_external_search)",
+      "Traceback (most recent call last):\n  File \"/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round8/verification/source-preflight/test_search_failures.py\", line 23, in test_query_request_persists_one_shot_intent_before_external_search\n    with self.assertRaises((AssertionError,ValueError)):c.request('Q01')\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: (<class 'AssertionError'>, <class 'ValueError'>) not raised\n"
+    ]
+  ],
+  "provider_calls": 0,
+  "network_calls": 0
+}

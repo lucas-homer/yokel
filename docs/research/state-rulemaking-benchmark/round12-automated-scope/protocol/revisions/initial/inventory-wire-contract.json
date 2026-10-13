@@ -1,0 +1,23 @@
+{
+  "schema_version": "round12.inventory-span-tuples.v1",
+  "columns": [
+    "id",
+    "kind",
+    "assertion",
+    "modality",
+    "applicability",
+    "uncertainty",
+    "uncertainty_reason",
+    "required_unit_ids",
+    "evidence"
+  ],
+  "evidence_columns": [
+    "start",
+    "end",
+    "occurrence"
+  ],
+  "unit_order": "unchanged from frozen A",
+  "encoding": "For every unit emit exactly nine values in columns order. Each evidence row is [start,end,occurrence], using zero-based Unicode codepoint offsets, exclusive end, derived from the validated exact quote and its original 1-based occurrence among all overlapping exact matches. No byte or UTF-16 offsets. All other values and unit order unchanged, including empty values. Never edit raw A.",
+  "decode": "Require exact envelope keys schema_version,source_text_sha256,columns,evidence_columns,units and exact version/columns; nine values per unit, three per evidence row. Require true integer offsets/occurrence (not booleans), 0<=start<end<=source codepoint length, occurrence>=1. Reconstruct quote=source[start:end] with no normalization. Enumerate all overlapping occurrences of this reconstructed quote and require the specified occurrence starts exactly at start. Restore each original {quote,occurrence} selector and round12.source-inventory.v1 schema version. Strictly validate reconstructed A and require canonical equality AND canonical SHA256 equality to frozen validated A. No defaults, coercion or repair.",
+  "restored_inventory_schema_version": "round12.source-inventory.v1"
+}

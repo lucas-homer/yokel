@@ -1,0 +1,21 @@
+{
+  "request": {
+    "url": "https://www.sos.ms.gov/adminsearch/ACProposed/00027305a.pdf",
+    "formats": [
+      "json"
+    ],
+    "parsers": [
+      "pdf"
+    ],
+    "pdfOptions": {
+      "maxPages": 1
+    },
+    "maxAge": 0,
+    "jsonOptions": {
+      "prompt": "Extract only assertions supported by this form. Return JSON fields agency, rule_citations, proposed_action, hearing_status, filing_date, hearing_request_duration_days, hearing_request_anchor, public_comment_duration_days, public_comment_anchor, comment_close, effective_date, final_action. Include evidence quotes and unknowns. Distinguish marked choices from blank options and distinguish date roles. Do not compute unstated dates."
+    }
+  },
+  "elapsed_ms": 15950,
+  "retrieved_at": "2026-10-05T23:30:12.270Z",
+  "mode": "prompt_only_no_schema"
+}

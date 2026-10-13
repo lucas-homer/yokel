@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "scope": "Source/copy integrity, raw-to-derived identity, offline replay, retained fixture assertions and three omission guards; not general semantic validation.",
+  "baseline_files_unchanged": 22,
+  "copied_files_verified": 28,
+  "source_byte_identity": true,
+  "raw_markdown_exact": true,
+  "replay_outputs_byte_identical": true,
+  "commands": [
+    {
+      "arguments": [
+        "normalize.py"
+      ],
+      "exit_code": 0,
+      "stdout": "7 supported candidate observations; filing date withheld; review required\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "test_guards.py"
+      ],
+      "exit_code": 0,
+      "stdout": "[{\"case\": \"hearing_duration\", \"exit\": 1, \"missing\": \"hearing_request_duration\", \"partial_count\": 6, \"passed\": true}, {\"case\": \"comment_duration\", \"exit\": 1, \"missing\": \"comment_duration\", \"partial_count\": 6, \"passed\": true}, {\"case\": \"eligibility\", \"exit\": 1, \"missing\": \"hearing_request_duration\", \"partial_count\": 6, \"passed\": true}]\n",
+      "stderr": ""
+    }
+  ],
+  "shared_validator": {
+    "schema_version": 1,
+    "purpose": "offline structural and evidence-integrity checks",
+    "passed": true,
+    "lanes": [
+      {
+        "lane": "trial",
+        "artifact_count": 19,
+        "observation_count": 7,
+        "method_counts": {
+          "deterministic": 7,
+          "manual_text": 0,
+          "manual_visual": 0,
+          "model": 0
+        },
+        "exact_quote_count": 9,
+        "visual_evidence_count": 0,
+        "failures": [],
+        "passed": true,
+        "semantic_entailment": "requires separate source review",
+        "production_readiness": "not established"
+      }
+    ]
+  },
+  "full_json_schema_engine_executed": false,
+  "extraction_result_available": false,
+  "all_observations_require_review": true
+}

@@ -1,0 +1,104 @@
+{
+  "sessionId": "aa1048d4-b115-4f93-ae9c-400bc4434fb5",
+  "stopReason": "success",
+  "text": "Verdict: no material correctness blocker remains for an explicitly experimental source-only pilot on real sources. The revision fixes the inverse type guards, documents the partition and sentinel accurately, and adds the arrival and request clock/zone splits. Three items stay open. One is a factual inaccuracy in the new controls document, one is an unmitigated semantic risk that structural checks cannot close, and one is unchanged yield risk. None corrupts an accepted output.\n\n## Verified against the diffs\n\n- **Inverse ValueError guards.** `contract()` now checks that `units` and each `evidence` are lists. The new test covers `None`, `0`, `'text'`, `{}` and `()`. Remaining malformed shapes reach `closed()` or `validate()`, which already raise `ValueError`. Resolved.\n- **Partition documentation.** The prompt now names the separators that `str.splitlines` honors. The new test builds a twelve-separator source, checks twelve rows, and reconstructs byte-exactly. Resolved.\n- **Capacity sentinel documentation.** The prompt now states the schema allows 160 and the host rejects exactly 160. The test asserts the schema cap and the rejection. Resolved, with one cosmetic defect: the prompt text reads \"exactly160\" and \"treat159\" with missing spaces. Fix before the first paid call since this is model-facing text.\n- **Actor uncertainty.** Unit 2 now states an unspecified actor and records it in `r`. Partially resolved. Unit 6 still asserts \"must be received\" with no statement that the recipient is unstated, and units 19 and 20 still omit actor uncertainty. Fixture quality only, not code.\n- **Arrival and request clock/zone splits.** Units 21 to 24 link to units 19 and 20 and the round-trip test passes. Resolved. One consistency gap remains: units 4 and 5 carry `m=1` inherited from the applications directive, while units 21, 22 and 24 carry `m=0`. The prompt still does not say whether dimension units inherit directive force. Reviewers will split on this. One prompt sentence fixes it.\n- **Overflow controls.** The three controls exceed the caps, `validate_response` raises \"text bound\", and the input object is unchanged. This confirms host rejection of overlong authored text. The text-bound check itself was already present in r14.1, so this is new coverage of existing behavior, not a new guard.\n\n## Open items\n\n**O1. Provider-generated clipping remains undetectable by the host.** The overflow controls prove the host rejects a 225-character `c` that arrives whole. They say nothing about a model that, under constrained decoding, closes `c` at 180 characters with the exception clause missing. That output is structurally valid and passes every check in the revision. The new prompt sentence \"fail the complete-output attempt rather than shorten\" names no mechanism. Under a strict schema the model can only stop early, run to the token cap, or emit 160 units. Stopping early is the silent path. This is not a blocker for a pilot whose outputs are independently reviewed against the full source, because a reviewer with the source can see the missing clause. It is the main thing that review must look for. Optional in-scope mitigation with no schema change: designate a fixed `r` prefix such as \"BOUND:\" for \"qualification not representable within caps\", and have `validate()` reject any unit carrying it. That converts compliant clipping into a fail-closed path and costs one prompt sentence and one line of code.\n\n**O2. Fixture contamination persists and the controls document misstates it.** The illustration paragraph in `stage-a.system.txt` is unchanged. It still contains \"Send remarks by April 9, 2031.\", \"Amend Rule Q-8 (previous filing F-17, filed January 6, 2029).\" and \"The office is in Alder City, North Province.\" These are fixture source lines s1, s4 and s5, verbatim or near-verbatim. The new `revision_checks` entry says \"Fixture data never enters prompt\". That is true for the two new control sources, which the test checks, and false for the main fixture source, which the test does not check. Consequence: the fictional positive fixture source can never serve as a live calibration or smoke-test input. This is not a blocker for real-source pilot calls. Fix: correct the statement, and add an assertion that no stripped line of the main fixture source appears in the prompt. That assertion would fail today, which is the point. Then either change the illustrations or the fixture.\n\n**O3. Capacity and yield are unchanged.** The prompt grew, so the request now measures 11582 bytes against the 40000-byte guard, which is fine. Output profiles are essentially identical to r14.1. The 64-unit representative profile still fails the 0.70 headroom threshold at the 2-byte ratio. The fixture now yields 24 units from 10 lines, up from 20, because the prompt's own dimension-splitting rule adds units. `build()` still has no gate on line count or expected unit count. For a pilot this means long notices will truncate and be rejected cleanly, which is acceptable, but the pilot should record finish_reason and provider usage on every call so the byte ratio can be replaced with a measured one. No guaranteed fit is required and none is claimed.\n\n**Evidence still absent, unchanged from the prior review.** No live confirmation that the provider accepts the strict schema keywords and the per-line `e` enum size. No confirmation whether `max_tokens` also consumes reasoning tokens. A single trivial call resolves both, and that remains the team's decision.\n\n**Unseen files.** `REPORT.md`, `SPEC.md`, the regenerated JSON artifacts and `test_semantic_contract.py` are bound by hash but were not re-reviewed. The semantic test file's unchanged hash is consistent with the fixture appending units at the end, so existing index-based assertions still address the same units.",
+  "result": {
+    "duration_api_ms": 400916,
+    "stop_reason": "end_turn",
+    "session_id": "aa1048d4-b115-4f93-ae9c-400bc4434fb5",
+    "total_cost_usd": 2.64831675,
+    "usage": {
+      "input_tokens": 2,
+      "cache_creation_input_tokens": 30850,
+      "cache_read_input_tokens": 36067,
+      "output_tokens": 6731,
+      "output_tokens_details": {
+        "thinking_tokens": 4785
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 30850,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "global",
+      "iterations": [
+        {
+          "input_tokens": 2,
+          "output_tokens": 6731,
+          "cache_read_input_tokens": 36067,
+          "cache_creation_input_tokens": 30850,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 30850
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "modelUsage": {
+      "claude-fable-5-1": {
+        "inputTokens": 8,
+        "outputTokens": 26056,
+        "thinkingTokens": 19127,
+        "cacheReadInputTokens": 44467,
+        "cacheCreationInputTokens": 66716,
+        "webSearchRequests": 0,
+        "costUSD": 2.64831675,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000,
+        "canonicalModel": "claude-fable-5-1",
+        "provider": "firstParty",
+        "costBasis": "list"
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "fast_mode_disabled_reason": "sdk_opt_in_required",
+    "subagent_stats": {
+      "spawned": 0,
+      "requested": {
+        "background": 0,
+        "foreground": 0,
+        "unset": 0
+      },
+      "started_in_background": 0,
+      "max_depth": 0,
+      "spawned_by_subagents": 0,
+      "completed": 0,
+      "failed": 0,
+      "killed": {
+        "parent": 0,
+        "user": 0,
+        "system": 0
+      },
+      "refused": {
+        "depth_limit": 0,
+        "concurrency_limit": 0,
+        "budget": 0
+      },
+      "by_type": {}
+    },
+    "safety_stops": 0,
+    "is_error": false,
+    "num_turns": 1,
+    "subtype": "success",
+    "api_error_status": null,
+    "result": "Verdict: no material correctness blocker remains for an explicitly experimental source-only pilot on real sources. The revision fixes the inverse type guards, documents the partition and sentinel accurately, and adds the arrival and request clock/zone splits. Three items stay open. One is a factual inaccuracy in the new controls document, one is an unmitigated semantic risk that structural checks cannot close, and one is unchanged yield risk. None corrupts an accepted output.\n\n## Verified against the diffs\n\n- **Inverse ValueError guards.** `contract()` now checks that `units` and each `evidence` are lists. The new test covers `None`, `0`, `'text'`, `{}` and `()`. Remaining malformed shapes reach `closed()` or `validate()`, which already raise `ValueError`. Resolved.\n- **Partition documentation.** The prompt now names the separators that `str.splitlines` honors. The new test builds a twelve-separator source, checks twelve rows, and reconstructs byte-exactly. Resolved.\n- **Capacity sentinel documentation.** The prompt now states the schema allows 160 and the host rejects exactly 160. The test asserts the schema cap and the rejection. Resolved, with one cosmetic defect: the prompt text reads \"exactly160\" and \"treat159\" with missing spaces. Fix before the first paid call since this is model-facing text.\n- **Actor uncertainty.** Unit 2 now states an unspecified actor and records it in `r`. Partially resolved. Unit 6 still asserts \"must be received\" with no statement that the recipient is unstated, and units 19 and 20 still omit actor uncertainty. Fixture quality only, not code.\n- **Arrival and request clock/zone splits.** Units 21 to 24 link to units 19 and 20 and the round-trip test passes. Resolved. One consistency gap remains: units 4 and 5 carry `m=1` inherited from the applications directive, while units 21, 22 and 24 carry `m=0`. The prompt still does not say whether dimension units inherit directive force. Reviewers will split on this. One prompt sentence fixes it.\n- **Overflow controls.** The three controls exceed the caps, `validate_response` raises \"text bound\", and the input object is unchanged. This confirms host rejection of overlong authored text. The text-bound check itself was already present in r14.1, so this is new coverage of existing behavior, not a new guard.\n\n## Open items\n\n**O1. Provider-generated clipping remains undetectable by the host.** The overflow controls prove the host rejects a 225-character `c` that arrives whole. They say nothing about a model that, under constrained decoding, closes `c` at 180 characters with the exception clause missing. That output is structurally valid and passes every check in the revision. The new prompt sentence \"fail the complete-output attempt rather than shorten\" names no mechanism. Under a strict schema the model can only stop early, run to the token cap, or emit 160 units. Stopping early is the silent path. This is not a blocker for a pilot whose outputs are independently reviewed against the full source, because a reviewer with the source can see the missing clause. It is the main thing that review must look for. Optional in-scope mitigation with no schema change: designate a fixed `r` prefix such as \"BOUND:\" for \"qualification not representable within caps\", and have `validate()` reject any unit carrying it. That converts compliant clipping into a fail-closed path and costs one prompt sentence and one line of code.\n\n**O2. Fixture contamination persists and the controls document misstates it.** The illustration paragraph in `stage-a.system.txt` is unchanged. It still contains \"Send remarks by April 9, 2031.\", \"Amend Rule Q-8 (previous filing F-17, filed January 6, 2029).\" and \"The office is in Alder City, North Province.\" These are fixture source lines s1, s4 and s5, verbatim or near-verbatim. The new `revision_checks` entry says \"Fixture data never enters prompt\". That is true for the two new control sources, which the test checks, and false for the main fixture source, which the test does not check. Consequence: the fictional positive fixture source can never serve as a live calibration or smoke-test input. This is not a blocker for real-source pilot calls. Fix: correct the statement, and add an assertion that no stripped line of the main fixture source appears in the prompt. That assertion would fail today, which is the point. Then either change the illustrations or the fixture.\n\n**O3. Capacity and yield are unchanged.** The prompt grew, so the request now measures 11582 bytes against the 40000-byte guard, which is fine. Output profiles are essentially identical to r14.1. The 64-unit representative profile still fails the 0.70 headroom threshold at the 2-byte ratio. The fixture now yields 24 units from 10 lines, up from 20, because the prompt's own dimension-splitting rule adds units. `build()` still has no gate on line count or expected unit count. For a pilot this means long notices will truncate and be rejected cleanly, which is acceptable, but the pilot should record finish_reason and provider usage on every call so the byte ratio can be replaced with a measured one. No guaranteed fit is required and none is claimed.\n\n**Evidence still absent, unchanged from the prior review.** No live confirmation that the provider accepts the strict schema keywords and the per-line `e` enum size. No confirmation whether `max_tokens` also consumes reasoning tokens. A single trivial call resolves both, and that remains the team's decision.\n\n**Unseen files.** `REPORT.md`, `SPEC.md`, the regenerated JSON artifacts and `test_semantic_contract.py` are bound by hash but were not re-reviewed. The semantic test file's unchanged hash is consistent with the fixture appending units at the end, so existing index-based assertions still address the same units.",
+    "ttft_ms": 75650,
+    "type": "result",
+    "duration_ms": 104295,
+    "uuid": "3d20f5cf-748a-4f39-83e0-cdd08fa2d495",
+    "ttft_stream_ms": 3370,
+    "time_to_request_ms": 23,
+    "first_content_frame_ms": 3370,
+    "queued_turn_count": 0,
+    "result_index": 0
+  }
+}

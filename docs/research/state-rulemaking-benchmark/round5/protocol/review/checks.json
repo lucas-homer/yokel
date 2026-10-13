@@ -1,0 +1,170 @@
+{
+  "status": "checks_passed",
+  "runtime_suite": {
+    "tests": 26,
+    "success": true
+  },
+  "historical_evaluator_suite": {
+    "tests": 23,
+    "success": true
+  },
+  "independent_checks": [
+    {
+      "name": "unicode_incidental_if_and_date_email",
+      "passed": true,
+      "fake_POSTs": 2,
+      "accepted": [
+        [
+          "comment_deadline",
+          "2026-10-31"
+        ],
+        [
+          "submission_email",
+          "comments@example.gov"
+        ]
+      ]
+    },
+    {
+      "name": "same_DATE_real_contingency",
+      "passed": true,
+      "fake_POSTs": 1,
+      "accepted": [
+        [
+          "submission_email",
+          "comments@example.gov"
+        ]
+      ]
+    },
+    {
+      "name": "unconditional_clock_date",
+      "passed": true,
+      "fake_POSTs": 1,
+      "accepted": [
+        [
+          "comment_deadline",
+          "2026-10-31"
+        ]
+      ]
+    },
+    {
+      "name": "email_competitor_positive_wrong_role",
+      "passed": true,
+      "fake_POSTs": 2,
+      "accepted": [
+        [
+          "submission_email",
+          "comments@example.gov"
+        ]
+      ]
+    },
+    {
+      "name": "email_competitor_unknown",
+      "passed": true,
+      "fake_POSTs": 2,
+      "accepted": []
+    },
+    {
+      "name": "two_confirmed_dates_hard_block",
+      "passed": true,
+      "fake_POSTs": 0,
+      "accepted": []
+    },
+    {
+      "name": "split_paragraph_year_never_borrowed",
+      "passed": true,
+      "fake_POSTs": 0,
+      "accepted": []
+    },
+    {
+      "name": "invalid_calendar_date",
+      "passed": true,
+      "fake_POSTs": 0,
+      "accepted": []
+    },
+    {
+      "name": "relative_DATE_independent_EMAIL",
+      "passed": true,
+      "fake_POSTs": 1,
+      "accepted": [
+        [
+          "submission_email",
+          "comments@example.gov"
+        ]
+      ]
+    },
+    {
+      "name": "unknown_notice_scope",
+      "passed": true,
+      "fake_POSTs": 0,
+      "accepted": []
+    },
+    {
+      "name": "semantic_only_remote_qualification_rejected",
+      "passed": true,
+      "fake_POSTs": 1,
+      "accepted": []
+    },
+    {
+      "name": "mutation_claim",
+      "passed": true,
+      "blocking_issues": [
+        "unconditional_date_projection_claim_missing"
+      ]
+    },
+    {
+      "name": "mutation_literal",
+      "passed": true,
+      "blocking_issues": [
+        "invalid_value_span"
+      ]
+    },
+    {
+      "name": "mutation_unknown",
+      "passed": true,
+      "blocking_issues": [
+        "unreviewed_clearance"
+      ]
+    },
+    {
+      "name": "mutation_evidence",
+      "passed": true,
+      "blocking_issues": [
+        "invalid_citation"
+      ]
+    },
+    {
+      "name": "DATE_alternative_mismatched",
+      "passed": true
+    },
+    {
+      "name": "DATE_alternative_insufficient",
+      "passed": true
+    },
+    {
+      "name": "actual_R5_terminal_into_unchanged_R4_evaluator",
+      "passed": true,
+      "synthetic_correct_accepts": 2
+    }
+  ],
+  "pin_verification": {
+    "pipeline": {
+      "files": 11,
+      "match": true
+    },
+    "runtime": {
+      "files": 10,
+      "match": true
+    },
+    "source_prep": {
+      "files": 4,
+      "match": true
+    },
+    "evaluator": {
+      "files": 7,
+      "match": true
+    }
+  },
+  "actual_provider_calls": 0,
+  "fresh_source_access": false,
+  "limits": "Semantic-only phrasing relies on model judgment and post-run source audit; fake transport does not establish accuracy."
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "round8-contract-probe.request_size_audit.v1",
+  "admissions": {
+    "jev": {
+      "admitted": false,
+      "body_sha256": "ed7e7cb26cd969dae559b66fc2f7d79a6f9f6a7569bf6f824b7084a781e5224d",
+      "body_utf8_bytes": 39580,
+      "cap": 64000,
+      "estimate": 40604,
+      "reason": "Jev state + longest question overlimit; no clipping",
+      "reservation_usd": null,
+      "schema_version": "round7.admission.v1",
+      "source_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5",
+      "stage": "jev",
+      "state_longest_cap": 32000,
+      "state_longest_estimate": 33149
+    },
+    "stronger": {
+      "admitted": false,
+      "body_sha256": "d4f24e91cb41ab0ae540346a65bca0d14f977a2efacbe8f11db316a8960151e8",
+      "body_utf8_bytes": 39529,
+      "cap": 40000,
+      "estimate": 40553,
+      "reason": "OpenRouter input overlimit or completion cap mismatch; no clipping",
+      "reservation_usd": null,
+      "schema_version": "round7.admission.v1",
+      "source_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5",
+      "stage": "stronger",
+      "state_longest_cap": null,
+      "state_longest_estimate": null
+    }
+  },
+  "paired_payload_identical": true,
+  "source_and_record_complete_in_both_bodies": true,
+  "jev_state_bytes": 29889,
+  "jev_longest_question_bytes": 2236,
+  "transport_template_allowance": 1024,
+  "jev_state_excess": 1149,
+  "stronger_total_excess": 553,
+  "dispatch_evidence": "Both full request/admission artifacts retained; independently reproduced strict admission denial; no verifier intents or operations; frozen runner constructs both before dispatch. This verifies code/artifact consistency, not a separate wall-clock instrumentation trace.",
+  "clipping_or_repair_observed": false,
+  "both_provider_calls": 0
+}

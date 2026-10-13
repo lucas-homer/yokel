@@ -1,0 +1,104 @@
+{
+  "sessionId": "ef1c3ae3-83ac-4d0f-9578-bb5b839808ad",
+  "stopReason": "success",
+  "text": "**Verdict.** No blocker to a bounded offline validator. The anchor-pair resolution in DESIGN.md §3 is deterministic and implementable as written. Five structural defects should be fixed before the schema freezes, two of which open silent scope leaks that the design exists to make visible. The typed operator layer currently does not earn its cost; a small containment rule would change that.\n\n## Prioritized defects\n\n1. **Qualification without applicability state (leak).** DESIGN.md §3 lets `qual` links appear with `p=0`, and `p=1` counts only if/onlyif/unless. A unit whose only condition is a `qual` link must therefore be `p=0` or `p=2`. Expansion renders `p=0` as `none_reported` even though a condition was reported with an unknown role. This contradicts host completion item 4 (\"unknown function/scope cannot silently become p0\"). Counterexample: \"Bids are considered where the bond is posted\" with the model unsure whether \"where\" is condition or location. It emits `qual` plus `p=0`, validates, and expands as none reported. Fix: `p=0` requires zero links in {if, onlyif, unless, qual}; `qual` requires link `q≠0`; a qual-only unit must be `p=2` with unit `q≠0`.\n\n2. **Short fragments can silently select the wrong range.** DESIGN.md §3 says a short fragment uses tail occurrence 1 but does not enforce it. Because tail occurrence is an index into the filtered candidate list, a model that mirrors the head occurrence picks a later match. Counterexample: three \"AND\" tokens on one row; head occurrence 2, tail occurrence 2 resolves to \"AND ... AND\" spanning the second and third, validates, and expands as content. Fix: when start row equals end row and head equals tail, reject tail occurrence other than 1. This is cheap and removes a whole class of exact-but-wrong selections. It does not address a model choosing a short fragment for a longer condition; that stays unverifiable.\n\n3. **L versus R is inconsistent between the enum and the examples.** DESIGN.md §2 defines R as a reference whose governing content is not in the source. Example 1 encodes \"sent after the date\" as L with `q2`, while example 2 encodes \"organizations described in section 7\" as R, although both phrases are in the source and both have an unresolved referent. Fix: either drop R and use L with `q2` plus the expansion flag, or define R narrowly as a node whose entire condition content is the referenced text, with L+`q2` for in-source conditions containing an unresolved term. Right now a model cannot pick deterministically, and comparison cannot treat the two as errors.\n\n4. **Rejection of the legacy `c` key is mis-scoped.** DESIGN.md §4 step 4 and negative test 7 reject \"a `c` key present\", but the Deadline object in §2 has a required key `c` for the cutoff clock. As written the rule either rejects every stated deadline or is never applied. Fix: reject `c` on Unit objects only.\n\n5. **Example 1 contradicts host item 4 on invented connectives.** Node c9 is an AND over \"are tenants\" and \"with a lease of at least twelve months\" with no connective evidence. The source has no conjunction there; the split exists so the waiver can target c10. Host item 4 says a whole fragment with a qual link is the conservative form when parsing would invent a connective. Fix: keep one leaf \"are tenants with a lease of at least twelve months\" and let the waiver `acts` link cite \"lease duration\" in its own connective evidence. If splitting is to remain permitted, say so and require node `q1` on operators with empty evidence that join sub-phrases of one clause.\n\n## Underspecified invariants\n\n- **Span table geometry.** DESIGN.md §3 computes `A.start + j`, which requires the table to expose codepoint start offsets, and to state whether row text excludes line terminators. If terminators are excluded, anchors containing them can never match, which is fine but should be stated. Cross-row fragments depend on rows being contiguous in the source.\n- **Tail overlap with head.** The filter allows a tail that starts inside the head. This is deterministic but surprising. State it explicitly or require the tail start to be at or after head end.\n- **OR exclusivity.** DESIGN.md §2 still says \"if exclusivity is unclear, use node q1\". Host item 4 reverses this. Amend §2 or the prompt and validator will disagree with the host rule.\n- **p=2 with a link.** Example 3 attaches an R leaf to a `p=2` unit without naming the role. Under fix 1 this is a `qual` link.\n- **Provenance versus graph evidence.** Nothing ties link or node evidence rows to the unit's `e` list. A unit can link to a node evidenced in a sentence it does not cite. Report as a diagnostic rather than reject, since shared conditions can sit in other sentences.\n- **Unit `q` is single-valued.** Deadline, actor and scope ambiguities collapse into one code. Not a blocker, but comparison should not read unit `q` as the full uncertainty set.\n\n## Does the typed graph earn its cost\n\nAs specified, mostly not. The host checks arity, acyclicity and evidence exactness, and positive test 8 in DESIGN.md §9 documents that OR for AND, a wrong `acts` target and `if` for `onlyif` all validate. Operators therefore add unverifiable annotation on top of the thing that actually carries value: exact leaf text plus a typed link whose absence is visible. An opaque full clause with an explicit unit link gives preservation, non-leakage across units, sharing and deadline states at lower emission cost and with a comparison target that exists.\n\nThe parts that do earn their place are EXC ordering, `unless` as a carve-out against the unit, `acts` as a typed home for waivers, and ALT for competing readings. Operators would earn their place if one structural rule were added: every operator node carries covering evidence of the whole combined clause, and each child's resolved ranges must lie within the parent's covering ranges. This turns a class of leaks into structural errors. Counterexample: a model joins \"if available\" from sentence 2 under an AND whose covering clause is sentence 1; today that validates, under containment it is rejected. Discontinuous parents keep the existing 0..4 fragment slots. Cross-sentence conditions remain representable through separate links. Without this rule, recommend treating the operator tree as optional elaboration and mandating the full-clause fragment on the link root as the baseline that comparison runs against.\n\nNesting still cannot be canonicalized. Exception-to-exception has two defensible shapes, and DESIGN.md §11 correctly declines to pick. Comparison therefore needs explicit equivalence rules for AND flattening, EXC nesting, ALT versus `q1`, shared versus duplicated leaves, and leaf boundary variance.\n\n## Capacity and evidence limits\n\n- Caps detect overflow after the fact and do not prove or prevent loss. A shorter structurally valid graph is the real failure mode, and no sentinel or completeness flag in DESIGN.md §5 can see it.\n- An exact match proves only the selected range. A short fragment can select part of a condition and still validate, so coverage is a comparison question, not a validation one.\n- Whether the bridge reliably emits positional six-element fragment tuples is unverified. If tuple emission proves unstable, a keyed fragment object is a drop-in change.\n- Depth 12, 400 nodes and 600 KB are stated as provisional engineering defaults in host item 5. That is the correct framing; nothing here measures fit.\n- All examples are fictional and were reviewed only for internal consistency with DESIGN.md. Roles, anchors and types remain proposals, and no legal reading of the sample clauses is asserted.",
+  "result": {
+    "duration_api_ms": 194125,
+    "stop_reason": "end_turn",
+    "session_id": "ef1c3ae3-83ac-4d0f-9578-bb5b839808ad",
+    "total_cost_usd": 0.88428825,
+    "usage": {
+      "input_tokens": 2,
+      "cache_creation_input_tokens": 12807,
+      "cache_read_input_tokens": 3313,
+      "output_tokens": 12546,
+      "output_tokens_details": {
+        "thinking_tokens": 9937
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 12807,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "global",
+      "iterations": [
+        {
+          "input_tokens": 2,
+          "output_tokens": 12546,
+          "cache_read_input_tokens": 3313,
+          "cache_creation_input_tokens": 12807,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 12807
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "modelUsage": {
+      "claude-fable-5-1": {
+        "inputTokens": 2,
+        "outputTokens": 12546,
+        "cacheReadInputTokens": 3313,
+        "cacheCreationInputTokens": 12807,
+        "webSearchRequests": 0,
+        "costUSD": 0.88428825,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000,
+        "thinkingTokens": 9937,
+        "canonicalModel": "claude-fable-5-1",
+        "provider": "firstParty",
+        "costBasis": "list"
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "fast_mode_disabled_reason": "sdk_opt_in_required",
+    "subagent_stats": {
+      "spawned": 0,
+      "requested": {
+        "background": 0,
+        "foreground": 0,
+        "unset": 0
+      },
+      "started_in_background": 0,
+      "max_depth": 0,
+      "spawned_by_subagents": 0,
+      "completed": 0,
+      "failed": 0,
+      "killed": {
+        "parent": 0,
+        "user": 0,
+        "system": 0
+      },
+      "refused": {
+        "depth_limit": 0,
+        "concurrency_limit": 0,
+        "budget": 0
+      },
+      "by_type": {}
+    },
+    "safety_stops": 0,
+    "is_error": false,
+    "num_turns": 1,
+    "subtype": "success",
+    "api_error_status": null,
+    "result": "**Verdict.** No blocker to a bounded offline validator. The anchor-pair resolution in DESIGN.md §3 is deterministic and implementable as written. Five structural defects should be fixed before the schema freezes, two of which open silent scope leaks that the design exists to make visible. The typed operator layer currently does not earn its cost; a small containment rule would change that.\n\n## Prioritized defects\n\n1. **Qualification without applicability state (leak).** DESIGN.md §3 lets `qual` links appear with `p=0`, and `p=1` counts only if/onlyif/unless. A unit whose only condition is a `qual` link must therefore be `p=0` or `p=2`. Expansion renders `p=0` as `none_reported` even though a condition was reported with an unknown role. This contradicts host completion item 4 (\"unknown function/scope cannot silently become p0\"). Counterexample: \"Bids are considered where the bond is posted\" with the model unsure whether \"where\" is condition or location. It emits `qual` plus `p=0`, validates, and expands as none reported. Fix: `p=0` requires zero links in {if, onlyif, unless, qual}; `qual` requires link `q≠0`; a qual-only unit must be `p=2` with unit `q≠0`.\n\n2. **Short fragments can silently select the wrong range.** DESIGN.md §3 says a short fragment uses tail occurrence 1 but does not enforce it. Because tail occurrence is an index into the filtered candidate list, a model that mirrors the head occurrence picks a later match. Counterexample: three \"AND\" tokens on one row; head occurrence 2, tail occurrence 2 resolves to \"AND ... AND\" spanning the second and third, validates, and expands as content. Fix: when start row equals end row and head equals tail, reject tail occurrence other than 1. This is cheap and removes a whole class of exact-but-wrong selections. It does not address a model choosing a short fragment for a longer condition; that stays unverifiable.\n\n3. **L versus R is inconsistent between the enum and the examples.** DESIGN.md §2 defines R as a reference whose governing content is not in the source. Example 1 encodes \"sent after the date\" as L with `q2`, while example 2 encodes \"organizations described in section 7\" as R, although both phrases are in the source and both have an unresolved referent. Fix: either drop R and use L with `q2` plus the expansion flag, or define R narrowly as a node whose entire condition content is the referenced text, with L+`q2` for in-source conditions containing an unresolved term. Right now a model cannot pick deterministically, and comparison cannot treat the two as errors.\n\n4. **Rejection of the legacy `c` key is mis-scoped.** DESIGN.md §4 step 4 and negative test 7 reject \"a `c` key present\", but the Deadline object in §2 has a required key `c` for the cutoff clock. As written the rule either rejects every stated deadline or is never applied. Fix: reject `c` on Unit objects only.\n\n5. **Example 1 contradicts host item 4 on invented connectives.** Node c9 is an AND over \"are tenants\" and \"with a lease of at least twelve months\" with no connective evidence. The source has no conjunction there; the split exists so the waiver can target c10. Host item 4 says a whole fragment with a qual link is the conservative form when parsing would invent a connective. Fix: keep one leaf \"are tenants with a lease of at least twelve months\" and let the waiver `acts` link cite \"lease duration\" in its own connective evidence. If splitting is to remain permitted, say so and require node `q1` on operators with empty evidence that join sub-phrases of one clause.\n\n## Underspecified invariants\n\n- **Span table geometry.** DESIGN.md §3 computes `A.start + j`, which requires the table to expose codepoint start offsets, and to state whether row text excludes line terminators. If terminators are excluded, anchors containing them can never match, which is fine but should be stated. Cross-row fragments depend on rows being contiguous in the source.\n- **Tail overlap with head.** The filter allows a tail that starts inside the head. This is deterministic but surprising. State it explicitly or require the tail start to be at or after head end.\n- **OR exclusivity.** DESIGN.md §2 still says \"if exclusivity is unclear, use node q1\". Host item 4 reverses this. Amend §2 or the prompt and validator will disagree with the host rule.\n- **p=2 with a link.** Example 3 attaches an R leaf to a `p=2` unit without naming the role. Under fix 1 this is a `qual` link.\n- **Provenance versus graph evidence.** Nothing ties link or node evidence rows to the unit's `e` list. A unit can link to a node evidenced in a sentence it does not cite. Report as a diagnostic rather than reject, since shared conditions can sit in other sentences.\n- **Unit `q` is single-valued.** Deadline, actor and scope ambiguities collapse into one code. Not a blocker, but comparison should not read unit `q` as the full uncertainty set.\n\n## Does the typed graph earn its cost\n\nAs specified, mostly not. The host checks arity, acyclicity and evidence exactness, and positive test 8 in DESIGN.md §9 documents that OR for AND, a wrong `acts` target and `if` for `onlyif` all validate. Operators therefore add unverifiable annotation on top of the thing that actually carries value: exact leaf text plus a typed link whose absence is visible. An opaque full clause with an explicit unit link gives preservation, non-leakage across units, sharing and deadline states at lower emission cost and with a comparison target that exists.\n\nThe parts that do earn their place are EXC ordering, `unless` as a carve-out against the unit, `acts` as a typed home for waivers, and ALT for competing readings. Operators would earn their place if one structural rule were added: every operator node carries covering evidence of the whole combined clause, and each child's resolved ranges must lie within the parent's covering ranges. This turns a class of leaks into structural errors. Counterexample: a model joins \"if available\" from sentence 2 under an AND whose covering clause is sentence 1; today that validates, under containment it is rejected. Discontinuous parents keep the existing 0..4 fragment slots. Cross-sentence conditions remain representable through separate links. Without this rule, recommend treating the operator tree as optional elaboration and mandating the full-clause fragment on the link root as the baseline that comparison runs against.\n\nNesting still cannot be canonicalized. Exception-to-exception has two defensible shapes, and DESIGN.md §11 correctly declines to pick. Comparison therefore needs explicit equivalence rules for AND flattening, EXC nesting, ALT versus `q1`, shared versus duplicated leaves, and leaf boundary variance.\n\n## Capacity and evidence limits\n\n- Caps detect overflow after the fact and do not prove or prevent loss. A shorter structurally valid graph is the real failure mode, and no sentinel or completeness flag in DESIGN.md §5 can see it.\n- An exact match proves only the selected range. A short fragment can select part of a condition and still validate, so coverage is a comparison question, not a validation one.\n- Whether the bridge reliably emits positional six-element fragment tuples is unverified. If tuple emission proves unstable, a keyed fragment object is a drop-in change.\n- Depth 12, 400 nodes and 600 KB are stated as provisional engineering defaults in host item 5. That is the correct framing; nothing here measures fit.\n- All examples are fictional and were reviewed only for internal consistency with DESIGN.md. Roles, anchors and types remain proposals, and no legal reading of the sample clauses is asserted.",
+    "ttft_ms": 155443,
+    "type": "result",
+    "duration_ms": 194165,
+    "uuid": "b6a1b4ea-557f-4738-9e59-f59c72814916",
+    "ttft_stream_ms": 869,
+    "time_to_request_ms": 29,
+    "first_content_frame_ms": 869,
+    "queued_turn_count": 0,
+    "result_index": 0
+  }
+}

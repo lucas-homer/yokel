@@ -1,0 +1,30 @@
+{
+  "event": "audit_deviation",
+  "recorded_at_utc": "2026-10-07T17:18:32Z",
+  "basis": "Primary audit note from the current task identifies Q01\u2013Q03 submitted web query strings as omitting the planned filetype:pdf filter; source query history is retained and is not rerun or replaced.",
+  "deviations": [
+    {
+      "query_id": "Q01",
+      "state": "Georgia",
+      "planned_query": "site:rules.sos.ga.gov Georgia official proposed agency rule public comment written comments notice PDF filetype:pdf",
+      "submitted_query": "site:rules.sos.ga.gov Georgia official proposed agency rule public comment written comments notice PDF",
+      "difference": "submitted query omitted the trailing filetype:pdf term"
+    },
+    {
+      "query_id": "Q02",
+      "state": "Virginia",
+      "planned_query": "site:register.dls.virginia.gov Virginia proposed regulation public comment period notice rulemaking PDF filetype:pdf",
+      "submitted_query": "site:register.dls.virginia.gov Virginia proposed regulation public comment period notice rulemaking PDF",
+      "difference": "submitted query omitted the trailing filetype:pdf term"
+    },
+    {
+      "query_id": "Q03",
+      "state": "Kentucky",
+      "planned_query": "site:apps.legislature.ky.gov Kentucky proposed administrative regulation notice public comment PDF filetype:pdf",
+      "submitted_query": "site:apps.legislature.ky.gov Kentucky proposed administrative regulation notice public comment PDF",
+      "difference": "submitted query omitted the trailing filetype:pdf term"
+    }
+  ],
+  "impact": "Candidate result sets were produced without the planned filetype filter; result URLs were still individually constrained to the official publisher domain. Do not reconstruct candidate sets or perform substitution searches.",
+  "disposition": "disclose and continue exact frozen Q05-Q24 queries."
+}

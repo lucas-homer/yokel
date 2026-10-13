@@ -1,0 +1,165 @@
+{
+  "fixture_id": "A10",
+  "state": "US-NY",
+  "bucket": "dense register layouts",
+  "layout_features": [
+    "dense two-column register",
+    "two neighboring notices",
+    "target complete in right column"
+  ],
+  "event_type": "proposed rulemaking on petition",
+  "source_url": "https://dos.ny.gov/september-30-2026vol-xlviii-issue-39",
+  "discovery_url": "https://dos.ny.gov/state-register",
+  "retrieved_at": "2026-10-06T00:33:42.355769+00:00",
+  "source_title": "PSC-39-26-00027-P Issuance of Securities and Other Forms of Indebtedness",
+  "selection_reason": "Second complete one-page target in latest issue on different physical page/input hash; distinguishes petition filing, debt authority horizon, and comment duration.",
+  "original_sha256": "fa9905b20ef140f1b2fd32bd7c5eb70f550741de45645a5d579ee9a0cb720928",
+  "input_sha256": "1bf2e0dd6a5badf8b581cc9c45d9d46376f568095bbd2512fef24d0cd80c0782",
+  "original_byte_length": 852912,
+  "input_byte_length": 89129,
+  "original_physical_pages": [
+    36
+  ],
+  "original_page_count": 98,
+  "input_page_count": 1,
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Original is complete 98-page September 30, 2026 issue, shared between A09/A10; inputs are distinct unchanged single physical pages and hashes. Adjacent notice text remains and must not supply target fields. Full target notice and its analyses survive; other issue pages/cover not in input. Downloaded original bytes contain a 422-byte warning prefix before the PDF header and produce xref warnings; original bytes retained without repair, readers successfully render the unaltered selected page content."
+  ],
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which commission considers the target PSC-39-26-00027-P petition?",
+      "expected_value": "Public Service Commission",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 36,
+      "input_page": 1,
+      "region": "right column target Substance",
+      "source_quote": "The Public Service Commission",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "notice_id",
+      "question": "What is the target Issuance of Securities notice identifier?",
+      "expected_value": "PSC-39-26-00027-P",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 36,
+      "input_page": 1,
+      "region": "right column target header",
+      "source_quote": "I.D. No. PSC-39-26-00027-P",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "subject",
+      "question": "What is the subject of PSC-39-26-00027-P?",
+      "expected_value": "Issuance of securities and other forms of indebtedness.",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 36,
+      "input_page": 1,
+      "region": "right target Subject",
+      "source_quote": "Subject: Issuance of securities and other forms of indebtedness.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "proposed_action_scope",
+      "question": "What authority amount and through-date are sought in PSC-39-26-00027-P (not a comment deadline)?",
+      "expected_value": {
+        "amount_usd": 500000000,
+        "through_date": "2029-12-31",
+        "role": "requested debt issuance authority horizon"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 36,
+      "input_page": 1,
+      "region": "right target Proposed Action",
+      "source_quote": "authority to issue long term debt in\nthe aggregate principal amount not to exceed $500 million th rough\nDecember 31, 2029.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "hearing_status",
+      "question": "Does target PSC-39-26-00027-P schedule a hearing?",
+      "expected_value": false,
+      "answerability": "explicit_negative",
+      "critical": true,
+      "original_page": 36,
+      "input_page": 1,
+      "region": "right column target heading below preceding notice case number",
+      "source_quote": "NO HEARING(S) SCHEDULED",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "comment_duration_anchor",
+      "question": "What comment duration and anchor belong to PSC-39-26-00027-P, without calculating a close?",
+      "expected_value": {
+        "duration": 60,
+        "unit": "days",
+        "anchor": "publication of this notice",
+        "computed_close": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 36,
+      "input_page": 1,
+      "region": "right lower target comment paragraph above target analyses",
+      "source_quote": "Public comment will be received until: 60 days after publication of this\nnotice.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "petition_filing_date",
+      "question": "What filing date belongs to the NFG petition considered in PSC-39-26-00027-P?",
+      "expected_value": {
+        "date": "2026-09-01",
+        "role": "petition filing"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 36,
+      "input_page": 1,
+      "region": "right target Substance first paragraph",
+      "source_quote": "ﬁled on September 1, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "authority",
+      "question": "What statutory authority belongs to PSC-39-26-00027-P?",
+      "expected_value": "Public Service Law, section 69",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 36,
+      "input_page": 1,
+      "region": "right target Statutory authority",
+      "source_quote": "Statutory authority: Public Service Law, section 69",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "issue_publication_date",
+      "question": "What issue publication date is printed on the target notice page?",
+      "expected_value": {
+        "date": "2026-09-30",
+        "role": "issue publication header"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 36,
+      "input_page": 1,
+      "region": "page header/footer",
+      "source_quote": "NYS Register/September 30, 2026",
+      "basis": "source_text"
+    }
+  ],
+  "collector": "source-a Codex task; source-only annotation before vendor parsing",
+  "reference_version": "collector-v1",
+  "discovery_method": "Official listing link or targeted official register PDF search, documented in selection-log.json",
+  "shared_original_group": "NY-2026-39",
+  "template_group": "NY-register-two-column",
+  "visual_inspection": {
+    "all_input_pages_inspected": true,
+    "renderer": "bundled PDFium scale1.8; earlier Poppler previews for first forms",
+    "scope": "complete input pages, including columns, selected marks, stamps, footers, continuation"
+  },
+  "reference_basis_note": "Image-only forms: source_text quotes are manual rendered-image transcriptions; visual_mark identifies actual selected choice. Born-digital quotes retain exact native substrings when available. Full-scope absence applies only to specified target and retained input."
+}

@@ -1,0 +1,9 @@
+## Department
+
+Agency CCR number Rule title Effective Date Department of Revenue Taxation Division 1 CCR 201-18 1 CCR 201-18 RETAIL MARIJUANA TAX 1 - eff 09/30/2026
+
+09/30/2026
+
+## Permanent Rules Adopted
+
+Colorado Register, Vol. 49, No. 17, September 10, 2026

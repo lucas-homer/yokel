@@ -1,0 +1,89 @@
+Bounded follow-up for your independent 12-method synthetic test file. r14.2 revision is READY. Host rerun of your byte-identical file with only PYTHONPATH changed: 11 pass, 1 duplicate-unit-ID error. Supplied code and test results are approved payload; no source-reference labels, credentials or prior reports supplied. Fable judgments only; Codex executes locally.
+Task: inspect the exact failing method and fixture diff, identify root cause, and return JSON only with diagnosis, scope/limits, and a replacement_method string for that ONE method. Preserve every prior assertion and semantic-versus-structural distinction. Allocate new test-only unit IDs from the fixture's current maximum rather than hard-coded 21/22/23; update all direct references to those new IDs consistently. No change to protocol, other methods, source facts or test expectations; no claim of r14.2 semantic implementation approval. Need a small portability adaptation only. Do not invent unrelated tests.
+BEGIN TEST METHOD DATA
+    def test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural(self):
+        v = fixture()
+        v['u'].append(dict(i=21, k=4, s='The office in Alder City is the in-person arrival endpoint.', m=0, c='', d=[14, 15], b=[], e=['s5', 's9'], q=0, r=''))
+        v['u'].append(dict(i=22, k=5, s='The office serves as the arrival location for the July 4, 2031 deadline.', m=0, c='', d=[21, 19], b=[], e=['s9', 's5'], q=0, r=''))
+        units = by_id(C.expand(v, SOURCE, TABLE))
+        self.assertEqual(units[22]['required_unit_ids'], [21, 19])
+        self.assertEqual(units[21]['modality'], 'informational')
+        self.assertEqual(units[14]['modality'], 'informational')
+        # A mandatory dependent does not make its prerequisites mandatory: edges have no force.
+        w = copy.deepcopy(v); w['u'][-1].update(m=1)
+        self.assertEqual(by_id(C.expand(w, SOURCE, TABLE))[21]['modality'], 'informational')
+        # The role-to-endpoint ordering rule is purely structural and is enforced as such.
+        w = copy.deepcopy(v); w['u'][-1]['d'] = [19, 21]
+        self.assertTrue(check(w, 'role endpoint dependency'))
+        w = copy.deepcopy(v)
+        w['u'].append(dict(i=23, k=7, s='Rule Q-8 and filing F-17 relate as amended rule and prior filing.', m=0, c='', d=[], b=[9, 10], e=['s4'], q=0, r=''))
+        C.validate(w, SOURCE, TABLE)
+        w['u'][-1]['b'] = [9]
+        self.assertTrue(check(w, 'relationship members'))
+        w = copy.deepcopy(v); w['u'][0]['b'] = [2]
+        self.assertTrue(check(w, 'members on nonrelationship'))
+END TEST METHOD
+BEGIN FIXTURE DIFF DATA
+--- /Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/protocol/fictional_controls.py	2026-10-12 18:48:34
++++ /Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/protocol-revised/fictional_controls.py	2026-10-12 19:05:08
+@@ -19,7 +19,7 @@
+     add(3,'Remarks deadline date is April 9, 2031.','s1',5,
+         'Cutoff clock unknown; timezone unknown; receipt-versus-dispatch unknown.',q=1,
+         r='Source gives only a date; cutoff clock, timezone, timeliness basis and directive force remain unknown.')
+-    add(6,'Send remarks by the deadline.','s1',5,d=[1],q=1,r='Bare directive does not settle mandatory versus advisory force.')
++    add(6,'An unspecified actor is directed to send remarks by the deadline.','s1',5,d=[1],q=1,r='Actor is not stated; bare directive does not settle mandatory versus advisory force.')
+     add(3,'Applications deadline date is May 12, 2031.','s2',1,
+         'Cutoff clock 5 p.m.; timezone Eastern; timeliness basis receipt.')
+     add(3,'Applications cutoff clock is 5 p.m.','s2',1,d=[3])
+@@ -45,6 +45,10 @@
+     add(3,'Requests deadline date is August 2, 2031.','s10',5,
+         'Cutoff clock stated but ambiguous: 12:00 or 13:00; timezone UTC; receipt-versus-dispatch not stated (unknown).',q=1,
+         r='Source leaves two cutoff clocks unresolved; timeliness basis is absent, directive force unknown.')
++    add(3,'In-person arrival cutoff clock is 09:00.','s9',d=[19])
++    add(3,'In-person arrival cutoff timezone is UTC.','s9',d=[19])
++    add(3,'Requests cutoff clock is stated as 12:00 or 13:00, unresolved.','s10',d=[20],q=1,r='Source leaves the two stated cutoff clocks unresolved.')
++    add(3,'Requests cutoff timezone is UTC.','s10',d=[20])
+     table=span_table(SOURCE)
+     return dict(v=VERSION,h=source_hash(SOURCE),t=digest(table),u=units,z='END')
+ 
+
+END DIFF
+BEGIN LOCAL TEST OUTPUT DATA
+test_affected_rule_and_historical_filing_stay_distinct_on_one_broad_span (test_fable_contract.AffectedRuleVersusHistoricalFiling.test_affected_rule_and_historical_filing_stay_distinct_on_one_broad_span) ... ok
+test_misattributed_transition_is_structurally_valid_and_separately_reviewable (test_fable_contract.AffectedRuleVersusHistoricalFiling.test_misattributed_transition_is_structurally_valid_and_separately_reviewable) ... ok
+test_contested_force_with_reason_accepted_unsupported_certainty_flagged (test_fable_contract.AmbiguousForce.test_contested_force_with_reason_accepted_unsupported_certainty_flagged) ... ok
+test_missing_present_ambiguous_dimensions_and_silent_drop (test_fable_contract.DeadlineDimensions.test_missing_present_ambiguous_dimensions_and_silent_drop) ... ok
+test_bundled_facts_remain_recoverable_with_fewer_units (test_fable_contract.RecoverabilityAndDecomposition.test_bundled_facts_remain_recoverable_with_fewer_units) ... ok
+test_span_coverage_does_not_prove_fact_coverage (test_fable_contract.RecoverabilityAndDecomposition.test_span_coverage_does_not_prove_fact_coverage) ... ok
+test_all_semantic_negatives_pass_the_structural_validator (test_fable_contract.SemanticVersusStructural.test_all_semantic_negatives_pass_the_structural_validator)
+validate() is semantics-blind by design. Every authored negative must pass it and ... ok
+test_one_byte_source_mutation_breaks_binding (test_fable_contract.SpanTableAndBinding.test_one_byte_source_mutation_breaks_binding) ... ok
+test_partition_is_exact_and_byte_preserving (test_fable_contract.SpanTableAndBinding.test_partition_is_exact_and_byte_preserving) ... ok
+test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural (test_fable_contract.StructuralInvariants.test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural) ... ERROR
+test_fixture_validates_roundtrips_and_never_claims_completeness (test_fable_contract.StructuralInvariants.test_fixture_validates_roundtrips_and_never_claims_completeness) ... ok
+test_id_evidence_cycle_terminal_capacity_and_truncation_rejections (test_fable_contract.StructuralInvariants.test_id_evidence_cycle_terminal_capacity_and_truncation_rejections) ... ok
+
+======================================================================
+ERROR: test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural (test_fable_contract.StructuralInvariants.test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/testing/revised/test_fable_contract.py", line 160, in test_dependency_edges_carry_no_force_and_endpoint_rule_is_structural
+    units = by_id(C.expand(v, SOURCE, TABLE))
+                  ~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/protocol-revised/compact.py", line 91, in expand
+    validate(value,source,table,finish_reason)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/protocol-revised/compact.py", line 65, in validate
+    require(unit['i'] not in units,'duplicate unit ID');units[unit['i']]=unit
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/protocol-revised/compact.py", line 15, in require
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: duplicate unit ID
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.015s
+
+FAILED (errors=1)
+
+END TEST OUTPUT

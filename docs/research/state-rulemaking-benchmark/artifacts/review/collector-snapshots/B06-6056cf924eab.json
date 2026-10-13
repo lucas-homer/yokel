@@ -1,0 +1,136 @@
+{
+  "fixture_id": "B06",
+  "state": "TX",
+  "bucket": "dense register layouts",
+  "layout_features": [
+    "two-column dense",
+    "cross-page continuation",
+    "neighboring notices",
+    "rule text strikeouts"
+  ],
+  "event_type": "proposal",
+  "source_url": "https://www.sos.texas.gov/texreg/pdf/backview/0522/0522is.pdf",
+  "discovery_url": "https://www.sos.texas.gov/texreg/pdf/backview/0522/index.shtml",
+  "retrieved_at": "2026-10-06T00:33:01.377057+00:00",
+  "source_title": "Broker Responsibility Advisory Committee proposal",
+  "selection_reason": "Next bounded notice after education proposal; relative deadline; second and last from issue.",
+  "original_sha256": "536e0a4a7ded51e4a76f1dfb26fb92fef2c364152bbf8d0e7938c4f8afeadae4",
+  "input_sha256": "e2d346ead432a03dd645b4e8027a4808003648ddb1b10a9f154e6c633bc71bf9",
+  "original_bytes": 35763191,
+  "input_bytes": 241628,
+  "original_page_count": 185,
+  "input_page_count": 2,
+  "original_physical_pages": [
+    32,
+    33
+  ],
+  "package_limitations": "Derived contiguous complete notice/form excerpt. Full original retained; attachments/rule text outside selected notice are excluded; whole physical pages may contain neighboring notice material.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency proposes Broker Responsibility Advisory Committee changes?",
+      "expected_value": "Texas Real Estate Commission",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 32,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "The T exas Real Estate Commission (TREC) proposes amend-",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "citation",
+      "question": "Which citation belongs to the target notice?",
+      "expected_value": "22 TAC \u00a7535.46",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 32,
+      "input_page": 1,
+      "region": "Target notice labeled field",
+      "source_quote": "22 TAC \u00a7535.46",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "source_id",
+      "question": "What is the target native TRD identifier?",
+      "expected_value": "TRD-202601973",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 33,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "TRD-202601973",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "comment_duration",
+      "question": "What relative public comment deadline is stated?",
+      "expected_value": {
+        "days": 30,
+        "day_basis": null,
+        "anchor": "publication in Texas Register",
+        "computed_date": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 33,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "The deadline for \ncomments is 30 days after publication in the Texas Register.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "publication",
+      "question": "What issue publication date anchors the relative deadline?",
+      "expected_value": "2026-05-22",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 32,
+      "input_page": 1,
+      "region": "Page footer",
+      "source_quote": "May 22, 2026 51 TexReg 3501",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "filing",
+      "question": "What filing date belongs to TRD-202601973?",
+      "expected_value": "2026-05-08",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 33,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "Filed with the Office of the Secretary of State on May 8, 2026.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "earliest_adoption",
+      "question": "What earliest possible adoption date is supplied?",
+      "expected_value": "2026-06-21",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 33,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "Earliest possible date of adoption: June 21, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "close_clock",
+      "question": "Does the target notice state a comment-close clock time?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 33,
+      "input_page": 2,
+      "region": "Target \u00a7535.46 starts input page 1 after TEA diamonds and ends page 2 at TRD-202601973/diamonds; do not use neighboring TEA window.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    }
+  ],
+  "annotation_author": "Codex source collector agent; not human gold",
+  "visual_inspection": "All input pages inspected as rendered images by collector agent; source-only references, pending independent review.",
+  "shared_original_group": "TX-2026-05-22",
+  "template_family": "TX-Register-proposed-rule",
+  "page_derivation_validation": "Selected page content streams and media/crop boxes equal original mapped pages; rendered all input pages inspected."
+}

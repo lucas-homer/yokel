@@ -1,0 +1,29 @@
+{
+  "schema_version": "round8-cap-probe.primary-native-validation.v1",
+  "created_utc": "2026-10-09T21:22:50.038047+00:00",
+  "status": "ready_waiting_for_v4_keychain_authorization",
+  "provider_calls": 0,
+  "prior_round8_files_verified": 1046,
+  "reviewed_policy_sha256": "4370219977baa4769c2d2ecc918e9cdf3cb1f2dcbbcb890f56a3e8fa258989b7",
+  "native_job_sha256": "e9903ba2509940e9bc742b01dfb02eb9a28c8a6eddc42522ee3fefc9096d7a58",
+  "binding_sha256": "449f411bd3f38f02c5bfc06e5f4d40fff7cbbf7267d3ff295800966f5d19e1bd",
+  "dependencies_sha256": "60e59edaa18335d50809d21265176b1f4b4d0e06a859052a4f331180954c3540",
+  "native_binary": "/Users/home/.local/libexec/yokel/research-credentials-v4",
+  "native_binary_sha256": "9d45651394952d95840521c968f413ab754962b61e64bd402fdbf0aa7716c70f",
+  "native_source_sha256": "b40d294dd46b44a3ced0313d60425863aa3e9fef7c49922869c5d85232e6bcce",
+  "build_script_sha256": "0f935757c1227a8a21085ca43ab224652f4697559989752a45e14364fcb74779",
+  "build_exit_code": 0,
+  "build_validation": [
+    "codesign --verify --strict passed",
+    "hardened runtime/restrict/kill signature flags passed",
+    "embedded policy valid"
+  ],
+  "native_self_test_exit_code": 0,
+  "adapter_check_exit_code": 0,
+  "job_file_pins_verified": 1683,
+  "v4_noninteractive_identity_exit_code": 1,
+  "v3_comparison_identity_exit_code": 0,
+  "interpretation": "Existing service-account identity works through previously trusted v3. New v4 fails immediately with generic fail-closed message; new-binary Keychain trust is the likely remaining boundary. No raw Keychain status/secret inspection.",
+  "required_user_step": "Run ~/.local/libexec/yokel/research-credentials-v4 rotate-local in a normal Mini Terminal, paste existing service-account token at hidden prompt, approve exact v4 binary.",
+  "next_after_user_step": "Verify v4 identity and smoke, then execute fixed round8-cap-probe-initial once; freeze and independently audit outputs."
+}

@@ -1,0 +1,55 @@
+[
+  {
+    "fixture_id": "A03",
+    "field_id": "rule_identity",
+    "type": "value_transcription_correction",
+    "reason": "Rendered rule-name cell reads Subpart 1 to S; accompanying description says a new subpart S was created. Collector numeral 5 transcription corrected to letter S.",
+    "collector_value": "Title 35, Part VIII, Subpart 1 to 5 - Table of Contents",
+    "reviewer_value": "Title 35, Part VIII, Subpart 1 to S - Table of Contents",
+    "collector_answerability": "present",
+    "reviewer_answerability": "present"
+  },
+  {
+    "fixture_id": "A10",
+    "field_id": "authority",
+    "type": "criticality_adjudication",
+    "reason": "Statutory authority is supporting context; this section69 citation alone does not identify the notice or determine lifecycle/participation/date scope. Do not inflate critical quota with legal-authority trivia.",
+    "collector_value": "Public Service Law, section 69",
+    "reviewer_value": "Public Service Law, section 69",
+    "collector_answerability": "present",
+    "reviewer_answerability": "present"
+  },
+  {
+    "fixture_id": "A10",
+    "field_id": "issue_publication_date",
+    "type": "input_scope_correction",
+    "reason": "Quoted NYS Register/September30,2026 header is absent from this retained input, confirmed visually and in native.txt. Date belongs to issue provenance, not parse-visible evidence. Preserve original question; answer is not stated in retained input.",
+    "collector_value": {
+      "date": "2026-09-30",
+      "role": "issue publication header"
+    },
+    "reviewer_value": null,
+    "collector_answerability": "present",
+    "reviewer_answerability": "not_stated"
+  },
+  {
+    "fixture_id": "B03",
+    "field_id": "event",
+    "type": "role_precision_clarification",
+    "reason": "Opening says intends to adopt and all action is proposed. Expected answer must preserve proposed stage; asserted final adoption fails.",
+    "collector_value": "adoption",
+    "reviewer_value": "proposed adoption",
+    "collector_answerability": "present",
+    "reviewer_answerability": "present"
+  },
+  {
+    "fixture_id": "B04",
+    "field_id": "event_selected",
+    "type": "role_precision_clarification",
+    "reason": "Selected AMENDMENT is inside Proposed Action block. Must retain proposed stage and X association, not final amendment.",
+    "collector_value": "amendment",
+    "reviewer_value": "proposed amendment",
+    "collector_answerability": "present",
+    "reviewer_answerability": "present"
+  }
+]

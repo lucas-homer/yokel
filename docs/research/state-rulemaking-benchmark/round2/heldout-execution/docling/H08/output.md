@@ -1,0 +1,89 @@
+## NOTICE OF PROPOSED CHANGES IN THE REGULATIONS OF THE ALASKA BOARD OF GAME
+
+Summary of Changes: The Alaska Board of Game proposes to adopt regulation changes in Title 5 of the Alaska Administrative Code, dealing with the use and taking of game in Game Management Units 23, 24 26(B), and 5 AAC Chapter 92, Statewide Provisions including the following:
+
+- (1) 5 AAC 92.510 is proposed to be amended regarding hunting in the vicinity of the Ambler Road.
+- (2) 5 AAC 92.550 is proposed to be amended regarding trapping in the vicinity of the Ambler Road.
+- (3) 5 AAC 92.126(b) is proposed to be amended regarding reauthorization of a nonintensive management predator control plan for muskoxen in Unit 26B.
+- (4) 5 AAC 92.085 is proposed to be amended regarding the use of equipment in hunts for big game with archery.
+
+Written comments: You may comment on the proposed regulation changes, including the potential costs to private persons of complying with the proposed changes, by submitting written comments to the Alaska Board of Game at https://boardofgame.adfg.alaska.gov. Written comments may also be submitted to the ADF&amp;G Boards Support Section at P.O. Box 115526, Juneau, AK 99811-5526. Additionally, the Board of Game will accept comments by facsimile at (907) 465-6094.
+
+Written comment deadline: The comments must be received not later than 8:00 a.m. on Thursday, July 16, 2026.
+
+Oral hearing: Oral or written comments also may be submitted at a hearing to be held on July 2223, 2026, at the Westmark Fairbanks Hotel &amp; Conference Center, 813 Noble St., Fairbanks, Alaska. The hearing will be held from 8:30 a.m. to 5:30 p.m. and might be extended to July 24, from 8:30 am to 5:30 p. m. at the same location to accommodate those present before 1:00 p.m. on July 22, who did not have an opportunity to comment.
+
+Obtaining copies of proposed regulations: For a copy of the proposed regulation changes, go to https://www.adfg.alaska.gov/index.cfm?adfg=gameboard.meetinginfo&amp;date=07-222026&amp;meeting=fairbanks or contact the ADF&amp;G Boards Support Section at (907) 465-4110.
+
+Final version of regulations: After the public comment period ends, the Board of Game will either adopt the proposed regulation changes or other provisions dealing with the same subject, without further notice, or decide to take no action. The language of the final regulation may be different from that of the proposed regulation. You should comment during the time allowed if your interests could be affected.
+
+Public nature of comments: Public comments, once submitted, are public records and subject to disclosure under the Alaska Public Records Act. See AS 40.25.100 - 40.25.295. Do NOT include in your comments any information that you do not want made public.
+
+Accommodations: If you are a person with a disability who needs a reasonable accommodation in order to participate in this process, please contact ADF&amp;G, Boards Support Section at (907) 465-4110 not later than July 15, 2026 to ensure that any necessary accommodation can be provided.
+
+Statutory authority: AS 16.05.255
+
+Statutes being implemented, interpreted, or made specific: AS 16.05.250; AS 16.05.255; AS 16.05.258; AS 16.05.270; AS 16.05.783; AS 16.05.790; AS 16.05.920
+
+Fiscal information: The proposed regulation changes are not expected to require an increased appropriation.
+
+How to receive further notices: The ADF&amp;G Boards Support Section keeps a list of individuals and organizations interested in its regulations. Those on the list will automatically be sent a copy of all of the boards' notices of proposed regulation changes. To be added to or removed from the list, send a request to Kari Winkel at kari.winkel@alaska.gov, giving your name, and either your e-mail address or mailing address, as you prefer for receiving notices. Alternatively, visit the website at https://boardofgame.adfg.alaska.gov or contact ADF&amp;G Boards Support Section at (907) 465-4110.
+
+Individuals can also signup to receive automated notifications of all State of Alaska notices, including public notice for regulation changes, by subscribing to the Alaska Online Public Notices System: https://aws.state.ak.us/OnlinePublicNotices/Default.aspx.
+
+Date: June 12, 2026
+
+/s/
+
+Kari Winkel Executive Director Alaska Board of Game
+
+- 2 -
+
+## ADDITIONAL REGULATION NOTICE INFORMATION (AS 44.62.190(g))
+
+1. Adopting agency: Alaska Board of Game
+2. General subject of regulation: Areas closed to hunting and trapping, Non-Intensive Management Predator Control Plans, Methods and Means, other miscellaneous provisions
+3. Citation of regulation (may be grouped): 5 AAC 92.085, 5 AAC 92.126, 5 AAC 92.510, 5 AAC 92.550
+4. Department of Law file number, if any: 2026200173
+5. Reason for the proposed action:
+
+- [ ] ( ) Compliance with federal law
+
+- [ ] ( ) Compliance with new or changed state statute
+
+- [ ] ( ) Compliance with court orders
+
+- [x] (x ) Development of program standards
+
+- [ ] ( ) Other (identify):
+
+6. Appropriation/Allocation: Natural Resources and all RDUs; OMB Component Number 2048
+7. Cost of implementation to the state agency and available funding (in thousands of dollars):
+
+|                            | Initial Year - FY 27   | Subsequent Years - FY 28   | Subsequent Years - FY 29           |
+|----------------------------|------------------------|----------------------------|------------------------------------|
+| Operating Cost             | $ 106.0                | $ 100.0                    | TBD*                               |
+| Capital Cost               | $ 0                    | $ 0                        |                                    |
+| 1002 Federal receipts      | $ 0                    | $ 0                        |                                    |
+| 1003 General fund match    | $ 0                    | $ 0                        |                                    |
+| 1004 General fund          | $ 0                    | $ 0                        |                                    |
+| 1005 General fund/ program | $ 0                    | $ 0                        |                                    |
+| Other (identify)           | $ 106.0                | $ 100.0                    | 100% Fish and Game Fund all years. |
+
+- 3 -
+
+8. The name of the contact person for the regulation:
+
+Name: Kari Winkel Title: Executive Director, Board of Game Address: Boards Support Section Alaska Department of Fish and Game PO Box 115526 Juneau, AK 99811-5526 Telephone: (907) 465-6098 E-mail address: kari.winkel@alaska.gov
+
+9. The origin of the proposed action:
+
+\_\_X\_\_ Staff of state agency \_\_\_\_\_ Federal government \_\_X\_ General public \_\_\_\_\_ Petition for regulation change
+
+\_\_\_\_\_ Other (identify)
+
+10. Date:\_\_June 12, 2026\_\_\_\_ Prepared by:
+
+Name (printed) Kari Winkel Title (printed): Executive Director Telephone: 907-465-6098
+
+- 4 -

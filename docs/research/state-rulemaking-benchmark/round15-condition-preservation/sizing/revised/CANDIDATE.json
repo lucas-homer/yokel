@@ -1,0 +1,406 @@
+{
+  "actual_diff": {
+    "all_other_functions_constants_schema_build_AST_unchanged_except_three_version_constants": true,
+    "changed_functions": [
+      "contract",
+      "validate"
+    ],
+    "full_matrix_rerun_needed_for_wire_shape_change": false,
+    "full_original_matrix_rerun": false,
+    "inverse_delta": "deepcopy unit d/b and node a lists; wire unchanged",
+    "prompt_delta": "only r15.0 -> r15.1 envelope version",
+    "settings_and_bound_policy_unchanged": true,
+    "validate_prefix_suffix_unchanged_except_graph_walk": true
+  },
+  "authored_controls_sha256": "defa002abc60d71507619fc6f17b39adf771bbd96e5087406f0a5fadd0e12fba",
+  "budget": {
+    "R14_reservation_and_charge_nanousd": 200000000,
+    "another_200000000_reservation_fits": false,
+    "budget_policy": "Do not replace conservative charges with lower reported/estimated costs or silently lower reservation. R15 is offline only; a new paid experiment requires explicit primary/user admission and sufficient approved budget.",
+    "cache_write_premium_verified": false,
+    "cache_write_tokens_reported": 6727,
+    "ceiling_nanousd": 2000000000,
+    "cumulative_conservative_charge_nanousd": 1905990718,
+    "invoice_verified": false,
+    "nominal_estimate_includes_cache_write_premium": false,
+    "nominal_usage_rate_estimated_nanousd": 85770000,
+    "prior_before_R14_nanousd": 1705990718,
+    "provider_report_minus_nominal_estimate_nanousd": 3363500,
+    "provider_reported_cost_nanousd": 89133500,
+    "provider_reported_cost_usd": 0.0891335,
+    "remaining_conservative_nanousd": 94009282,
+    "remaining_conservative_usd": "0.094009282",
+    "shortfall_for_same_reservation_nanousd": 105990718
+  },
+  "compatibility": {
+    "actual_source_bound_schema_old_checker_admitted": false,
+    "alternative": "A separately reviewed object-fragment wire/schema redesign would require new codecs, pins, independent equivalence/negative checks and complete sizing. Do not assume provider support for either route.",
+    "minimal_new_runtime_support_required": [
+      "$schema dialect metadata",
+      "positional prefixItems and Boolean items=false closure",
+      "anyOf branch semantics",
+      "pattern constraints",
+      "same strict keyword/resource/type checks"
+    ],
+    "provider_structured_schema_support": "UNVERIFIED_NO_PROVIDER_CALL",
+    "runtime_adapter_or_native_runner_changed": false,
+    "schema_inventory": {
+      "boolean_schema_paths": [
+        "$/properties/u/items/properties/y/anyOf/0/properties/c/properties/x/items/items",
+        "$/properties/u/items/properties/y/anyOf/0/properties/z/properties/x/items/items",
+        "$/properties/u/items/properties/y/anyOf/0/properties/b/properties/x/items/items",
+        "$/properties/g/items/properties/x/items/items",
+        "$/properties/l/items/properties/x/items/items"
+      ],
+      "keywords": {
+        "$schema": 1,
+        "additionalProperties": 8,
+        "anyOf": 1,
+        "enum": 20,
+        "items": 17,
+        "maxItems": 17,
+        "maxLength": 18,
+        "maximum": 10,
+        "minItems": 17,
+        "minLength": 18,
+        "minimum": 20,
+        "pattern": 3,
+        "prefixItems": 5,
+        "properties": 8,
+        "required": 8,
+        "type": 87
+      },
+      "old_schema_depth_cap": 16,
+      "schema_node_depth": 8,
+      "unsupported_old_checker_keywords": {
+        "$schema": [
+          "$"
+        ],
+        "anyOf": [
+          "$/properties/u/items/properties/y"
+        ],
+        "pattern": [
+          "$/properties/g/items/properties/i",
+          "$/properties/g/items/properties/a/items",
+          "$/properties/l/items/properties/n"
+        ],
+        "prefixItems": [
+          "$/properties/u/items/properties/y/anyOf/0/properties/c/properties/x/items",
+          "$/properties/u/items/properties/y/anyOf/0/properties/z/properties/x/items",
+          "$/properties/u/items/properties/y/anyOf/0/properties/b/properties/x/items",
+          "$/properties/g/items/properties/x/items",
+          "$/properties/l/items/properties/x/items"
+        ]
+      }
+    }
+  },
+  "expanded_version": "round15.expanded-inventory.v2",
+  "focused_behavioural_control": {
+    "error_code": "graph_depth",
+    "error_type": "ValueError",
+    "expected_depth_nodes": 399,
+    "nodes": 399,
+    "old_error_not_retested": "Earlier Opus/GPT hardening evidence reports RecursionError; this small check verifies only revised controlled stop.",
+    "partial_expansion_emitted": false,
+    "recursion_limit": 600
+  },
+  "limits": [
+    "Authored translated controls do not establish semantic equivalence, source completeness, model compression, accuracy or future output fit.",
+    "Wire/schema shapes are checked unchanged after version/hash translation; behavioural hardening is a controlled host stop and detached inverse lists, not improved extraction.",
+    "Complete source/request/controls retained; no clipping, narrowing, retry, fallback, signing or budget changes."
+  ],
+  "observed_tokens": "Only R14 observed7231/8192; no R15/R15.1 model or tokenizer measurement",
+  "paired_authored_controls": [
+    {
+      "byte_delta": 0,
+      "bytes": 638,
+      "expanded_equal_after_only_version_hash_translation": true,
+      "guarded_request_bytes": 14634,
+      "guarded_request_delta": 0,
+      "id": "paired-opaque-complete-clause",
+      "inverse_exact": true,
+      "inverse_lists_detached": true,
+      "label": "Translated authored exact-clause sizing control; not model output/semantic performance",
+      "original_bytes": 638,
+      "request_sha256": "dc32064c02c0fb2f0045e65a29b05a0ba128c91f21742b888bec33a4fdd4680c",
+      "source_sha256": "fbfd3edc0186471e17fc35a30e211fd98ff198e7a78ea8d0d7b0e45a4797ea45",
+      "wire_sha256": "2d86a17c26cd2b7c08fafe1b70e2c9e795023a9f3c4ba0374033ddbf568735e2"
+    },
+    {
+      "byte_delta": 0,
+      "bytes": 868,
+      "expanded_equal_after_only_version_hash_translation": true,
+      "guarded_request_bytes": 14634,
+      "guarded_request_delta": 0,
+      "id": "paired-typed-complete-clause",
+      "inverse_exact": true,
+      "inverse_lists_detached": true,
+      "label": "Translated authored exact-clause sizing control; not model output/semantic performance",
+      "original_bytes": 868,
+      "request_sha256": "dc32064c02c0fb2f0045e65a29b05a0ba128c91f21742b888bec33a4fdd4680c",
+      "source_sha256": "fbfd3edc0186471e17fc35a30e211fd98ff198e7a78ea8d0d7b0e45a4797ea45",
+      "wire_sha256": "18f1652719a9424509662a53c21ca7c2b7453d1ab7f382dfce46794674395d2d"
+    }
+  ],
+  "protocol_ready_sha256": "dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50",
+  "protocol_version": "r15.1",
+  "public_R14_source_request": {
+    "full_request_bytes": 36884,
+    "guard_max_bytes": 40000,
+    "guarded_byte_delta": 0,
+    "guarded_request_bytes": 37908,
+    "label": "Same outcome-exposed7208-byte R14 source; request sizing only, no reference/output migration or provider experiment",
+    "original_R15_guarded_bytes": 37908,
+    "prior_request_sha256": "0c6c4a1e38f6bfacb6ad0fc455777bca9875567e4864d1bf00a65043e4cb3a71",
+    "request_sha256": "9d8ff82581f6e7a7541ce2cc208f3eef19eddd6b7f6a126a28abef8d5e4a1ec5",
+    "residual_guard_bytes": 2092,
+    "schema_byte_delta": 0,
+    "schema_bytes": 11776,
+    "schema_equal_after_only_version_hash_translation": true,
+    "source_bytes": 7208,
+    "source_sha256": "5b8b221224c799e4950dbddf6df8bbf0652ee90db7150f1ed16a332b137df55f",
+    "source_text_and_span_rows_unchanged": true,
+    "span_count": 108
+  },
+  "schema_version": "round15.revised-small-sizing.v1",
+  "source_pins": {
+    "round14-semantic-contract/source/parsed-body.txt": {
+      "bytes": 7208,
+      "sha256": "5b8b221224c799e4950dbddf6df8bbf0652ee90db7150f1ed16a332b137df55f"
+    },
+    "round15-condition-preservation/primary/R14-FREEZE.json": {
+      "bytes": 29703,
+      "sha256": "6e8f052b3aee27f1561e3384fed394aba9d05602bbd25f4240d094f4566a1ce3"
+    },
+    "round15-condition-preservation/protocol-revised/READY.json": {
+      "bytes": 4739,
+      "sha256": "dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50"
+    },
+    "round15-condition-preservation/protocol-revised/REPORT.md": {
+      "bytes": 2512,
+      "sha256": "2c99cec0493b6f60b6d5dcf99b88ed5c1630b1bee0e9d1269e0288b51f89f155"
+    },
+    "round15-condition-preservation/protocol-revised/SPEC.md": {
+      "bytes": 15292,
+      "sha256": "38c5ca0131d58a59183bff4d8a6d2fdcfebd1f5e8433352453e30d6c2cf866b6"
+    },
+    "round15-condition-preservation/protocol-revised/bound-policy.json": {
+      "bytes": 873,
+      "sha256": "0bd69600a782c8746318bcac4ada7990e84de6c19afa24121f1e5e7652959482"
+    },
+    "round15-condition-preservation/protocol-revised/compact.py": {
+      "bytes": 21113,
+      "sha256": "8e7faec0d3c3fd5d16cabf58977804a401ca904f441f535af2e59fda9163ff6a"
+    },
+    "round15-condition-preservation/protocol-revised/fictional_controls.py": {
+      "bytes": 5576,
+      "sha256": "a99925b177473c351c8d6863c3fb471f4538571973bddfc1b8d09169499f0fce"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/expanded.json": {
+      "bytes": 9387,
+      "sha256": "99d95caefed656d116d9eca2dcb4c9983e7b1213f70e47edfd7d0d3943c887ff"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/expected.json": {
+      "bytes": 1218,
+      "sha256": "217970aa3fc2aaad58af20fc714fab468bd75c9b0f09bba98c6755516f416ae9"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint1-full-clause.json": {
+      "bytes": 948,
+      "sha256": "6f21f93e11b525f5847e90d3d9696e951b77fc7054e1bc7aa14b3d629d777b4d"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint1-graph.json": {
+      "bytes": 583,
+      "sha256": "d6a7d95cd5487d08c3f2267d4cecf6fd6db1954c48d330d7cd434373a4fabea2"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint1-source.txt": {
+      "bytes": 714,
+      "sha256": "a31184487fa2adfc48636ebbc9a8f2c7ea867761bd04b80ac1b0df27f8ab90e6"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint16-full-clause.json": {
+      "bytes": 12894,
+      "sha256": "d0d141df47888caaa07cd113f6e69457b2a4e72e0193ac6a31acab031c72b5bf"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint16-graph.json": {
+      "bytes": 6624,
+      "sha256": "928a09b56b73be3f4da5a3e7b00ec4633ca00cc6c85ba16d9eb54ac97e107162"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint16-source.txt": {
+      "bytes": 11446,
+      "sha256": "4cb0ddad2f1662b96ba3181a371965433c9c633c56eeb9b68c7509aa564fc794"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint8-full-clause.json": {
+      "bytes": 6513,
+      "sha256": "e0efbf60210227dbe22d14dc9f2c2e91e4cce0145e59be15a7eee9851d7b7943"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint8-graph.json": {
+      "bytes": 3376,
+      "sha256": "c027afa50a6b3e70b9beb7c05f9dc7fb6b644617569e08c99e4c9516e7c76972"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_disjoint8-source.txt": {
+      "bytes": 5719,
+      "sha256": "11de1c85bfc61b3b154e6e3e36982131b163efbc888c44ea88a8cbb02e3ca10c"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared64-full-clause.json": {
+      "bytes": 51143,
+      "sha256": "cccddd3fb059c0a1eda4b0b5d0d2b42c7e24b86cf967060bc52976876b9593ff"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared64-graph.json": {
+      "bytes": 13789,
+      "sha256": "68b240ffbcc61b9309350b46396c2b6bbea52d3076f870d067ee2da956c1e908"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared64-source.txt": {
+      "bytes": 714,
+      "sha256": "a31184487fa2adfc48636ebbc9a8f2c7ea867761bd04b80ac1b0df27f8ab90e6"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared8-full-clause.json": {
+      "bytes": 6513,
+      "sha256": "cf389928b4466aaa51ea829d05bd6d57529a719ccbf12cc383b64463a663e9cf"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared8-graph.json": {
+      "bytes": 2032,
+      "sha256": "7f824e7d1f7f3e643152791b801787aefeb55bdb11a1ca5c3b18c22fd26898cb"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/long_shared8-source.txt": {
+      "bytes": 714,
+      "sha256": "a31184487fa2adfc48636ebbc9a8f2c7ea867761bd04b80ac1b0df27f8ab90e6"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/positive.json": {
+      "bytes": 3518,
+      "sha256": "89c1e876d102111161f5c1f62052c25a7b000a1d4198a48c3af548b4d254e487"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/semantic-negatives.json": {
+      "bytes": 31950,
+      "sha256": "0cddb6b91e2a0d9fbfb6f42cad7cdae03b9d205ded4155a6d0e992c2b4423500"
+    },
+    "round15-condition-preservation/protocol-revised/fixtures/source.txt": {
+      "bytes": 1234,
+      "sha256": "67f31a4bd0c271be7f2b101046215c88069a8699de6a7ebc4e1e1b84de18d440"
+    },
+    "round15-condition-preservation/protocol-revised/implementation-preflight.md": {
+      "bytes": 11325,
+      "sha256": "b1b82748fc1bbb59b8a793ac0c2ff2920c29173674fdfbb54a59b7231a964637"
+    },
+    "round15-condition-preservation/protocol-revised/offline-request.json": {
+      "bytes": 15480,
+      "sha256": "83a9e06f885c06a52e2ab051ed94d5f975f2b747736326981c8351009a997a5e"
+    },
+    "round15-condition-preservation/protocol-revised/offline-results.json": {
+      "bytes": 1768,
+      "sha256": "6120ae050b5440af4da983f53f61ce57eedf99b622ffeea4a4db3f093f3b199e"
+    },
+    "round15-condition-preservation/protocol-revised/offline_checks.py": {
+      "bytes": 3962,
+      "sha256": "881832d54e94a7a7b15879f958b1188d2531e2a281746ec33e51aee0c420ab80"
+    },
+    "round15-condition-preservation/protocol-revised/original-hardening-evidence.json": {
+      "bytes": 5213,
+      "sha256": "af6cc0ac95ea5545a71edce63bb117d947c5ebb77768ca67307b60cd01448cd4"
+    },
+    "round15-condition-preservation/protocol-revised/pre-fix-test-output.txt": {
+      "bytes": 369176,
+      "sha256": "8d8674a56fe0b3a7df76df440829eb05c189ab858fc8387a27f2b98dc817a450"
+    },
+    "round15-condition-preservation/protocol-revised/provenance.json": {
+      "bytes": 1479,
+      "sha256": "17627efb8711ebc1ff4618b1d2306fbf6edf60b235d115ad06b09947fffe1fb7"
+    },
+    "round15-condition-preservation/protocol-revised/request-settings.json": {
+      "bytes": 342,
+      "sha256": "43d3b4f7886d84c528a07ff3ba0901a2be1ff42a6b503853ee87e1e6985b1ac2"
+    },
+    "round15-condition-preservation/protocol-revised/schema.json": {
+      "bytes": 5144,
+      "sha256": "42114ee35755e4f39fa0a10c3f4b065e11f550d6ba96658d5caa17663a32a9f1"
+    },
+    "round15-condition-preservation/protocol-revised/span-table.json": {
+      "bytes": 1512,
+      "sha256": "63052f42bf7b3c3beb405e479a97e5df52f1cfcda39750272a4661540582ffd1"
+    },
+    "round15-condition-preservation/protocol-revised/stage-a.system.txt": {
+      "bytes": 6869,
+      "sha256": "49edae001b41ac63f32a5a049484544b219b5f1bf68a0b7f3dbc3e5dc5196f70"
+    },
+    "round15-condition-preservation/protocol-revised/test-output.txt": {
+      "bytes": 4384,
+      "sha256": "5cb00cf3949a9869ec3def89f72fd2532f5c0387826e16c75404512bf770c8ce"
+    },
+    "round15-condition-preservation/protocol-revised/test_capacity.py": {
+      "bytes": 5957,
+      "sha256": "19f0ee0c7577aa2c5846a3edb253bcb19d2312fe0d03afea26ab65c69ee96c9d"
+    },
+    "round15-condition-preservation/protocol-revised/test_compact.py": {
+      "bytes": 9533,
+      "sha256": "41f72099f21e4f37b67beb8750f04693a2c6e75439d80115b42fc40cb6fe95c6"
+    },
+    "round15-condition-preservation/protocol-revised/test_hardening.py": {
+      "bytes": 4230,
+      "sha256": "b66e5b264f930120563ed5e3c75a5c122216cbffe9dfeab45ac035a5266760b2"
+    },
+    "round15-condition-preservation/protocol/READY.json": {
+      "bytes": 4281,
+      "sha256": "5979447bc7b0c267da45116258862f4b30e0d633ce352cfea5149887851104e0"
+    },
+    "round15-condition-preservation/sizing/BASELINE.json": {
+      "bytes": 24850,
+      "sha256": "b133032c77a8024e22e98bd08f8e5146e220f2a6a598f9b84e2b6556f137b14d"
+    },
+    "round15-condition-preservation/sizing/BASELINE.md": {
+      "bytes": 8460,
+      "sha256": "97903144741308c115580138038a68f82b042380d78af57e43241dc16643c2ee"
+    },
+    "round15-condition-preservation/sizing/CANDIDATE.json": {
+      "bytes": 97668,
+      "sha256": "f9c99a2eb7fe3fbd6f9214aa8d3c38a32eb0d69ccfd09aae37878323a2c767a4"
+    },
+    "round15-condition-preservation/sizing/CANDIDATE.md": {
+      "bytes": 7721,
+      "sha256": "9318a2ab94a25d931bd95d7aebc6d4dcacc54f7a0f1031d32c439531aabd6bc6"
+    },
+    "round15-condition-preservation/sizing/CHECKS.json": {
+      "bytes": 2417,
+      "sha256": "8fd0532ae6eb383a892b5a877460bfc795839833cd2747976d2104d4f6c220f6"
+    },
+    "round15-condition-preservation/sizing/authored-profiles.json": {
+      "bytes": 657320,
+      "sha256": "b3bb69845fdd7a8b20f46191a716e1abe51b24993812ff4574036a1c8d4c23b9"
+    },
+    "round15-condition-preservation/sizing/exposed-R14-input-request.json": {
+      "bytes": 36884,
+      "sha256": "0c6c4a1e38f6bfacb6ad0fc455777bca9875567e4864d1bf00a65043e4cb3a71"
+    },
+    "round15-condition-preservation/sizing/measure_baseline.py": {
+      "bytes": 26143,
+      "sha256": "2f62798fb4d5d0c5862a7c442918d27e53fa2e0f60caed7b8985b3a9286f7247"
+    },
+    "round15-condition-preservation/sizing/measure_candidate.py": {
+      "bytes": 22453,
+      "sha256": "5d385707787eb539a5ea304d87508f91878a793c4603720d956f3386aedbb5ec"
+    },
+    "round15-condition-preservation/sizing/profile_recipe.py": {
+      "bytes": 7081,
+      "sha256": "a14d91d5020355b81c75f036ec78064489f8a463df0968991242fc38cca19d00"
+    },
+    "round15-condition-preservation/sizing/revised/revalidate.py": {
+      "bytes": 18532,
+      "sha256": "7b322012879859b96066bd137d53b32c75c94dd692a4f0a6ea76fec8715519fa"
+    }
+  },
+  "span_version": "r15.spans.2",
+  "status": "OFFLINE_SMALL_REVALIDATION_NOT_RELEASED",
+  "typed_minus_opaque_bytes": 230,
+  "typed_over_opaque_fraction": 0.3605015673981191,
+  "verification": {
+    "R14_freeze_files_verified": 221,
+    "action_ready": false,
+    "credentials_read": false,
+    "new_READY_files_verified": 40,
+    "old_READY_files_verified": 37,
+    "original_candidate_sha256": "f9c99a2eb7fe3fbd6f9214aa8d3c38a32eb0d69ccfd09aae37878323a2c767a4",
+    "original_sizing_manifest_files_verified": 11,
+    "paired_inverses_exact": true,
+    "prior_artifacts_changed": false,
+    "production_eligible": false,
+    "provider_calls": 0,
+    "signer_executor_invoked": false
+  }
+}

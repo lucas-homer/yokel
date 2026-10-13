@@ -1,0 +1,340 @@
+{
+  "trial_root": "/private/tmp/docketclock-llamaparse-comparison-2026-10-05/trial",
+  "normalizer_sha256": "244aeee30aa2d20be4cd15766c2b33a101a1b31f43c4866d1e0e0c264a463f5e",
+  "validator_sha256": "5de3cc3d4a405c5dce8a3911a564c3f090df4472140bba361a20d2aadbef8153",
+  "validation": {
+    "lane": "trial",
+    "artifact_count": 19,
+    "observation_count": 7,
+    "method_counts": {
+      "deterministic": 7,
+      "manual_text": 0,
+      "manual_visual": 0,
+      "model": 0
+    },
+    "exact_quote_count": 9,
+    "visual_evidence_count": 0,
+    "failures": [],
+    "passed": true,
+    "semantic_entailment": "requires separate source review",
+    "production_readiness": "not established"
+  },
+  "raw_lineage": [
+    {
+      "response": "parse-response.json",
+      "derived": "parse.md",
+      "transformation": "exact"
+    },
+    {
+      "response": "parse-plus-response.json",
+      "derived": "parse-plus.md",
+      "transformation": "exact"
+    }
+  ],
+  "replay": [
+    {
+      "exit_code": 0,
+      "stdout": "7 supported candidate observations; filing date withheld; review required\n",
+      "stderr": "",
+      "unchanged": true,
+      "shared_validation_passed": true
+    },
+    {
+      "exit_code": 0,
+      "stdout": "7 supported candidate observations; filing date withheld; review required\n",
+      "stderr": "",
+      "unchanged": true,
+      "shared_validation_passed": true
+    }
+  ],
+  "mutations": [
+    {
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/private/tmp/docketclock-llamaparse-comparison-2026-10-05/review/mutation-66wrauvk/trial/normalize.py\", line 40, in <module>\n    if __name__=='__main__': main()\n                             ~~~~^^\n  File \"/private/tmp/docketclock-llamaparse-comparison-2026-10-05/review/mutation-66wrauvk/trial/normalize.py\", line 13, in main\n    if (P/derived).read_text()!=expected: raise ValueError('Raw-to-markdown mismatch: '+derived)\n                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: Raw-to-markdown mismatch: parse-plus.md\n",
+      "case": "markdown_only_tampering",
+      "desired_behavior": "raw_lineage_failure",
+      "observations_count": 7,
+      "all_needs_review": true,
+      "diagnostics": {
+        "status": "needs_review",
+        "missing_critical_predicates": [],
+        "withheld": {
+          "filing_date": "Vendor output lacks dated filing stamp; handwriting submit date cannot substitute",
+          "comment_close": "No explicit absolute close or resolved comment anchor",
+          "effective_date": "Unmarked options only"
+        },
+        "observations_emitted": 7,
+        "no_agent_visual_repairs": true,
+        "unmapped_roles": [
+          "submit_date",
+          "economic_impact_status: not in shared predicate vocabulary"
+        ]
+      },
+      "mapped_values": {
+        "agency": "Secretary of State - Securities Division",
+        "rule_citations": [
+          "Rule 5.29"
+        ],
+        "rule_action": "amendment",
+        "event_type": "proposal",
+        "hearing_status": "not_scheduled",
+        "hearing_request_duration": {
+          "kind": "relative",
+          "duration": 20,
+          "unit": "days",
+          "anchor": "the filing of this notice of proposed rule adoption",
+          "day_basis": null,
+          "computed_close": null
+        },
+        "comment_duration": {
+          "kind": "relative",
+          "duration": 25,
+          "unit": "days",
+          "anchor": null,
+          "day_basis": null,
+          "computed_close": null
+        }
+      },
+      "shared_validation_passed": false
+    },
+    {
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Missing critical clauses: hearing_request_duration\n",
+      "case": "missing_hearing_duration",
+      "desired_behavior": "explicit_failure",
+      "observations_count": 6,
+      "all_needs_review": true,
+      "diagnostics": {
+        "status": "needs_review",
+        "missing_critical_predicates": [
+          "hearing_request_duration"
+        ],
+        "withheld": {
+          "filing_date": "Vendor output lacks dated filing stamp; handwriting submit date cannot substitute",
+          "comment_close": "No explicit absolute close or resolved comment anchor",
+          "effective_date": "Unmarked options only"
+        },
+        "observations_emitted": 6,
+        "no_agent_visual_repairs": true,
+        "unmapped_roles": [
+          "submit_date",
+          "economic_impact_status: not in shared predicate vocabulary"
+        ]
+      },
+      "mapped_values": {
+        "agency": "Secretary of State - Securities Division",
+        "rule_citations": [
+          "Rule 5.29"
+        ],
+        "rule_action": "amendment",
+        "event_type": "proposal",
+        "hearing_status": "not_scheduled",
+        "comment_duration": {
+          "kind": "relative",
+          "duration": 25,
+          "unit": "days",
+          "anchor": null,
+          "day_basis": null,
+          "computed_close": null
+        }
+      },
+      "shared_validation_passed": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Missing critical clauses: comment_duration\n",
+      "case": "missing_comment_duration",
+      "desired_behavior": "explicit_failure",
+      "observations_count": 6,
+      "all_needs_review": true,
+      "diagnostics": {
+        "status": "needs_review",
+        "missing_critical_predicates": [
+          "comment_duration"
+        ],
+        "withheld": {
+          "filing_date": "Vendor output lacks dated filing stamp; handwriting submit date cannot substitute",
+          "comment_close": "No explicit absolute close or resolved comment anchor",
+          "effective_date": "Unmarked options only"
+        },
+        "observations_emitted": 6,
+        "no_agent_visual_repairs": true,
+        "unmapped_roles": [
+          "submit_date",
+          "economic_impact_status: not in shared predicate vocabulary"
+        ]
+      },
+      "mapped_values": {
+        "agency": "Secretary of State - Securities Division",
+        "rule_citations": [
+          "Rule 5.29"
+        ],
+        "rule_action": "amendment",
+        "event_type": "proposal",
+        "hearing_status": "not_scheduled",
+        "hearing_request_duration": {
+          "kind": "relative",
+          "duration": 20,
+          "unit": "days",
+          "anchor": "the filing of this notice of proposed rule adoption",
+          "day_basis": null,
+          "computed_close": null
+        }
+      },
+      "shared_validation_passed": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Missing critical clauses: hearing_request_duration\n",
+      "case": "missing_eligibility",
+      "desired_behavior": "explicit_failure",
+      "observations_count": 6,
+      "all_needs_review": true,
+      "diagnostics": {
+        "status": "needs_review",
+        "missing_critical_predicates": [
+          "hearing_request_duration"
+        ],
+        "withheld": {
+          "filing_date": "Vendor output lacks dated filing stamp; handwriting submit date cannot substitute",
+          "comment_close": "No explicit absolute close or resolved comment anchor",
+          "effective_date": "Unmarked options only"
+        },
+        "observations_emitted": 6,
+        "no_agent_visual_repairs": true,
+        "unmapped_roles": [
+          "submit_date",
+          "economic_impact_status: not in shared predicate vocabulary"
+        ]
+      },
+      "mapped_values": {
+        "agency": "Secretary of State - Securities Division",
+        "rule_citations": [
+          "Rule 5.29"
+        ],
+        "rule_action": "amendment",
+        "event_type": "proposal",
+        "hearing_status": "not_scheduled",
+        "comment_duration": {
+          "kind": "relative",
+          "duration": 25,
+          "unit": "days",
+          "anchor": null,
+          "day_basis": null,
+          "computed_close": null
+        }
+      },
+      "shared_validation_passed": true
+    },
+    {
+      "exit_code": 0,
+      "stdout": "7 supported candidate observations; filing date withheld; review required\n",
+      "stderr": "",
+      "case": "co_selected_incompatible_hearing_states",
+      "desired_behavior": "review_conflict_expected",
+      "observations_count": 7,
+      "all_needs_review": true,
+      "diagnostics": {
+        "status": "needs_review",
+        "missing_critical_predicates": [],
+        "withheld": {
+          "filing_date": "Vendor output lacks dated filing stamp; handwriting submit date cannot substitute",
+          "comment_close": "No explicit absolute close or resolved comment anchor",
+          "effective_date": "Unmarked options only"
+        },
+        "observations_emitted": 7,
+        "no_agent_visual_repairs": true,
+        "unmapped_roles": [
+          "submit_date",
+          "economic_impact_status: not in shared predicate vocabulary"
+        ]
+      },
+      "mapped_values": {
+        "agency": "Secretary of State - Securities Division",
+        "rule_citations": [
+          "Rule 5.29"
+        ],
+        "rule_action": "amendment",
+        "event_type": "proposal",
+        "hearing_status": "not_scheduled",
+        "hearing_request_duration": {
+          "kind": "relative",
+          "duration": 20,
+          "unit": "days",
+          "anchor": "the filing of this notice of proposed rule adoption",
+          "day_basis": null,
+          "computed_close": null
+        },
+        "comment_duration": {
+          "kind": "relative",
+          "duration": 25,
+          "unit": "days",
+          "anchor": null,
+          "day_basis": null,
+          "computed_close": null
+        }
+      },
+      "shared_validation_passed": true
+    },
+    {
+      "exit_code": 0,
+      "stdout": "7 supported candidate observations; filing date withheld; review required\n",
+      "stderr": "",
+      "case": "amendment_mark_moved_to_temporary_rules_column",
+      "desired_behavior": "review_scope_expected",
+      "observations_count": 7,
+      "all_needs_review": true,
+      "diagnostics": {
+        "status": "needs_review",
+        "missing_critical_predicates": [],
+        "withheld": {
+          "filing_date": "Vendor output lacks dated filing stamp; handwriting submit date cannot substitute",
+          "comment_close": "No explicit absolute close or resolved comment anchor",
+          "effective_date": "Unmarked options only"
+        },
+        "observations_emitted": 7,
+        "no_agent_visual_repairs": true,
+        "unmapped_roles": [
+          "submit_date",
+          "economic_impact_status: not in shared predicate vocabulary"
+        ]
+      },
+      "mapped_values": {
+        "agency": "Secretary of State - Securities Division",
+        "rule_citations": [
+          "Rule 5.29"
+        ],
+        "rule_action": "amendment",
+        "event_type": "proposal",
+        "hearing_status": "not_scheduled",
+        "hearing_request_duration": {
+          "kind": "relative",
+          "duration": 20,
+          "unit": "days",
+          "anchor": "the filing of this notice of proposed rule adoption",
+          "day_basis": null,
+          "computed_close": null
+        },
+        "comment_duration": {
+          "kind": "relative",
+          "duration": 25,
+          "unit": "days",
+          "anchor": null,
+          "day_basis": null,
+          "computed_close": null
+        }
+      },
+      "shared_validation_passed": true
+    }
+  ],
+  "final_baseline_checks": {
+    "all_needs_review": true,
+    "no_filing_date": true,
+    "normalization_is_local_deterministic_from_model_parser": true,
+    "no_agent_visual_repairs": true
+  }
+}

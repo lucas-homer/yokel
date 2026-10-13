@@ -1,0 +1,244 @@
+{
+  "assembly_errors": [
+    "t-access-request: dependency ids require a relation",
+    "t-access-request: relative/conditional timing requires dependency association or explicit uncertainty"
+  ],
+  "controls": [
+    {
+      "anchors": [],
+      "conditions": [
+        "q-accessibility"
+      ],
+      "errors": [
+        "t-access-request: dependency ids require a relation",
+        "t-access-request: relative/conditional timing requires dependency association or explicit uncertainty"
+      ],
+      "expected_valid": false,
+      "passed": true,
+      "relation": "none"
+    },
+    {
+      "anchors": [],
+      "conditions": [],
+      "errors": [
+        "t-access-request: relative/conditional timing requires dependency association or explicit uncertainty"
+      ],
+      "expected_valid": false,
+      "passed": true,
+      "relation": "none"
+    },
+    {
+      "anchors": [],
+      "conditions": [],
+      "errors": [
+        "t-access-request: dependency relation requires explicit event/requirement binding"
+      ],
+      "expected_valid": false,
+      "passed": true,
+      "relation": "before"
+    },
+    {
+      "anchors": [],
+      "conditions": [
+        "q-accessibility"
+      ],
+      "errors": [],
+      "expected_valid": true,
+      "passed": true,
+      "relation": "other"
+    },
+    {
+      "anchors": [],
+      "conditions": [],
+      "errors": [],
+      "expected_valid": true,
+      "passed": true,
+      "relation": "uncertain"
+    }
+  ],
+  "credentials_read": false,
+  "diagnostic_development_variants": {
+    "other": {
+      "admission": {
+        "jev": {
+          "admitted": true,
+          "body_codepoints": 37420,
+          "body_sha256": "eef00bf020ecf37fd6b659375e41d3be99e69698295e9a7bf048d6ef220c9ed4",
+          "body_utf8_bytes": 37420,
+          "cap": 64000,
+          "estimate": 38444,
+          "input_margin": 25556,
+          "reason": null,
+          "reservation_usd": 0.001614648,
+          "schema_version": "round7.admission.v1",
+          "source_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5",
+          "stage": "jev",
+          "state_longest_cap": 32000,
+          "state_longest_estimate": 30989,
+          "state_longest_margin": 1011
+        },
+        "stronger": {
+          "admitted": false,
+          "body_codepoints": 37297,
+          "body_sha256": "231a5dcff466acb7275d8ef1ba0f2c1b5b8f6d2df344e33f8db869791b3e13cf",
+          "body_utf8_bytes": 37297,
+          "cap": 35000,
+          "estimate": 38321,
+          "input_margin": -3321,
+          "reason": "OpenRouter input overlimit; no clipping",
+          "reservation_usd": null,
+          "schema_version": "round7.admission.v1",
+          "source_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5",
+          "stage": "stronger",
+          "state_longest_cap": null,
+          "state_longest_estimate": null,
+          "state_longest_margin": null
+        }
+      },
+      "assembled_sha256": "547d11176b7750330e945241f7839a493e9688213acaf254e43871cff2ce2bbc",
+      "change": {
+        "field": "dependency_relation",
+        "from": "none",
+        "id": "t-access-request",
+        "to": "other"
+      },
+      "inventory_sha256": "d08edd025ee86ec0c536827b77d3c55e1d776ec76f407507f27c7c0365cff0b8",
+      "paired_admitted": false,
+      "semantic_acceptance": false,
+      "valid_structurally": true,
+      "validation": {
+        "errors": [],
+        "review_reasons": [
+          "explicit_source_uncertainties",
+          "association_unresolved"
+        ],
+        "source_completeness": "unverified",
+        "source_correctness": "unverified",
+        "valid": true
+      }
+    },
+    "uncertain": {
+      "admission": {
+        "jev": {
+          "admitted": true,
+          "body_codepoints": 37444,
+          "body_sha256": "cb3c301159add80121bd24f2a340e5d2fd35cff21e7383b602dd337a89f6fd42",
+          "body_utf8_bytes": 37444,
+          "cap": 64000,
+          "estimate": 38468,
+          "input_margin": 25532,
+          "reason": null,
+          "reservation_usd": 0.001615656,
+          "schema_version": "round7.admission.v1",
+          "source_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5",
+          "stage": "jev",
+          "state_longest_cap": 32000,
+          "state_longest_estimate": 31013,
+          "state_longest_margin": 987
+        },
+        "stronger": {
+          "admitted": false,
+          "body_codepoints": 37323,
+          "body_sha256": "237cfa40741fa9369b09ddeb0cf1d9aa1d9b48f4a541a8e7961e1e7e32ea9654",
+          "body_utf8_bytes": 37323,
+          "cap": 35000,
+          "estimate": 38347,
+          "input_margin": -3347,
+          "reason": "OpenRouter input overlimit; no clipping",
+          "reservation_usd": null,
+          "schema_version": "round7.admission.v1",
+          "source_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5",
+          "stage": "stronger",
+          "state_longest_cap": null,
+          "state_longest_estimate": null,
+          "state_longest_margin": null
+        }
+      },
+      "assembled_sha256": "72b8084d8f7d771a9439887e6669f65bb65e316b61cf8685000705ade21fd832",
+      "change": {
+        "field": "dependency_relation",
+        "from": "none",
+        "id": "t-access-request",
+        "to": "uncertain"
+      },
+      "inventory_sha256": "0e0c768dc94cc66fbd42340b60c68322c223cd5e1525976c0c8aaa40b4f00e58",
+      "paired_admitted": false,
+      "semantic_acceptance": false,
+      "valid_structurally": true,
+      "validation": {
+        "errors": [],
+        "review_reasons": [
+          "explicit_source_uncertainties",
+          "association_unresolved",
+          "timing_unresolved"
+        ],
+        "source_completeness": "unverified",
+        "source_correctness": "unverified",
+        "valid": true
+      }
+    }
+  },
+  "freeze_E_sha256": "415b294f83b3c093bd623da4cd4369a3c84cf385e6402ad190794e5681b30fb6",
+  "frozen_files_checked": 20,
+  "implementation_sha256": "396ce57d4912820d63ef55979c5484025972b0825a029ebbd452ee914a336da0",
+  "input_hashes": {
+    "execution/run/documents/doc-92211b8c7ba0/assembled.json": "c06d312396fcdd2b6e2b8add24e4864b06f86a8c523d99928154a8ef6788b266",
+    "execution/run/documents/doc-92211b8c7ba0/source.json": "356cf09ee530378385bf8d125020d0434e04cba95433300a7b2e87c19ddd0fbc",
+    "execution/run/operations/inventory-8f69eccb0e19f2d6e43cc72d/request.json": "c95bb1fbb9b514ca5b15c0ccabd1b34f2267d22ce71e28aadf76bb109efb3809",
+    "execution/run/operations/inventory-8f69eccb0e19f2d6e43cc72d/response.body": "60d39e5f35a639520f89ac3bd110da34ebff7b649ef84ae0dcbc8397f03a4b25",
+    "execution/run/operations/inventory-8f69eccb0e19f2d6e43cc72d/result.json": "633bd14218b79135dba912636c3a5e32d116a634ce7276b7b0be72c4d86f1884"
+  },
+  "labels_read": false,
+  "observed_artifacts_modified": false,
+  "offending_timing": {
+    "anchor_event_ids": [],
+    "condition_requirement_ids": [
+      "q-accessibility"
+    ],
+    "dependency_relation": "none",
+    "evidence": [
+      {
+        "context": null,
+        "occurrence": null,
+        "quote": "as soon as\npossible."
+      }
+    ],
+    "id": "t-access-request",
+    "kind": "relative",
+    "raw": "as soon as\npossible",
+    "role": "other",
+    "value": null
+  },
+  "production_eligible": false,
+  "provider": {
+    "cost_usd": 0.0900085,
+    "finish_reason": "stop",
+    "usage": {
+      "completion_tokens": 8263,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "image_tokens": 0,
+        "reasoning_tokens": 61
+      },
+      "cost": 0.0900085,
+      "cost_details": {
+        "upstream_inference_completions_cost": 0.08263,
+        "upstream_inference_cost": 0.0900085,
+        "upstream_inference_prompt_cost": 0.0073785
+      },
+      "is_byok": false,
+      "prompt_tokens": 2952,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 2949,
+        "cached_tokens": 0,
+        "video_tokens": 0
+      },
+      "total_tokens": 11215
+    }
+  },
+  "provider_calls": 0,
+  "reproduced_exactly": true,
+  "schema_errors": [],
+  "schema_version": "round8-cap-probe.failure-diagnosis.v1"
+}

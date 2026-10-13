@@ -1,0 +1,104 @@
+{
+  "sessionId": "aa1048d4-b115-4f93-ae9c-400bc4434fb5",
+  "stopReason": "success",
+  "text": "Risk report for a prospective semantic extraction contract covering public notices. Nothing below reflects any observed implementation.\n\n**Prioritized risks**\n\n1. **Deadline over-specification.** A date-only deadline is the most likely place to invent certainty. The schema needs separate, nullable fields for clock time, timezone, and receipt-versus-postmark semantics. Any downstream default, such as midnight UTC or \"received by\", must be impossible to populate silently.\n2. **Rule-versus-filing conflation.** Notices cite the rule being affected and also cite historical filings, dockets, or prior notices. A single flat \"references\" list will merge these. Each citation needs a role: affected target, procedural history, authority, or unresolved.\n3. **Fact bundling.** Combining deadline, action, and addressee into one object means one missing part degrades the others. Each independently lossy fact should be its own record with its own confidence and source span.\n4. **Directive force collapsed to boolean.** \"Must\", \"should\", \"may\", and \"is encouraged to\" carry different force and are often ambiguous in notice prose. The contract should offer a graded enumeration plus an explicit \"ambiguous\" value, not mandatory or optional only.\n5. **Structural dependency read as normative prerequisite.** A notice that lists an entity before an action, or nests one section under another, does not thereby make the first a legal precondition for the second. Dependencies should be typed: structural, contextual, or asserted-normative, with the last requiring an explicit textual basis.\n6. **Confidence without provenance.** Confidence scores without source spans cannot be audited. Every extracted field should carry a text offset or quoted anchor.\n7. **Null versus absent versus unknown.** Three different states, often encoded as one. The contract should distinguish \"not stated\", \"stated but ambiguous\", and \"field not applicable\".\n\n**Generic synthetic checks**\n\n- A notice with a bare date deadline. Pass only if clock, timezone, and receipt semantics are all marked unknown.\n- A notice citing one affected rule and two historical filings. Pass only if roles differ and the affected rule is not inferred from the most recent citation.\n- A notice with an action stated but no addressee. Pass only if the action record survives intact and the addressee record is independently null.\n- Sentences using \"should\", \"may\", and \"must\" in sequence. Pass only if three distinct force values appear.\n- A notice where \"shall be encouraged to\" appears. Pass only if force is marked ambiguous rather than mandatory.\n- A section listing an agency, then a filing step. Pass only if the dependency is typed structural, not prerequisite.\n- A repeated date appearing as both a publication date and a comment deadline. Pass only if the two are not merged.\n- Adversarial check: a notice stating \"received by 5 p.m. Eastern\". Pass only if the known values populate, confirming the unknown defaults are not sticky.\n\n**Uncertainties**\n\n- Whether the consuming system can represent graded force, or will coerce to boolean at ingestion.\n- Whether notices in scope are single-jurisdiction. Timezone inference rules differ sharply by jurisdiction.\n- Whether \"affected rule\" is meant to include rules affected indirectly, such as cross-referenced definitions.\n- Whether the contract is for extraction only or also for normalization. Normalization is where invented certainty typically enters.\n- Whether multiple deadlines per notice are expected. A single-deadline schema will truncate.\n\n**Evidence needed for a focused review**\n\n- The actual schema or type definitions, including nullability and enumerations.\n- A small gold set, ten to twenty notices, with annotations for each risk above and inter-annotator disagreement recorded.\n- The prompt or extraction instructions, to check for implicit defaults.\n- Any post-processing or normalization code, since it is the most likely source of silent certainty.\n- Sample outputs on at least one notice per synthetic check.\n- The downstream consumer's handling of unknown and ambiguous values.\n\nWithout these, no claim can be made about how any implementation behaves. The report above identifies where a generic design of this kind tends to fail.",
+  "result": {
+    "duration_api_ms": 32965,
+    "stop_reason": "end_turn",
+    "session_id": "aa1048d4-b115-4f93-ae9c-400bc4434fb5",
+    "total_cost_usd": 0.15768700000000002,
+    "usage": {
+      "input_tokens": 2,
+      "cache_creation_input_tokens": 719,
+      "cache_read_input_tokens": 3573,
+      "output_tokens": 1479,
+      "output_tokens_details": {
+        "thinking_tokens": 119
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 719,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "global",
+      "iterations": [
+        {
+          "input_tokens": 2,
+          "output_tokens": 1479,
+          "cache_read_input_tokens": 3573,
+          "cache_creation_input_tokens": 719,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 719
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "modelUsage": {
+      "claude-fable-5-1": {
+        "inputTokens": 4,
+        "outputTokens": 1496,
+        "thinkingTokens": 119,
+        "cacheReadInputTokens": 4108,
+        "cacheCreationInputTokens": 4091,
+        "webSearchRequests": 0,
+        "costUSD": 0.15768700000000002,
+        "contextWindow": 1000000,
+        "maxOutputTokens": 64000,
+        "canonicalModel": "claude-fable-5-1",
+        "provider": "firstParty",
+        "costBasis": "list"
+      }
+    },
+    "permission_denials": [],
+    "terminal_reason": "completed",
+    "fast_mode_state": "off",
+    "fast_mode_disabled_reason": "sdk_opt_in_required",
+    "subagent_stats": {
+      "spawned": 0,
+      "requested": {
+        "background": 0,
+        "foreground": 0,
+        "unset": 0
+      },
+      "started_in_background": 0,
+      "max_depth": 0,
+      "spawned_by_subagents": 0,
+      "completed": 0,
+      "failed": 0,
+      "killed": {
+        "parent": 0,
+        "user": 0,
+        "system": 0
+      },
+      "refused": {
+        "depth_limit": 0,
+        "concurrency_limit": 0,
+        "budget": 0
+      },
+      "by_type": {}
+    },
+    "safety_stops": 0,
+    "is_error": false,
+    "num_turns": 1,
+    "subtype": "success",
+    "api_error_status": null,
+    "result": "Risk report for a prospective semantic extraction contract covering public notices. Nothing below reflects any observed implementation.\n\n**Prioritized risks**\n\n1. **Deadline over-specification.** A date-only deadline is the most likely place to invent certainty. The schema needs separate, nullable fields for clock time, timezone, and receipt-versus-postmark semantics. Any downstream default, such as midnight UTC or \"received by\", must be impossible to populate silently.\n2. **Rule-versus-filing conflation.** Notices cite the rule being affected and also cite historical filings, dockets, or prior notices. A single flat \"references\" list will merge these. Each citation needs a role: affected target, procedural history, authority, or unresolved.\n3. **Fact bundling.** Combining deadline, action, and addressee into one object means one missing part degrades the others. Each independently lossy fact should be its own record with its own confidence and source span.\n4. **Directive force collapsed to boolean.** \"Must\", \"should\", \"may\", and \"is encouraged to\" carry different force and are often ambiguous in notice prose. The contract should offer a graded enumeration plus an explicit \"ambiguous\" value, not mandatory or optional only.\n5. **Structural dependency read as normative prerequisite.** A notice that lists an entity before an action, or nests one section under another, does not thereby make the first a legal precondition for the second. Dependencies should be typed: structural, contextual, or asserted-normative, with the last requiring an explicit textual basis.\n6. **Confidence without provenance.** Confidence scores without source spans cannot be audited. Every extracted field should carry a text offset or quoted anchor.\n7. **Null versus absent versus unknown.** Three different states, often encoded as one. The contract should distinguish \"not stated\", \"stated but ambiguous\", and \"field not applicable\".\n\n**Generic synthetic checks**\n\n- A notice with a bare date deadline. Pass only if clock, timezone, and receipt semantics are all marked unknown.\n- A notice citing one affected rule and two historical filings. Pass only if roles differ and the affected rule is not inferred from the most recent citation.\n- A notice with an action stated but no addressee. Pass only if the action record survives intact and the addressee record is independently null.\n- Sentences using \"should\", \"may\", and \"must\" in sequence. Pass only if three distinct force values appear.\n- A notice where \"shall be encouraged to\" appears. Pass only if force is marked ambiguous rather than mandatory.\n- A section listing an agency, then a filing step. Pass only if the dependency is typed structural, not prerequisite.\n- A repeated date appearing as both a publication date and a comment deadline. Pass only if the two are not merged.\n- Adversarial check: a notice stating \"received by 5 p.m. Eastern\". Pass only if the known values populate, confirming the unknown defaults are not sticky.\n\n**Uncertainties**\n\n- Whether the consuming system can represent graded force, or will coerce to boolean at ingestion.\n- Whether notices in scope are single-jurisdiction. Timezone inference rules differ sharply by jurisdiction.\n- Whether \"affected rule\" is meant to include rules affected indirectly, such as cross-referenced definitions.\n- Whether the contract is for extraction only or also for normalization. Normalization is where invented certainty typically enters.\n- Whether multiple deadlines per notice are expected. A single-deadline schema will truncate.\n\n**Evidence needed for a focused review**\n\n- The actual schema or type definitions, including nullability and enumerations.\n- A small gold set, ten to twenty notices, with annotations for each risk above and inter-annotator disagreement recorded.\n- The prompt or extraction instructions, to check for implicit defaults.\n- Any post-processing or normalization code, since it is the most likely source of silent certainty.\n- Sample outputs on at least one notice per synthetic check.\n- The downstream consumer's handling of unknown and ambiguous values.\n\nWithout these, no claim can be made about how any implementation behaves. The report above identifies where a generic design of this kind tends to fail.",
+    "ttft_ms": 6963,
+    "type": "result",
+    "duration_ms": 29334,
+    "uuid": "73244e43-1698-404e-b4de-c15ad5142e04",
+    "ttft_stream_ms": 3600,
+    "time_to_request_ms": 41,
+    "first_content_frame_ms": 3600,
+    "queued_turn_count": 0,
+    "result_index": 0
+  }
+}

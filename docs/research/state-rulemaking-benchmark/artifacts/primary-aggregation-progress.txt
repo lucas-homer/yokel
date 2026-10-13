@@ -1,0 +1,210 @@
+{
+  "validation": {
+    "passed": true,
+    "complete": true,
+    "frozen_files_verified": 141,
+    "completed_document_rows": 80,
+    "completed_field_rows": 696,
+    "exact_quotes_verified": 308,
+    "output_artifacts_verified": 45,
+    "recomputed_document_gates": 80,
+    "source_ledgers": {
+      "field-scores.jsonl": "0d1ca0565ac935b4b25491607d77b489ef69718593432a0f46c4631e7ca324cc",
+      "document-scores.jsonl": "0b6e39ccd51330d88bd68b344dd82b8747c2eafcaf70e4fe5ec4487eff749455",
+      "operation-records.jsonl": "8bb6c9e264b2180f8046666f6b78df98f164b40b22ff1eed70088744932a0666",
+      "extra-assertions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "limit": "Checks integrity, quote existence, frozen reference identity and deterministic aggregation; semantic judgments also need source/output review."
+  },
+  "arms": {
+    "native": {
+      "documents": 20,
+      "document_gates": {
+        "operational_unusable": 3,
+        "content_fail": 2,
+        "pass": 14,
+        "insufficient_reference": 1
+      },
+      "operations": {
+        "completed_empty": 3,
+        "completed_nonempty": 17
+      },
+      "reference_eligible_documents": 19,
+      "critical_positive_evidence_yield": {
+        "supported": 91,
+        "scheduled": 118,
+        "outcomes": {
+          "not_assessable": 24,
+          "missing": 2,
+          "supported": 91,
+          "partial_ambiguous": 1
+        }
+      },
+      "critical_positive_successful_output_content": {
+        "supported": 91,
+        "eligible": 94
+      },
+      "critical_not_stated_scope": {
+        "safe_abstention": 22,
+        "usable_output_eligible": 23,
+        "scheduled": 23
+      },
+      "determinate_critical_groups": {
+        "all_facets_pass": 98,
+        "scheduled": 125
+      },
+      "critical_uncertain_fields": 1,
+      "critical_field_outcomes": {
+        "not_assessable": 25,
+        "missing": 3,
+        "supported": 91,
+        "safe_abstention": 22,
+        "partial_ambiguous": 1
+      },
+      "documents_with_critical_incorrect_assertions": 0,
+      "successful_wrapper_latency_ms": {
+        "observations": 0,
+        "median": null,
+        "min": null,
+        "max": null
+      }
+    },
+    "firecrawl_local_parse": {
+      "documents": 20,
+      "document_gates": {
+        "content_fail": 9,
+        "pass": 10,
+        "insufficient_reference": 1
+      },
+      "operations": {
+        "completed_nonempty": 20
+      },
+      "reference_eligible_documents": 19,
+      "critical_positive_evidence_yield": {
+        "supported": 109,
+        "scheduled": 118,
+        "outcomes": {
+          "supported": 109,
+          "partial_ambiguous": 3,
+          "missing": 6
+        }
+      },
+      "critical_positive_successful_output_content": {
+        "supported": 109,
+        "eligible": 118
+      },
+      "critical_not_stated_scope": {
+        "safe_abstention": 17,
+        "usable_output_eligible": 23,
+        "scheduled": 23
+      },
+      "determinate_critical_groups": {
+        "all_facets_pass": 110,
+        "scheduled": 125
+      },
+      "critical_uncertain_fields": 1,
+      "critical_field_outcomes": {
+        "supported": 109,
+        "partial_ambiguous": 3,
+        "missing": 12,
+        "safe_abstention": 17,
+        "not_assessable": 1
+      },
+      "documents_with_critical_incorrect_assertions": 0,
+      "successful_wrapper_latency_ms": {
+        "observations": 20,
+        "median": 3269.0,
+        "min": 720,
+        "max": 10063
+      }
+    },
+    "llama_agentic": {
+      "documents": 20,
+      "document_gates": {
+        "operational_unusable": 2,
+        "not_attempted_provider_stop": 17,
+        "insufficient_reference": 1
+      },
+      "operations": {
+        "timeout_backend_unknown": 2,
+        "not_attempted_provider_stop": 18
+      },
+      "reference_eligible_documents": 19,
+      "critical_positive_evidence_yield": {
+        "supported": 0,
+        "scheduled": 118,
+        "outcomes": {
+          "not_assessable": 118
+        }
+      },
+      "critical_positive_successful_output_content": {
+        "supported": 0,
+        "eligible": 0
+      },
+      "critical_not_stated_scope": {
+        "safe_abstention": 0,
+        "usable_output_eligible": 0,
+        "scheduled": 23
+      },
+      "determinate_critical_groups": {
+        "all_facets_pass": 0,
+        "scheduled": 125
+      },
+      "critical_uncertain_fields": 1,
+      "critical_field_outcomes": {
+        "not_assessable": 142
+      },
+      "documents_with_critical_incorrect_assertions": 0,
+      "successful_wrapper_latency_ms": {
+        "observations": 0,
+        "median": null,
+        "min": null,
+        "max": null
+      }
+    },
+    "llama_agentic_plus": {
+      "documents": 20,
+      "document_gates": {
+        "operational_unusable": 2,
+        "not_attempted_provider_stop": 17,
+        "insufficient_reference": 1
+      },
+      "operations": {
+        "timeout_backend_unknown": 2,
+        "not_attempted_provider_stop": 18
+      },
+      "reference_eligible_documents": 19,
+      "critical_positive_evidence_yield": {
+        "supported": 0,
+        "scheduled": 118,
+        "outcomes": {
+          "not_assessable": 118
+        }
+      },
+      "critical_positive_successful_output_content": {
+        "supported": 0,
+        "eligible": 0
+      },
+      "critical_not_stated_scope": {
+        "safe_abstention": 0,
+        "usable_output_eligible": 0,
+        "scheduled": 23
+      },
+      "determinate_critical_groups": {
+        "all_facets_pass": 0,
+        "scheduled": 125
+      },
+      "critical_uncertain_fields": 1,
+      "critical_field_outcomes": {
+        "not_assessable": 142
+      },
+      "documents_with_critical_incorrect_assertions": 0,
+      "successful_wrapper_latency_ms": {
+        "observations": 0,
+        "median": null,
+        "min": null,
+        "max": null
+      }
+    }
+  }
+}

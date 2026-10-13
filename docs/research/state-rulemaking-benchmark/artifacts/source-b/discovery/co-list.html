@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+<title>Colorado Online Register</title>
+<script language="JavaScript1.2"
+	src='https://www.coloradosos.gov/pubs/Phoenix_js_functions.js'></script>
+<SCRIPT language="JavaScript" src="/CCR/javascripts/multipleupdates.js"></SCRIPT>
+<link href="/CCR/theme/common.css" rel="stylesheet" type="text/css" />
+<link href="/CCR/theme/style.css" rel="stylesheet" type="text/css">
+<link href="/CCR/theme/static.css" rel="stylesheet" type="text/css">
+
+<style>
+.pagehead3 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	color: #000066;
+	font-weight: bold;
+}
+</style>
+<script language="javascript">
+	function OpenRegisterPdfWindow(pday) {
+		window.open('/CCR/RegisterPdfContents.do?publicationDay=' + pday);
+	}
+	function OpenRegisterDocxWindow(pday) {
+		   window.open('/CCR/RegisterDocxContents.do?publicationDay=' + pday);
+	}
+	function backIssues() {
+		document.forms['RegisterHomeForm'].action = "RegisterHome.do";
+		document.forms['RegisterHomeForm'].submit();
+	}
+</script>
+</head>
+
+<body style="margin: 0;">
+	
+	<!-- /apps/banner -->
+<style type="text/css">
+#pageHeader { 
+    width: expression( document.body.clientWidth < 1000 ? "1000px" : "auto" ); /* sets max-width for IE */
+}
+
+@media print {
+                #printHeader {
+                                width: 1000px;
+                }
+}
+
+body {
+    margin: 0px;
+    min-width: 1000px;
+
+
+}
+
+.toplinks {
+    color: #FFFFFF;
+}
+
+.toplinks a {
+    text-decoration: none;
+    font-family: verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 18px;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.toplinks a:hover {
+    text-decoration: underline;
+}
+
+
+
+.pageBand {
+    background-color: #003767;
+    text-align: center;
+    
+}
+.ADAhidden	{position:absolute; left:-10000px; top:auto; width:1px; height:1px;}
+
+--></style>
+<div id="banner" aria-label="Header" role="region">
+<div id="printHeader">
+    
+<div id="pageHeader" style="position: relative;">
+<div style="background-color: #2c5990; height: 140px;">
+    
+    	<div class="toplinks" style="position: absolute; top: 1px; right: 5px;">
+				<a style="background-color: #003767;" href="#main">Skip to content</a> &#160;|&#160; 
+				<a style="background-color: #003767;" href="https://www.coloradosos.gov/pubs/info_center/biography.html">About Secretary Griswold</a> &#160;|&#160; 
+				<a  style="background-color: #003767;" href="https://www.coloradosos.gov/pubs/spanish/spanishHome.html">Espa&#241;ol</a>&#160;
+			</div>
+<div style="float: left;"><a href="https://www.coloradosos.gov/"> <img alt="Colorado Secretary of State - Go to home page" src="https://www.coloradosos.gov/pubs/images/Banner/bannerLeft.png" style="text-decoration: none; border: 0 none; border-width: 0px;" width="332" height="140" /> </a></div>
+<div style="float: right;"><img alt="" src="https://www.coloradosos.gov/pubs/images/Banner/bannerRight.png" />
+
+
+</div>
+</div>
+</div>
+</div></div>
+<a aria-label="Main content" role="region" id="main" name="main"></a>
+<div id="application" style="position: absolute; top: 165px; width: 100%">
+
+	
+
+	<table class="fullNoPadding">
+		<tr>
+			<td style="width: 10%; vertical-align: top;" class="grayBackground">
+				<FORM NAME="logoutForm" METHOD="POST" ACTION="ibm_security_logout" style="margin: 0; padding: 0;"><INPUT
+	TYPE="HIDDEN" NAME="logoutExitPage" value="/Welcome.do"></FORM>
+<FORM NAME="loginForm" METHOD="POST" ACTION="ibm_security_logout" style="margin: 0; padding: 0;"><INPUT
+	TYPE="HIDDEN" NAME="logoutExitPage" value="/Welcome.do"></FORM>
+ 
+<table style="width: 158px; border: 0; float: right; border-collapse: collapse;">
+	<tr><td><br></td></tr>
+	<tr> 
+	  <td>&nbsp;<a href="/CCR/Welcome.do" class="leftNav">Home</a></td>
+	</tr>
+	<tr><td><br></td></tr>
+	<tr> 
+	  <td>&nbsp;<a href="http://www.lexisnexis.com/hottopics/colorado/" target="_blank" class="leftNav">Colorado Revised Statutes</a></td>
+	</tr>
+	<tr><td><br></td></tr>
+	<tr> 
+	  <td>&nbsp;<a href="/CCR/KeywordSearch.do" class="leftNav">Search</a></td>
+	</tr>
+	<tr><td><br></td></tr>
+	<tr> 
+	  <td>&nbsp;<a href="/CCR/NumericalDeptList.do" class="leftNav">Browse</a></td>
+	</tr>
+	<tr><td><br></td></tr>
+	<tr> 
+	  <td>&nbsp;<a href="/CCR/RegisterHome.do" class="leftNav">Colorado Register</a></td>
+	</tr>
+	<tr><td><br></td></tr>
+	<tr> 
+	  <td>&nbsp;<a href="/CCR/eDocketCriteria.do" class="leftNav">eDocket</a></td>
+	</tr>
+	<tr><td><br></td></tr>
+	<tr> 
+	  <td>&nbsp;<a href="/CCR/auth/loginHome.do" class="leftNav">Log in</a></td>
+	</tr>
+	<tr><td><br></td></tr>
+	<tr> 
+	  <td>&nbsp;<a href='https://www.coloradosos.gov/pubs/info_center/contact.html' class="leftNav">Contact Us</a></td>
+	</tr>
+	<tr> 
+	  <td><br></td>
+	</tr>
+</table>
+
+			</td>
+			<td style="width: 100%; vertical-align: top;" class="whiteBackground">
+				<table style="width: 100%; height: 285px;" class="fullNoPadding">
+					<tr>
+						<td colspan="2"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><br /></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="text-align: center;">
+							<h1>
+								Colorado Register 
+								<br> <span class="smallheader">Official Publication of the State Administrative Rules (24-4-103(11) C.R.S.)</span>
+							</h1>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: left"><a href="/CCR/Welcome.do">Home</a> &gt; Colorado Register</td>
+
+						<form name="registerContentsForm" id="RegisterHomeForm" method="post" action="/CCR/RegisterHome.do">
+							<td style="width: 200px; text-align: right"><b><label
+									for="pyear">Back Issues</label></b>
+							<select name="pyear" onchange="backIssues()" id="pyear"><option value="">Select year</option>
+									
+										<option value="2031">2031</option>
+									
+										<option value="2030">2030</option>
+									
+										<option value="2029">2029</option>
+									
+										<option value="2028">2028</option>
+									
+										<option value="2027">2027</option>
+									
+										<option value="2026">2026</option>
+									
+										<option value="2025">2025</option>
+									
+										<option value="2024">2024</option>
+									
+										<option value="2023">2023</option>
+									
+										<option value="2022">2022</option>
+									
+										<option value="2021">2021</option>
+									
+										<option value="2020">2020</option>
+									
+										<option value="2019">2019</option>
+									
+										<option value="2018">2018</option>
+									
+										<option value="2017">2017</option>
+									
+										<option value="2016">2016</option>
+									
+										<option value="2015">2015</option>
+									
+										<option value="2014">2014</option>
+									
+										<option value="2013">2013</option>
+									
+										<option value="2012">2012</option>
+									
+										<option value="2011">2011</option>
+									
+										<option value="2010">2010</option>
+									
+										<option value="2009">2009</option>
+									
+										<option value="2008">2008</option>
+									
+										<option value="2007">2007</option>
+									
+										<option value="2006">2006</option></select></td>
+						</form>
+
+					</tr>
+					<tr>
+						<td colspan="2">
+							<hr style="width: 100%;" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div class="centered">
+								<p class="pagehead3">
+									2026
+									- Volume
+									49
+								</p>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+
+							<div>
+								<table style="margin: 0 auto;" class="noStripes">
+									<thead>
+										<tr style="background-color: #b0c4de;">
+											<th class="headerLeft"><b> Date </b></th>
+											<th class="headerLeft"><b> Issue </b></th>
+											<th class="headerLeft"><b> Web version </b></th>
+											<!-- CHANGED: removed "what is this?" link from Authenticated PDF header -->
+											<th style="text-align: center;"><b> Authenticated
+													PDF </b></th>
+											<!-- ADDED: new Accessible DOCX column header -->
+											<th style="text-align: center;"><b> Accessible DOCX
+											</b></th>
+										</tr>
+									</thead>
+									<TBODY>
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												<TR class="rowOdd">
+													
+
+													<td>
+															
+														 January 10, 2026
+													</td>
+													<td>49 CR 1</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=01/10/2026&Volume=49&yearPublishNumber=1&Month=1&Year=2026">
+														<span style="text-decoration: underline;"> January 10 - 49 CR 1
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('01/10/2026')">
+															     <span style="text-decoration: underline;">
+																   January 10 - 49 CR 1
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('01/10/2026')">
+															   <span style="text-decoration: underline;">
+									                				January 10 - 49 CR 1
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												
+												<TR class="rowEven">
+													
+
+													<td>
+															
+														 January 25, 2026
+													</td>
+													<td>49 CR 2</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=01/25/2026&Volume=49&yearPublishNumber=2&Month=1&Year=2026">
+														<span style="text-decoration: underline;"> January 25 - 49 CR 2
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('01/25/2026')">
+															     <span style="text-decoration: underline;">
+																   January 25 - 49 CR 2
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('01/25/2026')">
+															   <span style="text-decoration: underline;">
+									                				January 25 - 49 CR 2
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												<TR class="rowOdd">
+													
+
+													<td>
+															
+														 February 10, 2026
+													</td>
+													<td>49 CR 3</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=02/10/2026&Volume=49&yearPublishNumber=3&Month=2&Year=2026">
+														<span style="text-decoration: underline;"> February 10 - 49 CR 3
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('02/10/2026')">
+															     <span style="text-decoration: underline;">
+																   February 10 - 49 CR 3
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('02/10/2026')">
+															   <span style="text-decoration: underline;">
+									                				February 10 - 49 CR 3
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												
+												<TR class="rowEven">
+													
+
+													<td>
+															
+														 February 25, 2026
+													</td>
+													<td>49 CR 4</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=02/25/2026&Volume=49&yearPublishNumber=4&Month=2&Year=2026">
+														<span style="text-decoration: underline;"> February 25 - 49 CR 4
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('02/25/2026')">
+															     <span style="text-decoration: underline;">
+																   February 25 - 49 CR 4
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('02/25/2026')">
+															   <span style="text-decoration: underline;">
+									                				February 25 - 49 CR 4
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												<TR class="rowOdd">
+													
+
+													<td>
+															
+														 March 10, 2026
+													</td>
+													<td>49 CR 5</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=03/10/2026&Volume=49&yearPublishNumber=5&Month=3&Year=2026">
+														<span style="text-decoration: underline;"> March 10 - 49 CR 5
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('03/10/2026')">
+															     <span style="text-decoration: underline;">
+																   March 10 - 49 CR 5
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('03/10/2026')">
+															   <span style="text-decoration: underline;">
+									                				March 10 - 49 CR 5
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												
+												<TR class="rowEven">
+													
+
+													<td>
+															
+														 March 25, 2026
+													</td>
+													<td>49 CR 6</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=03/25/2026&Volume=49&yearPublishNumber=6&Month=3&Year=2026">
+														<span style="text-decoration: underline;"> March 25 - 49 CR 6
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('03/25/2026')">
+															     <span style="text-decoration: underline;">
+																   March 25 - 49 CR 6
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('03/25/2026')">
+															   <span style="text-decoration: underline;">
+									                				March 25 - 49 CR 6
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												<TR class="rowOdd">
+													
+
+													<td>
+															
+														 April 10, 2026
+													</td>
+													<td>49 CR 7</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=04/10/2026&Volume=49&yearPublishNumber=7&Month=4&Year=2026">
+														<span style="text-decoration: underline;"> April 10 - 49 CR 7
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('04/10/2026')">
+															     <span style="text-decoration: underline;">
+																   April 10 - 49 CR 7
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('04/10/2026')">
+															   <span style="text-decoration: underline;">
+									                				April 10 - 49 CR 7
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												
+												<TR class="rowEven">
+													
+
+													<td>
+															
+														 April 25, 2026
+													</td>
+													<td>49 CR 8</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=04/25/2026&Volume=49&yearPublishNumber=8&Month=4&Year=2026">
+														<span style="text-decoration: underline;"> April 25 - 49 CR 8
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('04/25/2026')">
+															     <span style="text-decoration: underline;">
+																   April 25 - 49 CR 8
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('04/25/2026')">
+															   <span style="text-decoration: underline;">
+									                				April 25 - 49 CR 8
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												<TR class="rowOdd">
+													
+
+													<td>
+															
+														 May 10, 2026
+													</td>
+													<td>49 CR 9</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=05/10/2026&Volume=49&yearPublishNumber=9&Month=5&Year=2026">
+														<span style="text-decoration: underline;"> May 10 - 49 CR 9
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('05/10/2026')">
+															     <span style="text-decoration: underline;">
+																   May 10 - 49 CR 9
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('05/10/2026')">
+															   <span style="text-decoration: underline;">
+									                				May 10 - 49 CR 9
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												
+												<TR class="rowEven">
+													
+
+													<td>
+															
+														 May 25, 2026
+													</td>
+													<td>49 CR 10</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=05/25/2026&Volume=49&yearPublishNumber=10&Month=5&Year=2026">
+														<span style="text-decoration: underline;"> May 25 - 49 CR 10
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('05/25/2026')">
+															     <span style="text-decoration: underline;">
+																   May 25 - 49 CR 10
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('05/25/2026')">
+															   <span style="text-decoration: underline;">
+									                				May 25 - 49 CR 10
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												<TR class="rowOdd">
+													
+
+													<td>
+															
+														 June 10, 2026
+													</td>
+													<td>49 CR 11</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=06/10/2026&Volume=49&yearPublishNumber=11&Month=6&Year=2026">
+														<span style="text-decoration: underline;"> June 10 - 49 CR 11
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('06/10/2026')">
+															     <span style="text-decoration: underline;">
+																   June 10 - 49 CR 11
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('06/10/2026')">
+															   <span style="text-decoration: underline;">
+									                				June 10 - 49 CR 11
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												
+												<TR class="rowEven">
+													
+
+													<td>
+															
+														 June 25, 2026
+													</td>
+													<td>49 CR 12</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=06/25/2026&Volume=49&yearPublishNumber=12&Month=6&Year=2026">
+														<span style="text-decoration: underline;"> June 25 - 49 CR 12
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('06/25/2026')">
+															     <span style="text-decoration: underline;">
+																   June 25 - 49 CR 12
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('06/25/2026')">
+															   <span style="text-decoration: underline;">
+									                				June 25 - 49 CR 12
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												<TR class="rowOdd">
+													
+
+													<td>
+															
+														 July 10, 2026
+													</td>
+													<td>49 CR 13</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=07/10/2026&Volume=49&yearPublishNumber=13&Month=7&Year=2026">
+														<span style="text-decoration: underline;"> July 10 - 49 CR 13
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('07/10/2026')">
+															     <span style="text-decoration: underline;">
+																   July 10 - 49 CR 13
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('07/10/2026')">
+															   <span style="text-decoration: underline;">
+									                				July 10 - 49 CR 13
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												
+												<TR class="rowEven">
+													
+
+													<td>
+															
+														 July 25, 2026
+													</td>
+													<td>49 CR 14</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=07/25/2026&Volume=49&yearPublishNumber=14&Month=7&Year=2026">
+														<span style="text-decoration: underline;"> July 25 - 49 CR 14
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('07/25/2026')">
+															     <span style="text-decoration: underline;">
+																   July 25 - 49 CR 14
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('07/25/2026')">
+															   <span style="text-decoration: underline;">
+									                				July 25 - 49 CR 14
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												<TR class="rowOdd">
+													
+
+													<td>
+															
+														 August 10, 2026
+													</td>
+													<td>49 CR 15</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=08/10/2026&Volume=49&yearPublishNumber=15&Month=8&Year=2026">
+														<span style="text-decoration: underline;"> August 10 - 49 CR 15
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('08/10/2026')">
+															     <span style="text-decoration: underline;">
+																   August 10 - 49 CR 15
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('08/10/2026')">
+															   <span style="text-decoration: underline;">
+									                				August 10 - 49 CR 15
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												
+												<TR class="rowEven">
+													
+
+													<td>
+															
+														 August 25, 2026
+													</td>
+													<td>49 CR 16</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=08/25/2026&Volume=49&yearPublishNumber=16&Month=8&Year=2026">
+														<span style="text-decoration: underline;"> August 25 - 49 CR 16
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('08/25/2026')">
+															     <span style="text-decoration: underline;">
+																   August 25 - 49 CR 16
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('08/25/2026')">
+															   <span style="text-decoration: underline;">
+									                				August 25 - 49 CR 16
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												<TR class="rowOdd">
+													
+
+													<td>
+															
+														 September 10, 2026
+													</td>
+													<td>49 CR 17</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=09/10/2026&Volume=49&yearPublishNumber=17&Month=9&Year=2026">
+														<span style="text-decoration: underline;"> September 10 - 49 CR 17
+                                                        </span></a>
+                                                     </td>
+													
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterPdfWindow('09/10/2026')">
+															     <span style="text-decoration: underline;">
+																   September 10 - 49 CR 17
+																   (PDF)
+																</span></a></td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;"><a
+															href="javascript:void(0)"
+															onclick="OpenRegisterDocxWindow('09/10/2026')">
+															   <span style="text-decoration: underline;">
+									                				September 10 - 49 CR 17
+													                (DOCX)
+															   </span></a></td>
+													
+													
+												</tr>
+
+												
+
+											
+										
+										   
+											<!-- Logic related to 2010 issues START -->
+											
+											<!-- Logic related to 2010 issues END -->
+
+											
+												
+												
+												<TR class="rowEven">
+													
+
+													<td>
+															
+														 September 25, 2026
+													</td>
+													<td>49 CR 18</td>
+													<td style="text-align: center;"><a
+														href="/CCR/RegisterContents.do?publicationDay=09/25/2026&Volume=49&yearPublishNumber=18&Month=9&Year=2026">
+														<span style="text-decoration: underline;"> September 25 - 49 CR 18
+                                                        </span></a>
+                                                     </td>
+													
+													
+														<td style="text-align: center;">n/a</td>
+														<!-- ADDED: Accessible DOCX cell mirrors the Authenticated PDF value for this row -->
+														<td style="text-align: center;">n/a</td>
+													
+												</tr>
+
+												
+
+											
+										
+									</TBODY>
+								</table>
+								<table style="width: 100%; border: 0;">
+									<tr>
+										<td colspan="4">&nbsp;&nbsp;</td>
+									</tr>
+									<!-- ADDED: new sentence about Authenticated PDF digital certificate, placed above the asterisk footnote -->
+									<tr>
+										<td>&nbsp;&nbsp;</td>
+										<td style="text-align: center;">Authenticated PDFs use a
+											digital certificate to indicate that the document is an
+											unaltered, published official record.</td>
+										<td>&nbsp;&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;&nbsp;</td>
+										<td style="text-align: center; padding-top: 15px;"><span class="redText">
+												* </span> Annual Departmental Regulatory Agendas are published in
+											November 10th <br> issues of the Colorado Register
+											starting in 2012, per H.B. 12-1008.</td>
+										<td>&nbsp;&nbsp;</td>
+									</tr>
+								</table>
+							</div>
+					<tr>
+						<td>&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="4" style="text-align: center;"></td>
+					</tr>
+					<tr>
+						<td style="width: 100%;">
+							<table style="width: 100%; border: 0;">
+								<tr>
+									<td colspan="4">&nbsp;&nbsp;</td>
+								</tr>
+								<tr>
+									<td>&nbsp;&nbsp;</td>
+									<td style="text-align: center;">
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+										alt="envelope"
+										src='https://www.coloradosos.gov/pubs/images/general/envelope.gif'
+										width="17" height="17" alt="email">&nbsp; <a
+										href="/CCR/EmailSubscription.do"
+										style="text-decoration: underline;">Sign up to receive
+											Colorado Register email updates</a>
+									</td>
+									<td>&nbsp;&nbsp;</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;&nbsp;</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+
+	</table>
+	<p style="margin-left: 20em;">
+		<input type="button" value="Back"
+			onclick="javascript:location.href='/CCR/Welcome.do'" />
+	</p>
+	<!-- /apps/footer.html -->
+<div aria-label="Footer" role="region" style="padding-top: 50px;">
+<div id="pageFooter" class="toplinks pageBand" style="text-align: center;">
+    <a href="https://www.coloradosos.gov/pubs/info_center/terms.html">Terms & conditions</a> | <a href="https://coloradosos.gov/pubs/info_center/accessibility.html">Accessibility statement</a> | <a href="https://www.coloradosos.gov/pubs/info_center/compatibility.html">Browser compatibility</a>
+</div></div></div>
+<!-- NEW Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-JDK6PLVHDW"></script>
+<script>// <![CDATA[
+window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-JDK6PLVHDW');
+// ]]></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a460933f890df31f',t:'MTc5MTI0NjgxMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -1,0 +1,189 @@
+{
+  "fixture_id": "A02",
+  "state": "US-MS",
+  "bucket": "scanned/filled forms",
+  "layout_features": [
+    "image-only scanned SOS APA Form 001",
+    "marked hearing box and filled clock",
+    "X choices, filing stamp"
+  ],
+  "event_type": "proposed amendment",
+  "source_url": "https://www.sos.ms.gov/adminsearch/ACProposed/00028576a.pdf",
+  "discovery_url": "https://www.sos.ms.gov/adminsearch/ACProposed/00028576a.pdf",
+  "retrieved_at": "2026-10-06T00:33:40.673026+00:00",
+  "source_title": "FY2026 Water Pollution Control Revolving Loan Fund Intended Use Plan proposed filing",
+  "selection_reason": "Second distinct eligible form; contrasts scheduled hearing with other unselected hearing fields.",
+  "original_sha256": "6738db08f6233b37320da7864bee379bbdf0771eb6f36e5b243cdd3d028cc8b5",
+  "input_sha256": "6738db08f6233b37320da7864bee379bbdf0771eb6f36e5b243cdd3d028cc8b5",
+  "original_byte_length": 398478,
+  "input_byte_length": 398478,
+  "original_physical_pages": [
+    1
+  ],
+  "original_page_count": 1,
+  "input_page_count": 1,
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Publisher PDF contains only the one-page filing form; referenced rule text attachment is not included or collected. Native embedded text is empty; references use rendered-page transcription and marked selections.",
+    "All three MS units share SOS APA Form 001 template; three distinct PDF documents/agency records."
+  ],
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency names appear in the filing table?",
+      "expected_value": [
+        "Mississippi Commission on Environmental Quality",
+        "Mississippi Department of Environmental Quality"
+      ],
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top agency cell",
+      "source_quote": "Mississippi Commission on Environmental Quality\nMississippi Department of Environmental Quality",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "rule_identity",
+      "question": "Which rule number and plan are named?",
+      "expected_value": "11 Admin. Code Pt. 6, Ch. 8 – Fiscal Year 2026 Intended Use Plan (IUP) for the Water Pollution Control Revolving Loan Fund Program.",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top rule name/number cell",
+      "source_quote": "11 Admin. Code Pt. 6, Ch. 8 – Fiscal Year 2026 Intended Use Plan (IUP) for the Water Pollution Control Revolving Loan Fund Program.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "selected_lifecycle",
+      "question": "Which PROPOSED ACTION ON RULES option is marked?",
+      "expected_value": "Amendment to existing rule(s)",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "center proposed-action X",
+      "source_quote": "Amendment to existing rule(s)",
+      "basis": "visual_mark"
+    },
+    {
+      "field_id": "hearing_selection",
+      "question": "Which oral-proceeding choice is selected?",
+      "expected_value": true,
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "first oral-proceeding box checked, second empty",
+      "source_quote": "An oral proceeding is scheduled for this rule on:",
+      "basis": "visual_mark"
+    },
+    {
+      "field_id": "hearing_clock",
+      "question": "What hearing date and time are entered, retaining unstated timezone?",
+      "expected_value": {
+        "date": "2026-05-20",
+        "time": "11:00",
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "oral proceeding date/time fields",
+      "source_quote": "Date: May 20, 2026 Time: 11:00 a.m.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "submit_date",
+      "question": "What date is in SUBMIT DATE?",
+      "expected_value": {
+        "date": "2026-04-14"
+      },
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top submit-date cell",
+      "source_quote": "04/14/26",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "filing_stamp",
+      "question": "What date is stamped FILED?",
+      "expected_value": {
+        "date": "2026-04-14"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "bottom center stamp",
+      "source_quote": "APR 14 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "proposed_effective",
+      "question": "Which proposed final effective-date option is selected?",
+      "expected_value": {
+        "duration": 30,
+        "unit": "days",
+        "anchor": "filing",
+        "computed_effective": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "center proposed-action effective X",
+      "source_quote": "30 days after filing",
+      "basis": "visual_mark"
+    },
+    {
+      "field_id": "generic_comment_duration",
+      "question": "What public-comment duration is printed in the generic instructions, without computing a close?",
+      "expected_value": {
+        "duration": 25,
+        "unit": "days",
+        "computed_close": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "paragraph below oral-proceeding boxes",
+      "source_quote": "twenty-five (25) day public comment period",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "oral_request_condition",
+      "question": "What printed condition and deadline apply if a proceeding were not scheduled?",
+      "expected_value": {
+        "requestors": "political subdivision, an agency or ten (10) or more persons",
+        "duration": 20,
+        "unit": "days",
+        "anchor": "filing of this notice of proposed rule adoption",
+        "computed_close": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "generic instructions beneath scheduled hearing",
+      "source_quote": "political subdivision, an agency or ten (10) or more persons. The written request should be submitted to the agency contact person at the above address within twenty (20) days after the filing of this notice of proposed rule adoption",
+      "basis": "source_text"
+    }
+  ],
+  "collector": "source-a Codex task; source-only annotation before vendor parsing",
+  "reference_version": "collector-v1",
+  "discovery_method": "Targeted web search with official direct PDF result; dynamic bulletin listing did not expose a usable ordered result set",
+  "shared_original_group": null,
+  "template_group": "MS-SOS-APA-001",
+  "visual_inspection": {
+    "all_input_pages_inspected": true,
+    "renderer": "bundled PDFium scale1.8; earlier Poppler previews for first forms",
+    "scope": "complete input pages, including columns, selected marks, stamps, footers, continuation"
+  },
+  "reference_basis_note": "Image-only forms: source_text quotes are manual rendered-image transcriptions; visual_mark identifies actual selected choice. Born-digital quotes retain exact native substrings when available. Full-scope absence applies only to specified target and retained input."
+}

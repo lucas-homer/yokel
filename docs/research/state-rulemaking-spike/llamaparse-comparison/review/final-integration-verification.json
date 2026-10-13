@@ -1,0 +1,66 @@
+{
+  "integrated_root": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/llamaparse-comparison",
+  "verify_script_sha256": "9333826b9d9d7dfda57d0341c1fb30c246484937622470df013d216177a8db89",
+  "readme_sha256": "9dcfc1e89e29c4b47fa3b4627702edda60551b3afb7b3f694eda405f9a7ed47e",
+  "command": "python3 -B verify.py",
+  "executed_in": "isolated reviewer-owned copy with baseline files and shared validator",
+  "exit_code": 0,
+  "stdout": "{\n  \"passed\": true,\n  \"scope\": \"Source/copy integrity, raw-to-derived identity, offline replay, retained fixture assertions and three omission guards; not general semantic validation.\",\n  \"baseline_files_unchanged\": 22,\n  \"copied_files_verified\": 28,\n  \"source_byte_identity\": true,\n  \"raw_markdown_exact\": true,\n  \"replay_outputs_byte_identical\": true,\n  \"full_json_schema_engine_executed\": false,\n  \"extraction_result_available\": false,\n  \"all_observations_require_review\": true\n}\n",
+  "stderr": "",
+  "verification": {
+    "passed": true,
+    "scope": "Source/copy integrity, raw-to-derived identity, offline replay, retained fixture assertions and three omission guards; not general semantic validation.",
+    "baseline_files_unchanged": 22,
+    "copied_files_verified": 28,
+    "source_byte_identity": true,
+    "raw_markdown_exact": true,
+    "replay_outputs_byte_identical": true,
+    "commands": [
+      {
+        "arguments": [
+          "normalize.py"
+        ],
+        "exit_code": 0,
+        "stdout": "7 supported candidate observations; filing date withheld; review required\n",
+        "stderr": ""
+      },
+      {
+        "arguments": [
+          "test_guards.py"
+        ],
+        "exit_code": 0,
+        "stdout": "[{\"case\": \"hearing_duration\", \"exit\": 1, \"missing\": \"hearing_request_duration\", \"partial_count\": 6, \"passed\": true}, {\"case\": \"comment_duration\", \"exit\": 1, \"missing\": \"comment_duration\", \"partial_count\": 6, \"passed\": true}, {\"case\": \"eligibility\", \"exit\": 1, \"missing\": \"hearing_request_duration\", \"partial_count\": 6, \"passed\": true}]\n",
+        "stderr": ""
+      }
+    ],
+    "shared_validator": {
+      "schema_version": 1,
+      "purpose": "offline structural and evidence-integrity checks",
+      "passed": true,
+      "lanes": [
+        {
+          "lane": "trial",
+          "artifact_count": 19,
+          "observation_count": 7,
+          "method_counts": {
+            "deterministic": 7,
+            "manual_text": 0,
+            "manual_visual": 0,
+            "model": 0
+          },
+          "exact_quote_count": 9,
+          "visual_evidence_count": 0,
+          "failures": [],
+          "passed": true,
+          "semantic_entailment": "requires separate source review",
+          "production_readiness": "not established"
+        }
+      ]
+    },
+    "full_json_schema_engine_executed": false,
+    "extraction_result_available": false,
+    "all_observations_require_review": true
+  },
+  "final_readme_sha256": "9dcfc1e89e29c4b47fa3b4627702edda60551b3afb7b3f694eda405f9a7ed47e",
+  "final_narrative_review": "Explicit co-selection and wrong-column guard limits present; original-byte wording corrected; no material narrative blocker."
+}

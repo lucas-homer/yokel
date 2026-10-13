@@ -1,0 +1,3709 @@
+{
+  "schema_version": "round9.development-audit-inputs.v1",
+  "audits": [
+    {
+      "schema_version": "round9.semantic-audit-input.v1",
+      "audit_id": "rule_assertion/semantic_positive",
+      "document_id": "synthetic-r9-rule",
+      "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+      "record_sha256": "46e3aa14567d969fd989960b0eedc35e14a6a4ae81d673b72913ace142167434",
+      "source_reference_sha256": "e2b0e8d1ea6e1b99e077f67138c47a80240e97846e8b4d82c54a9fa39f328fa9",
+      "source_reference": {
+        "document_id": "synthetic-r9-rule",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "origin": "synthetic_source_first_development",
+        "scope": {
+          "status": "complete",
+          "definition": "All participation-related assertions in the entire supplied synthetic source: identity, phases, timing, channels, instructions/modality, relationships, and disclosures. No external linked content is part of this fixture.",
+          "reviewed_start": 0,
+          "reviewed_end": 89,
+          "exclusions": [],
+          "unresolved_questions": []
+        },
+        "units": [
+          {
+            "source_unit_id": "src-agency",
+            "category": "identity",
+            "assertion": "Civic Board is issuing agency.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-hearing",
+            "category": "fact",
+            "assertion": "Public hearing occurs.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-transition",
+            "category": "identity",
+            "assertion": "Both A and B are repealed and A is recreated in this proceeding.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          }
+        ]
+      },
+      "source_dispositions": [
+        {
+          "source_unit_id": "src-agency",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/identities/0/literal"
+          ],
+          "candidate_claim_ids": [
+            "field-004"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-hearing",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description",
+            "/events/0/phase"
+          ],
+          "candidate_claim_ids": [
+            "field-001",
+            "field-002"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-transition",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description"
+          ],
+          "candidate_claim_ids": [
+            "field-002"
+          ],
+          "basis": "Transition must occur in event semantic description. Evidence and coverage rationale are never assertion pointers."
+        }
+      ],
+      "claim_coverage": {
+        "status": "complete",
+        "enumeration": "r7-semantic-fields-v1",
+        "unreviewed_pointers": [],
+        "notes": "Every operative semantic field enumerated. Coverage is a derived assertion checked after aggregation; it is never evidence supporting itself. Compound text fields require review of every assertion, not a sampled keyword."
+      },
+      "candidate_claim_checks": [
+        {
+          "claim_id": "field-001",
+          "record_pointer": "/events/0/phase",
+          "value_sha256": "b739b8e0b58e27c3e96f280079446d43b06c646018dae508355bfc833f805d63",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-002",
+          "record_pointer": "/events/0/description",
+          "value_sha256": "7a7134284b58372fe1fc9bfac10043d490724337b97a30f98de8d5b0ce6f9fe9",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing",
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-003",
+          "record_pointer": "/identities/0/kind",
+          "value_sha256": "75de9dec489df8b6702cad240ec87ff7586d194e2dfd1a9e833e40331dcd50a8",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-004",
+          "record_pointer": "/identities/0/literal",
+          "value_sha256": "c47ed5604378933f7be450733c613dcd52220179d615a55189df5158693d5586",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-005",
+          "record_pointer": "/identities/0/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-006",
+          "record_pointer": "/identities/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-007",
+          "record_pointer": "/identities/1/kind",
+          "value_sha256": "7cd9f8ae25691dd26248820cdb23cec61039b8b3d2cfac9a0d37f15b0565fe5c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-008",
+          "record_pointer": "/identities/1/literal",
+          "value_sha256": "704cc922d9da3259a5b370c865bb8723a3054e5e051a3a7417eec240bb4f9b1c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-009",
+          "record_pointer": "/identities/1/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-010",
+          "record_pointer": "/identities/1/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        }
+      ],
+      "provenance": {
+        "author": "R9 protocol AI child",
+        "method": "proposed_manual_development_adjudication",
+        "independence_statement": "Source-unit obligations are synthetic source-first annotations; source dispositions and candidate field judgments were manually proposed after seeing the candidate. Neither uses a verifier output. The author has seen prior failures. Independent review has NOT occurred.",
+        "limitations": "Development fixtures only; field enumeration checks coverage, not semantic truth. No human gold, held-out evaluation, automated omission discovery, or production readiness is established."
+      }
+    },
+    {
+      "schema_version": "round9.semantic-audit-input.v1",
+      "audit_id": "rule_assertion/evidence_only_negative",
+      "document_id": "synthetic-r9-rule",
+      "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+      "record_sha256": "a50611c0f9c466590b86e8cbb9faa54a42679ee74b2249a77d27392fd48b3ac6",
+      "source_reference_sha256": "e2b0e8d1ea6e1b99e077f67138c47a80240e97846e8b4d82c54a9fa39f328fa9",
+      "source_reference": {
+        "document_id": "synthetic-r9-rule",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "origin": "synthetic_source_first_development",
+        "scope": {
+          "status": "complete",
+          "definition": "All participation-related assertions in the entire supplied synthetic source: identity, phases, timing, channels, instructions/modality, relationships, and disclosures. No external linked content is part of this fixture.",
+          "reviewed_start": 0,
+          "reviewed_end": 89,
+          "exclusions": [],
+          "unresolved_questions": []
+        },
+        "units": [
+          {
+            "source_unit_id": "src-agency",
+            "category": "identity",
+            "assertion": "Civic Board is issuing agency.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-hearing",
+            "category": "fact",
+            "assertion": "Public hearing occurs.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-transition",
+            "category": "identity",
+            "assertion": "Both A and B are repealed and A is recreated in this proceeding.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          }
+        ]
+      },
+      "source_dispositions": [
+        {
+          "source_unit_id": "src-agency",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/identities/0/literal"
+          ],
+          "candidate_claim_ids": [
+            "field-004"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-hearing",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description",
+            "/events/0/phase"
+          ],
+          "candidate_claim_ids": [
+            "field-001",
+            "field-002"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-transition",
+          "disposition": "mismatched",
+          "semantic_record_pointers": [
+            "/events/0/description"
+          ],
+          "candidate_claim_ids": [
+            "field-002"
+          ],
+          "basis": "Transition must occur in event semantic description. Evidence and coverage rationale are never assertion pointers."
+        }
+      ],
+      "claim_coverage": {
+        "status": "complete",
+        "enumeration": "r7-semantic-fields-v1",
+        "unreviewed_pointers": [],
+        "notes": "Every operative semantic field enumerated. Coverage is a derived assertion checked after aggregation; it is never evidence supporting itself. Compound text fields require review of every assertion, not a sampled keyword."
+      },
+      "candidate_claim_checks": [
+        {
+          "claim_id": "field-001",
+          "record_pointer": "/events/0/phase",
+          "value_sha256": "b739b8e0b58e27c3e96f280079446d43b06c646018dae508355bfc833f805d63",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-002",
+          "record_pointer": "/events/0/description",
+          "value_sha256": "db0447265417c5a08e8a93f90cff7a632ac32f8854f36e17b09cb403fb68966e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing",
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-003",
+          "record_pointer": "/identities/0/kind",
+          "value_sha256": "75de9dec489df8b6702cad240ec87ff7586d194e2dfd1a9e833e40331dcd50a8",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-004",
+          "record_pointer": "/identities/0/literal",
+          "value_sha256": "c47ed5604378933f7be450733c613dcd52220179d615a55189df5158693d5586",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-005",
+          "record_pointer": "/identities/0/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-006",
+          "record_pointer": "/identities/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-007",
+          "record_pointer": "/identities/1/kind",
+          "value_sha256": "7cd9f8ae25691dd26248820cdb23cec61039b8b3d2cfac9a0d37f15b0565fe5c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-008",
+          "record_pointer": "/identities/1/literal",
+          "value_sha256": "704cc922d9da3259a5b370c865bb8723a3054e5e051a3a7417eec240bb4f9b1c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-009",
+          "record_pointer": "/identities/1/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-010",
+          "record_pointer": "/identities/1/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        }
+      ],
+      "provenance": {
+        "author": "R9 protocol AI child",
+        "method": "proposed_manual_development_adjudication",
+        "independence_statement": "Source-unit obligations are synthetic source-first annotations; source dispositions and candidate field judgments were manually proposed after seeing the candidate. Neither uses a verifier output. The author has seen prior failures. Independent review has NOT occurred.",
+        "limitations": "Development fixtures only; field enumeration checks coverage, not semantic truth. No human gold, held-out evaluation, automated omission discovery, or production readiness is established."
+      }
+    },
+    {
+      "schema_version": "round9.semantic-audit-input.v1",
+      "audit_id": "rule_assertion/coverage_rationale_cannot_repair",
+      "document_id": "synthetic-r9-rule",
+      "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+      "record_sha256": "e9da064da7e77afef455ea778e289bc8ff446e900380ccdb18244c11dfb9be58",
+      "source_reference_sha256": "e2b0e8d1ea6e1b99e077f67138c47a80240e97846e8b4d82c54a9fa39f328fa9",
+      "source_reference": {
+        "document_id": "synthetic-r9-rule",
+        "source_text_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c",
+        "origin": "synthetic_source_first_development",
+        "scope": {
+          "status": "complete",
+          "definition": "All participation-related assertions in the entire supplied synthetic source: identity, phases, timing, channels, instructions/modality, relationships, and disclosures. No external linked content is part of this fixture.",
+          "reviewed_start": 0,
+          "reviewed_end": 89,
+          "exclusions": [],
+          "unresolved_questions": []
+        },
+        "units": [
+          {
+            "source_unit_id": "src-agency",
+            "category": "identity",
+            "assertion": "Civic Board is issuing agency.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-hearing",
+            "category": "fact",
+            "assertion": "Public hearing occurs.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-transition",
+            "category": "identity",
+            "assertion": "Both A and B are repealed and A is recreated in this proceeding.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          }
+        ]
+      },
+      "source_dispositions": [
+        {
+          "source_unit_id": "src-agency",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/identities/0/literal"
+          ],
+          "candidate_claim_ids": [
+            "field-004"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-hearing",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description",
+            "/events/0/phase"
+          ],
+          "candidate_claim_ids": [
+            "field-001",
+            "field-002"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-transition",
+          "disposition": "mismatched",
+          "semantic_record_pointers": [
+            "/events/0/description"
+          ],
+          "candidate_claim_ids": [
+            "field-002"
+          ],
+          "basis": "Transition must occur in event semantic description. Evidence and coverage rationale are never assertion pointers."
+        }
+      ],
+      "claim_coverage": {
+        "status": "complete",
+        "enumeration": "r7-semantic-fields-v1",
+        "unreviewed_pointers": [],
+        "notes": "Every operative semantic field enumerated. Coverage is a derived assertion checked after aggregation; it is never evidence supporting itself. Compound text fields require review of every assertion, not a sampled keyword."
+      },
+      "candidate_claim_checks": [
+        {
+          "claim_id": "field-001",
+          "record_pointer": "/events/0/phase",
+          "value_sha256": "b739b8e0b58e27c3e96f280079446d43b06c646018dae508355bfc833f805d63",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-002",
+          "record_pointer": "/events/0/description",
+          "value_sha256": "db0447265417c5a08e8a93f90cff7a632ac32f8854f36e17b09cb403fb68966e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing",
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-003",
+          "record_pointer": "/identities/0/kind",
+          "value_sha256": "75de9dec489df8b6702cad240ec87ff7586d194e2dfd1a9e833e40331dcd50a8",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-004",
+          "record_pointer": "/identities/0/literal",
+          "value_sha256": "c47ed5604378933f7be450733c613dcd52220179d615a55189df5158693d5586",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-005",
+          "record_pointer": "/identities/0/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-006",
+          "record_pointer": "/identities/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-007",
+          "record_pointer": "/identities/1/kind",
+          "value_sha256": "7cd9f8ae25691dd26248820cdb23cec61039b8b3d2cfac9a0d37f15b0565fe5c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-008",
+          "record_pointer": "/identities/1/literal",
+          "value_sha256": "704cc922d9da3259a5b370c865bb8723a3054e5e051a3a7417eec240bb4f9b1c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-009",
+          "record_pointer": "/identities/1/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-010",
+          "record_pointer": "/identities/1/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        }
+      ],
+      "provenance": {
+        "author": "R9 protocol AI child",
+        "method": "proposed_manual_development_adjudication",
+        "independence_statement": "Source-unit obligations are synthetic source-first annotations; source dispositions and candidate field judgments were manually proposed after seeing the candidate. Neither uses a verifier output. The author has seen prior failures. Independent review has NOT occurred.",
+        "limitations": "Development fixtures only; field enumeration checks coverage, not semantic truth. No human gold, held-out evaluation, automated omission discovery, or production readiness is established."
+      }
+    },
+    {
+      "schema_version": "round9.semantic-audit-input.v1",
+      "audit_id": "rule_assertion/source_only_extra_negative",
+      "document_id": "synthetic-r9-rule",
+      "source_text_sha256": "070a0f4c93e13c0709fe04722093e5d089a25ca9c4e2e1ee40a0db324ed900b7",
+      "record_sha256": "d50e09a447e7ba9df6383e78d9eb469a69d54aeeca85121feeaebc90b52255f5",
+      "source_reference_sha256": "3cd079622f958a714023ad2339d483ec7be2b852e023cd66dbfe670e48d0a20f",
+      "source_reference": {
+        "document_id": "synthetic-r9-rule",
+        "source_text_sha256": "070a0f4c93e13c0709fe04722093e5d089a25ca9c4e2e1ee40a0db324ed900b7",
+        "origin": "synthetic_source_first_development",
+        "scope": {
+          "status": "complete",
+          "definition": "All participation-related assertions in the entire supplied synthetic source: identity, phases, timing, channels, instructions/modality, relationships, and disclosures. No external linked content is part of this fixture.",
+          "reviewed_start": 0,
+          "reviewed_end": 140,
+          "exclusions": [],
+          "unresolved_questions": []
+        },
+        "units": [
+          {
+            "source_unit_id": "src-agency",
+            "category": "identity",
+            "assertion": "Civic Board is issuing agency.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-hearing",
+            "category": "fact",
+            "assertion": "Public hearing occurs.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-transition",
+            "category": "identity",
+            "assertion": "Both A and B are repealed and A is recreated in this proceeding.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 89,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-written",
+            "category": "fact",
+            "assertion": "Written comment participation phase.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 140,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A. Written comments must be received by June 1, 2030."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-receipt",
+            "category": "fact",
+            "assertion": "Comments received by June1,2030; no inferred timezone.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 140,
+                "quote": "Civic Board will hold a public hearing to repeal Chapters A and B and recreate Chapter A. Written comments must be received by June 1, 2030."
+              }
+            ],
+            "required_source_unit_ids": []
+          }
+        ]
+      },
+      "source_dispositions": [
+        {
+          "source_unit_id": "src-agency",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/identities/0/literal"
+          ],
+          "candidate_claim_ids": [
+            "field-004"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-hearing",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description",
+            "/events/0/phase"
+          ],
+          "candidate_claim_ids": [
+            "field-001",
+            "field-002"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-transition",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description"
+          ],
+          "candidate_claim_ids": [
+            "field-002"
+          ],
+          "basis": "Transition must occur in event semantic description. Evidence and coverage rationale are never assertion pointers."
+        },
+        {
+          "source_unit_id": "src-written",
+          "disposition": "omitted",
+          "semantic_record_pointers": [],
+          "candidate_claim_ids": [],
+          "basis": "Additional source-only obligation absent from unchanged candidate semantic fields and ID schedule."
+        },
+        {
+          "source_unit_id": "src-receipt",
+          "disposition": "omitted",
+          "semantic_record_pointers": [],
+          "candidate_claim_ids": [],
+          "basis": "Additional source-only obligation absent from unchanged candidate semantic fields and ID schedule."
+        }
+      ],
+      "claim_coverage": {
+        "status": "complete",
+        "enumeration": "r7-semantic-fields-v1",
+        "unreviewed_pointers": [],
+        "notes": "Every operative semantic field enumerated. Coverage is a derived assertion checked after aggregation; it is never evidence supporting itself. Compound text fields require review of every assertion, not a sampled keyword."
+      },
+      "candidate_claim_checks": [
+        {
+          "claim_id": "field-001",
+          "record_pointer": "/events/0/phase",
+          "value_sha256": "b739b8e0b58e27c3e96f280079446d43b06c646018dae508355bfc833f805d63",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-002",
+          "record_pointer": "/events/0/description",
+          "value_sha256": "7a7134284b58372fe1fc9bfac10043d490724337b97a30f98de8d5b0ce6f9fe9",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing",
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-003",
+          "record_pointer": "/identities/0/kind",
+          "value_sha256": "75de9dec489df8b6702cad240ec87ff7586d194e2dfd1a9e833e40331dcd50a8",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-004",
+          "record_pointer": "/identities/0/literal",
+          "value_sha256": "c47ed5604378933f7be450733c613dcd52220179d615a55189df5158693d5586",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-005",
+          "record_pointer": "/identities/0/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-006",
+          "record_pointer": "/identities/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-007",
+          "record_pointer": "/identities/1/kind",
+          "value_sha256": "7cd9f8ae25691dd26248820cdb23cec61039b8b3d2cfac9a0d37f15b0565fe5c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-008",
+          "record_pointer": "/identities/1/literal",
+          "value_sha256": "704cc922d9da3259a5b370c865bb8723a3054e5e051a3a7417eec240bb4f9b1c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-009",
+          "record_pointer": "/identities/1/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-010",
+          "record_pointer": "/identities/1/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-transition"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        }
+      ],
+      "provenance": {
+        "author": "R9 protocol AI child",
+        "method": "proposed_manual_development_adjudication",
+        "independence_statement": "Source-unit obligations are synthetic source-first annotations; source dispositions and candidate field judgments were manually proposed after seeing the candidate. Neither uses a verifier output. The author has seen prior failures. Independent review has NOT occurred.",
+        "limitations": "Development fixtures only; field enumeration checks coverage, not semantic truth. No human gold, held-out evaluation, automated omission discovery, or production readiness is established."
+      }
+    },
+    {
+      "schema_version": "round9.semantic-audit-input.v1",
+      "audit_id": "full_alternatives/full_group_positive",
+      "document_id": "synthetic-r9-alternatives",
+      "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+      "record_sha256": "ffe60a65f03fc748671c79d9c3d3fb082106f74c5c68abb11720cc301668c56f",
+      "source_reference_sha256": "3f4d21e070641def4581a51a3091e4140816587647bfc37bf02ea99f4d1b6b99",
+      "source_reference": {
+        "document_id": "synthetic-r9-alternatives",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "origin": "synthetic_source_first_development",
+        "scope": {
+          "status": "complete",
+          "definition": "All participation-related assertions in the entire supplied synthetic source: identity, phases, timing, channels, instructions/modality, relationships, and disclosures. No external linked content is part of this fixture.",
+          "reviewed_start": 0,
+          "reviewed_end": 180,
+          "exclusions": [],
+          "unresolved_questions": []
+        },
+        "units": [
+          {
+            "source_unit_id": "src-agency",
+            "category": "identity",
+            "assertion": "Civic Board is agency.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-hearing",
+            "category": "fact",
+            "assertion": "Hearing H.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-zoom",
+            "category": "fact",
+            "assertion": "Hearing access endpoint https://example.invalid/hearing",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-phone1",
+            "category": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0101",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-phone2",
+            "category": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0102",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-all-alternatives",
+            "category": "relationship",
+            "assertion": "Zoom and both phones are one full hearing-access alternative group; every required endpoint is linked.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": [
+              "src-zoom",
+              "src-phone1",
+              "src-phone2"
+            ]
+          }
+        ]
+      },
+      "source_dispositions": [
+        {
+          "source_unit_id": "src-agency",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/identities/0/literal"
+          ],
+          "candidate_claim_ids": [
+            "field-028"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-hearing",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description",
+            "/events/0/phase"
+          ],
+          "candidate_claim_ids": [
+            "field-001",
+            "field-002"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-zoom",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/routes/0/components/0/literal",
+            "/routes/0/event_ids",
+            "/routes/0/association"
+          ],
+          "candidate_claim_ids": [
+            "field-005",
+            "field-006",
+            "field-009"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-phone1",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/routes/1/components/0/literal",
+            "/routes/1/event_ids",
+            "/routes/1/association"
+          ],
+          "candidate_claim_ids": [
+            "field-013",
+            "field-014",
+            "field-017"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-phone2",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/routes/2/components/0/literal",
+            "/routes/2/event_ids",
+            "/routes/2/association"
+          ],
+          "candidate_claim_ids": [
+            "field-021",
+            "field-022",
+            "field-025"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-all-alternatives",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/alternative_groups/0/route_ids",
+            "/alternative_groups/0/purpose",
+            "/alternative_groups/0/event_ids",
+            "/routes/0/alternative_group_id",
+            "/routes/1/alternative_group_id",
+            "/routes/2/alternative_group_id"
+          ],
+          "candidate_claim_ids": [
+            "field-007",
+            "field-015",
+            "field-023",
+            "field-031",
+            "field-032",
+            "field-033"
+          ],
+          "basis": "All3 endpoint units required. Phone-only subset fails; any unresolved endpoint propagates unknown."
+        }
+      ],
+      "claim_coverage": {
+        "status": "complete",
+        "enumeration": "r7-semantic-fields-v1",
+        "unreviewed_pointers": [],
+        "notes": "Every operative semantic field enumerated. Coverage is a derived assertion checked after aggregation; it is never evidence supporting itself. Compound text fields require review of every assertion, not a sampled keyword."
+      },
+      "candidate_claim_checks": [
+        {
+          "claim_id": "field-001",
+          "record_pointer": "/events/0/phase",
+          "value_sha256": "b739b8e0b58e27c3e96f280079446d43b06c646018dae508355bfc833f805d63",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-002",
+          "record_pointer": "/events/0/description",
+          "value_sha256": "94528015837aa565995e9fd6ba42d357f447ceb16c0c6de64861fa489766bbe7",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-003",
+          "record_pointer": "/routes/0/channel",
+          "value_sha256": "bde1489624c3f4f8041d716bfb56754a5bbf2c99054424bc25eddc8a9139ad1a",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-004",
+          "record_pointer": "/routes/0/role",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-005",
+          "record_pointer": "/routes/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-006",
+          "record_pointer": "/routes/0/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-007",
+          "record_pointer": "/routes/0/alternative_group_id",
+          "value_sha256": "0175545245be2ebcaf931f392a7f22e2c7b5f5343db6e4cada8b7656bc35f907",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-008",
+          "record_pointer": "/routes/0/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-009",
+          "record_pointer": "/routes/0/components/0/literal",
+          "value_sha256": "0d00ee11e8946ad44eea8ee1a11ad4c9e4f738684d99803e2142c3cfbc3a7b89",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-010",
+          "record_pointer": "/routes/0/description",
+          "value_sha256": "76c4a950328d4a3f8ef952bc8e92ec072606c0e7478a39c6abf0188d38a3d935",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-011",
+          "record_pointer": "/routes/1/channel",
+          "value_sha256": "742917718c0252ecd124ed98f06b5f20e097d0b1e2b86565b8b72d12704b39e4",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-012",
+          "record_pointer": "/routes/1/role",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-013",
+          "record_pointer": "/routes/1/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-014",
+          "record_pointer": "/routes/1/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-015",
+          "record_pointer": "/routes/1/alternative_group_id",
+          "value_sha256": "0175545245be2ebcaf931f392a7f22e2c7b5f5343db6e4cada8b7656bc35f907",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-016",
+          "record_pointer": "/routes/1/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-017",
+          "record_pointer": "/routes/1/components/0/literal",
+          "value_sha256": "9cb80ddfcf4ad778507bba780c7551ff7bcc316f3ca5e33838e5c9b9c1d5ec95",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-018",
+          "record_pointer": "/routes/1/description",
+          "value_sha256": "93a7d2f80f5f6c792a250bb0ce30c6dbd343ca77d885101b1595b0805230623a",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-019",
+          "record_pointer": "/routes/2/channel",
+          "value_sha256": "742917718c0252ecd124ed98f06b5f20e097d0b1e2b86565b8b72d12704b39e4",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-020",
+          "record_pointer": "/routes/2/role",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-021",
+          "record_pointer": "/routes/2/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-022",
+          "record_pointer": "/routes/2/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-023",
+          "record_pointer": "/routes/2/alternative_group_id",
+          "value_sha256": "0175545245be2ebcaf931f392a7f22e2c7b5f5343db6e4cada8b7656bc35f907",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-024",
+          "record_pointer": "/routes/2/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-025",
+          "record_pointer": "/routes/2/components/0/literal",
+          "value_sha256": "c4211166ffab84c6acb735838a9dda33237540e39a92e1df9a267d0eed0e0dc5",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-026",
+          "record_pointer": "/routes/2/description",
+          "value_sha256": "10dbf46f66bb7bf22b296231f69c5f0a6c89ae8c80bd874a8dabd45a0ba39fb3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-027",
+          "record_pointer": "/identities/0/kind",
+          "value_sha256": "75de9dec489df8b6702cad240ec87ff7586d194e2dfd1a9e833e40331dcd50a8",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-028",
+          "record_pointer": "/identities/0/literal",
+          "value_sha256": "c47ed5604378933f7be450733c613dcd52220179d615a55189df5158693d5586",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-029",
+          "record_pointer": "/identities/0/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-030",
+          "record_pointer": "/identities/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-031",
+          "record_pointer": "/alternative_groups/0/purpose",
+          "value_sha256": "b188256cceddb393a6e30c6833f856761cca21d87bb9d3f4cc763b7e899a0407",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-032",
+          "record_pointer": "/alternative_groups/0/route_ids",
+          "value_sha256": "c375f11d63a04839d1f4fd10e5ce54140cc12d9be87a2c5e009517ad63af2bec",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-033",
+          "record_pointer": "/alternative_groups/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-034",
+          "record_pointer": "/alternative_groups/0/requirement_ids",
+          "value_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual check of this null/empty local field: it adds no unsupported positive assertion. It cannot prove source completeness or discharge a source obligation."
+        },
+        {
+          "claim_id": "field-035",
+          "record_pointer": "/alternative_groups/0/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        }
+      ],
+      "provenance": {
+        "author": "R9 protocol AI child",
+        "method": "proposed_manual_development_adjudication",
+        "independence_statement": "Source-unit obligations are synthetic source-first annotations; source dispositions and candidate field judgments were manually proposed after seeing the candidate. Neither uses a verifier output. The author has seen prior failures. Independent review has NOT occurred.",
+        "limitations": "Development fixtures only; field enumeration checks coverage, not semantic truth. No human gold, held-out evaluation, automated omission discovery, or production readiness is established."
+      }
+    },
+    {
+      "schema_version": "round9.semantic-audit-input.v1",
+      "audit_id": "full_alternatives/phone_subgroup_negative",
+      "document_id": "synthetic-r9-alternatives",
+      "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+      "record_sha256": "4c19bacf26b277fe2040a7bd8af1d86946f02cbde58eef032c34c0d3b810da9d",
+      "source_reference_sha256": "3f4d21e070641def4581a51a3091e4140816587647bfc37bf02ea99f4d1b6b99",
+      "source_reference": {
+        "document_id": "synthetic-r9-alternatives",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "origin": "synthetic_source_first_development",
+        "scope": {
+          "status": "complete",
+          "definition": "All participation-related assertions in the entire supplied synthetic source: identity, phases, timing, channels, instructions/modality, relationships, and disclosures. No external linked content is part of this fixture.",
+          "reviewed_start": 0,
+          "reviewed_end": 180,
+          "exclusions": [],
+          "unresolved_questions": []
+        },
+        "units": [
+          {
+            "source_unit_id": "src-agency",
+            "category": "identity",
+            "assertion": "Civic Board is agency.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-hearing",
+            "category": "fact",
+            "assertion": "Hearing H.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-zoom",
+            "category": "fact",
+            "assertion": "Hearing access endpoint https://example.invalid/hearing",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-phone1",
+            "category": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0101",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-phone2",
+            "category": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0102",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-all-alternatives",
+            "category": "relationship",
+            "assertion": "Zoom and both phones are one full hearing-access alternative group; every required endpoint is linked.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": [
+              "src-zoom",
+              "src-phone1",
+              "src-phone2"
+            ]
+          }
+        ]
+      },
+      "source_dispositions": [
+        {
+          "source_unit_id": "src-agency",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/identities/0/literal"
+          ],
+          "candidate_claim_ids": [
+            "field-028"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-hearing",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description",
+            "/events/0/phase"
+          ],
+          "candidate_claim_ids": [
+            "field-001",
+            "field-002"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-zoom",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/routes/0/components/0/literal",
+            "/routes/0/event_ids",
+            "/routes/0/association"
+          ],
+          "candidate_claim_ids": [
+            "field-005",
+            "field-006",
+            "field-009"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-phone1",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/routes/1/components/0/literal",
+            "/routes/1/event_ids",
+            "/routes/1/association"
+          ],
+          "candidate_claim_ids": [
+            "field-013",
+            "field-014",
+            "field-017"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-phone2",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/routes/2/components/0/literal",
+            "/routes/2/event_ids",
+            "/routes/2/association"
+          ],
+          "candidate_claim_ids": [
+            "field-021",
+            "field-022",
+            "field-025"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-all-alternatives",
+          "disposition": "mismatched",
+          "semantic_record_pointers": [
+            "/alternative_groups/0/route_ids",
+            "/alternative_groups/0/purpose",
+            "/alternative_groups/0/event_ids",
+            "/routes/0/alternative_group_id",
+            "/routes/1/alternative_group_id",
+            "/routes/2/alternative_group_id"
+          ],
+          "candidate_claim_ids": [
+            "field-007",
+            "field-015",
+            "field-023",
+            "field-031",
+            "field-032",
+            "field-033"
+          ],
+          "basis": "All3 endpoint units required. Phone-only subset fails; any unresolved endpoint propagates unknown."
+        }
+      ],
+      "claim_coverage": {
+        "status": "complete",
+        "enumeration": "r7-semantic-fields-v1",
+        "unreviewed_pointers": [],
+        "notes": "Every operative semantic field enumerated. Coverage is a derived assertion checked after aggregation; it is never evidence supporting itself. Compound text fields require review of every assertion, not a sampled keyword."
+      },
+      "candidate_claim_checks": [
+        {
+          "claim_id": "field-001",
+          "record_pointer": "/events/0/phase",
+          "value_sha256": "b739b8e0b58e27c3e96f280079446d43b06c646018dae508355bfc833f805d63",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-002",
+          "record_pointer": "/events/0/description",
+          "value_sha256": "94528015837aa565995e9fd6ba42d357f447ceb16c0c6de64861fa489766bbe7",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-003",
+          "record_pointer": "/routes/0/channel",
+          "value_sha256": "bde1489624c3f4f8041d716bfb56754a5bbf2c99054424bc25eddc8a9139ad1a",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-004",
+          "record_pointer": "/routes/0/role",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-005",
+          "record_pointer": "/routes/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-006",
+          "record_pointer": "/routes/0/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-007",
+          "record_pointer": "/routes/0/alternative_group_id",
+          "value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual check of this null/empty local field: it adds no unsupported positive assertion. It cannot prove source completeness or discharge a source obligation."
+        },
+        {
+          "claim_id": "field-008",
+          "record_pointer": "/routes/0/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-009",
+          "record_pointer": "/routes/0/components/0/literal",
+          "value_sha256": "0d00ee11e8946ad44eea8ee1a11ad4c9e4f738684d99803e2142c3cfbc3a7b89",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-010",
+          "record_pointer": "/routes/0/description",
+          "value_sha256": "76c4a950328d4a3f8ef952bc8e92ec072606c0e7478a39c6abf0188d38a3d935",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-011",
+          "record_pointer": "/routes/1/channel",
+          "value_sha256": "742917718c0252ecd124ed98f06b5f20e097d0b1e2b86565b8b72d12704b39e4",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-012",
+          "record_pointer": "/routes/1/role",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-013",
+          "record_pointer": "/routes/1/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-014",
+          "record_pointer": "/routes/1/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-015",
+          "record_pointer": "/routes/1/alternative_group_id",
+          "value_sha256": "0175545245be2ebcaf931f392a7f22e2c7b5f5343db6e4cada8b7656bc35f907",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-016",
+          "record_pointer": "/routes/1/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-017",
+          "record_pointer": "/routes/1/components/0/literal",
+          "value_sha256": "9cb80ddfcf4ad778507bba780c7551ff7bcc316f3ca5e33838e5c9b9c1d5ec95",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-018",
+          "record_pointer": "/routes/1/description",
+          "value_sha256": "93a7d2f80f5f6c792a250bb0ce30c6dbd343ca77d885101b1595b0805230623a",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-019",
+          "record_pointer": "/routes/2/channel",
+          "value_sha256": "742917718c0252ecd124ed98f06b5f20e097d0b1e2b86565b8b72d12704b39e4",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-020",
+          "record_pointer": "/routes/2/role",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-021",
+          "record_pointer": "/routes/2/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-022",
+          "record_pointer": "/routes/2/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-023",
+          "record_pointer": "/routes/2/alternative_group_id",
+          "value_sha256": "0175545245be2ebcaf931f392a7f22e2c7b5f5343db6e4cada8b7656bc35f907",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-024",
+          "record_pointer": "/routes/2/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-025",
+          "record_pointer": "/routes/2/components/0/literal",
+          "value_sha256": "c4211166ffab84c6acb735838a9dda33237540e39a92e1df9a267d0eed0e0dc5",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-026",
+          "record_pointer": "/routes/2/description",
+          "value_sha256": "10dbf46f66bb7bf22b296231f69c5f0a6c89ae8c80bd874a8dabd45a0ba39fb3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-027",
+          "record_pointer": "/identities/0/kind",
+          "value_sha256": "75de9dec489df8b6702cad240ec87ff7586d194e2dfd1a9e833e40331dcd50a8",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-028",
+          "record_pointer": "/identities/0/literal",
+          "value_sha256": "c47ed5604378933f7be450733c613dcd52220179d615a55189df5158693d5586",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-029",
+          "record_pointer": "/identities/0/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-030",
+          "record_pointer": "/identities/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-031",
+          "record_pointer": "/alternative_groups/0/purpose",
+          "value_sha256": "b188256cceddb393a6e30c6833f856761cca21d87bb9d3f4cc763b7e899a0407",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-032",
+          "record_pointer": "/alternative_groups/0/route_ids",
+          "value_sha256": "cb5ad5d1f97feed9bd43b471530812d70aff81742f1bc1b87798c55181027ee6",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-033",
+          "record_pointer": "/alternative_groups/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-034",
+          "record_pointer": "/alternative_groups/0/requirement_ids",
+          "value_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual check of this null/empty local field: it adds no unsupported positive assertion. It cannot prove source completeness or discharge a source obligation."
+        },
+        {
+          "claim_id": "field-035",
+          "record_pointer": "/alternative_groups/0/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        }
+      ],
+      "provenance": {
+        "author": "R9 protocol AI child",
+        "method": "proposed_manual_development_adjudication",
+        "independence_statement": "Source-unit obligations are synthetic source-first annotations; source dispositions and candidate field judgments were manually proposed after seeing the candidate. Neither uses a verifier output. The author has seen prior failures. Independent review has NOT occurred.",
+        "limitations": "Development fixtures only; field enumeration checks coverage, not semantic truth. No human gold, held-out evaluation, automated omission discovery, or production readiness is established."
+      }
+    },
+    {
+      "schema_version": "round9.semantic-audit-input.v1",
+      "audit_id": "full_alternatives/unknown_endpoint_blocks_group",
+      "document_id": "synthetic-r9-alternatives",
+      "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+      "record_sha256": "81cc86b8f28fd267ed7f4ace2b3910c12d6171ffe85e39db07a094b652b2937d",
+      "source_reference_sha256": "3f4d21e070641def4581a51a3091e4140816587647bfc37bf02ea99f4d1b6b99",
+      "source_reference": {
+        "document_id": "synthetic-r9-alternatives",
+        "source_text_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754",
+        "origin": "synthetic_source_first_development",
+        "scope": {
+          "status": "complete",
+          "definition": "All participation-related assertions in the entire supplied synthetic source: identity, phases, timing, channels, instructions/modality, relationships, and disclosures. No external linked content is part of this fixture.",
+          "reviewed_start": 0,
+          "reviewed_end": 180,
+          "exclusions": [],
+          "unresolved_questions": []
+        },
+        "units": [
+          {
+            "source_unit_id": "src-agency",
+            "category": "identity",
+            "assertion": "Civic Board is agency.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-hearing",
+            "category": "fact",
+            "assertion": "Hearing H.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-zoom",
+            "category": "fact",
+            "assertion": "Hearing access endpoint https://example.invalid/hearing",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-phone1",
+            "category": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0101",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-phone2",
+            "category": "fact",
+            "assertion": "Hearing access endpoint +1-202-555-0102",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-all-alternatives",
+            "category": "relationship",
+            "assertion": "Zoom and both phones are one full hearing-access alternative group; every required endpoint is linked.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 180,
+                "quote": "Civic Board will hold public hearing H. Attend using Zoom at https://example.invalid/hearing or by phone at +1-202-555-0101 or +1-202-555-0102. These three routes are alternatives."
+              }
+            ],
+            "required_source_unit_ids": [
+              "src-zoom",
+              "src-phone1",
+              "src-phone2"
+            ]
+          }
+        ]
+      },
+      "source_dispositions": [
+        {
+          "source_unit_id": "src-agency",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/identities/0/literal"
+          ],
+          "candidate_claim_ids": [
+            "field-028"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-hearing",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description",
+            "/events/0/phase"
+          ],
+          "candidate_claim_ids": [
+            "field-001",
+            "field-002"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-zoom",
+          "disposition": "unknown",
+          "semantic_record_pointers": [
+            "/routes/0/components/0/literal",
+            "/routes/0/event_ids",
+            "/routes/0/association"
+          ],
+          "candidate_claim_ids": [
+            "field-005",
+            "field-006",
+            "field-009"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-phone1",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/routes/1/components/0/literal",
+            "/routes/1/event_ids",
+            "/routes/1/association"
+          ],
+          "candidate_claim_ids": [
+            "field-013",
+            "field-014",
+            "field-017"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-phone2",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/routes/2/components/0/literal",
+            "/routes/2/event_ids",
+            "/routes/2/association"
+          ],
+          "candidate_claim_ids": [
+            "field-021",
+            "field-022",
+            "field-025"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-all-alternatives",
+          "disposition": "unknown",
+          "semantic_record_pointers": [
+            "/alternative_groups/0/route_ids",
+            "/alternative_groups/0/purpose",
+            "/alternative_groups/0/event_ids",
+            "/routes/0/alternative_group_id",
+            "/routes/1/alternative_group_id",
+            "/routes/2/alternative_group_id"
+          ],
+          "candidate_claim_ids": [
+            "field-007",
+            "field-015",
+            "field-023",
+            "field-037",
+            "field-038",
+            "field-039"
+          ],
+          "basis": "All3 endpoint units required. Phone-only subset fails; any unresolved endpoint propagates unknown."
+        }
+      ],
+      "claim_coverage": {
+        "status": "complete",
+        "enumeration": "r7-semantic-fields-v1",
+        "unreviewed_pointers": [],
+        "notes": "Every operative semantic field enumerated. Coverage is a derived assertion checked after aggregation; it is never evidence supporting itself. Compound text fields require review of every assertion, not a sampled keyword."
+      },
+      "candidate_claim_checks": [
+        {
+          "claim_id": "field-001",
+          "record_pointer": "/events/0/phase",
+          "value_sha256": "b739b8e0b58e27c3e96f280079446d43b06c646018dae508355bfc833f805d63",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-002",
+          "record_pointer": "/events/0/description",
+          "value_sha256": "94528015837aa565995e9fd6ba42d357f447ceb16c0c6de64861fa489766bbe7",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-hearing"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-003",
+          "record_pointer": "/routes/0/channel",
+          "value_sha256": "bde1489624c3f4f8041d716bfb56754a5bbf2c99054424bc25eddc8a9139ad1a",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-004",
+          "record_pointer": "/routes/0/role",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-005",
+          "record_pointer": "/routes/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-006",
+          "record_pointer": "/routes/0/association",
+          "value_sha256": "06f0ce347185bdee8b5081b9f3d31f268698b248496d3e1b316da4ec3fcd4716",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "The field explicitly leaves modality or association unresolved; conservative uncertainty is not successful recovery."
+        },
+        {
+          "claim_id": "field-007",
+          "record_pointer": "/routes/0/alternative_group_id",
+          "value_sha256": "0175545245be2ebcaf931f392a7f22e2c7b5f5343db6e4cada8b7656bc35f907",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Full relationship support is unresolved because its required Zoom endpoint association is unknown."
+        },
+        {
+          "claim_id": "field-008",
+          "record_pointer": "/routes/0/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-009",
+          "record_pointer": "/routes/0/components/0/literal",
+          "value_sha256": "0d00ee11e8946ad44eea8ee1a11ad4c9e4f738684d99803e2142c3cfbc3a7b89",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-010",
+          "record_pointer": "/routes/0/description",
+          "value_sha256": "76c4a950328d4a3f8ef952bc8e92ec072606c0e7478a39c6abf0188d38a3d935",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-011",
+          "record_pointer": "/routes/1/channel",
+          "value_sha256": "742917718c0252ecd124ed98f06b5f20e097d0b1e2b86565b8b72d12704b39e4",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-012",
+          "record_pointer": "/routes/1/role",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-013",
+          "record_pointer": "/routes/1/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-014",
+          "record_pointer": "/routes/1/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-015",
+          "record_pointer": "/routes/1/alternative_group_id",
+          "value_sha256": "0175545245be2ebcaf931f392a7f22e2c7b5f5343db6e4cada8b7656bc35f907",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-016",
+          "record_pointer": "/routes/1/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-017",
+          "record_pointer": "/routes/1/components/0/literal",
+          "value_sha256": "9cb80ddfcf4ad778507bba780c7551ff7bcc316f3ca5e33838e5c9b9c1d5ec95",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-018",
+          "record_pointer": "/routes/1/description",
+          "value_sha256": "93a7d2f80f5f6c792a250bb0ce30c6dbd343ca77d885101b1595b0805230623a",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone1"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-019",
+          "record_pointer": "/routes/2/channel",
+          "value_sha256": "742917718c0252ecd124ed98f06b5f20e097d0b1e2b86565b8b72d12704b39e4",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-020",
+          "record_pointer": "/routes/2/role",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-021",
+          "record_pointer": "/routes/2/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-022",
+          "record_pointer": "/routes/2/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-023",
+          "record_pointer": "/routes/2/alternative_group_id",
+          "value_sha256": "0175545245be2ebcaf931f392a7f22e2c7b5f5343db6e4cada8b7656bc35f907",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-024",
+          "record_pointer": "/routes/2/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-025",
+          "record_pointer": "/routes/2/components/0/literal",
+          "value_sha256": "c4211166ffab84c6acb735838a9dda33237540e39a92e1df9a267d0eed0e0dc5",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-026",
+          "record_pointer": "/routes/2/description",
+          "value_sha256": "10dbf46f66bb7bf22b296231f69c5f0a6c89ae8c80bd874a8dabd45a0ba39fb3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-phone2"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-027",
+          "record_pointer": "/identities/0/kind",
+          "value_sha256": "75de9dec489df8b6702cad240ec87ff7586d194e2dfd1a9e833e40331dcd50a8",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-028",
+          "record_pointer": "/identities/0/literal",
+          "value_sha256": "c47ed5604378933f7be450733c613dcd52220179d615a55189df5158693d5586",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-029",
+          "record_pointer": "/identities/0/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-030",
+          "record_pointer": "/identities/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-031",
+          "record_pointer": "/uncertainties/0/kind",
+          "value_sha256": "e4e36336db9c0f6f20a9f326970de25b3fd32d48ed2f857e436582d856d7e297",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "The field explicitly leaves modality or association unresolved; conservative uncertainty is not successful recovery."
+        },
+        {
+          "claim_id": "field-032",
+          "record_pointer": "/uncertainties/0/description",
+          "value_sha256": "3fb11c023810df185eef799dc1a307b755f1f3e1624aaa268bdf1daa908b76c1",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "The field explicitly leaves modality or association unresolved; conservative uncertainty is not successful recovery."
+        },
+        {
+          "claim_id": "field-033",
+          "record_pointer": "/uncertainties/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "The field explicitly leaves modality or association unresolved; conservative uncertainty is not successful recovery."
+        },
+        {
+          "claim_id": "field-034",
+          "record_pointer": "/uncertainties/0/route_ids",
+          "value_sha256": "37417b576ab09b75612615bf96c80dfafd1391858c00390c1c87bd0a942d4673",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "The field explicitly leaves modality or association unresolved; conservative uncertainty is not successful recovery."
+        },
+        {
+          "claim_id": "field-035",
+          "record_pointer": "/uncertainties/0/requirement_ids",
+          "value_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual check of this null/empty local field: it adds no unsupported positive assertion. It cannot prove source completeness or discharge a source obligation."
+        },
+        {
+          "claim_id": "field-036",
+          "record_pointer": "/uncertainties/0/identity_ids",
+          "value_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-zoom"
+          ],
+          "basis": "Proposed manual check of this null/empty local field: it adds no unsupported positive assertion. It cannot prove source completeness or discharge a source obligation."
+        },
+        {
+          "claim_id": "field-037",
+          "record_pointer": "/alternative_groups/0/purpose",
+          "value_sha256": "b188256cceddb393a6e30c6833f856761cca21d87bb9d3f4cc763b7e899a0407",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Full relationship support is unresolved because its required Zoom endpoint association is unknown."
+        },
+        {
+          "claim_id": "field-038",
+          "record_pointer": "/alternative_groups/0/route_ids",
+          "value_sha256": "c375f11d63a04839d1f4fd10e5ce54140cc12d9be87a2c5e009517ad63af2bec",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Full relationship support is unresolved because its required Zoom endpoint association is unknown."
+        },
+        {
+          "claim_id": "field-039",
+          "record_pointer": "/alternative_groups/0/event_ids",
+          "value_sha256": "82de150d351f421c7b664cddffb528fc5908117a631cff7a2d42ff7869e402ae",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Full relationship support is unresolved because its required Zoom endpoint association is unknown."
+        },
+        {
+          "claim_id": "field-040",
+          "record_pointer": "/alternative_groups/0/requirement_ids",
+          "value_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Proposed manual check of this null/empty local field: it adds no unsupported positive assertion. It cannot prove source completeness or discharge a source obligation."
+        },
+        {
+          "claim_id": "field-041",
+          "record_pointer": "/alternative_groups/0/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-all-alternatives"
+          ],
+          "basis": "Full relationship support is unresolved because its required Zoom endpoint association is unknown."
+        }
+      ],
+      "provenance": {
+        "author": "R9 protocol AI child",
+        "method": "proposed_manual_development_adjudication",
+        "independence_statement": "Source-unit obligations are synthetic source-first annotations; source dispositions and candidate field judgments were manually proposed after seeing the candidate. Neither uses a verifier output. The author has seen prior failures. Independent review has NOT occurred.",
+        "limitations": "Development fixtures only; field enumeration checks coverage, not semantic truth. No human gold, held-out evaluation, automated omission discovery, or production readiness is established."
+      }
+    },
+    {
+      "schema_version": "round9.semantic-audit-input.v1",
+      "audit_id": "modality_preservation/optional_positive",
+      "document_id": "synthetic-r9-modality",
+      "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+      "record_sha256": "1df3ba3ef5a7779388a7ecd7911418b77dacdaeb8738ec610454b3e451a4f4ab",
+      "source_reference_sha256": "a17aef06108ebf52b0c406c93ecad4c1bf51353d09eaf5d404ade395188667a0",
+      "source_reference": {
+        "document_id": "synthetic-r9-modality",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "origin": "synthetic_source_first_development",
+        "scope": {
+          "status": "complete",
+          "definition": "All participation-related assertions in the entire supplied synthetic source: identity, phases, timing, channels, instructions/modality, relationships, and disclosures. No external linked content is part of this fixture.",
+          "reviewed_start": 0,
+          "reviewed_end": 132,
+          "exclusions": [],
+          "unresolved_questions": []
+        },
+        "units": [
+          {
+            "source_unit_id": "src-agency",
+            "category": "identity",
+            "assertion": "Civic Board is agency.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-comments",
+            "category": "fact",
+            "assertion": "Written comments are accepted.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-email",
+            "category": "fact",
+            "assertion": "Submission endpoint comments@example.invalid.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-optional",
+            "category": "instruction",
+            "assertion": "Submission is expressly optional and email wording advisory.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          }
+        ]
+      },
+      "source_dispositions": [
+        {
+          "source_unit_id": "src-agency",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/identities/0/literal"
+          ],
+          "candidate_claim_ids": [
+            "field-019"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-comments",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description",
+            "/events/0/phase"
+          ],
+          "candidate_claim_ids": [
+            "field-001",
+            "field-002"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-email",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/routes/0/components/0/literal",
+            "/routes/0/role",
+            "/routes/0/event_ids"
+          ],
+          "candidate_claim_ids": [
+            "field-004",
+            "field-005",
+            "field-010"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-optional",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/requirements/0/text",
+            "/requirements/0/modality",
+            "/requirements/0/route_ids"
+          ],
+          "candidate_claim_ids": [
+            "field-011",
+            "field-014",
+            "field-016"
+          ],
+          "basis": "Text and typed modality jointly preserve explicit source optionality; unclear cannot count preserved."
+        }
+      ],
+      "claim_coverage": {
+        "status": "complete",
+        "enumeration": "r7-semantic-fields-v1",
+        "unreviewed_pointers": [],
+        "notes": "Every operative semantic field enumerated. Coverage is a derived assertion checked after aggregation; it is never evidence supporting itself. Compound text fields require review of every assertion, not a sampled keyword."
+      },
+      "candidate_claim_checks": [
+        {
+          "claim_id": "field-001",
+          "record_pointer": "/events/0/phase",
+          "value_sha256": "ae8b869a40298a9d564e945a2c02e7350d27b45f1106685680c9f2ad7c6b92da",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-comments"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-002",
+          "record_pointer": "/events/0/description",
+          "value_sha256": "2e6038356a207a2ce98fd23c6f23d6a7d679574b55af6a06b5992c27a2aaa320",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-comments"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-003",
+          "record_pointer": "/routes/0/channel",
+          "value_sha256": "d55b99efba68c4d57a901b891ddbaa9d1d8ad6c52dd62390b00204efc3170441",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-004",
+          "record_pointer": "/routes/0/role",
+          "value_sha256": "eea61bcf4e6447ef836a628bcf14a013eebe22a2756ad808fcd91605e3c6748c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-005",
+          "record_pointer": "/routes/0/event_ids",
+          "value_sha256": "4ec2403f1bbe2a54c8480cf9e395ea5c88208b2481c6b3ba49110f68681f78cc",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-006",
+          "record_pointer": "/routes/0/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-007",
+          "record_pointer": "/routes/0/alternative_group_id",
+          "value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual check of this null/empty local field: it adds no unsupported positive assertion. It cannot prove source completeness or discharge a source obligation."
+        },
+        {
+          "claim_id": "field-008",
+          "record_pointer": "/routes/0/description",
+          "value_sha256": "ad45a6a07941bc6d8c036ea001550221126d173e6ced1431a9daf17860435ef4",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-009",
+          "record_pointer": "/routes/0/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-010",
+          "record_pointer": "/routes/0/components/0/literal",
+          "value_sha256": "1e3ef02be1f38046f7f7cd5000f4804fea54b4eafdfcac1d61ce1a0055bdca6c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-011",
+          "record_pointer": "/requirements/0/modality",
+          "value_sha256": "47d1d0b33374b93a697dddf5b4b1947f2247dccef58b3eab195e7678da749d52",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-012",
+          "record_pointer": "/requirements/0/semantic_class",
+          "value_sha256": "4ec46c9ca40f86a8d999c3dfa7863953416a76f6f0ae04a25abc256f56f7fae1",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-013",
+          "record_pointer": "/requirements/0/kind",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-014",
+          "record_pointer": "/requirements/0/text",
+          "value_sha256": "38543e1ded4688ef09f7295eeb669be9e99b452e74ef0d9d2b37026ed9b4db29",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-015",
+          "record_pointer": "/requirements/0/event_ids",
+          "value_sha256": "4ec2403f1bbe2a54c8480cf9e395ea5c88208b2481c6b3ba49110f68681f78cc",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-016",
+          "record_pointer": "/requirements/0/route_ids",
+          "value_sha256": "4c23e9a8b490b5a989684bc8b6c89c7afebab9165967534f14eafd65ae85b7eb",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-017",
+          "record_pointer": "/requirements/0/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-018",
+          "record_pointer": "/identities/0/kind",
+          "value_sha256": "75de9dec489df8b6702cad240ec87ff7586d194e2dfd1a9e833e40331dcd50a8",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-019",
+          "record_pointer": "/identities/0/literal",
+          "value_sha256": "c47ed5604378933f7be450733c613dcd52220179d615a55189df5158693d5586",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-020",
+          "record_pointer": "/identities/0/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-021",
+          "record_pointer": "/identities/0/event_ids",
+          "value_sha256": "4ec2403f1bbe2a54c8480cf9e395ea5c88208b2481c6b3ba49110f68681f78cc",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        }
+      ],
+      "provenance": {
+        "author": "R9 protocol AI child",
+        "method": "proposed_manual_development_adjudication",
+        "independence_statement": "Source-unit obligations are synthetic source-first annotations; source dispositions and candidate field judgments were manually proposed after seeing the candidate. Neither uses a verifier output. The author has seen prior failures. Independent review has NOT occurred.",
+        "limitations": "Development fixtures only; field enumeration checks coverage, not semantic truth. No human gold, held-out evaluation, automated omission discovery, or production readiness is established."
+      }
+    },
+    {
+      "schema_version": "round9.semantic-audit-input.v1",
+      "audit_id": "modality_preservation/unclear_negative",
+      "document_id": "synthetic-r9-modality",
+      "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+      "record_sha256": "0a4138867c78804394c21fa4e20c5629c9bbb33fc8cc6979e7d1b58c508c8577",
+      "source_reference_sha256": "a17aef06108ebf52b0c406c93ecad4c1bf51353d09eaf5d404ade395188667a0",
+      "source_reference": {
+        "document_id": "synthetic-r9-modality",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "origin": "synthetic_source_first_development",
+        "scope": {
+          "status": "complete",
+          "definition": "All participation-related assertions in the entire supplied synthetic source: identity, phases, timing, channels, instructions/modality, relationships, and disclosures. No external linked content is part of this fixture.",
+          "reviewed_start": 0,
+          "reviewed_end": 132,
+          "exclusions": [],
+          "unresolved_questions": []
+        },
+        "units": [
+          {
+            "source_unit_id": "src-agency",
+            "category": "identity",
+            "assertion": "Civic Board is agency.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-comments",
+            "category": "fact",
+            "assertion": "Written comments are accepted.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-email",
+            "category": "fact",
+            "assertion": "Submission endpoint comments@example.invalid.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-optional",
+            "category": "instruction",
+            "assertion": "Submission is expressly optional and email wording advisory.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          }
+        ]
+      },
+      "source_dispositions": [
+        {
+          "source_unit_id": "src-agency",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/identities/0/literal"
+          ],
+          "candidate_claim_ids": [
+            "field-019"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-comments",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description",
+            "/events/0/phase"
+          ],
+          "candidate_claim_ids": [
+            "field-001",
+            "field-002"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-email",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/routes/0/components/0/literal",
+            "/routes/0/role",
+            "/routes/0/event_ids"
+          ],
+          "candidate_claim_ids": [
+            "field-004",
+            "field-005",
+            "field-010"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-optional",
+          "disposition": "unknown",
+          "semantic_record_pointers": [
+            "/requirements/0/text",
+            "/requirements/0/modality",
+            "/requirements/0/route_ids"
+          ],
+          "candidate_claim_ids": [
+            "field-011",
+            "field-014",
+            "field-016"
+          ],
+          "basis": "Text and typed modality jointly preserve explicit source optionality; unclear cannot count preserved."
+        }
+      ],
+      "claim_coverage": {
+        "status": "complete",
+        "enumeration": "r7-semantic-fields-v1",
+        "unreviewed_pointers": [],
+        "notes": "Every operative semantic field enumerated. Coverage is a derived assertion checked after aggregation; it is never evidence supporting itself. Compound text fields require review of every assertion, not a sampled keyword."
+      },
+      "candidate_claim_checks": [
+        {
+          "claim_id": "field-001",
+          "record_pointer": "/events/0/phase",
+          "value_sha256": "ae8b869a40298a9d564e945a2c02e7350d27b45f1106685680c9f2ad7c6b92da",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-comments"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-002",
+          "record_pointer": "/events/0/description",
+          "value_sha256": "2e6038356a207a2ce98fd23c6f23d6a7d679574b55af6a06b5992c27a2aaa320",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-comments"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-003",
+          "record_pointer": "/routes/0/channel",
+          "value_sha256": "d55b99efba68c4d57a901b891ddbaa9d1d8ad6c52dd62390b00204efc3170441",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-004",
+          "record_pointer": "/routes/0/role",
+          "value_sha256": "eea61bcf4e6447ef836a628bcf14a013eebe22a2756ad808fcd91605e3c6748c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-005",
+          "record_pointer": "/routes/0/event_ids",
+          "value_sha256": "4ec2403f1bbe2a54c8480cf9e395ea5c88208b2481c6b3ba49110f68681f78cc",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-006",
+          "record_pointer": "/routes/0/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-007",
+          "record_pointer": "/routes/0/alternative_group_id",
+          "value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual check of this null/empty local field: it adds no unsupported positive assertion. It cannot prove source completeness or discharge a source obligation."
+        },
+        {
+          "claim_id": "field-008",
+          "record_pointer": "/routes/0/description",
+          "value_sha256": "ad45a6a07941bc6d8c036ea001550221126d173e6ced1431a9daf17860435ef4",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-009",
+          "record_pointer": "/routes/0/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-010",
+          "record_pointer": "/routes/0/components/0/literal",
+          "value_sha256": "1e3ef02be1f38046f7f7cd5000f4804fea54b4eafdfcac1d61ce1a0055bdca6c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-011",
+          "record_pointer": "/requirements/0/modality",
+          "value_sha256": "683144a12969e0fd85512737e57b4db93ed15ee760906165a5516d581a77889a",
+          "disposition": "unknown",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "The field explicitly leaves modality or association unresolved; conservative uncertainty is not successful recovery."
+        },
+        {
+          "claim_id": "field-012",
+          "record_pointer": "/requirements/0/semantic_class",
+          "value_sha256": "4ec46c9ca40f86a8d999c3dfa7863953416a76f6f0ae04a25abc256f56f7fae1",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-013",
+          "record_pointer": "/requirements/0/kind",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-014",
+          "record_pointer": "/requirements/0/text",
+          "value_sha256": "38543e1ded4688ef09f7295eeb669be9e99b452e74ef0d9d2b37026ed9b4db29",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-015",
+          "record_pointer": "/requirements/0/event_ids",
+          "value_sha256": "4ec2403f1bbe2a54c8480cf9e395ea5c88208b2481c6b3ba49110f68681f78cc",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-016",
+          "record_pointer": "/requirements/0/route_ids",
+          "value_sha256": "4c23e9a8b490b5a989684bc8b6c89c7afebab9165967534f14eafd65ae85b7eb",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-017",
+          "record_pointer": "/requirements/0/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-018",
+          "record_pointer": "/identities/0/kind",
+          "value_sha256": "75de9dec489df8b6702cad240ec87ff7586d194e2dfd1a9e833e40331dcd50a8",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-019",
+          "record_pointer": "/identities/0/literal",
+          "value_sha256": "c47ed5604378933f7be450733c613dcd52220179d615a55189df5158693d5586",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-020",
+          "record_pointer": "/identities/0/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-021",
+          "record_pointer": "/identities/0/event_ids",
+          "value_sha256": "4ec2403f1bbe2a54c8480cf9e395ea5c88208b2481c6b3ba49110f68681f78cc",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        }
+      ],
+      "provenance": {
+        "author": "R9 protocol AI child",
+        "method": "proposed_manual_development_adjudication",
+        "independence_statement": "Source-unit obligations are synthetic source-first annotations; source dispositions and candidate field judgments were manually proposed after seeing the candidate. Neither uses a verifier output. The author has seen prior failures. Independent review has NOT occurred.",
+        "limitations": "Development fixtures only; field enumeration checks coverage, not semantic truth. No human gold, held-out evaluation, automated omission discovery, or production readiness is established."
+      }
+    },
+    {
+      "schema_version": "round9.semantic-audit-input.v1",
+      "audit_id": "modality_preservation/mandatory_negative",
+      "document_id": "synthetic-r9-modality",
+      "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+      "record_sha256": "f8383e8305f27e9e7ce1a787d73c0e0f689dfb80143ac3b29fab2d2909fa3731",
+      "source_reference_sha256": "a17aef06108ebf52b0c406c93ecad4c1bf51353d09eaf5d404ade395188667a0",
+      "source_reference": {
+        "document_id": "synthetic-r9-modality",
+        "source_text_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2",
+        "origin": "synthetic_source_first_development",
+        "scope": {
+          "status": "complete",
+          "definition": "All participation-related assertions in the entire supplied synthetic source: identity, phases, timing, channels, instructions/modality, relationships, and disclosures. No external linked content is part of this fixture.",
+          "reviewed_start": 0,
+          "reviewed_end": 132,
+          "exclusions": [],
+          "unresolved_questions": []
+        },
+        "units": [
+          {
+            "source_unit_id": "src-agency",
+            "category": "identity",
+            "assertion": "Civic Board is agency.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-comments",
+            "category": "fact",
+            "assertion": "Written comments are accepted.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-email",
+            "category": "fact",
+            "assertion": "Submission endpoint comments@example.invalid.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          },
+          {
+            "source_unit_id": "src-optional",
+            "category": "instruction",
+            "assertion": "Submission is expressly optional and email wording advisory.",
+            "source_evidence": [
+              {
+                "start": 0,
+                "end": 132,
+                "quote": "Civic Board accepts written comments at comments@example.invalid. Submission is optional; you should email comments to that address."
+              }
+            ],
+            "required_source_unit_ids": []
+          }
+        ]
+      },
+      "source_dispositions": [
+        {
+          "source_unit_id": "src-agency",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/identities/0/literal"
+          ],
+          "candidate_claim_ids": [
+            "field-019"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-comments",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/events/0/description",
+            "/events/0/phase"
+          ],
+          "candidate_claim_ids": [
+            "field-001",
+            "field-002"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-email",
+          "disposition": "matched",
+          "semantic_record_pointers": [
+            "/routes/0/components/0/literal",
+            "/routes/0/role",
+            "/routes/0/event_ids"
+          ],
+          "candidate_claim_ids": [
+            "field-004",
+            "field-005",
+            "field-010"
+          ],
+          "basis": "Manually reviewed semantic field assertion; source evidence is separately retained in source unit."
+        },
+        {
+          "source_unit_id": "src-optional",
+          "disposition": "mismatched",
+          "semantic_record_pointers": [
+            "/requirements/0/text",
+            "/requirements/0/modality",
+            "/requirements/0/route_ids"
+          ],
+          "candidate_claim_ids": [
+            "field-011",
+            "field-014",
+            "field-016"
+          ],
+          "basis": "Text and typed modality jointly preserve explicit source optionality; unclear cannot count preserved."
+        }
+      ],
+      "claim_coverage": {
+        "status": "complete",
+        "enumeration": "r7-semantic-fields-v1",
+        "unreviewed_pointers": [],
+        "notes": "Every operative semantic field enumerated. Coverage is a derived assertion checked after aggregation; it is never evidence supporting itself. Compound text fields require review of every assertion, not a sampled keyword."
+      },
+      "candidate_claim_checks": [
+        {
+          "claim_id": "field-001",
+          "record_pointer": "/events/0/phase",
+          "value_sha256": "ae8b869a40298a9d564e945a2c02e7350d27b45f1106685680c9f2ad7c6b92da",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-comments"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-002",
+          "record_pointer": "/events/0/description",
+          "value_sha256": "2e6038356a207a2ce98fd23c6f23d6a7d679574b55af6a06b5992c27a2aaa320",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-comments"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-003",
+          "record_pointer": "/routes/0/channel",
+          "value_sha256": "d55b99efba68c4d57a901b891ddbaa9d1d8ad6c52dd62390b00204efc3170441",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-004",
+          "record_pointer": "/routes/0/role",
+          "value_sha256": "eea61bcf4e6447ef836a628bcf14a013eebe22a2756ad808fcd91605e3c6748c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-005",
+          "record_pointer": "/routes/0/event_ids",
+          "value_sha256": "4ec2403f1bbe2a54c8480cf9e395ea5c88208b2481c6b3ba49110f68681f78cc",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-006",
+          "record_pointer": "/routes/0/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-007",
+          "record_pointer": "/routes/0/alternative_group_id",
+          "value_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual check of this null/empty local field: it adds no unsupported positive assertion. It cannot prove source completeness or discharge a source obligation."
+        },
+        {
+          "claim_id": "field-008",
+          "record_pointer": "/routes/0/description",
+          "value_sha256": "ad45a6a07941bc6d8c036ea001550221126d173e6ced1431a9daf17860435ef4",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-009",
+          "record_pointer": "/routes/0/components/0/kind",
+          "value_sha256": "a2883e3744bce5f6e5da05fb2ac7600586ea31c1d4a8e38c5bd4388b3679e825",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-010",
+          "record_pointer": "/routes/0/components/0/literal",
+          "value_sha256": "1e3ef02be1f38046f7f7cd5000f4804fea54b4eafdfcac1d61ce1a0055bdca6c",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-email"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-011",
+          "record_pointer": "/requirements/0/modality",
+          "value_sha256": "36067e9f5c81336bfc388d29391f4c5f240cc167e7f6fc6303e807a1cf651410",
+          "disposition": "unsupported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Mandatory modality contradicts the expressly optional source."
+        },
+        {
+          "claim_id": "field-012",
+          "record_pointer": "/requirements/0/semantic_class",
+          "value_sha256": "4ec46c9ca40f86a8d999c3dfa7863953416a76f6f0ae04a25abc256f56f7fae1",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-013",
+          "record_pointer": "/requirements/0/kind",
+          "value_sha256": "d448c0e0f65da7948e3edb7805b5272b54f75f427c33333157324b626f5ca51f",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-014",
+          "record_pointer": "/requirements/0/text",
+          "value_sha256": "38543e1ded4688ef09f7295eeb669be9e99b452e74ef0d9d2b37026ed9b4db29",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-015",
+          "record_pointer": "/requirements/0/event_ids",
+          "value_sha256": "4ec2403f1bbe2a54c8480cf9e395ea5c88208b2481c6b3ba49110f68681f78cc",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-016",
+          "record_pointer": "/requirements/0/route_ids",
+          "value_sha256": "4c23e9a8b490b5a989684bc8b6c89c7afebab9165967534f14eafd65ae85b7eb",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-017",
+          "record_pointer": "/requirements/0/association",
+          "value_sha256": "397beb3d248d4302dd995fa9969cc166e3aa44ebbe360a90aebe193bb5e4f40e",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-optional"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-018",
+          "record_pointer": "/identities/0/kind",
+          "value_sha256": "75de9dec489df8b6702cad240ec87ff7586d194e2dfd1a9e833e40331dcd50a8",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-019",
+          "record_pointer": "/identities/0/literal",
+          "value_sha256": "c47ed5604378933f7be450733c613dcd52220179d615a55189df5158693d5586",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-020",
+          "record_pointer": "/identities/0/relation",
+          "value_sha256": "1db36da41b374e34cba63c5c125a9f4869933bc539c99255c2fc81fc9ed69ab3",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        },
+        {
+          "claim_id": "field-021",
+          "record_pointer": "/identities/0/event_ids",
+          "value_sha256": "4ec2403f1bbe2a54c8480cf9e395ea5c88208b2481c6b3ba49110f68681f78cc",
+          "disposition": "supported",
+          "source_unit_ids": [
+            "src-agency"
+          ],
+          "basis": "Proposed manual field adjudication: the complete field value, including its role and referenced endpoints, is consistent with the linked synthetic source units. Pending independent review; not an observed model judgment."
+        }
+      ],
+      "provenance": {
+        "author": "R9 protocol AI child",
+        "method": "proposed_manual_development_adjudication",
+        "independence_statement": "Source-unit obligations are synthetic source-first annotations; source dispositions and candidate field judgments were manually proposed after seeing the candidate. Neither uses a verifier output. The author has seen prior failures. Independent review has NOT occurred.",
+        "limitations": "Development fixtures only; field enumeration checks coverage, not semantic truth. No human gold, held-out evaluation, automated omission discovery, or production readiness is established."
+      }
+    }
+  ]
+}

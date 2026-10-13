@@ -1,0 +1,384 @@
+{
+  "fixture_id": "A03",
+  "reference_version": "reviewer-source-v1",
+  "collector_annotation_hash": "f6dcadbadc5ada9c81d4aa3784326b3aa7e18d1c2782b6a70065e7517fcd3896",
+  "collector_snapshot": "/private/tmp/docketclock-expanded-benchmark-2026-10-05/review/collector-snapshots/A03-f6dcadbadc5a.json",
+  "input_sha256": "f449dbda4031d44f32dd92b60d87f6a7ac87d75612957f407a8b6939ba0578b1",
+  "reviewer_kind": "independent agent, not human gold standard",
+  "new_vendor_outputs_inspected": false,
+  "state": "MS",
+  "primary_bucket": "scanned/filled forms",
+  "layout_features": [
+    "image-only scanned SOS APA Form 001",
+    "final-column X choices and fixed effective date",
+    "colored filing stamp"
+  ],
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Publisher PDF contains only the one-page filing form; referenced rule text attachment is not included or collected. Native embedded text is empty; references use rendered-page transcription and marked selections.",
+    "All three MS units share SOS APA Form 001 template; three distinct PDF documents/agency records."
+  ],
+  "notice_scope_boundaries": "Entire single-page MS filing form; final-action column selected; attachments absent.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency is filing this notice?",
+      "expected_value": "Mississippi Department of Revenue",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top agency table",
+      "source_quote": "Mississippi Department of Revenue",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; final-action column selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Department of Revenue; Title 35 Part VIII Subpart 1 to S Table of Contents.",
+        "Submit and final-column FILED stamp April 7, 2026. Final adopted with no changes X; proposed rule filed December 31, 2025.",
+        "Final effective Other May 8, 2026 X; 30 days after filing unchecked. Proposed and temporary columns blank.",
+        "Not scheduled and economic impact not required checked. Hearing scheduled/date/time/place blank.",
+        "Generic 20/25-day boilerplate is not evidence of new participation on final action."
+      ]
+    },
+    {
+      "field_id": "rule_identity",
+      "question": "Which rule name or number is stated?",
+      "expected_value": "Title 35, Part VIII, Subpart 1 to S - Table of Contents",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top rule name/number cell",
+      "source_quote": "Title 35, Part VIII, Subpart 1 to S - Table of Contents",
+      "basis": "source_text",
+      "semantic_group_id": "rule_identity",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; final-action column selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Department of Revenue; Title 35 Part VIII Subpart 1 to S Table of Contents.",
+        "Submit and final-column FILED stamp April 7, 2026. Final adopted with no changes X; proposed rule filed December 31, 2025.",
+        "Final effective Other May 8, 2026 X; 30 days after filing unchecked. Proposed and temporary columns blank.",
+        "Not scheduled and economic impact not required checked. Hearing scheduled/date/time/place blank.",
+        "Generic 20/25-day boilerplate is not evidence of new participation on final action."
+      ]
+    },
+    {
+      "field_id": "selected_lifecycle",
+      "question": "Which FINAL ACTION ON RULES option is marked?",
+      "expected_value": "Adopted with no changes in text",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "right final-action column selected X",
+      "source_quote": "Adopted with no changes in text",
+      "basis": "visual_mark",
+      "semantic_group_id": "selected_lifecycle",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Preserve marked state attached to correct option, action heading, and column; merely listing labels is insufficient.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; final-action column selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Department of Revenue; Title 35 Part VIII Subpart 1 to S Table of Contents.",
+        "Submit and final-column FILED stamp April 7, 2026. Final adopted with no changes X; proposed rule filed December 31, 2025.",
+        "Final effective Other May 8, 2026 X; 30 days after filing unchecked. Proposed and temporary columns blank.",
+        "Not scheduled and economic impact not required checked. Hearing scheduled/date/time/place blank.",
+        "Generic 20/25-day boilerplate is not evidence of new participation on final action."
+      ]
+    },
+    {
+      "field_id": "hearing_selection",
+      "question": "Is an oral proceeding presently scheduled, according to the selected box?",
+      "expected_value": false,
+      "answerability": "explicit_negative",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "oral proceeding second box selected",
+      "source_quote": "Presently, an oral proceeding is not scheduled on this rule.",
+      "basis": "visual_mark",
+      "semantic_group_id": "hearing_selection",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "bool",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve explicit no-hearing-scheduled assertion or selected negative checkbox; silence is insufficient. Preserve marked state attached to correct option, action heading, and column; merely listing labels is insufficient.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; final-action column selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Department of Revenue; Title 35 Part VIII Subpart 1 to S Table of Contents.",
+        "Submit and final-column FILED stamp April 7, 2026. Final adopted with no changes X; proposed rule filed December 31, 2025.",
+        "Final effective Other May 8, 2026 X; 30 days after filing unchecked. Proposed and temporary columns blank.",
+        "Not scheduled and economic impact not required checked. Hearing scheduled/date/time/place blank.",
+        "Generic 20/25-day boilerplate is not evidence of new participation on final action."
+      ]
+    },
+    {
+      "field_id": "submit_date",
+      "question": "What date appears in the SUBMIT DATE cell?",
+      "expected_value": {
+        "date": "2026-04-07"
+      },
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "top submit-date cell",
+      "source_quote": "4/7/26",
+      "basis": "source_text",
+      "semantic_group_id": "submit_date",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; final-action column selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Department of Revenue; Title 35 Part VIII Subpart 1 to S Table of Contents.",
+        "Submit and final-column FILED stamp April 7, 2026. Final adopted with no changes X; proposed rule filed December 31, 2025.",
+        "Final effective Other May 8, 2026 X; 30 days after filing unchecked. Proposed and temporary columns blank.",
+        "Not scheduled and economic impact not required checked. Hearing scheduled/date/time/place blank.",
+        "Generic 20/25-day boilerplate is not evidence of new participation on final action."
+      ]
+    },
+    {
+      "field_id": "filing_stamp",
+      "question": "What date is shown in the selected official filing stamp?",
+      "expected_value": {
+        "date": "2026-04-07"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "bottom right official filing stamp",
+      "source_quote": "APR 07 2026",
+      "basis": "source_text",
+      "semantic_group_id": "filing_stamp",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; final-action column selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Department of Revenue; Title 35 Part VIII Subpart 1 to S Table of Contents.",
+        "Submit and final-column FILED stamp April 7, 2026. Final adopted with no changes X; proposed rule filed December 31, 2025.",
+        "Final effective Other May 8, 2026 X; 30 days after filing unchecked. Proposed and temporary columns blank.",
+        "Not scheduled and economic impact not required checked. Hearing scheduled/date/time/place blank.",
+        "Generic 20/25-day boilerplate is not evidence of new participation on final action."
+      ]
+    },
+    {
+      "field_id": "prior_proposal_filed",
+      "question": "What date does FINAL ACTION identify for the proposed rule filing?",
+      "expected_value": {
+        "date": "2025-12-31"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "right final-action column, Date Proposed Rule Filed",
+      "source_quote": "12/31/25",
+      "basis": "source_text",
+      "semantic_group_id": "prior_proposal_filed",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; final-action column selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Department of Revenue; Title 35 Part VIII Subpart 1 to S Table of Contents.",
+        "Submit and final-column FILED stamp April 7, 2026. Final adopted with no changes X; proposed rule filed December 31, 2025.",
+        "Final effective Other May 8, 2026 X; 30 days after filing unchecked. Proposed and temporary columns blank.",
+        "Not scheduled and economic impact not required checked. Hearing scheduled/date/time/place blank.",
+        "Generic 20/25-day boilerplate is not evidence of new participation on final action."
+      ]
+    },
+    {
+      "field_id": "selected_effective",
+      "question": "Which effective-date choice is marked in FINAL ACTION?",
+      "expected_value": {
+        "date": "2026-05-08"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "right final-action effective choice X",
+      "source_quote": "Other (specify): 5/8/2026",
+      "basis": "visual_mark",
+      "semantic_group_id": "selected_effective",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Preserve marked state attached to correct option, action heading, and column; merely listing labels is insufficient.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; final-action column selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Department of Revenue; Title 35 Part VIII Subpart 1 to S Table of Contents.",
+        "Submit and final-column FILED stamp April 7, 2026. Final adopted with no changes X; proposed rule filed December 31, 2025.",
+        "Final effective Other May 8, 2026 X; 30 days after filing unchecked. Proposed and temporary columns blank.",
+        "Not scheduled and economic impact not required checked. Hearing scheduled/date/time/place blank.",
+        "Generic 20/25-day boilerplate is not evidence of new participation on final action."
+      ]
+    },
+    {
+      "field_id": "generic_comment_duration",
+      "question": "What public-comment duration is printed in generic form instructions (without treating it as a newly opened comment cycle)?",
+      "expected_value": {
+        "duration": 25,
+        "unit": "days",
+        "role": "generic form instruction; no current close calculated"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "paragraph below oral-proceeding boxes",
+      "source_quote": "twenty-five (25) day public comment period",
+      "basis": "source_text",
+      "semantic_group_id": "generic_comment_duration",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Printed boilerplate on final filing; must not assert new current comment/request window or compute a close from final filing stamp.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; final-action column selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Department of Revenue; Title 35 Part VIII Subpart 1 to S Table of Contents.",
+        "Submit and final-column FILED stamp April 7, 2026. Final adopted with no changes X; proposed rule filed December 31, 2025.",
+        "Final effective Other May 8, 2026 X; 30 days after filing unchecked. Proposed and temporary columns blank.",
+        "Not scheduled and economic impact not required checked. Hearing scheduled/date/time/place blank.",
+        "Generic 20/25-day boilerplate is not evidence of new participation on final action."
+      ]
+    },
+    {
+      "field_id": "conditional_oral_request",
+      "question": "What printed request condition and relative deadline would trigger an oral proceeding if one is not scheduled?",
+      "expected_value": {
+        "requestors": "political subdivision, an agency or ten (10) or more persons",
+        "duration": 20,
+        "unit": "days",
+        "anchor": "filing of this notice of proposed rule adoption",
+        "computed_close": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "generic oral-proceeding instructions",
+      "source_quote": "political subdivision, an agency or ten (10) or more persons. The written request should be submitted to the agency contact person at the above address within twenty (20) days after the filing of this notice of proposed rule adoption",
+      "basis": "source_text",
+      "semantic_group_id": "conditional_oral_request",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Printed boilerplate on final filing; must not assert new current comment/request window or compute a close from final filing stamp.",
+      "notice_scope_boundaries": "Entire single-page MS filing form; final-action column selected; attachments absent.",
+      "source_pages_viewed": [
+        1
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "MS Department of Revenue; Title 35 Part VIII Subpart 1 to S Table of Contents.",
+        "Submit and final-column FILED stamp April 7, 2026. Final adopted with no changes X; proposed rule filed December 31, 2025.",
+        "Final effective Other May 8, 2026 X; 30 days after filing unchecked. Proposed and temporary columns blank.",
+        "Not scheduled and economic impact not required checked. Hearing scheduled/date/time/place blank.",
+        "Generic 20/25-day boilerplate is not evidence of new participation on final action."
+      ]
+    }
+  ],
+  "adjudications": [
+    {
+      "field_id": "rule_identity",
+      "type": "value_transcription_correction",
+      "reason": "Rendered rule-name cell reads Subpart 1 to S; accompanying description says a new subpart S was created. Collector numeral 5 transcription corrected to letter S.",
+      "collector_value": "Title 35, Part VIII, Subpart 1 to 5 - Table of Contents",
+      "reviewer_value": "Title 35, Part VIII, Subpart 1 to S - Table of Contents",
+      "collector_answerability": "present",
+      "reviewer_answerability": "present"
+    }
+  ],
+  "critical_determinate_groups": 8,
+  "critical_uncertain_fields": [],
+  "reference_gate_eligible": true,
+  "collector_ready_confirmed": true,
+  "original_sha256": "f449dbda4031d44f32dd92b60d87f6a7ac87d75612957f407a8b6939ba0578b1",
+  "original_physical_pages": [
+    1
+  ],
+  "collector_shared_original_group": null,
+  "collector_template_family": "MS-SOS-APA-001",
+  "agency_reference": "Mississippi Department of Revenue"
+}

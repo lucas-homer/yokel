@@ -1,0 +1,3 @@
+# Probe native service preparation
+
+Fixed isolated -I -S -B check/live-initial entry, same v3 credential architecture. Primary must rebind native policy/job to this namespace and independently reviewed code before live. Adapter checks new freeze-A/S, original opaque R8freeze-B, code/source/debit/auth/dependency files before injected environment keys. No op lookup, enrollment, Keychain change, caller override or retries. prepare_manifest.py generates metadata files exclusively after primary freezes/auth; nothing here builds or executes native jobs. External R8 source/reference/E-debit paths are exact hash-bound read-only inputs. Only the shared$2 budget with fixed .100166 debit and3newcalls is permitted.

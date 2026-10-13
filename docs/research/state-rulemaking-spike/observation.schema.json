@@ -1,0 +1,530 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DocketClock state research candidate observation",
+  "description": "Research-only common envelope; validation does not establish semantic entailment or publication approval.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "state-spike-v1"
+    },
+    "observation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jurisdiction": {
+      "type": "string",
+      "pattern": "^US-[A-Z]{2}$"
+    },
+    "source_record_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "subject": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "proceeding",
+            "notice",
+            "participation_window",
+            "hearing",
+            "instrument"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "predicate": {
+      "enum": [
+        "agency",
+        "title",
+        "event_type",
+        "rule_action",
+        "rule_citations",
+        "filing_date",
+        "publication_date",
+        "comment_open",
+        "comment_close",
+        "hearing_time",
+        "hearing_status",
+        "effective_date",
+        "withdraws",
+        "comment_duration",
+        "hearing_request_duration",
+        "operational_policy_date"
+      ]
+    },
+    "value": {},
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "artifact_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quote": {
+            "type": "string",
+            "minLength": 1
+          },
+          "support": {
+            "enum": [
+              "text_exact",
+              "visual_review"
+            ]
+          }
+        },
+        "required": [
+          "artifact_id",
+          "locator",
+          "quote",
+          "support"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "method": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "deterministic",
+            "model",
+            "manual_visual",
+            "manual_text"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "name",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "review_state": {
+      "enum": [
+        "candidate",
+        "needs_review",
+        "reviewed_for_research"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "observation_id",
+    "jurisdiction",
+    "source_record_id",
+    "subject",
+    "predicate",
+    "value",
+    "evidence",
+    "method",
+    "review_state",
+    "warnings"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "instant": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "instant"
+        },
+        "utc_instant": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "submission_condition": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "utc_instant"
+      ],
+      "additionalProperties": false
+    },
+    "date": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "date"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "submission_condition": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "date"
+      ],
+      "additionalProperties": false
+    },
+    "local_datetime": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "local_datetime"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "time": {
+          "type": "string",
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"
+        },
+        "timezone_text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "iana_zone": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "utc_instant": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "submission_condition": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "date",
+        "time",
+        "timezone_text",
+        "iana_zone",
+        "utc_instant"
+      ],
+      "additionalProperties": false
+    },
+    "relative": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "relative"
+        },
+        "duration": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "unit": {
+          "const": "days"
+        },
+        "anchor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "day_basis": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "computed_close": {
+          "type": "null"
+        },
+        "submission_condition": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "duration",
+        "unit",
+        "anchor",
+        "day_basis",
+        "computed_close"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "predicate": {
+            "enum": [
+              "agency",
+              "title"
+            ]
+          }
+        },
+        "required": [
+          "predicate"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "predicate": {
+            "enum": [
+              "event_type"
+            ]
+          }
+        },
+        "required": [
+          "predicate"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "enum": [
+              "proposal",
+              "withdrawal"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "predicate": {
+            "enum": [
+              "rule_action"
+            ]
+          }
+        },
+        "required": [
+          "predicate"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "enum": [
+              "new",
+              "amendment",
+              "repeal",
+              "adoption_by_reference"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "predicate": {
+            "enum": [
+              "hearing_status"
+            ]
+          }
+        },
+        "required": [
+          "predicate"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "enum": [
+              "scheduled",
+              "not_scheduled",
+              "canceled"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "predicate": {
+            "enum": [
+              "rule_citations"
+            ]
+          }
+        },
+        "required": [
+          "predicate"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "predicate": {
+            "enum": [
+              "withdraws"
+            ]
+          }
+        },
+        "required": [
+          "predicate"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "type": "object",
+            "properties": {
+              "target_source_record_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "target_source_record_id",
+              "scope"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "predicate": {
+            "enum": [
+              "comment_duration",
+              "hearing_request_duration"
+            ]
+          }
+        },
+        "required": [
+          "predicate"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "$ref": "#/$defs/relative"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "predicate": {
+            "enum": [
+              "filing_date",
+              "publication_date",
+              "comment_open",
+              "comment_close",
+              "hearing_time",
+              "effective_date",
+              "operational_policy_date"
+            ]
+          }
+        },
+        "required": [
+          "predicate"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/instant"
+              },
+              {
+                "$ref": "#/$defs/date"
+              },
+              {
+                "$ref": "#/$defs/local_datetime"
+              },
+              {
+                "$ref": "#/$defs/relative"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

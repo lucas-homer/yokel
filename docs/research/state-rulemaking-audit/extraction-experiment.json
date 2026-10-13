@@ -1,0 +1,461 @@
+{
+  "schema_version": 1,
+  "research_date_utc": "2026-09-30",
+  "method": "Five deliberately difficult single-run diagnostic cases; expectations recorded after source inspection and before prompt-only extraction.",
+  "initial_schema_attempt": "Connector rejected JSON Schema properties before execution.",
+  "requested_schema_not_enforced": {
+    "type": "object",
+    "properties": {
+      "source_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "agency": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "event_type": {
+        "type": "string",
+        "enum": [
+          "proposal",
+          "preproposal",
+          "withdrawal",
+          "adoption",
+          "hearing_notice",
+          "other",
+          "unknown"
+        ]
+      },
+      "related_source_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "comment_deadline": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "time": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "timezone_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "relative_expression": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "quote": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "date",
+          "time",
+          "timezone_text",
+          "relative_expression",
+          "quote"
+        ]
+      },
+      "hearing": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "time": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "timezone_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "quote": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "date",
+          "time",
+          "timezone_text",
+          "quote"
+        ]
+      },
+      "effective_date": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": [
+      "source_id",
+      "agency",
+      "event_type",
+      "related_source_ids",
+      "comment_deadline",
+      "hearing",
+      "effective_date",
+      "warnings"
+    ]
+  },
+  "actual_mode": "Firecrawl scrape JSON format with prompt only",
+  "prompt": "Extract facts only from this specific rulemaking notice. Use YYYY-MM-DD dates and 24-hour local times when explicitly stated. Do not calculate a deadline from a number of days; preserve the relative expression instead. Do not turn a hearing date, effective date, publication date, archive date, generic comment form, or unchecked form option into a comment deadline. Preserve time-zone wording exactly; flag ambiguous or seasonally inconsistent wording without silently correcting it. Capture withdrawals and their referenced notice IDs. Return verbatim short evidence quotes. Unknown values must be null. This is extraction, not legal interpretation.\nReturn a JSON object with these fields: source_id, agency, event_type, related_source_ids, comment_deadline {date,time,timezone_text,relative_expression,quote}, hearing {date,time,timezone_text,quote}, effective_date, warnings. event_type must be proposal, preproposal, withdrawal, adoption, hearing_notice, other, or unknown.",
+  "cases": [
+    {
+      "case_id": "wa-notice",
+      "source_url": "http://lawfilesext.leg.wa.gov/law/wsr/2026/18/26-18-058.htm",
+      "expectation_recorded_before_prompt_only_run": {
+        "id": "wa-notice",
+        "event_type": "withdrawal",
+        "related_source_ids": [
+          "26-15-113"
+        ],
+        "comment_date": null,
+        "hearing_date": null,
+        "notes": "Future hearing/comment period promised, not scheduled; only CR-102 withdrawn."
+      },
+      "actual_output": {
+        "source_id": "WSR 26-18-058",
+        "agency": "DEPARTMENT OF COMMERCE",
+        "event_type": "withdrawal",
+        "related_source_ids": [
+          "WSR 26-15-113"
+        ],
+        "comment_deadline": {
+          "date": "",
+          "time": "",
+          "timezone_text": "",
+          "relative_expression": "",
+          "quote": ""
+        },
+        "hearing": {
+          "date": "",
+          "time": "",
+          "timezone_text": "",
+          "quote": ""
+        },
+        "effective_date": "2026-08-31",
+        "warnings": []
+      },
+      "provider_metadata": {
+        "title": "WSR 26-18-058 (26-18)",
+        "language": "en",
+        "scrapeId": "01a0f105-6f1a-70c8-be90-8f18c457c43f",
+        "sourceURL": "http://lawfilesext.leg.wa.gov/law/wsr/2026/18/26-18-058.htm",
+        "url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/18/26-18-058.htm",
+        "statusCode": 200,
+        "contentType": "text/html",
+        "timezone": "America/New_York",
+        "proxyUsed": "basic",
+        "indexId": "490fd4bd-c49d-46c7-9869-344f207a7592",
+        "creditsUsed": 5,
+        "concurrencyLimited": false
+      },
+      "manual_assessment": {
+        "useful": [
+          "Withdrawal classification and related filing recovered."
+        ],
+        "errors": [
+          "Filing date 2026-08-31 was assigned as effective_date without source support.",
+          "Unknown fields used empty strings instead of requested null values."
+        ]
+      },
+      "execution_count": 1,
+      "source_text_hash": "356d889833e444aa36852a4cc2714553ca0336984578308af8ac766b77147414"
+    },
+    {
+      "case_id": "ak-notice",
+      "source_url": "https://aws.state.ak.us/OnlinePublicNotices/Notices/View.aspx?id=225308",
+      "expectation_recorded_before_prompt_only_run": {
+        "id": "ak-notice",
+        "event_type": "adoption",
+        "comment_date": null,
+        "hearing_date": null,
+        "effective_date": "2026-10-28",
+        "notes": "Generic comment form and Events/Deadlines field do not establish a comment period."
+      },
+      "actual_output": {
+        "source_id": "225308",
+        "agency": "Department of Education and Early Development",
+        "event_type": "other",
+        "related_source_ids": [
+          "2025200185"
+        ],
+        "comment_deadline": {
+          "date": "null",
+          "time": "null",
+          "timezone_text": "null",
+          "relative_expression": "null",
+          "quote": "null"
+        },
+        "hearing": {
+          "date": "null",
+          "time": "null",
+          "timezone_text": "null",
+          "quote": "null"
+        },
+        "effective_date": "2026-10-28",
+        "warnings": []
+      },
+      "provider_metadata": {
+        "language": "en",
+        "og:title": "Alaska Administrative Code - Title 4 - Department of Education and Early Development regulations re: Update Alternate ACCESS proficiency levels",
+        "ogTitle": "Alaska Administrative Code - Title 4 - Department of Education and Early Development regulations re: Update Alternate ACCESS proficiency levels",
+        "title": "\n\tAlaska Administrative Code - Title 4 - Department of Education and Early Development regulations re: Update Alternate ACCESS proficiency levels - Alaska Online Public Notices\n",
+        "favicon": "https://aws.state.ak.us/OnlinePublicNotices/favicon.ico",
+        "scrapeId": "01a0f106-b3ec-7520-b792-f30a419f7c5d",
+        "sourceURL": "https://aws.state.ak.us/OnlinePublicNotices/Notices/View.aspx?id=225308",
+        "url": "https://aws.state.ak.us/OnlinePublicNotices/Notices/View.aspx?id=225308",
+        "statusCode": 200,
+        "contentType": "text/html; charset=utf-8",
+        "timezone": "America/New_York",
+        "proxyUsed": "basic",
+        "indexId": "d04afbdd-647b-440e-ac20-a68f938d8725",
+        "creditsUsed": 5,
+        "concurrencyLimited": false
+      },
+      "manual_assessment": {
+        "useful": [
+          "Effective date recovered.",
+          "No actual comment deadline fabricated from generic controls."
+        ],
+        "errors": [
+          "Unknown fields were strings containing null."
+        ],
+        "qualifications": [
+          "Other is an imprecise event type, not scored as a legal date error."
+        ]
+      },
+      "execution_count": 1,
+      "source_text_hash": "2c1de1163aac4c22a851983f2edceffd4ef02b6e136aaea7416c622ebde744b3"
+    },
+    {
+      "case_id": "ma-pdf",
+      "source_url": "https://www.sec.state.ma.us/divisions/pubs-regs/hearings/pdf/9-25-26-205-CMR-116.08-229.01-Notice-of-Public-Hearing-SOS.pdf",
+      "expectation_recorded_before_prompt_only_run": {
+        "id": "ma-pdf",
+        "event_type": "hearing_notice",
+        "comment_date": "2026-10-05",
+        "comment_time": "17:00",
+        "timezone_text": "EST",
+        "hearing_date": "2026-10-06",
+        "notes": "Preserve EST literally and flag October DST ambiguity; two amended rules in one notice."
+      },
+      "actual_output": {
+        "source_id": "SMALL_BUSINESS_IMPACT_STATEMENT_AUGUST_2026",
+        "agency": "Massachusetts Gaming Commission",
+        "event_type": "hearing_notice",
+        "related_source_ids": [],
+        "comment_deadline": {
+          "date": "2026-10-05",
+          "time": "17:00",
+          "timezone_text": "EST",
+          "relative_expression": "N/A",
+          "quote": "Written comments must be received by 5:00 PM EST on October 5, 2026."
+        },
+        "hearing": {
+          "date": "2026-10-06",
+          "time": "09:30",
+          "timezone_text": "EST",
+          "quote": "Notice is hereby provided that in accordance with G.L. c. 30A, § 2, the Massachusetts Gaming Commission will convene a public hearing for purposes of gathering comments, ideas, and information relative to the proposed adoption of amendments to two regulations."
+        },
+        "effective_date": "N/A",
+        "warnings": "N/A"
+      },
+      "provider_metadata": {
+        "scrapeId": "01a0f106-825c-750d-9829-a3def1d0dd87",
+        "sourceURL": "https://www.sec.state.ma.us/divisions/pubs-regs/hearings/pdf/9-25-26-205-CMR-116.08-229.01-Notice-of-Public-Hearing-SOS.pdf",
+        "url": "https://www.sec.state.ma.us/divisions/pubs-regs/hearings/pdf/9-25-26-205-CMR-116.08-229.01-Notice-of-Public-Hearing-SOS.pdf",
+        "statusCode": 200,
+        "numPages": 5,
+        "totalPages": 6,
+        "title": " Notice of Public Hearing ",
+        "contentType": "application/pdf",
+        "proxyUsed": "basic",
+        "creditsUsed": 9,
+        "concurrencyLimited": false
+      },
+      "manual_assessment": {
+        "useful": [
+          "Explicit comment/hearing dates and times recovered.",
+          "EST preserved literally."
+        ],
+        "errors": [
+          "Invented source_id.",
+          "warnings was a string rather than an array.",
+          "Unknown values used N/A.",
+          "No zone-ambiguity warning despite instruction."
+        ]
+      },
+      "execution_count": 1,
+      "source_text_hash": "caa5272f975f5ce5e8c4750cbabf946d38d16b2b9614c5b45154252cdd7fd2ec"
+    },
+    {
+      "case_id": "tn-pdf",
+      "source_url": "https://publications.tnsosfiles.com/rules_filings/09-35-26.pdf",
+      "expectation_recorded_before_prompt_only_run": {
+        "id": "tn-pdf",
+        "event_type": "hearing_notice",
+        "comment_date": null,
+        "hearing_date": "2026-12-08",
+        "hearing_time": "13:00",
+        "notes": "Written comments prior to hearing, plus oral/written at hearing; no separate exact closing time stated."
+      },
+      "actual_output": {
+        "source_id": "1320-08-19-Applicable-Fee",
+        "agency": "Department of Revenue",
+        "event_type": "proposal",
+        "related_source_ids": [],
+        "comment_deadline": {
+          "date": "2026-12-08",
+          "time": "13:00",
+          "timezone_text": "CST/CDT",
+          "relative_expression": "10 days prior to the hearing",
+          "quote": "Any Individuals with disabilities who wish to participate in these proceedings... should contact the following at least 10 days prior to the hearing:"
+        },
+        "hearing": {
+          "date": "2026-12-08",
+          "time": "13:00",
+          "timezone_text": "CST/CDT",
+          "quote": "Oral or written comments are invited at the hearing."
+        },
+        "effective_date": "2026-09-25",
+        "warnings": "N/A"
+      },
+      "provider_metadata": {
+        "scrapeId": "01a0f107-1f2b-72fc-942f-39e88a383411",
+        "sourceURL": "https://publications.tnsosfiles.com/rules_filings/09-35-26.pdf",
+        "url": "https://publications.tnsosfiles.com/rules_filings/09-35-26.pdf",
+        "statusCode": 200,
+        "numPages": 5,
+        "totalPages": 5,
+        "title": "Rule Filing 09-35-26",
+        "contentType": "application/pdf",
+        "proxyUsed": "basic",
+        "indexId": "714cdaf2-0fca-4436-aaea-84ed5a0a3a6a",
+        "creditsUsed": 9,
+        "concurrencyLimited": false
+      },
+      "manual_assessment": {
+        "useful": [
+          "Hearing date/time recovered."
+        ],
+        "errors": [
+          "Filing date assigned as effective date.",
+          "Accommodation request timing used as comment-deadline evidence.",
+          "Hearing instant assigned as a precise comment deadline without distinguishing pre-hearing written and at-hearing participation.",
+          "warnings was a string rather than an array."
+        ],
+        "qualifications": [
+          "Proposal versus hearing_notice alone is not scored as an error; this notice performs both functions."
+        ]
+      },
+      "execution_count": 1,
+      "source_text_hash": "e4bc923f05a28d537a7a81451ab77ee404e90789925ffe6148bc1099196fe29b"
+    },
+    {
+      "case_id": "ms-pdf",
+      "source_url": "https://www.sos.ms.gov/adminsearch/ACProposed/00027305a.pdf",
+      "expectation_recorded_before_prompt_only_run": {
+        "id": "ms-pdf",
+        "event_type": "proposal",
+        "comment_date": null,
+        "hearing_date": null,
+        "notes": "25-day public comment expression; 20-day hearing-request period; do not fabricate computed close; exact anchor and counting require policy."
+      },
+      "actual_output": {
+        "source_id": "27305",
+        "agency": "Secretary of State – Securities Division",
+        "event_type": "proposal",
+        "related_source_ids": [
+          "Rule 5.29"
+        ],
+        "comment_deadline": {
+          "date": "",
+          "time": "",
+          "timezone_text": "",
+          "relative_expression": "twenty (20) days after the filing of this notice of proposed rule adoption",
+          "quote": "the written request should be submitted to the agency contact person... within twenty (20) days after the filing of this notice of proposed rule adoption"
+        },
+        "hearing": {
+          "date": "",
+          "time": "",
+          "timezone_text": "",
+          "quote": "Presently, an oral proceeding is not scheduled on this rule."
+        },
+        "effective_date": "",
+        "warnings": []
+      },
+      "provider_metadata": {
+        "scrapeId": "01a0f106-3e07-715e-897f-d926a8ca8845",
+        "sourceURL": "https://www.sos.ms.gov/adminsearch/ACProposed/00027305a.pdf",
+        "url": "https://www.sos.ms.gov/adminsearch/ACProposed/00027305a.pdf",
+        "statusCode": 200,
+        "numPages": 1,
+        "totalPages": 1,
+        "contentType": "application/pdf",
+        "proxyUsed": "basic",
+        "indexId": "d276bb06-708b-4d0d-9942-e5177d8acd53",
+        "creditsUsed": 5,
+        "concurrencyLimited": false
+      },
+      "manual_assessment": {
+        "useful": [
+          "Proposal and lack of scheduled hearing recognized."
+        ],
+        "errors": [
+          "20-day hearing-request condition assigned to comment deadline instead of the distinct 25-day comment period.",
+          "Unknown fields used empty strings instead of null."
+        ]
+      },
+      "execution_count": 1,
+      "source_text_hash": "c66b8c9a6d9f96bf6307536d5cab6398e1ee56337cfebe2b75c69c4c1cdc3de4"
+    }
+  ],
+  "limitations": [
+    "Not a random sample or national accuracy estimate.",
+    "Not a test of schema-constrained direct SDK extraction.",
+    "No LlamaParse comparator.",
+    "No independent human labeling panel.",
+    "No repeatability or longitudinal monitoring study."
+  ]
+}

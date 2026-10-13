@@ -1,0 +1,174 @@
+{
+  "status": "COMPLETE_ADVISORY_AI_ASSESSMENT_SEMANTIC_READINESS_UNVERIFIED",
+  "summary": "Observed serialization succeeded on the fresh source, but Fable identifies incomplete/corrupted applicability fields and disputed force/markup/actor interpretations. Structural success and reference crosswalk coverage do not certify semantic completeness.",
+  "roles": {
+    "semantic_judgments": "Fable, actual claude-fable-5-1 through firstParty Claude.ai Max subscription bridge, requested high effort. Same isolated session created the frozen source-only reference and later reviewed the complete source/public-derived inventory.",
+    "host": "Codex executes deterministic tests and verifies cited strings, IDs, signatures, pins, raw/expanded roundtrip and ledger. No replacement semantic judgments."
+  },
+  "source_and_output": {
+    "source_id": "WSR 26-19-023",
+    "fresh_source_selection": "Prospective first eligible unused notice; reference frozen before prompt/output exposure.",
+    "output_units_reviewed": 110,
+    "coverage_count_role": "Bookkeeping, not samples, accuracy denominator or gold labels.",
+    "complete_response_finish_reason": "stop",
+    "completion_tokens": 7231,
+    "reasoning_tokens": 57,
+    "output_cap": 8192,
+    "reported_cost_usd": 0.0891335,
+    "conservative_charge_nanousd": 200000000,
+    "cumulative_charge_nanousd": 1905990718,
+    "invoice_verified": false
+  },
+  "material_known_finding": {
+    "author": "Fable finding F2",
+    "units": [
+      88,
+      95,
+      96,
+      98,
+      99
+    ],
+    "finding": "Applicability fields end with a dangling comma/incomplete phrase, and unit 95 contains non-source katakana. Assertions retain content elsewhere, so do not count all five as absent source functions.",
+    "examples": [
+      "or head スタ",
+      "or assistance program or head start program, or",
+      "in accordance with the federal individuals with disabilities education ",
+      "school district accounting manual requirem",
+      "this is an age attainment date,"
+    ],
+    "implication": "Consumers cannot treat these applicability fields as complete qualifications. Exact host roundtrip preserves the defects; no host clipping, repair or extraction retry occurred."
+  },
+  "fable_contested_findings": [
+    {
+      "id": "F1",
+      "title": "Deletion/addition asserted from double parentheses without uncertainty",
+      "unit_ids": [
+        94,
+        95
+      ],
+      "severity": "contested",
+      "practical_implication": "Readers relying on these units take a convention-based interpretation as a source fact. The content of the bracketed text and the authorization sentence are otherwise reported accurately."
+    },
+    {
+      "id": "F3",
+      "title": "Eligibility criteria recast as mandatory duties",
+      "unit_ids": [
+        86,
+        87,
+        85,
+        88
+      ],
+      "severity": "contested",
+      "practical_implication": "Force labels overstate directive character. Read as conditions of eligibility, the units are accurate; read as duties, they are not evidenced."
+    },
+    {
+      "id": "F4",
+      "title": "Declarative-future allocation language labeled mandatory",
+      "unit_ids": [
+        102,
+        103,
+        104,
+        110
+      ],
+      "severity": "contested",
+      "practical_implication": "Low. Assertions are faithful; only the modality tag presumes a binding reading."
+    },
+    {
+      "id": "F5",
+      "title": "Actor inferred for passive accounting duty",
+      "unit_ids": [
+        99
+      ],
+      "severity": "contested",
+      "practical_implication": "Actor assignment is a reasonable inference, not a stated fact. Scope mismatch between lead-in and (e) also bears on UI-07/UI-08."
+    },
+    {
+      "id": "F6",
+      "title": "Permissive authorization under a 'must:' lead-in left without uncertainty",
+      "unit_ids": [
+        96
+      ],
+      "severity": "contested",
+      "practical_implication": "Low to medium. The permissive reading is probably right, but the structural tension and scope shift are unflagged."
+    },
+    {
+      "id": "F9",
+      "title": "Historical filing described as the thing being amended",
+      "unit_ids": [
+        81
+      ],
+      "severity": "contested, low",
+      "practical_implication": "Readers should pair 81 with 84 to avoid treating the WSR number as the regulated text."
+    }
+  ],
+  "fable_minor_notes": [
+    {
+      "id": "F7",
+      "title": "'or portions of the proposal' omitted from exemption assertions",
+      "unit_ids": [
+        71,
+        72
+      ],
+      "severity": "known, low",
+      "practical_implication": "Negligible."
+    },
+    {
+      "id": "F8",
+      "title": "LEA category equated with named school types",
+      "unit_ids": [
+        49
+      ],
+      "severity": "known, low",
+      "practical_implication": "Minor inference; likely correct in domain but not in text."
+    },
+    {
+      "id": "F10",
+      "title": "Unflagged source ambiguities",
+      "unit_ids": [
+        16,
+        17,
+        91,
+        103,
+        110
+      ],
+      "severity": "known, low",
+      "practical_implication": "Facts are not wrong; uncertainty coverage is thinner than the source warrants."
+    }
+  ],
+  "requested_contract_dimensions": {
+    "deadlines": "Fable supports units 35,36,44 preserving printed cutoff values and explicitly absent timezone/timeliness basis or absent clock; units 10,34 preserve missing zones for stated clocks. No receipt/postmark or timezone default inferred.",
+    "rule_vs_filing": "Affected WAC target and historical filing/dates are separately present. Fable flags unit 81 wording as contested while unit 84 correctly states the WAC amendment target.",
+    "atomicity": "Fable notes a bundle in unit 37 and other supported grouping notes; retained facts remain present and are not counted as omissions or failed fixed-unit-count expectations.",
+    "force": "Fable treats eligibility-as-duty, future allocation, passive actor assignment and permission under a mandatory lead-in as disputed interpretations/uncertainty issues rather than settled legal errors.",
+    "qualifications": "Known applicability text defects are concentrated in units 88,95,96,98,99; undefined referents/year frames and markup-status/scope tensions remain visible as advisory gaps.",
+    "source_function_crosswalk": "Every non-uncertainty frozen reference entry has a Fable many-to-many mapping. Five funding criteria were initially grouped and now explicitly unpacked by a same-session supplement; no new omission or reference change."
+  },
+  "mechanical_verification": {
+    "all_110_unit_review_ids_present_once": true,
+    "original_finding_source_quotes_exact": 21,
+    "inventory_quotes_exact_within_affected_units": 20,
+    "supplement_source_quotes_exact": 5,
+    "all_finding_and_crosswalk_inventory_ids_resolve": true,
+    "reference_frozen_hashes_unchanged": true,
+    "limitation": "Equality/membership checks do not independently validate semantic judgments.",
+    "bookkeeping_issue": "Fable summary status totals differ from its individual entries; raw data retained and summary totals unused. Individual verdicts are unchanged; no accuracy score supplied."
+  },
+  "reference_limits": [
+    "The frozen reference treats the deletion reading of double parentheses as unresolved; a reader applying standard WSR drafting conventions would regard units 94 and 95 as correct. The finding F1 is about evidentiary basis, not likely truth.",
+    "The reference's own force labels (declarative future for 065; permissive for 040(2)(d)) are interpretations; F4 and F6 record disagreement in uncertainty handling, not established error.",
+    "Reference assigned no unit-level duty to LEAs for (e) because the source is passive; F5 could be resolved either way by a legal reader."
+  ],
+  "overall_fable_conclusion": "Every source function in the frozen reference maps to at least one inventory unit, and the large majority of the 110 assertions are entailed by the quoted source text with appropriate absence statements for timezone, access details, and deadline basis. Material concerns are concentrated in the proposed rule text: deletion/addition asserted from plain-text brackets without uncertainty (94, 95), eligibility criteria and declarative-future language tagged as mandatory duties (86, 87, 102, 103, 104, 110), an inferred actor for the passive accounting duty (99), and five applicability fields that are truncated or contain non-source characters (88, 95, 96, 98, 99). Notice-side units (1 through 84) are substantively sound, with only low-severity glosses and one conflation of historical filing with amendment target (81). This is an advisory assessment; no score is given and completeness of the inventory against the source is not certified.",
+  "postrun_integrity": "Local actual-receipt audit passed, including both native public-key signatures, retained original pre-dispatch STOP/claim, exact actual roundtrip, source-only request, pins and single adapter ledger. See ../testing/postrun/READY.json.",
+  "limits": [
+    "One prospectively selected engineering pilot; no causal improvement, direct-versus-staged comparison, unseen-source generalization, production eligibility or action readiness follows.",
+    "Reference is AI-authored and contains interpretive limitations; missing HTML markup cannot become a model-input requirement.",
+    "Broad evidence coverage, crosswalk coverage and complete serialization do not establish exhaustive discovery or semantic accuracy.",
+    "Earlier native pre-dispatch failure remains historical evidence; successful replacement/recovery is documented separately."
+  ],
+  "new_research_calls_by_this_assessment": 0,
+  "runtime_credentials_or_prior_internal_reports_exported": false,
+  "source_reference_file_labels_retransmitted": false,
+  "fable_subscription_only": true,
+  "completed_utc": "2026-10-13T03:17:49.098266+00:00"
+}

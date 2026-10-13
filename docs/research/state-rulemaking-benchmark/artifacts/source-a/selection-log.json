@@ -1,0 +1,214 @@
+{
+  "selection_stage": "source collection and source-only labeling before new vendor outputs",
+  "sampling": "purposive diagnostic; no randomness or coverage estimate",
+  "order_basis": "bounded search result order and official listing order, then page-count/complete-notice eligibility; target IDs assigned by requested bucket rather than chronology",
+  "queries_in_order": [
+    {
+      "query": "site.sos.ms.gov adminsearch Proposed Rule 2026 pdf",
+      "outcome": "No useful notice in initial grouped results; native FAQ surfaced, not used to label"
+    },
+    {
+      "query": "site.lni.wa.gov rulemaking withdrawal 2026 CR-103 pdf",
+      "outcome": "Official WA 26-16PROP withdrawal result surfaced, later retained as A05"
+    },
+    {
+      "query": "site.ca.gov notice proposed rulemaking 2026 pdf comment",
+      "outcome": "Official wildlife and DMV listings surfaced"
+    },
+    {
+      "query": "site.dos.ny.gov state register September 2026 pdf",
+      "outcome": "Official State Register index surfaced; freshest issue selected from live index"
+    },
+    {
+      "query": "site.sos.ms.gov/ACProposed/ \"2026\" \"NOTICE\"; site.sos.ms.gov/adminsearch/ACProposed \"pdf\"",
+      "outcome": "Official 00028572a direct PDF result surfaced; selected A03"
+    },
+    {
+      "query": "site.sos.ms.gov/adminsearch/ACProposed/ SOS APA Form 001 2026",
+      "ordered_eligible_hits": [
+        "00028528a.pdf",
+        "00028576a.pdf",
+        "00028438a.pdf"
+      ],
+      "selected": [
+        "A01=00028528a",
+        "A02=00028576a"
+      ],
+      "excluded": "00028438a is earlier proposed stage of A03 same Revenue record, avoid near-duplicate paired lifecycle template unit"
+    },
+    {
+      "query": "site.sos.ms.gov/adminsearch/ACProposed/ SUBMIT DATE 2025",
+      "outcome": "Historical candidates allowed but 2026 distinct forms already filled MS quota"
+    },
+    {
+      "query": "site.ca.gov 2026 NOTICE OF PROPOSED filetype:pdf Written Comment Page 2; site.cdtfa.ca.gov 2026 notice comments filetype:pdf; site.waterboards.ca.gov 2026 NOTICE OF rulemaking filetype:pdf",
+      "outcome": "Short standalone wildlife 241124 surfaced; CDTFA calendar and Water Board alternatives not selected after CA quota eligible"
+    }
+  ],
+  "official_listing_order": [
+    {
+      "listing": "ca-dmv.html",
+      "ordered_inspected_notice_links": [
+        "Driver Safety Hearings Notice of Proposed Action",
+        "Termination of Suspension Notice of Proposed Action",
+        "Vision Screenings and Driving Evaluations Notice of Proposed Action",
+        "ELT Second Notice of Modified Regulatory Text"
+      ],
+      "eligibility_rejections": [
+        {
+          "url": "https://www.dmv.ca.gov/portal/file/driver-safety-hearings-notice-of-proposed-action-pdf/",
+          "pages": 6,
+          "reason": "Complete notice exceeds maximum4pages; no partial section substituted"
+        },
+        {
+          "url": "https://www.dmv.ca.gov/portal/file/notice-of-proposed-action-7-16-pdf/",
+          "pages": 5,
+          "reason": "Complete notice exceeds maximum4pages"
+        },
+        {
+          "url": "https://www.dmv.ca.gov/portal/file/notice_of_proposed_action_2026-0428-05-pdf/",
+          "pages": 6,
+          "reason": "Complete notice exceeds maximum4pages"
+        }
+      ],
+      "selected": "A07 short complete two-page ELT notice"
+    },
+    {
+      "listing": "ca-wildlife.html and ca-mussels.html",
+      "order": "Current continuation first, then older actions/groundfish; current mussels continuation A06 and searched groundfish readoption A08 satisfy short complete standalone layout allocation"
+    },
+    {
+      "listing": "wa-cro.html",
+      "order": "URL updates (2025): CR-105 25-08-089, Withdraw CR-105 25-08-088, CR-105 25-03-112",
+      "selected": "A04 withdrawal, historical allowed; original target retained in reference rather than counted extra unit"
+    },
+    {
+      "listing": "ny-register.html",
+      "order": "September30 Issue39, September23 Issue38, September16 Issue37, September9 Issue36",
+      "selected": "Latest Issue39; inspected physical30..36 for short complete targets; A09 physical30 complete Licensing notice, A10 physical36 complete Issuance notice. Only2 units from issue; distinct inputs."
+    },
+    {
+      "listing": "ms-bulletin.html",
+      "order": "Dynamic form did not expose ordered notice listing in read-only retrieved view; use official direct-PDF targeted search hits, not invented native listing order"
+    }
+  ],
+  "selection_units": [
+    {
+      "fixture_id": "A01",
+      "state": "US-MS",
+      "bucket": "scanned/filled forms",
+      "source_url": "https://www.sos.ms.gov/adminsearch/ACProposed/00028528a.pdf",
+      "selection_reason": "First eligible distinct education form in targeted search, excluded prior calibration notice.",
+      "physical_pages": [
+        1
+      ]
+    },
+    {
+      "fixture_id": "A02",
+      "state": "US-MS",
+      "bucket": "scanned/filled forms",
+      "source_url": "https://www.sos.ms.gov/adminsearch/ACProposed/00028576a.pdf",
+      "selection_reason": "Second distinct eligible form; contrasts scheduled hearing with other unselected hearing fields.",
+      "physical_pages": [
+        1
+      ]
+    },
+    {
+      "fixture_id": "A03",
+      "state": "US-MS",
+      "bucket": "scanned/filled forms",
+      "source_url": "https://www.sos.ms.gov/adminsearch/ACProposed/00028572a.pdf",
+      "selection_reason": "Third eligible distinct agency form found earlier in search; fixed-date effective option contrasts with relative option.",
+      "physical_pages": [
+        1
+      ]
+    },
+    {
+      "fixture_id": "A04",
+      "state": "US-WA",
+      "bucket": "lifecycle changes",
+      "source_url": "https://leg.wa.gov/media/0khlud2v/wsr-25-08-088.pdf",
+      "selection_reason": "First linked withdrawal on official CRO topic listing; complete one-page letter with prior target and current stamp.",
+      "physical_pages": [
+        1
+      ]
+    },
+    {
+      "fixture_id": "A05",
+      "state": "US-WA",
+      "bucket": "lifecycle changes",
+      "source_url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/16/26-16PROP.pdf",
+      "selection_reason": "Recent L&I withdrawal returned by targeted search; distinguish current filing, prior comment period, and certified date.",
+      "physical_pages": [
+        11
+      ]
+    },
+    {
+      "fixture_id": "A06",
+      "state": "US-CA",
+      "bucket": "clean standalone PDFs",
+      "source_url": "https://nrm.dfg.ca.gov/FileHandler.ashx?DocumentID=247277&inline=",
+      "selection_reason": "First short complete notice on current wildlife listing after >4-page DMV notices rejected.",
+      "physical_pages": [
+        1,
+        2
+      ]
+    },
+    {
+      "fixture_id": "A07",
+      "state": "US-CA",
+      "bucket": "clean standalone PDFs",
+      "source_url": "https://www.dmv.ca.gov/portal/file/electronic-lien-and-title-program-notice-of-second-modified-regulatory-text-pdf/",
+      "selection_reason": "Short complete DMV notice from same initial listing; provides explicit current opening/closing interval and scope.",
+      "physical_pages": [
+        1,
+        2
+      ]
+    },
+    {
+      "fixture_id": "A08",
+      "state": "US-CA",
+      "bucket": "clean standalone PDFs",
+      "source_url": "https://nrm.dfg.ca.gov/FileHandler.ashx?DocumentID=241124",
+      "selection_reason": "Eligible short standalone original from targeted search; tests planned versus actual anchor and comment versus extension duration.",
+      "physical_pages": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "fixture_id": "A09",
+      "state": "US-NY",
+      "bucket": "dense register layouts",
+      "source_url": "https://dos.ny.gov/september-30-2026vol-xlviii-issue-39",
+      "selection_reason": "First complete one-page target on inspected gaming notice pages of latest available issue; complete target ends before adjacent Coupling heading.",
+      "physical_pages": [
+        30
+      ]
+    },
+    {
+      "fixture_id": "A10",
+      "state": "US-NY",
+      "bucket": "dense register layouts",
+      "source_url": "https://dos.ny.gov/september-30-2026vol-xlviii-issue-39",
+      "selection_reason": "Second complete one-page target in latest issue on different physical page/input hash; distinguishes petition filing, debt authority horizon, and comment duration.",
+      "physical_pages": [
+        36
+      ]
+    }
+  ],
+  "inaccessible_attempts": [],
+  "access_limitations": [
+    "MS native listing was not an enumerable notice list in retained view; direct official PDF retrievals succeeded.",
+    "Web source previews were used for eligibility/discovery only; annotations use retained images and native text."
+  ],
+  "substitutions": {
+    "ca": "Replaced >4-page initial notice candidates with complete shorter notices in same assigned state; layout allocation clean standalone, overlapping lifecycle content recorded."
+  },
+  "unmet_assigned_buckets": [],
+  "outside_assigned_states_needed": false,
+  "no_vendor_parsing_performed": true,
+  "queries_in_order_note": "Grouped query entries preserve discovery families/order; detailed searches were bounded to official sources. Selection does not claim native listing order where only search hits were available."
+}

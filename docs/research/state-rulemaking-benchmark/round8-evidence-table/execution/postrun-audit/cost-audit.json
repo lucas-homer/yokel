@@ -1,0 +1,69 @@
+{
+  "schema_version": "round8-evidence-table.cost_audit.v1",
+  "incremental_probe": {
+    "extraction": {
+      "usage_estimate_usd": 0,
+      "provider_reported_usd": 0,
+      "conservative_charge_usd": 0
+    },
+    "jev": {
+      "usage_estimate_usd": 0.000502026,
+      "provider_reported_usd": null,
+      "conservative_charge_usd": 0.001586718
+    },
+    "stronger": {
+      "usage_estimate_usd": 0.055182,
+      "provider_reported_usd": 0.058736,
+      "conservative_charge_usd": 0.112454
+    }
+  },
+  "raw_usage": {
+    "jev": {
+      "input_tokens": 11953,
+      "output_tokens": 192
+    },
+    "stronger": {
+      "prompt_tokens": 7111,
+      "completion_tokens": 4096,
+      "total_tokens": 11207,
+      "cost": 0.058736,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 7108,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.058736,
+        "upstream_inference_prompt_cost": 0.017776,
+        "upstream_inference_completions_cost": 0.04096
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 220,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "raw_response_sha256": {
+    "jev": "5fba4a3b012b755e7208be149a296e8378bf29e48a7f1154588f9a0dd2a1e907",
+    "stronger": "72e9fa4e4286f00ef9817a3967256f83af824fe5c1fc595141eea0b0e0867b2b"
+  },
+  "prior_three_extractions": {
+    "provider_reported_usd": 0.249253,
+    "conservative_charge_usd": 0.428936
+  },
+  "cumulative_five_operations": {
+    "known_provider_reported_subtotal_usd": 0.307989,
+    "provider_reported_total_usd": null,
+    "separate_jev_usage_estimate_usd": 0.000502026,
+    "conservative_charge_usd": 0.542976718
+  },
+  "raw_stronger_cost_recovered_despite_invalid_result": true,
+  "runtime_observed_accounted_usd": 0.000502026,
+  "ledger_limitation": "The ledger observed-accounted field reads parsed result files only: it includes Jev usage estimate but omits raw reported cost for stronger invalid response. Recovery is in this derivative only; full stronger reservation already exceeds raw cost, so guard debit is unchanged.",
+  "invoice_verified": false,
+  "extraction_cost_scope": "Zero new extraction; original artifacts reused byte-for-byte and all prior extraction spending remains separate.",
+  "future_guard_carry_forward_usd": 0.542976718
+}

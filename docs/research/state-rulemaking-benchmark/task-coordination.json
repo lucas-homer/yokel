@@ -1,0 +1,43 @@
+{
+  "primary_thread_id": "01a0f0e6-da92-7c11-99b7-5b2354ba23c7",
+  "mechanism": "separate existing Codex tasks",
+  "target_new_notices": 20,
+  "max_input_pages": 80,
+  "children": [
+    {
+      "role": "Corpus A; complete Firecrawl lane",
+      "thread_id": "01a10e64-a260-7362-97ff-621d77802fee",
+      "model": "gpt-6.1-sol",
+      "effort": "medium"
+    },
+    {
+      "role": "Corpus B; independent operations audit",
+      "thread_id": "01a10e64-f0aa-7241-ba6f-1042d6e5735e",
+      "model": "gpt-6.1-sol",
+      "effort": "medium"
+    },
+    {
+      "role": "LlamaParse paired tiers",
+      "thread_id": "01a10e65-48ff-7c62-9e5f-baafcea007a0",
+      "model": "gpt-6-astra",
+      "effort": "medium"
+    },
+    {
+      "role": "Independent reference/scoring review",
+      "thread_id": "01a10e68-225d-7cf3-ad93-ad51715a9887",
+      "model": "gpt-6-astra",
+      "effort": "high"
+    }
+  ],
+  "firecrawl_balance_before": {
+    "remainingCredits": 1129,
+    "planCredits": 1000,
+    "note": "Account-wide balance, not a trial receipt; no API keys read."
+  },
+  "status": "research complete for native/Firecrawl; expanded Llama content comparison blocked by connector timeouts and dashboard sign-in",
+  "freeze_manifest_sha256": "900f21e8a75d50444f12a0e3814d665a4f401a0d689194465d0b00467a762946",
+  "actual_input_pages": 34,
+  "artifacts_retained": 629,
+  "reference_questions": 174,
+  "all_document_arm_evaluations": 80
+}

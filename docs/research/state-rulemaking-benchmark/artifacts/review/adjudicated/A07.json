@@ -1,0 +1,365 @@
+{
+  "fixture_id": "A07",
+  "reference_version": "reviewer-source-v1",
+  "collector_annotation_hash": "0741f32c3cfadb9918be6e44c4869ba649202002cffc92045d6bad451c79bb79",
+  "collector_snapshot": "/private/tmp/docketclock-expanded-benchmark-2026-10-05/review/collector-snapshots/A07-0741f32c3cfa.json",
+  "input_sha256": "c56ca68a293ae601707ae3f88c406b3b60414aa2a471412706acfcc5051df7d8",
+  "reviewer_kind": "independent agent, not human gold standard",
+  "new_vendor_outputs_inspected": false,
+  "state": "CA",
+  "primary_bucket": "clean standalone PDFs",
+  "layout_features": [
+    "clean born-digital two-page notice",
+    "lists and underlined/struck presentation conventions",
+    "contradictory historical date"
+  ],
+  "package_limitations": [
+    "Diagnostic selection; no state coverage or complete rulemaking attachment claim.",
+    "Clean-PDF allocation describes layout; content also contains lifecycle change. Related regulatory text/attachments are not included.",
+    "Original notice date conflicts: p1 October 31, 2025 versus p2 October 31, 2026; unresolved annotation, no outside correction."
+  ],
+  "notice_scope_boundaries": "Both pages of complete second modification notice, excluding separately available rule text/forms.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which department issues this second modification notice?",
+      "expected_value": "Department of Motor Vehicles",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "Department of \nMotor Vehicles",
+      "basis": "source_text",
+      "semantic_group_id": "agency",
+      "critical_reason": "Supporting context; not counted in critical evidence gate.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete second modification notice, excluding separately available rule text/forms.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA DMV second modification of Electronic Lien and Titling Program proposed regulations plus added rulemaking documents.",
+        "Current comments October5 through October20,2026; must submitted no later than and received by October20; no clock/timezone. Scope changes and newly listed documents.",
+        "Original notice October31,2025 on page1, but original availability paragraph page2 says October31,2026: source inconsistency, do not silently reconcile. Earlier modification April23,2026.",
+        "Randi Calkins, DMV Legal Affairs Division, 2415 First Ave MS C-128 Sacramento CA95818; LADRegulations@dmv.ca.gov.",
+        "No hearing or final effective date in full two-page notice; attachments elsewhere."
+      ]
+    },
+    {
+      "field_id": "lifecycle",
+      "question": "What action does the notice announce?",
+      "expected_value": "second modification to proposed regulations and addition of documents to rulemaking file",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "title",
+      "source_quote": "SECOND NOTICE OF MODIFICATIONS TO TEXT OF PROPOSED REGULATIONS  \nAND ADDITION OF DOCUMENTS TO RULEMAKING FILE",
+      "basis": "source_text",
+      "semantic_group_id": "lifecycle",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete second modification notice, excluding separately available rule text/forms.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA DMV second modification of Electronic Lien and Titling Program proposed regulations plus added rulemaking documents.",
+        "Current comments October5 through October20,2026; must submitted no later than and received by October20; no clock/timezone. Scope changes and newly listed documents.",
+        "Original notice October31,2025 on page1, but original availability paragraph page2 says October31,2026: source inconsistency, do not silently reconcile. Earlier modification April23,2026.",
+        "Randi Calkins, DMV Legal Affairs Division, 2415 First Ave MS C-128 Sacramento CA95818; LADRegulations@dmv.ca.gov.",
+        "No hearing or final effective date in full two-page notice; attachments elsewhere."
+      ]
+    },
+    {
+      "field_id": "form_rule_links",
+      "question": "Which rule sections incorporate the two revised ELT application forms?",
+      "expected_value": {
+        "REG 670": "153.04",
+        "REG 671": "153.22"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "added document bullets",
+      "source_quote": "Revised ELT Program Service Provider Application, form REG 670 (Rev. \n8/2026), incorporated by reference in Section 153.04 \n• Revised ELT Program Lienholder Application, form REG 671 (Rev. 8/2026), \nincorporated by reference in Section 153.22",
+      "basis": "source_text",
+      "semantic_group_id": "form_rule_links",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete second modification notice, excluding separately available rule text/forms.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA DMV second modification of Electronic Lien and Titling Program proposed regulations plus added rulemaking documents.",
+        "Current comments October5 through October20,2026; must submitted no later than and received by October20; no clock/timezone. Scope changes and newly listed documents.",
+        "Original notice October31,2025 on page1, but original availability paragraph page2 says October31,2026: source inconsistency, do not silently reconcile. Earlier modification April23,2026.",
+        "Randi Calkins, DMV Legal Affairs Division, 2415 First Ave MS C-128 Sacramento CA95818; LADRegulations@dmv.ca.gov.",
+        "No hearing or final effective date in full two-page notice; attachments elsewhere."
+      ]
+    },
+    {
+      "field_id": "current_comment_open",
+      "question": "When does the stated written-comment window begin?",
+      "expected_value": {
+        "date": "2026-10-05",
+        "time": null,
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "current written-comment paragraph",
+      "source_quote": "accept written comments between \nOctober 5, 2026 through October 20, 2026",
+      "basis": "source_text",
+      "semantic_group_id": "current_comment_window",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete second modification notice, excluding separately available rule text/forms.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA DMV second modification of Electronic Lien and Titling Program proposed regulations plus added rulemaking documents.",
+        "Current comments October5 through October20,2026; must submitted no later than and received by October20; no clock/timezone. Scope changes and newly listed documents.",
+        "Original notice October31,2025 on page1, but original availability paragraph page2 says October31,2026: source inconsistency, do not silently reconcile. Earlier modification April23,2026.",
+        "Randi Calkins, DMV Legal Affairs Division, 2415 First Ave MS C-128 Sacramento CA95818; LADRegulations@dmv.ca.gov.",
+        "No hearing or final effective date in full two-page notice; attachments elsewhere."
+      ]
+    },
+    {
+      "field_id": "current_comment_close",
+      "question": "When does the stated written-comment window end?",
+      "expected_value": {
+        "date": "2026-10-20",
+        "time": null,
+        "timezone": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "current written-comment paragraph",
+      "source_quote": "All written comments must be \nsubmitted to the department no later than October 20, 2026",
+      "basis": "source_text",
+      "semantic_group_id": "current_comment_window",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not. Full notice also says comments received by October20,2026; preserve receipt condition, date-only precision.",
+      "notice_scope_boundaries": "Both pages of complete second modification notice, excluding separately available rule text/forms.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA DMV second modification of Electronic Lien and Titling Program proposed regulations plus added rulemaking documents.",
+        "Current comments October5 through October20,2026; must submitted no later than and received by October20; no clock/timezone. Scope changes and newly listed documents.",
+        "Original notice October31,2025 on page1, but original availability paragraph page2 says October31,2026: source inconsistency, do not silently reconcile. Earlier modification April23,2026.",
+        "Randi Calkins, DMV Legal Affairs Division, 2415 First Ave MS C-128 Sacramento CA95818; LADRegulations@dmv.ca.gov.",
+        "No hearing or final effective date in full two-page notice; attachments elsewhere."
+      ]
+    },
+    {
+      "field_id": "comment_scope",
+      "question": "What current comments does the notice say it will review?",
+      "expected_value": "indicated changes or listed documents and other information",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "last comments paragraph",
+      "source_quote": "which pertain to the \nindicated changes or the above-listed documents and other information",
+      "basis": "source_text",
+      "semantic_group_id": "comment_scope",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "str",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete second modification notice, excluding separately available rule text/forms.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA DMV second modification of Electronic Lien and Titling Program proposed regulations plus added rulemaking documents.",
+        "Current comments October5 through October20,2026; must submitted no later than and received by October20; no clock/timezone. Scope changes and newly listed documents.",
+        "Original notice October31,2025 on page1, but original availability paragraph page2 says October31,2026: source inconsistency, do not silently reconcile. Earlier modification April23,2026.",
+        "Randi Calkins, DMV Legal Affairs Division, 2415 First Ave MS C-128 Sacramento CA95818; LADRegulations@dmv.ca.gov.",
+        "No hearing or final effective date in full two-page notice; attachments elsewhere."
+      ]
+    },
+    {
+      "field_id": "prior_modification_date",
+      "question": "Which date belongs to the earlier modification notice?",
+      "expected_value": {
+        "date": "2026-04-23",
+        "role": "earlier modification notice"
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "opening paragraph",
+      "source_quote": "A Notice of Modification was also provided to the public on April 23, 2026.",
+      "basis": "source_text",
+      "semantic_group_id": "prior_modification_date",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve the stated value with the question’s exact role and target scope; equivalent date/number formats are allowed, new precision or changed lifecycle is not.",
+      "notice_scope_boundaries": "Both pages of complete second modification notice, excluding separately available rule text/forms.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA DMV second modification of Electronic Lien and Titling Program proposed regulations plus added rulemaking documents.",
+        "Current comments October5 through October20,2026; must submitted no later than and received by October20; no clock/timezone. Scope changes and newly listed documents.",
+        "Original notice October31,2025 on page1, but original availability paragraph page2 says October31,2026: source inconsistency, do not silently reconcile. Earlier modification April23,2026.",
+        "Randi Calkins, DMV Legal Affairs Division, 2415 First Ave MS C-128 Sacramento CA95818; LADRegulations@dmv.ca.gov.",
+        "No hearing or final effective date in full two-page notice; attachments elsewhere."
+      ]
+    },
+    {
+      "field_id": "original_notice_date",
+      "question": "Is the original-notice date consistent across this complete notice?",
+      "expected_value": {
+        "printed_dates": [
+          "2025-10-31",
+          "2026-10-31"
+        ],
+        "resolved_date": null
+      },
+      "answerability": "uncertain",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "p1 opening paragraph conflicts with p2 original material paragraph: October 31, 2026",
+      "source_quote": "California Regulatory Notice \nRegister on October 31, 2025",
+      "basis": "source_text",
+      "additional_evidence": [
+        {
+          "original_page": 2,
+          "input_page": 2,
+          "region": "original materials paragraph",
+          "source_quote": "provided to the public on October 31, 2026.",
+          "basis": "source_text"
+        }
+      ],
+      "semantic_group_id": "original_notice_date",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "dict",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "Preserve conflicting source renditions without resolving. Exclude from determinate field denominator and unqualified document gate. Page1 prints October31,2025; page2 prints October31,2026.",
+      "notice_scope_boundaries": "Both pages of complete second modification notice, excluding separately available rule text/forms.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": null,
+      "reviewer_source_note": [
+        "CA DMV second modification of Electronic Lien and Titling Program proposed regulations plus added rulemaking documents.",
+        "Current comments October5 through October20,2026; must submitted no later than and received by October20; no clock/timezone. Scope changes and newly listed documents.",
+        "Original notice October31,2025 on page1, but original availability paragraph page2 says October31,2026: source inconsistency, do not silently reconcile. Earlier modification April23,2026.",
+        "Randi Calkins, DMV Legal Affairs Division, 2415 First Ave MS C-128 Sacramento CA95818; LADRegulations@dmv.ca.gov.",
+        "No hearing or final effective date in full two-page notice; attachments elsewhere."
+      ]
+    },
+    {
+      "field_id": "new_hearing_clock",
+      "question": "Does the complete second modification notice specify a hearing date/time?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 1,
+      "input_page": 1,
+      "region": "entire two-page second modification notice inspected",
+      "source_quote": "",
+      "basis": "full_scope_absence",
+      "semantic_group_id": "new_hearing_clock",
+      "critical_reason": "Loss or wrong association can change target identity, lifecycle, temporal role/precision or participation conditions.",
+      "expected_value_shape": "NoneType",
+      "accepted_equivalences": [
+        "Equivalent date, time, number, capitalization and whitespace formats preserving meaning.",
+        "No added timezone, computed relative date, final/proposed stage change, or borrowed neighboring value."
+      ],
+      "decisive_evidence": "No value is supplied in the retained target scope. Safe abstention requires complete relevant output scope; omitted scope cannot establish absence. Do not infer from neighboring notices or metadata.",
+      "notice_scope_boundaries": "Both pages of complete second modification notice, excluding separately available rule text/forms.",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "absence_scope_if_applicable": "Both pages of complete second modification notice, excluding separately available rule text/forms.",
+      "reviewer_source_note": [
+        "CA DMV second modification of Electronic Lien and Titling Program proposed regulations plus added rulemaking documents.",
+        "Current comments October5 through October20,2026; must submitted no later than and received by October20; no clock/timezone. Scope changes and newly listed documents.",
+        "Original notice October31,2025 on page1, but original availability paragraph page2 says October31,2026: source inconsistency, do not silently reconcile. Earlier modification April23,2026.",
+        "Randi Calkins, DMV Legal Affairs Division, 2415 First Ave MS C-128 Sacramento CA95818; LADRegulations@dmv.ca.gov.",
+        "No hearing or final effective date in full two-page notice; attachments elsewhere."
+      ]
+    }
+  ],
+  "adjudications": [],
+  "critical_determinate_groups": 6,
+  "critical_uncertain_fields": [
+    "original_notice_date"
+  ],
+  "reference_gate_eligible": false,
+  "collector_ready_confirmed": true,
+  "original_sha256": "c56ca68a293ae601707ae3f88c406b3b60414aa2a471412706acfcc5051df7d8",
+  "original_physical_pages": [
+    1,
+    2
+  ],
+  "collector_shared_original_group": null,
+  "collector_template_family": null,
+  "agency_reference": "Department of Motor Vehicles"
+}

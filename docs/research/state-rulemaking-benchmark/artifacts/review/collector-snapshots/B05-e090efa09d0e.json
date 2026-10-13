@@ -1,0 +1,141 @@
+{
+  "fixture_id": "B05",
+  "state": "TX",
+  "bucket": "dense register layouts",
+  "layout_features": [
+    "two-column dense",
+    "cross-page continuation",
+    "neighboring notices",
+    "rule text strikeouts"
+  ],
+  "event_type": "proposal",
+  "source_url": "https://www.sos.texas.gov/texreg/pdf/backview/0522/0522is.pdf",
+  "discovery_url": "https://www.sos.texas.gov/texreg/pdf/backview/0522/index.shtml",
+  "retrieved_at": "2026-10-06T00:33:01.377057+00:00",
+  "source_title": "Educator certification passing standards proposal",
+  "selection_reason": "First bounded education proposal in inspected proposed section; preserve heading and full notice across columns/pages.",
+  "original_sha256": "536e0a4a7ded51e4a76f1dfb26fb92fef2c364152bbf8d0e7938c4f8afeadae4",
+  "input_sha256": "885d2d5561fa2ec658f59663cf712976bfa3fa7de48c12dc5e6c8ca456d3c872",
+  "original_bytes": 35763191,
+  "input_bytes": 254081,
+  "original_page_count": 185,
+  "input_page_count": 3,
+  "original_physical_pages": [
+    30,
+    31,
+    32
+  ],
+  "package_limitations": "Derived contiguous complete notice/form excerpt. Full original retained; attachments/rule text outside selected notice are excluded; whole physical pages may contain neighboring notice material.",
+  "reference_fields": [
+    {
+      "field_id": "agency",
+      "question": "Which agency proposes the Passing Standards notice?",
+      "expected_value": "Texas Education Agency",
+      "answerability": "present",
+      "critical": false,
+      "original_page": 31,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "The T exas Education Agency (TEA) proposes",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "citation",
+      "question": "Which rule is this target notice amending?",
+      "expected_value": "19 TAC \u00a7151.1001",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 31,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "\u00a7151.1001, concerning passing standards",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "source_id",
+      "question": "What is the native TRD identifier of this target notice?",
+      "expected_value": "TRD-202601979",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 32,
+      "input_page": 3,
+      "region": "Target notice labeled field",
+      "source_quote": "TRD-202601979",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "comment_window",
+      "question": "What explicit comment opening and closing dates apply to this target notice?",
+      "expected_value": {
+        "open": "2026-05-22",
+        "close": "2026-06-22",
+        "time": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 31,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "comment period on the proposal begins May 22, 2026, and \nends June 22, 2026.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "hearing_request",
+      "question": "What relative hearing-request duration and anchor are given?",
+      "expected_value": {
+        "days": 14,
+        "day_basis": "calendar",
+        "anchor": "notice published May 22, 2026",
+        "computed_date": null
+      },
+      "answerability": "present",
+      "critical": true,
+      "original_page": 31,
+      "input_page": 2,
+      "region": "Target notice labeled field",
+      "source_quote": "must be received by the commissioner of education not more \nthan 14 calendar days after notice of the proposal has been \npublished in the Texas Register on May 22, 2026.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "filing",
+      "question": "What filing date belongs to TRD-202601979?",
+      "expected_value": "2026-05-11",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 32,
+      "input_page": 3,
+      "region": "Target notice labeled field",
+      "source_quote": "Filed with the Office of the Secretary of State on May 11, 2026.",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "earliest_adoption",
+      "question": "What date is described as earliest possible adoption, rather than effectivity?",
+      "expected_value": "2026-06-21",
+      "answerability": "present",
+      "critical": true,
+      "original_page": 32,
+      "input_page": 3,
+      "region": "Target notice labeled field",
+      "source_quote": "Earliest possible date of adoption: June 21, 2026",
+      "basis": "source_text"
+    },
+    {
+      "field_id": "effective",
+      "question": "Does the target proposal state an adopted effective date?",
+      "expected_value": null,
+      "answerability": "not_stated",
+      "critical": true,
+      "original_page": 32,
+      "input_page": 3,
+      "region": "Target \u00a7151.1001 notice begins input page 1 bottom heading, continues page 2, ends page 3 at TRD-202601979 and diamonds; neighboring TREC notice excluded.",
+      "source_quote": null,
+      "basis": "full_scope_absence"
+    }
+  ],
+  "annotation_author": "Codex source collector agent; not human gold",
+  "visual_inspection": "All input pages inspected as rendered images by collector agent; source-only references, pending independent review.",
+  "shared_original_group": "TX-2026-05-22",
+  "template_family": "TX-Register-proposed-rule",
+  "page_derivation_validation": "Selected page content streams and media/crop boxes equal original mapped pages; rendered all input pages inspected."
+}

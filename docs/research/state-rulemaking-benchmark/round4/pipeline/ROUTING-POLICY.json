@@ -1,0 +1,17 @@
+{
+  "version": "round4-routing-1",
+  "research_only": true,
+  "field_disposition": {
+    "shadow_eligible_text_only": "No detected field issues; text support remains separate from PDF fidelity and production action-readiness.",
+    "review": "One or more deterministic issues; retain both hard and soft lists."
+  },
+  "soft_issues": ["condition_scope_requires_semantic_verification", "written_comment_role_unverified", "competing_temporal_role_cues", "submission_role_unverified", "multiple_email_candidates_require_role_resolution"],
+  "hard_issues": ["empty_text", "source_scope_incomplete_or_unknown", "page_count_mismatch", "replacement_character", "source_overlimit", "multiple_notice_or_rule_scopes", "lifecycle_scope_unresolved", "date_year_order_or_range_unresolved", "invalid_calendar_date", "email_syntax_outside_supported_subset", "case_overlimit", "multiple_same_role_values_scope_unresolved"],
+  "unknown_issue_default": "hard review",
+  "semantic_resolution": "Only a completed, valid four-dimension verifier result with supported / matched / preserved / absent can resolve soft issues. Hard issues continue to block shadow field acceptance. Runtime owns this gate; proposer does not call models.",
+  "email_multiplicity": "Several extracted email strings are competing role candidates, not proven conflicts. A runtime may clear multiplicity for a unique matched submission candidate only if every other email candidate is positively mismatched for this role; any insufficient/failed/unclassified competitor keeps review. Several matched submission emails stay review pending explicit multi-destination policy.",
+  "date_multiplicity": "Distinct absolute close-date proposals for one document remain hard scope-unresolved. No first/last-date choice.",
+  "notice_completeness": "Missing one field, wrapped-token suspicion or participation evidence without a supported absolute date requests parser fallback/source review but does not itself invalidate an independently supported other field. The document still requires source audit.",
+  "fallback": "No hidden fallback reads. Acquired fallback is a separate manifest/channel/invocation, with identity and retained-byte checks.",
+  "source_fidelity": "No text-only decision establishes original-PDF fidelity. All accepted outputs are shadow fields with no production authorization."
+}

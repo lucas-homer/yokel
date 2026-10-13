@@ -1,0 +1,2465 @@
+{
+  "assembly": {
+    "action_ready": false,
+    "document_id": "doc-92211b8c7ba0",
+    "inventory": {
+      "alternative_groups": [
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Written\ncomments may be submitted by U.S. mail, E-mail, or through the internet"
+            },
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Comments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov."
+            },
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings."
+            }
+          ],
+          "id": "ag-submission",
+          "purpose": "submission",
+          "requirement_ids": [
+            "q-weight"
+          ],
+          "route_ids": [
+            "r-mail",
+            "r-email-madi",
+            "r-email-comments",
+            "r-web-comments"
+          ]
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Virtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g\nMeeting ID: 896 2745 6939\nJoin by phone:\n        +13052241968, 89627456939# US\n        +13092053325, 89627456939# US"
+            }
+          ],
+          "id": "ag-access",
+          "purpose": "hearing_access",
+          "requirement_ids": [],
+          "route_ids": [
+            "r-zoom-access",
+            "r-phone-one",
+            "r-phone-two"
+          ]
+        }
+      ],
+      "coverage": {
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Notice of Hearing"
+          },
+          {
+            "context": null,
+            "occurrence": null,
+            "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+          }
+        ],
+        "rationale": "Reviewed the entire supplied notice, including hearing access and registration, written comments, accessibility, rule-review links, questions and coordinator contacts. No separate response or reply phase, publication policy, extension or late-comment policy is stated. Accessibility contact association remains uncertain.",
+        "status": "claimed_complete"
+      },
+      "document_id": "doc-92211b8c7ba0",
+      "events": [
+        {
+          "description": "Public hearing on the permanent rule repealing chapters NR 107 and 109 and recreating chapter NR 107; the public may testify.",
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "The Department of Natural Resources announces that it will hold a public hearing on a\npermanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107, relating to aquatic\nplant management, manual removal and mechanical control regulations, aquatic habitat\nprotection, and surface water grants, at the time and place shown below."
+            },
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "The public has the opportunity to testify at the hearing."
+            }
+          ],
+          "id": "e-hearing",
+          "phase": "hearing",
+          "timing": [
+            {
+              "anchor_event_ids": [],
+              "condition_requirement_ids": [],
+              "dependency_relation": "none",
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "Date:   April 22, 2026"
+                }
+              ],
+              "id": "t-hearing-date",
+              "kind": "absolute_date",
+              "raw": "April 22, 2026",
+              "role": "hearing_start",
+              "value": "2026-04-22"
+            },
+            {
+              "anchor_event_ids": [],
+              "condition_requirement_ids": [],
+              "dependency_relation": "none",
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "Time:   1:00 PM"
+                }
+              ],
+              "id": "t-hearing-time",
+              "kind": "clock",
+              "raw": "1:00 PM",
+              "role": "hearing_start",
+              "value": null
+            }
+          ]
+        },
+        {
+          "description": "Submission of written comments on the proposed rule.",
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Comments on the proposed rule must be received on or before April 30, 2026."
+            }
+          ],
+          "id": "e-comments",
+          "phase": "written_comment",
+          "timing": [
+            {
+              "anchor_event_ids": [],
+              "condition_requirement_ids": [],
+              "dependency_relation": "none",
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "Comments on the proposed rule must be received on or before April 30, 2026."
+                }
+              ],
+              "id": "t-comments-close",
+              "kind": "absolute_date",
+              "raw": "April 30, 2026",
+              "role": "closes",
+              "value": "2026-04-30"
+            }
+          ]
+        },
+        {
+          "description": "Hearing registration or pre-registration and phone-participant appearance-form submission.",
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "To join via Zoom, please register or pre-\nregister using the link above, which will prompt you to enter information required on the Hearing\nAppearance form."
+            },
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+            }
+          ],
+          "id": "e-registration",
+          "phase": "hearing_intent",
+          "timing": [
+            {
+              "anchor_event_ids": [
+                "e-hearing"
+              ],
+              "condition_requirement_ids": [
+                "q-preregister"
+              ],
+              "dependency_relation": "before",
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "Pre-registration is strongly encouraged if you plan to provide spoken\ncomments during the hearing."
+                }
+              ],
+              "id": "t-preregister",
+              "kind": "relative",
+              "raw": "Pre-registration",
+              "role": "other",
+              "value": null
+            }
+          ]
+        },
+        {
+          "description": "Requests for accessibility aids and accessible hearing documents.",
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible."
+            }
+          ],
+          "id": "e-accessibility",
+          "phase": "other",
+          "timing": [
+            {
+              "anchor_event_ids": [
+                "e-hearing"
+              ],
+              "condition_requirement_ids": [
+                "q-accessibility"
+              ],
+              "dependency_relation": "before",
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "with reasonable advance notice"
+                }
+              ],
+              "id": "t-access-notice",
+              "kind": "relative",
+              "raw": "with reasonable advance notice",
+              "role": "other",
+              "value": null
+            },
+            {
+              "anchor_event_ids": [],
+              "condition_requirement_ids": [
+                "q-accessibility"
+              ],
+              "dependency_relation": "other",
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "as soon as\npossible."
+                }
+              ],
+              "id": "t-access-request",
+              "kind": "relative",
+              "raw": "as soon as\npossible",
+              "role": "other",
+              "value": null
+            }
+          ]
+        }
+      ],
+      "identities": [
+        {
+          "event_ids": [
+            "e-hearing",
+            "e-comments",
+            "e-registration",
+            "e-accessibility"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "The Department of Natural Resources announces"
+            }
+          ],
+          "id": "i-agency",
+          "kind": "agency",
+          "literal": "Department of Natural Resources",
+          "relation": "canonical"
+        },
+        {
+          "event_ids": [
+            "e-hearing",
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "permanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107"
+            }
+          ],
+          "id": "i-rule",
+          "kind": "rule",
+          "literal": "chs. NR 107 and 109",
+          "relation": "canonical"
+        },
+        {
+          "event_ids": [
+            "e-hearing",
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "The proposed recreated ch. NR 107, Wis. Adm. Code, unifies all control activities"
+            }
+          ],
+          "id": "i-recreated",
+          "kind": "rule",
+          "literal": "ch. NR 107, Wis. Adm. Code",
+          "relation": "canonical"
+        },
+        {
+          "event_ids": [
+            "e-hearing",
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "The rule may be viewed under NRB Order number WY-20-23 at:"
+            }
+          ],
+          "id": "i-order",
+          "kind": "docket",
+          "literal": "WY-20-23",
+          "relation": "canonical"
+        }
+      ],
+      "requirements": [
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-registration",
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "To join via Zoom, please register or pre-\nregister using the link above, which will prompt you to enter information required on the Hearing\nAppearance form."
+            }
+          ],
+          "id": "q-zoom-registration",
+          "kind": "hearing_procedure",
+          "modality": "conditional",
+          "route_ids": [
+            "r-register",
+            "r-zoom-access"
+          ],
+          "semantic_class": "instruction",
+          "text": "To join via Zoom, register or pre-register through the supplied link and enter the required Hearing Appearance form information."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-registration",
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Pre-registration is strongly encouraged if you plan to provide spoken\ncomments during the hearing."
+            }
+          ],
+          "id": "q-preregister",
+          "kind": "hearing_procedure",
+          "modality": "optional",
+          "route_ids": [
+            "r-register"
+          ],
+          "semantic_class": "instruction",
+          "text": "Pre-registration is strongly encouraged for those planning spoken comments."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-registration",
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+            }
+          ],
+          "id": "q-phone-form",
+          "kind": "format",
+          "modality": "conditional",
+          "route_ids": [
+            "r-form",
+            "r-phone-one",
+            "r-phone-two"
+          ],
+          "semantic_class": "instruction",
+          "text": "Phone participants are asked to download, complete and email the fillable Hearing Appearance form to Sarah Wood."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Comments on the proposed rule must be received on or before April 30, 2026."
+            }
+          ],
+          "id": "q-deadline",
+          "kind": "timing",
+          "modality": "mandatory",
+          "route_ids": [
+            "r-mail",
+            "r-email-madi",
+            "r-email-comments",
+            "r-web-comments"
+          ],
+          "semantic_class": "instruction",
+          "text": "Comments must be received on or before April 30, 2026."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-comments",
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Written\ncomments may be submitted by U.S. mail, E-mail, or through the internet and will have the\nsame weight and effect as oral statements presented at the public hearing."
+            }
+          ],
+          "id": "q-weight",
+          "kind": "other",
+          "modality": "informational",
+          "route_ids": [
+            "r-mail",
+            "r-email-madi",
+            "r-email-comments",
+            "r-web-comments"
+          ],
+          "semantic_class": "disclosure",
+          "text": "Written comments submitted by mail, email or internet have the same weight and effect as oral hearing statements."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov"
+            }
+          ],
+          "id": "q-comments-contact",
+          "kind": "other",
+          "modality": "optional",
+          "route_ids": [
+            "r-mail",
+            "r-email-madi"
+          ],
+          "semantic_class": "instruction",
+          "text": "Written comments should be submitted to the listed Department contact."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov"
+            }
+          ],
+          "id": "q-questions",
+          "kind": "other",
+          "modality": "informational",
+          "route_ids": [
+            "r-questions-mail",
+            "r-questions-email",
+            "r-questions-phone"
+          ],
+          "semantic_class": "other",
+          "text": "Madi Johansen is the listed contact for questions on the proposed rules."
+        },
+        {
+          "association": "uncertain",
+          "event_ids": [
+            "e-accessibility"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "For the hearing or visually impaired, non-English speakers, or those with other personal\ncircumstances which might make communication at the meeting/hearing difficult, DNR will, to\nthe maximum extent possible and with reasonable advance notice, provide aids including an\ninterpreter, or a non-English, large-print, or recorded version of hearing documents. To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible."
+            }
+          ],
+          "id": "q-accessibility",
+          "kind": "other",
+          "modality": "conditional",
+          "route_ids": [],
+          "semantic_class": "instruction",
+          "text": "People with communication difficulties may request aids or accessible hearing documents by the email address or phone number listed below, as soon as possible. DNR provides these to the maximum extent possible with reasonable advance notice; the exact referenced contact is not identified."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "The rule may be viewed under NRB Order number WY-20-23 at:\nhttps://dnr.wisconsin.gov/news/input/ProposedPermanent.html."
+            },
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings."
+            }
+          ],
+          "id": "q-review",
+          "kind": "other",
+          "modality": "informational",
+          "route_ids": [
+            "r-rule-view",
+            "r-rule-review"
+          ],
+          "semantic_class": "other",
+          "text": "The rule can be viewed under NRB Order WY-20-23 on the DNR site and reviewed on the legislative hearings site."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+            }
+          ],
+          "id": "q-coordinator",
+          "kind": "other",
+          "modality": "informational",
+          "route_ids": [
+            "r-coordinator-phone",
+            "r-coordinator-email"
+          ],
+          "semantic_class": "other",
+          "text": "Emma Esch is the Agency Small Business Regulatory Coordinator; these contacts are not identified as comment-submission routes."
+        }
+      ],
+      "routes": [
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "web",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g"
+                }
+              ],
+              "id": "c-register-url",
+              "kind": "endpoint",
+              "literal": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g"
+            }
+          ],
+          "description": "Zoom registration or pre-registration.",
+          "event_ids": [
+            "e-registration"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "To join via Zoom, please register or pre-\nregister using the link above"
+            }
+          ],
+          "id": "r-register",
+          "role": "hearing_registration"
+        },
+        {
+          "alternative_group_id": "ag-access",
+          "association": "source_resolved",
+          "channel": "web",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g"
+                }
+              ],
+              "id": "c-zoom-url",
+              "kind": "endpoint",
+              "literal": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g"
+            },
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "Meeting ID: 896 2745 6939"
+                }
+              ],
+              "id": "c-zoom-id",
+              "kind": "meeting_id",
+              "literal": "896 2745 6939"
+            }
+          ],
+          "description": "Virtual hearing access via Zoom, with registration requested.",
+          "event_ids": [
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Virtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g\nMeeting ID: 896 2745 6939"
+            }
+          ],
+          "id": "r-zoom-access",
+          "role": "other"
+        },
+        {
+          "alternative_group_id": "ag-access",
+          "association": "source_resolved",
+          "channel": "telephone",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "+13052241968"
+                }
+              ],
+              "id": "c-phone-one",
+              "kind": "endpoint",
+              "literal": "+13052241968"
+            },
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": 1,
+                  "quote": "89627456939#"
+                }
+              ],
+              "id": "c-phone-one-id",
+              "kind": "meeting_id",
+              "literal": "89627456939#"
+            }
+          ],
+          "description": "First listed phone access option.",
+          "event_ids": [
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Join by phone:\n        +13052241968, 89627456939# US"
+            }
+          ],
+          "id": "r-phone-one",
+          "role": "other"
+        },
+        {
+          "alternative_group_id": "ag-access",
+          "association": "source_resolved",
+          "channel": "telephone",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "+13092053325"
+                }
+              ],
+              "id": "c-phone-two",
+              "kind": "endpoint",
+              "literal": "+13092053325"
+            },
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": 2,
+                  "quote": "89627456939#"
+                }
+              ],
+              "id": "c-phone-two-id",
+              "kind": "meeting_id",
+              "literal": "89627456939#"
+            }
+          ],
+          "description": "Second listed phone access option.",
+          "event_ids": [
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "        +13092053325, 89627456939# US"
+            }
+          ],
+          "id": "r-phone-two",
+          "role": "other"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "email",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "Sarah.wood@wisconsin.gov"
+                }
+              ],
+              "id": "c-form-email",
+              "kind": "endpoint",
+              "literal": "Sarah.wood@wisconsin.gov"
+            }
+          ],
+          "description": "Appearance-form submission for phone participants, not written rule comments.",
+          "event_ids": [
+            "e-registration"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+            }
+          ],
+          "id": "r-form",
+          "role": "hearing_registration"
+        },
+        {
+          "alternative_group_id": "ag-submission",
+          "association": "source_resolved",
+          "channel": "postal",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI",
+                  "occurrence": null,
+                  "quote": "Department of Natural Resources"
+                }
+              ],
+              "id": "c-mail-office",
+              "kind": "name",
+              "literal": "Department of Natural Resources"
+            },
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "Attn: Madi Johansen"
+                }
+              ],
+              "id": "c-mail-attn",
+              "kind": "name",
+              "literal": "Attn: Madi Johansen"
+            },
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "3550 Mormon Coulee Road, La Crosse, WI"
+                }
+              ],
+              "id": "c-mail-address",
+              "kind": "address_part",
+              "literal": "3550 Mormon Coulee Road, La Crosse, WI"
+            }
+          ],
+          "description": "Postal written comments to the listed Department contact.",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI"
+            }
+          ],
+          "id": "r-mail",
+          "role": "submission"
+        },
+        {
+          "alternative_group_id": "ag-submission",
+          "association": "source_resolved",
+          "channel": "email",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "Madison.johansen@wisconsin.gov"
+                }
+              ],
+              "id": "c-email-madi",
+              "kind": "endpoint",
+              "literal": "Madison.johansen@wisconsin.gov"
+            }
+          ],
+          "description": "Written comments to the listed rule contact.",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov"
+            }
+          ],
+          "id": "r-email-madi",
+          "role": "submission"
+        },
+        {
+          "alternative_group_id": "ag-submission",
+          "association": "source_resolved",
+          "channel": "email",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "DNRAdministrativeRulesComments@wisconsin.gov"
+                }
+              ],
+              "id": "c-comments-email",
+              "kind": "endpoint",
+              "literal": "DNRAdministrativeRulesComments@wisconsin.gov"
+            }
+          ],
+          "description": "Expressly listed email comment destination.",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Comments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov."
+            }
+          ],
+          "id": "r-email-comments",
+          "role": "submission"
+        },
+        {
+          "alternative_group_id": "ag-submission",
+          "association": "source_resolved",
+          "channel": "web",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "http://docs.legis.wisconsin.gov/code/chr/hearings"
+                }
+              ],
+              "id": "c-comments-web",
+              "kind": "endpoint",
+              "literal": "http://docs.legis.wisconsin.gov/code/chr/hearings"
+            }
+          ],
+          "description": "Internet comments on the legislative hearings site.",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings."
+            }
+          ],
+          "id": "r-web-comments",
+          "role": "submission"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "postal",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI",
+                  "occurrence": null,
+                  "quote": "Department of Natural Resources"
+                }
+              ],
+              "id": "c-query-office",
+              "kind": "name",
+              "literal": "Department of Natural Resources"
+            },
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "Attn: Madi Johansen"
+                }
+              ],
+              "id": "c-query-attn",
+              "kind": "name",
+              "literal": "Attn: Madi Johansen"
+            },
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "3550 Mormon Coulee Road, La Crosse, WI"
+                }
+              ],
+              "id": "c-query-address",
+              "kind": "address_part",
+              "literal": "3550 Mormon Coulee Road, La Crosse, WI"
+            }
+          ],
+          "description": "Postal questions on the proposed rules.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:"
+            }
+          ],
+          "id": "r-questions-mail",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "email",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "Madison.johansen@wisconsin.gov"
+                }
+              ],
+              "id": "c-query-email",
+              "kind": "endpoint",
+              "literal": "Madison.johansen@wisconsin.gov"
+            }
+          ],
+          "description": "Email questions on the proposed rules.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov"
+            }
+          ],
+          "id": "r-questions-email",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "telephone",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "608-712-2798"
+                }
+              ],
+              "id": "c-query-phone",
+              "kind": "endpoint",
+              "literal": "608-712-2798"
+            }
+          ],
+          "description": "Listed rule-question telephone contact.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov"
+            }
+          ],
+          "id": "r-questions-phone",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "web",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html"
+                }
+              ],
+              "id": "c-view-url",
+              "kind": "endpoint",
+              "literal": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html"
+            }
+          ],
+          "description": "View the rule under NRB Order WY-20-23.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "The rule may be viewed under NRB Order number WY-20-23 at:\nhttps://dnr.wisconsin.gov/news/input/ProposedPermanent.html."
+            }
+          ],
+          "id": "r-rule-view",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "web",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "http://docs.legis.wisconsin.gov/code/chr/hearings"
+                }
+              ],
+              "id": "c-review-url",
+              "kind": "endpoint",
+              "literal": "http://docs.legis.wisconsin.gov/code/chr/hearings"
+            }
+          ],
+          "description": "Review the proposed rule.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings."
+            }
+          ],
+          "id": "r-rule-review",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "telephone",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "Emma Esch"
+                }
+              ],
+              "id": "c-coordinator-name-phone",
+              "kind": "name",
+              "literal": "Emma Esch"
+            },
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "(608) 266-1959"
+                }
+              ],
+              "id": "c-coordinator-phone",
+              "kind": "endpoint",
+              "literal": "(608) 266-1959"
+            }
+          ],
+          "description": "Agency Small Business Regulatory Coordinator telephone.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959"
+            }
+          ],
+          "id": "r-coordinator-phone",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "email",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "context": null,
+                  "occurrence": null,
+                  "quote": "emma.esch@wisconsin.gov"
+                }
+              ],
+              "id": "c-coordinator-email",
+              "kind": "endpoint",
+              "literal": "emma.esch@wisconsin.gov"
+            }
+          ],
+          "description": "Agency Small Business Regulatory Coordinator email.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+            }
+          ],
+          "id": "r-coordinator-email",
+          "role": "information_contact"
+        }
+      ],
+      "schema_version": "round7.source_inventory.v1",
+      "source_text_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5",
+      "uncertainties": [
+        {
+          "description": "The accessibility paragraph refers to an email address or phone number listed below without naming a contact. Multiple email addresses and phone numbers follow; no specific accessibility endpoint can be resolved from that reference alone.",
+          "event_ids": [
+            "e-accessibility"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible."
+            },
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "608-712-2798, Madison.johansen@wisconsin.gov"
+            },
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Emma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+            }
+          ],
+          "id": "u-access-contact",
+          "identity_ids": [],
+          "kind": "association",
+          "requirement_ids": [
+            "q-accessibility"
+          ],
+          "route_ids": [
+            "r-questions-email",
+            "r-questions-phone",
+            "r-coordinator-phone",
+            "r-coordinator-email"
+          ]
+        },
+        {
+          "description": "The hearing clock time has no printed timezone, and no registration cutoff or hearing end time is stated.",
+          "event_ids": [
+            "e-hearing",
+            "e-registration"
+          ],
+          "evidence": [
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Time:   1:00 PM"
+            },
+            {
+              "context": null,
+              "occurrence": null,
+              "quote": "Pre-registration is strongly encouraged if you plan to provide spoken\ncomments during the hearing."
+            }
+          ],
+          "id": "u-hearing-timing",
+          "identity_ids": [],
+          "kind": "timing",
+          "requirement_ids": [
+            "q-preregister"
+          ],
+          "route_ids": []
+        }
+      ]
+    },
+    "inventory_sha256": "d08edd025ee86ec0c536827b77d3c55e1d776ec76f407507f27c7c0365cff0b8",
+    "pipeline_version": "round7-participation-record-1.0.0",
+    "production_eligible": false,
+    "record": {
+      "alternative_groups": [
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "end": 2561,
+              "quote": "Written\ncomments may be submitted by U.S. mail, E-mail, or through the internet",
+              "start": 2482
+            },
+            {
+              "end": 3069,
+              "quote": "Comments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov.",
+              "start": 2996
+            },
+            {
+              "end": 3174,
+              "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings.",
+              "start": 3071
+            }
+          ],
+          "id": "ag-submission",
+          "purpose": "submission",
+          "requirement_ids": [
+            "q-weight"
+          ],
+          "route_ids": [
+            "r-mail",
+            "r-email-madi",
+            "r-email-comments",
+            "r-web-comments"
+          ]
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "end": 655,
+              "quote": "Virtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g\nMeeting ID: 896 2745 6939\nJoin by phone:\n        +13052241968, 89627456939# US\n        +13092053325, 89627456939# US",
+              "start": 456
+            }
+          ],
+          "id": "ag-access",
+          "purpose": "hearing_access",
+          "requirement_ids": [],
+          "route_ids": [
+            "r-zoom-access",
+            "r-phone-one",
+            "r-phone-two"
+          ]
+        }
+      ],
+      "coverage": {
+        "evidence": [
+          {
+            "end": 57,
+            "quote": "Notice of Hearing",
+            "start": 40
+          },
+          {
+            "end": 3587,
+            "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov",
+            "start": 3493
+          }
+        ],
+        "rationale": "Reviewed the entire supplied notice, including hearing access and registration, written comments, accessibility, rule-review links, questions and coordinator contacts. No separate response or reply phase, publication policy, extension or late-comment policy is stated. Accessibility contact association remains uncertain.",
+        "status": "claimed_complete"
+      },
+      "document_id": "doc-92211b8c7ba0",
+      "events": [
+        {
+          "description": "Public hearing on the permanent rule repealing chapters NR 107 and 109 and recreating chapter NR 107; the public may testify.",
+          "evidence": [
+            {
+              "end": 392,
+              "quote": "The Department of Natural Resources announces that it will hold a public hearing on a\npermanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107, relating to aquatic\nplant management, manual removal and mechanical control regulations, aquatic habitat\nprotection, and surface water grants, at the time and place shown below.",
+              "start": 59
+            },
+            {
+              "end": 2009,
+              "quote": "The public has the opportunity to testify at the hearing.",
+              "start": 1952
+            }
+          ],
+          "id": "e-hearing",
+          "phase": "hearing",
+          "timing": [
+            {
+              "anchor_event_ids": [],
+              "condition_requirement_ids": [],
+              "dependency_relation": "none",
+              "evidence": [
+                {
+                  "end": 437,
+                  "quote": "Date:   April 22, 2026",
+                  "start": 415
+                }
+              ],
+              "id": "t-hearing-date",
+              "kind": "absolute_date",
+              "raw": "April 22, 2026",
+              "role": "hearing_start",
+              "value": "2026-04-22"
+            },
+            {
+              "anchor_event_ids": [],
+              "condition_requirement_ids": [],
+              "dependency_relation": "none",
+              "evidence": [
+                {
+                  "end": 454,
+                  "quote": "Time:   1:00 PM",
+                  "start": 439
+                }
+              ],
+              "id": "t-hearing-time",
+              "kind": "clock",
+              "raw": "1:00 PM",
+              "role": "hearing_start",
+              "value": null
+            }
+          ]
+        },
+        {
+          "description": "Submission of written comments on the proposed rule.",
+          "evidence": [
+            {
+              "end": 2481,
+              "quote": "Comments on the proposed rule must be received on or before April 30, 2026.",
+              "start": 2406
+            }
+          ],
+          "id": "e-comments",
+          "phase": "written_comment",
+          "timing": [
+            {
+              "anchor_event_ids": [],
+              "condition_requirement_ids": [],
+              "dependency_relation": "none",
+              "evidence": [
+                {
+                  "end": 2481,
+                  "quote": "Comments on the proposed rule must be received on or before April 30, 2026.",
+                  "start": 2406
+                }
+              ],
+              "id": "t-comments-close",
+              "kind": "absolute_date",
+              "raw": "April 30, 2026",
+              "role": "closes",
+              "value": "2026-04-30"
+            }
+          ]
+        },
+        {
+          "description": "Hearing registration or pre-registration and phone-participant appearance-form submission.",
+          "evidence": [
+            {
+              "end": 2166,
+              "quote": "To join via Zoom, please register or pre-\nregister using the link above, which will prompt you to enter information required on the Hearing\nAppearance form.",
+              "start": 2010
+            },
+            {
+              "end": 2404,
+              "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov.",
+              "start": 2266
+            }
+          ],
+          "id": "e-registration",
+          "phase": "hearing_intent",
+          "timing": [
+            {
+              "anchor_event_ids": [
+                "e-hearing"
+              ],
+              "condition_requirement_ids": [
+                "q-preregister"
+              ],
+              "dependency_relation": "before",
+              "evidence": [
+                {
+                  "end": 2265,
+                  "quote": "Pre-registration is strongly encouraged if you plan to provide spoken\ncomments during the hearing.",
+                  "start": 2167
+                }
+              ],
+              "id": "t-preregister",
+              "kind": "relative",
+              "raw": "Pre-registration",
+              "role": "other",
+              "value": null
+            }
+          ]
+        },
+        {
+          "description": "Requests for accessibility aids and accessible hearing documents.",
+          "evidence": [
+            {
+              "end": 1888,
+              "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible.",
+              "start": 1779
+            }
+          ],
+          "id": "e-accessibility",
+          "phase": "other",
+          "timing": [
+            {
+              "anchor_event_ids": [
+                "e-hearing"
+              ],
+              "condition_requirement_ids": [
+                "q-accessibility"
+              ],
+              "dependency_relation": "before",
+              "evidence": [
+                {
+                  "end": 1665,
+                  "quote": "with reasonable advance notice",
+                  "start": 1635
+                }
+              ],
+              "id": "t-access-notice",
+              "kind": "relative",
+              "raw": "with reasonable advance notice",
+              "role": "other",
+              "value": null
+            },
+            {
+              "anchor_event_ids": [],
+              "condition_requirement_ids": [
+                "q-accessibility"
+              ],
+              "dependency_relation": "other",
+              "evidence": [
+                {
+                  "end": 1888,
+                  "quote": "as soon as\npossible.",
+                  "start": 1868
+                }
+              ],
+              "id": "t-access-request",
+              "kind": "relative",
+              "raw": "as soon as\npossible",
+              "role": "other",
+              "value": null
+            }
+          ]
+        }
+      ],
+      "identities": [
+        {
+          "event_ids": [
+            "e-hearing",
+            "e-comments",
+            "e-registration",
+            "e-accessibility"
+          ],
+          "evidence": [
+            {
+              "end": 104,
+              "quote": "The Department of Natural Resources announces",
+              "start": 59
+            }
+          ],
+          "id": "i-agency",
+          "kind": "agency",
+          "literal": "Department of Natural Resources",
+          "relation": "canonical"
+        },
+        {
+          "event_ids": [
+            "e-hearing",
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "end": 213,
+              "quote": "permanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107",
+              "start": 145
+            }
+          ],
+          "id": "i-rule",
+          "kind": "rule",
+          "literal": "chs. NR 107 and 109",
+          "relation": "canonical"
+        },
+        {
+          "event_ids": [
+            "e-hearing",
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "end": 1227,
+              "quote": "The proposed recreated ch. NR 107, Wis. Adm. Code, unifies all control activities",
+              "start": 1146
+            }
+          ],
+          "id": "i-recreated",
+          "kind": "rule",
+          "literal": "ch. NR 107, Wis. Adm. Code",
+          "relation": "canonical"
+        },
+        {
+          "event_ids": [
+            "e-hearing",
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "end": 2933,
+              "quote": "The rule may be viewed under NRB Order number WY-20-23 at:",
+              "start": 2875
+            }
+          ],
+          "id": "i-order",
+          "kind": "docket",
+          "literal": "WY-20-23",
+          "relation": "canonical"
+        }
+      ],
+      "requirements": [
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-registration",
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "end": 2166,
+              "quote": "To join via Zoom, please register or pre-\nregister using the link above, which will prompt you to enter information required on the Hearing\nAppearance form.",
+              "start": 2010
+            }
+          ],
+          "id": "q-zoom-registration",
+          "kind": "hearing_procedure",
+          "modality": "conditional",
+          "route_ids": [
+            "r-register",
+            "r-zoom-access"
+          ],
+          "semantic_class": "instruction",
+          "text": "To join via Zoom, register or pre-register through the supplied link and enter the required Hearing Appearance form information."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-registration",
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "end": 2265,
+              "quote": "Pre-registration is strongly encouraged if you plan to provide spoken\ncomments during the hearing.",
+              "start": 2167
+            }
+          ],
+          "id": "q-preregister",
+          "kind": "hearing_procedure",
+          "modality": "optional",
+          "route_ids": [
+            "r-register"
+          ],
+          "semantic_class": "instruction",
+          "text": "Pre-registration is strongly encouraged for those planning spoken comments."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-registration",
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "end": 2404,
+              "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov.",
+              "start": 2266
+            }
+          ],
+          "id": "q-phone-form",
+          "kind": "format",
+          "modality": "conditional",
+          "route_ids": [
+            "r-form",
+            "r-phone-one",
+            "r-phone-two"
+          ],
+          "semantic_class": "instruction",
+          "text": "Phone participants are asked to download, complete and email the fillable Hearing Appearance form to Sarah Wood."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "end": 2481,
+              "quote": "Comments on the proposed rule must be received on or before April 30, 2026.",
+              "start": 2406
+            }
+          ],
+          "id": "q-deadline",
+          "kind": "timing",
+          "modality": "mandatory",
+          "route_ids": [
+            "r-mail",
+            "r-email-madi",
+            "r-email-comments",
+            "r-web-comments"
+          ],
+          "semantic_class": "instruction",
+          "text": "Comments must be received on or before April 30, 2026."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-comments",
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "end": 2654,
+              "quote": "Written\ncomments may be submitted by U.S. mail, E-mail, or through the internet and will have the\nsame weight and effect as oral statements presented at the public hearing.",
+              "start": 2482
+            }
+          ],
+          "id": "q-weight",
+          "kind": "other",
+          "modality": "informational",
+          "route_ids": [
+            "r-mail",
+            "r-email-madi",
+            "r-email-comments",
+            "r-web-comments"
+          ],
+          "semantic_class": "disclosure",
+          "text": "Written comments submitted by mail, email or internet have the same weight and effect as oral hearing statements."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "end": 2873,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov",
+              "start": 2656
+            }
+          ],
+          "id": "q-comments-contact",
+          "kind": "other",
+          "modality": "optional",
+          "route_ids": [
+            "r-mail",
+            "r-email-madi"
+          ],
+          "semantic_class": "instruction",
+          "text": "Written comments should be submitted to the listed Department contact."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 2873,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov",
+              "start": 2656
+            }
+          ],
+          "id": "q-questions",
+          "kind": "other",
+          "modality": "informational",
+          "route_ids": [
+            "r-questions-mail",
+            "r-questions-email",
+            "r-questions-phone"
+          ],
+          "semantic_class": "other",
+          "text": "Madi Johansen is the listed contact for questions on the proposed rules."
+        },
+        {
+          "association": "uncertain",
+          "event_ids": [
+            "e-accessibility"
+          ],
+          "evidence": [
+            {
+              "end": 1888,
+              "quote": "For the hearing or visually impaired, non-English speakers, or those with other personal\ncircumstances which might make communication at the meeting/hearing difficult, DNR will, to\nthe maximum extent possible and with reasonable advance notice, provide aids including an\ninterpreter, or a non-English, large-print, or recorded version of hearing documents. To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible.",
+              "start": 1422
+            }
+          ],
+          "id": "q-accessibility",
+          "kind": "other",
+          "modality": "conditional",
+          "route_ids": [],
+          "semantic_class": "instruction",
+          "text": "People with communication difficulties may request aids or accessible hearing documents by the email address or phone number listed below, as soon as possible. DNR provides these to the maximum extent possible with reasonable advance notice; the exact referenced contact is not identified."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 2994,
+              "quote": "The rule may be viewed under NRB Order number WY-20-23 at:\nhttps://dnr.wisconsin.gov/news/input/ProposedPermanent.html.",
+              "start": 2875
+            },
+            {
+              "end": 3174,
+              "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings.",
+              "start": 3071
+            }
+          ],
+          "id": "q-review",
+          "kind": "other",
+          "modality": "informational",
+          "route_ids": [
+            "r-rule-view",
+            "r-rule-review"
+          ],
+          "semantic_class": "other",
+          "text": "The rule can be viewed under NRB Order WY-20-23 on the DNR site and reviewed on the legislative hearings site."
+        },
+        {
+          "association": "source_resolved",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 3587,
+              "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov",
+              "start": 3493
+            }
+          ],
+          "id": "q-coordinator",
+          "kind": "other",
+          "modality": "informational",
+          "route_ids": [
+            "r-coordinator-phone",
+            "r-coordinator-email"
+          ],
+          "semantic_class": "other",
+          "text": "Emma Esch is the Agency Small Business Regulatory Coordinator; these contacts are not identified as comment-submission routes."
+        }
+      ],
+      "routes": [
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "web",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 538,
+                  "quote": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g",
+                  "start": 475
+                }
+              ],
+              "id": "c-register-url",
+              "kind": "endpoint",
+              "literal": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g"
+            }
+          ],
+          "description": "Zoom registration or pre-registration.",
+          "event_ids": [
+            "e-registration"
+          ],
+          "evidence": [
+            {
+              "end": 2081,
+              "quote": "To join via Zoom, please register or pre-\nregister using the link above",
+              "start": 2010
+            }
+          ],
+          "id": "r-register",
+          "role": "hearing_registration"
+        },
+        {
+          "alternative_group_id": "ag-access",
+          "association": "source_resolved",
+          "channel": "web",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 538,
+                  "quote": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g",
+                  "start": 475
+                }
+              ],
+              "id": "c-zoom-url",
+              "kind": "endpoint",
+              "literal": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 564,
+                  "quote": "Meeting ID: 896 2745 6939",
+                  "start": 539
+                }
+              ],
+              "id": "c-zoom-id",
+              "kind": "meeting_id",
+              "literal": "896 2745 6939"
+            }
+          ],
+          "description": "Virtual hearing access via Zoom, with registration requested.",
+          "event_ids": [
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "end": 564,
+              "quote": "Virtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g\nMeeting ID: 896 2745 6939",
+              "start": 456
+            }
+          ],
+          "id": "r-zoom-access",
+          "role": "other"
+        },
+        {
+          "alternative_group_id": "ag-access",
+          "association": "source_resolved",
+          "channel": "telephone",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 600,
+                  "quote": "+13052241968",
+                  "start": 588
+                }
+              ],
+              "id": "c-phone-one",
+              "kind": "endpoint",
+              "literal": "+13052241968"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 614,
+                  "quote": "89627456939#",
+                  "start": 602
+                }
+              ],
+              "id": "c-phone-one-id",
+              "kind": "meeting_id",
+              "literal": "89627456939#"
+            }
+          ],
+          "description": "First listed phone access option.",
+          "event_ids": [
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "end": 617,
+              "quote": "Join by phone:\n        +13052241968, 89627456939# US",
+              "start": 565
+            }
+          ],
+          "id": "r-phone-one",
+          "role": "other"
+        },
+        {
+          "alternative_group_id": "ag-access",
+          "association": "source_resolved",
+          "channel": "telephone",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 638,
+                  "quote": "+13092053325",
+                  "start": 626
+                }
+              ],
+              "id": "c-phone-two",
+              "kind": "endpoint",
+              "literal": "+13092053325"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 652,
+                  "quote": "89627456939#",
+                  "start": 640
+                }
+              ],
+              "id": "c-phone-two-id",
+              "kind": "meeting_id",
+              "literal": "89627456939#"
+            }
+          ],
+          "description": "Second listed phone access option.",
+          "event_ids": [
+            "e-hearing"
+          ],
+          "evidence": [
+            {
+              "end": 655,
+              "quote": "        +13092053325, 89627456939# US",
+              "start": 618
+            }
+          ],
+          "id": "r-phone-two",
+          "role": "other"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "email",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 2403,
+                  "quote": "Sarah.wood@wisconsin.gov",
+                  "start": 2379
+                }
+              ],
+              "id": "c-form-email",
+              "kind": "endpoint",
+              "literal": "Sarah.wood@wisconsin.gov"
+            }
+          ],
+          "description": "Appearance-form submission for phone participants, not written rule comments.",
+          "event_ids": [
+            "e-registration"
+          ],
+          "evidence": [
+            {
+              "end": 2404,
+              "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov.",
+              "start": 2266
+            }
+          ],
+          "id": "r-form",
+          "role": "hearing_registration"
+        },
+        {
+          "alternative_group_id": "ag-submission",
+          "association": "source_resolved",
+          "channel": "postal",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 2769,
+                  "quote": "Department of Natural Resources",
+                  "start": 2738
+                }
+              ],
+              "id": "c-mail-office",
+              "kind": "name",
+              "literal": "Department of Natural Resources"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 2789,
+                  "quote": "Attn: Madi Johansen",
+                  "start": 2770
+                }
+              ],
+              "id": "c-mail-attn",
+              "kind": "name",
+              "literal": "Attn: Madi Johansen"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 2828,
+                  "quote": "3550 Mormon Coulee Road, La Crosse, WI",
+                  "start": 2790
+                }
+              ],
+              "id": "c-mail-address",
+              "kind": "address_part",
+              "literal": "3550 Mormon Coulee Road, La Crosse, WI"
+            }
+          ],
+          "description": "Postal written comments to the listed Department contact.",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "end": 2828,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI",
+              "start": 2656
+            }
+          ],
+          "id": "r-mail",
+          "role": "submission"
+        },
+        {
+          "alternative_group_id": "ag-submission",
+          "association": "source_resolved",
+          "channel": "email",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 2873,
+                  "quote": "Madison.johansen@wisconsin.gov",
+                  "start": 2843
+                }
+              ],
+              "id": "c-email-madi",
+              "kind": "endpoint",
+              "literal": "Madison.johansen@wisconsin.gov"
+            }
+          ],
+          "description": "Written comments to the listed rule contact.",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "end": 2873,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov",
+              "start": 2656
+            }
+          ],
+          "id": "r-email-madi",
+          "role": "submission"
+        },
+        {
+          "alternative_group_id": "ag-submission",
+          "association": "source_resolved",
+          "channel": "email",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 3068,
+                  "quote": "DNRAdministrativeRulesComments@wisconsin.gov",
+                  "start": 3024
+                }
+              ],
+              "id": "c-comments-email",
+              "kind": "endpoint",
+              "literal": "DNRAdministrativeRulesComments@wisconsin.gov"
+            }
+          ],
+          "description": "Expressly listed email comment destination.",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "end": 3069,
+              "quote": "Comments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov.",
+              "start": 2996
+            }
+          ],
+          "id": "r-email-comments",
+          "role": "submission"
+        },
+        {
+          "alternative_group_id": "ag-submission",
+          "association": "source_resolved",
+          "channel": "web",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 3173,
+                  "quote": "http://docs.legis.wisconsin.gov/code/chr/hearings",
+                  "start": 3124
+                }
+              ],
+              "id": "c-comments-web",
+              "kind": "endpoint",
+              "literal": "http://docs.legis.wisconsin.gov/code/chr/hearings"
+            }
+          ],
+          "description": "Internet comments on the legislative hearings site.",
+          "event_ids": [
+            "e-comments"
+          ],
+          "evidence": [
+            {
+              "end": 3174,
+              "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings.",
+              "start": 3071
+            }
+          ],
+          "id": "r-web-comments",
+          "role": "submission"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "postal",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 2769,
+                  "quote": "Department of Natural Resources",
+                  "start": 2738
+                }
+              ],
+              "id": "c-query-office",
+              "kind": "name",
+              "literal": "Department of Natural Resources"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 2789,
+                  "quote": "Attn: Madi Johansen",
+                  "start": 2770
+                }
+              ],
+              "id": "c-query-attn",
+              "kind": "name",
+              "literal": "Attn: Madi Johansen"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 2828,
+                  "quote": "3550 Mormon Coulee Road, La Crosse, WI",
+                  "start": 2790
+                }
+              ],
+              "id": "c-query-address",
+              "kind": "address_part",
+              "literal": "3550 Mormon Coulee Road, La Crosse, WI"
+            }
+          ],
+          "description": "Postal questions on the proposed rules.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 2736,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:",
+              "start": 2656
+            }
+          ],
+          "id": "r-questions-mail",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "email",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 2873,
+                  "quote": "Madison.johansen@wisconsin.gov",
+                  "start": 2843
+                }
+              ],
+              "id": "c-query-email",
+              "kind": "endpoint",
+              "literal": "Madison.johansen@wisconsin.gov"
+            }
+          ],
+          "description": "Email questions on the proposed rules.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 2873,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov",
+              "start": 2656
+            }
+          ],
+          "id": "r-questions-email",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "telephone",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 2841,
+                  "quote": "608-712-2798",
+                  "start": 2829
+                }
+              ],
+              "id": "c-query-phone",
+              "kind": "endpoint",
+              "literal": "608-712-2798"
+            }
+          ],
+          "description": "Listed rule-question telephone contact.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 2873,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov",
+              "start": 2656
+            }
+          ],
+          "id": "r-questions-phone",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "web",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 2993,
+                  "quote": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html",
+                  "start": 2934
+                }
+              ],
+              "id": "c-view-url",
+              "kind": "endpoint",
+              "literal": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html"
+            }
+          ],
+          "description": "View the rule under NRB Order WY-20-23.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 2994,
+              "quote": "The rule may be viewed under NRB Order number WY-20-23 at:\nhttps://dnr.wisconsin.gov/news/input/ProposedPermanent.html.",
+              "start": 2875
+            }
+          ],
+          "id": "r-rule-view",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "web",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 3173,
+                  "quote": "http://docs.legis.wisconsin.gov/code/chr/hearings",
+                  "start": 3124
+                }
+              ],
+              "id": "c-review-url",
+              "kind": "endpoint",
+              "literal": "http://docs.legis.wisconsin.gov/code/chr/hearings"
+            }
+          ],
+          "description": "Review the proposed rule.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 3174,
+              "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings.",
+              "start": 3071
+            }
+          ],
+          "id": "r-rule-review",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "telephone",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 3548,
+                  "quote": "Emma Esch",
+                  "start": 3539
+                }
+              ],
+              "id": "c-coordinator-name-phone",
+              "kind": "name",
+              "literal": "Emma Esch"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 3563,
+                  "quote": "(608) 266-1959",
+                  "start": 3549
+                }
+              ],
+              "id": "c-coordinator-phone",
+              "kind": "endpoint",
+              "literal": "(608) 266-1959"
+            }
+          ],
+          "description": "Agency Small Business Regulatory Coordinator telephone.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 3563,
+              "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959",
+              "start": 3493
+            }
+          ],
+          "id": "r-coordinator-phone",
+          "role": "information_contact"
+        },
+        {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "email",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 3587,
+                  "quote": "emma.esch@wisconsin.gov",
+                  "start": 3564
+                }
+              ],
+              "id": "c-coordinator-email",
+              "kind": "endpoint",
+              "literal": "emma.esch@wisconsin.gov"
+            }
+          ],
+          "description": "Agency Small Business Regulatory Coordinator email.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 3587,
+              "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov",
+              "start": 3493
+            }
+          ],
+          "id": "r-coordinator-email",
+          "role": "information_contact"
+        }
+      ],
+      "schema_version": "round7.participation_record.v1",
+      "source_text_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5",
+      "uncertainties": [
+        {
+          "description": "The accessibility paragraph refers to an email address or phone number listed below without naming a contact. Multiple email addresses and phone numbers follow; no specific accessibility endpoint can be resolved from that reference alone.",
+          "event_ids": [
+            "e-accessibility"
+          ],
+          "evidence": [
+            {
+              "end": 1888,
+              "quote": "To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible.",
+              "start": 1779
+            },
+            {
+              "end": 2873,
+              "quote": "608-712-2798, Madison.johansen@wisconsin.gov",
+              "start": 2829
+            },
+            {
+              "end": 3587,
+              "quote": "Emma Esch (608) 266-1959\nemma.esch@wisconsin.gov",
+              "start": 3539
+            }
+          ],
+          "id": "u-access-contact",
+          "identity_ids": [],
+          "kind": "association",
+          "requirement_ids": [
+            "q-accessibility"
+          ],
+          "route_ids": [
+            "r-questions-email",
+            "r-questions-phone",
+            "r-coordinator-phone",
+            "r-coordinator-email"
+          ]
+        },
+        {
+          "description": "The hearing clock time has no printed timezone, and no registration cutoff or hearing end time is stated.",
+          "event_ids": [
+            "e-hearing",
+            "e-registration"
+          ],
+          "evidence": [
+            {
+              "end": 454,
+              "quote": "Time:   1:00 PM",
+              "start": 439
+            },
+            {
+              "end": 2265,
+              "quote": "Pre-registration is strongly encouraged if you plan to provide spoken\ncomments during the hearing.",
+              "start": 2167
+            }
+          ],
+          "id": "u-hearing-timing",
+          "identity_ids": [],
+          "kind": "timing",
+          "requirement_ids": [
+            "q-preregister"
+          ],
+          "route_ids": []
+        }
+      ]
+    },
+    "schema_version": "round7.assembled_record.v1",
+    "source": {
+      "channel": "native",
+      "document_id": "doc-92211b8c7ba0",
+      "page_map_known": true,
+      "pdf_pages": 2,
+      "scope": "full_notice",
+      "source_text": "                                        Notice of Hearing\n\nThe Department of Natural Resources announces that it will hold a public hearing on a\npermanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107, relating to aquatic\nplant management, manual removal and mechanical control regulations, aquatic habitat\nprotection, and surface water grants, at the time and place shown below.\n\nHearing Information\n\nDate:   April 22, 2026\n\nTime:   1:00 PM\n\nVirtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrldGeo84g\nMeeting ID: 896 2745 6939\nJoin by phone:\n        +13052241968, 89627456939# US\n        +13092053325, 89627456939# US\n\nRule Information\n\nThe Aquatic Plant Management (APM) program regulates the chemical, mechanical, physical,\nand biological control of aquatic organisms in order to protect and develop diverse and stable\nnative aquatic plant communities. The program is currently regulated under two separate but\nrelated administrative rules, ch. NR 107, Wis. Adm. Code, which regulates chemical control, and\nch. NR 109, Wis. Adm. Code, which regulates burning and mechanical, physical, and manual\ncontrol.\n\nThe proposed recreated ch. NR 107, Wis. Adm. Code, unifies all control activities under a\nconsistent set of procedures and policies that align with current state and federal law, improving\nadministrative consistency and efficiency as well as customer service.\n\nAccessibility\n\nFor the hearing or visually impaired, non-English speakers, or those with other personal\ncircumstances which might make communication at the meeting/hearing difficult, DNR will, to\nthe maximum extent possible and with reasonable advance notice, provide aids including an\ninterpreter, or a non-English, large-print, or recorded version of hearing documents. To access\nthese resources, please contact the email address or phone number listed below as soon as\npossible.\n\nAppearances at the Hearing and Submittal of Written Comments\n\nThe public has the opportunity to testify at the hearing. To join via Zoom, please register or pre-\nregister using the link above, which will prompt you to enter information required on the Hearing\nAppearance form. Pre-registration is strongly encouraged if you plan to provide spoken\ncomments during the hearing. For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov.\n\fComments on the proposed rule must be received on or before April 30, 2026. Written\ncomments may be submitted by U.S. mail, E-mail, or through the internet and will have the\nsame weight and effect as oral statements presented at the public hearing.\n\nWritten comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov\n\nThe rule may be viewed under NRB Order number WY-20-23 at:\nhttps://dnr.wisconsin.gov/news/input/ProposedPermanent.html.\n\nComments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov.\n\nThe rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings.\n\nInitial Regulatory Flexibility Analysis\n\nThe proposed rule reduces the compliance requirements for small businesses by incorporating\nless stringent compliance or reporting requirements, less stringent schedules or deadlines for\ncompliance or reporting, and consolidation or simplification of reporting requirements.\n\nAgency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov\n\f",
+      "source_text_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5"
+    },
+    "validation": {
+      "errors": [],
+      "review_reasons": [
+        "explicit_source_uncertainties",
+        "association_unresolved"
+      ],
+      "source_completeness": "unverified",
+      "source_correctness": "unverified",
+      "valid": true
+    }
+  },
+  "diagnostic_development_only": true,
+  "observed": false,
+  "production_eligible": false,
+  "semantic_acceptance": false
+}

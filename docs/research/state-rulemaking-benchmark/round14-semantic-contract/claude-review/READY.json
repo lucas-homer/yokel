@@ -1,0 +1,38 @@
+{
+  "status": "READY_FOR_FOCUSED_FOLLOWUP",
+  "initial_review_scope": "Generic design only; R13 report export rejected and no report data sent",
+  "authentication": "claude.ai",
+  "subscription": "max",
+  "probe": "Escalated probe succeeded; sandbox probe reported signed out",
+  "model_requested": "fable",
+  "actual_model": "claude-fable-5-1",
+  "provider": "firstParty",
+  "effort": "client default; no effort override applied",
+  "sessionId": "aa1048d4-b115-4f93-ae9c-400bc4434fb5",
+  "neutral_cwd": "/private/tmp/r14-claude-advisory.EGG7lO",
+  "wrapper": "/Users/home/.codex/skills/claude-delegate/scripts/claude-advisory",
+  "bridge": "/Users/home/.local/share/codex-router/bin/model-router",
+  "is_error": false,
+  "stopReason": "success",
+  "conflicting_environment_names": [],
+  "isolation_verified": "Installed source uses --tools empty and dontAsk; installed wrapper adds safe-mode and strict empty MCP; CLI help confirms support. Bridge does not preserve initialization tool inventory, so effective runtime tool inventory was not directly observed. Results report no web search/fetch and no subagents.",
+  "limitations": [
+    "No Claude file inspection, edits, or tests",
+    "No R14 protocol/runtime reviewed yet",
+    "No source gold or fresh source content supplied",
+    "Claude suggested a gold set; this is advisory only and does not authorize exposing gold",
+    "List-price cost metadata does not establish extra subscription charges"
+  ],
+  "prompt_sha256": "7eabdfd8896042e26f4f056b3215572e7f557e97d9a1c4447f26f577f40be79d",
+  "report_sha256": "cd355659065110f86a4b1f173bf28e90eb41fe6079c1f62036b2645a6048ffeb",
+  "standing_user_constraints": {
+    "claude_route": "Existing Claude.ai Max subscription via isolated official Claude Code bridge only",
+    "prohibited_routes": [
+      "OpenRouter Fable",
+      "Anthropic API billing",
+      "Any API fallback"
+    ],
+    "on_bridge_unavailable": "Fail and report blocker; do not substitute route",
+    "model_name_is_not_route_authorization": true
+  }
+}

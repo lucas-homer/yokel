@@ -1,0 +1,372 @@
+{
+  "action_ready": false,
+  "approvals_created": false,
+  "approved_audits_sha256": "5682a7a621cd36b54b7736001799395dc9dd21d0c73010cb773f9e6a567c8f99",
+  "audit_mutation_note": "Mutated audits use existing unchanged external endorsements and fail closed; no mutation receives a newly synthesized approval.",
+  "credentials_read": false,
+  "log_sha256": "191e24ef2355dee9ffca855db625057283fddf0149cb17f3655df1993279a96b",
+  "model_accuracy_measured": false,
+  "passed": true,
+  "production_eligible": false,
+  "protocol_READY_sha256": "613b372963791f54f7afa3160a48cf15d1750e454f126a9b75c5b1ec4d4db2f1",
+  "provider_calls": 0,
+  "raw_response_cases": [
+    {
+      "actual": true,
+      "case": "exact_keys_positive",
+      "expected": true
+    },
+    {
+      "actual": true,
+      "case": "key_order_positive",
+      "expected": true
+    },
+    {
+      "actual": false,
+      "case": "extra_coverage_negative",
+      "expected": false
+    },
+    {
+      "actual": false,
+      "case": "missing_key_negative",
+      "expected": false
+    },
+    {
+      "actual": false,
+      "case": "wrong_key_balanced_negative",
+      "expected": false
+    },
+    {
+      "actual": false,
+      "case": "embedded_item_id_negative",
+      "expected": false
+    },
+    {
+      "actual": false,
+      "case": "wrong_payload_negative",
+      "expected": false
+    },
+    {
+      "actual": false,
+      "case": "wrong_document_negative",
+      "expected": false
+    },
+    {
+      "actual": false,
+      "case": "unknown_contradiction_ref_negative",
+      "expected": false
+    },
+    {
+      "actual": false,
+      "case": "complete_with_missing_negative",
+      "expected": false
+    },
+    {
+      "actual": false,
+      "case": "duplicate_assessment_raw_key_negative",
+      "expected": false
+    },
+    {
+      "actual": false,
+      "case": "duplicate_nested_raw_key_negative",
+      "expected": false
+    },
+    {
+      "actual": false,
+      "case": "duplicate_top_level_key_negative",
+      "expected": false
+    }
+  ],
+  "read_only_dependency_files_verified": 12,
+  "request": {
+    "baseline_body_bytes": 34723,
+    "baseline_schema_bytes": 4037,
+    "body_bytes": 38432,
+    "body_delta_bytes": 3709,
+    "body_sha256": "093b205a1c01bc0f2f2d6640944d3e0854e88ba34ffc0ad4c2b5f9f4e4b812f5",
+    "estimate": 39456,
+    "expanded_schema_sha256": "7e1d307af2f397b8fea7b9388239091537b91c638cdcf69c74508b31e23d28f4",
+    "guard": 40000,
+    "headroom": 544,
+    "neutral_instruction_bytes": 239,
+    "provider_compatibility": "unverified",
+    "schema_bytes": 7506,
+    "schema_delta_bytes": 3469,
+    "schema_sha256": "1db6ed7fbbbe494ed2380eabdc6bc5f39e5592f825295b113d1d241ad3e55ab4",
+    "user_source_record_evidence_unchanged": true
+  },
+  "schema_version": "round9.runtime.offline-report.v1",
+  "semantic_discovery_performed": false,
+  "semantic_results": [
+    {
+      "audit_id": "rule_assertion/semantic_positive",
+      "audit_sha256": "8e8073f97eb45ad1e61d7e61cc34fd1d76baef549af4ef4814c83f065ab332d0",
+      "endorsed_result": {
+        "action_ready": false,
+        "complete_supported": true,
+        "coverage_claim_status": "corroborated",
+        "diagnostic_codes": [],
+        "diagnostics": [],
+        "production_eligible": false,
+        "review_required": false,
+        "semantic_discovery_performed": false,
+        "semantic_status": "complete_supported"
+      },
+      "manually_reviewed_development_input": true,
+      "model_observation": false,
+      "pending_result": "unverified",
+      "record_sha256": "46e3aa14567d969fd989960b0eedc35e14a6a4ae81d673b72913ace142167434",
+      "semantic_field_rows": 10,
+      "source_rows": 3,
+      "source_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c"
+    },
+    {
+      "audit_id": "rule_assertion/evidence_only_negative",
+      "audit_sha256": "c3ee9914b85e9ea2218fb0bd0c615ad9899b56d50a8ac96de7be4f40c42d934c",
+      "endorsed_result": {
+        "action_ready": false,
+        "complete_supported": false,
+        "coverage_claim_status": "contradicted",
+        "diagnostic_codes": [
+          "semantic_defect"
+        ],
+        "diagnostics": [
+          "source obligation not fully represented"
+        ],
+        "production_eligible": false,
+        "review_required": true,
+        "semantic_discovery_performed": false,
+        "semantic_status": "not_complete"
+      },
+      "manually_reviewed_development_input": true,
+      "model_observation": false,
+      "pending_result": "unverified",
+      "record_sha256": "a50611c0f9c466590b86e8cbb9faa54a42679ee74b2249a77d27392fd48b3ac6",
+      "semantic_field_rows": 10,
+      "source_rows": 3,
+      "source_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c"
+    },
+    {
+      "audit_id": "rule_assertion/coverage_rationale_cannot_repair",
+      "audit_sha256": "155b576601ef3f8cec5f0fb500099a11c6fb7ea40149f058aea3edbb060b0926",
+      "endorsed_result": {
+        "action_ready": false,
+        "complete_supported": false,
+        "coverage_claim_status": "contradicted",
+        "diagnostic_codes": [
+          "semantic_defect"
+        ],
+        "diagnostics": [
+          "source obligation not fully represented"
+        ],
+        "production_eligible": false,
+        "review_required": true,
+        "semantic_discovery_performed": false,
+        "semantic_status": "not_complete"
+      },
+      "manually_reviewed_development_input": true,
+      "model_observation": false,
+      "pending_result": "unverified",
+      "record_sha256": "e9da064da7e77afef455ea778e289bc8ff446e900380ccdb18244c11dfb9be58",
+      "semantic_field_rows": 10,
+      "source_rows": 3,
+      "source_sha256": "b6e3627c041c32836282a3079c7b33ffefca4695511124112981f668ed45fd4c"
+    },
+    {
+      "audit_id": "rule_assertion/source_only_extra_negative",
+      "audit_sha256": "93bc7b097a0c79c75dc4f21fc4a4e38a8602708a0e9bec50583d49a184164e14",
+      "endorsed_result": {
+        "action_ready": false,
+        "complete_supported": false,
+        "coverage_claim_status": "contradicted",
+        "diagnostic_codes": [
+          "semantic_defect"
+        ],
+        "diagnostics": [
+          "source obligation not fully represented",
+          "source obligation not fully represented"
+        ],
+        "production_eligible": false,
+        "review_required": true,
+        "semantic_discovery_performed": false,
+        "semantic_status": "not_complete"
+      },
+      "manually_reviewed_development_input": true,
+      "model_observation": false,
+      "pending_result": "unverified",
+      "record_sha256": "d50e09a447e7ba9df6383e78d9eb469a69d54aeeca85121feeaebc90b52255f5",
+      "semantic_field_rows": 10,
+      "source_rows": 5,
+      "source_sha256": "070a0f4c93e13c0709fe04722093e5d089a25ca9c4e2e1ee40a0db324ed900b7"
+    },
+    {
+      "audit_id": "full_alternatives/full_group_positive",
+      "audit_sha256": "398b785552e5bb4cec891de7f8ac3d18514b285b2e2f56708b69af1239ee3420",
+      "endorsed_result": {
+        "action_ready": false,
+        "complete_supported": true,
+        "coverage_claim_status": "corroborated",
+        "diagnostic_codes": [],
+        "diagnostics": [],
+        "production_eligible": false,
+        "review_required": false,
+        "semantic_discovery_performed": false,
+        "semantic_status": "complete_supported"
+      },
+      "manually_reviewed_development_input": true,
+      "model_observation": false,
+      "pending_result": "unverified",
+      "record_sha256": "ffe60a65f03fc748671c79d9c3d3fb082106f74c5c68abb11720cc301668c56f",
+      "semantic_field_rows": 35,
+      "source_rows": 6,
+      "source_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754"
+    },
+    {
+      "audit_id": "full_alternatives/phone_subgroup_negative",
+      "audit_sha256": "b9018b5ebbd596a41a6ea0669bcb0f6d1c448b8b3300a085ef2b9a84abce373b",
+      "endorsed_result": {
+        "action_ready": false,
+        "complete_supported": false,
+        "coverage_claim_status": "contradicted",
+        "diagnostic_codes": [
+          "semantic_defect"
+        ],
+        "diagnostics": [
+          "source obligation not fully represented"
+        ],
+        "production_eligible": false,
+        "review_required": true,
+        "semantic_discovery_performed": false,
+        "semantic_status": "not_complete"
+      },
+      "manually_reviewed_development_input": true,
+      "model_observation": false,
+      "pending_result": "unverified",
+      "record_sha256": "4c19bacf26b277fe2040a7bd8af1d86946f02cbde58eef032c34c0d3b810da9d",
+      "semantic_field_rows": 35,
+      "source_rows": 6,
+      "source_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754"
+    },
+    {
+      "audit_id": "full_alternatives/unknown_endpoint_blocks_group",
+      "audit_sha256": "c9a92e8a7eb384f8ae082d2915cf6b18f2fd9b64d2c27eeef873931b766596f0",
+      "endorsed_result": {
+        "action_ready": false,
+        "complete_supported": false,
+        "coverage_claim_status": "unverified",
+        "diagnostic_codes": [
+          "acceptance_guard",
+          "semantic_unknown"
+        ],
+        "diagnostics": [
+          "original R7 review guard remains",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "candidate field support unknown",
+          "source disposition unknown",
+          "source disposition unknown"
+        ],
+        "production_eligible": false,
+        "review_required": true,
+        "semantic_discovery_performed": false,
+        "semantic_status": "unverified"
+      },
+      "manually_reviewed_development_input": true,
+      "model_observation": false,
+      "pending_result": "unverified",
+      "record_sha256": "81cc86b8f28fd267ed7f4ace2b3910c12d6171ffe85e39db07a094b652b2937d",
+      "semantic_field_rows": 41,
+      "source_rows": 6,
+      "source_sha256": "4fa7c5e95d80004cd0dab39371e789d6448a6f3ddab90113e1a187d880c85754"
+    },
+    {
+      "audit_id": "modality_preservation/optional_positive",
+      "audit_sha256": "6a1e0f0ccc61c517cd9253be092b5e5e3e1dbb5ac13277bfb30f7268a0880272",
+      "endorsed_result": {
+        "action_ready": false,
+        "complete_supported": true,
+        "coverage_claim_status": "corroborated",
+        "diagnostic_codes": [],
+        "diagnostics": [],
+        "production_eligible": false,
+        "review_required": false,
+        "semantic_discovery_performed": false,
+        "semantic_status": "complete_supported"
+      },
+      "manually_reviewed_development_input": true,
+      "model_observation": false,
+      "pending_result": "unverified",
+      "record_sha256": "1df3ba3ef5a7779388a7ecd7911418b77dacdaeb8738ec610454b3e451a4f4ab",
+      "semantic_field_rows": 21,
+      "source_rows": 4,
+      "source_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2"
+    },
+    {
+      "audit_id": "modality_preservation/unclear_negative",
+      "audit_sha256": "5bef9edc81bbb090f6059a40d6acb6f0d39bbb1d2ac15d60633d16f5ab4f92c0",
+      "endorsed_result": {
+        "action_ready": false,
+        "complete_supported": false,
+        "coverage_claim_status": "unverified",
+        "diagnostic_codes": [
+          "acceptance_guard",
+          "semantic_unknown"
+        ],
+        "diagnostics": [
+          "original R7 review guard remains",
+          "candidate field support unknown",
+          "source disposition unknown"
+        ],
+        "production_eligible": false,
+        "review_required": true,
+        "semantic_discovery_performed": false,
+        "semantic_status": "unverified"
+      },
+      "manually_reviewed_development_input": true,
+      "model_observation": false,
+      "pending_result": "unverified",
+      "record_sha256": "0a4138867c78804394c21fa4e20c5629c9bbb33fc8cc6979e7d1b58c508c8577",
+      "semantic_field_rows": 21,
+      "source_rows": 4,
+      "source_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2"
+    },
+    {
+      "audit_id": "modality_preservation/mandatory_negative",
+      "audit_sha256": "8059608b9852325d2b1e7d02c8f1d875a1c989b7442717cbc702994df9dac9de",
+      "endorsed_result": {
+        "action_ready": false,
+        "complete_supported": false,
+        "coverage_claim_status": "contradicted",
+        "diagnostic_codes": [
+          "semantic_defect"
+        ],
+        "diagnostics": [
+          "candidate field unsupported",
+          "source obligation not fully represented"
+        ],
+        "production_eligible": false,
+        "review_required": true,
+        "semantic_discovery_performed": false,
+        "semantic_status": "not_complete"
+      },
+      "manually_reviewed_development_input": true,
+      "model_observation": false,
+      "pending_result": "unverified",
+      "record_sha256": "f8383e8305f27e9e7ce1a787d73c0e0f689dfb80143ac3b29fab2d2909fa3731",
+      "semantic_field_rows": 21,
+      "source_rows": 4,
+      "source_sha256": "d3e45e4c91aecefdb0db52b883eabeffb4f917111f2f946f8dc0a2ac97cdbed2"
+    }
+  ],
+  "tests": 15
+}

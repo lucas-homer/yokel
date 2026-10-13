@@ -1,0 +1,260 @@
+[
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "pdf-agency",
+    "jurisdiction": "US-MS",
+    "source_record_id": "00027305a",
+    "subject": {
+      "kind": "proceeding",
+      "id": "research:ms:00027305a:form"
+    },
+    "predicate": "agency",
+    "value": "Secretary of State \u2013 Securities Division",
+    "evidence": [
+      {
+        "artifact_id": "pdf-firecrawl-text",
+        "locator": "one-page form",
+        "quote": "AGENCY NAMESecretary of State \u2013 Securities Division ",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "guarded-captured-clauses",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": [
+      "Research form fixture only; source search and complete attachment coverage untested"
+    ]
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "pdf-rule_citations",
+    "jurisdiction": "US-MS",
+    "source_record_id": "00027305a",
+    "subject": {
+      "kind": "proceeding",
+      "id": "research:ms:00027305a:form"
+    },
+    "predicate": "rule_citations",
+    "value": [
+      "Rule 5.29"
+    ],
+    "evidence": [
+      {
+        "artifact_id": "pdf-firecrawl-text",
+        "locator": "one-page form",
+        "quote": "Name or number of rule(s):Rule 5.29 ",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "guarded-captured-clauses",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": [
+      "Research form fixture only; source search and complete attachment coverage untested"
+    ]
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "pdf-hearing_request_duration",
+    "jurisdiction": "US-MS",
+    "source_record_id": "00027305a",
+    "subject": {
+      "kind": "participation_window",
+      "id": "research:ms:00027305a:hearing-request"
+    },
+    "predicate": "hearing_request_duration",
+    "value": {
+      "kind": "relative",
+      "duration": 20,
+      "unit": "days",
+      "anchor": "the filing of this notice of proposed rule adoption",
+      "day_basis": null,
+      "computed_close": null
+    },
+    "evidence": [
+      {
+        "artifact_id": "pdf-firecrawl-text",
+        "locator": "one-page form",
+        "quote": "within twenty (20) days after the filing of this notice of proposed rule adoption",
+        "support": "text_exact"
+      },
+      {
+        "artifact_id": "pdf-firecrawl-text",
+        "locator": "one-page form, ORAL PROCEEDING conditional eligibility sentence",
+        "quote": "If an oral proceeding is not scheduled, an oral proceeding must be held if a written request for an oral proceeding is submitted by a political subdivision, an agency or ten (10) or more persons.",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "guarded-captured-clauses",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": [
+      "Research form fixture only; source search and complete attachment coverage untested",
+      "Hearing-request eligibility applies to a political subdivision, an agency, or ten or more persons when no oral proceeding is scheduled. Eligibility is retained in exact evidence but is not yet a separately typed field; this is not an unconditional individual right to require a hearing."
+    ]
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "pdf-comment_duration",
+    "jurisdiction": "US-MS",
+    "source_record_id": "00027305a",
+    "subject": {
+      "kind": "participation_window",
+      "id": "research:ms:00027305a:public-comment"
+    },
+    "predicate": "comment_duration",
+    "value": {
+      "kind": "relative",
+      "duration": 25,
+      "unit": "days",
+      "anchor": null,
+      "day_basis": null,
+      "computed_close": null
+    },
+    "evidence": [
+      {
+        "artifact_id": "pdf-firecrawl-text",
+        "locator": "one-page form",
+        "quote": "At any time within the twenty-five (25) day public comment period, written submissions including arguments, data, and views on the proposed rule/amendment/repeal may be submitted to the filing agency.",
+        "support": "text_exact"
+      }
+    ],
+    "method": {
+      "kind": "deterministic",
+      "name": "guarded-captured-clauses",
+      "version": "1"
+    },
+    "review_state": "candidate",
+    "warnings": [
+      "Research form fixture only; source search and complete attachment coverage untested"
+    ]
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "pdf-event_type",
+    "jurisdiction": "US-MS",
+    "source_record_id": "00027305a",
+    "subject": {
+      "kind": "proceeding",
+      "id": "research:ms:00027305a:form"
+    },
+    "predicate": "event_type",
+    "value": "proposal",
+    "evidence": [
+      {
+        "artifact_id": "pdf-page-image",
+        "locator": "page 1 lower middle, PROPOSED ACTION ON RULES",
+        "quote": "X appears on Amendment to existing rule(s); other proposed action lines blank.",
+        "support": "visual_review"
+      }
+    ],
+    "method": {
+      "kind": "manual_visual",
+      "name": "reviewed-form-regions",
+      "version": "1"
+    },
+    "review_state": "reviewed_for_research",
+    "warnings": [
+      "Research form fixture only; source search and complete attachment coverage untested"
+    ]
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "pdf-hearing_status",
+    "jurisdiction": "US-MS",
+    "source_record_id": "00027305a",
+    "subject": {
+      "kind": "hearing",
+      "id": "research:ms:00027305a:oral-proceeding"
+    },
+    "predicate": "hearing_status",
+    "value": "not_scheduled",
+    "evidence": [
+      {
+        "artifact_id": "pdf-page-image",
+        "locator": "page 1 ORAL PROCEEDING checkbox rows",
+        "quote": "Box at Presently, an oral proceeding is not scheduled on this rule is marked; scheduled option is empty.",
+        "support": "visual_review"
+      }
+    ],
+    "method": {
+      "kind": "manual_visual",
+      "name": "reviewed-form-regions",
+      "version": "1"
+    },
+    "review_state": "reviewed_for_research",
+    "warnings": [
+      "Research form fixture only; source search and complete attachment coverage untested"
+    ]
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "pdf-filing_date",
+    "jurisdiction": "US-MS",
+    "source_record_id": "00027305a",
+    "subject": {
+      "kind": "notice",
+      "id": "research:ms:00027305a:notice"
+    },
+    "predicate": "filing_date",
+    "value": {
+      "kind": "date",
+      "date": "2023-12-27"
+    },
+    "evidence": [
+      {
+        "artifact_id": "pdf-page-image",
+        "locator": "page 1 bottom middle OFFICIAL FILING STAMP",
+        "quote": "FILED stamp reads DEC 27 2023. This is filing date, not comment close.",
+        "support": "visual_review"
+      }
+    ],
+    "method": {
+      "kind": "manual_visual",
+      "name": "reviewed-form-regions",
+      "version": "1"
+    },
+    "review_state": "reviewed_for_research",
+    "warnings": [
+      "Research form fixture only; source search and complete attachment coverage untested"
+    ]
+  },
+  {
+    "schema_version": "state-spike-v1",
+    "observation_id": "pdf-rule_action",
+    "jurisdiction": "US-MS",
+    "source_record_id": "00027305a",
+    "subject": {
+      "kind": "proceeding",
+      "id": "research:ms:00027305a:form"
+    },
+    "predicate": "rule_action",
+    "value": "amendment",
+    "evidence": [
+      {
+        "artifact_id": "pdf-page-image",
+        "locator": "page 1 lower middle, PROPOSED ACTION ON RULES",
+        "quote": "X appears on Amendment to existing rule(s); other proposed action lines blank.",
+        "support": "visual_review"
+      }
+    ],
+    "method": {
+      "kind": "manual_visual",
+      "name": "reviewed-form-regions",
+      "version": "1"
+    },
+    "review_state": "reviewed_for_research",
+    "warnings": [
+      "Research form fixture only; source search and complete attachment coverage untested"
+    ]
+  }
+]

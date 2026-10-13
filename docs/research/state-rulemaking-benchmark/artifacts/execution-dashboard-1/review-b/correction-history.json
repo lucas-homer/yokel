@@ -1,0 +1,145 @@
+[
+  {
+    "timestamp_utc": "2026-10-07T03:30:44.831454+00:00",
+    "fixture_id": "B04",
+    "tier": "agentic",
+    "authority": "Primary reviewer explicit adjudication after independent source/output review and reported Astra high review",
+    "initial_judgment": {
+      "fixture_id": "B04",
+      "tier": "agentic",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "notice_wide_extra_assertion_audit_complete": true,
+      "ranges": {
+        "agency": [
+          18,
+          18
+        ],
+        "citation": [
+          20,
+          20
+        ],
+        "event_selected": [
+          20,
+          20
+        ],
+        "proposed_effective": [
+          21,
+          21
+        ],
+        "hearing": [
+          14,
+          23
+        ],
+        "comment_close": [
+          47,
+          47
+        ],
+        "filing": [
+          1,
+          1
+        ],
+        "close_clock": [
+          37,
+          47
+        ],
+        "timezone": [
+          21,
+          23
+        ]
+      },
+      "exceptions": {
+        "citation": {
+          "outcome": "incorrect",
+          "reason_code": "unsupported_citation_strikethrough",
+          "scope_coverage": "complete",
+          "note": "Markdown adds ~~08 NCAC 21 .0206~~ under selected AMENDMENT. Source page1 shows ordinary unstruck blue citation. Digits alone do not preserve decisive active target relation; no JSON rescue."
+        }
+      },
+      "extra_assertions": [
+        {
+          "id": "citation-strikethrough",
+          "range": [
+            20,
+            20
+          ],
+          "source_scope": "Input/source page1 block3 amendment citation: ordinary blue 08 NCAC 21 .0206, no strikethrough",
+          "error_type": "unsupported_citation_strikethrough",
+          "critical": true,
+          "reason": "Introduced deletion styling changes cited target presentation; same error as citation field, counted once.",
+          "affected_field_ids": [
+            "citation"
+          ]
+        }
+      ],
+      "reviewer_note": "Both complete source pages and full Markdown reviewed. The citation is incorrectly marked as struck text despite an ordinary blue source citation; this critical identity relation fails the gate. Amendment and scheduled-hearing choices, dates and absence of comment clock/timezone otherwise survive. Complete extra audit found this one deduplicated critical assertion; proposal May20 and filing June8 remain distinct, objection 5pm stays conditional."
+    },
+    "revised_judgment": {
+      "fixture_id": "B04",
+      "tier": "agentic",
+      "source_pages_viewed": [
+        1,
+        2
+      ],
+      "notice_wide_extra_assertion_audit_complete": true,
+      "ranges": {
+        "agency": [
+          18,
+          18
+        ],
+        "citation": [
+          20,
+          20
+        ],
+        "event_selected": [
+          20,
+          20
+        ],
+        "proposed_effective": [
+          21,
+          21
+        ],
+        "hearing": [
+          14,
+          23
+        ],
+        "comment_close": [
+          47,
+          47
+        ],
+        "filing": [
+          1,
+          1
+        ],
+        "close_clock": [
+          37,
+          47
+        ],
+        "timezone": [
+          21,
+          23
+        ]
+      },
+      "exceptions": {},
+      "extra_assertions": [
+        {
+          "id": "citation-strikethrough",
+          "range": [
+            20,
+            20
+          ],
+          "source_scope": "Input/source page1 block3 amendment citation: ordinary blue 08 NCAC 21 .0206, no strikethrough",
+          "error_type": "unsupported_tilde_markers_inside_html",
+          "critical": false,
+          "reason": "Primary independent source/output review and reported Astra high review adjudicate the exact citation as supported: it remains directly beside [x] AMENDMENT under Proposed Action, alternatives unchecked, with page2 explicitly confirming proposed amendment. Unsupported ~~ occurs inside raw HTML td; Markdown-inside-HTML rendering was neither defined nor tested and markers are not HTML del. Therefore contradictory identity/action is not established. Keep formatting diagnostic without critical failure; distinct from plain-paragraph deletion of a temporal condition.",
+          "affected_field_ids": []
+        }
+      ],
+      "reviewer_note": "Both complete source pages and returned Markdown inspected. Exact citation, selected amendment action, hearing choice and date roles supported. Unsupported tilde markers in raw HTML retained as noncritical formatting diagnostic after primary adjudication; initial classification preserved in correction-history.json. No critical extra assertion established. Proposed effective and filing dates remain distinct; objection 5pm stays conditional; no invented comment clock/timezone."
+    },
+    "rationale": "Primary independent source/output review and reported Astra high review adjudicate the exact citation as supported: it remains directly beside [x] AMENDMENT under Proposed Action, alternatives unchecked, with page2 explicitly confirming proposed amendment. Unsupported ~~ occurs inside raw HTML td; Markdown-inside-HTML rendering was neither defined nor tested and markers are not HTML del. Therefore contradictory identity/action is not established. Keep formatting diagnostic without critical failure; distinct from plain-paragraph deletion of a temporal condition.",
+    "reference_changed": false
+  }
+]

@@ -1,0 +1,7 @@
+# Held-out adapter static review
+
+Read only: round2/heldout-execution/run_llama.py and the frozen diagnostic engine. Engine SHA256 matches b05803050e0200784f3947114258768212fc977c30e3494c6dfa2509a33c9963. Adapter imports that engine and overrides local_plan, LANE_DIR and RUN_TAG; no reference values or custom prompts enter config. Candidate IDs are absent so inherited uploads require authenticated byte-hash verification. Inherited durable intent/reconciliation, two-job pair barrier, third-failure stop, one-new-job default pilot, no blind POST retry and signed-download handling remain unchanged.
+
+**Dry-run not yet performed:** heldout-execution/freeze.json did not exist at this review. No engine/adapter execution, API call, credential access or adapter mutation occurred. An authenticated run must wait for independent reference approval and the final freeze. Supply a root containing the heldout inputs (the benchmark directory or round2), because these inputs are outside the original artifacts root; otherwise Path.relative_to(root) fails before a job.
+
+Before accepting the final dry-run, check frozen digest/independent references, exact unique eight fixture IDs/order, actual per-unit pages and 22-page sum, input hashes/bytes, namespace separation, nominal66 credits, no reference hints, and one-job submission pilot. Adapter currently checks status and file hashes/bytes plus eight jobs/22 metadata pages; final primary freeze validation should supply the independent identity/page-count checks and recorded freeze digest.

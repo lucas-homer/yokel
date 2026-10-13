@@ -1,0 +1,95 @@
+{
+  "schema_version": "round8.protocol_contract.v1",
+  "status": "proposed_for_primary_freeze",
+  "versions": {
+    "schedule": "round8.schedule.v1",
+    "truth": "round8.truth.v1",
+    "audit": "round8.matching-audit.v1",
+    "observed": "round8.observed.v1",
+    "report": "round8.evaluation.report.v1"
+  },
+  "model_artifact_versions": "unchanged round7.*.v1",
+  "entrypoints": {
+    "validator": "evaluate.validate_observed(observed)",
+    "schema": "evaluate.observed_schema()",
+    "evaluator": "evaluate.evaluate(schedule, truth, audit, observed)",
+    "runtime_validator": "observed.validate_observed(observed)",
+    "runtime_schema": "observed.observed_schema()"
+  },
+  "cohort": {
+    "target_notices": 8,
+    "minimum_states": 6,
+    "max_per_state": 2,
+    "general": 6,
+    "controls": 2,
+    "max_pdf_pages": 40,
+    "max_native_codepoints_per_notice": 30000,
+    "shortfall": "retain actual schedule and report inadequate; no replacement after labeling",
+    "control_definition": "actual conditional participation timing or hearing availability; format-practicability alone insufficient; negative lifecycle notices excluded"
+  },
+  "limits": {
+    "budget_usd": 2,
+    "total_calls": 24,
+    "inventory_calls": 8,
+    "jev_calls": 8,
+    "stronger_calls": 8,
+    "OR_input_estimate": 35000,
+    "inventory_completion": 6144,
+    "stronger_completion": 4096,
+    "Jev_input_estimate": 64000,
+    "Jev_state_longest_estimate": 32000,
+    "worst_case_nominal_reservation_usd": 1.960704,
+    "budget_interpretation": "reservation/conservative-accounting stop guard, not invoice guarantee; retain after-call observed overrun and stop"
+  },
+  "model_settings": {
+    "openrouter_model": "openai/gpt-6.1-sol",
+    "canonical_response_model": "openai/gpt-6.1-sol-20260929",
+    "provider": "OpenAI",
+    "reasoning": "low",
+    "jev_model": "jev-1.13.0"
+  },
+  "failure_kinds": [
+    "http_error",
+    "transport_uncertain",
+    "invalid_response",
+    "budget_stop",
+    "operator_pause",
+    "local_error"
+  ],
+  "runtime_gates": [
+    "source_review",
+    "request_size_review",
+    "assembly_review",
+    "inventory_failed",
+    "paired_verification_completed",
+    "verification_failed",
+    "operation_pause",
+    "not_started",
+    "postresponse_budget_stop"
+  ],
+  "called_semantics": "attempted or uncertain POST bound by durable intent; not proof server received it",
+  "provider_service_error_semantics": "confirmed non-200 provider HTTP response only; not necessarily outage",
+  "failure_receipt_binding": "runtime review must validate evidence_sha256 against retained ledger/status/stop or local pause receipt",
+  "reference": "independent AI page-image reference, frozen before outputs; not human gold",
+  "acceptance_gate": {
+    "all_scheduled_source_complete": true,
+    "unsafe_accepted": 0,
+    "minimum_correct_complete_accepted_per_arm": 2,
+    "adequate_cohort_required": true
+  },
+  "freeze_order": [
+    "reviewed implementation/protocol/collection plan",
+    "source bytes and actual schedule",
+    "independent all-page image labels",
+    "source-first inventory and paired outputs"
+  ],
+  "production_eligible": false,
+  "action_ready": false,
+  "observed_document_extension": {
+    "failure": "required nullable object; fields stage,kind,intent_recorded,operation_id,http_status,evidence_sha256; see evaluate.observed_schema()",
+    "operation_pause": "safe no-intent pause before next stage; preserve earlier completed Jev judgment",
+    "inventory_failed": "no inventory/record/payload; attempted inventory failure with retained operational receipt",
+    "provider_service_error": "true iff failure.kind=http_error with retained non-200 status; transport_uncertain remains false",
+    "postresponse_budget_stop": "successful parsed response followed by observed-budget latch; failure kind=budget_stop,intent_recorded=true,stage=completed stage; preserve inventory hash and any completed arm judgments; no later dispatch"
+  }
+}

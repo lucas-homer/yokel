@@ -1,0 +1,33 @@
+{
+  "status": "approved_prefreeze_configuration",
+  "models": {
+    "inventory": "openai/gpt-6.1-sol",
+    "stronger": "openai/gpt-6.1-sol",
+    "jev": "jev-1.13.0"
+  },
+  "reasoning_effort": "low",
+  "provider": "regular OpenAI only for OpenRouter stages",
+  "alias_weight_immutability_verified": false,
+  "budget_usd": 2,
+  "maximum_nominal_reservation_usd": 1.960704,
+  "max_calls": {
+    "inventory": 8,
+    "jev": 8,
+    "stronger": 8
+  },
+  "caps": {
+    "OR_input_estimate": 35000,
+    "inventory_completion": 6144,
+    "stronger_completion": 4096,
+    "Jev_total_input_estimate": 64000,
+    "Jev_state_plus_longest_question_estimate": 32000
+  },
+  "gate_per_arm": {
+    "unsafe_accepted_records": 0,
+    "minimum_correct_complete_accepted": 2,
+    "scheduled_notices": 8,
+    "all_source_complete_required": true
+  },
+  "same_family_error_correlation_disclosed": true,
+  "no_model_calls_yet": true
+}

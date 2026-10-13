@@ -1,0 +1,58 @@
+{
+  "scope": "fictional offline only; not model output or semantic accuracy",
+  "request_bytes": 10686,
+  "guarded_request_bytes": 11710,
+  "input_guard": 40000,
+  "output_cap": 8192,
+  "tokenizer": "unavailable; byte sensitivity is not a proven bound",
+  "profiles": {
+    "representative32.json": {
+      "bytes": 5875,
+      "units": 32,
+      "estimated_tokens": {
+        "2": 3194,
+        "3": 2215,
+        "4": 1725
+      },
+      "two_byte_residual": 4998,
+      "prudent_headroom_pass": true,
+      "threshold_fraction": 0.7
+    },
+    "representative64.json": {
+      "bytes": 11897,
+      "units": 64,
+      "estimated_tokens": {
+        "2": 6205,
+        "3": 4222,
+        "4": 3231
+      },
+      "two_byte_residual": 1987,
+      "prudent_headroom_pass": false,
+      "threshold_fraction": 0.7
+    },
+    "stressed96.json": {
+      "bytes": 44813,
+      "units": 96,
+      "estimated_tokens": {
+        "2": 22663,
+        "3": 15194,
+        "4": 11460
+      },
+      "two_byte_residual": -14471,
+      "prudent_headroom_pass": false,
+      "threshold_fraction": 0.85
+    },
+    "stressed128.json": {
+      "bytes": 59996,
+      "units": 128,
+      "estimated_tokens": {
+        "2": 30254,
+        "3": 20255,
+        "4": 15255
+      },
+      "two_byte_residual": -22062,
+      "prudent_headroom_pass": false,
+      "threshold_fraction": 0.85
+    }
+  }
+}

@@ -1,0 +1,425 @@
+{
+  "ended_at": "2026-10-06T00:56:58.044Z",
+  "freeze_sha256": "900f21e8a75d50444f12a0e3814d665a4f401a0d689194465d0b00467a762946",
+  "submitted": 14,
+  "completed": 14,
+  "operational_successes": 8,
+  "operational_failures": 6,
+  "stopped": true,
+  "completion_order_basis": "completed collection pipelines, including phase-one/upload failures; already-in-flight jobs are retained after stop",
+  "completion_order": [
+    "A01",
+    "A02",
+    "A04",
+    "A03",
+    "A05",
+    "A06",
+    "A07",
+    "A08",
+    "A09",
+    "A10",
+    "B01",
+    "B03",
+    "B02",
+    "B04"
+  ],
+  "outcomes": [
+    {
+      "fixture_id": "A01",
+      "success": true,
+      "failure_stage": null,
+      "reason": null,
+      "started_at": "2026-10-06T00:55:05.391Z",
+      "ended_at": "2026-10-06T00:55:33.487Z",
+      "elapsed_ms": 28096,
+      "parse_wall_ms": 3039,
+      "input_pages": 1,
+      "input_sha256": "1518ccb9f0c0a0c042e61f0b67d51e9f3114db178a8de1fcc0bae8c0042ca950",
+      "exact_markdown_capture": {
+        "sha256": "0a7820ac88ab1010f5e908465e792e428df5f1044b776bb999208ae8f88d2f0e",
+        "byte_length": 3209,
+        "terminal_newline": false,
+        "exact_utf8": true
+      },
+      "reported": {
+        "usage": [
+          {
+            "path": "/data/metadata/creditsUsed",
+            "value": 1
+          }
+        ],
+        "identifiers": [
+          {
+            "path": "/data/metadata/scrapeId",
+            "value": "01a10eb5-5e10-75c7-9abc-343dcfc45776"
+          }
+        ]
+      },
+      "completion_sequence": 1,
+      "consecutive_failures_after_completion": 0
+    },
+    {
+      "fixture_id": "A02",
+      "success": true,
+      "failure_stage": null,
+      "reason": null,
+      "started_at": "2026-10-06T00:55:05.392Z",
+      "ended_at": "2026-10-06T00:55:33.489Z",
+      "elapsed_ms": 28097,
+      "parse_wall_ms": 3293,
+      "input_pages": 1,
+      "input_sha256": "6738db08f6233b37320da7864bee379bbdf0771eb6f36e5b243cdd3d028cc8b5",
+      "exact_markdown_capture": {
+        "sha256": "005c4119a0e18f593503fc9bc35efaef6a8dbead4c00c5aada40c9fdfe1b61db",
+        "byte_length": 3396,
+        "terminal_newline": false,
+        "exact_utf8": true
+      },
+      "reported": {
+        "usage": [
+          {
+            "path": "/data/metadata/creditsUsed",
+            "value": 1
+          }
+        ],
+        "identifiers": [
+          {
+            "path": "/data/metadata/scrapeId",
+            "value": "01a10eb5-5e5e-776c-a39c-51fa591b74bc"
+          }
+        ]
+      },
+      "completion_sequence": 2,
+      "consecutive_failures_after_completion": 0
+    },
+    {
+      "fixture_id": "A04",
+      "success": true,
+      "failure_stage": null,
+      "reason": null,
+      "started_at": "2026-10-06T00:55:33.601Z",
+      "ended_at": "2026-10-06T00:55:51.835Z",
+      "elapsed_ms": 18234,
+      "parse_wall_ms": 786,
+      "input_pages": 1,
+      "input_sha256": "95ac7a80eba8b41e9fd03b34cb9b495036a5303f5f2de993b14de55d20dc0923",
+      "exact_markdown_capture": {
+        "sha256": "54e1c580ce8d0d1dfb4d06e2d07081ef4c051f72c1903d51581bd0b8d289747b",
+        "byte_length": 446,
+        "terminal_newline": true,
+        "exact_utf8": true
+      },
+      "reported": {
+        "usage": [
+          {
+            "path": "/data/metadata/creditsUsed",
+            "value": 1
+          }
+        ],
+        "identifiers": [
+          {
+            "path": "/data/metadata/scrapeId",
+            "value": "01a10eb5-a5ac-7706-bd56-c4a7c722683f"
+          }
+        ]
+      },
+      "completion_sequence": 3,
+      "consecutive_failures_after_completion": 0
+    },
+    {
+      "fixture_id": "A03",
+      "success": true,
+      "failure_stage": null,
+      "reason": null,
+      "started_at": "2026-10-06T00:55:33.532Z",
+      "ended_at": "2026-10-06T00:55:51.839Z",
+      "elapsed_ms": 18307,
+      "parse_wall_ms": 3245,
+      "input_pages": 1,
+      "input_sha256": "f449dbda4031d44f32dd92b60d87f6a7ac87d75612957f407a8b6939ba0578b1",
+      "exact_markdown_capture": {
+        "sha256": "855c08220f5720e39fd27f388335ae3dda4d8f51e4c5dc8cf846712ba5ab385d",
+        "byte_length": 3409,
+        "terminal_newline": false,
+        "exact_utf8": true
+      },
+      "reported": {
+        "usage": [
+          {
+            "path": "/data/metadata/creditsUsed",
+            "value": 1
+          }
+        ],
+        "identifiers": [
+          {
+            "path": "/data/metadata/scrapeId",
+            "value": "01a10eb5-a5d1-760d-b45a-4d6cb9f443b9"
+          }
+        ]
+      },
+      "completion_sequence": 4,
+      "consecutive_failures_after_completion": 0
+    },
+    {
+      "fixture_id": "A05",
+      "success": false,
+      "failure_stage": "parse",
+      "reason": "Final response failed or lacked one nonempty document markdown string",
+      "started_at": "2026-10-06T00:55:51.876Z",
+      "ended_at": "2026-10-06T00:56:05.884Z",
+      "elapsed_ms": 14008,
+      "parse_wall_ms": 3383,
+      "input_pages": 1,
+      "input_sha256": "7d0af749a85bb07ccc105327bdeda1bd225380eacc54c5465447e79171311cf8",
+      "exact_markdown_capture": null,
+      "reported": {
+        "usage": null,
+        "identifiers": null
+      },
+      "completion_sequence": 5,
+      "consecutive_failures_after_completion": 1
+    },
+    {
+      "fixture_id": "A06",
+      "success": false,
+      "failure_stage": "parse",
+      "reason": "Final response failed or lacked one nonempty document markdown string",
+      "started_at": "2026-10-06T00:55:51.948Z",
+      "ended_at": "2026-10-06T00:56:05.904Z",
+      "elapsed_ms": 13956,
+      "parse_wall_ms": 585,
+      "input_pages": 2,
+      "input_sha256": "9bd708c86641ecc89157b3620b60f5886ae7a5db7ee2a9892eeb800930c83747",
+      "exact_markdown_capture": null,
+      "reported": {
+        "usage": null,
+        "identifiers": null
+      },
+      "completion_sequence": 6,
+      "consecutive_failures_after_completion": 2
+    },
+    {
+      "fixture_id": "A07",
+      "success": true,
+      "failure_stage": null,
+      "reason": null,
+      "started_at": "2026-10-06T00:56:05.921Z",
+      "ended_at": "2026-10-06T00:56:20.435Z",
+      "elapsed_ms": 14514,
+      "parse_wall_ms": 3910,
+      "input_pages": 2,
+      "input_sha256": "c56ca68a293ae601707ae3f88c406b3b60414aa2a471412706acfcc5051df7d8",
+      "exact_markdown_capture": {
+        "sha256": "d426d64b3e6efa077d1ccee6eb9265bb427e545ca7863db79c25b7cc8f759d8e",
+        "byte_length": 3805,
+        "terminal_newline": true,
+        "exact_utf8": true
+      },
+      "reported": {
+        "usage": [
+          {
+            "path": "/data/metadata/creditsUsed",
+            "value": 2
+          }
+        ],
+        "identifiers": [
+          {
+            "path": "/data/metadata/scrapeId",
+            "value": "01a10eb6-1f28-716a-bd54-c24fe4c386d1"
+          }
+        ]
+      },
+      "completion_sequence": 7,
+      "consecutive_failures_after_completion": 0
+    },
+    {
+      "fixture_id": "A08",
+      "success": true,
+      "failure_stage": null,
+      "reason": null,
+      "started_at": "2026-10-06T00:56:05.983Z",
+      "ended_at": "2026-10-06T00:56:23.768Z",
+      "elapsed_ms": 17785,
+      "parse_wall_ms": 3929,
+      "input_pages": 4,
+      "input_sha256": "cedd8f50770ac09fbc61f438134c8a059eb88f26239cb2b7327faa5220b01d8a",
+      "exact_markdown_capture": {
+        "sha256": "985305fe105216dc2b83fa7cd8675ffa089b9a8a710187b541104a2f9a01a9db",
+        "byte_length": 9663,
+        "terminal_newline": false,
+        "exact_utf8": true
+      },
+      "reported": {
+        "usage": [
+          {
+            "path": "/data/metadata/creditsUsed",
+            "value": 4
+          }
+        ],
+        "identifiers": [
+          {
+            "path": "/data/metadata/scrapeId",
+            "value": "01a10eb6-21a3-7475-9c74-ae192d0bbe85"
+          }
+        ]
+      },
+      "completion_sequence": 8,
+      "consecutive_failures_after_completion": 0
+    },
+    {
+      "fixture_id": "A09",
+      "success": true,
+      "failure_stage": null,
+      "reason": null,
+      "started_at": "2026-10-06T00:56:22.399Z",
+      "ended_at": "2026-10-06T00:56:37.642Z",
+      "elapsed_ms": 15244,
+      "parse_wall_ms": 2064,
+      "input_pages": 1,
+      "input_sha256": "ea6dc4db696db4aa590262cf7409655175a12a2ce64f67d9fbaa10cac5049e3e",
+      "exact_markdown_capture": {
+        "sha256": "c41b54c97309c7db834910ad013244c08a8024a79e9bdb153a993e93d099b22c",
+        "byte_length": 8335,
+        "terminal_newline": false,
+        "exact_utf8": true
+      },
+      "reported": {
+        "usage": [
+          {
+            "path": "/data/metadata/creditsUsed",
+            "value": 1
+          }
+        ],
+        "identifiers": [
+          {
+            "path": "/data/metadata/scrapeId",
+            "value": "01a10eb6-4e4b-7111-abd3-d88b1addd1e7"
+          }
+        ]
+      },
+      "completion_sequence": 9,
+      "consecutive_failures_after_completion": 0
+    },
+    {
+      "fixture_id": "A10",
+      "success": true,
+      "failure_stage": null,
+      "reason": null,
+      "started_at": "2026-10-06T00:56:27.842Z",
+      "ended_at": "2026-10-06T00:56:47.072Z",
+      "elapsed_ms": 19230,
+      "parse_wall_ms": 2173,
+      "input_pages": 1,
+      "input_sha256": "1bf2e0dd6a5badf8b581cc9c45d9d46376f568095bbd2512fef24d0cd80c0782",
+      "exact_markdown_capture": {
+        "sha256": "488ef98520ecdbe21236c5a1c15d6d5879374c4429e198f4f0213b55b15e89e0",
+        "byte_length": 8444,
+        "terminal_newline": false,
+        "exact_utf8": true
+      },
+      "reported": {
+        "usage": [
+          {
+            "path": "/data/metadata/creditsUsed",
+            "value": 1
+          }
+        ],
+        "identifiers": [
+          {
+            "path": "/data/metadata/scrapeId",
+            "value": "01a10eb6-70b6-731b-82fd-dfc40ec45767"
+          }
+        ]
+      },
+      "completion_sequence": 10,
+      "consecutive_failures_after_completion": 0
+    },
+    {
+      "fixture_id": "B01",
+      "success": false,
+      "failure_stage": "parse",
+      "reason": "Final response failed or lacked one nonempty document markdown string",
+      "started_at": "2026-10-06T00:56:39.209Z",
+      "ended_at": "2026-10-06T00:56:53.137Z",
+      "elapsed_ms": 13928,
+      "parse_wall_ms": 493,
+      "input_pages": 2,
+      "input_sha256": "b87f4cae6fa71684d88b2d85aeaec441421d5627c9d65998e2ef166ac3fdc1ca",
+      "exact_markdown_capture": null,
+      "reported": {
+        "usage": null,
+        "identifiers": null
+      },
+      "completion_sequence": 11,
+      "consecutive_failures_after_completion": 1
+    },
+    {
+      "fixture_id": "B03",
+      "success": false,
+      "failure_stage": "phase_one",
+      "reason": "No usable hosted upload instructions",
+      "started_at": "2026-10-06T00:56:56.632Z",
+      "ended_at": "2026-10-06T00:56:57.459Z",
+      "elapsed_ms": 827,
+      "completion_sequence": 12,
+      "consecutive_failures_after_completion": 2
+    },
+    {
+      "fixture_id": "B02",
+      "success": false,
+      "failure_stage": "parse",
+      "reason": "Final response failed or lacked one nonempty document markdown string",
+      "started_at": "2026-10-06T00:56:48.904Z",
+      "ended_at": "2026-10-06T00:56:57.477Z",
+      "elapsed_ms": 8573,
+      "parse_wall_ms": 578,
+      "input_pages": 3,
+      "input_sha256": "8e8ab68e5896c4980d2766bd8cefa5ef6603ac055b674150d8e6416822b5f58b",
+      "exact_markdown_capture": null,
+      "reported": {
+        "usage": null,
+        "identifiers": null
+      },
+      "completion_sequence": 13,
+      "consecutive_failures_after_completion": 3
+    },
+    {
+      "fixture_id": "B04",
+      "success": false,
+      "failure_stage": "phase_one",
+      "reason": "No usable hosted upload instructions",
+      "started_at": "2026-10-06T00:56:57.494Z",
+      "ended_at": "2026-10-06T00:56:58.023Z",
+      "elapsed_ms": 529,
+      "completion_sequence": 14,
+      "consecutive_failures_after_completion": 4
+    }
+  ],
+  "skipped": [
+    {
+      "fixture_id": "B05",
+      "reason": "Provider stopped after three consecutive operational failures"
+    },
+    {
+      "fixture_id": "B06",
+      "reason": "Provider stopped after three consecutive operational failures"
+    },
+    {
+      "fixture_id": "B07",
+      "reason": "Provider stopped after three consecutive operational failures"
+    },
+    {
+      "fixture_id": "B08",
+      "reason": "Provider stopped after three consecutive operational failures"
+    },
+    {
+      "fixture_id": "B09",
+      "reason": "Provider stopped after three consecutive operational failures"
+    },
+    {
+      "fixture_id": "B10",
+      "reason": "Provider stopped after three consecutive operational failures"
+    }
+  ]
+}
+

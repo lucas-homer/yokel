@@ -1,0 +1,7 @@
+# Service adapter candidate ready — execution not approved
+
+Six guarded offline tests pass. The OpenRouter-only adapter preserves fixed isolation/paths/auth/budget, fresh-run and pre-key input checks, generic errors and immutable receipts. The offline preparer emits the published yokel.research-job.v1 unsigned external-job format with exact nanodollar budgets, one provider variable, fixed argv and final-review hash included in file pins. A synthetic proposal passes the actual stable release.py pure validator; no key/signature/publication/executor function is called. Invalid scope/expiry rejects before metadata outputs.
+
+Approved runtime/implementation/reviewer files were not edited; runtime pins and prior baseline verify unchanged. INTERFACE/auth remains the frozen runtime's existing interface. INTEGRATION.md describes the aligned preparation CLI and owner-delegated primary release. HANDOFF.json records final code/test/stable-interface-source hashes. Candidate code edits stop here for final credential review.
+
+No real-scope binding/dependency/job files, signed job, live intent, provider/credential/Keychain access, native build/install/enrollment or production signing key creation occurred. Primary must finalize the stable runner core/config and review, then prepare/sign/release under its delegated scope/budget authority. Candidate remains unapproved until that review and release; signed output is not an independent approval claim.

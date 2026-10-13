@@ -1,0 +1,168 @@
+{
+  "additional_fix_checks": [
+    "integer and floating-point number fields accepted; negative cost rejects",
+    "40 PDF pages admit; 41 gate before synthetic dispatch",
+    "missing/inconsistent/extra judgment and favorable status with negative dimension reject"
+  ],
+  "code_artifact_sha256": {
+    "pipeline/INTERFACE.md": "dd1e9c731e6b88955a391ee69c5806bcfd962a1cd8bfd3e47ac1d3043134106a",
+    "pipeline/development_fixtures.py": "35a2363b1791a741b530a51a3ca49bdce375c9c45174e3afefb9de674a59a45d",
+    "pipeline/inventory.schema.json": "45743e26e2e0404edcc1751450a557a036d6e590ce6431593e8a468b2ab8c83b",
+    "pipeline/pipeline.py": "cab605c3da02ebc5c2670ba0711e63c24c4b97bdf52420d825d5f1a9040d1098",
+    "pipeline/record.schema.json": "adb033e89f46f566ee1ddc11bf50ba1c91dcadafa2f7a94977ca296256be94e2",
+    "pipeline/test_pipeline.py": "9cb0b03cbbafe480ce2b2b7103c5032e25b45eb178a8bb0980c363e521285d87",
+    "pipeline/verdict.schema.json": "8f55dbf33853680d8c61477d5dd7a3cb2b70636eeb72f30d051b12d868007cab",
+    "protocol/README.md": "096a64480ddb52c78c105942169a6e933e574fa1bc934b1018b459e1d6c859bb",
+    "protocol/evaluate.py": "89b661f3bb7092972cc514aabd80f7cec56d24235b5d50768f6d4c803419836e",
+    "protocol/observed.schema.json": "ab49c0c0a1ba8dbc30f3e33ca6d8d81bdc76f142177fc14b19acd8203152cdfa",
+    "protocol/test_evaluate.py": "7a404a586deb652d016d13d6027d9461a147ef664591e4eeddf945bbaf4fe6e1",
+    "runtime/README.md": "f38addbd3a210c731bf53f37c437aa04f7140b8e3e08400144e5686587bc1673",
+    "runtime/offline_checks.py": "2e2d1a7e7905e47479ab30112b30f38cefa19f6620ee0a25b255a811de514b81",
+    "runtime/provider_adapters.py": "462302188e6e9c87f153e2f0c4bd73f9cce64bff0ca3e06c9b96029ff4dcb712",
+    "runtime/run_pipeline.py": "60f0557a0d46bb57ab4443c92489ef169536e27410ef85ecefd6e1f015ca2e3d",
+    "verification/PLAN.md": "5d082d2ca6c773575bc24ba6ed1cf6297efd2b706ed185be4ea674a1d7d2a3c3",
+    "verification/pipeline-results.json": "181fab83ea660b848ed3cdc4b6bbeff799ac90ed0f123a35989de7901ed0a6ce",
+    "verification/prior-round-hashes.json": "adfc91610c713a3d5852f8169b1875c6e3d4e489feb6d85b2460d375a03d38e1",
+    "verification/runtime-results.json": "ae1c4d9e1fb20fbed5ace1c0367dcbb60454821ea6aaf81af556d2cf23834100",
+    "verification/test_pipeline_independent.py": "c283caad10d5c7f3af26d97901a267fc9989216fe4a9839a7a8e9eb9db00229f",
+    "verification/test_runtime_independent.py": "a2074dd87215dd26d49efb662060e3aa9954a9469d0eef3625cc6802626a6a1d"
+  },
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 docs/research/state-rulemaking-benchmark/round7/verification/test_pipeline_independent.py",
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 docs/research/state-rulemaking-benchmark/round7/verification/test_runtime_independent.py",
+      "exit_code": 0
+    }
+  ],
+  "controls": [
+    {
+      "control": "test_explicit_calendar_oracles_and_negatives",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_pipeline_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_unsupported_components_and_envelope_tampering",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_pipeline_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_group_reciprocity_roles_and_scopes",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_pipeline_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_group_uncertainty_preserved_in_common_payload",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_pipeline_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_components_and_groups_require_verdict_assessments",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_pipeline_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_semantic_classification_and_omission_are_not_assembly_proof",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_pipeline_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_aggregate_component_accounting_at_limit",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_pipeline_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_r6_discriminator_and_prior_round_lineage",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_pipeline_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_final_request_pair_identity_and_full_coverage_is_schedule_not_favorability",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_runtime_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_source_inventory_and_assembly_gates_do_not_invent_arm_calls",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_runtime_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_valid_record_large_verifier_gate_preserves_hashes_and_blocks_both",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_runtime_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_independent_actual_body_cap_boundaries",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_runtime_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_actual_synthetic_failed_call_and_later_uncalled_arm",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_runtime_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_favorable_verdict_cannot_erase_extraction_uncertainty",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_runtime_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_semantic_omission_and_classification_veto_useful_acceptance",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_runtime_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_page_cap_numeric_costs_and_judgment_coherence",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_runtime_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_impossible_failure_order_and_completed_gate_rejected",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_runtime_independent.py",
+      "observed": "passed final real command"
+    },
+    {
+      "control": "test_forged_call_gate_hash_states_reject_and_missing_stays_unserved",
+      "expected": "asserted public behavior and explicit rejection controls",
+      "file": "test_runtime_independent.py",
+      "observed": "passed final real command"
+    }
+  ],
+  "credential_network_process_evidence": "Audit hook active during controls forbids socket operations, subprocess.Popen, os.system and credential-like file reads. Explicit fake transport counters and runtime synthetic_dispatches matched. No dependencies installed.",
+  "fixed_failures_confirmed": [
+    "completed gate with failed arm rejects",
+    "stronger called after failed Jev rejects"
+  ],
+  "limitations": [
+    "Synthetic development controls establish internal routing and validator compatibility, not provider acceptance or extraction accuracy.",
+    "Independent semantic mapping controls demonstrate that favorable mocked verdicts cannot establish useful coverage when the supplied audit reports omissions/mismatches. They are authored controls, not new source-first cohort labels.",
+    "Owner development replay was not rerun here because it writes owner development artifacts; separate independent public-interface end-to-end controls were executed."
+  ],
+  "passed": true,
+  "prior_round_file_set_and_hashes_unchanged": true,
+  "prior_round_files": 3487,
+  "provider_calls": 0,
+  "runtime_receipts_sha256": "ae1c4d9e1fb20fbed5ace1c0367dcbb60454821ea6aaf81af556d2cf23834100",
+  "schema_version": "round7.independent-verification.v1",
+  "test_methods": 18,
+  "unresolved_failures": []
+}

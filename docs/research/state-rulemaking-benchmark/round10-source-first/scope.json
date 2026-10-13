@@ -1,0 +1,29 @@
+{
+  "schema_version": "round10.source-first.scope.v1",
+  "authority": "owner-delegated-primary",
+  "user_instruction": "go ahead",
+  "scope": "Two-stage source-first comparison on retained Wisconsin development notice, with existing targeted offline regressions",
+  "max_provider_calls": 2,
+  "stages": [
+    "source_only_inventory",
+    "inventory_to_record_matching"
+  ],
+  "model": "openai/gpt-6.1-sol",
+  "reasoning": "low",
+  "output_cap_per_call": 8192,
+  "full_request_guard_per_call": 40000,
+  "provider": "OpenRouter/OpenAI-only",
+  "price_cap_prompt_usd_per_million": 2,
+  "price_cap_completion_usd_per_million": 10,
+  "prior_nanousd": 858310718,
+  "reservation_per_call_nanousd": 161920000,
+  "reservation_ceiling_nanousd": 323840000,
+  "budget_ceiling_nanousd": 2000000000,
+  "automatic_retry": false,
+  "repair_clipping_or_fallback": false,
+  "production_eligible": false,
+  "action_ready": false,
+  "release_condition": "Reviewed frozen protocol and runtime, primary exact admission verification, signed immutable job",
+  "source_inventory_limit": "Generated inventory completeness must be audited independently, never assumed from its own coverage claim",
+  "comparison_limit": "One reused development source; multiple protocol changes, not causal or aggregate accuracy evidence"
+}

@@ -1,0 +1,23 @@
+{
+  "status": "API_COMPATIBLE_pending_READY_code_review",
+  "created_at_utc": "2026-10-07T05:20:18.537856+00:00",
+  "reviewed_files": {
+    "evaluation/LABEL-API.md": "4a3f2cb739e56ca50403229ea266bc53f3a4ea7877fcd40e6164c2606f806315",
+    "evaluation/label-schema.json": "eeca152010126b1cbd734d58e5d239e0979588dbe890e59d84e0d68b6be5400a"
+  },
+  "source_label_contract": "All required notice and field evidence concepts preserved; field_type is the concrete DATE/EMAIL key. Source-derived normalized_value and source_precision are appropriate evaluator-only extensions.",
+  "approved_separation": "Source-image labels freeze before outputs; postrun acceptance audits independently check actual accepted claims against frozen truth. No terminal value-equality-only correctness credit.",
+  "remaining_final_code_checks": [
+    "Validate actual scheduled-document denominator and missing labels; never omit failed/not-started documents.",
+    "Group duplicate mentions without losing distinct values/conditions; validate required_field_values against eligible fields.",
+    "Accept only final terminal observations; missing/unknown/malformed audits cannot produce safe acceptance credit.",
+    "Bind audits to exact document/case/channel and real eligible source fields; preserve literal email equality and normalized date equality.",
+    "Count wrong-role/lost-condition/unsupported/conflicted/unauditable acceptances as unsafe; zero denominator stays insufficient.",
+    "Gate must preserve all12/min6-state quota requirement externally even if actual scheduled count differs."
+  ],
+  "metrics_boundary": "Terminal-only scaffold intentionally leaves candidate recall, faithful-parse recall, proposal normalization and parser-text accuracy unmeasured. This is honest and compatible as an adapter, but those protocol metrics still require separately frozen stage-audit rules or explicit unmeasured reporting; do not represent terminal coverage as full stage evaluation.",
+  "fresh_sources_inspected": 0,
+  "runtime_outputs_inspected": 0,
+  "provider_calls": 0,
+  "frozen_protocol_edits": 0
+}

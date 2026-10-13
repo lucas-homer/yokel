@@ -1,0 +1,125 @@
+
+
+# Proposed Rules
+
+**Comments on Planned Rules or Rule Amendments.** An agency must first solicit Comments on Planned Rules or Comments on Planned Rule Amendments from the public on the subject matter of a possible rulemaking proposal under active consideration within the agency (*Minnesota Statutes §§ 14.101*). It does this by publishing a notice in the *State Register* at least 60 days before publication of a notice to adopt or a notice of hearing, and within 60 days of the effective date of any new statutory grant of required rulemaking.
+
+**Rules to be Adopted After a Hearing.** After receiving comments and deciding to hold a public hearing on the rule, an agency drafts its rule. It then publishes its rules with a notice of hearing. All persons wishing to make a statement must register at the hearing. Anyone who wishes to submit written comments may do so at the hearing, or within five working days of the close of the hearing. Administrative law judges may, during the hearing, extend the period for receiving comments up to 20 calendar days. For five business days after the submission period the agency and interested persons may respond to any new information submitted during the written submission period and the record then is closed. The administrative law judge prepares a report within 30 days, stating findings of fact, conclusions and recommendations. After receiving the report, the agency decides whether to adopt, withdraw or modify the proposed rule based on consideration of the comments made during the rule hearing procedure and the report of the administrative law judge. The agency must wait five days after receiving the report before taking any action.
+
+**Rules to be Adopted Without a Hearing.** Pursuant to *Minnesota Statutes § 14.22*, an agency may propose to adopt, amend, suspend or repeal rules without first holding a public hearing. An agency must first solicit **Comments on Planned Rules** or **Comments on Planned Rule Amendments** from the public. The agency then publishes a notice of intent to adopt rules without a public hearing, together with the proposed rules, in the *State Register*. If, during the 30-day comment period, 25 or more persons submit to the agency a written request for a hearing of the proposed rules, the agency must proceed under the provisions of §§ 14.1414.20, which state that if an agency decides to hold a public hearing, it must publish a notice of intent in the *State Register*.
+
+**KEY:** **Proposed Rules** - <u>Underlining</u> indicates additions to existing rule language. ~~Strikeouts~~ indicate deletions from existing rule language. If a proposed rule is totally new, it is designated "all new material." **Adopted Rules** - <u>Underlining</u> indicates additions to proposed rule language. ~~Strikeout~~ indicates deletions from proposed rule language.
+
+## Minnesota Department of Labor and Industry
+## Minnesota Board of Electricity
+# **Proposed Permanent Rule Adopting the 2026 National Electrical Code; DUAL NOTICE: Notice of Intent to Adopt Rules Without a Public Hearing Unless 25 or More Persons Request a Hearing, and Notice of Hearing if 25 or More Requests for Hearing Are Received**
+
+**Proposed Amendment to Rules Relating to the Minnesota Electrical Code, *Minnesota Rules*, Chapter 1315; Revisor's ID Number RD-04985; CAH docket number 5-9065-41611**
+
+**Introduction.** The Minnesota Board of Electricity ("Board") intends to adopt rules without a public hearing following the procedures in the rules of the Court of Administrative Hearings, *Minnesota Rules*, parts 1400.2300 to 1400.2310, and the Administrative Procedure Act, *Minnesota Statutes*, sections 14.22 to 14.28. You may submit written comments and/or a written request that a hearing be held on the proposed rules until **4:30 p.m. on Wednesday, June 3, 2026**.
+
+**Hearing.** If 25 or more persons submit a written request for a hearing on the rules by **4:30 p.m. on Wednesday, June 3, 2026**, the Board will hold a virtual public hearing on **Wednesday, June 17, 2026, at 9:30 a.m.** You can participate in the virtual hearing, which will be conducted by an Administrative Law Judge from the Court of Administrative Hearings, via Webex by using this link along with the associated access code and password:
+For a video and audio connection, join the hearing through an internet connection:
+
+(Cite 50 SR 1173) **Minnesota State Register, Monday 4 May 2026** Page 1173
+
+---
+
+
+
+# Proposed Rules
+
+Web link: **Webex Meeting Link**
+Meeting Number (access code): 2495 219 4174
+Password: 1234
+
+For audio-only connection, join the virtual hearing by telephone:
+
+Call: 1-855-282-6330
+Access code: 2495 219 4174
+Password: 1234
+
+To find out whether the agency will adopt the rules without a hearing or if it will hold the hearing, you should contact the agency contact person or check the Board website at <u>https://www.dli.mn.gov/about-department/rulemaking/rulemaking-docket-minnesota-rules-chapter-1315</u> after **Wednesday, June 3, 2026** and before June 17, 2026.
+
+**Subject of Rules.** The proposed rules are amendments to the Minnesota Electrical Code contained in Minnesota Rules, Chapter 1315. The Board is considering rule amendments that incorporate by reference and adopt the 2026 National Electrical Code/NFPA 70<sup>®</sup>, with any Minnesota amendments.
+
+**Statutory Authority.** Minnesota Statutes, section 326B.32, establishes the Minnesota Board of Electricity and the powers and duties of the board, among other things. Specifically, Minnesota Statutes, section 326B.32, subdivision 2(a) (3) (2025), provides the power and authority for the Board to adopt the Minnesota Electrical Code, which must be the most current edition of the National Electrical Code ("NEC"), and any amendments thereto.
+
+**Publication of proposed rules.** The proposed rules may be viewed at: <u>https://www.dli.mn.gov/about-department/rulemaking/rulemaking-docket-minnesota-rules-chapter-1315</u>
+
+**Statement of Need and Reasonableness.** The statement of need and reasonableness ("SONAR") contains a summary of the justification for the proposed rules, a description of who will be affected by the proposed rules, and an estimate of the probable cost of the proposed rules. You may review or obtain copies of the SONAR by contacting the agency contact person. The SONAR may also be viewed at: <u>https://www.dli.mn.gov/about-department/rulemaking/rulemaking-docket-minnesota-rules-chapter-1315</u>
+
+**Agency Contact Person.** The agency contact person is Krystle Conley at the Department of Labor and Industry, 443 Lafayette Road North, St. Paul, MN 55155, **Phone:** (651) 284-5315, or **Email:** dli.rules@state.mn.us, **fax:** (651) 284-5725. You may contact the agency contact person with questions about the rules.
+
+**Public Comment.** You have until **4:30 p.m. on Wednesday, June 3, 2026**, to submit written comment in support of or in opposition to the proposed rules or any part or subpart of the rules.
+
+Your comment must be in writing and received by the due date. Your comment should identify the portion of the proposed rules addressed, the reason for the comment, and any changes you propose. Any comments that you have about the legality of the proposed rules must be made during this comment period. All evidence that you present should relate to the proposed rules. If the proposed rules affect you in any way, the agency encourages you to participate. All comments and responses received are public data and will be available for review by all.
+
+Submit written comments to the Department contact person listed above, via email at <u>dli.rules@state.mn.us</u>, or by U.S. Mail addressed to Krystle Conley, Minnesota Department of Labor and Industry, 443 Lafayette Road N., Saint Paul, Minnesota 55155.
+
+**Request for a Hearing.** In addition to submitting comments, you may also request that the agency hold a public hearing on the rules. You must make your request for a public hearing in writing by **4:30 p.m. on Wednesday, June 3, 2026**. You must include your name and address in your written request for hearing. You must identify the portion of the proposed rules that you object to or state that you oppose the entire set of rules. You are also encouraged to state the reason for the request and any changes you want made to the proposed rules. Any request that does not comply with
+
+**Page** 1174 **Minnesota State Register, Monday 4 May 2026** **(Cite 50 SR 1174)**
+
+---
+
+# Proposed Rules
+
+these requirements is not valid and the agency cannot count it when determining whether it must hold a public hearing.
+
+**Withdrawal of Requests.** If 25 or more persons submit a valid written request for a hearing, the agency will hold a public hearing unless a sufficient number of persons withdraw their requests in writing. If enough requests for hearing are withdrawn to reduce the number below 25, the agency must give written notice of this to all persons who requested a hearing, explain the actions the agency took to bring about the withdrawal, and ask for written comments on this action. If the agency is required to hold a public hearing, it will follow the procedures in *Minnesota Statutes*, sections 14.131 to 14.20.
+
+**Cancellation of Hearing.** The agency will cancel the hearing scheduled for June 17, 2026, if the agency does not receive requests for a hearing from 25 or more persons. If you requested a public hearing, the agency will notify you before the scheduled hearing whether the hearing will be held. You may also call the agency contact person at 651-284-5315 June 3, 2026, to find out whether the hearing will be held. On the scheduled day, you may check for whether the hearing will be held by calling 651-284-5006 or going online at <u>https://www.dli.mn.gov/about-department/rulemaking/rulemaking-docket-minnesota-rules-chapter-1315</u>
+
+**Notice of Hearing.** If 25 or more persons submit valid written requests for a public hearing on the rules, the Board will hold a hearing following the procedures in *Minnesota Statutes*, sections 14.131 to 14.20. The Board will hold the hearing on the date and at the time and place listed above. The hearing will continue until 4:30 p.m. or until all interested persons have been heard, whichever occurs first. Administrative Law Judge James Mortenson is assigned to conduct the hearing. Judge Mortenson can be reached by contacting William Moore, Rules Coordinator, Court of Administrative Hearings, 600 North Robert Street, P.O. Box 64620, Saint Paul, Minnesota 55164-0620, telephone 651-361-7893, or at <u>william.t.moore@state.mn.us</u>.
+
+**Hearing Procedure.** If the Board holds a hearing, you and all interested or affected persons, including representatives of associations or other interested groups, will have an opportunity to participate. You may present your views orally at the hearing or in writing at any time before the hearing record closes. All evidence presented should relate to the proposed rules.
+
+You may also submit written material to the Administrative Law Judge to be recorded in the hearing record for five working days after the public hearing ends. At the hearing, the Administrative Law Judge may order this five-day comment period extended for a longer period but for no more than 20 working days.
+
+After the comment period, there is a five-day rebuttal period when the Board and any interested person may respond in writing to any new information submitted. No one may submit new evidence during the five-day rebuttal period.
+
+The Court of Administrative Hearings must receive all hearing comments and responses submitted to the Administrative Law Judge via the <u>Court of Administrative Hearings Rulemaking eComments website (https://mn.gov/oah/forms-and-filing/ecomments/)</u> no later than 4:30 p.m. on the due date. If using the eComments website is not possible, you may submit post-hearing comments in person or via United States mail addressed to Judge Mortenson at the address listed above. All comments or responses received are public data and will be available for review on the eComments website.
+
+This rule hearing procedure is governed by *Minnesota Rules*, parts 1400.2000 to 1400.2240, and *Minnesota Statutes*, sections 14.131 to 14.20. You may direct questions about the procedure to the Administrative Law Judge, through William Moore, the Court of Administrative Hearing's rules coordinator listed above.
+
+**Modifications.** The Board may modify the proposed rules either as a result of public comment or as a result of the rule hearing process. It must support modifications by data and views submitted during the public comment and rule hearing process. The adopted rules may not be substantially different than these proposed rules unless the Board follows the procedure under *Minnesota Rules*, part 1400.2110. If the final rules are identical to the rules originally published in the *State Register*, the agency will publish a notice of adoption in the *State Register*. If the final rules are different from the rules originally published in the *State Register*, the Board must publish a copy of the changes in the *State Register*.
+**(Cite 50 SR 1175)** Minnesota State Register, Monday 4 May 2026 Page 1175
+
+
+
+---
+
+# Proposed Rules
+
+## **Adoption Procedure if No Hearing.** If no hearing is required, the Board may adopt the rules after the end of the comment period. The Board will submit the rules and supporting documents to the Court of Administrative Hearings for a legal review. You may ask to be notified of the date the rules are submitted to the office. If you want to receive notice of that submission, receive a copy of the adopted rules, or to register with the Board to receive notice of future rule proceedings, then please submit your request to the agency contact person listed above.
+
+## **Adoption Procedure after a Hearing.** If a hearing is held, after the close of the hearing record, the Administrative Law Judge will issue a report on the proposed rules. You may ask to be notified of the date that the Administrative Law Judge's report will become available and can make this request at the hearing or in writing to the Administrative Law Judge. You may also ask to be notified of the date that the Board adopts the rules, and the rules are filed with the Secretary of State or register with the Board to receive notice of future rule proceedings by requesting this at the hearing or by writing to the agency contact person stated above.
+
+## **Lobbyist Registration.** *Minnesota Statutes*, chapter 10A, requires each lobbyist to register with the State Campaign Finance and Public Disclosure Board. You may direct questions about this requirement to the Campaign Finance and Public Disclosure Board at: Suite #190, Centennial Building, 658 Cedar Street, St. Paul, Minnesota 55155, telephone (651) 539-1180 or 1-800-657-3889.
+
+## **Alternative Format/Accommodation.** Upon request, this information can be made available in an alternative format, such as large print, braille, or audio. To make such a request or if you need an accommodation to make this hearing accessible, please contact the agency contact person at the address or telephone number listed above.
+
+## **Order.** I order that the rulemaking hearing be held at the date, time, and location listed above.
+
+Date: April 27, 2026
+
+Trevor Turek, Chair
+Minnesota Board of Electricity
+
+## **1315.0200 SCOPE.**
+
+Subpart 1. **Title.** This chapter shall be known and cited as the "Minnesota Electrical Code."
+
+Subp. 1a. **Electrical code.** All new electrical wiring, apparatus, and equipment for electric light, heat, power, technology circuits and systems, and alarm and communication systems must comply with the regulations contained in the <u>2023</u> <u>2026</u> edition of the National Electrical Code (NEC) as approved by the American National Standards Institute (ANSI/NFPA ~~**70-2023**~~ <u>**70-2026**),</u> Minnesota Statutes, section 326B.35, and the Minnesota State Building Code as adopted by the commissioner of labor and industry. The <u>2023</u> <u>2026</u> edition of the National Electrical Code, developed and published by the National Fire Protection Association, Inc., is incorporated by reference and made part of the Minnesota State Building Code. The National Electrical Code is not subject to frequent change and is available in the office of the commissioner of labor and industry, through public libraries, from major bookstores and other retail sources, or from National Fire Protection Association, Inc., One Batterymarch Park, Quincy, MA 02169-7471.
+
+Subp. 2. [Repealed, 12 SR 102; 12 SR 151]
+
+# **Minnesota Board of Marriage and Family Therapy**
+# **Amended Notice of Intent to Adopt Rules Without a Public Hearing**
+
+**Proposed Permanent Rules Modifying Licensure Qualifications and Procedures, *Minnesota Rules*, parts **5300.0100** to **5300.0355**, and repeal of parts **5300.0100**, subpart 7, **5300.0150**, **5300.0160**, subpart 1, **5300.0175**, **5300.0180**, **5300.0190**, **5300.0230**, **5300.0240**, subparts 2 and 7, **5300.0320**, subpart 8, and **5300.0330**, subparts 3 and 4; Revisor's ID Number RD-4834**
+
+**Introduction.** The Minnesota Board of Marriage and Family Therapy intends to adopt rules without a public hearing following the procedures in the rules of the Court of Administrative Hearings, *Minnesota Rules*, parts 1400.2300 to 1400.2310, and the Administrative Procedure Act, *Minnesota Statutes*, sections 14.22 to 14.28. You may submit written
+
+**Page** **1176** **Minnesota State Register, Monday 4 May 2026** **(Cite 50 SR 1176)**

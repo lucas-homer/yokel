@@ -1,0 +1,48 @@
+{
+  "status": "NOT_READY_three_bounded_scoring_fixes",
+  "created_at_utc": "2026-10-07T05:28:36.090913+00:00",
+  "evaluator_inventory_sha256": "2f03eb0ac842c1fa36bf1299d5c97f388ba2a7959029ad9087a64b69cd798846",
+  "evaluate_py_sha256": "eac76a6b76ad9dd93f32771922290af51891e0c3a0e88c8372d3a6fc6b6d69b5",
+  "all_inventory_hashes_match": true,
+  "existing_synthetic_tests_passed": 19,
+  "provider_calls": 0,
+  "fresh_sources_inspected": 0,
+  "runtime_outputs_inspected": 0,
+  "frozen_protocol_edits": 0,
+  "findings": [
+    {
+      "id": "E01",
+      "target": "runtime_false_readiness",
+      "observed": "With both source fields not_stated, zero runtime observations, and action_ready=true, false readiness is reported as 0/1.",
+      "root_cause": "all_fields is computed from independently known source labels and a vacuous required-value set, then used as the runtime readiness criterion. Gold absence retroactively supplies a capability that the frozen runtime does not implement.",
+      "required_fix": "Keep gold notice completeness separate. Under this frozen runtime, no supported whole-notice/absence verification method exists, so any action_ready or ready/complete claim is unsupported readiness (or explicitly unassessable, not certified true). Do not give the runtime credit merely because the reviewer later found no field.",
+      "regression": "Both fields not_stated + empty terminal observations + action_ready=true cannot report zero false readiness; ordinary action_ready=false preserves undefined no-claims denominator."
+    },
+    {
+      "id": "E02",
+      "target": "unsupported_abstention",
+      "observed": "One correctly audited in-scope DATE accepted plus a distinct present_out_of_scope DATE with no accepted matching claim yields unsupported abstention 0/1.",
+      "root_cause": "Abstention checks any accepted claim with the same field_type, rather than the source fact/role group. Independent supported values therefore suppress credit for correctly unaccepted unsupported ones.",
+      "required_fix": "Use frozen source group IDs and postrun audit mappings to assess whether the unsupported group was accepted. A positively audited different source group must not count as acceptance of this unsupported group. Unmapped/unknown acceptance can conservatively remain unresolved for the affected field; missing terminal output still earns no abstention credit.",
+      "regression": "Distinct in-scope DATE correctly accepted + unsupported DATE left unaccepted yields 1/1; acceptance audited to the unsupported group yields 0/1; partial/no terminal yields 0/1."
+    },
+    {
+      "id": "E03",
+      "target": "distinct_audited_or_unclassified_claims and unsafe_acceptance_fraction denominator",
+      "observed": "Two distinct accepted dates 2026-10-31 and 2026-11-01, mapped to different source groups but sharing claim_group, collapse to one distinct claim. Coverage correctly remains 2/2, making the accepted-claim denominator inconsistent.",
+      "root_cause": "claim_group is trusted without a check that grouped rows represent the same value and source fact/conditions. Source distinct_value_group validation does not validate acceptance groups.",
+      "required_fix": "Fail closed when an audited claim_group combines materially different accepted values or different source fact/condition groups. Preserve duplicate native/fallback mentions of the same source fact and the existing rule that an unsafe duplicate taints its group. No new grouping inference is needed.",
+      "regression": "Different accepted values or distinct materially different source groups sharing claim_group are rejected; identical native/fallback duplicates still count once; unsafe duplicate still taints the group."
+    }
+  ],
+  "otherwise_verified": [
+    "Actual scheduled manifest count retained; missing/partial outputs stay in denominators.",
+    "Missing labels null aggregate coverage instead of shrinking schedule.",
+    "Missing/unknown audits and wrong value/role/condition/precision/scope yield unsafe acceptance.",
+    "Source conflicts and uncertainty cannot receive positive recovery credit.",
+    "EMAIL exact raw/value/source equality and valid DATE normalization checked.",
+    "Only final document files loaded; provisional model verdict files are not read.",
+    "Stage-specific recall/parser/cost metrics remain explicitly unmeasured."
+  ],
+  "next_step": "Owner resolves these three bounded metric fixes with synthetic regressions, publishes a new READY inventory, then reviewer verifies focused tests/hashes. No fresh source labeling before Freeze E."
+}

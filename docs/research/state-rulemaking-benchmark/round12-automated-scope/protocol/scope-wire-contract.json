@@ -1,0 +1,39 @@
+{
+  "schema_version": "round12.scope-span-tuples.v1",
+  "restored_schema_version": "round12.source-scope.v1",
+  "envelope_keys": [
+    "schema_version",
+    "source_text_sha256",
+    "inventory_sha256",
+    "columns",
+    "evidence_columns",
+    "scopes"
+  ],
+  "columns": [
+    "id",
+    "category",
+    "basis",
+    "reason",
+    "evidence"
+  ],
+  "evidence_columns": [
+    "start",
+    "end",
+    "occurrence"
+  ],
+  "category_codes": [
+    "required_participation",
+    "identifying_context",
+    "retained_background",
+    "unresolved_scope"
+  ],
+  "basis_codes": [
+    "participation_function",
+    "identifies_proceeding",
+    "substantive_background_only",
+    "uncertain_source_function"
+  ],
+  "row_order": "unchanged frozen A unit ID order, total exact schedule",
+  "encoding": "Exactly five values per scope row. Category and basis are independently preserved as true integer codes 0..3. Reason text unchanged. Evidence uses exact Unicode codepoint [start,end,occurrence] with end exclusive, preserving every selector and order. Envelope preserves source/inventory hashes; known C version is restored without inference. C raw/canonical outputs unchanged.",
+  "decode": "Closed fixed version/keys/columns only; no generalized object codec. Reject bool/coerced codes or offsets, unavailable/ambiguous selectors, duplicate/reordered/missing/extra IDs, invalid widths, source/inventory binding mismatch, category/basis contradiction. Reconstruct exact quotes from same full source and exact overlapping occurrence. Validate the restored known C schema. Require object and canonical-byte equality plus canonical full C SHA256 equality to frozen C; no dropped fields, defaults, semantic repair or normalization. scope_sha256 in B always hashes original canonical C, not wire."
+}

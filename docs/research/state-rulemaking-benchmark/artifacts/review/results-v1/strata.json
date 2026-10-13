@@ -1,0 +1,1613 @@
+{
+  "state": {
+    "US-CA": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "A06",
+        "A07",
+        "A08"
+      ],
+      "critical_determinate_groups": 18,
+      "arms": {
+        "native": {
+          "pass": 2,
+          "insufficient_reference": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 2,
+          "insufficient_reference": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2,
+          "insufficient_reference": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2,
+          "insufficient_reference": 1
+        }
+      }
+    },
+    "US-CO": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "B08",
+        "B09",
+        "B10"
+      ],
+      "critical_determinate_groups": 18,
+      "arms": {
+        "native": {
+          "pass": 3
+        },
+        "firecrawl_local_parse": {
+          "pass": 2,
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 3
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 3
+        }
+      }
+    },
+    "US-MA": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "B01",
+        "B02"
+      ],
+      "critical_determinate_groups": 10,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "pass": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "US-MS": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "A01",
+        "A02",
+        "A03"
+      ],
+      "critical_determinate_groups": 23,
+      "arms": {
+        "native": {
+          "operational_unusable": 3
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 3
+        },
+        "llama_agentic": {
+          "operational_unusable": 2,
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "operational_unusable": 2,
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "US-NC": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "B03",
+        "B04"
+      ],
+      "critical_determinate_groups": 11,
+      "arms": {
+        "native": {
+          "pass": 1,
+          "content_fail": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1,
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "US-NY": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "A09",
+        "A10"
+      ],
+      "critical_determinate_groups": 12,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1,
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "US-TX": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "critical_determinate_groups": 20,
+      "arms": {
+        "native": {
+          "pass": 3
+        },
+        "firecrawl_local_parse": {
+          "pass": 1,
+          "content_fail": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 3
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 3
+        }
+      }
+    },
+    "US-WA": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "A04",
+        "A05"
+      ],
+      "critical_determinate_groups": 13,
+      "arms": {
+        "native": {
+          "content_fail": 1,
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1,
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    }
+  },
+  "primary_bucket": {
+    "clean_standalone_pdf": {
+      "notice_denominator": 5,
+      "fixture_ids": [
+        "A06",
+        "A07",
+        "A08",
+        "B03",
+        "B04"
+      ],
+      "critical_determinate_groups": 29,
+      "arms": {
+        "native": {
+          "pass": 3,
+          "insufficient_reference": 1,
+          "content_fail": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 3,
+          "insufficient_reference": 1,
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 4,
+          "insufficient_reference": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 4,
+          "insufficient_reference": 1
+        }
+      }
+    },
+    "dense_register_layout": {
+      "notice_denominator": 5,
+      "fixture_ids": [
+        "A09",
+        "A10",
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "critical_determinate_groups": 32,
+      "arms": {
+        "native": {
+          "pass": 5
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 3,
+          "pass": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 5
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 5
+        }
+      }
+    },
+    "lifecycle_change": {
+      "notice_denominator": 5,
+      "fixture_ids": [
+        "A04",
+        "A05",
+        "B08",
+        "B09",
+        "B10"
+      ],
+      "critical_determinate_groups": 31,
+      "arms": {
+        "native": {
+          "content_fail": 1,
+          "pass": 4
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 2,
+          "pass": 3
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 5
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 5
+        }
+      }
+    },
+    "scanned_filled_form": {
+      "notice_denominator": 5,
+      "fixture_ids": [
+        "A01",
+        "A02",
+        "A03",
+        "B01",
+        "B02"
+      ],
+      "critical_determinate_groups": 33,
+      "arms": {
+        "native": {
+          "operational_unusable": 3,
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 3,
+          "pass": 2
+        },
+        "llama_agentic": {
+          "operational_unusable": 2,
+          "not_attempted_provider_stop": 3
+        },
+        "llama_agentic_plus": {
+          "operational_unusable": 2,
+          "not_attempted_provider_stop": 3
+        }
+      }
+    }
+  },
+  "event_type": {
+    "emergency_adoption": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "B01",
+        "B02"
+      ],
+      "critical_determinate_groups": 10,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "pass": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "final adoption": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "A01",
+        "A03"
+      ],
+      "critical_determinate_groups": 16,
+      "arms": {
+        "native": {
+          "operational_unusable": 2
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 2
+        },
+        "llama_agentic": {
+          "operational_unusable": 1,
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "operational_unusable": 1,
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "permanent_adoption": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "B10"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "proposal": {
+      "notice_denominator": 5,
+      "fixture_ids": [
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "critical_determinate_groups": 31,
+      "arms": {
+        "native": {
+          "pass": 4,
+          "content_fail": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 2,
+          "content_fail": 3
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 5
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 5
+        }
+      }
+    },
+    "proposed amendment": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "A02",
+        "A09"
+      ],
+      "critical_determinate_groups": 13,
+      "arms": {
+        "native": {
+          "operational_unusable": 1,
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 2
+        },
+        "llama_agentic": {
+          "operational_unusable": 1,
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "operational_unusable": 1,
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "proposed emergency readoption": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A08"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "proposed modification": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A07"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "insufficient_reference": 1
+        },
+        "firecrawl_local_parse": {
+          "insufficient_reference": 1
+        },
+        "llama_agentic": {
+          "insufficient_reference": 1
+        },
+        "llama_agentic_plus": {
+          "insufficient_reference": 1
+        }
+      }
+    },
+    "proposed modification/continuation": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A06"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "proposed rulemaking on petition": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A10"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "termination": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "B08",
+        "B09"
+      ],
+      "critical_determinate_groups": 12,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "pass": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "withdrawal": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "A04",
+        "A05"
+      ],
+      "critical_determinate_groups": 13,
+      "arms": {
+        "native": {
+          "content_fail": 1,
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1,
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    }
+  },
+  "template_family": {
+    "CO-Permanent-Rules-Adopted": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "B10"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "CO-Terminated-Rulemaking": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "B08",
+        "B09"
+      ],
+      "critical_determinate_groups": 12,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "pass": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "MA-Regulation-Filing": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "B01",
+        "B02"
+      ],
+      "critical_determinate_groups": 10,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "pass": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "MS-SOS-APA-001": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "A01",
+        "A02",
+        "A03"
+      ],
+      "critical_determinate_groups": 23,
+      "arms": {
+        "native": {
+          "operational_unusable": 3
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 3
+        },
+        "llama_agentic": {
+          "operational_unusable": 2,
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "operational_unusable": 2,
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "NC-Form-300": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "B04"
+      ],
+      "critical_determinate_groups": 5,
+      "arms": {
+        "native": {
+          "content_fail": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "NC-agency-notice": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "B03"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "NY-register-two-column": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "A09",
+        "A10"
+      ],
+      "critical_determinate_groups": 12,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1,
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "TX-Register-proposed-rule": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "critical_determinate_groups": 20,
+      "arms": {
+        "native": {
+          "pass": 3
+        },
+        "firecrawl_local_parse": {
+          "pass": 1,
+          "content_fail": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 3
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 3
+        }
+      }
+    },
+    "unassigned": {
+      "notice_denominator": 5,
+      "fixture_ids": [
+        "A04",
+        "A05",
+        "A06",
+        "A07",
+        "A08"
+      ],
+      "critical_determinate_groups": 31,
+      "arms": {
+        "native": {
+          "content_fail": 1,
+          "pass": 3,
+          "insufficient_reference": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1,
+          "pass": 3,
+          "insufficient_reference": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 4,
+          "insufficient_reference": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 4,
+          "insufficient_reference": 1
+        }
+      }
+    }
+  },
+  "layout_features": {
+    "X choices, filing stamp": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A02"
+      ],
+      "critical_determinate_groups": 7,
+      "arms": {
+        "native": {
+          "operational_unusable": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "operational_unusable": 1
+        },
+        "llama_agentic_plus": {
+          "operational_unusable": 1
+        }
+      }
+    },
+    "blank fields": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "B01",
+        "B02"
+      ],
+      "critical_determinate_groups": 10,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "pass": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "bracketed deletions/italic additions": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A09"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "checkboxes": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "B03",
+        "B04"
+      ],
+      "critical_determinate_groups": 11,
+      "arms": {
+        "native": {
+          "pass": 1,
+          "content_fail": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1,
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "clean born-digital four-page standalone notice": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A08"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "clean born-digital two-page letter": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A06"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "clean born-digital two-page notice": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A07"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "insufficient_reference": 1
+        },
+        "firecrawl_local_parse": {
+          "insufficient_reference": 1
+        },
+        "llama_agentic": {
+          "insufficient_reference": 1
+        },
+        "llama_agentic_plus": {
+          "insufficient_reference": 1
+        }
+      }
+    },
+    "colored filing stamp": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A03"
+      ],
+      "critical_determinate_groups": 8,
+      "arms": {
+        "native": {
+          "operational_unusable": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "contradictory historical date": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A07"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "insufficient_reference": 1
+        },
+        "firecrawl_local_parse": {
+          "insufficient_reference": 1
+        },
+        "llama_agentic": {
+          "insufficient_reference": 1
+        },
+        "llama_agentic_plus": {
+          "insufficient_reference": 1
+        }
+      }
+    },
+    "cross-page continuation": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "critical_determinate_groups": 20,
+      "arms": {
+        "native": {
+          "pass": 3
+        },
+        "firecrawl_local_parse": {
+          "pass": 1,
+          "content_fail": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 3
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 3
+        }
+      }
+    },
+    "current and prior comment close roles": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A06"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "dense two-column register": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "A09",
+        "A10"
+      ],
+      "critical_determinate_groups": 12,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1,
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "embedded native text": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "B01",
+        "B02"
+      ],
+      "critical_determinate_groups": 10,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "pass": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "filed line and certification footer": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A05"
+      ],
+      "critical_determinate_groups": 7,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "filled form": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "B01",
+        "B02"
+      ],
+      "critical_determinate_groups": 10,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "pass": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "filled notice": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "B04"
+      ],
+      "critical_determinate_groups": 5,
+      "arms": {
+        "native": {
+          "content_fail": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "final-column X choices and fixed effective date": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A03"
+      ],
+      "critical_determinate_groups": 8,
+      "arms": {
+        "native": {
+          "operational_unusable": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "handwritten signature, X choices, colored filing stamp": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A01"
+      ],
+      "critical_determinate_groups": 8,
+      "arms": {
+        "native": {
+          "operational_unusable": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "operational_unusable": 1
+        },
+        "llama_agentic_plus": {
+          "operational_unusable": 1
+        }
+      }
+    },
+    "image-only scanned SOS APA Form 001": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "A01",
+        "A02",
+        "A03"
+      ],
+      "critical_determinate_groups": 23,
+      "arms": {
+        "native": {
+          "operational_unusable": 3
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 3
+        },
+        "llama_agentic": {
+          "operational_unusable": 2,
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "operational_unusable": 2,
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "label/value layout": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "B08",
+        "B09",
+        "B10"
+      ],
+      "critical_determinate_groups": 18,
+      "arms": {
+        "native": {
+          "pass": 3
+        },
+        "firecrawl_local_parse": {
+          "pass": 2,
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 3
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 3
+        }
+      }
+    },
+    "lifecycle event": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "B08",
+        "B09",
+        "B10"
+      ],
+      "critical_determinate_groups": 18,
+      "arms": {
+        "native": {
+          "pass": 3
+        },
+        "firecrawl_local_parse": {
+          "pass": 2,
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 3
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 3
+        }
+      }
+    },
+    "lists and underlined/struck presentation conventions": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A07"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "insufficient_reference": 1
+        },
+        "firecrawl_local_parse": {
+          "insufficient_reference": 1
+        },
+        "llama_agentic": {
+          "insufficient_reference": 1
+        },
+        "llama_agentic_plus": {
+          "insufficient_reference": 1
+        }
+      }
+    },
+    "marked hearing box and filled clock": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A02"
+      ],
+      "critical_determinate_groups": 7,
+      "arms": {
+        "native": {
+          "operational_unusable": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "operational_unusable": 1
+        },
+        "llama_agentic_plus": {
+          "operational_unusable": 1
+        }
+      }
+    },
+    "native-text letter": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A04"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "content_fail": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "neighboring notice begins in right column": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A09"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "neighboring notices": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "critical_determinate_groups": 20,
+      "arms": {
+        "native": {
+          "pass": 3
+        },
+        "firecrawl_local_parse": {
+          "pass": 1,
+          "content_fail": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 3
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 3
+        }
+      }
+    },
+    "p2 two contact columns": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A08"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "planned submission vs relative close": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A08"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "repeated inconsistent printed year": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A08"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "rule text attachment": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "B03"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "rule text strikeouts": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "critical_determinate_groups": 20,
+      "arms": {
+        "native": {
+          "pass": 3
+        },
+        "firecrawl_local_parse": {
+          "pass": 1,
+          "content_fail": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 3
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 3
+        }
+      }
+    },
+    "signature and bottom filing-stamp graphic": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A04"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "content_fail": 1
+        },
+        "firecrawl_local_parse": {
+          "content_fail": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "signature/stamp image": {
+      "notice_denominator": 2,
+      "fixture_ids": [
+        "B01",
+        "B02"
+      ],
+      "critical_determinate_groups": 10,
+      "arms": {
+        "native": {
+          "pass": 2
+        },
+        "firecrawl_local_parse": {
+          "pass": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 2
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 2
+        }
+      }
+    },
+    "single-column notice": {
+      "notice_denominator": 5,
+      "fixture_ids": [
+        "B03",
+        "B04",
+        "B08",
+        "B09",
+        "B10"
+      ],
+      "critical_determinate_groups": 29,
+      "arms": {
+        "native": {
+          "pass": 4,
+          "content_fail": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 3,
+          "content_fail": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 5
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 5
+        }
+      }
+    },
+    "single-column register notice": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A05"
+      ],
+      "critical_determinate_groups": 7,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "target complete in right column": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A10"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "two neighboring notices": {
+      "notice_denominator": 1,
+      "fixture_ids": [
+        "A10"
+      ],
+      "critical_determinate_groups": 6,
+      "arms": {
+        "native": {
+          "pass": 1
+        },
+        "firecrawl_local_parse": {
+          "pass": 1
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 1
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 1
+        }
+      }
+    },
+    "two-column dense": {
+      "notice_denominator": 3,
+      "fixture_ids": [
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "critical_determinate_groups": 20,
+      "arms": {
+        "native": {
+          "pass": 3
+        },
+        "firecrawl_local_parse": {
+          "pass": 1,
+          "content_fail": 2
+        },
+        "llama_agentic": {
+          "not_attempted_provider_stop": 3
+        },
+        "llama_agentic_plus": {
+          "not_attempted_provider_stop": 3
+        }
+      }
+    }
+  },
+  "warning": "Layout features overlap; no independent-trial inference. Cluster evidence retained in frozen review/cluster-ledger.json. Strata are diagnostic counts, not population estimates."
+}

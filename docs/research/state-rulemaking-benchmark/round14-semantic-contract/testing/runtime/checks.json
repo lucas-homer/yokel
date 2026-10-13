@@ -1,0 +1,155 @@
+{
+  "runtime_READY": {
+    "entries": 46,
+    "mismatches": []
+  },
+  "code-pins.json": {
+    "entries": 7,
+    "mismatches": []
+  },
+  "input-pins.json": {
+    "entries": 70,
+    "mismatches": []
+  },
+  "dependency-pins.json": {
+    "entries": 8831,
+    "mismatches": []
+  },
+  "source": {
+    "entries": 7,
+    "mismatches": []
+  },
+  "protocol-revised": {
+    "entries": 26,
+    "mismatches": []
+  },
+  "implementation_release": {
+    "entries": 10,
+    "mismatches": []
+  },
+  "protocol_review": {
+    "entries": 1,
+    "mismatches": []
+  },
+  "prior_baseline": {
+    "entries": 7063,
+    "mismatches": [],
+    "sha256": "d8226ba085e10d18a4065bf81e8ef5370f9c863355b008e0200f0e0ddbeef71d"
+  },
+  "tests": {
+    "command": [
+      "/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "-I",
+      "-S",
+      "-B",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/runtime/test_runtime.py"
+    ],
+    "exit_code": 0,
+    "evidence": "test-output.txt"
+  },
+  "preflight": {
+    "command": [
+      "/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "-I",
+      "-S",
+      "-B",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/runtime/adapter.py",
+      "--check"
+    ],
+    "exit_code": 0,
+    "evidence": "preflight-output.txt",
+    "result": {
+      "aggregate_max_nanousd": 1905990718,
+      "body_bytes": 28307,
+      "credentials_read": false,
+      "guarded_bytes": 29331,
+      "prior": {
+        "baseline_rows": 7063,
+        "historical_rounds": [
+          {
+            "operations": [
+              {
+                "budget_charge_nanousd": 161920000,
+                "reserved_nanousd": 161920000,
+                "stage": "stage-a",
+                "state": "validated_frozen"
+              },
+              {
+                "budget_charge_nanousd": 161920000,
+                "reserved_nanousd": 161920000,
+                "stage": "stage-b",
+                "state": "validated_frozen"
+              }
+            ],
+            "round": "round10-source-first"
+          },
+          {
+            "operations": [
+              {
+                "budget_charge_nanousd": 161920000,
+                "reserved_nanousd": 161920000,
+                "stage": "D",
+                "state": "failed_or_uncertain"
+              },
+              {
+                "budget_charge_nanousd": 161920000,
+                "reserved_nanousd": 161920000,
+                "stage": "A",
+                "state": "failed_or_uncertain"
+              }
+            ],
+            "round": "round12-automated-scope"
+          },
+          {
+            "budget_charge_nanousd": 200000000,
+            "round": "round13-compact-inventory",
+            "state": "validated_frozen"
+          }
+        ],
+        "invoice_verified": false,
+        "prior_nanousd": 1705990718
+      },
+      "provider_calls": 0,
+      "release_preflight_passed": true,
+      "request_sha256": "91ed8a79712125caf66b1672e625b8e57e557b81eccfa485396171cc10d54c4f",
+      "source_ready_sha256": "9f73ded9eb6de4a9a26efd8e376ea9b618693306915f350fa4e715b3cf7a6b74",
+      "source_sha256": "5b8b221224c799e4950dbddf6df8bbf0652ee90db7150f1ed16a332b137df55f",
+      "span_count": 108,
+      "state": "passed"
+    }
+  },
+  "static_transport": {
+    "execute_once_transport_call_sites": 1,
+    "execute_once_loop_nodes": 0,
+    "post_once_open_call_sites": 1,
+    "post_once_loop_nodes": 0,
+    "redirect_class": "class NoRedirect(urllib.request.HTTPRedirectHandler):\n    def redirect_request(self,*args,**kwargs):raise c.Denied()"
+  },
+  "budget": {
+    "prior_nanousd": 1705990718,
+    "reserve_nanousd": 200000000,
+    "ceiling_nanousd": 2000000000,
+    "aggregate_reserved_nanousd": 1905990718,
+    "remaining_under_ceiling_nanousd": 94009282,
+    "ledger": "max(reserve, recoverable reported/rate costs, saved result/stop debit); state charge_recorded; separate completed/stop attestation",
+    "evidence_tests": [
+      "test_02_success_charge_ledger_completion_concordance_and_no_resume",
+      "test_04_transport_uncertainty_no_retry_secret_exception_not_logged",
+      "test_05_budget_refusal_and_request_overflow_no_POST",
+      "test_06_reported_and_rate_overruns_remain_charged",
+      "test_08_receipt_write_failures_latched_and_charge_ledger_never_claims_success"
+    ]
+  },
+  "late_binding": {
+    "pure_unsigned_validator_compatibility_test": "test_17_synthetic_unsigned_job_unchanged_pure_validator",
+    "method": "Extract exact-pinned pure validator functions by AST, patch prepare put/digest to in-memory capture, synthetic authorization, no signer/native executor invocation.",
+    "live_entry_guard_test": "test_18_live_entry_requires_missing_primary_late_bindings"
+  },
+  "runtime_READY_sha256": "1308fcc8bb0e9a255817e362b5f2361fcbfca147d4328e6951eb4b4b32b442d2",
+  "source_reference_unchanged": true,
+  "final_runtime_READY_files": {
+    "entries": 46,
+    "mismatches": []
+  },
+  "completed_utc": "2026-10-13T02:18:50.987374+00:00"
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": "round10.semantic.provenance.v1",
+  "created_utc": "2026-10-12T05:45:29.595653+00:00",
+  "reviewer": "Independent AI semantic reviewer with explicit prior audit/response exposure; not blind or human gold",
+  "freeze_sha256": "d6d3d600146539f9ac0abe3c7a3eae6d78b682cf4425017ab54919ae922ce15a",
+  "A_response_sha256": "cd0e50a402c8aec6182d701f5a27abfcc978a6e1ebccc438506d5287b4e3dbeb",
+  "B_response_sha256": "8ff5b9449259ff8d3d9d1180e0f7bb7cae2d15ed958dcd198b007d13d05b76a6",
+  "A_inventory_sha256": "65648a4230356708329a1bd07dcfa736a0154e2a9e27a47a75bee3825e74b820",
+  "B_mapping_sha256": "79212e224fc904c1187f24ecef8b0cce8c486996b896acfa032154c9a65209a8",
+  "original_record_sha256": "315ddda2dd8012856463df1f31122dc8952dfcc050e152fcd6055bb3e2d0368a",
+  "source_reference_sha256": "680fba60db84a1d3f31789350c5d7351e90d59841d7cfb70b15b515a27cffabe",
+  "prior_matching_audit_sha256": "295b0cea69077f928f97adbfd59f8de4cd9e6b31701a2622b6bfebe1dc15cd11",
+  "prereview_pins": {
+    "baseline-evidence.json": "b3a19bec9bb5ae5490e2c9784498da7efcfbd810a25bafdbc3b43e2ab87d2275",
+    "input-pins.json": "46a12873f73c6b57eeb0090002bfd715bbc9cade421b833612e6477ced468321",
+    "pre-response-checklist.json": "a14297c8cd6556ad247a911aef17ba78071323f1a5b67639bf2b37fadb1b465f",
+    "PRE_RESPONSE_READY.json": "308dd1a70ccbedebbe50e3b9e45eb4f0b8923414b7c543828d30abb938fec570"
+  },
+  "request_separation": {
+    "stage_A": "Full inspected request has exactly source_text and its binding in user data, with neutral source-only instructions/schema; no candidate record, candidate ID schedule, prior outputs or audit included.",
+    "stage_B": "Full inspected request has source, frozen A lossless tuple encoding, original-record operative projection and bindings; no original source-label/audit or R9 response included. Model receives neutral general failure-mode guidance in B, not WI expected answers.",
+    "reviewer_exposure": "Reviewer has seen the original source labels/audit, prior R8/R9 responses and known defects before this run, explicitly carried by preregistration. This is not clean blind review or human gold. Protocol design itself is informed by prior development failures; no causal attribution to staging alone."
+  },
+  "all_A_units_reviewed": 46,
+  "all_B_reasons_and_pointers_reviewed": 46,
+  "all_original_source_units_reviewed": 31,
+  "write_scope": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round10-source-first/semantic-review",
+  "additional_read_only_artifact_pins": [
+    {
+      "path": "docs/research/state-rulemaking-benchmark/round10-source-first/protocol/offline-regressions.json",
+      "sha256": "5dac6067e65dbbf17062182c0e5629aee28cb3b85761522fe231071eb6bbbfce"
+    },
+    {
+      "path": "docs/research/state-rulemaking-benchmark/round10-source-first/protocol/authoring-checks.json",
+      "sha256": "0e558bee5f4e98ca8bff1c7199a43f6c8021b55c1fe7c4f942f0c66996cdcb1d"
+    },
+    {
+      "path": "docs/research/state-rulemaking-benchmark/round10-source-first/review/protocol-checks-final.json",
+      "sha256": "00a46ba2b3cecb8278a81e7bac886136ac340582b7b8cae679f352186e935a2f"
+    },
+    {
+      "path": "docs/research/state-rulemaking-benchmark/round10-source-first/runtime/test-output.txt",
+      "sha256": "4302c37195f0af3144d1022fe0810451121e68b99c305cb8832598b524812a53"
+    },
+    {
+      "path": "docs/research/state-rulemaking-benchmark/round10-source-first/runtime/check-output.txt",
+      "sha256": "bd70d29c1fc5c9636414cbc009486bd194ad1cfec0ceed906ba68a51b3013b54"
+    },
+    {
+      "path": "docs/research/state-rulemaking-benchmark/round10-source-first/review/runtime/READY.json",
+      "sha256": "aae0d321a935c2c826e466427c0a10809b9ffbbc7b43365c82c0de4f2d591d1a"
+    },
+    {
+      "path": "docs/research/state-rulemaking-benchmark/round10-source-first/review/runtime/final-pin-checks.json",
+      "sha256": "3fb88888c4055314318d0f3132953ed4fd5ef1936084ecc15b8746e7e057c452"
+    }
+  ]
+}

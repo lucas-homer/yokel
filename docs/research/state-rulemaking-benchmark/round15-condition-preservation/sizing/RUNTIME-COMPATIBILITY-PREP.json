@@ -1,0 +1,37 @@
+{
+  "actual_candidate_schema_checked": false,
+  "credentials_read": false,
+  "extraction": "Only unchanged Denied/require/check_schema/schema_errors AST definitions; no runtime/adapter/signer module import or execution.",
+  "hypothetical_keyword_probes": {
+    "anyOf_union": {
+      "accepted": false,
+      "error_type": "Denied"
+    },
+    "boolean_items_closed": {
+      "accepted": false,
+      "error_type": "Denied"
+    },
+    "homogeneous_items_control": {
+      "accepted": true
+    },
+    "items_list_tuple": {
+      "accepted": false,
+      "error_type": "Denied"
+    },
+    "pattern_node_id": {
+      "accepted": false,
+      "error_type": "Denied"
+    },
+    "prefixItems_tuple": {
+      "accepted": false,
+      "error_type": "Denied"
+    }
+  },
+  "minimal_change_requirement": "New reviewed runtime checker must handle the actual candidate schema position/union/bool/reference/depth forms and enforce them consistently in validation, or protocol owner must provide an equally strict reviewed compatible schema/wire. Do not drop keyword rejection or bypass checker. No runtime implementation here.",
+  "prior_R14_files_verified": 221,
+  "provider_calls": 0,
+  "provider_compatibility": "unverified_no_provider_call",
+  "runtime_common_sha256": "a341e11b6b0d49b130c28d8881ef4b71748161bcfc0d15c41384bc150f35bdc5",
+  "schema_version": "round15.sizing.runtime-schema-preparation.v1",
+  "status": "PREPARATION_ACTUAL_CANDIDATE_SCHEMA_PENDING"
+}

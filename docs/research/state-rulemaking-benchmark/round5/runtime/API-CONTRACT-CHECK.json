@@ -1,0 +1,33 @@
+{
+  "checked_date": "2026-10-07",
+  "sources": [
+    "https://docs.typesafe.ai/api",
+    "https://docs.typesafe.ai/primitives/choice",
+    "https://docs.typesafe.ai/models",
+    "https://docs.typesafe.ai/concepts/state",
+    "https://docs.typesafe.ai/cookbooks/pre_parsed_value_extraction_cookbook"
+  ],
+  "endpoint": "https://api.typesafe.ai/v1/systemone",
+  "request_fields": [
+    "model",
+    "state",
+    "questions"
+  ],
+  "model": "jev-1.13.0",
+  "question_type": "choice",
+  "response_fields": [
+    "model",
+    "answers",
+    "usage"
+  ],
+  "choice_answer_fields": [
+    "type",
+    "choice",
+    "probabilities",
+    "confidence"
+  ],
+  "input_usd_per_token": 4.2e-08,
+  "output_usd_per_token": 0,
+  "automatic_retries": false,
+  "notes": "Live official public documentation only; no authenticated provider requests. Frozen four-rubric adapter unchanged; actual full-notice/unconditional-DATE policy prefix pinned separately."
+}

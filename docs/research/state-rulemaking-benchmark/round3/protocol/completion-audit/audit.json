@@ -1,0 +1,985 @@
+{
+  "version": "round3-independent-completion-audit-v1",
+  "audited_at_utc": "2026-10-07T04:53:29.964975+00:00",
+  "status": "results_and_costs_verified_with_disclosed_ancillary_freeze_mismatch",
+  "provider_calls_by_auditor": 0,
+  "freeze": {
+    "manifest_sha256": "8fccee7f1b96af7143cf7aeb6f92225f3d959e4e4a33833677199fddd15579b1",
+    "entries": 12,
+    "unchanged": 11,
+    "mismatches": [
+      "protocol/challenge-label-review.json"
+    ],
+    "runtime_labels_code_and_rubrics_unchanged": true,
+    "whole_manifest_integrity_pass": false
+  },
+  "raw_validation": {
+    "paired_scheduled_cases": 16,
+    "total_successful_provider_responses": 30,
+    "deterministic_no_call_records": 2,
+    "all_input_copies_match_staged_runtime": true,
+    "all_request_hashes_and_bytes_reconstructed": true,
+    "all_response_hashes_and_parsed_results_reproduced": true,
+    "all_returned_model_identifiers_match_requested": true,
+    "semantic_payload_state_identical": true,
+    "staged_evaluator_labels_present": false,
+    "OS_level_read_isolation_verified": false,
+    "isolation_note": "Staged directory has runtime input and verifier code only; wrapper does not demonstrate an OS read sandbox. Audited payload allowlist and code keep labels out, but directory separation alone is not enforced filesystem isolation.",
+    "recorded_retries": 0
+  },
+  "arms": {
+    "jev": {
+      "requested_returned_model": "jev-1.13.0",
+      "scheduled": 16,
+      "successful_provider_responses": 15,
+      "deterministic_no_call": [
+        "C007"
+      ],
+      "operational_errors": 0,
+      "recorded_retries": 0,
+      "primary_gate_ambiguous_excluded": [
+        "C016"
+      ],
+      "challenge_escalation_including_preblock": {
+        "numerator": 9,
+        "denominator": 10
+      },
+      "model_evaluated_challenge_escalation": {
+        "numerator": 8,
+        "denominator": 9
+      },
+      "correct_controls_accepted": {
+        "numerator": 3,
+        "denominator": 4
+      },
+      "resolved_text_gate_accuracy_including_preblock": {
+        "numerator": 13,
+        "denominator": 15
+      },
+      "resolved_model_only_text_gate_accuracy": {
+        "numerator": 12,
+        "denominator": 14
+      },
+      "text_acceptances_excluding_ambiguous": 5,
+      "accepted_known_source_incorrect_cases": [
+        "C002",
+        "C003"
+      ],
+      "accepted_unresolved_by_source_cases": [],
+      "accepted_source_correct_but_text_unsupported_cases": [],
+      "source_conflicts_escalated": {
+        "numerator": 2,
+        "denominator": 2
+      },
+      "source_conflicts_explicitly_labeled_present": {
+        "numerator": 2,
+        "denominator": 2
+      },
+      "false_present_conflict_labels": [
+        "C005",
+        "C009",
+        "C011"
+      ],
+      "dimension_accuracy_resolved_model_only": {
+        "support": {
+          "numerator": 12,
+          "denominator": 14
+        },
+        "role": {
+          "numerator": 11,
+          "denominator": 14
+        },
+        "condition": {
+          "numerator": 9,
+          "denominator": 14
+        },
+        "conflict": {
+          "numerator": 8,
+          "denominator": 14
+        }
+      },
+      "returned_input_tokens": 36172,
+      "returned_output_tokens": 2611,
+      "returned_cost_usd": null,
+      "token_price_equivalent_usd": 0.001519224,
+      "price_equivalent_is_invoice": false,
+      "observed_request_elapsed_seconds": {
+        "count": 15,
+        "sum": 1.8888616259209812,
+        "median": 0.12346533313393593,
+        "min": 0.0988321250770241,
+        "max": 0.21449354197829962
+      },
+      "evaluator_reproduced_exactly": true
+    },
+    "openrouter": {
+      "requested_returned_model": "openai/gpt-4.1-nano",
+      "scheduled": 16,
+      "successful_provider_responses": 15,
+      "deterministic_no_call": [
+        "C007"
+      ],
+      "operational_errors": 0,
+      "recorded_retries": 0,
+      "primary_gate_ambiguous_excluded": [
+        "C016"
+      ],
+      "challenge_escalation_including_preblock": {
+        "numerator": 3,
+        "denominator": 10
+      },
+      "model_evaluated_challenge_escalation": {
+        "numerator": 2,
+        "denominator": 9
+      },
+      "correct_controls_accepted": {
+        "numerator": 4,
+        "denominator": 4
+      },
+      "resolved_text_gate_accuracy_including_preblock": {
+        "numerator": 8,
+        "denominator": 15
+      },
+      "resolved_model_only_text_gate_accuracy": {
+        "numerator": 7,
+        "denominator": 14
+      },
+      "text_acceptances_excluding_ambiguous": 12,
+      "accepted_known_source_incorrect_cases": [
+        "C002",
+        "C003",
+        "C005",
+        "C009",
+        "C011"
+      ],
+      "accepted_unresolved_by_source_cases": [
+        "C008",
+        "C013"
+      ],
+      "accepted_source_correct_but_text_unsupported_cases": [
+        "C006"
+      ],
+      "source_conflicts_escalated": {
+        "numerator": 2,
+        "denominator": 2
+      },
+      "source_conflicts_explicitly_labeled_present": {
+        "numerator": 0,
+        "denominator": 2
+      },
+      "false_present_conflict_labels": [],
+      "dimension_accuracy_resolved_model_only": {
+        "support": {
+          "numerator": 6,
+          "denominator": 14
+        },
+        "role": {
+          "numerator": 8,
+          "denominator": 14
+        },
+        "condition": {
+          "numerator": 9,
+          "denominator": 14
+        },
+        "conflict": {
+          "numerator": 12,
+          "denominator": 14
+        }
+      },
+      "returned_input_tokens": 22756,
+      "returned_output_tokens": 320,
+      "returned_cost_usd": 0.0024035999999999997,
+      "token_price_equivalent_usd": 0.0024036,
+      "price_equivalent_is_invoice": false,
+      "observed_request_elapsed_seconds": {
+        "count": 15,
+        "sum": 9.966842917492613,
+        "median": 0.637670167023316,
+        "min": 0.5429026670753956,
+        "max": 0.9861570000648499
+      },
+      "evaluator_reproduced_exactly": true
+    }
+  },
+  "rows": [
+    {
+      "case_id": "C001",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": false,
+      "correct_control": true,
+      "text_accepted": true,
+      "expected_text_accept": true,
+      "source_fidelity_label": "correct",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "correct_control"
+    },
+    {
+      "case_id": "C002",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": false,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": false,
+        "role": false,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "projection_of_retained_parser_error"
+    },
+    {
+      "case_id": "C003",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": false,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": true,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "projection_of_retained_parser_error"
+    },
+    {
+      "case_id": "C004",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": false,
+      "correct_control": true,
+      "text_accepted": false,
+      "expected_text_accept": true,
+      "source_fidelity_label": "correct",
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": false,
+        "conflict": true
+      },
+      "candidate_origin": "correct_control"
+    },
+    {
+      "case_id": "C005",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "present",
+        "role": "matched",
+        "support": "contradicted"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": false,
+        "condition": false,
+        "conflict": false
+      },
+      "candidate_origin": "projection_of_retained_parser_error"
+    },
+    {
+      "case_id": "C006",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "correct_but_runtime_unsupported",
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "insufficient",
+        "role": "mismatched",
+        "support": "insufficient"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": false,
+        "conflict": false
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C007",
+      "arm": "jev",
+      "provider_evaluated": false,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "insufficient",
+        "conflict": "insufficient",
+        "role": "insufficient",
+        "support": "insufficient"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": false,
+        "conflict": false
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C008",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "unresolved_by_source",
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "insufficient",
+        "role": "insufficient",
+        "support": "insufficient"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": false,
+        "conflict": false
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C009",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "present",
+        "role": "mismatched",
+        "support": "contradicted"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": false
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C010",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": false,
+      "correct_control": true,
+      "text_accepted": true,
+      "expected_text_accept": true,
+      "source_fidelity_label": "correct",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "correct_control"
+    },
+    {
+      "case_id": "C011",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "present",
+        "role": "mismatched",
+        "support": "contradicted"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": false,
+        "condition": true,
+        "conflict": false
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C012",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": false,
+      "correct_control": true,
+      "text_accepted": true,
+      "expected_text_accept": true,
+      "source_fidelity_label": "correct",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "correct_control"
+    },
+    {
+      "case_id": "C013",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "unresolved_by_source",
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "insufficient",
+        "role": "mismatched",
+        "support": "insufficient"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": false
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C014",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "unresolved_source_conflict",
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "present",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": false,
+        "role": true,
+        "condition": false,
+        "conflict": true
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C015",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "unresolved_source_conflict",
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "present",
+        "role": "matched",
+        "support": "insufficient"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C016",
+      "arm": "jev",
+      "provider_evaluated": true,
+      "resolved_primary_gate": false,
+      "expected_challenge_escalation": false,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": false,
+      "source_fidelity_label": "correct_but_runtime_unsupported",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "projection_from_retained_role_loss"
+    },
+    {
+      "case_id": "C001",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": false,
+      "correct_control": true,
+      "text_accepted": true,
+      "expected_text_accept": true,
+      "source_fidelity_label": "correct",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "correct_control"
+    },
+    {
+      "case_id": "C002",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": false,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": false,
+        "role": false,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "projection_of_retained_parser_error"
+    },
+    {
+      "case_id": "C003",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": false,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": true,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "projection_of_retained_parser_error"
+    },
+    {
+      "case_id": "C004",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": false,
+      "correct_control": true,
+      "text_accepted": true,
+      "expected_text_accept": true,
+      "source_fidelity_label": "correct",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "correct_control"
+    },
+    {
+      "case_id": "C005",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": false,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": false,
+        "role": false,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "projection_of_retained_parser_error"
+    },
+    {
+      "case_id": "C006",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": false,
+      "source_fidelity_label": "correct_but_runtime_unsupported",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": false,
+        "role": false,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C007",
+      "arm": "openrouter",
+      "provider_evaluated": false,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "insufficient",
+        "conflict": "insufficient",
+        "role": "insufficient",
+        "support": "insufficient"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": false,
+        "conflict": false
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C008",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": false,
+      "source_fidelity_label": "unresolved_by_source",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": false,
+        "role": false,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C009",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": false,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": false,
+        "role": false,
+        "condition": false,
+        "conflict": true
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C010",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": false,
+      "correct_control": true,
+      "text_accepted": true,
+      "expected_text_accept": true,
+      "source_fidelity_label": "correct",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "correct_control"
+    },
+    {
+      "case_id": "C011",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": false,
+      "source_fidelity_label": "incorrect",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": false,
+        "role": true,
+        "condition": false,
+        "conflict": true
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C012",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": false,
+      "correct_control": true,
+      "text_accepted": true,
+      "expected_text_accept": true,
+      "source_fidelity_label": "correct",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "correct_control"
+    },
+    {
+      "case_id": "C013",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": false,
+      "source_fidelity_label": "unresolved_by_source",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": false,
+        "role": false,
+        "condition": false,
+        "conflict": true
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C014",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "unresolved_source_conflict",
+      "labels": {
+        "condition": "omitted_or_changed",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "contradicted"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": false,
+        "role": true,
+        "condition": false,
+        "conflict": false
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C015",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": true,
+      "expected_challenge_escalation": true,
+      "correct_control": false,
+      "text_accepted": false,
+      "expected_text_accept": false,
+      "source_fidelity_label": "unresolved_source_conflict",
+      "labels": {
+        "condition": "insufficient",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "insufficient"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": false,
+        "conflict": false
+      },
+      "candidate_origin": "controlled_candidate_mutation"
+    },
+    {
+      "case_id": "C016",
+      "arm": "openrouter",
+      "provider_evaluated": true,
+      "resolved_primary_gate": false,
+      "expected_challenge_escalation": false,
+      "correct_control": false,
+      "text_accepted": true,
+      "expected_text_accept": false,
+      "source_fidelity_label": "correct_but_runtime_unsupported",
+      "labels": {
+        "condition": "preserved",
+        "conflict": "absent",
+        "role": "matched",
+        "support": "supported"
+      },
+      "dimension_matches_allowing_predeclared_alternatives": {
+        "support": true,
+        "role": true,
+        "condition": true,
+        "conflict": true
+      },
+      "candidate_origin": "projection_from_retained_role_loss"
+    }
+  ],
+  "interpretation_caveats": [
+    "Challenge escalation is a gate outcome, not proof that all four judgments or error reasons were correct.",
+    "Cases are reviewer-authored from selected retained spans; not observed extractor-error prevalence, automatic retrieval recall, full normalization or routing validation.",
+    "Jev only correct-control rejection is C004 under the frozen announced-range versus separate-extension scope; retain that predeclared label rather than revise from outputs.",
+    "Both arms accept C002 despite the independent supplied text spelling the email differently. Deterministic baseline checks citation exactness and candidate-value versus claim consistency, not literal candidate-value versus source email equality; this is a common guardrail gap, not evidence that exact-string checking needs a model.",
+    "Both arms accept C003 correctly as parser-text-supported, while the original source email differs. It is a source-fidelity escape and cannot be solved from this sole corrupted text alone.",
+    "Nano escalates C014/C015 but labels conflict absent; those are not successful conflict detections. Jev recognizes both but falsely labels conflicts on C005/C009/C011; safe routing alone masks dimension errors.",
+    "No probability threshold was optimized. Small selected cases do not establish calibration, deployment reliability or model superiority.",
+    "Jev returns token usage, not dollar charges. Its cost is a documented-price equivalent only. General-model returned usage.cost already includes upstream cost; do not add it again.",
+    "The historical freeze is retained with one ancillary review-note mismatch; final label decisions themselves were already bound in unchanged evaluator labels."
+  ]
+}

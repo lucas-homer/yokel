@@ -1,0 +1,49 @@
+{
+  "scope": "Independent semantic assessment of complete source and exact evidence; no keyword oracle.",
+  "representation": "Equivalent faithful wording and links allowed; authored controls are examples, not live gold.",
+  "checks": [
+    {
+      "area": "deadline_dimensions",
+      "assessment": "For each deadline, compare stated clock, timezone and timeliness basis to c/q/r. Each absent dimension must be explicitly unknown; no inferred timestamp or receipt rule. Preserve known dimensions and source-established inapplicability. Distinguish not stated from stated-but-ambiguous and source-established not applicable; preserve known5p.m./Eastern/receipt without sticky unknowns or offset conversion."
+    },
+    {
+      "area": "affected_object",
+      "assessment": "Check affected rule and historical filing identities independently. Transition explicitly targets rule; links preserve rule identity and filing context, with separately anchored filing/effective dates. A context/entity d link does not establish normative prerequisites; require explicit assertion and source basis."
+    },
+    {
+      "area": "independently_lossy_facts",
+      "assessment": "Inspect every proposition in the broad span. Independently lossy actor, phase, date, clock, jurisdiction, component, role and transition facts need independently preserved units; necessary qualifications remain attached."
+    },
+    {
+      "area": "directive_force",
+      "assessment": "Review actual action, actor, purpose and qualifications. Ambiguous force remains m5 with reason; explicit modal wording is assessed in context. Disagreement with a reference does not alone prove error."
+    },
+    {
+      "area": "whole_source",
+      "assessment": "Check background and unresolved functions alongside participation and proposed/deleted rule content. All evidence IDs cited and END do not prove discovery completeness."
+    }
+  ],
+  "negative_controls": {
+    "silently_missing_deadline_dimensions": "Semantically deficient: date-only deadline silently loses all three unknown dimensions; host still accepts.",
+    "historical_filing_replaces_affected_rule": "Semantically deficient: transition changes the affected object despite separate identities and valid links.",
+    "independently_lossy_facts_bundled": "Atomicity defect: city and province facts bundled; facts retained but independently lossy boundaries gone.",
+    "unsupported_force_certainty": "Semantically deficient: ambiguous bare directive forced mandatory without evidence.",
+    "background_dropped_but_all_spans_still_cited": "Completeness defect: background assertion lost while broad evidence spans remain covered."
+  },
+  "reporting": "Separate known omissions/contradictions, disputed interpretations and unassessable source gaps; attach exact evidence and concrete implications. Counts are bookkeeping, not accuracy denominators.",
+  "limitations": "No structured nullable deadline slots or typed context/normative edges: c/r/s must preserve states and roles, independently reviewed. Generic Claude advice is not implementation approval; future normalization needs a separate reviewed contract.",
+  "revision_checks": [
+    {
+      "area": "actor_and_atomic_consistency",
+      "assessment": "Preserve unspecified actor/reason; independent arrival/request clock and timezone facts stay linked to their qualified dates."
+    },
+    {
+      "area": "qualification_overflow",
+      "assessment": "Full overlong s/c/r controls reject at unchanged caps without mutation or clipping. Shorter semantically incomplete output needs independent rejection."
+    },
+    {
+      "area": "illustration_leakage",
+      "assessment": "Reject borrowed deadline assertion independently against unrelated archive evidence despite valid shape. Fixture data never enters prompt; future model tests require disjoint facts."
+    }
+  ]
+}

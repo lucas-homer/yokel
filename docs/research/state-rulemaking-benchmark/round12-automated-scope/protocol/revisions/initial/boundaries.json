@@ -1,0 +1,59 @@
+{
+  "stage_order": [
+    "D",
+    "A",
+    "C",
+    "B"
+  ],
+  "exact_user_fields": {
+    "D": [
+      "source_text",
+      "source_text_sha256",
+      "record_sha256",
+      "operative_record",
+      "operative_record_sha256"
+    ],
+    "A": [
+      "source_text",
+      "source_text_sha256"
+    ],
+    "C": [
+      "source_text",
+      "source_text_sha256",
+      "inventory_wire",
+      "inventory_sha256"
+    ],
+    "B": [
+      "source_text",
+      "source_text_sha256",
+      "record_sha256",
+      "operative_record",
+      "operative_record_sha256",
+      "inventory_wire",
+      "inventory_sha256",
+      "scope",
+      "scope_sha256"
+    ]
+  },
+  "forbidden_all_stages": [
+    "independent_reference",
+    "gold",
+    "reference_crosswalk",
+    "known_defects",
+    "human_scope",
+    "prior_outputs",
+    "candidate_author_notes",
+    "assessment_notes"
+  ],
+  "C_schema_id_schedule": "frozen A IDs exactly, keyed scope objects",
+  "B_schema_id_schedule": "same frozen A IDs exactly, keyed mappings",
+  "template_substitutions": {
+    "__SOURCE_SHA256__": "exact source_text UTF-8 SHA256",
+    "__RECORD_SHA256__": "original candidate canonical SHA256",
+    "__OPERATIVE_SHA256__": "complete operative projection canonical SHA256",
+    "__INVENTORY_SHA256__": "validated canonical A SHA256",
+    "__SCOPE_SHA256__": "validated canonical C full-output SHA256"
+  },
+  "isolation": "Fresh source-only A/C builders receive no candidate or D output, even though D executes first. C gets only A wire, never direct units. B gets only A/C from this arm, no direct or reference.",
+  "B_scope_transport": "unchanged complete validated C object, including binding hashes and reasons/evidence; no new scope codec"
+}

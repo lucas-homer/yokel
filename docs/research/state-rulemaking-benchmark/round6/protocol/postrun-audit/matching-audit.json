@@ -1,0 +1,1947 @@
+{
+  "schema_version": "round6.matching-audit.v1",
+  "reviewer": "Independent AI postrun semantic audit against pre-extraction image reference; no human-gold claim",
+  "documents": [
+    {
+      "document_id": "doc-9998d72f5aba",
+      "inventory": null,
+      "record": null
+    },
+    {
+      "document_id": "doc-de09ce82c4c7",
+      "inventory": {
+        "sha256": "032011263b318d0614330fed5c378fda51ae24500e32f9326ae73068e1b7131a",
+        "review_complete": true,
+        "claims": [
+          {
+            "id": "ev_hearing",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Printed public hearing on the rule; correct phase."
+          },
+          {
+            "id": "tm_hearing_date",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "date",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Monday July13,2026 ->2026-07-13 is the correct printed calendar value and hearing role. Frozen parser rejects weekday prefix; no date inference or numerical error."
+          },
+          {
+            "id": "tm_hearing_clock",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "9:30a.m. is hearing start; no timezone invented."
+          },
+          {
+            "id": "ev_written",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Advance written office-receipt phase is separate from hearing presentations."
+          },
+          {
+            "id": "tm_written_date",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "date",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Friday July10,2026 ->2026-07-10 matches printed office-receipt deadline; parser weekday restriction is a structural failure."
+          },
+          {
+            "id": "tm_written_clock",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "5p.m. binds to advance written receipt; not hearing end."
+          },
+          {
+            "id": "ev_consideration",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Source states consideration of hearing and timely written comments."
+          },
+          {
+            "id": "tm_consideration",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Correct explicit relative relation before final rule action, with no computed date."
+          },
+          {
+            "id": "ev_final_action",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Source explicitly references final action as an unscheduled endpoint."
+          },
+          {
+            "id": "route_hearing",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Level2Room2 venue correctly differs from letterheadL3 office."
+          },
+          {
+            "id": "route_oral",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Oral presentation at hearing; correct alternatives with written presentation."
+          },
+          {
+            "id": "route_hearing_written",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Written presentation at hearing preserved beyond earlier advance-receipt cutoff."
+          },
+          {
+            "id": "route_postal",
+            "categories": [
+              "fact",
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Direct postal route includes all printed destination components and ATTN:Rules; this also preserves the route-conditional recipient instruction."
+          },
+          {
+            "id": "route_email",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "email",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Exact Paul.Nick email is the alternate direct written route."
+          },
+          {
+            "id": "route_rule_web",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Printed Register rules/search URL correctly retained as viewing, not submission."
+          },
+          {
+            "id": "route_phone",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Letterhead telephone remains general contact."
+          },
+          {
+            "id": "route_fax",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Letterhead fax remains general contact, not direct submission."
+          },
+          {
+            "id": "route_agency_web",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "General agency website retained as information contact."
+          },
+          {
+            "id": "route_header_address",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "All address components and general-office role are source-supported. Semicolon joins noncontiguous native columns and triggers the exact-literal guard; no invented address."
+          },
+          {
+            "id": "req_attend",
+            "categories": [
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Optional public attendance entitlement matches notice."
+          },
+          {
+            "id": "req_hearing_procedure",
+            "categories": [
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Affected-person wording, personal/attorney/both representation, oral/written modes and optional witnesses/evidence all retained."
+          },
+          {
+            "id": "req_receipt",
+            "categories": [
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Conditional assurance of consideration retains the mandatory receipt cutoff within advance-written phase; does not declare later hearing writing forbidden."
+          },
+          {
+            "id": "req_consideration",
+            "categories": [
+              "disclosure",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Consideration-policy content/scope is source-correct; its semantic_class field is separately audited as incorrect."
+          },
+          {
+            "id": "req_rule_view",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Accurately limits rule-viewing URL to ancillary use."
+          },
+          {
+            "id": "req_header_contacts",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Correctly excludes letterhead phone/fax/web/address from submission routes."
+          },
+          {
+            "id": "ident_agency",
+            "categories": [
+              "identity",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Correct agency, shared across notice events."
+          },
+          {
+            "id": "ident_rule",
+            "categories": [
+              "identity",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Correct102-5-05 amendment identity linked to participation."
+          },
+          {
+            "id": "ident_notice",
+            "categories": [
+              "identity",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Generic public-hearing title faithfully retained, not an invented docket number."
+          },
+          {
+            "id": "ident_authority",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Chapter119 is explicitly a legal reference; no invented filing obligation."
+          },
+          {
+            "id": "unc_header_date",
+            "categories": [
+              "uncertainty"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Explicitly limits ambiguity to header metadata and declines to infer a participation date. This conservative background note does not invent a controlling conflict."
+          },
+          {
+            "id": "req_consideration:semantic_class",
+            "categories": [
+              "disclosure"
+            ],
+            "status": "incorrect",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Content of consideration policy is preserved, but semantic_class=other does not retain the separately typed disclosure required by the frozen truth/contract. Classification mismatch, not fabricated policy."
+          },
+          {
+            "id": "coverage",
+            "categories": [
+              "uncertainty"
+            ],
+            "status": "incorrect",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "claimed_complete is not established against frozen full semantic universe: consideration disclosure typing mismatch."
+          }
+        ],
+        "source_matches": [
+          {
+            "source_unit_id": "agency",
+            "status": "matched",
+            "claim_ids": [
+              "ident_agency"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "rule",
+            "status": "matched",
+            "claim_ids": [
+              "ident_rule"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing",
+            "status": "matched",
+            "claim_ids": [
+              "ev_hearing"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-date",
+            "status": "matched",
+            "claim_ids": [
+              "tm_hearing_date"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-clock",
+            "status": "matched",
+            "claim_ids": [
+              "tm_hearing_clock"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-place",
+            "status": "matched",
+            "claim_ids": [
+              "route_hearing"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-oral",
+            "status": "matched",
+            "claim_ids": [
+              "route_oral"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-written",
+            "status": "matched",
+            "claim_ids": [
+              "route_hearing_written"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "attendance",
+            "status": "matched",
+            "claim_ids": [
+              "req_attend"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "representation",
+            "status": "matched",
+            "claim_ids": [
+              "req_hearing_procedure"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "witness-evidence",
+            "status": "matched",
+            "claim_ids": [
+              "req_hearing_procedure"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written",
+            "status": "matched",
+            "claim_ids": [
+              "ev_written"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written-close-date",
+            "status": "matched",
+            "claim_ids": [
+              "tm_written_date"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written-close-clock",
+            "status": "matched",
+            "claim_ids": [
+              "tm_written_clock"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "receipt-rule",
+            "status": "matched",
+            "claim_ids": [
+              "req_receipt"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "post-route",
+            "status": "matched",
+            "claim_ids": [
+              "route_postal"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "email-route",
+            "status": "matched",
+            "claim_ids": [
+              "route_email"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "attention-rule",
+            "status": "matched",
+            "claim_ids": [
+              "route_postal"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "consideration",
+            "status": "mismatched",
+            "claim_ids": [
+              "req_consideration",
+              "req_consideration:semantic_class"
+            ],
+            "basis": "Policy content present but typed other, not disclosure; calendar/route accuracy is unaffected."
+          },
+          {
+            "source_unit_id": "rule-access",
+            "status": "matched",
+            "claim_ids": [
+              "route_rule_web",
+              "req_rule_view"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "office-post",
+            "status": "matched",
+            "claim_ids": [
+              "route_header_address",
+              "req_header_contacts"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "office-phone",
+            "status": "matched",
+            "claim_ids": [
+              "route_phone",
+              "req_header_contacts"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "office-fax",
+            "status": "matched",
+            "claim_ids": [
+              "route_fax",
+              "req_header_contacts"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "office-web",
+            "status": "matched",
+            "claim_ids": [
+              "route_agency_web",
+              "req_header_contacts"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-time-link",
+            "status": "matched",
+            "claim_ids": [
+              "ev_hearing",
+              "tm_hearing_date",
+              "tm_hearing_clock",
+              "route_hearing"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written-time-link",
+            "status": "matched",
+            "claim_ids": [
+              "ev_written",
+              "tm_written_date",
+              "tm_written_clock",
+              "req_receipt"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written-alternatives",
+            "status": "matched",
+            "claim_ids": [
+              "route_postal",
+              "route_email"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-mode-alternatives",
+            "status": "matched",
+            "claim_ids": [
+              "route_oral",
+              "route_hearing_written",
+              "req_hearing_procedure"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          }
+        ]
+      },
+      "record": null
+    },
+    {
+      "document_id": "doc-7be63f24299e",
+      "inventory": {
+        "sha256": "bb818efa96299055fc3da4b6cd090fc4e19379aba80528714149b02cd56e320b",
+        "review_complete": true,
+        "claims": [
+          {
+            "id": "e1",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Source public hearing on the proposed amendment."
+          },
+          {
+            "id": "t1",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "date",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Printed Monday October5,2026 correctly becomes2026-10-05; weekday parser failure is separate."
+          },
+          {
+            "id": "t2",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Printed10a.m. hearing start, no timezone inference."
+          },
+          {
+            "id": "e2",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Advance office-receipt written phase distinct from hearing."
+          },
+          {
+            "id": "t3",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "date",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Printed Friday October2,2026 correctly becomes2026-10-02; weekday parser failure is separate."
+          },
+          {
+            "id": "t4",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "5p.m. advance-written receipt clock, no timezone supplied."
+          },
+          {
+            "id": "e3",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Source comment-consideration process before final action."
+          },
+          {
+            "id": "t5",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Correct before-final-action dependency without calendar calculation."
+          },
+          {
+            "id": "e4",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Explicitly referenced final action, not assigned invented date."
+          },
+          {
+            "id": "r1",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Venue and submission activity are source-supported; punctuation joins printed lines and fails strict literal containment. alternative_group separately assessed."
+          },
+          {
+            "id": "r2",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Oral presentation is supported by source wording orally, though the literal field paraphrases it. alternative_group separately assessed; no invented destination."
+          },
+          {
+            "id": "r3",
+            "categories": [
+              "fact",
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Exact mailed destination with ATTN:Rules retained."
+          },
+          {
+            "id": "r4",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "email",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Exact direct Paul.Nick email retained."
+          },
+          {
+            "id": "r5",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Register rules-search URL preserved for viewing."
+          },
+          {
+            "id": "r6",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "General agency phone, no submission claim."
+          },
+          {
+            "id": "r7",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Fax role other is disambiguated by q7 as general contact, not submission."
+          },
+          {
+            "id": "r8",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "General agency website retained as information contact."
+          },
+          {
+            "id": "q1",
+            "categories": [
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Optional attendance permission retained."
+          },
+          {
+            "id": "q2",
+            "categories": [
+              "fact",
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Narrative preserves written and oral hearing presentations, representation alternatives and optional witnesses/evidence. Its explicit written mode counts even without a separate route object; problematic structured group is separately audited."
+          },
+          {
+            "id": "q3",
+            "categories": [
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Office receipt deadline retained as condition for promised consideration."
+          },
+          {
+            "id": "q4",
+            "categories": [
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Mail/email alternatives and ATTN:Rules destination preserved as optional routes, with recipient conditional on mailing."
+          },
+          {
+            "id": "q5",
+            "categories": [
+              "disclosure",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Consideration-policy content and timing are correct; semantic_class other separately fails frozen disclosure typing."
+          },
+          {
+            "id": "q6",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Rule-viewing URL correctly separated from submission."
+          },
+          {
+            "id": "q7",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "General phone/fax/web roles retained, but L3 office address is absent from inventory claims."
+          },
+          {
+            "id": "i1",
+            "categories": [
+              "identity",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Correct agency identification."
+          },
+          {
+            "id": "i2",
+            "categories": [
+              "identity",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Correct102-5-05(B) proposed amendment identity."
+          },
+          {
+            "id": "i3",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Chapter119 legal-authority reference, not participation obligation."
+          },
+          {
+            "id": "i4",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "HouseBill479 retained as background reference without event binding; no effective-date deadline invented."
+          },
+          {
+            "id": "i5",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "5119.75 statutory reference remains background, not filing instruction."
+          },
+          {
+            "id": "q5:semantic_class",
+            "categories": [
+              "disclosure"
+            ],
+            "status": "incorrect",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Content of consideration policy is preserved, but semantic_class=other does not retain the separately typed disclosure required by the frozen truth/contract. Classification mismatch, not fabricated policy."
+          },
+          {
+            "id": "hearing_modes:association",
+            "categories": [
+              "relationship"
+            ],
+            "status": "unknown",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Structured hearing_modes groups the physical venue/in-person route with oral presentation, instead of explicitly distinguishing oral versus written modes. Narrativeq2 preserves oral/written alternatives, but the structured grouping has mixed levels and cannot certify the exact frozen alternative relation."
+          },
+          {
+            "id": "coverage",
+            "categories": [
+              "uncertainty"
+            ],
+            "status": "incorrect",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "claimed_complete is not established against frozen full semantic universe: office-address omission, consideration typing mismatch and ambiguous hearing-mode structure."
+          }
+        ],
+        "source_matches": [
+          {
+            "source_unit_id": "agency",
+            "status": "matched",
+            "claim_ids": [
+              "i1"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "rule",
+            "status": "matched",
+            "claim_ids": [
+              "i2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing",
+            "status": "matched",
+            "claim_ids": [
+              "e1"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-date",
+            "status": "matched",
+            "claim_ids": [
+              "t1"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-clock",
+            "status": "matched",
+            "claim_ids": [
+              "t2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-place",
+            "status": "matched",
+            "claim_ids": [
+              "r1"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-oral",
+            "status": "matched",
+            "claim_ids": [
+              "r2",
+              "q2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-written",
+            "status": "matched",
+            "claim_ids": [
+              "q2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "attendance",
+            "status": "matched",
+            "claim_ids": [
+              "q1"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "representation",
+            "status": "matched",
+            "claim_ids": [
+              "q2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "witness-evidence",
+            "status": "matched",
+            "claim_ids": [
+              "q2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written",
+            "status": "matched",
+            "claim_ids": [
+              "e2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written-close-date",
+            "status": "matched",
+            "claim_ids": [
+              "t3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written-close-clock",
+            "status": "matched",
+            "claim_ids": [
+              "t4"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "receipt-rule",
+            "status": "matched",
+            "claim_ids": [
+              "q3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "post-route",
+            "status": "matched",
+            "claim_ids": [
+              "r3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "email-route",
+            "status": "matched",
+            "claim_ids": [
+              "r4"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "attention-rule",
+            "status": "matched",
+            "claim_ids": [
+              "r3",
+              "q4"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "consideration",
+            "status": "mismatched",
+            "claim_ids": [
+              "q5",
+              "q5:semantic_class"
+            ],
+            "basis": "Policy content present but typed other, not disclosure; calendar/route accuracy is unaffected."
+          },
+          {
+            "source_unit_id": "rule-access",
+            "status": "matched",
+            "claim_ids": [
+              "r5",
+              "q6"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "office-post",
+            "status": "omitted",
+            "claim_ids": [],
+            "basis": "No explicit semantic inventory claim preserves this frozen source unit; appearing only in quoted source evidence is insufficient."
+          },
+          {
+            "source_unit_id": "office-phone",
+            "status": "matched",
+            "claim_ids": [
+              "r6",
+              "q7"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "office-fax",
+            "status": "matched",
+            "claim_ids": [
+              "r7",
+              "q7"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "office-web",
+            "status": "matched",
+            "claim_ids": [
+              "r8",
+              "q7"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-time-link",
+            "status": "matched",
+            "claim_ids": [
+              "e1",
+              "t1",
+              "t2",
+              "r1"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written-time-link",
+            "status": "matched",
+            "claim_ids": [
+              "e2",
+              "t3",
+              "t4",
+              "q3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written-alternatives",
+            "status": "matched",
+            "claim_ids": [
+              "r3",
+              "r4",
+              "q4"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-mode-alternatives",
+            "status": "mismatched",
+            "claim_ids": [
+              "q2",
+              "hearing_modes:association"
+            ],
+            "basis": "Narrativeq2 is correct but structured group mixes venue and oral mode; exact alternative relation remains unverified."
+          }
+        ]
+      },
+      "record": null
+    },
+    {
+      "document_id": "doc-03d522cbc19e",
+      "inventory": {
+        "sha256": "410e81079d22a8ae01a0b62fc6283fcc634b1f79ca3920257fd1b1c5a451959e",
+        "review_complete": true,
+        "claims": [
+          {
+            "id": "e1",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Correctly labeled prior register publication, not an opening/current deadline; extra background outside required truth universe."
+          },
+          {
+            "id": "t1",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "date",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "2026-06-04 is correct prior-publication date, not a new deadline; extra background scalar retained in claimed-date accuracy."
+          },
+          {
+            "id": "e2",
+            "categories": [
+              "fact",
+              "identity",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Hearing tied to draft-final-proposal stage."
+          },
+          {
+            "id": "t2",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "date",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Exact July24 ISO hearing date."
+          },
+          {
+            "id": "t3",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Exact09AM hearing clock, no timezone inferred."
+          },
+          {
+            "id": "e3",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Written-material phase preserves conditional practicability of specified electronic formats."
+          },
+          {
+            "id": "t4",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "date",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Exact July29 materials cutoff, no closing clock invented."
+          },
+          {
+            "id": "r1",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Physical hearing location and hearing-access group preserve source meaning; non-submission alternative-group schema restriction fails mechanically."
+          },
+          {
+            "id": "r2",
+            "categories": [
+              "fact",
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Teams label, meeting ID and case-sensitive passcode are exact image-supported components. Joined literal is noncontiguous and group uses role other; these are structural failures, not fabricated credentials."
+          },
+          {
+            "id": "r3",
+            "categories": [
+              "fact",
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Correct dial-in number and conference ID; joined literal/group fail structural guards. Find-a-local-number label is only in evidence, not a retained semantic contact/link claim."
+          },
+          {
+            "id": "r4",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "email",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Exact nhdesrules submission email, correctly separate from help/copies emails."
+          },
+          {
+            "id": "r5",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Named selected form retained with visible label; no hidden target URL invented. Other channel mirrors printed Other selection and u1 states image-evidence limit."
+          },
+          {
+            "id": "r6",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Technical-help phone and function retained viaq4; alternative group violates schema but does not falsely make it testimony route."
+          },
+          {
+            "id": "r7",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "email",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Technical-help email and function retained viaq4; no direct-comment role invented."
+          },
+          {
+            "id": "r8",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "AronJohnson name/title and address components correct and explicitly ancillary. Noncontiguous concatenation and ancillary alternative group trigger structural guards."
+          },
+          {
+            "id": "r9",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Copies/questions/accessibility phone correctly linked byq5."
+          },
+          {
+            "id": "r10",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "email",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Copies/questions/accessibility email correctly linked byq5."
+          },
+          {
+            "id": "r11",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Printed AdministrativeRules footer phone retained, but fuller publisher-office address unit missing."
+          },
+          {
+            "id": "q1",
+            "categories": [
+              "fact",
+              "identity",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Draft-final comment solicitation/priornotice context preserved; correctly says no instruction to quote notice number."
+          },
+          {
+            "id": "q2",
+            "categories": [
+              "fact",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Explicit materials deadline applies to selected email/form routes."
+          },
+          {
+            "id": "q3",
+            "categories": [
+              "fact",
+              "instruction",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Conditional practicability, specified electronic formats, Email/Other selections and unselected fax all preserved."
+          },
+          {
+            "id": "q4",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Conditional technical assistance instruction binds correct phone/email and person."
+          },
+          {
+            "id": "q5",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Copies/questions/disability-accommodation function plus named person/title supported jointly with linkedr8 evidence."
+          },
+          {
+            "id": "q6",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Uploaded draft-rule filename and background list note correct; explicitly does not invent participation-publication disclosure."
+          },
+          {
+            "id": "q7",
+            "categories": [
+              "ancillary",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Correctly identifies footer telephone as AdministrativeRules background contact with no submission function."
+          },
+          {
+            "id": "i1",
+            "categories": [
+              "identity",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Correct2026-112 notice ID."
+          },
+          {
+            "id": "i2",
+            "categories": [
+              "identity",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Unique Env-Wq307 identity retained with notice/agency and draft-final stage elsewhere. Frozen unit raw identity is rule ID; explanatory title/action wording is not separately counted as a new omitted atom."
+          },
+          {
+            "id": "i3",
+            "categories": [
+              "identity",
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Correct DES program agency identity."
+          },
+          {
+            "id": "u1",
+            "categories": [
+              "fact",
+              "relationship",
+              "uncertainty"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Correctly marks absent printed form URL/delivery specifics; does not invent unseen hyperlink target."
+          },
+          {
+            "id": "u2",
+            "categories": [
+              "relationship",
+              "uncertainty"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Correct absence of hearing timezone and written closing clock."
+          },
+          {
+            "id": "u3",
+            "categories": [
+              "ancillary",
+              "relationship",
+              "uncertainty"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Correctly refuses to turn copies/agency postal address into a designated comment route, while retaining that address as ancillary."
+          },
+          {
+            "id": "coverage",
+            "categories": [
+              "uncertainty"
+            ],
+            "status": "incorrect",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "claimed_complete is not established against frozen full semantic universe: local-number link and publisher-office omission; publisher-phone required endpoint therefore incomplete."
+          }
+        ],
+        "source_matches": [
+          {
+            "source_unit_id": "agency",
+            "status": "matched",
+            "claim_ids": [
+              "i3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "notice",
+            "status": "matched",
+            "claim_ids": [
+              "i1"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "rule",
+            "status": "matched",
+            "claim_ids": [
+              "i2",
+              "e2",
+              "q1"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "phase",
+            "status": "matched",
+            "claim_ids": [
+              "e2",
+              "e3",
+              "q1"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing",
+            "status": "matched",
+            "claim_ids": [
+              "e2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-date",
+            "status": "matched",
+            "claim_ids": [
+              "t2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-clock",
+            "status": "matched",
+            "claim_ids": [
+              "t3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "physical-route",
+            "status": "matched",
+            "claim_ids": [
+              "r1"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "teams-route",
+            "status": "matched",
+            "claim_ids": [
+              "r2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "teams-id",
+            "status": "matched",
+            "claim_ids": [
+              "r2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "teams-passcode",
+            "status": "matched",
+            "claim_ids": [
+              "r2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "dial-route",
+            "status": "matched",
+            "claim_ids": [
+              "r3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "dial-id",
+            "status": "matched",
+            "claim_ids": [
+              "r3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "local-number",
+            "status": "omitted",
+            "claim_ids": [],
+            "basis": "No explicit semantic inventory claim preserves this frozen source unit; appearing only in quoted source evidence is insufficient."
+          },
+          {
+            "source_unit_id": "technical-person",
+            "status": "matched",
+            "claim_ids": [
+              "q4",
+              "r6",
+              "r7"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "technical-phone",
+            "status": "matched",
+            "claim_ids": [
+              "r6",
+              "q4"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "technical-email",
+            "status": "matched",
+            "claim_ids": [
+              "r7",
+              "q4"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written",
+            "status": "matched",
+            "claim_ids": [
+              "e3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written-date",
+            "status": "matched",
+            "claim_ids": [
+              "t4",
+              "q2"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "electronic-condition",
+            "status": "matched",
+            "claim_ids": [
+              "q3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "email-route",
+            "status": "matched",
+            "claim_ids": [
+              "r4",
+              "q3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "form-route",
+            "status": "matched",
+            "claim_ids": [
+              "r5",
+              "q3",
+              "u1"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "copies-person",
+            "status": "matched",
+            "claim_ids": [
+              "q5",
+              "r8"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "copies-address",
+            "status": "matched",
+            "claim_ids": [
+              "r8",
+              "u3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "copies-phone",
+            "status": "matched",
+            "claim_ids": [
+              "r9",
+              "q5"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "copies-email",
+            "status": "matched",
+            "claim_ids": [
+              "r10",
+              "q5"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "publisher-office",
+            "status": "omitted",
+            "claim_ids": [],
+            "basis": "No explicit semantic inventory claim preserves this frozen source unit; appearing only in quoted source evidence is insufficient."
+          },
+          {
+            "source_unit_id": "publisher-phone",
+            "status": "mismatched",
+            "claim_ids": [
+              "r11",
+              "q7"
+            ],
+            "basis": "Phone literal/function is correct; frozen unit targets publisher-office whose address identity was omitted. Endpoint closure prevents a full source-unit match."
+          },
+          {
+            "source_unit_id": "draft-copy",
+            "status": "matched",
+            "claim_ids": [
+              "q6"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-time-link",
+            "status": "matched",
+            "claim_ids": [
+              "e2",
+              "t2",
+              "t3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "hearing-access-alternatives",
+            "status": "matched",
+            "claim_ids": [
+              "r1",
+              "r2",
+              "r3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written-time-link",
+            "status": "matched",
+            "claim_ids": [
+              "e3",
+              "t4",
+              "q2",
+              "q3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          },
+          {
+            "source_unit_id": "written-route-alternatives",
+            "status": "matched",
+            "claim_ids": [
+              "r4",
+              "r5",
+              "q3"
+            ],
+            "basis": "Independent source semantic unit is preserved by these explicit claims with correct source role/applicability; evidence-only mentions do not count as recovered claims."
+          }
+        ]
+      },
+      "record": null
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Candidate schema and limitations
+
+AI-assisted source-only candidate for WSR 26-19-016, not independent gold. Uses `round7.participation_record.v1` and the allowed round10 operative record solely as a structural example. Semantic sections are events, routes, requirements, identities, uncertainties and alternative groups; nested timing/components retain source facts. Exact quotations are in evidence. Scope exclusions are declared in record_notes and apply to background and separate tax-adjudication procedures, not general-public rulemaking participation.
+
+The browser text is the authoring source. Final source READY pins unchanged browser text plus original official HTML and reports whitespace-token agreement. No anchor destinations or external board/Teams details were inferred. Bracketed postal/preproposal values and the unexplained suite asterisk are retained; clock timezones, comment receipt/postmark cutoff and hearing testimony procedures are unresolved. Intended adoption is prospective. Channels listed for comments and assistance are modeled as alternatives, with role-specific routes for shared endpoint values.
+
+Validation: JSON parsing, unique IDs, reference integrity, group membership, evidence substring checks, all final source artifact hashes and the 12,000-byte size ceiling passed. No runtime schema validation or semantic scoring was performed. Artifact content is frozen before verification outputs; no repair after verification is authorized.

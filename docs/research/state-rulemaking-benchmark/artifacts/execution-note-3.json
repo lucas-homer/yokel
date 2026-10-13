@@ -1,0 +1,13 @@
+{
+  "id": "execution-note-3",
+  "at_utc": "2026-10-06T01:03:26.728273+00:00",
+  "clarifies": "execution-note-2",
+  "decision": "Fresh upload is permitted for a single known rate-limit recovery if the earlier transient uploadRef is unavailable, not only expired. No need to wait for expiry.",
+  "reason": "Signed upload references were intentionally kept transient. No final parse was accepted in explicitly rate-rejected attempts; re-uploading identical frozen bytes cannot duplicate an unknown submitted parse.",
+  "constraints": [
+    "Same frozen bytes/settings and one recovery per rejected input.",
+    "Retain both upload records and original rejection.",
+    "No timeout/unknown-backend retry.",
+    "Preserve request-rate pacing."
+  ]
+}

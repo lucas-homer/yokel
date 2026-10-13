@@ -1,0 +1,165 @@
+{
+  "fixture_type": "single selected scanned notice form with pre-existing imperfect OCR text layer; research fixture, not complete proposal package",
+  "acquisition": {
+    "inherited_original_retained": true,
+    "fresh_direct_pdf_download": {
+      "success": true,
+      "initial_failure_preserved": {
+        "attempt": 1,
+        "sandbox": "default",
+        "success": false,
+        "curl_exit_code": 6,
+        "error": "Could not resolve host: www.sos.ms.gov",
+        "original_bytes_retained": false
+      },
+      "retry": {
+        "attempt": 2,
+        "sandbox": "require_escalated",
+        "success": true,
+        "curl_exit_code": 0,
+        "headers_path": "raw/fresh-http-headers.txt",
+        "original_path": "raw/fresh.pdf",
+        "byte_count": 401742,
+        "sha256": "ac95c240653690261eb7a6fef83bd80a04310cf49c15c37256569bbc70315955"
+      },
+      "fresh_byte_identity": "identical to inherited inspected original",
+      "retrieval_evidence": "raw/retrieval-evidence.json"
+    },
+    "firecrawl": {
+      "success": true,
+      "reported_http_status": 200,
+      "reported_pages": 1,
+      "maxAge": 0,
+      "maxPages": 1,
+      "original_bytes_returned": false
+    },
+    "source_search_coverage": "untested"
+  },
+  "counts": {
+    "physical_pdf_pages": 1,
+    "observations": 8,
+    "deterministic_observations": 4,
+    "manual_visual_observations": 4,
+    "model_observations_in_normalized_output": 0,
+    "fresh_remote_calls_attempted": 4,
+    "firecrawl_calls": 2
+  },
+  "methods": [
+    "pypdf native extraction",
+    "pdftoppm render and manual visual inspection",
+    "Firecrawl markdown PDF scrape",
+    "Firecrawl prompt-only JSON scrape; no JSON schema supplied or enforced",
+    "standard-library offline guarded clause normalization plus explicitly reviewed visual additions"
+  ],
+  "latency_and_credits": {
+    "parse_elapsed_ms": 6194,
+    "parse_credits_reported": 1,
+    "model_elapsed_ms": 15950,
+    "model_credits_reported": 5,
+    "latency_scope": "wall time around connector call, one sample each"
+  },
+  "native_parsing_errors": [
+    "No filing stamp date in native text",
+    "Handwritten submit date absent",
+    "Amendment X separated from choice into days X",
+    "Hearing choice checkbox state lost",
+    "Rule 5,29 in first field; later Rule 5.29 survives",
+    "EVEP misread as EVER"
+  ],
+  "firecrawl_parsing_findings": [
+    "Recovered DEC 27 2023 and X Amendment to existing rule(s)",
+    "Cleaned spacing and rule citation",
+    "Both hearing options emitted without marks, so hearing selection remains ambiguous in parse",
+    "Both economic-impact options emitted without marks; visual review shows only not-required checked",
+    "Markdown is transformed text, not original PDF bytes",
+    "Fresh parse differs from inherited prior markdown: economic-impact attached option newly included"
+  ],
+  "model_shape": {
+    "json_object_returned": true,
+    "schema_enforced": false,
+    "unknowns_are_null": false,
+    "evidence_mapped_per_field": false,
+    "all_evidence_exact": false
+  },
+  "model_semantic_evaluation": {
+    "agency": "matches visual source",
+    "rule_citations": "matches visual source",
+    "proposed_action": "matches checked amendment option",
+    "hearing_status": "matches visual source, but markdown does not preserve checkbox evidence",
+    "filing_date": "matches filing stamp; no clock precision fabricated",
+    "hearing_request_duration_days": "correct 20",
+    "hearing_request_anchor": "correct filing-of-notice clause",
+    "public_comment_duration_days": "correct 25",
+    "public_comment_anchor": "not a resolved anchor: response repeats duration clause; must normalize to null",
+    "comment_close": "abstains, no computed date",
+    "effective_date": "abstains, blank options not promoted",
+    "final_action": "abstains, blank options not promoted",
+    "unknowns": "Date Proposed Rule Filed refers to blank final-action field, despite known filing stamp; distinct form roles must be retained"
+  },
+  "model_evidence_quote_checks": [
+    {
+      "quote": "The Exam Validity Extension Program (EVEP) provides an opportunity for registered representatives and investment adviser representatives to extend their state qualification exams.",
+      "exact_substring_of_parse": true
+    },
+    {
+      "quote": "This program allows industry professionals to maintain their state qualification exams for up to five years if they maintain compliance with their continuing education requirements.",
+      "exact_substring_of_parse": true
+    },
+    {
+      "quote": "An oral proceeding is not scheduled on this rule.",
+      "exact_substring_of_parse": false
+    },
+    {
+      "quote": "An oral proceeding must be held if a written request for an oral proceeding is submitted by a political subdivision, an agency or ten (10) or more persons.",
+      "exact_substring_of_parse": false
+    }
+  ],
+  "source_specific_rules": [
+    "Separate hearing-request and public-comment window subjects",
+    "Hearing-request eligibility (political subdivision, agency, or ten or more persons when no proceeding is scheduled) is retained as exact conditional-sentence evidence and a scope warning, not yet a separately typed field; no unconditional individual entitlement is asserted",
+    "Do not reuse stamp or submit date as comment close",
+    "Do not interpret blank final-action/effective-date options as assertions",
+    "Comment anchor/day basis unresolved; no computed closing date"
+  ],
+  "validation": {
+    "offline_normalizer": "passed",
+    "artifact_hashes": "passed",
+    "exact_text_quotes": "passed",
+    "manual_observations": "explicit manual_visual with saved image, review notes and matching source/image hashes",
+    "expectations_recorded_before_model_trial": true,
+    "shared_validator": "passed final eligibility correction: 13 artifacts, 8 observations, 5 exact quotes, 4 visual evidence items",
+    "missing_clause_mutation_tests": "passed both duration-pattern removals and eligibility-sentence removal; each exits nonzero with explicit missing predicate and 7 partial needs_review observations; guard-test-results.json"
+  },
+  "publication_readiness": {
+    "ready": false,
+    "reason": "Selected one-page form, manual evidence repair and unresolved temporal semantics; not unattended production ingestion"
+  },
+  "llamaparse": {
+    "status": "unavailable_not_tested",
+    "basis": "Primary reported no credential or connector; no secret-store search performed",
+    "accuracy": "not assessed",
+    "value_gap_to_test": [
+      "Checkbox-to-label association with bounding regions",
+      "Stamped and handwritten dates with date roles",
+      "Exact evidence mapping per extracted field",
+      "Null unresolved anchor/date semantics",
+      "Original-byte provenance and attachment completeness"
+    ]
+  },
+  "limitations": [
+    "No blind benchmark or general accuracy estimate",
+    "Firecrawl internal parser/model/version unspecified",
+    "No full proposal attachment retrieval",
+    "No state search discovery/recall evaluation",
+    "One-shot timings and six reported credits do not establish operating economics",
+    "Visual additions are manual, not automated OCR findings"
+  ],
+  "spec_extensions_needed": [],
+  "normalization_guards": {
+    "missing_critical_clause_behavior": "write partial observations with needs_review plus normalization-diagnostics.json listing missing predicates; exit nonzero; never fabricate values",
+    "canonical_event_type": "proposal",
+    "canonical_rule_action": "amendment",
+    "canonical_hearing_status": "not_scheduled",
+    "hearing_eligibility": "Hearing-request duration emitted only when both duration/anchor and exact conditional eligibility sentence match; absent eligibility triggers missing hearing_request_duration diagnostic"
+  }
+}

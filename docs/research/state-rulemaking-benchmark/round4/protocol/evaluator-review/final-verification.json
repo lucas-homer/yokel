@@ -1,0 +1,32 @@
+{
+  "status": "READY_for_primary_Freeze_E",
+  "reviewed_at_utc": "2026-10-07T05:34:18.201370+00:00",
+  "evaluator_inventory_sha256": "18db1bbad711b2e3ff3da7efc431f7ecb7f4c78e036613f5b38a5ea3c456fee1",
+  "evaluator_sha256": "d3e004cc014d3ecb897f560f4160c49740f31c7f26b7f8f513d92244d5627035",
+  "all_inventory_hashes_match_before_and_after_tests": true,
+  "tests_passed": 23,
+  "test_command": [
+    "/usr/local/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "-v",
+    "test_evaluate"
+  ],
+  "test_stdout": "",
+  "test_stderr": "test_audited_native_fallback_duplicates_count_once (test_evaluate.EvaluatorTests.test_audited_native_fallback_duplicates_count_once) ... ok\ntest_claim_group_rejects_distinct_values_E03 (test_evaluate.EvaluatorTests.test_claim_group_rejects_distinct_values_E03) ... ok\ntest_claim_group_rejects_same_value_distinct_source_conditions_E03 (test_evaluate.EvaluatorTests.test_claim_group_rejects_same_value_distinct_source_conditions_E03) ... ok\ntest_cli_scores_synthetic_terminal_and_requires_manifest_pin (test_evaluate.EvaluatorTests.test_cli_scores_synthetic_terminal_and_requires_manifest_pin) ... ok\ntest_correct_date_email_separate_and_complete (test_evaluate.EvaluatorTests.test_correct_date_email_separate_and_complete) ... ok\ntest_correct_value_wrong_role_or_condition_or_precision_unsafe (test_evaluate.EvaluatorTests.test_correct_value_wrong_role_or_condition_or_precision_unsafe) ... ok\ntest_dynamic_schedule_partial_not_started_are_unrecovered (test_evaluate.EvaluatorTests.test_dynamic_schedule_partial_not_started_are_unrecovered) ... ok\ntest_gold_absence_cannot_certify_runtime_readiness_E01 (test_evaluate.EvaluatorTests.test_gold_absence_cannot_certify_runtime_readiness_E01) ... ok\ntest_loader_reads_terminal_not_provisional_model_results (test_evaluate.EvaluatorTests.test_loader_reads_terminal_not_provisional_model_results) ... ok\ntest_materially_different_source_groups_not_merged (test_evaluate.EvaluatorTests.test_materially_different_source_groups_not_merged) ... ok\ntest_missing_audit_unverifiable_and_unsafe (test_evaluate.EvaluatorTests.test_missing_audit_unverifiable_and_unsafe) ... ok\ntest_missing_field_and_unsafe_extra_prevent_notice_completeness (test_evaluate.EvaluatorTests.test_missing_field_and_unsafe_extra_prevent_notice_completeness) ... ok\ntest_missing_labels_never_shrink_schedule_or_certify_coverage (test_evaluate.EvaluatorTests.test_missing_labels_never_shrink_schedule_or_certify_coverage) ... ok\ntest_source_conflict_or_uncertainty_not_settled (test_evaluate.EvaluatorTests.test_source_conflict_or_uncertainty_not_settled) ... ok\ntest_supported_value_does_not_suppress_distinct_unsupported_abstention_E02 (test_evaluate.EvaluatorTests.test_supported_value_does_not_suppress_distinct_unsupported_abstention_E02) ... ok\ntest_terminal_review_ignores_provisional_accept_disposition (test_evaluate.EvaluatorTests.test_terminal_review_ignores_provisional_accept_disposition) ... ok\ntest_timestamp_not_date_precision (test_evaluate.EvaluatorTests.test_timestamp_not_date_precision) ... ok\ntest_unsafe_duplicate_cannot_disappear (test_evaluate.EvaluatorTests.test_unsafe_duplicate_cannot_disappear) ... ok\ntest_unscheduled_terminal_and_source_identity_mismatch_rejected (test_evaluate.EvaluatorTests.test_unscheduled_terminal_and_source_identity_mismatch_rejected) ... ok\ntest_unsupported_abstention_requires_terminal_output (test_evaluate.EvaluatorTests.test_unsupported_abstention_requires_terminal_output) ... ok\ntest_wrong_email_case_is_source_incorrect (test_evaluate.EvaluatorTests.test_wrong_email_case_is_source_incorrect) ... ok\ntest_zero_eligible_type_null_not_vacuous_success (test_evaluate.EvaluatorTests.test_zero_eligible_type_null_not_vacuous_success) ... ok\ntest_zero_scheduled_quota_no_invented_denominator (test_evaluate.EvaluatorTests.test_zero_scheduled_quota_no_invented_denominator) ... ok\n\n----------------------------------------------------------------------\nRan 23 tests in 0.055s\n\nOK\n",
+  "resolved_findings": {
+    "E01": "Any readiness declaration is unsupported for the frozen runtime; gold absence no longer certifies runtime capability.",
+    "E02": "Unsupported abstention uses mapped source groups; known different groups do not suppress credit, unknown mappings remain conservative.",
+    "E03": "Grouping rejects inconsistent accepted values/source facts; valid duplicate and unsafe-taint checks remain passing."
+  },
+  "provider_calls": 0,
+  "fresh_sources_inspected": 0,
+  "fresh_runtime_outputs_inspected": 0,
+  "frozen_protocol_or_evaluator_edits": 0,
+  "limitations": [
+    "Terminal-only adapter; stage recall, all-proposal normalization, parser accuracy and costs remain explicitly unmeasured.",
+    "Final progression gate and12-notice/state/scan quotas are primary evaluation duties.",
+    "Source labels remain independently image-derived and must freeze before runtime outputs."
+  ]
+}

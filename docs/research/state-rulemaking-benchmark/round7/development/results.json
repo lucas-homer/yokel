@@ -1,0 +1,354 @@
+{
+  "schema_version": "round7.offline_development_report.v1",
+  "passed": true,
+  "scope": "offline development only; no improved model extraction or accuracy claim",
+  "public_interface_controls": [
+    {
+      "name": "pipeline_public_interface_controls",
+      "tests": 5,
+      "passed": true,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "runtime_public_interface_controls",
+      "tests": 4,
+      "passed": true,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "protocol_public_interface_controls",
+      "tests": 4,
+      "passed": true,
+      "failures": 0,
+      "errors": 0
+    }
+  ],
+  "historical_R6_replay": [
+    {
+      "document_id": "doc-de09ce82c4c7",
+      "errors": [
+        "tm_hearing_date: absolute date must normalize from explicit complete literal",
+        "tm_written_date: absolute date must normalize from explicit complete literal",
+        "route_header_address: literal not contained in its evidence"
+      ],
+      "same_errors": true,
+      "record_null": true,
+      "raw_inventory_sha256": "032011263b318d0614330fed5c378fda51ae24500e32f9326ae73068e1b7131a"
+    },
+    {
+      "document_id": "doc-7be63f24299e",
+      "errors": [
+        "t1: absolute date must normalize from explicit complete literal",
+        "t3: absolute date must normalize from explicit complete literal",
+        "r1: literal not contained in its evidence",
+        "r2: literal not contained in its evidence"
+      ],
+      "same_errors": true,
+      "record_null": true,
+      "raw_inventory_sha256": "bb818efa96299055fc3da4b6cd090fc4e19379aba80528714149b02cd56e320b"
+    },
+    {
+      "document_id": "doc-03d522cbc19e",
+      "errors": [
+        "r1: alternative groups reserved for submission routes",
+        "r2: literal not contained in its evidence",
+        "r2: alternative groups reserved for submission routes",
+        "r3: literal not contained in its evidence",
+        "r3: alternative groups reserved for submission routes",
+        "r6: alternative groups reserved for submission routes",
+        "r7: alternative groups reserved for submission routes",
+        "r8: literal not contained in its evidence",
+        "r8: alternative groups reserved for submission routes",
+        "r9: alternative groups reserved for submission routes",
+        "r10: alternative groups reserved for submission routes"
+      ],
+      "same_errors": true,
+      "record_null": true,
+      "raw_inventory_sha256": "410e81079d22a8ae01a0b62fc6283fcc634b1f79ca3920257fd1b1c5a451959e"
+    }
+  ],
+  "authored_migrations": [
+    {
+      "document_id": "doc-de09ce82c4c7",
+      "valid": true,
+      "errors": [],
+      "review_reasons": [
+        "explicit_source_uncertainties"
+      ],
+      "facts": 43,
+      "fixture_sha256": "f44b8d2e7b8b400a2864bb250b1b6b579d93a354d0969c6fe6caefa7b8696d70"
+    },
+    {
+      "document_id": "doc-7be63f24299e",
+      "valid": true,
+      "errors": [],
+      "review_reasons": [
+        "explicit_source_uncertainties"
+      ],
+      "facts": 42,
+      "fixture_sha256": "5814147788a2f0fac4c08e3c05bdc4ad51ac57634a2601a69485bdab07a2bf61"
+    },
+    {
+      "document_id": "doc-03d522cbc19e",
+      "valid": true,
+      "errors": [],
+      "review_reasons": [
+        "explicit_source_uncertainties",
+        "association_unresolved"
+      ],
+      "facts": 53,
+      "fixture_sha256": "cffae16409dc5cd78cede1131401c7a7c5caf3e93ee7f27fcaa1cade397dc66a"
+    }
+  ],
+  "admission": {
+    "doc-de09ce82c4c7": {
+      "inventory": {
+        "schema_version": "round7.admission.v1",
+        "stage": "inventory",
+        "body_sha256": "215fed40b2d8fc024d5087d9c62abc631ddcca6d5000d040849b8f5e2ef16cd2",
+        "body_utf8_bytes": 17775,
+        "estimate": 18799,
+        "cap": 35000,
+        "state_longest_estimate": null,
+        "state_longest_cap": null,
+        "admitted": true,
+        "reason": null,
+        "reservation_usd": 0.09903800000000001,
+        "source_sha256": "2527bde221f292839729f0f6031037f7e0356d823b20b88989f282badd6db7c6"
+      },
+      "stronger": {
+        "schema_version": "round7.admission.v1",
+        "stage": "stronger",
+        "body_sha256": "e0f940d2acbf3dada97ce1f0174253c7b8346f7e8faac1032e2590cc6a5744ef",
+        "body_utf8_bytes": 27598,
+        "estimate": 28622,
+        "cap": 35000,
+        "state_longest_estimate": null,
+        "state_longest_cap": null,
+        "admitted": true,
+        "reason": null,
+        "reservation_usd": 0.098204,
+        "source_sha256": "2527bde221f292839729f0f6031037f7e0356d823b20b88989f282badd6db7c6"
+      },
+      "jev": {
+        "schema_version": "round7.admission.v1",
+        "stage": "jev",
+        "body_sha256": "440cc4067385be123523688dfea624e4c98bcf66b7c7bec98f77199d9875e97b",
+        "body_utf8_bytes": 28655,
+        "estimate": 29679,
+        "cap": 64000,
+        "state_longest_estimate": 22224,
+        "state_longest_cap": 32000,
+        "admitted": true,
+        "reason": null,
+        "reservation_usd": 0.001246518,
+        "source_sha256": "2527bde221f292839729f0f6031037f7e0356d823b20b88989f282badd6db7c6"
+      }
+    },
+    "doc-7be63f24299e": {
+      "inventory": {
+        "schema_version": "round7.admission.v1",
+        "stage": "inventory",
+        "body_sha256": "35b4aee0820d6798ff669b71521bdf4cd84d4b6ba21c6182780055ced8940829",
+        "body_utf8_bytes": 17694,
+        "estimate": 18718,
+        "cap": 35000,
+        "state_longest_estimate": null,
+        "state_longest_cap": null,
+        "admitted": true,
+        "reason": null,
+        "reservation_usd": 0.098876,
+        "source_sha256": "9dfd5b5d07cb3cd4e33a509c3b809787fe61b900a753228f294a51d1c2592a64"
+      },
+      "stronger": {
+        "schema_version": "round7.admission.v1",
+        "stage": "stronger",
+        "body_sha256": "42c87ece81e62bb9c55a00b413ce76bf1aff4a6458cd9ecff9d994419c65afe0",
+        "body_utf8_bytes": 27110,
+        "estimate": 28134,
+        "cap": 35000,
+        "state_longest_estimate": null,
+        "state_longest_cap": null,
+        "admitted": true,
+        "reason": null,
+        "reservation_usd": 0.09722800000000001,
+        "source_sha256": "9dfd5b5d07cb3cd4e33a509c3b809787fe61b900a753228f294a51d1c2592a64"
+      },
+      "jev": {
+        "schema_version": "round7.admission.v1",
+        "stage": "jev",
+        "body_sha256": "27d281467b32d16433ba1a3cd8695be7089bf63ee23a1e51212f4831ce882f57",
+        "body_utf8_bytes": 28148,
+        "estimate": 29172,
+        "cap": 64000,
+        "state_longest_estimate": 21717,
+        "state_longest_cap": 32000,
+        "admitted": true,
+        "reason": null,
+        "reservation_usd": 0.001225224,
+        "source_sha256": "9dfd5b5d07cb3cd4e33a509c3b809787fe61b900a753228f294a51d1c2592a64"
+      }
+    },
+    "doc-03d522cbc19e": {
+      "inventory": {
+        "schema_version": "round7.admission.v1",
+        "stage": "inventory",
+        "body_sha256": "27f6971b68fb725f4d4ad018000023dcdecffc8bf2abb757d17bddfb8e83a880",
+        "body_utf8_bytes": 17641,
+        "estimate": 18665,
+        "cap": 35000,
+        "state_longest_estimate": null,
+        "state_longest_cap": null,
+        "admitted": true,
+        "reason": null,
+        "reservation_usd": 0.09877,
+        "source_sha256": "f8e6957c160ed394b6aa359be7532c09551d1205a4f47584a594d007b4c1ffae"
+      },
+      "stronger": {
+        "schema_version": "round7.admission.v1",
+        "stage": "stronger",
+        "body_sha256": "c04e1ebf3cd9f847f2e14f85ef4762026dc4a264bc9c2fc14a000105c4e66e21",
+        "body_utf8_bytes": 31002,
+        "estimate": 32026,
+        "cap": 35000,
+        "state_longest_estimate": null,
+        "state_longest_cap": null,
+        "admitted": true,
+        "reason": null,
+        "reservation_usd": 0.105012,
+        "source_sha256": "f8e6957c160ed394b6aa359be7532c09551d1205a4f47584a594d007b4c1ffae"
+      },
+      "jev": {
+        "schema_version": "round7.admission.v1",
+        "stage": "jev",
+        "body_sha256": "7dafe162c055489e195d41a3d4a9133d424c0e0d929d93cd29dff14b6474bd4f",
+        "body_utf8_bytes": 31639,
+        "estimate": 32663,
+        "cap": 64000,
+        "state_longest_estimate": 25208,
+        "state_longest_cap": 32000,
+        "admitted": true,
+        "reason": null,
+        "reservation_usd": 0.001371846,
+        "source_sha256": "f8e6957c160ed394b6aa359be7532c09551d1205a4f47584a594d007b4c1ffae"
+      }
+    },
+    "doc-9998d72f5aba": {
+      "inventory": {
+        "schema_version": "round7.admission.v1",
+        "stage": "inventory",
+        "body_sha256": "6736563096fccc1667ad71c8a1b3ea17affc18e06445f0715264cf6879ea5c79",
+        "body_utf8_bytes": 39631,
+        "estimate": 40655,
+        "cap": 35000,
+        "state_longest_estimate": null,
+        "state_longest_cap": null,
+        "admitted": false,
+        "reason": "OpenRouter input overlimit; no clipping",
+        "reservation_usd": null,
+        "source_sha256": "5f3cdf93e6a0fe5c278ea22dd2977eb5082d70d86b0e58b4431bd82826a4ac40"
+      }
+    }
+  },
+  "gate_integration": {
+    "runtime_gates": {
+      "request_size_review": 1,
+      "assembly_review": 3
+    },
+    "arms": {
+      "jev": {
+        "status_counts": {
+          "not_started": 4
+        },
+        "accepted_records": 0,
+        "correct_complete_accepted": 0,
+        "unsafe_accepted": 0,
+        "unsafe_acceptance_fraction": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "undefined_reason": "zero_denominator"
+        },
+        "useful_coverage": {
+          "numerator": 0,
+          "denominator": 4,
+          "value": 0.0,
+          "undefined_reason": null
+        },
+        "review_or_unserved_fraction": {
+          "numerator": 4,
+          "denominator": 4,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "unsafe_reason_counts": {},
+        "outcomes": {
+          "doc-9998d72f5aba": "not_started",
+          "doc-de09ce82c4c7": "not_started",
+          "doc-7be63f24299e": "not_started",
+          "doc-03d522cbc19e": "not_started"
+        },
+        "gate_passed": false
+      },
+      "stronger": {
+        "status_counts": {
+          "not_started": 4
+        },
+        "accepted_records": 0,
+        "correct_complete_accepted": 0,
+        "unsafe_accepted": 0,
+        "unsafe_acceptance_fraction": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "undefined_reason": "zero_denominator"
+        },
+        "useful_coverage": {
+          "numerator": 0,
+          "denominator": 4,
+          "value": 0.0,
+          "undefined_reason": null
+        },
+        "review_or_unserved_fraction": {
+          "numerator": 4,
+          "denominator": 4,
+          "value": 1.0,
+          "undefined_reason": null
+        },
+        "unsafe_reason_counts": {},
+        "outcomes": {
+          "doc-9998d72f5aba": "not_started",
+          "doc-de09ce82c4c7": "not_started",
+          "doc-7be63f24299e": "not_started",
+          "doc-03d522cbc19e": "not_started"
+        },
+        "gate_passed": false
+      }
+    },
+    "scheduled_notices": 4
+  },
+  "network_disabled": true,
+  "credential_access": false,
+  "network_process_credential_guard": "Python audit hook plus blocked socket construction",
+  "provider_calls": 0,
+  "production_eligible": false,
+  "action_ready": false,
+  "prior_round_hashes_unchanged_during_replay": true,
+  "prior_files_hashed": 3473,
+  "input_hashes": {
+    "round6/pipeline/pipeline.py": "2220f2cb751521f822cfe65062dcaf87bb87560c428c24be7f47b66dc9b4a680",
+    "round6/runtime/provider_adapters.py": "40bfa8b0c675a7360111d99c298727f5219226d8911be5225431abc321c0c12b",
+    "round6/runtime/run_pipeline.py": "7a6f7fa07b4c49cba6194a1018f75bf345a01744278b506fe31584e9e2b4c29a",
+    "round6/protocol/evaluate.py": "ba0479ec0c7defde376ce73213d6015bb530240204b6bd467eaa8e0de106fc54",
+    "round6/execution/run/documents/doc-de09ce82c4c7/source.json": "b7cc86399aed24ff858451395613606bf6fb4202346296e1e48d330ce55ee389",
+    "round6/execution/run/documents/doc-de09ce82c4c7/assembled.json": "bc84db28ec6e090b2a509f29e118ed71de1dfbabda8d1affe2b581c8f756520c",
+    "round6/execution/run/documents/doc-7be63f24299e/source.json": "a77258b4a51d261443003b58f462d859cebb62abf7b54b2a6ad762cc14656d86",
+    "round6/execution/run/documents/doc-7be63f24299e/assembled.json": "77c1cfbd728a8962bed68206e1a1fc224eb996dafccbce3fd96edb64c7e595cd",
+    "round6/execution/run/documents/doc-03d522cbc19e/source.json": "f0b4fb39d8d6f45f39634ce57646501423308ed7246473070c8ec53a66b31284",
+    "round6/execution/run/documents/doc-03d522cbc19e/assembled.json": "da5c9ab950366e233a570b11592312f7050cf30c571b3e48b065fe27f6214624",
+    "round6/execution/run/documents/doc-9998d72f5aba/source.json": "d3a88372dcb3f3bff31c6d38023c0e98022fdcd9024bee7c66056c83438258af"
+  },
+  "command": "PYTHONDONTWRITEBYTECODE=1 /Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 /Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round7/development/replay.py"
+}

@@ -1,0 +1,308 @@
+{
+  "case": {
+    "source": "The rule may be viewed at site A. The rule may also be viewed at office B.",
+    "inventory": [
+      {
+        "id": "e0",
+        "kind": "endpoint",
+        "value": "site A",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "site A",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "r0",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "e0",
+          "purpose": "view_material"
+        },
+        "modality": "optional",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "e0"
+        ],
+        "evidence": [
+          {
+            "quote": "The rule may be viewed at site A. The rule may also be viewed at office B.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "e1",
+        "kind": "endpoint",
+        "value": "office B",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "office B",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "r1",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "e1",
+          "purpose": "view_material"
+        },
+        "modality": "optional",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "e1"
+        ],
+        "evidence": [
+          {
+            "quote": "The rule may be viewed at site A. The rule may also be viewed at office B.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      }
+    ],
+    "classified_inventory": [
+      {
+        "id": "e0",
+        "kind": "endpoint",
+        "value": "site A",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "site A",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "r0",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "e0",
+          "purpose": "view_material"
+        },
+        "modality": "optional",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "e0"
+        ],
+        "evidence": [
+          {
+            "quote": "The rule may be viewed at site A. The rule may also be viewed at office B.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "e1",
+        "kind": "endpoint",
+        "value": "office B",
+        "modality": "descriptive",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "office B",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      },
+      {
+        "id": "r1",
+        "kind": "endpoint_role",
+        "value": {
+          "endpoint": "e1",
+          "purpose": "view_material"
+        },
+        "modality": "optional",
+        "condition": "unconditional",
+        "qualifications": [],
+        "dependencies": [
+          "e1"
+        ],
+        "evidence": [
+          {
+            "quote": "The rule may be viewed at site A. The rule may also be viewed at office B.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      }
+    ],
+    "scopes": {
+      "e0": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint",
+        "evidence": [
+          {
+            "quote": "site A",
+            "occurrence": 1
+          }
+        ]
+      },
+      "r0": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint_role",
+        "evidence": [
+          {
+            "quote": "The rule may be viewed at site A. The rule may also be viewed at office B.",
+            "occurrence": 1
+          }
+        ]
+      },
+      "e1": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint",
+        "evidence": [
+          {
+            "quote": "office B",
+            "occurrence": 1
+          }
+        ]
+      },
+      "r1": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of endpoint_role",
+        "evidence": [
+          {
+            "quote": "The rule may be viewed at site A. The rule may also be viewed at office B.",
+            "occurrence": 1
+          }
+        ]
+      }
+    },
+    "operative": {
+      "e0": {
+        "condition": "unconditional",
+        "kind": "endpoint",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": "site A"
+      },
+      "r0": {
+        "condition": "unconditional",
+        "kind": "endpoint_role",
+        "modality": "optional",
+        "qualifications": [],
+        "value": {
+          "endpoint": "e0",
+          "purpose": "view_material"
+        }
+      },
+      "e1": {
+        "condition": "unconditional",
+        "kind": "endpoint",
+        "modality": "descriptive",
+        "qualifications": [],
+        "value": "office B"
+      },
+      "r1": {
+        "condition": "unconditional",
+        "kind": "endpoint_role",
+        "modality": "optional",
+        "qualifications": [],
+        "value": {
+          "endpoint": "e1",
+          "purpose": "view_material"
+        }
+      }
+    },
+    "mappings": {
+      "e0": {
+        "status": "matched",
+        "refs": [
+          "e0"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      },
+      "r0": {
+        "status": "matched",
+        "refs": [
+          "r0"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      },
+      "e1": {
+        "status": "matched",
+        "refs": [
+          "e1"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      },
+      "r1": {
+        "status": "matched",
+        "refs": [
+          "r1"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      }
+    },
+    "source_review": {
+      "status": "source_only_frozen",
+      "source_sha256": "cd6b2559cc1d54b0bc641c92b1d735da43d4e88bf1cf393f87798c3b5395bd4d",
+      "inventory_sha256": "afc0da03c7b0c8a951931491733f348695036f306df7ec4c7a2d02a44e596885",
+      "scopes_sha256": "e11478c364decde2c59c5a99c113752948d3db390a48dd75ce8c045f64bef155"
+    },
+    "record_audit": {
+      "status": "not_run",
+      "reviewed_refs": [],
+      "unsupported_refs": [],
+      "unknown_refs": []
+    }
+  },
+  "name": "anchor-independent_view_permissions_no_group_required",
+  "expected": {
+    "valid": true,
+    "required_scope_status": "all_required_inventoried_units_matched"
+  },
+  "actual": {
+    "accepted": true,
+    "result": {
+      "required_scope_status": "all_required_inventoried_units_matched",
+      "unresolved_scope": [],
+      "required_unknown": [],
+      "required_defects": [],
+      "effective_mappings": {
+        "e0": "matched",
+        "r0": "matched",
+        "e1": "matched",
+        "r1": "matched"
+      },
+      "background_diagnostics": {},
+      "source_completeness": "reviewer_attestation_only",
+      "record_fidelity": "unverified",
+      "unsupported_record_refs": [],
+      "production_ready": false,
+      "live_compatibility": "unverified"
+    }
+  },
+  "expectation_met": true
+}

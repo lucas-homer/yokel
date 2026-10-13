@@ -1,0 +1,83 @@
+{
+  "status": "ELIGIBLE_FOR_PRIMARY_REVIEWED_PRE_DISPATCH_REPLACEMENT",
+  "review_author": "Codex/GPT bounded local integrity and scope review; no Fable runtime approval",
+  "approval_need": {
+    "explicit_new_user_approval_required": false,
+    "standing_authority": "Owner delegation: Primary releases reviewed jobs within my authorized scope and budgets; ADR 0012 delegates per-job release to primary without per-job owner interaction. Current R14 scope authorizes one fresh source-only provider call.",
+    "interpretation": "This manually reviewed replacement performs the still-unmade authorized first provider call. Scope retry:false / automatic_retry:false remains binding on provider attempts; this verdict does not permit replay of a dispatched or uncertain provider call or reset a consumed native identity.",
+    "not_an_explicit_recovery_grant": "No user-specific recovery approval is claimed; eligibility is the reviewer interpretation of existing standing release authority applied to independently verified pre-dispatch failure.",
+    "boundary": "Only this exact proposal, with absent shared adapter run folder, retained old claim, same frozen payload and at most one provider call. Any provider dispatch/uncertainty, adapter-run existence, changed payload/budget/provider, claim reset or automatic/repeated recovery requires a new review and applicable authority; no blanket retry authority granted."
+  },
+  "proposal": {
+    "path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/recovery/UNSIGNED-JOB-PROPOSAL.json",
+    "sha256": "81866311ed9f9b158681df03c95a622d97ceb021e19f1f931acbfc2ba360345e",
+    "job_id": "round14-semantic-contract-recovery",
+    "scope_id": "docketclock-research-authorized-20261012",
+    "expires_unix": 1791874613,
+    "expiry_valid_at_review": true,
+    "file_pins": 8858,
+    "mismatches": [],
+    "review_path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/recovery/RECOVERY-RELEASE-REVIEW.md",
+    "review_sha256": "ba4cdaa26021f55f65b15852003637228dc1a3c65ad8e8e5c69c3ca351340625"
+  },
+  "exact_delta": {
+    "top_level_changed": [
+      "job_id",
+      "expires_unix",
+      "review"
+    ],
+    "argv_unchanged": true,
+    "timeout_unchanged": true,
+    "provider_variables_unchanged": true,
+    "budget_unchanged": true,
+    "all_original_file_pins_retained_unchanged": 8856,
+    "added_file_pins": {
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/recovery/ACCESS-RECOVERY.json": "e176de011e6732b47534f6fe0ebfa90485574f36d4ad3bf87d6f9c4180ec0074",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/recovery/RECOVERY-RELEASE-REVIEW.md": "ba4cdaa26021f55f65b15852003637228dc1a3c65ad8e8e5c69c3ca351340625"
+    },
+    "changed_original_file_pins": [],
+    "removed_original_file_pins": []
+  },
+  "independent_guards": {
+    "original_claim_sha256": "5bf4879ce2f3df2f64d9887f83dfe9fc6f78f2703c5f06118c452e5e64d944c8",
+    "original_manifest_sha256": "e32116f311c5db0e2948cadd7f8277cde330a088a4db110703ae4830ed779db9",
+    "original_claim_matches_manifest": true,
+    "original_claim_preserved": true,
+    "replacement_unsigned_unclaimed_at_review": true,
+    "shared_adapter_run_directory_exists": false,
+    "same_adapter_claim_line": 127,
+    "same_adapter_transport_line": 132,
+    "runtime_READY_sha256": "1308fcc8bb0e9a255817e362b5f2361fcbfca147d4328e6951eb4b4b32b442d2",
+    "runtime_READY_files_unchanged": 46,
+    "reference_freeze_unchanged": true,
+    "prior_baseline_sha256": "d8226ba085e10d18a4065bf81e8ef5370f9c863355b008e0200f0e0ddbeef71d",
+    "baseline_entries_unchanged": 7063
+  },
+  "reservation_accounting": {
+    "prior_nanousd": 1705990718,
+    "reservation_nanousd": 200000000,
+    "ceiling_nanousd": 2000000000,
+    "reserved_aggregate_nanousd": 1905990718,
+    "remaining_under_ceiling_nanousd": 94009282,
+    "reason": "The initial native claim preceded the adapter and its request/ledger; there is no adapter attempt debit or provider dispatch to add to the prior. The same one-call reservation funds the unmade operation; retaining two native manifest identities does not itself accrue two provider reservations/charges. Original claim and manifest reserve metadata remain immutable.",
+    "invoice_verified": false,
+    "uncertainty_boundary": "If evidence of initial adapter/provider dispatch or incurred debit emerges, stop and reconcile conservative debit before release."
+  },
+  "access_recovery": "Primary retained identity/smoke success without credential/ACL/executor changes; this audit did not reproduce or diagnose access. Precise root cause remains unresolved.",
+  "risks": [
+    "Recovery may fail again before dispatch and consume its new native claim; this review supplies no automatic subsequent retry.",
+    "A repeated adapter run remains blocked by the unchanged exclusive execution/run claim once created, regardless of native job ID.",
+    "Provider output fit, compatibility and semantic completeness remain unverified; Fable source-reference assessment is required after an eventual output."
+  ],
+  "audit_operations": {
+    "credential_reads": false,
+    "native_executor_calls": 0,
+    "signer_calls": 0,
+    "research_provider_calls": 0,
+    "claude_bridge_calls": 0,
+    "runtime_export": false
+  },
+  "paid_dispatch_performed": false,
+  "signed_by_this_review": false,
+  "completed_utc": "2026-10-13T02:58:49.669793+00:00"
+}

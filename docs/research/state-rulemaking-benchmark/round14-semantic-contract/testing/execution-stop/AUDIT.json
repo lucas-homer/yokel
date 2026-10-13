@@ -1,0 +1,121 @@
+{
+  "status": "VERIFIED_PRE_DISPATCH_STOP_EVIDENCE",
+  "audit_author": "Codex/GPT local nonsecret filesystem and code audit only; no Fable runtime or stop assessment",
+  "observed_utc": "2026-10-13T02:29:08.785496+00:00",
+  "primary_stop_receipt": {
+    "path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/execution/STOP.json",
+    "sha256": "10a320bd6775aea4682e09f35ed1b6a78db47a68b2e685caa6b7c912df3fc238",
+    "reported_native_exit_code": 1,
+    "reported_signed_job_recheck_exit_code": 0,
+    "reported_separate_identity_check_exit_code": 1,
+    "limit": "Exit codes and identity/keychain/network diagnostic observations are primary-retained evidence; this audit did not rerun those operations."
+  },
+  "independently_verified": {
+    "claim_path": "/Users/home/.local/share/yokel/research-credentials/claims/round14-semantic-contract-initial",
+    "claim_bytes": 64,
+    "claim_file_sha256": "5bf4879ce2f3df2f64d9887f83dfe9fc6f78f2703c5f06118c452e5e64d944c8",
+    "claim_matches_published_manifest": true,
+    "manifest_path": "/Users/home/.local/share/yokel/research-credentials/jobs/round14-semantic-contract-initial.json",
+    "manifest_sha256": "e32116f311c5db0e2948cadd7f8277cde330a088a4db110703ae4830ed779db9",
+    "manifest_equals_unsigned_proposal": true,
+    "manifest_job_id": "round14-semantic-contract-initial",
+    "manifest_argv": [
+      "/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "-I",
+      "-S",
+      "-B",
+      "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round14-semantic-contract/runtime/adapter.py",
+      "--live-initial"
+    ],
+    "manifest_budget": {
+      "ceiling_nanousd": 2000000000,
+      "prior_nanousd": 1705990718,
+      "reservation_nanousd": 200000000
+    },
+    "release_receipt_hash_matches": true,
+    "signature_file_present": true,
+    "signature_verification": "Not performed; native successful signed-job check is primary evidence, no executor invoked by this audit.",
+    "adapter_run_directory_lexists": false,
+    "adapter_run_artifacts_all_absent": {
+      "request.json": true,
+      "span-table.json": true,
+      "intent.json": true,
+      "response.body": true,
+      "status.json": true,
+      "content.body": true,
+      "validated.json": true,
+      "expanded.json": true,
+      "result.json": true,
+      "ledger.json": true,
+      "completed.json": true,
+      "stop.json": true
+    },
+    "adapter_claim_line": 127,
+    "adapter_transport_line": 132,
+    "adapter_code_sha256": "1aeadf4312b9ed8713403798255b9a66e83e709961792a5a0546938a87442803",
+    "native_claim_order_source": "Authenticated() calls ClaimJob(job) before Token()/identity subprocess; Manifest.h ClaimJob writes ManifestDigest under O_EXCL. Inspected locally, not executed.",
+    "pins": {
+      "signed_manifest_dependencies": {
+        "entries": 8856,
+        "mismatches": []
+      },
+      "runtime_READY_files": {
+        "entries": 46,
+        "mismatches": []
+      },
+      "code-pins.json": {
+        "entries": 7,
+        "mismatches": []
+      },
+      "input-pins.json": {
+        "entries": 70,
+        "mismatches": []
+      },
+      "dependency-pins.json": {
+        "entries": 8831,
+        "mismatches": []
+      },
+      "prior_baseline": {
+        "entries": 7063,
+        "sha256": "d8226ba085e10d18a4065bf81e8ef5370f9c863355b008e0200f0e0ddbeef71d",
+        "mismatches": []
+      },
+      "reference_freeze": {
+        "entries": 3,
+        "mismatches": []
+      },
+      "testing_freeze": {
+        "entries": 12,
+        "mismatches": []
+      },
+      "testing/revised_freeze": {
+        "entries": 13,
+        "mismatches": []
+      },
+      "testing/runtime_freeze": {
+        "entries": 4,
+        "mismatches": []
+      }
+    }
+  },
+  "conclusion": "No extraction request/output artifact exists. The unchanged adapter creates the exclusive run directory before transport; current retained evidence supports failure before its extraction POST path. Native one-shot claim remains consumed.",
+  "root_cause": "Unresolved pre-dispatch credential/service-account path. Generic runner error does not isolate token access/validity, identity, or timeout; no Keychain-lock inference made.",
+  "fresh_semantic_assessment_performed": false,
+  "provider_output_available": false,
+  "frozen_source_reference_unchanged": true,
+  "native_reserved_nanousd": 200000000,
+  "prior_conservative_nanousd": 1705990718,
+  "budget_note": "Reservation/native claim retained; no invoice or actual charge inferred from stop evidence.",
+  "audit_actions": {
+    "research_provider_calls": 0,
+    "claude_bridge_calls": 0,
+    "credentials_read": false,
+    "native_executor_invocations": 0,
+    "signer_invocations": 0,
+    "identity_or_keychain_diagnostics": 0,
+    "retry_or_newjob": false
+  },
+  "primary_decision": "Resolve the credential/service-account path separately; this audit does not authorize retry, a new claim/job, or a provider request.",
+  "production_eligible": false,
+  "action_ready": false
+}

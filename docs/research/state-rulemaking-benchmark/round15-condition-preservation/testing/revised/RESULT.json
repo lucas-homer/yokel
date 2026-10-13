@@ -1,0 +1,70 @@
+{
+  "status": "PASSED",
+  "protocol_version": "r15.1",
+  "protocol_ready_sha256": "dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50",
+  "owner_methods": 31,
+  "unchanged_independent_methods": 17,
+  "targeted_methods": 6,
+  "results": {
+    "owner": {
+      "exit_code": 0,
+      "command": [
+        "/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round15-condition-preservation/protocol-revised",
+        "-p",
+        "test_*.py",
+        "-v"
+      ]
+    },
+    "independent": {
+      "exit_code": 0,
+      "command": [
+        "/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round15-condition-preservation/testing/revised/run_independent.py"
+      ]
+    },
+    "targeted": {
+      "exit_code": 0,
+      "command": [
+        "/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-I",
+        "-S",
+        "-B",
+        "-c",
+        "import sys,runpy; entry=sys.argv[2]; sys.path.insert(0,sys.argv[1]); sys.argv=[entry]; runpy.run_path(entry,run_name=\"__main__\")",
+        "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round15-condition-preservation/testing/revised",
+        "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round15-condition-preservation/testing/revised/test_targeted.py"
+      ]
+    }
+  },
+  "module_override": "Load unchanged testing/execution/test_independent.py; replace module.C with loaded protocol-revised/compact.py in memory before loading/executing methods. No test file or old receipt edit.",
+  "original_test_sha256": "16b16f95e6bc2feaa2537ac988c58d0b2c9c2895401d652072541a5fc02b219f",
+  "original_protocol_pins_unchanged": 37,
+  "revised_protocol_pins_match": 40,
+  "R14_snapshot_files_unchanged": 221,
+  "original_testing_receipts_unchanged": true,
+  "bridge_calls": 0,
+  "research_api_calls": 0,
+  "credentials_read": false,
+  "completed_utc": "2026-10-13T04:57:12.467628+00:00",
+  "harness_correction": {
+    "initial_failure": "unittest consumed runpy launcher path arguments as test names; six test methods did not run",
+    "correction": "Set sys.argv to target script only before runpy.run_path",
+    "evidence": [
+      "INITIAL-RESULT.json",
+      "targeted-initial-output.txt"
+    ],
+    "tests_or_protocol_changed": false,
+    "rerun_scope": "targeted six only; owner31 and unchanged17 not repeated"
+  }
+}

@@ -1,0 +1,54 @@
+--- companion.py
++++ companion_v2.py
+@@ -60,7 +60,7 @@
+     reasons=o['reasons'];assert reasons,'Every exclusion must retain its source/access/quota basis.'
+     # Earlier exclusions all have independent caps/scope/URL/redirect bases or
+     # the unchanged state-spread basis. Do not revive unreviewed source bodies.
+-    if reasons and all('would exceed retained aggregate page cap'==r for r in reasons):
++    if o['physical_event']['path']=='search-access-ledger.jsonl' and reasons and all('would exceed retained aggregate page cap'==r for r in reasons):
+      pending=identity(qid,c);break
+    elif frozen.urlkey(c['url']) in blocked:reasons=['prior seen source URL; frozen inventory key; no acquisition']
+    else:
+@@ -79,10 +79,10 @@
+  return b
+ 
+ def gate(operation='catchup'):
+- release=get(ROOT/'amendment-release.json') # Missing receipt holds before any native subprocess.
++ release=get(ROOT/'amendment-release-v2.json') # Missing receipt holds before any native subprocess.
+  assert release['authorized_reconciliation'] is True and release['primary_approval_message'] and release['timestamp_utc']
+- assert release['companion_preparation_sha256']==sha(ROOT/'preparation.READY.json')
+- for x in get(ROOT/'preparation.READY.json')['static_files']:assert sha(ROOT/x['path'])==x['sha256'],x['path']
++ assert release['companion_preparation_sha256']==sha(ROOT/'preparation-v2.READY.json')
++ for x in get(ROOT/'preparation-v2.READY.json')['static_files']:assert sha(ROOT/x['path'])==x['sha256'],x['path']
+  b=verify_baseline();assert release['original_ledger_sha256']==b['original_ledger_sha256'] and release['plan_amendment_sha256']==sha(ROOT/'plan-amendment.json')
+  saved=frozen.ROOT
+  try:frozen.ROOT=SOURCES;ORIGINAL_GATE()
+@@ -150,7 +150,7 @@
+  gate();view=record_logical_decisions();assert view['pending_candidate'] is None and not any(int(x['query_id'][1:])>14 for x in view['decisions'])
+  assert len(view['decisions'])==sum(len(cs) for q,cs in bounds().items() if int(q[1:])<=14)
+  assert not (ROOT/'logical-replay.READY.json').exists();put(ROOT/'logical-replay.json',view)
+- put(ROOT/'logical-replay.READY.json',{'schema_version':'round8.logical-replay-ready.v1','logical_replay_sha256':sha(ROOT/'logical-replay.json'),'correction_ledger_prefix_sha256':sha(ROOT/'correction-ledger.jsonl'),'access_ledger_prefix_sha256':sha(ROOT/'access-ledger.jsonl'),'amendment_release_sha256':sha(ROOT/'amendment-release.json'),'cohort_classification':'protocol-deviation corrected','physical_access_order_restored':False,'catchup_artifact_files':[{'path':str(p.relative_to(ROOT)),'sha256':sha(p)} for folder in [ROOT/'candidates',ROOT/'documents'] if folder.exists() for p in sorted(folder.rglob('*')) if p.is_file() and not p.is_symlink()]})
++ put(ROOT/'logical-replay.READY.json',{'schema_version':'round8.logical-replay-ready.v1','logical_replay_sha256':sha(ROOT/'logical-replay.json'),'correction_ledger_prefix_sha256':sha(ROOT/'correction-ledger.jsonl'),'access_ledger_prefix_sha256':sha(ROOT/'access-ledger.jsonl'),'amendment_release_sha256':sha(ROOT/'amendment-release-v2.json'),'cohort_classification':'protocol-deviation corrected','physical_access_order_restored':False,'catchup_artifact_files':[{'path':str(p.relative_to(ROOT)),'sha256':sha(p)} for folder in [ROOT/'candidates',ROOT/'documents'] if folder.exists() for p in sorted(folder.rglob('*')) if p.is_file() and not p.is_symlink()]})
+  return view
+ 
+ def request(q):
+--- export_bundle.py
++++ export_bundle_v2.py
+@@ -3,7 +3,7 @@
+ import json,math,re,subprocess
+ from collections import Counter
+ from pathlib import Path
+-import companion as c
++import companion_v2 as c
+ 
+ def manifest_for(view):
+  rows=[]
+@@ -45,7 +45,7 @@
+  c.put(c.ROOT/'logical-selection.FINAL.json',view)
+  for name,data in [('source-inputs.READY.json',runtime),('blinded-image-inventory.READY.json',{'schema_version':'round8.blinded-images.v1','documents':images}),('source-metadata.READY.json',{'schema_version':'round8.source-metadata.v1','documents':metadata})]:
+   if name!='source-inputs.READY.json' or runtime['documents']:c.put(c.ROOT/name,data)
+- audit={'schema_version':'round8.corrected-collection-audit.v1','counts':counts,'target_achieved':view['target_achieved'],'cohort_classification':'protocol-deviation corrected','physical_access_order_restored':False,'deviation':'Original Q05 candidates were omitted until after Q14; Q03 display13 was physically acquired outside corrected bounds. Preserve original source observations and replay corrected chronology before model outputs.','logical_selection_path':'reconciliation/logical-selection.FINAL.json','logical_selection_sha256':c.sha(c.ROOT/'logical-selection.FINAL.json'),'original_ledger_sha256':c.sha(c.SOURCES/'search-access-ledger.jsonl'),'correction_ledger_sha256':c.sha(c.ROOT/'correction-ledger.jsonl'),'access_ledger_sha256':c.sha(c.ROOT/'access-ledger.jsonl'),'plan_amendment_sha256':c.sha(c.ROOT/'plan-amendment.json'),'amendment_release_sha256':c.sha(c.ROOT/'amendment-release.json'),'application_parser_model_provider_OCR_labels_calls':0,'query_reruns':0}
++ audit={'schema_version':'round8.corrected-collection-audit.v1','counts':counts,'target_achieved':view['target_achieved'],'cohort_classification':'protocol-deviation corrected','physical_access_order_restored':False,'deviation':'Original Q05 candidates were omitted until after Q14; Q03 display13 was physically acquired outside corrected bounds. Preserve original source observations and replay corrected chronology before model outputs.','logical_selection_path':'reconciliation/logical-selection.FINAL.json','logical_selection_sha256':c.sha(c.ROOT/'logical-selection.FINAL.json'),'original_ledger_sha256':c.sha(c.SOURCES/'search-access-ledger.jsonl'),'correction_ledger_sha256':c.sha(c.ROOT/'correction-ledger.jsonl'),'access_ledger_sha256':c.sha(c.ROOT/'access-ledger.jsonl'),'plan_amendment_sha256':c.sha(c.ROOT/'plan-amendment.json'),'amendment_release_sha256':c.sha(c.ROOT/'amendment-release-v2.json'),'application_parser_model_provider_OCR_labels_calls':0,'query_reruns':0}
+  c.put(c.ROOT/'collection-audit.READY.json',audit);c.verify_baseline()
+  files=[{'path':str(p.relative_to(c.SOURCES)),'sha256':c.sha(p),'bytes':p.stat().st_size} for p in sorted(c.SOURCES.rglob('*')) if p.is_file() and '__pycache__' not in p.parts and p not in [c.ROOT/'source-files.READY.json',c.ROOT/'source-collection.READY.json']]
+  c.put(c.ROOT/'source-files.READY.json',{'files':files,'source_root':str(c.SOURCES),'excluded_paths':['reconciliation/source-files.READY.json','reconciliation/source-collection.READY.json','__pycache__']})

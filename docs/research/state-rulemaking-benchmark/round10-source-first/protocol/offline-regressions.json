@@ -1,0 +1,157 @@
+{
+  "status": "required_before_runtime_ready; not model observations",
+  "fixture_input": "round9-exact-id-completeness/protocol/development-fixtures.json",
+  "cases": [
+    {
+      "family": "rule_assertion",
+      "variant": "semantic_positive",
+      "private_expected": {
+        "target_unit": "src-transition",
+        "target_disposition": "matched",
+        "source_complete": true,
+        "whole_notice_complete_eligible": true,
+        "interpretation": "Research fixture semantic eligibility only; not production/action readiness or an actual model result."
+      },
+      "source_override_policy": "Use variant.get('source_text_override', family['source_text']); never serialize expected/source_units/oracle_mapping/review_obligation."
+    },
+    {
+      "family": "rule_assertion",
+      "variant": "evidence_only_negative",
+      "private_expected": {
+        "target_unit": "src-transition",
+        "target_disposition": "mismatched",
+        "source_complete": false,
+        "whole_notice_complete_eligible": false,
+        "interpretation": "Research fixture semantic eligibility only; not production/action readiness or an actual model result."
+      },
+      "source_override_policy": "Use variant.get('source_text_override', family['source_text']); never serialize expected/source_units/oracle_mapping/review_obligation."
+    },
+    {
+      "family": "rule_assertion",
+      "variant": "coverage_rationale_cannot_repair",
+      "private_expected": {
+        "target_unit": "src-transition",
+        "target_disposition": "mismatched",
+        "source_complete": false,
+        "whole_notice_complete_eligible": false,
+        "interpretation": "Research fixture semantic eligibility only; not production/action readiness or an actual model result."
+      },
+      "source_override_policy": "Use variant.get('source_text_override', family['source_text']); never serialize expected/source_units/oracle_mapping/review_obligation."
+    },
+    {
+      "family": "rule_assertion",
+      "variant": "source_only_extra_negative",
+      "private_expected": {
+        "omitted_units": [
+          "src-written",
+          "src-receipt"
+        ],
+        "source_complete": false,
+        "whole_notice_complete_eligible": false,
+        "interpretation": "Research fixture semantic eligibility only; not production/action readiness or an actual model result."
+      },
+      "source_override_policy": "Use variant.get('source_text_override', family['source_text']); never serialize expected/source_units/oracle_mapping/review_obligation."
+    },
+    {
+      "family": "full_alternatives",
+      "variant": "full_group_positive",
+      "private_expected": {
+        "target_unit": "src-all-alternatives",
+        "target_disposition": "matched",
+        "source_complete": true,
+        "whole_notice_complete_eligible": true,
+        "interpretation": "Research fixture semantic eligibility only; not production/action readiness or an actual model result."
+      },
+      "source_override_policy": "Use variant.get('source_text_override', family['source_text']); never serialize expected/source_units/oracle_mapping/review_obligation."
+    },
+    {
+      "family": "full_alternatives",
+      "variant": "phone_subgroup_negative",
+      "private_expected": {
+        "target_unit": "src-all-alternatives",
+        "target_disposition": "mismatched",
+        "source_complete": false,
+        "whole_notice_complete_eligible": false,
+        "interpretation": "Research fixture semantic eligibility only; not production/action readiness or an actual model result."
+      },
+      "source_override_policy": "Use variant.get('source_text_override', family['source_text']); never serialize expected/source_units/oracle_mapping/review_obligation."
+    },
+    {
+      "family": "full_alternatives",
+      "variant": "unknown_endpoint_blocks_group",
+      "private_expected": {
+        "target_unit": "src-all-alternatives",
+        "target_disposition": "unknown",
+        "source_complete": false,
+        "whole_notice_complete_eligible": false,
+        "automatic_reason": "association_unresolved",
+        "interpretation": "Research fixture semantic eligibility only; not production/action readiness or an actual model result."
+      },
+      "source_override_policy": "Use variant.get('source_text_override', family['source_text']); never serialize expected/source_units/oracle_mapping/review_obligation."
+    },
+    {
+      "family": "modality_preservation",
+      "variant": "optional_positive",
+      "private_expected": {
+        "target_unit": "src-optional",
+        "target_disposition": "matched",
+        "source_complete": true,
+        "requirements_label": "preserved",
+        "whole_notice_complete_eligible": true,
+        "interpretation": "Research fixture semantic eligibility only; not production/action readiness or an actual model result."
+      },
+      "source_override_policy": "Use variant.get('source_text_override', family['source_text']); never serialize expected/source_units/oracle_mapping/review_obligation."
+    },
+    {
+      "family": "modality_preservation",
+      "variant": "unclear_negative",
+      "private_expected": {
+        "target_unit": "src-optional",
+        "target_disposition": "unknown",
+        "source_complete": false,
+        "requirements_label": "uncertain",
+        "requirements_preserved_allowed": false,
+        "whole_notice_complete_eligible": false,
+        "automatic_reason": "requirement_modality_unresolved",
+        "interpretation": "Research fixture semantic eligibility only; not production/action readiness or an actual model result."
+      },
+      "source_override_policy": "Use variant.get('source_text_override', family['source_text']); never serialize expected/source_units/oracle_mapping/review_obligation."
+    },
+    {
+      "family": "modality_preservation",
+      "variant": "mandatory_negative",
+      "private_expected": {
+        "target_unit": "src-optional",
+        "target_disposition": "mismatched",
+        "source_complete": false,
+        "requirements_label": "omitted_or_changed",
+        "requirements_preserved_allowed": false,
+        "whole_notice_complete_eligible": false,
+        "interpretation": "Research fixture semantic eligibility only; not production/action readiness or an actual model result."
+      },
+      "source_override_policy": "Use variant.get('source_text_override', family['source_text']); never serialize expected/source_units/oracle_mapping/review_obligation."
+    }
+  ],
+  "isolation_tests": [
+    "Stage A builder accepts only source_text; derive hash internally. Schema binding source-only. Request identical for same source across all sibling records, labels, prior outputs and audit mutations.",
+    "Synthetic added-source variant changes A source/hash despite unchanged candidate IDs.",
+    "Stage A request contains no record, record-derived metadata, coverage labels, oracle, prior outputs, reviews or defect hints. Test full recursively serialized body, not just user text.",
+    "Stage B uses byte-frozen validated inventory; changing raw response after freeze invalidates provenance. Same exact source and restored record hashes as A/prior record.",
+    "Stage B has no private expected fields, audits or sibling cases. Full source hash identical; operative projection equals exhaustive original fields(record) with every whole value intact, and original record hash binds it."
+  ],
+  "host_tests": [
+    "Reject duplicate JSON keys at every depth, trailing text, NaN/Infinity/exponent overflow, wrong bindings and unrecognized schema fields.",
+    "A: reject zero/>64 units, duplicate/invalid IDs, absent dependency, self dependency/cycle, bad exact quote or occurrence, whitespace-only assertions, contradictory uncertainty_reason.",
+    "A failure, non-stop finish, overflow or refusal suppresses B with zero retry. B full actual body+1024 over40000 suppresses dispatch; keep A and charge reservation.",
+    "B: exact frozen ID keys all required/no extras; reject duplicate/missing/substituted keys and wrong inventory/source/record hashes.",
+    "Pointer must be exact operative whole-field allowlist member and resolve against original record; reject IDs, containers, evidence, coverage, source text, invalid escapes, out-of-range arrays and duplicate pointers.",
+    "Matched requires nonempty operative assertion and all dependencies matched. missing requires empty pointers. Source-uncertain inventory cannot match.",
+    "Unknown dependency propagates unknown; known incomplete dependency prevents match. Unknown/invalid/audit gaps dominate global eligibility but retain all defect findings.",
+    "A model self-completeness claim rejected as extra field. All matched never sets source completeness verified.",
+    "Use approved prior fixture oracles offline to test explicit supplied mappings and guards. Do not claim offline test generation proves model discovery; do not dispatch synthetic paid calls.",
+    "Inventory tuple codec preserves every field, order, empty values, repeated/overlapping quotes and Unicode; restore hash equals frozen A. Reject altered columns, widths, field types, dropped values, substituted hash and extra envelope keys.",
+    "Operative record equals recursive removal of only evidence/coverage from original; exhaustive 310-field pointer/value equality on WI. Original IDs and all relationship values retained. Reject any omitted operative field or altered value.",
+    "Span selectors: Unicode codepoints (including non-BMP and combining marks), overlapping/repeated quotes and retained occurrence must roundtrip exactly. Reject booleans, negative/reversed/empty/out-of-range spans, wrong occurrence/start, byte/UTF-16 offsets and changed source/hash. Canonical restored A must equal frozen A, not merely pass schema."
+  ],
+  "mapping_semantics": "Existing mismatched source-unit oracle can correspond to missing or mismatched in R10 only after reviewing whether any operative assertion remains; full obligation is not matched in either case. Preserve original expected data."
+}

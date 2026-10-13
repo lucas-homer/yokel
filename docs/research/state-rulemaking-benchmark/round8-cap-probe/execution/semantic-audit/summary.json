@@ -1,0 +1,60 @@
+{
+  "schema_version": "round8.cap-probe.semantic-audit-summary.v1",
+  "document_id": "doc-92211b8c7ba0",
+  "inventory_sha256": "6aefa75fb280bc77e03394b726feef404f908e72f37286c6786baa4243e308f7",
+  "claim_count": 79,
+  "claim_status_counts": {
+    "correct": 71,
+    "unknown": 7,
+    "incorrect": 1
+  },
+  "source_units": 31,
+  "source_status_counts": {
+    "matched": 21,
+    "unknown": 9,
+    "mismatched": 1
+  },
+  "matched_fraction": 0.6774193548387096,
+  "record_present": false,
+  "record_assessment": null,
+  "inventory_complete_supported": false,
+  "all_available_inventory_claims_reviewed": true,
+  "all_frozen_source_units_accounted": true,
+  "direct_source_uncertainties": [
+    "zoom",
+    "aid_request"
+  ],
+  "propagated_unknown_units": [
+    "meeting_id",
+    "phone1",
+    "phone2",
+    "access_alternatives",
+    "zoom_register",
+    "spoken_preregister",
+    "phone_form"
+  ],
+  "partial_source_unit": [
+    "aid"
+  ],
+  "omitted_source_units": [],
+  "literal_counts": {
+    "date": {
+      "correct": 3
+    },
+    "email": {
+      "correct": 5
+    },
+    "other": {
+      "correct": 25,
+      "unknown": 2
+    }
+  },
+  "claim_unit_note": "Counts include repeated literal claims/roles; not independent samples or distinct notices. Dates include q-deadline repetition.",
+  "semantic_notes": [
+    "Reference I/l ambiguity remains uncorrected; exact Zoom endpoint uncertified, not confirmed fabricated.",
+    "Accessibility examples only evidence; contact association unresolved versus fixed reference.",
+    "Sarah Wood personal-name expansion plausible but not separately stated.",
+    "Malformed t-access-request dependency does not make its literal as-soon-as-possible phrase false."
+  ],
+  "operational_note": "Frozen assembly record null; no verifier result supplied. Primary owns operational scoring, cost and runtime diagnosis; this audit does not reconstruct an absent record."
+}

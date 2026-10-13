@@ -1,0 +1,312 @@
+{
+  "schema_version": "round9.live.semantic-global-review.v1",
+  "raw_globals": {
+    "completeness": {
+      "evidence": [
+        {
+          "context": null,
+          "occurrence": 1,
+          "quote": "Written comments and any questions on the proposed rules should be submitted to:"
+        },
+        {
+          "context": null,
+          "occurrence": 1,
+          "quote": "For those who plan to phone in, please download and complete\nthe fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+        },
+        {
+          "context": null,
+          "occurrence": 1,
+          "quote": "Agency Small Business Regulatory Coordinator\n\nEmma Esch (608) 266-1959\nemma.esch@wisconsin.gov"
+        }
+      ],
+      "label": "incomplete",
+      "reason": "Independent full-notice review finds the events, dates, remote instructions, exact route components, alternatives, helper links, aid formats and qualifications, ancillary contacts, and explicit uncertainties represented. However, the question-contact requirement changes the source's 'should be submitted' instruction to informational directory text. The notice states equal consideration of written and oral comments but no public-posting, publication-latency, confidentiality, or copies-request policy; those absent disclosures or routes are not required omissions. This is a research-shadow assessment, not production certification."
+    },
+    "contradictions": [
+      {
+        "description": "The question-contact item is typed informational/other although the source directs that questions 'should be submitted' to the listed contact. This does not establish a mandatory or exclusive channel, but it is an instruction rather than merely a contact-directory disclosure.",
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": 1,
+            "quote": "Written comments and any questions on the proposed rules should be submitted to:"
+          }
+        ],
+        "item_ids": [
+          "q_questions",
+          "r_query"
+        ]
+      }
+    ],
+    "document_id": "doc-92211b8c7ba0",
+    "missing_items": [
+      {
+        "description": "Preserve the source's nonabsolute 'should be submitted' direction for questions on the proposed rules, separately from the correctly represented contact details and written-comment direction.",
+        "evidence": [
+          {
+            "context": null,
+            "occurrence": 1,
+            "quote": "Written comments and any questions on the proposed rules should be submitted to:"
+          }
+        ],
+        "kind": "requirement"
+      }
+    ],
+    "payload_sha256": "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c",
+    "schema_version": "round9.exact-id.record_verdict.v1",
+    "source_identity": {
+      "evidence": [
+        {
+          "context": null,
+          "occurrence": 1,
+          "quote": "The Department of Natural Resources announces that it will hold a public hearing on a\npermanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107"
+        },
+        {
+          "context": null,
+          "occurrence": 1,
+          "quote": "The rule may be viewed under NRB Order number WY-20-23 at:"
+        }
+      ],
+      "label": "resolved",
+      "reason": "The agency, chapter references, and order identifier match the supplied notice. No conflicting source identity is apparent. The attention name Madi Johansen and email Madison.johansen@wisconsin.gov are preserved as printed; no unsupported name repair or identity equivalence is inferred."
+    }
+  },
+  "reviews": {
+    "completeness": {
+      "label_assessment": "Directionally agrees that record is incomplete; reason-level agreement is partial, not complete.",
+      "reason_assessment": "The newly identified question-contact advisory instruction loss is source-grounded. The broad assertion that alternatives are represented omits the known full Zoom/phone grouping loss, and no repeal/recreation omission appears. Label agreement alone is not detection of those two defects. Named aids, ancillary roles and absence of posting/confidentiality/copy-request policies are locally supported."
+    },
+    "missing_items": {
+      "assessment": "One entry identifies missing advisory instruction for questions; useful additional concern. No entry identifies either known partial source unit rule or access_alternatives. Do not equate list presence with complete omission detection."
+    },
+    "contradictions": {
+      "assessment": "The single entry accurately contrasts informational/other typing with advisory source wording for q_questions/r_query. This is a semantic weakening/typing discrepancy, not a conflict in contact values or source identities, and duplicates the one underlying missing requirement concern."
+    },
+    "source_identity": {
+      "assessment": "One agency, rule chapter set and NRB order are consistent; resolved source identity is locally supported. Madi name and Madison email remain verbatim. Resolution is distinct from recovery of repeal/recreation operations, and identity evidence cannot fill absent semantic assertions."
+    },
+    "bindings": {
+      "assessment": "Document, payload and schema bindings match the request; expanded full payload canonical hash independently verified. These are structural/provenance checks, not semantic conclusions."
+    }
+  },
+  "new_question_instruction_finding": {
+    "finding": "source_grounded_additional_advisory_instruction_concern",
+    "source_evidence": {
+      "start": 2656,
+      "end": 2736,
+      "quote": "Written comments and any questions on the proposed rules should be submitted to:"
+    },
+    "record_items": {
+      "q_questions": {
+        "json_pointer": "/requirements/7",
+        "value": {
+          "association": "source_resolved",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 2873,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov",
+              "start": 2656
+            }
+          ],
+          "id": "q_questions",
+          "kind": "other",
+          "modality": "informational",
+          "route_ids": [
+            "r_query"
+          ],
+          "semantic_class": "other",
+          "text": "The Department of Natural Resources contact, Attn: Madi Johansen, is listed for questions on the proposed rules, with postal, telephone, and email contact details."
+        }
+      },
+      "r_query": {
+        "json_pointer": "/routes/10",
+        "value": {
+          "alternative_group_id": null,
+          "association": "source_resolved",
+          "channel": "other",
+          "components": [
+            {
+              "evidence": [
+                {
+                  "end": 2789,
+                  "quote": "Department of Natural Resources\nAttn: Madi Johansen",
+                  "start": 2738
+                }
+              ],
+              "id": "c_query_office",
+              "kind": "name",
+              "literal": "Department of Natural Resources"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 2789,
+                  "quote": "Attn: Madi Johansen",
+                  "start": 2770
+                }
+              ],
+              "id": "c_query_name",
+              "kind": "name",
+              "literal": "Attn: Madi Johansen"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 2828,
+                  "quote": "3550 Mormon Coulee Road, La Crosse, WI",
+                  "start": 2790
+                }
+              ],
+              "id": "c_query_address",
+              "kind": "address_part",
+              "literal": "3550 Mormon Coulee Road, La Crosse, WI"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 2873,
+                  "quote": "608-712-2798, Madison.johansen@wisconsin.gov",
+                  "start": 2829
+                }
+              ],
+              "id": "c_query_phone",
+              "kind": "endpoint",
+              "literal": "608-712-2798"
+            },
+            {
+              "evidence": [
+                {
+                  "end": 2873,
+                  "quote": "608-712-2798, Madison.johansen@wisconsin.gov",
+                  "start": 2829
+                }
+              ],
+              "id": "c_query_email",
+              "kind": "endpoint",
+              "literal": "Madison.johansen@wisconsin.gov"
+            }
+          ],
+          "description": "Contact details for questions on proposed rules; co-listing does not establish interchangeable channels.",
+          "event_ids": [],
+          "evidence": [
+            {
+              "end": 2873,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov",
+              "start": 2656
+            }
+          ],
+          "id": "r_query",
+          "role": "information_contact"
+        }
+      },
+      "q_comment_contact": {
+        "json_pointer": "/requirements/6",
+        "value": {
+          "association": "source_resolved",
+          "event_ids": [
+            "e_comments"
+          ],
+          "evidence": [
+            {
+              "end": 2873,
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:\n\nDepartment of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI\n608-712-2798, Madison.johansen@wisconsin.gov",
+              "start": 2656
+            }
+          ],
+          "id": "q_comment_contact",
+          "kind": "other",
+          "modality": "unclear",
+          "route_ids": [
+            "r_mail",
+            "r_comment_email"
+          ],
+          "semantic_class": "instruction",
+          "text": "Written comments should be submitted to the listed Department of Natural Resources contact, Attn: Madi Johansen."
+        }
+      }
+    },
+    "prior_claims": [
+      {
+        "id": "q_questions",
+        "categories": [
+          "ancillary"
+        ],
+        "status": "correct",
+        "literal_kind": "none",
+        "literal_status": "not_applicable",
+        "evidence_status": "matched",
+        "basis": "Page2 Department/Madi question-contact role and postal/telephone/email details faithfully retained via r_query. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+      },
+      {
+        "id": "r_query",
+        "categories": [
+          "ancillary"
+        ],
+        "status": "correct",
+        "literal_kind": "none",
+        "literal_status": "not_applicable",
+        "evidence_status": "matched",
+        "basis": "Page2 questions contact bundle retains office/name/address/phone/email and information-contact role. Other channel represents mixed bundle; no invented interchangeable-channel group. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+      },
+      {
+        "id": "q_comment_contact",
+        "categories": [
+          "instruction"
+        ],
+        "status": "correct",
+        "literal_kind": "none",
+        "literal_status": "not_applicable",
+        "evidence_status": "matched",
+        "basis": "Page2 should-be-submitted-to Department/Madi wording faithfully preserved with postal/email links. Structured unclear modality is split below. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+      },
+      {
+        "id": "q_comment_contact_modality",
+        "categories": [
+          "instruction",
+          "uncertainty"
+        ],
+        "status": "unknown",
+        "literal_kind": "none",
+        "literal_status": "not_applicable",
+        "evidence_status": "matched",
+        "basis": "The semantic text preserves should, but modality unclear leaves whether it is advisory unresolved. The frozen convention treats should as advice. This is unresolved structured modality, not an incorrect postal/email value; it prevents unconditional complete support. Normalized record retains the same semantic fields; corresponding evidence offset(s) checked against exact source slice."
+      }
+    ],
+    "independent_assessment": "The shared predicate should be submitted applies grammatically to questions as well as comments. q_questions removes that advice and uses informational/other typing. This is a defensible source-grounded loss of instruction strength/classification under the request contract; the response correctly avoids mandatory/exclusive interpretation. Contact values and actual ancillary query function remain correct. r_query is a linked consequence of the same concern, not a second independent error.",
+    "relation_to_frozen_audit": "Additional qualitative observation, not detection of either preexisting partial source unit. Prior q_questions/r_query correct claims and query_contact matched source unit remain unchanged. Do not retrofit source labels or add a new scored source unit/denominator after seeing response.",
+    "contrast_with_comment_contact": "q_comment_contact retains should in semantic text but leaves modality unclear, while q_questions removes advisory wording too. This explains some difference in severity, but does not justify calling the former fully preserved under the frozen modality convention."
+  },
+  "known_defect_detection": {
+    "repeal_recreation_evidence_only": {
+      "detected": false,
+      "basis": "i_rule explicitly and incorrectly credits event description with context absent from semantic fields; globals do not flag omission."
+    },
+    "full_zoom_phone_alternative_group_missing": {
+      "detected": false,
+      "basis": "ag_phone/r_phone reasons describe correct phone subset; global completeness broadly credits alternatives and missing_items does not flag larger relation."
+    },
+    "comment_contact_unclear_modality": {
+      "noticed": true,
+      "treated_as_defect": false,
+      "basis": "Reason explicitly excuses unclear strength and returns preserved, leaving prior unresolved modality unaddressed."
+    },
+    "accessibility_contact_source_uncertainty": {
+      "noticed": true,
+      "full_source_recovery_established": false,
+      "basis": "Reasons retain unresolved contact; all association labels matched. This is useful local caution with unchanged original reference disagreement."
+    }
+  },
+  "source_caveats": {
+    "url": "Original image-reference I/l unresolved; native text and supplementary PDF annotation support lowercase l. No confirmed fabrication and no relabeling.",
+    "propagated_unknowns": [
+      "meeting_id",
+      "phone1",
+      "phone2",
+      "zoom_register",
+      "spoken_preregister",
+      "phone_form"
+    ],
+    "accessibility": "Original aid_request references Madi email/phone; record deliberately leaves placeholder. Neither cautious response language nor original labels settle positional-reference ambiguity conclusively."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "operations-audit-v1",
+  "purpose": "Independent offline operations and reproducibility audit, excluding evidence-preservation scoring",
+  "statuses": ["pass", "fail", "pending", "not_assessable", "limitation"],
+  "report_fields": ["phase", "prepared_at_utc", "freeze_sha256", "checks", "provider_plans", "call_results", "security_findings", "limitations"],
+  "check_fields": ["check_id", "status", "evidence_paths", "details"],
+  "expected_parse_attempts": {"firecrawl": 20, "llama_agentic": 20, "llama_agentic_plus": 20},
+  "call_result_fields": ["provider", "fixture_id", "tier", "input_sha256_matches", "request_settings_match", "remote_mapping_check", "response_integrity", "text_integrity", "timing_check", "reported_usage", "returned_identifiers", "outcome"],
+  "response_categories": {
+    "exact_tool_response": "Uncorrected returned tool object saved to JSON; JSON serialization differs from transport bytes unless actual transport bytes were retained",
+    "sanitized_upload_envelope": "Explicitly redacted ephemeral URL/token/header/ref response; must not be represented as exact raw response",
+    "sanitized_parse_exception": "Returned parse object redacted because provider echoed sensitive upload values; document the exception",
+    "derived_text": "Byte comparison against returned string/block without inferred terminal newline"
+  },
+  "final_checks": [
+    "Frozen manifest checksum and every retained file hash/byte count unchanged",
+    "Twenty fixture IDs, full page counts, distinct paired local input hashes across all arms",
+    "Upload receipt local hash/byte count and remote file/ref linkage; unavailable linkage is limitation",
+    "Planned and actual settings without custom hints or expected answers",
+    "Uncorrected parse response object and exact derived text, with explicit redaction exceptions",
+    "UTC interval and measured latency consistency; distinguish parse from upload/pipeline latency",
+    "Actual returned usage separately from published-price estimates; unknown remains null",
+    "Global max-two parse concurrency per provider, combining both Llama tiers",
+    "Completion-order three-consecutive-failure stopping; in-flight outcomes retained; no blind timeout retries",
+    "Provider operational failures retained; never label pending planned calls failures before run complete",
+    "Sensitive findings report only path/category, never copy or print values"
+  ]
+}

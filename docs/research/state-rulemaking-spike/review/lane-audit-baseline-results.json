@@ -1,0 +1,404 @@
+{
+  "lanes": {
+    "ct": {
+      "normalizer_sha256": "46c1b5cdcc5d3c781b7931aed94de8d6895be444db1702c93a28708ff86a757e",
+      "manifest_sha256": "0aa1d6f7b4351e8c7fdcd4e9c1962017dd3257bf12bb323abed96cffb22f4a9f",
+      "validation": {
+        "lane": "ct",
+        "artifact_count": 14,
+        "observation_count": 28,
+        "method_counts": {
+          "deterministic": 28,
+          "manual_text": 0,
+          "manual_visual": 0,
+          "model": 0
+        },
+        "exact_quote_count": 28,
+        "visual_evidence_count": 0,
+        "failures": [],
+        "passed": true,
+        "semantic_entailment": "requires separate source review",
+        "production_readiness": "not established"
+      },
+      "first": {
+        "returncode": 0,
+        "stdout": "{\"observations\": 28, \"open_records\": 4, \"native_historical_windows\": 2}\n",
+        "stderr": ""
+      },
+      "second": {
+        "returncode": 0,
+        "stdout": "{\"observations\": 28, \"open_records\": 4, \"native_historical_windows\": 2}\n",
+        "stderr": ""
+      },
+      "first_changed_files": [],
+      "second_changed_files": []
+    },
+    "wa": {
+      "normalizer_sha256": "94b4d96dd60af04f7982cc4dd5f12caba9ddb5609fb9889e536862323dfe84d9",
+      "manifest_sha256": "7246f19fec700353ebd7cd70f857fb5d32618f3775cc6b365084d1d778dacba7",
+      "validation": {
+        "lane": "wa",
+        "artifact_count": 10,
+        "observation_count": 10,
+        "method_counts": {
+          "deterministic": 10,
+          "manual_text": 0,
+          "manual_visual": 0,
+          "model": 0
+        },
+        "exact_quote_count": 11,
+        "visual_evidence_count": 0,
+        "failures": [
+          {
+            "observation_id": "wa-26-18-058-event_type",
+            "errors": [
+              "value is outside the canonical research vocabulary"
+            ]
+          },
+          {
+            "observation_id": "wa-26-18-032-event_type",
+            "errors": [
+              "value is outside the canonical research vocabulary"
+            ]
+          }
+        ],
+        "passed": false,
+        "semantic_entailment": "requires separate source review",
+        "production_readiness": "not established"
+      },
+      "first": {
+        "returncode": 0,
+        "stdout": "{\"observation_count\": 10}\n",
+        "stderr": ""
+      },
+      "second": {
+        "returncode": 0,
+        "stdout": "{\"observation_count\": 10}\n",
+        "stderr": ""
+      },
+      "first_changed_files": [],
+      "second_changed_files": []
+    },
+    "pdf": {
+      "normalizer_sha256": "b28ffe59a7e3c220e80dc02d4a0203d26463bd28c5cc6ae2eabe09cbb7a126a8",
+      "manifest_sha256": "b2c82fa43ef91d1b1cc82971595890b16c28e323014fedcae2e0d06c20abc0c3",
+      "validation": {
+        "lane": "pdf",
+        "artifact_count": 13,
+        "observation_count": 7,
+        "method_counts": {
+          "deterministic": 4,
+          "manual_text": 0,
+          "manual_visual": 3,
+          "model": 0
+        },
+        "exact_quote_count": 4,
+        "visual_evidence_count": 3,
+        "failures": [
+          {
+            "observation_id": "pdf-event_type",
+            "errors": [
+              "value is outside the canonical research vocabulary"
+            ]
+          },
+          {
+            "observation_id": "pdf-hearing_status",
+            "errors": [
+              "value is outside the canonical research vocabulary"
+            ]
+          }
+        ],
+        "passed": false,
+        "semantic_entailment": "requires separate source review",
+        "production_readiness": "not established"
+      },
+      "first": {
+        "returncode": 0,
+        "stdout": "7 observations; all manifest hashes and exact-text evidence validated\n",
+        "stderr": ""
+      },
+      "second": {
+        "returncode": 0,
+        "stdout": "7 observations; all manifest hashes and exact-text evidence validated\n",
+        "stderr": ""
+      },
+      "first_changed_files": [],
+      "second_changed_files": []
+    }
+  },
+  "checks": [
+    {
+      "name": "ct_replays_identically",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "wa_replays_identically",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "pdf_replays_identically",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "cross_lane_observation_ids_unique",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "cross_lane_artifact_ids_unique",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-001_value_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-002_value_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-003_epoch_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-004_value_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-005_value_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-006_epoch_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-007_value_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-008_value_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-009_epoch_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-010_value_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-011_value_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-012_epoch_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-013_epoch_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-014_epoch_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-015_epoch_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct-016_epoch_and_locator",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct_all_native_observations_pointer_checked",
+      "passed": true,
+      "details": 16
+    },
+    {
+      "name": "ct_historical_cycles_distinct",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct_missing_record_not_withdrawn",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct_no_generic_hearing_assertions",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct_display_zone_unresolved",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "wa_partial_withdrawal",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "wa_withdrawal_no_future_dates",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "wa_proposal_comment_date_only",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "wa_proposal_hearing_separate",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "wa_no_current_effective_date",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "pdf_twenty_vs_twentyfive",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "pdf_no_computed_deadline",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "pdf_visual_methods_explicit",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "pdf_review_hash_links",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "pdf_fresh_original_equals_inherited",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "ct_captures/fc059.md_response_lineage",
+      "passed": false,
+      "details": null
+    },
+    {
+      "name": "ct_captures/fc059retry.md_response_lineage",
+      "passed": false,
+      "details": null
+    },
+    {
+      "name": "ct_captures/fc014.md_response_lineage",
+      "passed": false,
+      "details": null
+    },
+    {
+      "name": "wa_firecrawl-withdrawal.md_response_lineage",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "wa_firecrawl-proposal.md_response_lineage",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "pdf_derived/firecrawl.md_response_lineage",
+      "passed": true,
+      "details": null
+    }
+  ],
+  "mutations": [
+    {
+      "lane": "wa",
+      "label": "missing_comment_label",
+      "run": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/private/tmp/docketclock-three-path-2026-10-05/review/wa-negative-obmzob4k/wa/normalize.py\", line 79, in <module>\n    if __name__=='__main__': main()\n                             ~~~~^^\n  File \"/private/tmp/docketclock-three-path-2026-10-05/review/wa-negative-obmzob4k/wa/normalize.py\", line 76, in main\n    for name in ('withdrawal.html','proposal.html'): obs.extend(parse(ROOT/name))\n                                                                ~~~~~^^^^^^^^^^^\n  File \"/private/tmp/docketclock-three-path-2026-10-05/review/wa-negative-obmzob4k/wa/normalize.py\", line 63, in parse\n    close=field('Submit Written Comments to: ')\n  File \"/private/tmp/docketclock-three-path-2026-10-05/review/wa-negative-obmzob4k/wa/normalize.py\", line 59, in field\n    if len(matches)!=1: raise ValueError('Expected one '+label)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: Expected one Submit Written Comments to: \n"
+      },
+      "observation_count": 10,
+      "predicates": [
+        "event_type",
+        "agency",
+        "filing_date",
+        "withdraws",
+        "event_type",
+        "agency",
+        "filing_date",
+        "title",
+        "comment_close",
+        "hearing_time"
+      ],
+      "shared_validation_passed": null
+    },
+    {
+      "lane": "pdf",
+      "label": "missing_public_comment_clause_with_valid_hash",
+      "run": {
+        "returncode": 0,
+        "stdout": "6 observations; all manifest hashes and exact-text evidence validated\n",
+        "stderr": ""
+      },
+      "observation_count": 6,
+      "predicates": [
+        "agency",
+        "rule_citations",
+        "hearing_request_duration",
+        "event_type",
+        "hearing_status",
+        "filing_date"
+      ],
+      "shared_validation_passed": false
+    },
+    {
+      "lane": "pdf",
+      "label": "missing_hearing_clause_with_valid_hash",
+      "run": {
+        "returncode": 0,
+        "stdout": "6 observations; all manifest hashes and exact-text evidence validated\n",
+        "stderr": ""
+      },
+      "observation_count": 6,
+      "predicates": [
+        "agency",
+        "rule_citations",
+        "comment_duration",
+        "event_type",
+        "hearing_status",
+        "filing_date"
+      ],
+      "shared_validation_passed": false
+    }
+  ]
+}

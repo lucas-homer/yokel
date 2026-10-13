@@ -1,0 +1,630 @@
+{
+  "alternative_groups": [
+    {
+      "association": "source_resolved",
+      "event_ids": [
+        "comments"
+      ],
+      "id": "comment-channels",
+      "purpose": "submission",
+      "requirement_ids": [
+        "comment-routes",
+        "comment-window"
+      ],
+      "route_ids": [
+        "comment-mail",
+        "comment-email",
+        "comment-fax"
+      ]
+    },
+    {
+      "association": "source_resolved",
+      "event_ids": [
+        "hearing"
+      ],
+      "id": "hearing-channels",
+      "purpose": "hearing_access",
+      "requirement_ids": [
+        "teams-lookup"
+      ],
+      "route_ids": [
+        "hearing-place",
+        "teams"
+      ]
+    },
+    {
+      "association": "source_resolved",
+      "event_ids": [
+        "assistance"
+      ],
+      "id": "access-channels",
+      "purpose": "assistance_request",
+      "requirement_ids": [
+        "access-request"
+      ],
+      "route_ids": [
+        "access-phone",
+        "access-fax",
+        "access-email"
+      ]
+    }
+  ],
+  "document_id": "wsr-26-19-016",
+  "events": [
+    {
+      "description": "Written comments on WAC 456-10-730.",
+      "id": "comments",
+      "phase": "written_comment",
+      "timing": [
+        {
+          "anchor_event_ids": [],
+          "condition_requirement_ids": [],
+          "dependency_relation": "none",
+          "id": "comments-open",
+          "kind": "absolute_date",
+          "raw": "beginning August 7, 2026",
+          "role": "opens",
+          "value": "2026-08-07"
+        },
+        {
+          "anchor_event_ids": [],
+          "condition_requirement_ids": [],
+          "dependency_relation": "none",
+          "id": "comments-close",
+          "kind": "absolute_date",
+          "raw": "by October 20, 2026",
+          "role": "closes",
+          "value": "2026-10-20"
+        }
+      ]
+    },
+    {
+      "description": "Hearing at the listed Olympia location and via Microsoft Teams.",
+      "id": "hearing",
+      "phase": "hearing",
+      "timing": [
+        {
+          "anchor_event_ids": [],
+          "condition_requirement_ids": [],
+          "dependency_relation": "none",
+          "id": "hearing-date",
+          "kind": "absolute_date",
+          "raw": "November 3, 2026",
+          "role": "hearing_start",
+          "value": "2026-11-03"
+        },
+        {
+          "anchor_event_ids": [],
+          "condition_requirement_ids": [],
+          "dependency_relation": "none",
+          "id": "hearing-clock",
+          "kind": "clock",
+          "raw": "10:00 a.m.",
+          "role": "hearing_start",
+          "value": null
+        }
+      ]
+    },
+    {
+      "description": "Contact for assistance for persons with disabilities.",
+      "id": "assistance",
+      "phase": "other",
+      "timing": [
+        {
+          "anchor_event_ids": [],
+          "condition_requirement_ids": [],
+          "dependency_relation": "none",
+          "id": "assistance-by",
+          "kind": "absolute_date",
+          "raw": "by October 20, 2026",
+          "role": "closes",
+          "value": "2026-10-20"
+        }
+      ]
+    },
+    {
+      "description": "Date of intended adoption, not a guaranteed adoption outcome.",
+      "id": "adoption",
+      "phase": "other",
+      "timing": [
+        {
+          "anchor_event_ids": [],
+          "condition_requirement_ids": [],
+          "dependency_relation": "none",
+          "id": "adoption-date",
+          "kind": "absolute_date",
+          "raw": "December 2, 2026",
+          "role": "other",
+          "value": "2026-12-02"
+        }
+      ]
+    },
+    {
+      "description": "Original proposed-rule notice filed with Washington State Register.",
+      "id": "filing",
+      "phase": "other",
+      "timing": [
+        {
+          "anchor_event_ids": [],
+          "condition_requirement_ids": [],
+          "dependency_relation": "none",
+          "id": "filing-date",
+          "kind": "absolute_date",
+          "raw": "September 4, 2026",
+          "role": "other",
+          "value": "2026-09-04"
+        },
+        {
+          "anchor_event_ids": [],
+          "condition_requirement_ids": [],
+          "dependency_relation": "none",
+          "id": "filing-clock",
+          "kind": "clock",
+          "raw": "10:26 a.m.",
+          "role": "other",
+          "value": null
+        }
+      ]
+    }
+  ],
+  "identities": [
+    {
+      "event_ids": [
+        "comments",
+        "hearing",
+        "assistance",
+        "adoption",
+        "filing"
+      ],
+      "id": "agency",
+      "kind": "agency",
+      "literal": "BOARD OF TAX APPEALS",
+      "relation": "canonical"
+    },
+    {
+      "event_ids": [
+        "comments",
+        "hearing",
+        "assistance",
+        "adoption",
+        "filing"
+      ],
+      "id": "notice",
+      "kind": "other",
+      "literal": "WSR 26-19-016",
+      "relation": "canonical"
+    },
+    {
+      "event_ids": [
+        "comments",
+        "hearing",
+        "adoption"
+      ],
+      "id": "rule",
+      "kind": "rule",
+      "literal": "WAC 456-10-730 Exceptions to proposed decisions",
+      "relation": "canonical"
+    },
+    {
+      "event_ids": [
+        "comments",
+        "hearing",
+        "adoption"
+      ],
+      "id": "preproposal",
+      "kind": "other",
+      "literal": "WSR 26-15-[0]21",
+      "relation": "reference"
+    },
+    {
+      "event_ids": [
+        "comments",
+        "hearing",
+        "adoption"
+      ],
+      "id": "prior-rule",
+      "kind": "other",
+      "literal": "WSR 22-13-111, filed 6/15/22, effective 7/16/22",
+      "relation": "reference"
+    },
+    {
+      "event_ids": [
+        "comments",
+        "hearing",
+        "adoption"
+      ],
+      "id": "rds",
+      "kind": "other",
+      "literal": "RDS-7341.1",
+      "relation": "reference"
+    }
+  ],
+  "record_notes": [
+    "Scope: public rulemaking comments, hearing access, disability assistance, adoption/filing, identifiers, purpose, authority and agency recommendation.",
+    "Outside scope: fiscal/exemption analysis, drafting/implementation personnel and signature block; amendatory WAC party-specific adjudication duties (exception, service, response, proof, evidence, briefs/oral argument). Prior amendment retained as context.",
+    "AI-assisted source-only candidate, not independent gold. No external resolution or post-verification repair. Co-listed contact channels modeled as alternatives."
+  ],
+  "requirements": [
+    {
+      "association": "source_resolved",
+      "event_ids": [
+        "comments"
+      ],
+      "id": "comment-routes",
+      "kind": "other",
+      "modality": "informational",
+      "route_ids": [
+        "comment-mail",
+        "comment-email",
+        "comment-fax"
+      ],
+      "semantic_class": "instruction",
+      "text": "Submit written comments to Keri Lamb via the listed postal, email or fax destinations."
+    },
+    {
+      "association": "source_resolved",
+      "event_ids": [
+        "comments"
+      ],
+      "id": "comment-window",
+      "kind": "timing",
+      "modality": "mandatory",
+      "route_ids": [
+        "comment-mail",
+        "comment-email",
+        "comment-fax"
+      ],
+      "semantic_class": "instruction",
+      "text": "Submit beginning August 7, 2026, by October 20, 2026."
+    },
+    {
+      "association": "source_resolved",
+      "event_ids": [
+        "hearing"
+      ],
+      "id": "teams-lookup",
+      "kind": "hearing_procedure",
+      "modality": "conditional",
+      "route_ids": [
+        "teams",
+        "teams-info"
+      ],
+      "semantic_class": "instruction",
+      "text": "For Teams call-in information see the board website; no registration requirement is stated."
+    },
+    {
+      "association": "source_resolved",
+      "event_ids": [
+        "assistance"
+      ],
+      "id": "access-request",
+      "kind": "other",
+      "modality": "conditional",
+      "route_ids": [
+        "access-phone",
+        "access-fax",
+        "access-email"
+      ],
+      "semantic_class": "instruction",
+      "text": "For disability assistance contact Keri Lamb by October 20, 2026, by listed phone, fax or email."
+    },
+    {
+      "association": "source_resolved",
+      "event_ids": [],
+      "id": "proposal-purpose",
+      "kind": "other",
+      "modality": "informational",
+      "route_ids": [],
+      "semantic_class": "disclosure",
+      "text": "Clarify what the board can and will consider in an exception and reduce superfluous information. Reasons: see purpose."
+    },
+    {
+      "association": "source_resolved",
+      "event_ids": [],
+      "id": "legal-context",
+      "kind": "reference",
+      "modality": "informational",
+      "route_ids": [],
+      "semantic_class": "disclosure",
+      "text": "Adoption authority: RCW 82.03.170. Implemented: Chapters 34.05 RCW and 10-08 WAC. Not necessitated by federal law or federal/state court decision."
+    },
+    {
+      "association": "source_resolved",
+      "event_ids": [],
+      "id": "agency-recommendation",
+      "kind": "other",
+      "modality": "informational",
+      "route_ids": [],
+      "semantic_class": "disclosure",
+      "text": "Board drafted and recommends changes in full, implements/enforces its rules, and reports no fiscal impact. Proponent: Governmental."
+    }
+  ],
+  "routes": [
+    {
+      "alternative_group_id": "comment-channels",
+      "association": "source_resolved",
+      "channel": "postal",
+      "components": [
+        {
+          "id": "comment-mail-1",
+          "kind": "name",
+          "literal": "Keri Lamb"
+        },
+        {
+          "id": "comment-mail-2",
+          "kind": "address_part",
+          "literal": "1110 Capitol Way South, Suite 300*, Olympia, WA 98504 [98501]"
+        }
+      ],
+      "description": "Written-comment postal destination.",
+      "event_ids": [
+        "comments"
+      ],
+      "id": "comment-mail",
+      "role": "submission"
+    },
+    {
+      "alternative_group_id": "comment-channels",
+      "association": "source_resolved",
+      "channel": "email",
+      "components": [
+        {
+          "id": "comment-email-1",
+          "kind": "endpoint",
+          "literal": "bta@bta.wa.gov"
+        }
+      ],
+      "description": "Written-comment email.",
+      "event_ids": [
+        "comments"
+      ],
+      "id": "comment-email",
+      "role": "submission"
+    },
+    {
+      "alternative_group_id": "comment-channels",
+      "association": "source_resolved",
+      "channel": "fax",
+      "components": [
+        {
+          "id": "comment-fax-1",
+          "kind": "endpoint",
+          "literal": "360-586-9020"
+        }
+      ],
+      "description": "Written-comment fax.",
+      "event_ids": [
+        "comments"
+      ],
+      "id": "comment-fax",
+      "role": "submission"
+    },
+    {
+      "alternative_group_id": "hearing-channels",
+      "association": "source_resolved",
+      "channel": "other",
+      "components": [
+        {
+          "id": "hearing-place-1",
+          "kind": "address_part",
+          "literal": "1110 Capitol Way South, Suite 300*, Olympia, WA 98504"
+        }
+      ],
+      "description": "Physical hearing location.",
+      "event_ids": [
+        "hearing"
+      ],
+      "id": "hearing-place",
+      "role": "hearing_access"
+    },
+    {
+      "alternative_group_id": "hearing-channels",
+      "association": "source_resolved",
+      "channel": "other",
+      "components": [
+        {
+          "id": "teams-1",
+          "kind": "other",
+          "literal": "Microsoft Teams"
+        }
+      ],
+      "description": "Microsoft Teams hearing; call-in details on board website.",
+      "event_ids": [
+        "hearing"
+      ],
+      "id": "teams",
+      "role": "hearing_access"
+    },
+    {
+      "alternative_group_id": null,
+      "association": "source_resolved",
+      "channel": "web",
+      "components": [
+        {
+          "id": "teams-info-1",
+          "kind": "other",
+          "literal": "board of tax appeals (board) website"
+        }
+      ],
+      "description": "Website reference for Teams call-in information; URL unprinted.",
+      "event_ids": [
+        "hearing"
+      ],
+      "id": "teams-info",
+      "role": "information_contact"
+    },
+    {
+      "alternative_group_id": "access-channels",
+      "association": "source_resolved",
+      "channel": "telephone",
+      "components": [
+        {
+          "id": "access-phone-1",
+          "kind": "name",
+          "literal": "Keri Lamb"
+        },
+        {
+          "id": "access-phone-2",
+          "kind": "endpoint",
+          "literal": "360-753-5446"
+        }
+      ],
+      "description": "Keri Lamb disability-assistance telephone.",
+      "event_ids": [
+        "assistance"
+      ],
+      "id": "access-phone",
+      "role": "information_contact"
+    },
+    {
+      "alternative_group_id": "access-channels",
+      "association": "source_resolved",
+      "channel": "fax",
+      "components": [
+        {
+          "id": "access-fax-1",
+          "kind": "name",
+          "literal": "Keri Lamb"
+        },
+        {
+          "id": "access-fax-2",
+          "kind": "endpoint",
+          "literal": "360-586-9020"
+        }
+      ],
+      "description": "Keri Lamb disability-assistance fax.",
+      "event_ids": [
+        "assistance"
+      ],
+      "id": "access-fax",
+      "role": "information_contact"
+    },
+    {
+      "alternative_group_id": "access-channels",
+      "association": "source_resolved",
+      "channel": "email",
+      "components": [
+        {
+          "id": "access-email-1",
+          "kind": "name",
+          "literal": "Keri Lamb"
+        },
+        {
+          "id": "access-email-2",
+          "kind": "endpoint",
+          "literal": "bta@bta.wa.gov"
+        }
+      ],
+      "description": "Keri Lamb disability-assistance email.",
+      "event_ids": [
+        "assistance"
+      ],
+      "id": "access-email",
+      "role": "information_contact"
+    }
+  ],
+  "schema_version": "round7.participation_record.v1",
+  "source_text_sha256": "7cf8d7a924724d7fc80c80e5b4337c2114585668feef5edb14f49a75aec4d437",
+  "uncertainties": [
+    {
+      "description": "Comment postal code is 98504 [98501]; hearing postal code is 98504. No correction selected. Suite 300* has no explained asterisk in the text.",
+      "event_ids": [
+        "comments",
+        "hearing"
+      ],
+      "id": "postal-notation",
+      "identity_ids": [],
+      "kind": "endpoint",
+      "requirement_ids": [],
+      "route_ids": [
+        "comment-mail",
+        "hearing-place"
+      ]
+    },
+    {
+      "description": "WSR 26-15-[0]21 retained without correction.",
+      "event_ids": [],
+      "id": "preproposal-notation",
+      "identity_ids": [
+        "preproposal"
+      ],
+      "kind": "identity",
+      "requirement_ids": [],
+      "route_ids": []
+    },
+    {
+      "description": "Hearing/filing times lack timezone. Comment/assistance deadlines lack clock cutoff. No timezone or end-of-day timestamp inferred.",
+      "event_ids": [
+        "hearing",
+        "filing",
+        "comments",
+        "assistance"
+      ],
+      "id": "unspecified-timezones",
+      "identity_ids": [],
+      "kind": "timing",
+      "requirement_ids": [],
+      "route_ids": []
+    },
+    {
+      "description": "Comment opening precedes filing; closing precedes hearing. Dates retained as printed.",
+      "event_ids": [
+        "comments",
+        "filing",
+        "hearing"
+      ],
+      "id": "comment-date-sequence",
+      "identity_ids": [],
+      "kind": "timing",
+      "requirement_ids": [],
+      "route_ids": []
+    },
+    {
+      "description": "Board website and Teams call-in endpoints are unprinted; external details not inferred.",
+      "event_ids": [
+        "hearing"
+      ],
+      "id": "teams-endpoint-unprinted",
+      "identity_ids": [],
+      "kind": "endpoint",
+      "requirement_ids": [
+        "teams-lookup"
+      ],
+      "route_ids": [
+        "teams",
+        "teams-info"
+      ]
+    },
+    {
+      "description": "Oral-testimony procedures, registration, testimony limits and hearing-day written-submission acceptance unspecified.",
+      "event_ids": [
+        "hearing"
+      ],
+      "id": "hearing-procedure-unspecified",
+      "identity_ids": [],
+      "kind": "procedure",
+      "requirement_ids": [],
+      "route_ids": [
+        "hearing-place",
+        "teams"
+      ]
+    },
+    {
+      "description": "By does not resolve receipt versus postmark or clock cutoff.",
+      "event_ids": [
+        "comments"
+      ],
+      "id": "comment-delivery-rule",
+      "identity_ids": [],
+      "kind": "timing",
+      "requirement_ids": [
+        "comment-window"
+      ],
+      "route_ids": [
+        "comment-mail",
+        "comment-email",
+        "comment-fax"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3493 @@
+{
+  "schema_version": "round8.truth.v1",
+  "reviewer": "Independent AI image-only reference; not human-adjudicated gold",
+  "documents": [
+    {
+      "document_id": "doc-92211b8c7ba0",
+      "pdf_sha256": "92211b8c7ba076dc059edf299719967c2b56b37b8945cfbc39c51a03a1255005",
+      "scope_status": "complete",
+      "all_pages_viewed": true,
+      "universe_complete": true,
+      "domains": {
+        "fact": "present",
+        "relationship": "present",
+        "instruction": "present",
+        "disclosure": "present",
+        "ancillary": "present",
+        "identity": "present",
+        "uncertainty": "absent"
+      },
+      "units": [
+        {
+          "id": "agency",
+          "category": "identity",
+          "subtype": "agency",
+          "description": "Rulemaking agency",
+          "raw_value": "Department of Natural Resources",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "opening",
+              "quote": "The Department of Natural Resources announces that it will hold a public hearing"
+            }
+          ]
+        },
+        {
+          "id": "rule",
+          "category": "identity",
+          "subtype": "rule_identity",
+          "description": "Aquatic plant management permanent-rule repeal/recreation",
+          "raw_value": "chs. NR 107 and 109; ch. NR 107",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "opening",
+              "quote": "permanent rule to repeal chs. NR 107 and 109 and recreate ch. NR 107"
+            }
+          ]
+        },
+        {
+          "id": "order",
+          "category": "identity",
+          "subtype": "proceeding_identifier",
+          "description": "NRB order identifies rule",
+          "raw_value": "WY-20-23",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "rule access",
+              "quote": "The rule may be viewed Under NRB Order number WY-20-23 at:"
+            }
+          ]
+        },
+        {
+          "id": "hearing",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Public hearing with public testimony opportunity",
+          "raw_value": "public hearing",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "opening and appearances",
+              "quote": "The public has the opportunity to testify at the hearing."
+            }
+          ]
+        },
+        {
+          "id": "hearing_time",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Hearing date and clock time; no timezone stated",
+          "raw_value": "April 22, 2026; 1:00 PM",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Hearing Information",
+              "quote": "Date: April 22, 2026\nTime: 1:00 PM"
+            }
+          ]
+        },
+        {
+          "id": "zoom",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Virtual Zoom registration/access URL",
+          "raw_value": "https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrIdGeo84g",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Hearing Information",
+              "quote": "Virtual Zoom Link: https://us02web.zoom.us/meeting/register/Wes4OHfATJqagrIdGeo84g"
+            }
+          ]
+        },
+        {
+          "id": "meeting_id",
+          "category": "fact",
+          "subtype": "access_component",
+          "description": "Zoom meeting identifier",
+          "raw_value": "896 2745 6939",
+          "modality": "descriptive",
+          "targets": [
+            "zoom"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Hearing Information",
+              "quote": "Meeting ID: 896 2745 6939"
+            }
+          ]
+        },
+        {
+          "id": "phone1",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "First dial-in access number with meeting code",
+          "raw_value": "+13052241968, 89627456939# US",
+          "modality": "descriptive",
+          "targets": [
+            "hearing",
+            "meeting_id"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Join by phone",
+              "quote": "+13052241968, 89627456939# US"
+            }
+          ]
+        },
+        {
+          "id": "phone2",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Second dial-in access number with meeting code",
+          "raw_value": "+13092053325, 89627456939# US",
+          "modality": "descriptive",
+          "targets": [
+            "hearing",
+            "meeting_id"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Join by phone",
+              "quote": "+13092053325, 89627456939# US"
+            }
+          ]
+        },
+        {
+          "id": "access_alternatives",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Zoom and two telephone access alternatives",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "zoom",
+            "phone1",
+            "phone2"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Hearing Information",
+              "quote": "Virtual Zoom Link:"
+            },
+            {
+              "page": 1,
+              "region": "Hearing Information",
+              "quote": "Join by phone:"
+            }
+          ]
+        },
+        {
+          "id": "zoom_register",
+          "category": "instruction",
+          "subtype": "registration",
+          "description": "Zoom attendees asked to register or preregister through link and enter Hearing Appearance form information",
+          "raw_value": null,
+          "modality": "mandatory",
+          "targets": [
+            "zoom"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Appearances",
+              "quote": "To join via Zoom, please register or pre-register using the link above, which will prompt you to enter information required on the Hearing Appearance form."
+            }
+          ]
+        },
+        {
+          "id": "spoken_preregister",
+          "category": "instruction",
+          "subtype": "recommendation",
+          "description": "Pre-registration strongly encouraged for intended spoken commenters, not an absolute advance cutoff",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "hearing",
+            "zoom_register"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Appearances",
+              "quote": "Pre-registration is strongly encouraged if you plan to provide spoken comments during the hearing."
+            }
+          ]
+        },
+        {
+          "id": "appearance_form",
+          "category": "ancillary",
+          "subtype": "form_link",
+          "description": "Visible fillable Hearing Appearance form label; hidden target unavailable",
+          "raw_value": "Hearing Appearance form",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Appearances",
+              "quote": "please download and complete the fillable Hearing Appearance form"
+            }
+          ]
+        },
+        {
+          "id": "signup_email",
+          "category": "fact",
+          "subtype": "signup_route",
+          "description": "Email for phoning attendees to send appearance form",
+          "raw_value": "Sarah.wood@wisconsin.gov",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Appearances",
+              "quote": "send it to Sarah.wood@wisconsin.gov."
+            }
+          ]
+        },
+        {
+          "id": "phone_form",
+          "category": "instruction",
+          "subtype": "conditional_requirement",
+          "description": "Phone participants asked to download, complete and email appearance form",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "phone1",
+            "phone2",
+            "appearance_form",
+            "signup_email"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Appearances",
+              "quote": "For those who plan to phone in, please download and complete the fillable Hearing Appearance form and send it to Sarah.wood@wisconsin.gov."
+            }
+          ]
+        },
+        {
+          "id": "written",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Written comments on proposed rule",
+          "raw_value": "Written comments",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "Written comments may be submitted by U.S. mail, E-mail, or through the internet"
+            }
+          ]
+        },
+        {
+          "id": "written_cutoff",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Receipt cutoff, date only",
+          "raw_value": "April 30, 2026",
+          "modality": "mandatory",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "Comments on the proposed rule must be received on or before April 30, 2026."
+            }
+          ]
+        },
+        {
+          "id": "mail",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Madi Johansen postal route for written comments",
+          "raw_value": "Department of Natural Resources; Attn: Madi Johansen; 3550 Mormon Coulee Road, La Crosse, WI",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "comment contact",
+              "quote": "Department of Natural Resources\nAttn: Madi Johansen\n3550 Mormon Coulee Road, La Crosse, WI"
+            }
+          ]
+        },
+        {
+          "id": "email1",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Contact email accepts written comments",
+          "raw_value": "Madison.johansen@wisconsin.gov",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "comment contact",
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:"
+            },
+            {
+              "page": 2,
+              "region": "comment contact",
+              "quote": "608-712-2798, Madison.johansen@wisconsin.gov"
+            }
+          ]
+        },
+        {
+          "id": "email2",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Additional comment email",
+          "raw_value": "DNRAdministrativeRulesComments@wisconsin.gov",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "comment email",
+              "quote": "Comments may be emailed to: DNRAdministrativeRulesComments@wisconsin.gov."
+            }
+          ]
+        },
+        {
+          "id": "portal",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Online comment route also provides rule review",
+          "raw_value": "http://docs.legis.wisconsin.gov/code/chr/hearings",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "rule/comment access",
+              "quote": "The rule may also be reviewed, and comments made at:\nhttp://docs.legis.wisconsin.gov/code/chr/hearings."
+            }
+          ]
+        },
+        {
+          "id": "written_alternatives",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Postal, email and internet submission alternatives",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "mail",
+            "email1",
+            "email2",
+            "portal"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "Written comments may be submitted by U.S. mail, E-mail, or through the internet"
+            }
+          ]
+        },
+        {
+          "id": "equal_weight",
+          "category": "disclosure",
+          "subtype": "consideration_policy",
+          "description": "Written comments have same weight/effect as oral statements",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "written",
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "will have the same weight and effect as oral statements presented at the public hearing."
+            }
+          ]
+        },
+        {
+          "id": "rule_view",
+          "category": "ancillary",
+          "subtype": "rule_access",
+          "description": "Rule access link under order WY-20-23",
+          "raw_value": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html",
+          "modality": "descriptive",
+          "targets": [
+            "order"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "rule access",
+              "quote": "https://dnr.wisconsin.gov/news/input/ProposedPermanent.html."
+            }
+          ]
+        },
+        {
+          "id": "query_contact",
+          "category": "ancillary",
+          "subtype": "information_contact",
+          "description": "Madi Johansen receives questions as well as comments",
+          "raw_value": "Madi Johansen",
+          "modality": "descriptive",
+          "targets": [
+            "mail",
+            "email1"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "comment contact",
+              "quote": "Written comments and any questions on the proposed rules should be submitted to:"
+            }
+          ]
+        },
+        {
+          "id": "query_phone",
+          "category": "ancillary",
+          "subtype": "information_phone",
+          "description": "Contact telephone; not a written-submission endpoint",
+          "raw_value": "608-712-2798",
+          "modality": "descriptive",
+          "targets": [
+            "query_contact"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "comment contact",
+              "quote": "608-712-2798, Madison.johansen@wisconsin.gov"
+            }
+          ]
+        },
+        {
+          "id": "aid",
+          "category": "ancillary",
+          "subtype": "accessibility",
+          "description": "DNR provides aids to maximum extent possible with reasonable advance notice; includes interpreter and alternative document formats",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Accessibility",
+              "quote": "DNR will, to the maximum extent possible and with reasonable advance notice, provide aids including an interpreter, or a non-English, large-print, or recorded version of hearing documents."
+            }
+          ]
+        },
+        {
+          "id": "aid_request",
+          "category": "instruction",
+          "subtype": "accessibility_request",
+          "description": "Request accessibility resources as soon as possible at email or phone listed below",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "aid",
+            "email1",
+            "query_phone"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "Accessibility",
+              "quote": "To access these resources, please contact the email address or phone number listed below as soon as possible."
+            }
+          ]
+        },
+        {
+          "id": "coordinator",
+          "category": "ancillary",
+          "subtype": "small_business_contact",
+          "description": "Agency Small Business Regulatory Coordinator",
+          "raw_value": "Emma Esch",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "Agency Small Business Regulatory Coordinator",
+              "quote": "Emma Esch (608) 266-1959"
+            }
+          ]
+        },
+        {
+          "id": "coord_phone",
+          "category": "ancillary",
+          "subtype": "contact_component",
+          "description": "Small-business coordinator telephone",
+          "raw_value": "(608) 266-1959",
+          "modality": "descriptive",
+          "targets": [
+            "coordinator"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "coordinator",
+              "quote": "Emma Esch (608) 266-1959"
+            }
+          ]
+        },
+        {
+          "id": "coord_email",
+          "category": "ancillary",
+          "subtype": "contact_component",
+          "description": "Small-business coordinator email",
+          "raw_value": "emma.esch@wisconsin.gov",
+          "modality": "descriptive",
+          "targets": [
+            "coordinator"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "coordinator",
+              "quote": "emma.esch@wisconsin.gov"
+            }
+          ]
+        }
+      ],
+      "acceptance_blockers": [],
+      "exclusions": [
+        {
+          "pages": [
+            1,
+            2
+          ],
+          "rationale": "Exclude substantive APM program description, policy rationale and Initial Regulatory Flexibility Analysis; retain notice identity and all participation/contact information. No hidden Hearing Appearance form href certified."
+        }
+      ],
+      "reviewer": "Independent AI image-reference reviewer, thread 01a10e68-225d-7cf3-ad93-ad51715a9887; not human-adjudicated gold",
+      "review_evidence": {
+        "method": "Direct visual inspection of every listed full-page image; no OCR/native text or hidden link targets.",
+        "physical_pages_viewed": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "document_id": "doc-adb9fda35b7c",
+      "pdf_sha256": "adb9fda35b7cc2847539baa977f14c4f146a98c0ad87e310c41d2a6fbbf501a8",
+      "scope_status": "complete",
+      "all_pages_viewed": true,
+      "universe_complete": true,
+      "domains": {
+        "fact": "present",
+        "relationship": "present",
+        "instruction": "present",
+        "disclosure": "absent",
+        "ancillary": "present",
+        "identity": "present",
+        "uncertainty": "absent"
+      },
+      "units": [
+        {
+          "id": "agency",
+          "category": "identity",
+          "subtype": "agency",
+          "description": "Agency",
+          "raw_value": "ILLINOIS DEPARTMENT OF LABOR",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "header",
+              "quote": "ILLINOIS DEPARTMENT OF LABOR"
+            }
+          ]
+        },
+        {
+          "id": "rule",
+          "category": "identity",
+          "subtype": "rule_identity",
+          "description": "Proposed Paid Leave for All Workers Act rules",
+          "raw_value": "Paid Leave for All Workers Act; 56 Ill. Adm. Code 200",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "title/body",
+              "quote": "implementing the Paid Leave for All Workers Act (56 Ill. Adm. Code 200)."
+            }
+          ]
+        },
+        {
+          "id": "hearing",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Public hearing solely gathering proposed-rule comments",
+          "raw_value": "public hearing",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "body",
+              "quote": "The hearing will be held for the sole purpose of gathering public comments on the Proposed Rules"
+            }
+          ]
+        },
+        {
+          "id": "hearing_time",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Hearing date and start/end clocks without timezone",
+          "raw_value": "Wednesday, November 29, 2023 at 1:30 p.m. to 3:00 p.m.",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "title schedule",
+              "quote": "Wednesday, November 29, 2023 at 1:30 p.m. to 3:00 p.m."
+            }
+          ]
+        },
+        {
+          "id": "venue",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "In-person hearing location",
+          "raw_value": "Lincoln Tower; 524 South 2nd Street; 4th Floor; Springfield, IL 62701",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "schedule venue",
+              "quote": "Lincoln Tower\n524 South 2nd Street\n4th Floor\nSpringfield, IL 62701"
+            }
+          ]
+        },
+        {
+          "id": "webex",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Webex virtual registration/access",
+          "raw_value": "https://illinois.webex.com/weblink/register/r883d474759c7fb05054cad99830db231",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "virtual attendance",
+              "quote": "https://illinois.webex.com/weblink/register/r883d474759c7fb05054cad99830db231"
+            }
+          ]
+        },
+        {
+          "id": "attendance_alternatives",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Virtual or in-person attendance",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "venue",
+            "webex"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "procedure a",
+              "quote": "whether attending virtually or in-person."
+            }
+          ]
+        },
+        {
+          "id": "webex_registration",
+          "category": "instruction",
+          "subtype": "registration",
+          "description": "Registration required for virtual observation or testimony",
+          "raw_value": null,
+          "modality": "mandatory",
+          "targets": [
+            "webex"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "virtual attendance",
+              "quote": "Registration is required to testify or observe virtually."
+            }
+          ]
+        },
+        {
+          "id": "signup",
+          "category": "fact",
+          "subtype": "signup_route",
+          "description": "Separate testimony signup endpoint",
+          "raw_value": "https://forms.office.com/g/59x8r6rMqv",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "procedure a",
+              "quote": "Participants wishing to testify should sign up to testify at https://forms.office.com/g/59x8r6rMqv"
+            }
+          ]
+        },
+        {
+          "id": "signup_before",
+          "category": "instruction",
+          "subtype": "registration",
+          "description": "Testimony signup advised before hearing for both virtual and in-person participants; distinct from WebEx registration",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "signup",
+            "venue",
+            "webex"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "procedure a",
+              "quote": "to sign up prior to the hearing, whether attending virtually or in-person. This is distinct from WebEx registration."
+            }
+          ]
+        },
+        {
+          "id": "oral_limit",
+          "category": "instruction",
+          "subtype": "testimony_limit",
+          "description": "Oral testimony at most five minutes aggregate",
+          "raw_value": "5 minutes",
+          "modality": "mandatory",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "procedure b",
+              "quote": "No oral testimony shall exceed an aggregate of 5 minutes for the presentation."
+            }
+          ]
+        },
+        {
+          "id": "second_turn",
+          "category": "instruction",
+          "subtype": "testimony_order",
+          "description": "No second speaking turn until all wishing to testify have done so",
+          "raw_value": null,
+          "modality": "mandatory",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "procedure c",
+              "quote": "No person will be recognized to speak for a second time until all persons wishing to testify have done so."
+            }
+          ]
+        },
+        {
+          "id": "witness_email",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Email for witnesses written remarks",
+          "raw_value": "DOLPaidLeave@illinois.gov",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "procedure d",
+              "quote": "Witnesses are encouraged to submit their remarks in writing to DOLPaidLeave@illinois.gov before or after the hearing."
+            }
+          ]
+        },
+        {
+          "id": "witness_written",
+          "category": "instruction",
+          "subtype": "recommendation",
+          "description": "Witness written remarks encouraged before or after hearing",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "witness_email",
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "procedure d",
+              "quote": "Witnesses are encouraged to submit their remarks in writing to DOLPaidLeave@illinois.gov before or after the hearing."
+            }
+          ]
+        },
+        {
+          "id": "written",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Written comments not provided at hearing",
+          "raw_value": "written comments",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "agency contact",
+              "quote": "Any interested party may direct comments, data, views, or arguments concerning this proposal."
+            }
+          ]
+        },
+        {
+          "id": "written_cutoff",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Non-hearing comments submitted and received by December18 date-only",
+          "raw_value": "December 18, 2023",
+          "modality": "mandatory",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "agency contact",
+              "quote": "Comments not provided at the hearing must be submitted and received by December 18, 2023,"
+            }
+          ]
+        },
+        {
+          "id": "unable_attend",
+          "category": "instruction",
+          "subtype": "conditional_submission",
+          "description": "Those unable to attend wishing to comment should submit written comments by same cutoff",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "written",
+            "written_cutoff"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "procedure e",
+              "quote": "Those individuals who are unable to attend the public hearing but wish to comment on the Proposed Rule should submit written comments on or before December 18, 2023."
+            }
+          ]
+        },
+        {
+          "id": "mail",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Written-comment postal recipient",
+          "raw_value": "Anna Koeppel; Legislative & Policy Director; Rules Coordinator; Department of Labor; 524 South 2nd Street, 4th Floor; Springfield, IL 62701",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "agency contact block",
+              "quote": "Anna Koeppel\nLegislative & Policy Director\nRules Coordinator\nDepartment of Labor\n524 South 2nd Street, 4th Floor\nSpringfield, IL 62701"
+            }
+          ]
+        },
+        {
+          "id": "email",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "General non-hearing comments email (visible dot preserved)",
+          "raw_value": "DOL.PaidLeave@illinois.gov",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "agency contact block",
+              "quote": "DOL.PaidLeave@illinois.gov, (217) 558-1270"
+            }
+          ]
+        },
+        {
+          "id": "written_routes",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Listed postal and email routes for written comments",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "mail",
+            "email"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "agency contact",
+              "quote": "through the following methods:"
+            }
+          ]
+        },
+        {
+          "id": "contact_phone",
+          "category": "ancillary",
+          "subtype": "information_phone",
+          "description": "Agency contact telephone; not written submission",
+          "raw_value": "(217) 558-1270",
+          "modality": "descriptive",
+          "targets": [
+            "mail"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "agency contact block",
+              "quote": "DOL.PaidLeave@illinois.gov, (217) 558-1270"
+            }
+          ]
+        },
+        {
+          "id": "access_email",
+          "category": "ancillary",
+          "subtype": "accessibility_contact",
+          "description": "Disability access request email",
+          "raw_value": "DOL.PaidLeave@illinois.gov",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "disability paragraph",
+              "quote": "Please contact DOL.PaidLeave@illinois.gov or call 217-558-1270 to make any disability access requests as early as possible."
+            }
+          ]
+        },
+        {
+          "id": "access_phone",
+          "category": "ancillary",
+          "subtype": "accessibility_contact",
+          "description": "Disability access request phone",
+          "raw_value": "217-558-1270",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "disability paragraph",
+              "quote": "or call 217-558-1270"
+            }
+          ]
+        },
+        {
+          "id": "access_group",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Accessibility email or phone",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "access_email",
+            "access_phone"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "disability paragraph",
+              "quote": "Please contact DOL.PaidLeave@illinois.gov or call 217-558-1270"
+            }
+          ]
+        },
+        {
+          "id": "access_early",
+          "category": "instruction",
+          "subtype": "accessibility_request",
+          "description": "Disability requests as early as possible",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "access_email",
+            "access_phone"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "disability paragraph",
+              "quote": "to make any disability access requests as early as possible."
+            }
+          ]
+        },
+        {
+          "id": "springfield",
+          "category": "ancillary",
+          "subtype": "office",
+          "description": "Footer general office; not promoted to comment route",
+          "raw_value": "Lincoln Tower Plaza; 524 South 2nd Street, Suite 400; Springfield, Illinois 62701",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "footer",
+              "quote": "Lincoln Tower Plaza"
+            }
+          ]
+        },
+        {
+          "id": "springfield_phone",
+          "category": "ancillary",
+          "subtype": "contact_component",
+          "description": "Footer office phone",
+          "raw_value": "(217) 782-6206",
+          "modality": "descriptive",
+          "targets": [
+            "springfield"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "footer",
+              "quote": "(217) 782-6206"
+            }
+          ]
+        },
+        {
+          "id": "springfield_fax",
+          "category": "ancillary",
+          "subtype": "contact_component",
+          "description": "Footer office fax",
+          "raw_value": "(217) 782-0596",
+          "modality": "descriptive",
+          "targets": [
+            "springfield"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "footer",
+              "quote": "Fax: (217) 782-0596"
+            }
+          ]
+        },
+        {
+          "id": "chicago",
+          "category": "ancillary",
+          "subtype": "office",
+          "description": "Footer general office; not promoted to comment route",
+          "raw_value": "Michael A Bilandic Building; 160 North LaSalle, Suite C-1300; Chicago, Illinois 60601-3150",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "footer",
+              "quote": "Michael A Bilandic Building"
+            }
+          ]
+        },
+        {
+          "id": "chicago_phone",
+          "category": "ancillary",
+          "subtype": "contact_component",
+          "description": "Footer office phone",
+          "raw_value": "(312) 793-2800",
+          "modality": "descriptive",
+          "targets": [
+            "chicago"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "footer",
+              "quote": "(312) 793-2800"
+            }
+          ]
+        },
+        {
+          "id": "chicago_fax",
+          "category": "ancillary",
+          "subtype": "contact_component",
+          "description": "Footer office fax",
+          "raw_value": "(312) 793-5257",
+          "modality": "descriptive",
+          "targets": [
+            "chicago"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "footer",
+              "quote": "Fax: (312) 793-5257"
+            }
+          ]
+        },
+        {
+          "id": "marion",
+          "category": "ancillary",
+          "subtype": "office",
+          "description": "Footer general office; not promoted to comment route",
+          "raw_value": "Regional Office Building; 2309 West Main Street, Suite 115; Marion, Illinois 62959",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "footer",
+              "quote": "Regional Office Building"
+            }
+          ]
+        },
+        {
+          "id": "marion_phone",
+          "category": "ancillary",
+          "subtype": "contact_component",
+          "description": "Footer office phone",
+          "raw_value": "(618) 993-7090",
+          "modality": "descriptive",
+          "targets": [
+            "marion"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "footer",
+              "quote": "(618) 993-7090"
+            }
+          ]
+        },
+        {
+          "id": "marion_fax",
+          "category": "ancillary",
+          "subtype": "contact_component",
+          "description": "Footer office fax",
+          "raw_value": "(618) 993-7258",
+          "modality": "descriptive",
+          "targets": [
+            "marion"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "footer",
+              "quote": "Fax: (618) 993-7258"
+            }
+          ]
+        }
+      ],
+      "acceptance_blockers": [],
+      "exclusions": [
+        {
+          "pages": [
+            1
+          ],
+          "rationale": "Exclude governor/director ceremonial names, state seal, prior register publication date/citation as background; retain rule identity. Preserve the visibly different DOLPaidLeave and DOL.PaidLeave addresses rather than silently repairing either."
+        }
+      ],
+      "reviewer": "Independent AI image-reference reviewer, thread 01a10e68-225d-7cf3-ad93-ad51715a9887; not human-adjudicated gold",
+      "review_evidence": {
+        "method": "Direct visual inspection of every listed full-page image; no OCR/native text or hidden link targets.",
+        "physical_pages_viewed": [
+          1
+        ]
+      }
+    },
+    {
+      "document_id": "doc-429465fb3aaa",
+      "pdf_sha256": "429465fb3aaa6cb124429242b0aff1f832f0581c02c13cbf69656ebf06c7d1b2",
+      "scope_status": "complete",
+      "all_pages_viewed": true,
+      "universe_complete": true,
+      "domains": {
+        "fact": "present",
+        "relationship": "present",
+        "instruction": "present",
+        "disclosure": "present",
+        "ancillary": "present",
+        "identity": "present",
+        "uncertainty": "absent"
+      },
+      "units": [
+        {
+          "id": "agency",
+          "category": "identity",
+          "subtype": "agency",
+          "description": "Massachusetts agency",
+          "raw_value": "DEPARTMENT OF PUBLIC UTILITIES",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "header",
+              "quote": "DEPARTMENT OF PUBLIC UTILITIES"
+            }
+          ]
+        },
+        {
+          "id": "docket",
+          "category": "identity",
+          "subtype": "proceeding_identifier",
+          "description": "Railroad safety rulemaking identifier and rule",
+          "raw_value": "D.P.U. 26-55; 220 CMR 157.00",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "opening",
+              "quote": "to establish requirements for railroad safety, 220 CMR 157.00."
+            },
+            {
+              "page": 1,
+              "region": "docket header",
+              "quote": "D.P.U. 26-55"
+            }
+          ]
+        },
+        {
+          "id": "boston",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Hybrid Boston public hearing to receive rulemaking comments",
+          "raw_value": "hybrid public hearing",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing paragraph",
+              "quote": "The Department will conduct a hybrid public hearing to receive comments on the rulemaking."
+            }
+          ]
+        },
+        {
+          "id": "boston_time",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Boston hearing date/time without timezone",
+          "raw_value": "Tuesday, September 22, 2026; 2:00 p.m.",
+          "modality": "descriptive",
+          "targets": [
+            "boston"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing paragraph",
+              "quote": "on Tuesday, September 22, 2026, beginning at 2:00 p.m."
+            }
+          ]
+        },
+        {
+          "id": "boston_venue",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "In-person Boston hearing address",
+          "raw_value": "One South Station, 3rd Floor, Boston, MA 02110",
+          "modality": "descriptive",
+          "targets": [
+            "boston"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing paragraph",
+              "quote": "One South Station, 3rd Floor, Boston, MA 02110"
+            }
+          ]
+        },
+        {
+          "id": "zoom",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Boston hearing Zoom link",
+          "raw_value": "https://us06web.zoom.us/j/82683288456",
+          "modality": "descriptive",
+          "targets": [
+            "boston"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing paragraph",
+              "quote": "https://us06web.zoom.us/j/82683288456"
+            }
+          ]
+        },
+        {
+          "id": "phone",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Audio-only Boston hearing dial-in, not toll free",
+          "raw_value": "1-646-558-8656",
+          "modality": "descriptive",
+          "targets": [
+            "boston"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing paragraph",
+              "quote": "attendees can dial in at 1-646-558-8656 (not toll free)"
+            }
+          ]
+        },
+        {
+          "id": "meeting_id",
+          "category": "fact",
+          "subtype": "access_component",
+          "description": "Audio dial-in meeting ID",
+          "raw_value": "826 8328 8456",
+          "modality": "descriptive",
+          "targets": [
+            "phone"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing paragraph",
+              "quote": "and then enter ID# 826 8328 8456."
+            }
+          ]
+        },
+        {
+          "id": "boston_modes",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Boston physical, Zoom and audio-only options",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "boston_venue",
+            "zoom",
+            "phone"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing paragraph",
+              "quote": "Simultaneously, the Department will conduct the public hearing using Zoom videoconferencing."
+            }
+          ]
+        },
+        {
+          "id": "zoom_devices",
+          "category": "instruction",
+          "subtype": "access_method",
+          "description": "Zoom browser access from computer/smartphone/tablet; no prior software download required",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "zoom"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing paragraph",
+              "quote": "from a computer, smartphone, or tablet. No prior software download is required."
+            }
+          ]
+        },
+        {
+          "id": "signup_email",
+          "category": "fact",
+          "subtype": "signup_route",
+          "description": "Email advance hearing-comment registration",
+          "raw_value": "Kate.E.Timberlake@mass.gov",
+          "modality": "descriptive",
+          "targets": [
+            "boston"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing registration",
+              "quote": "to Kate.E.Timberlake@mass.gov with your name, email address, and mailing address,"
+            }
+          ]
+        },
+        {
+          "id": "signup_phone",
+          "category": "fact",
+          "subtype": "signup_route",
+          "description": "Voicemail advance hearing-comment registration",
+          "raw_value": "857-505-1119",
+          "modality": "descriptive",
+          "targets": [
+            "boston"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing registration",
+              "quote": "or leave a voicemail message by Monday, September 21, 2026, at 857-505-1119"
+            }
+          ]
+        },
+        {
+          "id": "signup_cutoff",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Advance Zoom-comment registration date, no clock",
+          "raw_value": "Monday, September 21, 2026",
+          "modality": "descriptive",
+          "targets": [
+            "boston"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing registration",
+              "quote": "If you anticipate providing comments via Zoom during the public hearing, please send an email by Monday, September 21, 2026,"
+            }
+          ]
+        },
+        {
+          "id": "email_fields",
+          "category": "instruction",
+          "subtype": "registration_fields",
+          "description": "Zoom-comment email registration includes name, email and mailing address",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "signup_email",
+            "signup_cutoff"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing registration",
+              "quote": "with your name, email address, and mailing address,"
+            }
+          ]
+        },
+        {
+          "id": "phone_fields",
+          "category": "instruction",
+          "subtype": "registration_fields",
+          "description": "Voicemail registration includes name, telephone and mailing address",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "signup_phone",
+            "signup_cutoff"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing registration",
+              "quote": "with your name, telephone number, and mailing address."
+            }
+          ]
+        },
+        {
+          "id": "signup_alternatives",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Email or voicemail advance registration",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "signup_email",
+            "signup_phone"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "hearing registration",
+              "quote": "or leave a voicemail message"
+            }
+          ]
+        },
+        {
+          "id": "springfield",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Additional in-person public hearing in Springfield",
+          "raw_value": "additional public hearing",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "last paragraph",
+              "quote": "The Department will conduct an additional public hearing to receive comments on the rulemaking in person"
+            }
+          ]
+        },
+        {
+          "id": "springfield_time",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Springfield hearing date/time without timezone",
+          "raw_value": "Wednesday, September 23, 2026; 10:00 a.m.",
+          "modality": "descriptive",
+          "targets": [
+            "springfield"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "last paragraph",
+              "quote": "on Wednesday, September 23, 2026, beginning at 10:00 a.m."
+            }
+          ]
+        },
+        {
+          "id": "springfield_venue",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Springfield in-person location",
+          "raw_value": "Springfield State Office Building, 3rd Floor Courtroom, 436 Dwight Street, Springfield, MA 01103",
+          "modality": "descriptive",
+          "targets": [
+            "springfield"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "last paragraph",
+              "quote": "Springfield State Office Building, 3rd Floor Courtroom, 436 Dwight Street, Springfield, MA 01103."
+            }
+          ]
+        },
+        {
+          "id": "inperson_signup",
+          "category": "instruction",
+          "subtype": "registration",
+          "description": "In-person commenters asked to register at hearing; advance email/voicemail optional",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "boston_venue",
+            "springfield_venue",
+            "signup_email",
+            "signup_phone"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "Individuals attending the in-person hearing will be asked to register at the hearing if they wish to provide public comment but may also register in advance using one of the methods listed above."
+            },
+            {
+              "page": 1,
+              "region": "Boston hearing paragraph",
+              "quote": "Individuals attending the in-person hearing will be asked to register at the hearing if they wish to provide public comment but may also register in advance using one of the methods listed above."
+            }
+          ]
+        },
+        {
+          "id": "written",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Initial written comment opportunity",
+          "raw_value": "written comment",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "Alternatively, any person who desires to provide written comment on this matter may submit their comments"
+            }
+          ]
+        },
+        {
+          "id": "initial_cutoff",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Initial written comment cutoff, explicit close-of-business clock",
+          "raw_value": "Monday, September 21, 2026; 5:00 p.m.",
+          "modality": "mandatory",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "no later than the close of business (5:00 p.m.) on Monday, September 21, 2026,"
+            }
+          ]
+        },
+        {
+          "id": "reply",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Reply written comments separate phase",
+          "raw_value": "reply written comments",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "and reply written comments no later than the close of business"
+            }
+          ]
+        },
+        {
+          "id": "reply_cutoff",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Reply written cutoff, no timezone",
+          "raw_value": "Wednesday, September 30, 2026; 5:00 p.m.",
+          "modality": "mandatory",
+          "targets": [
+            "reply"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "(5:00 p.m.) on Wednesday, September 30, 2026."
+            }
+          ]
+        },
+        {
+          "id": "filing_email",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "First required distribution-list recipient",
+          "raw_value": "dpu.efiling@mass.gov",
+          "modality": "descriptive",
+          "targets": [
+            "written",
+            "reply"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "dpu.efiling@mass.gov and Kate.E.Timberlake@mass.gov."
+            }
+          ]
+        },
+        {
+          "id": "officer_email",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Second distribution-list recipient",
+          "raw_value": "Kate.E.Timberlake@mass.gov",
+          "modality": "descriptive",
+          "targets": [
+            "written",
+            "reply"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "dpu.efiling@mass.gov and Kate.E.Timberlake@mass.gov."
+            }
+          ]
+        },
+        {
+          "id": "all_recipients",
+          "category": "relationship",
+          "subtype": "all_of_group",
+          "description": "Written email filing goes to BOTH recipients, not alternatives",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "filing_email",
+            "officer_email"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "to the Department to the following distribution list: dpu.efiling@mass.gov and Kate.E.Timberlake@mass.gov."
+            }
+          ]
+        },
+        {
+          "id": "attachment",
+          "category": "instruction",
+          "subtype": "submission_format",
+          "description": "Written comments should be electronic email attachments; recommendation preserves paper fallback",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "filing_email",
+            "officer_email"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "All written comments should be submitted in electronic format by e-mail attachment"
+            }
+          ]
+        },
+        {
+          "id": "email_content",
+          "category": "instruction",
+          "subtype": "required_fields",
+          "description": "Email text must specify docket, submitter name and brief descriptive document title",
+          "raw_value": null,
+          "modality": "mandatory",
+          "targets": [
+            "all_recipients"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "The text of the email must specify: (1) the docket number of the proceeding (D.P.U. 26-55); (2) the name of the person, entity, or company submitting the filing; and (3) a brief descriptive title of the document."
+            }
+          ]
+        },
+        {
+          "id": "contact_content",
+          "category": "instruction",
+          "subtype": "required_fields",
+          "description": "Email must contain contact person name/title/email/phone",
+          "raw_value": null,
+          "modality": "mandatory",
+          "targets": [
+            "all_recipients"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "The e-mail must also include the name, title, e-mail, and telephone number of a person to contact in the event of questions about the filing."
+            }
+          ]
+        },
+        {
+          "id": "filename",
+          "category": "instruction",
+          "subtype": "file_naming",
+          "description": "Attachment filename should identify document and should not exceed50characters",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "attachment"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "The electronic attachment file name should identify the document but should not exceed 50 characters in length."
+            }
+          ]
+        },
+        {
+          "id": "posted",
+          "category": "disclosure",
+          "subtype": "public_posting",
+          "description": "Electronic documents posted as soon as practicable",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "written",
+            "reply"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "posting paragraph",
+              "quote": "All documents submitted in electronic format will be posted on the Department’s website as soon as practicable."
+            }
+          ]
+        },
+        {
+          "id": "unredacted",
+          "category": "disclosure",
+          "subtype": "confidentiality",
+          "description": "Comments posted as received without redacting personal information",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "written",
+            "reply"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "posting paragraph",
+              "quote": "any comments will be posted to our website as received and without redacting personal information, such as addresses, telephone number, or email addresses."
+            }
+          ]
+        },
+        {
+          "id": "privacy_advice",
+          "category": "instruction",
+          "subtype": "privacy_recommendation",
+          "description": "Consider extent of personal information shared",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "written",
+            "reply"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "posting paragraph",
+              "quote": "please consider the extent of information you wish to share when submitting comments."
+            }
+          ]
+        },
+        {
+          "id": "docket_site",
+          "category": "ancillary",
+          "subtype": "docket_access",
+          "description": "Online docket materials; enter26-55",
+          "raw_value": "https://eeaonline.eea.state.ma.us/dpu/fileroom/#/dashboard",
+          "modality": "descriptive",
+          "targets": [
+            "docket"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "posting paragraph",
+              "quote": "https://eeaonline.eea.state.ma.us/dpu/fileroom/#/dashboard (enter “26-55”)."
+            }
+          ]
+        },
+        {
+          "id": "email_preferred",
+          "category": "instruction",
+          "subtype": "recommendation",
+          "description": "Email submission strongly encouraged",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "filing_email",
+            "officer_email"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "posting paragraph",
+              "quote": "The Department strongly encourages public comments to be submitted by email."
+            }
+          ]
+        },
+        {
+          "id": "mail",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Paper fallback for public unable to email",
+          "raw_value": "Peter A. Ray, Secretary, DPU, One South Station, 3rd Floor, Boston, Massachusetts, 02110",
+          "modality": "conditional",
+          "targets": [
+            "written",
+            "reply"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "posting paragraph",
+              "quote": "a paper copy may be sent to Peter A. Ray, Secretary, DPU, One South Station, 3rd Floor, Boston, Massachusetts, 02110."
+            }
+          ]
+        },
+        {
+          "id": "mail_condition",
+          "category": "relationship",
+          "subtype": "conditional_alternative",
+          "description": "Paper route available if member of public unable to email",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "mail",
+            "all_recipients"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "posting paragraph",
+              "quote": "If, however, a member of the public is unable to send written comments by email, a paper copy may be sent"
+            }
+          ]
+        },
+        {
+          "id": "translation",
+          "category": "ancillary",
+          "subtype": "language_access",
+          "description": "Summary translation and interpretation upon request including listed languages",
+          "raw_value": "Spanish, Portuguese, Chinese, Haitian Creole, Vietnamese, or other languages upon request",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "language paragraph",
+              "quote": "A summary of the proposed regulations is available in Spanish, Portuguese, Chinese, Haitian Creole, Vietnamese or other languages upon request."
+            }
+          ]
+        },
+        {
+          "id": "language_contact",
+          "category": "ancillary",
+          "subtype": "language_contact",
+          "description": "Paralegal Specialist Kaylee Burgess language request email",
+          "raw_value": "dpu.ej@mass.gov",
+          "modality": "descriptive",
+          "targets": [
+            "translation"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "language paragraph",
+              "quote": "please contact Paralegal Specialist Kaylee Burgess at dpu.ej@mass.gov"
+            }
+          ]
+        },
+        {
+          "id": "language_cutoff",
+          "category": "ancillary",
+          "subtype": "accessibility_timing",
+          "description": "Non-English translation/interpretation request deadline",
+          "raw_value": "Tuesday, September 15, 2026",
+          "modality": "mandatory",
+          "targets": [
+            "language_contact"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "language paragraph",
+              "quote": "no later than Tuesday, September 15, 2026."
+            }
+          ]
+        },
+        {
+          "id": "ada",
+          "category": "ancillary",
+          "subtype": "accessibility",
+          "description": "Reasonable disability accommodations available upon request including Braille/largeprint/electronic/audio",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "ADA paragraph",
+              "quote": "Reasonable accommodations for people with disabilities (e.g., Braille, large print, electronic files, audio format) are available upon request."
+            }
+          ]
+        },
+        {
+          "id": "ada_email",
+          "category": "ancillary",
+          "subtype": "accessibility_contact",
+          "description": "Department ADA coordinator email",
+          "raw_value": "eeadiversity@mass.gov",
+          "modality": "descriptive",
+          "targets": [
+            "ada"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "ADA paragraph",
+              "quote": "the Department’s ADA coordinator at eeadiversity@mass.gov or 617-626-1282."
+            }
+          ]
+        },
+        {
+          "id": "ada_phone",
+          "category": "ancillary",
+          "subtype": "accessibility_contact",
+          "description": "Department ADA coordinator phone",
+          "raw_value": "617-626-1282",
+          "modality": "descriptive",
+          "targets": [
+            "ada"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "ADA paragraph",
+              "quote": "or 617-626-1282."
+            }
+          ]
+        },
+        {
+          "id": "ada_alternatives",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "ADA email or telephone",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "ada_email",
+            "ada_phone"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "ADA paragraph",
+              "quote": "eeadiversity@mass.gov or 617-626-1282."
+            }
+          ]
+        },
+        {
+          "id": "ada_fields",
+          "category": "instruction",
+          "subtype": "accessibility_request",
+          "description": "State needed accommodation/why and contact information",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "ada"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "ADA paragraph",
+              "quote": "In your communication, state the accommodation you need and why you need the accommodation. Provide contact information in case the coordinator needs more information."
+            }
+          ]
+        },
+        {
+          "id": "ada_early",
+          "category": "instruction",
+          "subtype": "accessibility_request",
+          "description": "Request as soon as possible; late requests considered but may not be fulfillable",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "ada"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "ADA paragraph",
+              "quote": "Please provide your request as soon as possible. The coordinator will consider but may not be able to fulfill late requests."
+            }
+          ]
+        },
+        {
+          "id": "query",
+          "category": "ancillary",
+          "subtype": "information_contact",
+          "description": "Further notice information from Hearing Officer Kate Timberlake",
+          "raw_value": "Kate.E.Timberlake@mass.gov",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "last paragraph",
+              "quote": "please contact Kate Timberlake, Hearing Officer, Department of Public Utilities via e-mail at Kate.E.Timberlake@mass.gov."
+            }
+          ]
+        }
+      ],
+      "acceptance_blockers": [],
+      "exclusions": [
+        {
+          "pages": [
+            1,
+            2
+          ],
+          "rationale": "Exclude substantive railroad safety proposal descriptions, statutory authority and July31 issuance metadata. All phases/contact roles are retained separately; request-condition language does not assert that a hearing has been cancelled. No unstated timezone or receipt-clock inference."
+        }
+      ],
+      "reviewer": "Independent AI image-reference reviewer, thread 01a10e68-225d-7cf3-ad93-ad51715a9887; not human-adjudicated gold",
+      "review_evidence": {
+        "method": "Direct visual inspection of every listed full-page image; no OCR/native text or hidden link targets.",
+        "physical_pages_viewed": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "document_id": "doc-51759f30a419",
+      "pdf_sha256": "51759f30a4192c4db84f56d1a5fad8a480b3128227e2fa4efb6f4d8718656d87",
+      "scope_status": "complete",
+      "all_pages_viewed": true,
+      "universe_complete": true,
+      "domains": {
+        "fact": "present",
+        "relationship": "present",
+        "instruction": "present",
+        "disclosure": "present",
+        "ancillary": "present",
+        "identity": "present",
+        "uncertainty": "absent"
+      },
+      "units": [
+        {
+          "id": "agency",
+          "category": "identity",
+          "subtype": "agency",
+          "description": "Issuing cabinet/department/office",
+          "raw_value": "CABINET FOR HEALTH AND FAMILY SERVICES; DEPARTMENT FOR PUBLIC HEALTH; Office for Children with Special Health Care Needs",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "header",
+              "quote": "CABINET FOR HEALTH AND FAMILY SERVICES\nDEPARTMENT FOR PUBLIC HEALTH\nOffice for Children with Special Health Care Needs"
+            }
+          ]
+        },
+        {
+          "id": "rule",
+          "category": "identity",
+          "subtype": "rule_identity",
+          "description": "Amendment to clinical-program application rule",
+          "raw_value": "911 KAR 1:010. Application for Clinical Programs.",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "header",
+              "quote": "(Amendment)\n911 KAR 1:010. Application for Clinical Programs."
+            }
+          ]
+        },
+        {
+          "id": "hearing",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Public hearing held if requested, not unconditional",
+          "raw_value": "public hearing",
+          "modality": "conditional",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "PUBLIC HEARING AND COMMENT PERIOD",
+              "quote": "A public hearing on this administrative regulation shall, if requested, be held"
+            }
+          ]
+        },
+        {
+          "id": "hearing_time",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Conditional hearing date/time no timezone",
+          "raw_value": "April 27, 2026, at 9:00 a.m.",
+          "modality": "conditional",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "on April 27, 2026, at 9:00 a.m."
+            }
+          ]
+        },
+        {
+          "id": "zoom",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Virtual CHFS Office of Legislative and Regulatory Affairs Zoom meeting room; no public URL printed",
+          "raw_value": "CHFS Office of Legislative and Regulatory Affairs Zoom meeting room",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "using the CHFS Office of Legislative and Regulatory Affairs Zoom meeting room."
+            }
+          ]
+        },
+        {
+          "id": "invitation",
+          "category": "instruction",
+          "subtype": "access_delivery",
+          "description": "Zoom invitation emailed each requester week before scheduled hearing",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "zoom"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "The Zoom invitation will be emailed to each requestor the week prior to the scheduled hearing."
+            }
+          ]
+        },
+        {
+          "id": "intent",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Written notice of intent to attend virtual hearing",
+          "raw_value": "intent to attend",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "Individuals interested in attending this virtual hearing shall notify this agency in writing"
+            }
+          ]
+        },
+        {
+          "id": "intent_cutoff",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Explicit intent date and relative qualification, no calculated substitute",
+          "raw_value": "April 20, 2026, five (5) workdays prior to the hearing",
+          "modality": "mandatory",
+          "targets": [
+            "intent"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "by April 20, 2026, five (5) workdays prior to the hearing, of their intent to attend."
+            }
+          ]
+        },
+        {
+          "id": "intent_written",
+          "category": "instruction",
+          "subtype": "registration",
+          "description": "Interested virtual attendees shall notify agency in writing by intent cutoff",
+          "raw_value": null,
+          "modality": "mandatory",
+          "targets": [
+            "intent",
+            "intent_cutoff"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "Individuals interested in attending this virtual hearing shall notify this agency in writing"
+            }
+          ]
+        },
+        {
+          "id": "cancellation",
+          "category": "relationship",
+          "subtype": "conditional_event",
+          "description": "No timely intent permits hearing cancellation; no actual cancellation asserted",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "hearing",
+            "intent",
+            "intent_cutoff"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "If no notification of intent to attend the hearing is received by that date, the hearing may be canceled."
+            }
+          ]
+        },
+        {
+          "id": "public_attend",
+          "category": "instruction",
+          "subtype": "participation_permission",
+          "description": "Hearing open to public, virtual attendees given opportunity to comment",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "This hearing is open to the public. Any person who attends virtually will be given an opportunity to comment on the proposed administrative regulation."
+            }
+          ]
+        },
+        {
+          "id": "transcript",
+          "category": "disclosure",
+          "subtype": "recording_policy",
+          "description": "Transcript not made absent written request",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "A transcript of the public hearing will not be made unless a written request for a transcript is made."
+            }
+          ]
+        },
+        {
+          "id": "written",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Written comments alternative for persons not wishing to be heard",
+          "raw_value": "written comments",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "If you do not wish to be heard at the public hearing, you may submit written comments on this proposed administrative regulation"
+            }
+          ]
+        },
+        {
+          "id": "written_cutoff",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Written comments through date only",
+          "raw_value": "April 30, 2026",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "through April 30, 2026."
+            }
+          ]
+        },
+        {
+          "id": "participation_alternatives",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Hearing comment or written comments",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "hearing",
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "If you do not wish to be heard at the public hearing, you may submit written comments"
+            }
+          ]
+        },
+        {
+          "id": "contact",
+          "category": "ancillary",
+          "subtype": "contact_identity",
+          "description": "Named regulation contact",
+          "raw_value": "Krista Quarles, Policy Analyst, Office of Legislative and Regulatory Affairs",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "CONTACT PERSON",
+              "quote": "CONTACT PERSON: Krista Quarles, Policy Analyst, Office of Legislative and Regulatory Affairs,"
+            }
+          ]
+        },
+        {
+          "id": "mail",
+          "category": "fact",
+          "subtype": "direct_and_signup_route",
+          "description": "Written intent or comments sent to named contact postal address",
+          "raw_value": "275 East Main Street 5 W-A, Frankfort, Kentucky 40621",
+          "modality": "descriptive",
+          "targets": [
+            "intent",
+            "written",
+            "contact"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "CONTACT PERSON",
+              "quote": "275 East Main Street 5 W-A, Frankfort, Kentucky 40621"
+            }
+          ]
+        },
+        {
+          "id": "email",
+          "category": "fact",
+          "subtype": "direct_and_signup_route",
+          "description": "Listed email for written intent/comments contact",
+          "raw_value": "CHFSregs@ky.gov",
+          "modality": "descriptive",
+          "targets": [
+            "intent",
+            "written",
+            "contact"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "CONTACT PERSON",
+              "quote": "CHFSregs@ky.gov."
+            }
+          ]
+        },
+        {
+          "id": "fax",
+          "category": "fact",
+          "subtype": "direct_and_signup_route",
+          "description": "Listed fax for written intent/comments contact",
+          "raw_value": "502-564-7091",
+          "modality": "descriptive",
+          "targets": [
+            "intent",
+            "written",
+            "contact"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "CONTACT PERSON",
+              "quote": "Fax: 502-564-7091;"
+            }
+          ]
+        },
+        {
+          "id": "send_contact",
+          "category": "instruction",
+          "subtype": "submission_recipient",
+          "description": "Written intent and comments directed to contact person",
+          "raw_value": null,
+          "modality": "mandatory",
+          "targets": [
+            "mail",
+            "email",
+            "fax"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "Send written notification of intent to attend the public hearing or written comments on the proposed administrative regulation to the contact person."
+            }
+          ]
+        },
+        {
+          "id": "contact_routes",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Listed written-capable contact channels; telephone excluded from written delivery",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "mail",
+            "email",
+            "fax"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "CONTACT PERSON",
+              "quote": "Fax: 502-564-7091; CHFSregs@ky.gov."
+            }
+          ]
+        },
+        {
+          "id": "phone",
+          "category": "ancillary",
+          "subtype": "information_phone",
+          "description": "Contact telephone",
+          "raw_value": "502-564-7476",
+          "modality": "descriptive",
+          "targets": [
+            "contact"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "CONTACT PERSON",
+              "quote": "Phone: 502-564-7476;"
+            }
+          ]
+        },
+        {
+          "id": "statement_copies",
+          "category": "ancillary",
+          "subtype": "copies_access",
+          "description": "Statement of consideration and applicable amended-after-comments version available on request",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "public hearing",
+              "quote": "copies of the statement of consideration and, if applicable, the amended after comments version of the administrative regulation shall be made available upon request."
+            }
+          ]
+        },
+        {
+          "id": "material_office",
+          "category": "ancillary",
+          "subtype": "inspection_location",
+          "description": "Incorporated materials inspection/copy/obtain location",
+          "raw_value": "Office for Children with Special Health Care Needs, 310 Whittington Parkway, Suite 200, Louisville, Kentucky 40222",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "Section15(2)",
+              "quote": "at the Office for Children with Special Health Care Needs, 310 Whittington Parkway, Suite 200, Louisville, Kentucky 40222,"
+            }
+          ]
+        },
+        {
+          "id": "material_hours",
+          "category": "ancillary",
+          "subtype": "inspection_hours",
+          "description": "Material access hours, not comment deadline",
+          "raw_value": "Monday through Friday, 8 a.m. to 4:30 p.m.",
+          "modality": "descriptive",
+          "targets": [
+            "material_office"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "Section15(2)",
+              "quote": "Monday through Friday, 8 a.m. to 4:30 p.m."
+            }
+          ]
+        },
+        {
+          "id": "material_web",
+          "category": "ancillary",
+          "subtype": "document_access",
+          "description": "Online incorporated materials access",
+          "raw_value": "https://chfs.ky.gov/agencies/ocshcn",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "Section15(2)",
+              "quote": "or online at the agency's Web site at https://chfs.ky.gov/agencies/ocshcn."
+            }
+          ]
+        },
+        {
+          "id": "material_access",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "In-person or online materials access subject to applicable copyright",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "material_office",
+            "material_web"
+          ],
+          "evidence": [
+            {
+              "page": 9,
+              "region": "Section15(2)",
+              "quote": "This material may be inspected, copied, or obtained, subject to applicable copyright law,"
+            }
+          ]
+        }
+      ],
+      "acceptance_blockers": [],
+      "exclusions": [
+        {
+          "pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "rationale": "Exclude substantive clinical-program definitions, eligibility/application/forms/payment/reconsideration and individual administrative hearing rules, including their30day periods. Section14 is individual-benefit appeal, not rulemaking hearing. Retain Section15 materials-access office/hours/URL; exclude form edition dates and substantive form catalog, approval/filing metadata and signatory titles."
+        }
+      ],
+      "reviewer": "Independent AI image-reference reviewer, thread 01a10e68-225d-7cf3-ad93-ad51715a9887; not human-adjudicated gold",
+      "review_evidence": {
+        "method": "Direct visual inspection of every listed full-page image; no OCR/native text or hidden link targets.",
+        "physical_pages_viewed": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    },
+    {
+      "document_id": "doc-68b823216790",
+      "pdf_sha256": "68b823216790677329890bcbcc20d81f0f1bd3fbb011451e3da36cc83621a0bd",
+      "scope_status": "complete",
+      "all_pages_viewed": true,
+      "universe_complete": true,
+      "domains": {
+        "fact": "present",
+        "relationship": "present",
+        "instruction": "present",
+        "disclosure": "present",
+        "ancillary": "present",
+        "identity": "present",
+        "uncertainty": "absent"
+      },
+      "units": [
+        {
+          "id": "agency",
+          "category": "identity",
+          "subtype": "agency",
+          "description": "Georgia DNR Environmental Protection Division",
+          "raw_value": "DEPARTMENT OF NATURAL RESOURCES; ENVIRONMENTAL PROTECTION DIVISION",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "header",
+              "quote": "DEPARTMENT OF NATURAL RESOURCES\nENVIRONMENTAL PROTECTION DIVISION"
+            }
+          ]
+        },
+        {
+          "id": "rules",
+          "category": "identity",
+          "subtype": "rule_identity",
+          "description": "Air quality amendments notice",
+          "raw_value": "GEORGIA’S RULES FOR AIR QUALITY CONTROL; SUBJECT 391-3-1",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 1,
+              "region": "title",
+              "quote": "TO GEORGIA’S RULES FOR AIR QUALITY CONTROL\nSUBJECT 391-3-1"
+            }
+          ]
+        },
+        {
+          "id": "materials_web",
+          "category": "ancillary",
+          "subtype": "document_access",
+          "description": "Notice, amendments, synopsis and rationale viewing link",
+          "raw_value": "https://epd.georgia.gov/subject-391-3-1-air-quality-control",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "https://epd.georgia.gov/subject-391-3-1-air-quality-control"
+            }
+          ]
+        },
+        {
+          "id": "materials_office",
+          "category": "ancillary",
+          "subtype": "inspection_location",
+          "description": "Document viewing by appointment only",
+          "raw_value": "Georgia Environmental Protection Division, Air Protection Branch, 4244 International Parkway, Suite 104, Atlanta, Georgia 30354",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "or by appointment only at the Georgia Environmental Protection Division, Air Protection Branch 4244 International Parkway, Suite 104, Atlanta, Georgia 30354."
+            }
+          ]
+        },
+        {
+          "id": "appointment_email",
+          "category": "ancillary",
+          "subtype": "inspection_contact",
+          "description": "Email to arrange document viewing appointment",
+          "raw_value": "askepd@dnr.ga.gov",
+          "modality": "descriptive",
+          "targets": [
+            "materials_office"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "To set an appointment, email askepd@dnr.ga.gov with your name, email and phone number and an associate will reach out to you."
+            }
+          ]
+        },
+        {
+          "id": "appointment_fields",
+          "category": "instruction",
+          "subtype": "inspection_request",
+          "description": "Appointment request name/email/phone; associate responds",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "appointment_email"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "with your name, email and phone number and an associate will reach out to you."
+            }
+          ]
+        },
+        {
+          "id": "view_alternatives",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Website or by-appointment physical document review",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "materials_web",
+            "materials_office"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "These documents may be viewed at"
+            }
+          ]
+        },
+        {
+          "id": "copies1",
+          "category": "ancillary",
+          "subtype": "copies_contact",
+          "description": "Copy requests to Elisabeth Munsey",
+          "raw_value": "Elisabeth.Munsey@dnr.ga.gov",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "Copies may also be requested by contacting Elisabeth Munsey, Elisabeth.Munsey@dnr.ga.gov,"
+            }
+          ]
+        },
+        {
+          "id": "copies2",
+          "category": "ancillary",
+          "subtype": "copies_contact",
+          "description": "Copy requests to Anna Aponte",
+          "raw_value": "Anna.Aponte1@dnr.ga.gov",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "Anna Aponte, Anna.Aponte1@dnr.ga.gov,"
+            }
+          ]
+        },
+        {
+          "id": "copies3",
+          "category": "ancillary",
+          "subtype": "copies_contact",
+          "description": "Copy requests to EPD Director’s Office",
+          "raw_value": "askepd@dnr.ga.gov",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "or the Environmental Protection Division Director’s Office at askepd@dnr.ga.gov."
+            }
+          ]
+        },
+        {
+          "id": "copies_group",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Three alternative copies contacts",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "copies1",
+            "copies2",
+            "copies3"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "Copies may also be requested by contacting"
+            }
+          ]
+        },
+        {
+          "id": "notification_list",
+          "category": "ancillary",
+          "subtype": "notification_service",
+          "description": "Documents sent to persons who requested notification-list inclusion in writing; no signup endpoint specified",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "opening",
+              "quote": "is being provided to all persons who have requested in writing that they be placed on a notification list."
+            }
+          ]
+        },
+        {
+          "id": "hearing",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Public hearing for comment/input on proposed amendments",
+          "raw_value": "public hearing",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "hearing paragraph",
+              "quote": "To provide the public an opportunity to comment upon and provide input into the proposed Air Rule Amendments, a public hearing will be held"
+            }
+          ]
+        },
+        {
+          "id": "hearing_time",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Public hearing start date/time without timezone",
+          "raw_value": "11:00 a.m. on April 24, 2026",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "hearing paragraph",
+              "quote": "at 11:00 a.m. on April 24, 2026."
+            }
+          ]
+        },
+        {
+          "id": "zoom",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Zoom computer hearing access link",
+          "raw_value": "https://gaepd.zoom.us/j/96273415819?pwd=sVvamSlhgar4ftX81Onr8qKDXJRYsJ.1",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "computer login",
+              "quote": "https://gaepd.zoom.us/j/96273415819?pwd=sVvamSlhgar4ftX81Onr8qKDXJRYsJ.1"
+            }
+          ]
+        },
+        {
+          "id": "phone",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Toll-free hearing dial-in number",
+          "raw_value": "888-788-0099",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "phone access",
+              "quote": "To dial in by phone, please call this number: 888-788-0099 (Toll free)."
+            }
+          ]
+        },
+        {
+          "id": "meeting_id",
+          "category": "fact",
+          "subtype": "access_component",
+          "description": "Hearing meeting ID",
+          "raw_value": "962 7341 5819",
+          "modality": "descriptive",
+          "targets": [
+            "phone",
+            "zoom"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "meeting credentials",
+              "quote": "The meeting ID is 962 7341 5819"
+            }
+          ]
+        },
+        {
+          "id": "passcode",
+          "category": "fact",
+          "subtype": "access_component",
+          "description": "Hearing passcode",
+          "raw_value": "563181",
+          "modality": "descriptive",
+          "targets": [
+            "phone",
+            "zoom"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "meeting credentials",
+              "quote": "Passcode: 563181"
+            }
+          ]
+        },
+        {
+          "id": "phone_credentials",
+          "category": "instruction",
+          "subtype": "access_requirement",
+          "description": "Enter ID and/or passcode when prompted",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "phone",
+            "meeting_id",
+            "passcode"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "phone access",
+              "quote": "When prompted, enter the Meeting ID and/or Passcode shown below."
+            }
+          ]
+        },
+        {
+          "id": "access_group",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Zoom computer or phone participation",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "zoom",
+            "phone"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "hearing paragraph",
+              "quote": "Zoom is a free web conferencing platform that also allows participation by phone."
+            }
+          ]
+        },
+        {
+          "id": "zoom_download",
+          "category": "ancillary",
+          "subtype": "helper_link",
+          "description": "Zoom software download helper",
+          "raw_value": "https://zoom.us",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "download paragraph",
+              "quote": "Zoom can be found here: https://zoom.us"
+            }
+          ]
+        },
+        {
+          "id": "download_advice",
+          "category": "instruction",
+          "subtype": "recommendation",
+          "description": "Download Zoom in advance recommended, not required",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "zoom",
+            "zoom_download"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "download paragraph",
+              "quote": "we recommend that you download Zoom in advance."
+            }
+          ]
+        },
+        {
+          "id": "phone_visibility",
+          "category": "disclosure",
+          "subtype": "privacy_exposure",
+          "description": "Phone number may be visible to other attendees",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "phone"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "meeting credentials",
+              "quote": "if you choose to participate by phone, your phone number may be visible to other meeting attendees."
+            }
+          ]
+        },
+        {
+          "id": "oral",
+          "category": "fact",
+          "subtype": "participation_mode",
+          "description": "Anyone may present hearing comments/data/viewpoints orally",
+          "raw_value": "orally",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "testimony paragraph",
+              "quote": "anyone may present data, make a statement, comment, or offer a viewpoint or argument either orally or in writing."
+            }
+          ]
+        },
+        {
+          "id": "hearing_written",
+          "category": "fact",
+          "subtype": "participation_mode",
+          "description": "Anyone may present hearing comments in writing",
+          "raw_value": "in writing",
+          "modality": "descriptive",
+          "targets": [
+            "hearing"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "testimony paragraph",
+              "quote": "either orally or in writing."
+            }
+          ]
+        },
+        {
+          "id": "hearing_modes",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Oral and written hearing comment alternatives",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "oral",
+            "hearing_written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "testimony paragraph",
+              "quote": "either orally or in writing."
+            }
+          ]
+        },
+        {
+          "id": "concise",
+          "category": "instruction",
+          "subtype": "testimony_format",
+          "description": "Oral statements should be concise; advisory wording retained",
+          "raw_value": null,
+          "modality": "optional",
+          "targets": [
+            "oral"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "testimony paragraph",
+              "quote": "Oral statements should be concise."
+            }
+          ]
+        },
+        {
+          "id": "written_required",
+          "category": "instruction",
+          "subtype": "conditional_format",
+          "description": "Lengthy/considerably technical or economic statements and prerecorded messages must be written for official record",
+          "raw_value": null,
+          "modality": "conditional",
+          "targets": [
+            "hearing_written",
+            "oral"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "testimony paragraph",
+              "quote": "Lengthy statements or statements of a considerable technical or economic nature, as well as previously recorded messages, must be submitted in writing for the official record."
+            }
+          ]
+        },
+        {
+          "id": "written",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Written comments for Board package",
+          "raw_value": "Written comments",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "Written comments are welcomed."
+            }
+          ]
+        },
+        {
+          "id": "written_cutoff",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Receipt cutoff to ensure inclusion in Board package",
+          "raw_value": "4:30 PM on April 24, 2026",
+          "modality": "mandatory",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "To ensure their inclusion in EPD's package for the Board of Natural Resources, written comments must be received by 4:30 PM on April 24, 2026."
+            }
+          ]
+        },
+        {
+          "id": "package_condition",
+          "category": "relationship",
+          "subtype": "applicability",
+          "description": "Cutoff ensures inclusion in EPD Board package, not asserted universal later-comment prohibition",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "written",
+            "written_cutoff"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "To ensure their inclusion in EPD's package for the Board of Natural Resources,"
+            }
+          ]
+        },
+        {
+          "id": "comment_email",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Written comment email",
+          "raw_value": "Air-General.Comments@dnr.ga.gov",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "Written comments may be emailed to Air-General.Comments@dnr.ga.gov"
+            }
+          ]
+        },
+        {
+          "id": "comment_mail",
+          "category": "fact",
+          "subtype": "direct_route",
+          "description": "Written comments by regular mail",
+          "raw_value": "Branch Chief, Air Protection Branch, 4244 International Parkway, Suite 120, Atlanta, Georgia, 30354",
+          "modality": "descriptive",
+          "targets": [
+            "written"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "or sent via regular mail addressed to: Branch Chief, Air Protection Branch, 4244 International Parkway, Suite 120, Atlanta, Georgia, 30354."
+            }
+          ]
+        },
+        {
+          "id": "written_routes",
+          "category": "relationship",
+          "subtype": "alternative_group",
+          "description": "Email or postal written submission",
+          "raw_value": null,
+          "modality": "descriptive",
+          "targets": [
+            "comment_email",
+            "comment_mail"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "written paragraph",
+              "quote": "or sent via regular mail"
+            }
+          ]
+        },
+        {
+          "id": "board",
+          "category": "fact",
+          "subtype": "phase",
+          "description": "Adoption consideration Board meeting open to public; no separate comment entitlement stated",
+          "raw_value": "Board of Natural Resources meeting",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "last paragraph",
+              "quote": "The proposed Air Rule Amendments will be considered for adoption by the Board of Natural Resources at its meeting"
+            }
+          ]
+        },
+        {
+          "id": "board_time",
+          "category": "fact",
+          "subtype": "timing",
+          "description": "Public adoption meeting date/time",
+          "raw_value": "9:00 a.m. on Tuesday, May 19, 2026",
+          "modality": "descriptive",
+          "targets": [
+            "board"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "last paragraph",
+              "quote": "at 9:00 a.m. on Tuesday, May 19, 2026."
+            }
+          ]
+        },
+        {
+          "id": "board_venue",
+          "category": "fact",
+          "subtype": "hearing_access",
+          "description": "Public Board meeting venue",
+          "raw_value": "DNR Board Room, 2 Martin Luther King Jr. Drive, SE, Suite 1252 East, Atlanta, GA 30334",
+          "modality": "descriptive",
+          "targets": [
+            "board"
+          ],
+          "evidence": [
+            {
+              "page": 2,
+              "region": "last paragraph",
+              "quote": "The meeting will be open to the public and held at the DNR Board Room located at 2 Martin Luther King Jr. Drive, SE, Suite 1252 East, Atlanta, GA 30334."
+            }
+          ]
+        },
+        {
+          "id": "information_contact",
+          "category": "ancillary",
+          "subtype": "information_contact",
+          "description": "Further information contact Anna Aponte at Air Protection Branch",
+          "raw_value": "Anna Aponte; (470) 251-2942",
+          "modality": "descriptive",
+          "targets": [
+            "$notice"
+          ],
+          "evidence": [
+            {
+              "page": 3,
+              "region": "opening",
+              "quote": "For further information, contact Anna Aponte, (470) 251-2942 at the Air Protection Branch."
+            }
+          ]
+        }
+      ],
+      "acceptance_blockers": [],
+      "exclusions": [
+        {
+          "pages": [
+            1,
+            3
+          ],
+          "rationale": "Exclude substantive amendment descriptions, federal compliance/SIP transmission obligations,2024 standards and2027 fee references, routine March24 publication footer and statutory authority; retain rule family identity. Board meeting is retained because explicitly open to public, without inventing a new comment route."
+        }
+      ],
+      "reviewer": "Independent AI image-reference reviewer, thread 01a10e68-225d-7cf3-ad93-ad51715a9887; not human-adjudicated gold",
+      "review_evidence": {
+        "method": "Direct visual inspection of every listed full-page image; no OCR/native text or hidden link targets.",
+        "physical_pages_viewed": [
+          1,
+          2,
+          3
+        ]
+      }
+    }
+  ]
+}

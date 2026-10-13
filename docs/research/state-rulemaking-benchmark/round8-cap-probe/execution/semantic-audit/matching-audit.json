@@ -1,0 +1,1182 @@
+{
+  "schema_version": "round8.matching-audit.v1",
+  "reviewer": "Independent AI semantic audit; thread01a10e68-225d-7cf3-ad93-ad51715a9887; all claim judgments against frozen reference and two original page images; not human gold",
+  "documents": [
+    {
+      "document_id": "doc-92211b8c7ba0",
+      "inventory": {
+        "sha256": "6aefa75fb280bc77e03394b726feef404f908e72f37286c6786baa4243e308f7",
+        "review_complete": true,
+        "claims": [
+          {
+            "id": "e-hearing",
+            "categories": [
+              "fact",
+              "identity"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Public proposed-rule hearing and public testimony are supported by page1 opening and appearance paragraphs; repeal/recreation identity is faithful."
+          },
+          {
+            "id": "t-hearing-date",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "date",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 Date field supports April22,2026 and ISO2026-04-22 as hearing start; no timezone inferred."
+          },
+          {
+            "id": "t-hearing-time",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 Time field supports1:00PM hearing start with null normalized date/time; no timezone invented."
+          },
+          {
+            "id": "e-comments",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 opening supports written comments on this proposed rule."
+          },
+          {
+            "id": "t-comments-close",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "date",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 receipt cutoff supports April30,2026 /2026-04-30 as written-comment close; q-deadline preserves received-by semantics."
+          },
+          {
+            "id": "e-registration",
+            "categories": [
+              "fact",
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 links Zoom registration and phone appearance-form delivery to the hearing; hearing_intent is a faithful registration phase."
+          },
+          {
+            "id": "t-preregister",
+            "categories": [
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 pre-registration recommendation supports before-hearing relative association, conditional on optional spoken-comment preregistration; no numerical deadline fabricated."
+          },
+          {
+            "id": "e-accessibility",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 Accessibility section supports requests for aids and accessible hearing documents as ancillary activity, phase other; not a written-comment submission event."
+          },
+          {
+            "id": "t-access-notice",
+            "categories": [
+              "ancillary",
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Reasonable advance notice is literal page1 wording and refers to hearing accessibility preparations; no computed interval."
+          },
+          {
+            "id": "t-access-request",
+            "categories": [
+              "ancillary",
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "The page1 as-soon-as-possible request wording is correctly retained. This claim covers the relative phrase and accessibility purpose only; its inconsistent dependency fields are separately audited."
+          },
+          {
+            "id": "i-agency",
+            "categories": [
+              "identity"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 names Department of Natural Resources; hearing/comment/registration/accessibility associations are supported."
+          },
+          {
+            "id": "i-rule",
+            "categories": [
+              "identity"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 identifies repeal of chapters NR107 and109, correctly associated with hearing and written comments."
+          },
+          {
+            "id": "i-recreated",
+            "categories": [
+              "identity"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 separately identifies recreated chapter NR107; preserves same proceeding rather than inventing a second notice."
+          },
+          {
+            "id": "i-order",
+            "categories": [
+              "identity"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 rule-access paragraph identifies NRB Order WY-20-23."
+          },
+          {
+            "id": "r-register",
+            "categories": [
+              "fact",
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 requests Zoom registration/pre-registration. Role hearing_registration and registration-event association are faithful. Exact endpoint glyph is separately uncertified."
+          },
+          {
+            "id": "c-register-url",
+            "categories": [
+              "fact",
+              "instruction"
+            ],
+            "status": "unknown",
+            "literal_kind": "other",
+            "literal_status": "unknown",
+            "evidence_status": "unknown",
+            "basis": "Inventory has lowercase l in JqagrldGeo84g; frozen reference has uppercase I in JqagrIdGeo84g. Both render as an indistinguishable vertical glyph in the supplied page image. Exact endpoint correctness cannot be certified under the frozen image reference; not adjudicated as a model fabrication. No reference edit or native-text override."
+          },
+          {
+            "id": "r-zoom-access",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 labels virtual Zoom access and meetingID. Role other is resolved by hearing_access group, hearing event, web channel and explicit description; not a written-comment route. Exact URL glyph separately uncertified."
+          },
+          {
+            "id": "c-zoom-url",
+            "categories": [
+              "fact"
+            ],
+            "status": "unknown",
+            "literal_kind": "other",
+            "literal_status": "unknown",
+            "evidence_status": "unknown",
+            "basis": "Inventory has lowercase l in JqagrldGeo84g; frozen reference has uppercase I in JqagrIdGeo84g. Both render as an indistinguishable vertical glyph in the supplied page image. Exact endpoint correctness cannot be certified under the frozen image reference; not adjudicated as a model fabrication. No reference edit or native-text override."
+          },
+          {
+            "id": "c-zoom-id",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 visibly supports this component literal, its kind and association within r-zoom-access. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-phone-one",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 first dial-in option, telephone channel and hearing event/access group are supported; not a written-comment route."
+          },
+          {
+            "id": "c-phone-one",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 visibly supports this component literal, its kind and association within r-phone-one. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "c-phone-one-id",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 visibly supports this component literal, its kind and association within r-phone-one. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-phone-two",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 second dial-in option, telephone channel and hearing event/access group are supported; not a written-comment route."
+          },
+          {
+            "id": "c-phone-two",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 visibly supports this component literal, its kind and association within r-phone-two. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "c-phone-two-id",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 visibly supports this component literal, its kind and association within r-phone-two. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-form",
+            "categories": [
+              "fact",
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 directs phone participants to email completed appearance form to printed address; correctly hearing registration, expressly not written rule comments."
+          },
+          {
+            "id": "c-form-email",
+            "categories": [
+              "fact",
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "email",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page1 visibly supports this component literal, its kind and association within r-form. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-mail",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 directs written comments to Department/Madi Johansen postal endpoint; correct written phase/submission group."
+          },
+          {
+            "id": "c-mail-office",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-mail. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "c-mail-attn",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-mail. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "c-mail-address",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-mail. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-email-madi",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 listed Department contact accepts written comments; correct email role/phase/group."
+          },
+          {
+            "id": "c-email-madi",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "email",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-email-madi. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-email-comments",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 explicitly permits comments to administrative-rules email; correct role/phase/group."
+          },
+          {
+            "id": "c-comments-email",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "email",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-email-comments. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-web-comments",
+            "categories": [
+              "fact",
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 legislative hearings URL is explicitly for comments as well as rule review; correct web submission role."
+          },
+          {
+            "id": "c-comments-web",
+            "categories": [
+              "fact",
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-web-comments. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-questions-mail",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 contact block covers questions as well as comments; separate postal information-contact role correctly retained."
+          },
+          {
+            "id": "c-query-office",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-questions-mail. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "c-query-attn",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-questions-mail. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "c-query-address",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-questions-mail. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-questions-email",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 contact block supports email questions; not promoted from an ancillary contact alone to comments."
+          },
+          {
+            "id": "c-query-email",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "email",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-questions-email. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-questions-phone",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 telephone is associated with rule questions; remains information contact rather than written submission."
+          },
+          {
+            "id": "c-query-phone",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-questions-phone. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-rule-view",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 DNR link provides rule viewing under WY-20-23; ancillary, not a filing portal."
+          },
+          {
+            "id": "c-view-url",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-rule-view. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-rule-review",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 legislative link also supports rule review; separate ancillary role is faithful."
+          },
+          {
+            "id": "c-review-url",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-rule-review. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-coordinator-phone",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 labels Emma Esch Agency Small Business Regulatory Coordinator; phone stays ancillary."
+          },
+          {
+            "id": "c-coordinator-name-phone",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-coordinator-phone. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "c-coordinator-phone",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "other",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-coordinator-phone. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "r-coordinator-email",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 coordinator email remains ancillary; no comment-submission role invented."
+          },
+          {
+            "id": "c-coordinator-email",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "email",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 visibly supports this component literal, its kind and association within r-coordinator-email. Address/name/phone/credential/email are reviewed with the route context; no inferred ZIP or hidden endpoint."
+          },
+          {
+            "id": "q-zoom-registration",
+            "categories": [
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 To join via Zoom condition preserves mandatory registration for that chosen mode; conditional is semantically compatible with the source-scoped requirement. Required form information and correct registration/access links retained."
+          },
+          {
+            "id": "q-preregister",
+            "categories": [
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 strongly encouraged spoken-comment pre-registration remains optional; no unconditional deadline added."
+          },
+          {
+            "id": "q-phone-form",
+            "categories": [
+              "instruction",
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 supports download/complete/email of the fillable Hearing Appearance form for phone participants; actual endpoint linked by r-form. Form name is present in structured text, not only evidence. The personal name Sarah Wood is split below."
+          },
+          {
+            "id": "q-deadline",
+            "categories": [
+              "instruction",
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "date",
+            "literal_status": "correct",
+            "evidence_status": "matched",
+            "basis": "Page2 mandatory received-on-or-before April30 cutoff, correctly applied to all four written routes; date literal correct."
+          },
+          {
+            "id": "q-weight",
+            "categories": [
+              "disclosure"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 equal weight/effect of written and oral statements retained with semantic_class disclosure, informational modality and correct phases/routes; kind other does not erase separately typed disclosure."
+          },
+          {
+            "id": "q-comments-contact",
+            "categories": [
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 should-be-submitted-to wording is a recommendation to the listed Department contact; optional modality and postal/email associations faithful."
+          },
+          {
+            "id": "q-questions",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 names Madi Johansen as contact for questions and ties postal/email/telephone information routes; semantic_class other is appropriate ancillary content."
+          },
+          {
+            "id": "q-accessibility",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 supports general aids/accessible documents for communication difficulties to maximum extent possible with reasonable advance notice. General promise is correct, but named interpreter/non-English/large-print/recorded examples occur only in evidence and are not recovered by this generalized claim. Request instruction and uncertain-contact assertion split below."
+          },
+          {
+            "id": "q-review",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 supports both DNR rule-view and legislative rule-review links under same proposal; ancillary role faithfully preserved."
+          },
+          {
+            "id": "q-coordinator",
+            "categories": [
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 supports named small-business coordinator and both contacts; correctly excludes them from comment-submission routes."
+          },
+          {
+            "id": "ag-submission",
+            "categories": [
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page2 explicitly supports these route alternatives for submission. IDs/phase association and q-weight applicability checked. This relation claim does not independently certify uncertain component literals."
+          },
+          {
+            "id": "ag-access",
+            "categories": [
+              "relationship"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 explicitly supports these route alternatives for hearing_access. IDs/phase association and q-weight applicability checked. This relation claim does not independently certify uncertain component literals."
+          },
+          {
+            "id": "u-access-contact",
+            "categories": [
+              "uncertainty"
+            ],
+            "status": "unknown",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "The source says contact the email address or phone number listed below, and multiple contacts do appear below. Frozen reference resolves this to Madi Johansen; inventory instead refuses a specific endpoint. Exact referent disagreement is not resolved by the image alone with sufficient certainty; record unknown rather than count an invented contact or certify full recovery."
+          },
+          {
+            "id": "u-hearing-timing",
+            "categories": [
+              "uncertainty"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "All-page review confirms no printed timezone, specific registration cutoff, or hearing end time. The pre-registration recommendation is not an explicit numeric cutoff. This extra uncertainty statement is factually supported and not a new source denominator unit."
+          },
+          {
+            "id": "q-phone-form-person-name",
+            "categories": [
+              "identity"
+            ],
+            "status": "unknown",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Source prints Sarah.wood@wisconsin.gov but does not separately identify a person as Sarah Wood. The natural-name expansion is plausible, not independently established in the image. Endpoint itself is correct."
+          },
+          {
+            "id": "q-accessibility-request",
+            "categories": [
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Page1 expressly asks requesters to contact the email or phone listed below as soon as possible. Conditional on seeking assistance is faithful; exact endpoint association is separately unresolved."
+          },
+          {
+            "id": "q-accessibility-association",
+            "categories": [
+              "ancillary",
+              "uncertainty"
+            ],
+            "status": "unknown",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Inventory association uncertain, empty route_ids and explicit exact-contact-not-identified statement do not recover the frozen reference Madi email/phone association. Multiple downstream contacts make this an adjudication uncertainty rather than a fabricated contact."
+          },
+          {
+            "id": "t-access-request-dependency",
+            "categories": [
+              "instruction",
+              "relationship"
+            ],
+            "status": "unknown",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Structured relative timing carries q-accessibility condition ID but dependency_relation none. The intended conditional association is not consistently represented; no new deadline inferred. Literal as-soon-as-possible phrase is separately correct. This is one inconsistent relationship causing the two reported assembly diagnostics, not two invented facts."
+          },
+          {
+            "id": "coverage-complete",
+            "categories": [
+              "uncertainty"
+            ],
+            "status": "incorrect",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "claimed_complete overstates structured recovery: named accessibility aid formats are evidence-only and contact association unresolved; exact Zoom URL is also uncertified under the frozen reference."
+          },
+          {
+            "id": "coverage-scope",
+            "categories": [
+              "fact",
+              "instruction",
+              "ancillary"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Inventory does discuss hearing access/registration, written comments, accessibility, rule links, questions and coordinator contacts. This audits represented topics, not the model internal claim to have read every token."
+          },
+          {
+            "id": "coverage-no-reply",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "All two pages contain no separate response or reply-comment phase."
+          },
+          {
+            "id": "coverage-no-publication",
+            "categories": [
+              "disclosure"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "No public-posting/publication policy appears; equal-weight consideration disclosure is distinct and retained."
+          },
+          {
+            "id": "coverage-no-extension",
+            "categories": [
+              "fact"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "No extension policy appears in the two-page notice."
+          },
+          {
+            "id": "coverage-no-late",
+            "categories": [
+              "instruction"
+            ],
+            "status": "correct",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "No late-comment policy appears; the receipt cutoff is explicit."
+          },
+          {
+            "id": "coverage-access-uncertain",
+            "categories": [
+              "uncertainty"
+            ],
+            "status": "unknown",
+            "literal_kind": "none",
+            "literal_status": "not_applicable",
+            "evidence_status": "matched",
+            "basis": "Repeats the unresolved accessibility-contact association; frozen reference and model differ and exact referent remains an audit uncertainty."
+          }
+        ],
+        "source_matches": [
+          {
+            "source_unit_id": "agency",
+            "status": "matched",
+            "claim_ids": [
+              "i-agency"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "rule",
+            "status": "matched",
+            "claim_ids": [
+              "e-hearing",
+              "i-rule",
+              "i-recreated"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "order",
+            "status": "matched",
+            "claim_ids": [
+              "i-order"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "hearing",
+            "status": "matched",
+            "claim_ids": [
+              "e-hearing"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "hearing_time",
+            "status": "matched",
+            "claim_ids": [
+              "t-hearing-date",
+              "t-hearing-time"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "zoom",
+            "status": "unknown",
+            "claim_ids": [
+              "c-register-url",
+              "c-zoom-url"
+            ],
+            "basis": "Exact frozen URL I versus inventory l glyph disagreement unresolved from image; reference immutable. This is not a confirmed erroneous model endpoint."
+          },
+          {
+            "source_unit_id": "meeting_id",
+            "status": "unknown",
+            "claim_ids": [
+              "c-zoom-id"
+            ],
+            "basis": "Local content is supported, but frozen endpoint-closure rule prohibits full match because required target(s) are unresolved: zoom. This is propagated reference/association uncertainty, not a newly invented literal."
+          },
+          {
+            "source_unit_id": "phone1",
+            "status": "unknown",
+            "claim_ids": [
+              "r-phone-one",
+              "c-phone-one",
+              "c-phone-one-id"
+            ],
+            "basis": "Local content is supported, but frozen endpoint-closure rule prohibits full match because required target(s) are unresolved: meeting_id. This is propagated reference/association uncertainty, not a newly invented literal."
+          },
+          {
+            "source_unit_id": "phone2",
+            "status": "unknown",
+            "claim_ids": [
+              "r-phone-two",
+              "c-phone-two",
+              "c-phone-two-id"
+            ],
+            "basis": "Local content is supported, but frozen endpoint-closure rule prohibits full match because required target(s) are unresolved: meeting_id. This is propagated reference/association uncertainty, not a newly invented literal."
+          },
+          {
+            "source_unit_id": "access_alternatives",
+            "status": "unknown",
+            "claim_ids": [
+              "ag-access"
+            ],
+            "basis": "Local content is supported, but frozen endpoint-closure rule prohibits full match because required target(s) are unresolved: zoom, phone1, phone2. This is propagated reference/association uncertainty, not a newly invented literal."
+          },
+          {
+            "source_unit_id": "zoom_register",
+            "status": "unknown",
+            "claim_ids": [
+              "q-zoom-registration",
+              "r-register"
+            ],
+            "basis": "Local content is supported, but frozen endpoint-closure rule prohibits full match because required target(s) are unresolved: zoom. This is propagated reference/association uncertainty, not a newly invented literal."
+          },
+          {
+            "source_unit_id": "spoken_preregister",
+            "status": "unknown",
+            "claim_ids": [
+              "q-preregister",
+              "t-preregister"
+            ],
+            "basis": "Local content is supported, but frozen endpoint-closure rule prohibits full match because required target(s) are unresolved: zoom_register. This is propagated reference/association uncertainty, not a newly invented literal."
+          },
+          {
+            "source_unit_id": "appearance_form",
+            "status": "matched",
+            "claim_ids": [
+              "q-phone-form"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "signup_email",
+            "status": "matched",
+            "claim_ids": [
+              "r-form",
+              "c-form-email"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "phone_form",
+            "status": "unknown",
+            "claim_ids": [
+              "q-phone-form",
+              "r-form"
+            ],
+            "basis": "Local content is supported, but frozen endpoint-closure rule prohibits full match because required target(s) are unresolved: phone1, phone2. This is propagated reference/association uncertainty, not a newly invented literal."
+          },
+          {
+            "source_unit_id": "written",
+            "status": "matched",
+            "claim_ids": [
+              "e-comments"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "written_cutoff",
+            "status": "matched",
+            "claim_ids": [
+              "t-comments-close",
+              "q-deadline"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "mail",
+            "status": "matched",
+            "claim_ids": [
+              "r-mail",
+              "c-mail-office",
+              "c-mail-attn",
+              "c-mail-address"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "email1",
+            "status": "matched",
+            "claim_ids": [
+              "r-email-madi",
+              "c-email-madi"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "email2",
+            "status": "matched",
+            "claim_ids": [
+              "r-email-comments",
+              "c-comments-email"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "portal",
+            "status": "matched",
+            "claim_ids": [
+              "r-web-comments",
+              "c-comments-web",
+              "r-rule-review"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "written_alternatives",
+            "status": "matched",
+            "claim_ids": [
+              "ag-submission"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "equal_weight",
+            "status": "matched",
+            "claim_ids": [
+              "q-weight"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "rule_view",
+            "status": "matched",
+            "claim_ids": [
+              "r-rule-view",
+              "c-view-url",
+              "q-review"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "query_contact",
+            "status": "matched",
+            "claim_ids": [
+              "q-questions",
+              "r-questions-mail",
+              "r-questions-email"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "query_phone",
+            "status": "matched",
+            "claim_ids": [
+              "r-questions-phone",
+              "c-query-phone"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "aid",
+            "status": "mismatched",
+            "claim_ids": [
+              "q-accessibility"
+            ],
+            "basis": "General aid/accessible-document promise and qualifications retained, but interpreter and named alternative formats are only quoted as evidence, not asserted in structured semantic text. Partial recovery does not satisfy this composite frozen source unit."
+          },
+          {
+            "source_unit_id": "aid_request",
+            "status": "unknown",
+            "claim_ids": [
+              "q-accessibility-request",
+              "q-accessibility-association",
+              "u-access-contact",
+              "t-access-request-dependency"
+            ],
+            "basis": "As-soon-as-possible request content retained; inventory does not bind the frozen email1/query_phone targets and has an inconsistent timing dependency. Exact contact referent disagreement remains unknown; required aid endpoint is also not fully matched."
+          },
+          {
+            "source_unit_id": "coordinator",
+            "status": "matched",
+            "claim_ids": [
+              "q-coordinator",
+              "c-coordinator-name-phone"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "coord_phone",
+            "status": "matched",
+            "claim_ids": [
+              "r-coordinator-phone",
+              "c-coordinator-phone"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          },
+          {
+            "source_unit_id": "coord_email",
+            "status": "matched",
+            "claim_ids": [
+              "r-coordinator-email",
+              "c-coordinator-email"
+            ],
+            "basis": "Structured claims preserve source value, role, modality, applicability and image-supported evidence; no evidence-only recovery credit."
+          }
+        ]
+      },
+      "record": null
+    }
+  ]
+}

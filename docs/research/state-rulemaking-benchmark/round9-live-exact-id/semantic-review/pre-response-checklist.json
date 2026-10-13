@@ -1,0 +1,161 @@
+{
+  "schema_version": "round9.live.semantic-pre-response-checklist.v1",
+  "status": "prepared_awaiting_primary_frozen_response",
+  "created_utc": "2026-10-12T04:42:21.243832+00:00",
+  "reviewer": "Independent AI semantic review; not human gold",
+  "live_response_seen": false,
+  "expected_record_id_count": 70,
+  "expected_record_ids": [
+    "ag_comments",
+    "ag_phone",
+    "e_hearing",
+    "t_hearing_date",
+    "t_hearing_clock",
+    "e_registration",
+    "e_comments",
+    "t_comments_close",
+    "e_accessibility",
+    "t_access_request",
+    "t_advance",
+    "i_agency",
+    "i_rule",
+    "i_order",
+    "q_zoom_signup",
+    "q_preregister",
+    "q_phone_form",
+    "q_receipt",
+    "q_channels",
+    "q_equal_weight",
+    "q_comment_contact",
+    "q_questions",
+    "q_view",
+    "q_web_review",
+    "q_access_aids",
+    "q_access_request",
+    "q_coordinator",
+    "r_zoom_signup",
+    "c_zoom",
+    "r_meeting",
+    "c_meeting",
+    "r_phone1",
+    "c_phone1",
+    "c_phone1_code",
+    "c_phone1_region",
+    "r_phone2",
+    "c_phone2",
+    "c_phone2_code",
+    "c_phone2_region",
+    "r_oral",
+    "c_testify",
+    "r_form_email",
+    "c_form_email",
+    "r_mail",
+    "c_mail_office",
+    "c_mail_attn",
+    "c_mail_address",
+    "r_comment_email",
+    "c_comment_email",
+    "r_general_email",
+    "c_general_email",
+    "r_comment_web",
+    "c_comment_web",
+    "r_query",
+    "c_query_office",
+    "c_query_name",
+    "c_query_address",
+    "c_query_phone",
+    "c_query_email",
+    "r_view",
+    "c_view",
+    "r_access_contact",
+    "c_access_reference",
+    "r_coordinator",
+    "c_coordinator_name",
+    "c_coordinator_phone",
+    "c_coordinator_email",
+    "u_access_contact",
+    "u_access_timing",
+    "u_timezone"
+  ],
+  "checks": [
+    {
+      "id": "response_provenance",
+      "check": "Receive frozen raw response and request/validation artifacts from primary, pin exact bytes, reverify all baseline pins and same canonical source/record; stop comparison and report any baseline delta. Never repair response or alter labels."
+    },
+    {
+      "id": "structural_separation",
+      "check": "Independently enumerate expected 70 record IDs, assess missing/extra/duplicate IDs, parse/finish status and raw versus normalized result. Review every returned reason including invalid/extra rows qualitatively; exact-ID success alone is not semantic success. Coverage belongs in global sections, not a record assessment. No salvage of invalid subset."
+    },
+    {
+      "id": "repeal_recreation",
+      "check": "Source rule unit requires repeal of NR 107 and 109 and recreation of NR 107. i_rule literal has only chapter identifiers; e_hearing description has general topic. Evidence quotes are not asserted semantic fields. Identify any reason incorrectly crediting the hearing description or evidence as recovery. Local chapter support/source identity resolution can coexist with incomplete rule recovery.",
+      "record_ids": [
+        "i_rule",
+        "e_hearing"
+      ],
+      "source_unit": "rule"
+    },
+    {
+      "id": "full_access_alternatives",
+      "check": "ag_phone correctly groups two phones, but no full Zoom-versus-phone hearing-access alternative group exists. Correct endpoint/code or registration reasons cannot cure this missing relation. Judge global missing_items and completeness for detection of this partial recovery independently of the URL glyph caveat.",
+      "record_ids": [
+        "ag_phone",
+        "r_zoom_signup",
+        "r_meeting",
+        "r_phone1",
+        "r_phone2"
+      ],
+      "source_unit": "access_alternatives"
+    },
+    {
+      "id": "unclear_modality",
+      "check": "q_comment_contact text preserves should while structured modality is unclear; prior frozen convention treats should as advisory. Noticing this and calling it conservative is not preserved modality under the contract. Separate unresolved modality from valid recipient/email/postal literals; do not invent an exclusive or mandatory route.",
+      "record_ids": [
+        "q_comment_contact"
+      ]
+    },
+    {
+      "id": "url_reference_uncertainty",
+      "check": "Original truth has uppercase I in JqagrId; native text, retained record and supplementary PDF annotation have lowercase l in Jqagrld. Original image alone does not settle glyph. Retain strict unknown and six propagated unknown source units (meeting_id, phone1, phone2, zoom_register, spoken_preregister, phone_form); these are not six erroneous literals or a confirmed fabricated URL. Supplementary support is separate, not a label rewrite.",
+      "record_ids": [
+        "c_zoom",
+        "r_zoom_signup"
+      ]
+    },
+    {
+      "id": "accessibility_reference",
+      "check": "Original aid_request binds email1/query_phone (Madi contacts). Record uses unresolved positional placeholder; multiple later contacts make source adjudication uncertain. Reward bounded literal-versus-association distinctions without declaring the original referent conclusively impossible or the placeholder complete. Preserve timing uncertainty and all named interpreter/non-English/large-print/recorded aids.",
+      "record_ids": [
+        "q_access_request",
+        "r_access_contact",
+        "c_access_reference",
+        "u_access_contact",
+        "q_access_aids",
+        "t_access_request",
+        "t_advance",
+        "u_access_timing"
+      ]
+    },
+    {
+      "id": "all_reasons",
+      "check": "Review all assessment reasons for literal value, role, event/route/recipient ownership, alternatives, modality, applicability and evidence. Check useful distinctions: optional preregistration versus receipt cutoff, form email versus comments, query phone/coordinator versus submission, equal consideration versus publication/confidentiality, visible form label versus unavailable hidden URL, no inferred timezone/ZIP/name expansion. Exact source-span matches alone do not prove completeness."
+    },
+    {
+      "id": "global_judgment",
+      "check": "Review every global field/reason including completeness, missing items, contradictions, source identity. Whole-notice complete with no missing items conflicts with two unchanged partial source units; generic uncertainty/review status does not demonstrate detection. Record detection separately for repeal/recreation, full alternatives, modality and accessibility uncertainty. Distinguish model judgment from validation fallback dimensions and deterministic review guards."
+    },
+    {
+      "id": "limits",
+      "check": "This is one reused development diagnostic, independent AI review, not human gold, fresh accuracy, production eligibility or comparative model accuracy. Original audit has 31 units (21 matched, 2 partial/mismatched, 8 unknown), not 70 independent source truths. No synthetic R9 audits substituted for WI evidence. No new provider calls, credentials, runner changes, retries, source relabeling or edits outside assigned directory."
+    }
+  ],
+  "later_deliverables": [
+    "Pinned raw-response and validation provenance",
+    "One qualitative review entry per returned assessment reason, including invalid extras",
+    "Global-field review and explicit known-defect detection matrix",
+    "Separate structural, semantic, source-uncertainty and runtime-policy conclusions"
+  ],
+  "prior_result_context": {
+    "stronger8192": "Normally finished parseable 71-row output; all 70 required IDs plus invalid coverage. Raw complete, missing_items empty. Useful local reasons did not detect two known partial source units; unclear modality noticed but excused. This context does not predetermine the new response."
+  }
+}

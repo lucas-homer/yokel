@@ -1,0 +1,53 @@
+{
+  "amendment": 5,
+  "status": "adopted_by_primary_before_one_job_pilot",
+  "prepared_at_utc": "2026-10-07T03:18:00.809821+00:00",
+  "purpose": "Finish the 28 unsubmitted jobs from the same frozen 20-notice comparison through authenticated REST; preserve 12 already completed jobs",
+  "authorization": "User requested expanded comparison, created the LlamaParse key in 1Password, confirmed the Mini host, and enabled CLI integration for use",
+  "credential_handling": "op run injects credential into runner environment; no key in arguments, output, artifacts, or repository",
+  "input_and_reference_policy": "Exact frozen bytes and references unchanged; no prompts or expected answers",
+  "interface": "LlamaCloud REST v2, independent execution-api-1 captures; original connector and dashboard history retained",
+  "configuration_limits": [
+    "latest alias, no dated version guarantee",
+    "Nested v2 configuration differs from legacy dashboard fields; undocumented legacy high_res_ocr and hide_headers/hide_footers options omitted, no equivalence claim",
+    "Markdown-only scoring; supplementary JSON does not rescue evidence",
+    "Different interfaces and execution dates limit causal tiercomparisons"
+  ],
+  "execution_limits": {
+    "pilot": "first pending job A06 agentic_plus, --max-jobs 1; inspect output page count, metadata, hashes, usage before expanding",
+    "max_concurrent_provider_jobs": 2,
+    "stop_consecutive_operational_failures": 3,
+    "ambiguous_submission": "persist intent and job IDs; reconcile; no blind retry",
+    "no_new_calibration_jobs": true
+  },
+  "remaining_jobs": 28,
+  "remaining_input_pages_across_tiers": 54,
+  "nominal_remaining_credits": 1555,
+  "cost_note": "Nominal estimate only; use returned job.usage or refreshed account ledger for measured consumption",
+  "review": "Separate Codex child tasks for runner, correctness review, content reviews, and operations audit; primary integration",
+  "adopted_at_utc": "2026-10-07T03:19:27.368785+00:00",
+  "runner_sha256": "916b6fc69f48bae0d95116929c96c275fec5ca87fe901c0d71dc73fd77f25770",
+  "offline_checks": {
+    "passed": true,
+    "dry_plan_jobs": 28,
+    "completed_excluded": 12,
+    "frozen_files_verified": 141,
+    "pilot_max_jobs_one": true,
+    "durable_restart_no_duplicate": true,
+    "uncertain_submit_unique_reconciliation_no_retry": true,
+    "zero_reconciliation_matches_pause_without_post": true,
+    "max_two_active": true,
+    "stop_three_failures_retains_fourth_inflight": true,
+    "missing_page_evidence_is_operational_failure": true,
+    "exact_markdown_bytes_preserved": true,
+    "partial_receipt_resume_uses_max_prefix": true,
+    "key_and_transient_url_redaction": true,
+    "provider_requests": 0,
+    "credential_access": false,
+    "finite_invocation_preserves_accepted_ids": true,
+    "pair_barrier_polls_existing_before_new_submissions": true,
+    "signed_download_redirects_rejected": true,
+    "signed_download_never_receives_authorization": true
+  },
+  "primary_review": "Checked final pair barrier, signed-download NoRedirect client, credential wrapper, exact28job dry plan, and exclusionof12completedjobs. Astrareviewfound initial scheduler/redirect issues; corrected beforeliveuse."
+}

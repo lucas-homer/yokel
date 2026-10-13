@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Independent round-four evaluator source labels",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "documents"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "round4.evaluation.labels.v1"
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "opaque_document_id",
+          "original_pdf_sha256",
+          "retained_pdf_sha256",
+          "official_url",
+          "physical_page_mapping",
+          "all_source_pages_viewed",
+          "complete_notice_scope",
+          "source_states_for_both_fields",
+          "required_field_values",
+          "scan_degradation_basis",
+          "reviewer_identity",
+          "reviewed_at_utc",
+          "fields"
+        ],
+        "properties": {
+          "opaque_document_id": {
+            "type": "string"
+          },
+          "original_pdf_sha256": {
+            "type": "string"
+          },
+          "retained_pdf_sha256": {
+            "type": "string"
+          },
+          "official_url": {
+            "type": "string"
+          },
+          "physical_page_mapping": {
+            "type": "array"
+          },
+          "all_source_pages_viewed": {
+            "type": "boolean"
+          },
+          "complete_notice_scope": {
+            "type": "boolean"
+          },
+          "source_states_for_both_fields": {
+            "type": "object",
+            "required": [
+              "DATE",
+              "EMAIL"
+            ],
+            "properties": {
+              "DATE": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "enum": [
+                    "present_in_scope",
+                    "present_out_of_scope",
+                    "not_stated",
+                    "explicit_negative",
+                    "unresolved_conflict",
+                    "unresolved_uncertainty"
+                  ]
+                }
+              },
+              "EMAIL": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "enum": [
+                    "present_in_scope",
+                    "present_out_of_scope",
+                    "not_stated",
+                    "explicit_negative",
+                    "unresolved_conflict",
+                    "unresolved_uncertainty"
+                  ]
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "required_field_values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "scan_degradation_basis": {
+            "type": "string"
+          },
+          "reviewer_identity": {
+            "type": "string"
+          },
+          "reviewed_at_utc": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "field_id",
+                "field_type",
+                "source_state",
+                "raw_literal",
+                "page_region",
+                "exact_source_quote",
+                "role",
+                "conditions",
+                "supported_scope",
+                "distinct_value_group",
+                "uncertainty_reason_if_any",
+                "normalized_value",
+                "source_precision"
+              ],
+              "properties": {
+                "field_id": {
+                  "type": "string"
+                },
+                "field_type": {
+                  "enum": [
+                    "DATE",
+                    "EMAIL"
+                  ]
+                },
+                "source_state": {
+                  "enum": [
+                    "present_in_scope",
+                    "present_out_of_scope",
+                    "not_stated",
+                    "explicit_negative",
+                    "unresolved_conflict",
+                    "unresolved_uncertainty"
+                  ]
+                },
+                "raw_literal": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "page_region": {
+                  "type": [
+                    "string",
+                    "object",
+                    "array",
+                    "null"
+                  ]
+                },
+                "exact_source_quote": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "role": {
+                  "type": "string"
+                },
+                "conditions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "supported_scope": {
+                  "type": "boolean"
+                },
+                "distinct_value_group": {
+                  "type": "string"
+                },
+                "uncertainty_reason_if_any": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "normalized_value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source_precision": {
+                  "enum": [
+                    "date",
+                    "literal_email",
+                    "unsupported"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

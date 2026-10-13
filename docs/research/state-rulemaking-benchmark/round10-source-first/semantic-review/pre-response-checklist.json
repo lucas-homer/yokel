@@ -1,0 +1,142 @@
+{
+  "schema_version": "round10.source-first.semantic-pre-response-checklist.v1",
+  "status": "prepared_awaiting_frozen_stage_A_and_B",
+  "created_utc": "2026-10-12T05:13:31.951096+00:00",
+  "live_A_response_seen": false,
+  "live_B_response_seen": false,
+  "document_id": "doc-92211b8c7ba0",
+  "write_scope": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round10-source-first/semantic-review",
+  "scope": "Two-stage WI reused development diagnostic plus existing offline synthetic regressions; semantic review only.",
+  "checks": [
+    {
+      "id": "freeze_and_separation",
+      "stage": "before_A_B_evaluation",
+      "check": "Pin frozen A/B requests, raw responses, parsing/validation results, provenance, source/record bindings and freeze manifests before reviewing content. Reverify this baseline. Check A request contains only full unchanged source plus neutral instructions/schema; no candidate record/ID schedule, prior outputs/audits/expected findings/defect hints. Check B receives exactly frozen validated A plus same full source and unchanged record, with no audit feedback or prior findings. Any leakage or repair changes interpretation; do not silently call it source-independent.",
+      "responsibility_limit": "Read-only semantic verification of actual artifacts; primary/protocol reviewer own dispatch, credentials, execution gates and costs."
+    },
+    {
+      "id": "stage_A_bidirectional",
+      "stage": "A_source_only_inventory",
+      "check": "Compare every one of the 31 frozen source units to A, and every A unit back to source. Allow splitting/merging with explicit many-to-many mappings; do not require original IDs. Distinguish asserted semantic content from evidence-only text. Identify partial/absent facts, instructions, relationships, roles, modality, applicability, ownership, temporal qualifiers, identities, ancillary contacts and uncertainty. Review all A unit reasons/evidence and global scope statements. Unsupported generated units, duplicates and unresolved dependencies are separate from missed source units."
+    },
+    {
+      "id": "stage_A_scope",
+      "stage": "A_source_only_inventory",
+      "check": "A is a fallible generated inventory, not a reference oracle. Exact evidence, valid schema and a self-reported complete label cannot certify the participation universe. Audit source omissions even when A produces no unit to match in B. Substantive background excluded by the original participation scope is not automatically a required omission; retain original scope/exclusions and report any new qualitative observation separately."
+    },
+    {
+      "id": "stage_B_each_A_unit",
+      "stage": "B_inventory_source_record_matching",
+      "check": "Review every frozen A unit and every B reason, mapping and global conclusion. Verify exact A ID coverage independently of semantics. Inspect cited operative record assertions and relation endpoints, not just evidence spans, coverage rationale, headings, topic presence or the fact that all unit IDs received an answer. An unresolved pointer or source uncertainty cannot be cured by a matched label. Review any B source-only omissions beyond A separately."
+    },
+    {
+      "id": "stage_B_independent_universe",
+      "stage": "B_inventory_source_record_matching",
+      "check": "Carry the original 31-source-unit comparison through B even for units missing/partial in A. B success relative to a deficient A inventory does not establish source completeness. Do not penalize B for a nonexistent A row, but record inherited omission and whether B independently notices it from the full source. Whole-record fidelity requires source-grounded global reasoning, not merely correct matching of generated units."
+    },
+    {
+      "id": "rule_operations",
+      "stage": "A_and_B",
+      "check": "A must assert repeal of both NR 107 and NR 109 and recreation of NR 107, not only quote it or list the chapters/topic. If A has the obligation but B credits unchanged i_rule/e_hearing as complete, classify matching false recovery. If A omits it, classify inventory partial/absent first, then evaluate whether B notices the source-level loss. e_hearing only describes a permanent aquatic plant rule; evidence-only repeal/recreation does not repair it.",
+      "original_source_unit": "rule",
+      "priority": "primary_known_loss"
+    },
+    {
+      "id": "full_access_relation",
+      "stage": "A_and_B",
+      "check": "A must preserve full Zoom-versus-phone hearing-access alternatives and endpoints, not merely each endpoint or the two-phone subset. B must distinguish correct ag_phone from absent full relation; r_zoom_signup and r_meeting existing separately do not complete the group. Record role, event scope and dependency ownership matter. Diagnose this independently of URL glyph uncertainty.",
+      "original_source_unit": "access_alternatives",
+      "priority": "primary_known_loss"
+    },
+    {
+      "id": "modality_and_conditions",
+      "stage": "A_and_B",
+      "check": "Audit modality and applicability independently at both stages: should/advisory, optional preregistration, conditional Zoom/telephone procedures, mandatory receipt cutoff, informational services/disclosures, and nonquantified accessibility timing. In B, q_comment_contact text retains should but modality unclear is unresolved; calling it conservative/defensible does not establish preservation. Do not infer exclusivity, precise advance interval, timezone, hidden form endpoint or name expansion.",
+      "priority": "primary_semantic_check"
+    },
+    {
+      "id": "questions_secondary",
+      "stage": "A_and_B",
+      "check": "Track whether A explicitly captures should-be-submitted advice for questions and whether B recognizes q_questions informational/other typing weakens it. The same predicate applies to questions and comments; r_query is the linked consequence of one concern, not a second independent loss. This is a secondary source-grounded qualitative observation from round 9. Preserve prior q_questions/r_query correct labels, query_contact matched unit and denominator; no retrospective gold or primary-endpoint substitution."
+    },
+    {
+      "id": "reference_uncertainty",
+      "stage": "A_and_B",
+      "check": "Separate native source fidelity from original image-reference I/l uncertainty and supplementary annotation support. Keep original six dependent unknown units distinct from six literal errors. For accessibility, preserve positional wording and uncertain downstream ownership against original Madi interpretation; do not force an invented endpoint or equate cautious placeholder with complete association recovery. Report any fresh assertion relative to both supplied source and original caveat without relabeling."
+    },
+    {
+      "id": "positive_local_judgments",
+      "stage": "A_and_B",
+      "check": "Retain positive checks: exact hearing/receipt dates, registration versus comment roles, query phone/coordinator ancillary roles, all accessibility formats and qualifications, equal consideration disclosure, viewing-only link, written-comment alternatives, absence of posting/confidentiality/copy-request requirements. Local useful judgments are reported separately from whole-record fidelity."
+    },
+    {
+      "id": "global_and_attribution",
+      "stage": "A_and_B",
+      "check": "Read every global completeness/source identity/uncertainty section. Report inventory completeness, matching correctness conditional on A, and end-to-end source-to-record fidelity separately. Distinguish model conclusions, structural validation and deterministic aggregation/guards; incomplete or review alone proves neither known-loss detection nor complete reasoning. Identify each loss origin: A omission/partialization, A unsupported assertion, B false recovery, B failure to flag record loss, inherited A omission, reference uncertainty, or correct detection."
+    },
+    {
+      "id": "offline_controls",
+      "stage": "offline_separate",
+      "check": "Read primary-provided frozen results for existing synthetic regressions separately: operative repeal/recreation positive versus evidence/coverage-only negatives; source-only added phase/deadline absent from record IDs; full alternatives versus subgroup; unresolved endpoints; optional/unclear/mandatory modality. Retain positive controls and unknown precedence. Contract/aggregation regression success is not WI source truth, independent semantic approval, or live model accuracy. Do not introduce new paid cases here."
+    },
+    {
+      "id": "reporting_limits",
+      "stage": "final",
+      "check": "Initial scope is at most two live WI stages plus existing offline controls; no provider calls by reviewer. One reused development source, independent AI review, not new accuracy sample/human gold. Preserve original 31-unit counts 21 matched/2 partial-mismatched/8 unknown and 80-claim counts 73 correct/1 incorrect/6 unknown. Do not replace them with generated-unit denominators, count duplicates as independent successes, infer causality from multiple protocol changes or claim production eligibility. No original artifact edits, raw repair, retries, credentials or messaging other tasks."
+    }
+  ],
+  "loss_localization_decision_table": [
+    {
+      "A_observation": "known source content absent or evidence-only",
+      "B_observation": "does not identify source/record loss",
+      "interpretation": "inventory loss followed by inherited omission; B no row is not a fabricated missing-ID error, but end-to-end coverage fails"
+    },
+    {
+      "A_observation": "known source content asserted completely",
+      "B_observation": "claims unchanged deficient record fully matches",
+      "interpretation": "matching-stage false recovery"
+    },
+    {
+      "A_observation": "known source content asserted completely",
+      "B_observation": "correctly flags missing/partial operative record assertion",
+      "interpretation": "successful detection of that specific source-to-record defect, not proof of all-source completeness"
+    },
+    {
+      "A_observation": "known source content absent or partial",
+      "B_observation": "independently identifies missing source/record content",
+      "interpretation": "A remains deficient; B source-based recovery of diagnostic omission is useful and explicitly attributed"
+    },
+    {
+      "A_observation": "unsupported generated obligation or forced referent",
+      "B_observation": "marks unsupported obligation absent from record",
+      "interpretation": "not a valid omission credit; evaluate A hallucination/reference overclaim separately"
+    },
+    {
+      "A_observation": "uncertain source/reference target",
+      "B_observation": "carries uncertainty without false resolution",
+      "interpretation": "useful uncertainty preservation; no full-recovery certification"
+    },
+    {
+      "A_observation": "all generated units structurally valid",
+      "B_observation": "all generated IDs structurally assessed",
+      "interpretation": "contract compliance only; neither inventory universe completeness nor semantic matching established"
+    }
+  ],
+  "primary_evaluation_questions": [
+    "Does A independently capture both already-known partial source units as operative inventory assertions?",
+    "Does B correctly reject complete recovery for those assertions against unchanged record, without crediting source/evidence/coverage prose?",
+    "Does A or B preserve modality, relations, scope and reference uncertainty honestly?",
+    "Where do source-to-record losses first arise, and does B compound or independently detect them?"
+  ],
+  "secondary_question": "Does the source-grounded advisory question-direction concern appear, without replacing primary defect checks or altering frozen labels?",
+  "planned_final_artifacts": [
+    "Frozen A/B request/response and lineage pins plus contamination/separation checks",
+    "Bidirectional source-to-A mapping for all original 31 units and every generated A unit",
+    "Review of every B matching reason, operative record pointer and global section",
+    "Per-defect A/B detection and loss-localization matrix",
+    "Separate local utility, inventory completeness, matching correctness and end-to-end fidelity findings",
+    "Offline synthetic outcome summary explicitly separated from WI truth",
+    "Pinned READY preserving all prereview artifacts"
+  ],
+  "format_note": "No generated A/B schema or IDs assumed before primary supplies frozen artifacts; this preregisters semantic criteria independently of provider format."
+}

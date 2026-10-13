@@ -1,0 +1,50 @@
+{
+  "version": "round4-protocol-v1",
+  "status": "READY_for_primary_Freeze_A",
+  "scope": [
+    "absolute_explicit_written_comment_close_DATE",
+    "direct_written_comment_submission_EMAIL"
+  ],
+  "cohort": {
+    "notices": 12,
+    "minimum_states": 6,
+    "target_genuine_scanned_or_degraded_originals": 4,
+    "no_fabricated_scans": true,
+    "collection_after_implementation_freeze": true,
+    "full_notices": true
+  },
+  "limits": {
+    "jev_candidate_channel_cases": 120,
+    "ocr_submitted_pdf_pages": 60,
+    "nominal_estimated_total_usd": 1,
+    "automatic_post_retries": 0
+  },
+  "reference_policy": {
+    "independent_source_images_only": true,
+    "labels_before_runtime_outputs": true,
+    "no_gold_runtime_access": true,
+    "no_source_research_by_protocol_reviewer_before_freeze": true
+  },
+  "gate": {
+    "accepted_unsafe_values_max": 0,
+    "accepted_source_conflicts_max": 0,
+    "correctly_shadowaccepted_field_value_fraction_min": 0.25,
+    "denominator": "all source-resolvable in-scope DATE and EMAIL distinct field-value instances, including unrecovered/failed items",
+    "field_specific_rates_required": true,
+    "all_scheduled_notices_required": 12,
+    "zero_or_missing_field_denominator": "insufficient evidence for affected scope",
+    "meaning": "larger shadow evaluation consideration only; no production certification"
+  },
+  "ready_handshake": [
+    "Owner finalizes, validates and returns exact manifest hash",
+    "Owner stops editing READY artifacts",
+    "Primary verifies all owner hashes and records Freeze A",
+    "Collector begins fresh selection only after Freeze A",
+    "Source-only reviewer labels all pages; labels owner READY and stops editing",
+    "Primary records Freeze B and starts runtime",
+    "Later changes become separate version/deviation; never mutate frozen history"
+  ],
+  "provider_calls_by_reviewer": 0,
+  "reviewed_implementation_receipt_sha256": "60438e1e1732d6763839f508612674f05d8ce8a69d8f83294d61489ce12c8cc8",
+  "evaluation_scaffold_freeze": "May follow implementation Freeze A during collection; must precede source labeling and runtime/model outputs."
+}

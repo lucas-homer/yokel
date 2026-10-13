@@ -1,0 +1,496 @@
+{
+  "reference_meta": {
+    "type": "ai_assessment_semantic_reference",
+    "source": {
+      "citation": "source/parsed-body.txt",
+      "sha256": "5b8b221224c799e4950dbddf6df8bbf0652ee90db7150f1ed16a332b137df55f",
+      "label": "DATA (public notice plain text)"
+    },
+    "status": "frozen_before_exposure",
+    "not": [
+      "gold accuracy",
+      "legal advice",
+      "scored against any candidate output"
+    ],
+    "quote_policy": "Quotes are verbatim from the plain text, including doubled spaces (e.g. 'RCW  28A.300.072'), missing spaces in headings, and literal double parentheses. Trailing whitespace at paragraph ends is not reproduced. Line breaks inside a quoted unit are shown as ' / ' only where noted.",
+    "id_scheme": "ID identifiers; PT participation; PU purpose/background; AU authority; AD administrative; EX exemptions; SG signature block; R040 amended WAC 392-425-040; R065 new WAC 392-425-065; FN proposed rule functions; UI unresolved interpretations"
+  },
+  "basis_limitations": [
+    "Only the supplied plain text is evidence. Raw HTML, hyperlinks separate from text, URL protocol, model prompt, and provider output were not supplied.",
+    "No timezone is stated for any clock time. No receipt-versus-postmark rule is stated for any deadline. None is inferred.",
+    "Plain text shows literal double parentheses in one place only. Whether this denotes deleted text, and whether any undecorated text is new or unchanged, is a markup convention not confirmed by the source; treated as unresolved (UI-05, UI-06).",
+    "Legal force, effective dates of proposed text, and the content of cited statutes/bills (ESSB 6260, RCW chapters) are not described in the source beyond citation.",
+    "Several apparent transcription artifacts exist (doubled spaces before RCW numbers, 'AMENDATORY SECTION(Amending', 'WAC 392-425-040Student eligibility.', 'OPSI'). They are preserved, not corrected.",
+    "The unlabeled date 'September 8, 2026' above the name block is not labeled as a signature date in the text."
+  ],
+  "identifiers": [
+    {
+      "id": "ID-01",
+      "quote": "WSR 26-19-023",
+      "fact": "Washington State Register number of this notice",
+      "modality": "declarative"
+    },
+    {
+      "id": "ID-02",
+      "quote": "PROPOSED RULES",
+      "fact": "notice category",
+      "modality": "declarative"
+    },
+    {
+      "id": "ID-03",
+      "quote_lines": [
+        "SUPERINTENDENT OF",
+        "PUBLIC INSTRUCTION"
+      ],
+      "fact": "filing agency header, split across two lines",
+      "uncertainty": "header text only; agency also appears as 'OSPI' and 'office of superintendent of public instruction' elsewhere"
+    },
+    {
+      "id": "ID-04",
+      "quote": "[Filed September 8, 2026, 10:43 a.m.]",
+      "fact": "filing stamp with date and clock time",
+      "uncertainty": "no timezone stated"
+    },
+    {
+      "id": "ID-05",
+      "quote": "Original Notice.",
+      "fact": "notice stage",
+      "modality": "declarative"
+    },
+    {
+      "id": "ID-06",
+      "quote": "Preproposal statement of inquiry was filed as WSR 26-14-011.",
+      "fact": "historical relationship: prior CR-101 style filing cited by WSR number",
+      "uncertainty": "filing date of WSR 26-14-011 not stated"
+    },
+    {
+      "id": "ID-07",
+      "quote": "Title of Rule and Other Identifying Information: Chapter 392-425 WAC, Transition to kindergarten.",
+      "fact": "rule chapter and title"
+    },
+    {
+      "id": "ID-08",
+      "quote": "AMENDATORY SECTION(Amending WSR 24-14-074, filed 6/28/24, effective 7/29/24)",
+      "fact": "historical relationship: WAC 392-425-040 last amended by WSR 24-14-074 with stated filed and effective dates",
+      "uncertainty": "missing space before '(' is reproduced as-is; dates are in M/D/YY form"
+    },
+    {
+      "id": "ID-09",
+      "quote": "RDS-7285.3",
+      "fact": "unlabeled code string following the name block",
+      "uncertainty": "function of this code not stated in source"
+    },
+    {
+      "id": "ID-10",
+      "quote": "WAC 392-425-040Student eligibility.",
+      "fact": "amended section number and caption (space missing in source)"
+    },
+    {
+      "id": "ID-11",
+      "quote_lines": [
+        "NEW SECTION",
+        "WAC 392-425-065Allocation of state funding."
+      ],
+      "fact": "new section number and caption, labeled NEW SECTION (space missing in source)"
+    }
+  ],
+  "participation": [
+    {
+      "id": "PT-01",
+      "quote": "Hearing Location(s): On November 5, 2026, at 11:00 a.m., via Zoom (call-in option also available).",
+      "fact": "single hearing date/time; mode is Zoom with a call-in option",
+      "uncertainty": "no timezone; no call-in number, meeting ID, or access details in text; 'Location(s)' is template plural with one entry"
+    },
+    {
+      "id": "PT-02",
+      "quote": "Participation link available on office of superintendent of public instruction's (OPSI) rules web page at ospi.k12.wa.us/policy-funding/ospi-rulemaking-activity.",
+      "fact": "participation link is said to be on the agency rules web page at the stated host/path",
+      "uncertainty": "'OPSI' as written (differs from 'OSPI' elsewhere); no URL protocol stated; the link itself is not in the text"
+    },
+    {
+      "id": "PT-03",
+      "quote": "Visit the OSPI rules web page for information on participating in the hearing at ospi.k12.wa.us/policy-funding/ospi-rulemaking-activity.",
+      "fact": "same web page cited for hearing participation information",
+      "modality": "imperative ('Visit')"
+    },
+    {
+      "id": "PT-04",
+      "quote": "For participation questions, please email sirena.wu@k12.wa.us.",
+      "fact": "contact email for participation questions",
+      "modality": "request ('please')"
+    },
+    {
+      "id": "PT-05",
+      "quote": "Date of Intended Adoption: November 9, 2026.",
+      "fact": "intended adoption date",
+      "modality": "intended, not committed"
+    },
+    {
+      "id": "PT-06",
+      "quote": "Submit Written Comments to: Samantha Bowen, OSPI, P.O. Box 47200, Olympia, WA 98504, email EarlyLearning@k12.wa.us, beginning September 9, 2026, 8:00 a.m., by November 5, 2026, 5:00 p.m.",
+      "fact": "written comment recipient (name, PO box, email), comment window opening and closing date/times",
+      "conditions": "window opens September 9, 2026, 8:00 a.m.; closes November 5, 2026, 5:00 p.m.",
+      "uncertainty": "no timezone; receipt vs. postmark not stated; comment email differs from participation-questions email (PT-04); mailing address differs from street address in AD-01; close date equals hearing date"
+    },
+    {
+      "id": "PT-07",
+      "quote": "Assistance for Persons with Disabilities: Contact Sirena Wu, OSPI rules coordinator, phone 360-480-9317, TTY 360-664-3631, email sirena.wu@k12.wa.us, by October 29, 2026.",
+      "fact": "disability assistance contact (name, role, phone, TTY, email) and request-by date",
+      "conditions": "by October 29, 2026",
+      "uncertainty": "no clock time stated for this deadline; same person/email as PT-04"
+    }
+  ],
+  "purpose_background": [
+    {
+      "id": "PU-01",
+      "quote": "In accordance with ESSB 6260 (2026) and RCW  28A.300.072, OSPI is proposing to amend chapter 392-425 WAC to adopt permanent rules authorizing local education agencies to charge sliding scale fees for enrollment in the transition to kindergarten (TK) program and to establish rules related to the allocation of state funding for TK programs.",
+      "actor": "OSPI",
+      "purpose": "two stated aims: (1) authorize sliding scale fees for TK enrollment; (2) establish rules on allocation of state TK funding",
+      "modality": "proposing"
+    },
+    {
+      "id": "PU-02",
+      "quote": "Permanent rule adoption is necessary to implement statutory changes enacted by the Washington state legislature, and to ensure school districts, charter schools, and state-tribal education compact schools have the rules and guidance necessary for implementation during the 2027-28 school year, including enrollment, budgeting, and program planning timelines.",
+      "fact": "necessity rationale; affected entity types named (school districts, charter schools, state-tribal education compact schools); target school year 2027-28",
+      "modality": "asserted necessity"
+    },
+    {
+      "id": "PU-03a",
+      "quote": "Permanent rules are necessary to implement ESSB 6260 (2026) in time for the 2027-28 school year.",
+      "modality": "asserted necessity"
+    },
+    {
+      "id": "PU-03b",
+      "quote": "Local education agencies require timely rules regarding sliding scale fees and state funding allocation criteria in order to conduct enrollment, staffing, budgeting, and program planning activities prior to the start of the school year.",
+      "fact": "LEA planning activities said to depend on the rules: enrollment, staffing, budgeting, program planning"
+    },
+    {
+      "id": "PU-03c",
+      "quote": "Delayed adoption would create uncertainty regarding program administration and funding distribution and could impair implementation of legislatively enacted requirements.",
+      "modality": "conditional/hedged ('would', 'could')"
+    },
+    {
+      "id": "PU-04",
+      "quote": "Reasons Supporting Proposal: OSPI is proposing permanent amendments to chapter 392-425 WAC to implement ESSB 6260 (2026) and RCW  28A.300.072, including rules that allow local education agencies to charge sliding scale fees for TK and establish criteria for state funding allocations. Timely rule adoption is needed so districts, charter schools, and state-tribal education compact schools can plan for enrollment, staffing, budgeting, and implementation for the 2027-28 school year.",
+      "fact": "restates PU-01/PU-02 aims and entity types",
+      "uncertainty": "largely duplicative of PU-01 to PU-03; no additional distinct facts"
+    }
+  ],
+  "authority": [
+    {
+      "id": "AU-01",
+      "quote": "Statutory Authority for Adoption: ESSB 6260 (2026); RCW  28A.150.290 and  28A.300.072.",
+      "fact": "cited authority: one bill and two RCW sections",
+      "uncertainty": "RCW 28A.150.290 appears only here; content of citations not described"
+    },
+    {
+      "id": "AU-02",
+      "quote": "Rule is not necessitated by federal law, federal or state court decision.",
+      "modality": "negative declarative"
+    }
+  ],
+  "administrative": [
+    {
+      "id": "AD-01",
+      "quote": "Name of Agency Personnel Responsible for Drafting and Implementation: Samantha Bowen, OSPI, 600 South Washington Street, Olympia, WA; Enforcement: OSPI, 600 South Washington Street, Olympia, WA.",
+      "fact": "drafting and implementation: Samantha Bowen at the stated street address; enforcement: OSPI (no individual named) at the same address",
+      "uncertainty": "no ZIP code given here; Samantha Bowen is also the comment recipient (PT-06)"
+    },
+    {
+      "id": "AD-02",
+      "quote": "A school district fiscal impact statement is not required under RCW  28A.305.135.",
+      "modality": "negative declarative"
+    },
+    {
+      "id": "AD-03",
+      "quote": "A cost-benefit analysis is not required under RCW  34.05.328.",
+      "modality": "negative declarative"
+    }
+  ],
+  "exemptions": [
+    {
+      "id": "EX-01",
+      "quote": "This rule proposal, or portions of the proposal, is exempt from requirements of the Regulatory Fairness Act because the proposal:",
+      "fact": "lead-in to exemption basis list",
+      "uncertainty": "'or portions of' is template phrasing; scope resolved by EX-05"
+    },
+    {
+      "id": "EX-02",
+      "quote": "Is exempt under RCW  19.85.025(4).",
+      "fact": "first cited exemption basis"
+    },
+    {
+      "id": "EX-03",
+      "quote": "Is exempt under RCW  19.85.030.",
+      "fact": "second cited exemption basis"
+    },
+    {
+      "id": "EX-04",
+      "quote": "Explanation of exemptions: No small business economic impact statement has been prepared under chapter  19.85 RCW. The proposed amendment does not have an impact on small business and therefore does not meet the requirements for a statement under RCW  19.85.030 (1) or (2).",
+      "fact": "no SBEIS prepared; stated reason is no small business impact",
+      "modality": "asserted"
+    },
+    {
+      "id": "EX-05",
+      "quote_lines": [
+        "Scope of exemption for rule proposal:",
+        "Is fully exempt."
+      ],
+      "fact": "exemption scope stated as full"
+    }
+  ],
+  "signature_block": [
+    {
+      "id": "SG-01",
+      "quote_lines": [
+        "September 8, 2026",
+        "Chris P.S. Reykdal",
+        "State Superintendent of Public Instruction"
+      ],
+      "fact": "unlabeled date, name, and title appearing in sequence after the exemption section",
+      "uncertainty": "the date is not labeled; it matches the filing date in ID-04 but the text does not call it a signature date; no signature act is described"
+    }
+  ],
+  "proposed_rule_text": {
+    "wac_392_425_040": [
+      {
+        "id": "R040-1",
+        "quote": "(1) Children meeting the following criteria are eligible to participate in a transition to kindergarten program offered by an eligible local education agency:",
+        "fact": "eligibility lead-in; program offered by an 'eligible' LEA",
+        "uncertainty": "LEA eligibility not defined in supplied text"
+      },
+      {
+        "id": "R040-1a",
+        "quote": "(a) A child who has been determined, by the local education agency, to benefit from additional preparation for kindergarten through a screening process and tool; and",
+        "actor": "local education agency determines",
+        "conditions": "screening process and tool; joined to (b) by 'and'"
+      },
+      {
+        "id": "R040-1b",
+        "quote": "(b) A child who is at least four years old by August 31st of the school year in which they enroll in a transition to kindergarten program.",
+        "conditions": "age at least four by August 31st of enrollment school year"
+      },
+      {
+        "id": "R040-2",
+        "quote": "(2) In determining student eligibility and admitting students to a transition to kindergarten program, local education agencies must:",
+        "actor": "local education agencies",
+        "modality": "mandatory ('must') governing (a) through (e) as listed"
+      },
+      {
+        "id": "R040-2a",
+        "quote": "(a) Give priority to children most in need of additional preparation to be successful in kindergarten, as demonstrated through a screening process and tool.",
+        "modality": "mandatory via (2)"
+      },
+      {
+        "id": "R040-2b",
+        "quote": "(b) Give priority to children with the lowest family income not otherwise eligible and not enrolled in another local program.",
+        "modality": "mandatory via (2)",
+        "uncertainty": "'not otherwise eligible' referent not specified in text"
+      },
+      {
+        "id": "R040-2c",
+        "quote": "(c) Not exclude, nor establish a policy to prohibit from participation, an eligible child due only to the presence of a disability.",
+        "modality": "prohibition via (2)"
+      },
+      {
+        "id": "R040-2d",
+        "quote": "(d) ((Not charge tuition or other fees from state-funded eligible students for enrollment in a transition to kindergarten program))Eligible local education agencies are authorized to charge sliding scale fees for enrollment in a transition to kindergarten program, except that no fee may be charged for the following:",
+        "fact": "double-parenthesized text concerns a prohibition on tuition/fees from state-funded eligible students; following text authorizes sliding scale fees with exceptions",
+        "actor": "eligible local education agencies",
+        "modality": "permissive ('are authorized') with prohibition for listed groups ('no fee may be charged')",
+        "uncertainty": "see UI-05; the double-parenthesized text has no space before the following text; the permissive sentence is grammatically a stand-alone sentence despite sitting under the 'must:' lead-in (UI-07)"
+      },
+      {
+        "id": "R040-2d-i",
+        "quote": "(i) Children who are eligible for but not yet placed in the early childhood education or assistance program or the head start program;",
+        "fact": "first no-fee group",
+        "conditions": "eligible for, but not yet placed in, ECEAP or Head Start"
+      },
+      {
+        "id": "R040-2d-ii",
+        "quote": "(ii) Children with disabilities entitled to a free appropriate public education in accordance with the federal individuals with disabilities education act and chapter  28A.155 RCW.",
+        "fact": "second no-fee group",
+        "conditions": "entitled to FAPE under IDEA and chapter 28A.155 RCW"
+      },
+      {
+        "id": "R040-2e",
+        "quote": "(e) Tuition and fees collected for students in classrooms receiving state funding for the transition to kindergarten program must be accounted for separately, in accordance with the requirements outlined in the school district accounting manual.",
+        "modality": "mandatory ('must')",
+        "conditions": "applies to tuition and fees for students in classrooms receiving state TK funding; standard is the school district accounting manual",
+        "uncertainty": "whether (e) is new or pre-existing text is not determinable from plain text (UI-06)"
+      }
+    ],
+    "wac_392_425_065": [
+      {
+        "id": "R065-0",
+        "quote": "State funding for the transition to kindergarten program will be allocated to eligible local education agencies based on RCW  28A.300.072 and the state omnibus budget requirements. Funding allocations will be prioritized as follows:",
+        "fact": "allocation basis is RCW 28A.300.072 and state omnibus budget requirements; prioritization list follows",
+        "modality": "declarative future ('will be')"
+      },
+      {
+        "id": "R065-1",
+        "quote": "(1) Eligible local education agencies that received state funding allocations for transition to kindergarten in the previous year will have priority for the subsequent year.",
+        "conditions": "received state TK funding in the previous year",
+        "modality": "declarative future",
+        "uncertainty": "'previous year' / 'subsequent year' reference frame not defined"
+      },
+      {
+        "id": "R065-2",
+        "quote": "(2) When state funding is insufficient to maintain the number of students served in the subsequent year, eligible local education agencies will be allocated funding based on one or more of the following criteria:",
+        "conditions": "triggered when state funding is insufficient to maintain the number of students served",
+        "modality": "conditional, declarative future; 'one or more' criteria",
+        "uncertainty": "list ends with 'and' before (e) while lead-in says 'one or more' (UI-09)"
+      },
+      {
+        "id": "R065-2a",
+        "quote": "(a) Districtwide percentage of students eligible for free and reduced price lunch;"
+      },
+      {
+        "id": "R065-2b",
+        "quote": "(b) Districtwide percentage of students eligible for special education services;"
+      },
+      {
+        "id": "R065-2c",
+        "quote": "(c) Districtwide percentage of students eligible for transitional bilingual program services;"
+      },
+      {
+        "id": "R065-2d",
+        "quote": "(d) Data available measuring access to state-funded early learning programs; and"
+      },
+      {
+        "id": "R065-2e",
+        "quote": "(e) Local education agencies serving 20 or fewer transition to kindergarten students.",
+        "uncertainty": "(e) is a category of LEA rather than a 'percentage' or 'data' measure like (a) through (d); how it operates as a criterion is not stated"
+      }
+    ]
+  },
+  "proposed_rule_functions": [
+    {
+      "id": "FN-01",
+      "function": "Replace fee prohibition with authorization for eligible LEAs to charge sliding scale fees for TK enrollment",
+      "source_refs": [
+        "R040-2d",
+        "PU-01"
+      ],
+      "modality": "permissive",
+      "uncertainty": "replacement reading depends on UI-05; 'sliding scale' not defined in text"
+    },
+    {
+      "id": "FN-02",
+      "function": "Prohibit any fee for two child groups: ECEAP/Head Start eligible-but-unplaced children, and children with disabilities entitled to FAPE",
+      "source_refs": [
+        "R040-2d",
+        "R040-2d-i",
+        "R040-2d-ii"
+      ],
+      "modality": "prohibition"
+    },
+    {
+      "id": "FN-03",
+      "function": "Require separate accounting of tuition and fees for students in state-funded TK classrooms per the school district accounting manual",
+      "source_refs": [
+        "R040-2e"
+      ],
+      "modality": "mandatory"
+    },
+    {
+      "id": "FN-04",
+      "function": "Establish allocation basis for state TK funding (RCW 28A.300.072 and omnibus budget) with priority for LEAs funded in the previous year",
+      "source_refs": [
+        "R065-0",
+        "R065-1",
+        "PU-01"
+      ],
+      "modality": "declarative future"
+    },
+    {
+      "id": "FN-05",
+      "function": "When funding is insufficient to maintain students served, allocate using one or more of five listed criteria (FRL percentage, special education percentage, transitional bilingual percentage, early learning access data, LEAs serving 20 or fewer TK students)",
+      "source_refs": [
+        "R065-2",
+        "R065-2a",
+        "R065-2b",
+        "R065-2c",
+        "R065-2d",
+        "R065-2e"
+      ],
+      "modality": "conditional, declarative future"
+    },
+    {
+      "id": "FN-06",
+      "function": "Retain student eligibility criteria (screening-based benefit determination; age four by August 31st) and admission priorities/non-exclusion rules as printed",
+      "source_refs": [
+        "R040-1",
+        "R040-1a",
+        "R040-1b",
+        "R040-2",
+        "R040-2a",
+        "R040-2b",
+        "R040-2c"
+      ],
+      "uncertainty": "whether these are unchanged cannot be confirmed from plain text (UI-06)"
+    }
+  ],
+  "unresolved_interpretations": [
+    {
+      "id": "UI-01",
+      "issue": "'OPSI' in PT-02 versus 'OSPI' elsewhere; likely transposition but the text is as written."
+    },
+    {
+      "id": "UI-02",
+      "issue": "No timezone is given for 10:43 a.m. (filing), 11:00 a.m. (hearing), 8:00 a.m. and 5:00 p.m. (comment window). Not inferred."
+    },
+    {
+      "id": "UI-03",
+      "issue": "Comment deadline 'by November 5, 2026, 5:00 p.m.' does not specify receipt, postmark, or send time; the disability-assistance deadline 'by October 29, 2026' has no clock time."
+    },
+    {
+      "id": "UI-04",
+      "issue": "Date 'September 8, 2026' above the name block is unlabeled; it coincides with the filing date but is not identified as a signature date."
+    },
+    {
+      "id": "UI-05",
+      "issue": "Literal double parentheses in R040-2d: the source does not state they denote deletion. Reading them as deleted text is a WSR convention not evidenced in this text."
+    },
+    {
+      "id": "UI-06",
+      "issue": "Plain text carries no underline or other new-text markup for WAC 392-425-040. Which parts beyond the double-parenthesized text are new, amended, or unchanged (notably (e)) cannot be determined. Only WAC 392-425-065 is explicitly labeled 'NEW SECTION'."
+    },
+    {
+      "id": "UI-07",
+      "issue": "R040-2d's permissive sentence ('Eligible local education agencies are authorized...') sits under the mandatory lead-in 'local education agencies must:' in (2). The directive force of (d) as a whole is ambiguous between permission and a mandatory framing."
+    },
+    {
+      "id": "UI-08",
+      "issue": "The double-parenthesized text refers to 'state-funded eligible students'; the authorization text refers to 'enrollment in a transition to kindergarten program' without that qualifier; (e) refers to 'classrooms receiving state funding'. Scope relationship among these phrases is not resolved by the text."
+    },
+    {
+      "id": "UI-09",
+      "issue": "R065-2 says 'one or more of the following criteria' but the list is joined with 'and' before (e)."
+    },
+    {
+      "id": "UI-10",
+      "issue": "Terms not defined in supplied text: 'eligible local education agency', 'sliding scale fees', 'previous year'/'subsequent year', 'screening process and tool', 'another local program'."
+    },
+    {
+      "id": "UI-11",
+      "issue": "Doubled spaces before RCW numbers and missing spaces in 'AMENDATORY SECTION(Amending' and section captions are preserved as-is; likely parsing artifacts but not confirmed."
+    },
+    {
+      "id": "UI-12",
+      "issue": "Web address 'ospi.k12.wa.us/policy-funding/ospi-rulemaking-activity' is given without protocol; the participation link itself is not in the text. Zoom call-in details are absent."
+    },
+    {
+      "id": "UI-13",
+      "issue": "Two agency addresses appear (P.O. Box 47200, Olympia, WA 98504 for comments; 600 South Washington Street, Olympia, WA for personnel/enforcement) and two emails (EarlyLearning@k12.wa.us for comments; sirena.wu@k12.wa.us for participation and disability assistance). The text does not state which to use for purposes other than those labeled."
+    },
+    {
+      "id": "UI-14",
+      "issue": "Both RCW 19.85.025(4) and RCW 19.85.030 are listed as exemption bases alongside 'Is fully exempt'; the relationship between the two bases is not explained beyond EX-04."
+    },
+    {
+      "id": "UI-15",
+      "issue": "ESSB 6260 (2026) is cited repeatedly but its provisions are not described; the source does not state whether it mandates or merely permits sliding scale fees."
+    }
+  ]
+}

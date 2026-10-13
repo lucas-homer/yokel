@@ -1,0 +1,26 @@
+{
+  "objective": "Implement automated source-only scope classification and evaluate one fresh paired diagnostic with independent review.",
+  "max_provider_calls": 4,
+  "planned_order": [
+    "direct",
+    "inventory",
+    "scope",
+    "mapping"
+  ],
+  "prior_conservative_debit_nanousd": 1182150718,
+  "per_call_reserve_nanousd": 161920000,
+  "new_max_reservation_nanousd": 647680000,
+  "ceiling_nanousd": 2000000000,
+  "model": "openai/gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "max_output_tokens": 8192,
+  "guarded_request_bytes": 40000,
+  "retries": 0,
+  "repair": false,
+  "clipping": false,
+  "production_eligible": false,
+  "human_scope_input": false,
+  "independent_reference": "separate AI source-only assessment, not human gold",
+  "candidate_origin": "separate source-only AI author, frozen before verification, not supplied by reference reviewer",
+  "evaluation_claim": "one-case feasibility diagnostic; no accuracy or causal ordering claim"
+}

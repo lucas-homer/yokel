@@ -1,0 +1,137 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "round10.source-inventory.v1"
+      ]
+    },
+    "source_text_sha256": {
+      "type": "string",
+      "enum": [
+        "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5"
+      ]
+    },
+    "units": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/u"
+      },
+      "minItems": 1,
+      "maxItems": 64
+    }
+  },
+  "required": [
+    "schema_version",
+    "source_text_sha256",
+    "units"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "e": {
+      "type": "object",
+      "properties": {
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 320
+        },
+        "occurrence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        }
+      },
+      "required": [
+        "quote",
+        "occurrence"
+      ],
+      "additionalProperties": false
+    },
+    "u": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "fact",
+            "instruction",
+            "relationship",
+            "identity",
+            "policy"
+          ]
+        },
+        "assertion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 360
+        },
+        "modality": {
+          "type": "string",
+          "enum": [
+            "mandatory",
+            "advisory",
+            "optional",
+            "informational",
+            "conditional",
+            "unknown",
+            "not_applicable"
+          ]
+        },
+        "applicability": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "uncertainty": {
+          "type": "string",
+          "enum": [
+            "none",
+            "source_ambiguous",
+            "reference_unresolved"
+          ]
+        },
+        "uncertainty_reason": {
+          "type": "string",
+          "maxLength": 240
+        },
+        "required_unit_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16
+          },
+          "minItems": 0,
+          "maxItems": 16
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/e"
+          },
+          "minItems": 1,
+          "maxItems": 3
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "assertion",
+        "modality",
+        "applicability",
+        "uncertainty",
+        "uncertainty_reason",
+        "required_unit_ids",
+        "evidence"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

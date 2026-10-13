@@ -1,0 +1,959 @@
+{
+  "action_ready": false,
+  "candidate_budget_by_stronger_guard": {
+    "35000": {
+      "aggregate_nominal_usd": 0.5683020000000001,
+      "new_nominal_reservation_usd": 0.306528,
+      "prior_conservative_debit_usd": 0.261774,
+      "refund_or_reset": false,
+      "shared_budget_usd": 2
+    },
+    "40000": {
+      "aggregate_nominal_usd": 0.5783020000000001,
+      "new_nominal_reservation_usd": 0.31652800000000003,
+      "prior_conservative_debit_usd": 0.261774,
+      "refund_or_reset": false,
+      "shared_budget_usd": 2
+    }
+  },
+  "credentials_read": false,
+  "fixtures": [
+    {
+      "comparison": {
+        "35000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 10994,
+              "body_sha256": "23d0a9c302cb1440dd3129f522df0ccd5cf7078364c21c8595912b81a81e8de2",
+              "body_utf8_bytes": 10994,
+              "cap": 64000,
+              "estimate": 12018,
+              "margin": 51982,
+              "reason": null,
+              "reservation_usd": 0.000504756,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 4563,
+              "state_longest_margin": 27437
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 8503,
+              "body_sha256": "e07efaf1d7235d323ffc08ff76d45dd19ee85173fa677d3913938650f8b6a40a",
+              "body_utf8_bytes": 8503,
+              "cap": 35000,
+              "estimate": 9527,
+              "margin": 25473,
+              "reason": null,
+              "reservation_usd": 0.060014,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        },
+        "40000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 10994,
+              "body_sha256": "23d0a9c302cb1440dd3129f522df0ccd5cf7078364c21c8595912b81a81e8de2",
+              "body_utf8_bytes": 10994,
+              "cap": 64000,
+              "estimate": 12018,
+              "margin": 51982,
+              "reason": null,
+              "reservation_usd": 0.000504756,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 4563,
+              "state_longest_margin": 27437
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 8503,
+              "body_sha256": "e07efaf1d7235d323ffc08ff76d45dd19ee85173fa677d3913938650f8b6a40a",
+              "body_utf8_bytes": 8503,
+              "cap": 40000,
+              "estimate": 9527,
+              "margin": 30473,
+              "reason": null,
+              "reservation_usd": 0.060014,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        }
+      },
+      "fixture": "weekday-date",
+      "full_source_in_each_arm": true,
+      "guards_change_body_bytes": false,
+      "inventory_sha256": "e5952b653d4674434b361484db82bd8865a8cad328802fb02120099a0302fd3f",
+      "observed": false,
+      "paired_evidence_equal": true,
+      "payload_sha256": "76f10be4aa225e7d0f68915012d7c5af2585ddffe270351d97c7281e7d1961f8",
+      "provenance": "authored development",
+      "record_sha256": "f18fc604a17cd35b5fc8491b62d3b6d83d2b88cef453ca164c689f0634b7d8cd",
+      "semantic_acceptance": false,
+      "source_text_sha256": "f21168e0f7e245c81f39b00fae236a3b1b5c2f4332b41695b60f20b0ddd63c76"
+    },
+    {
+      "comparison": {
+        "35000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 11346,
+              "body_sha256": "9113c980d9098a9919942dcb17f1d15189c90b2724cbec1054d47319f2d1b33b",
+              "body_utf8_bytes": 11346,
+              "cap": 64000,
+              "estimate": 12370,
+              "margin": 51630,
+              "reason": null,
+              "reservation_usd": 0.00051954,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 4915,
+              "state_longest_margin": 27085
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 8927,
+              "body_sha256": "b1b141e4c02da394c4a1447a13aaaa9c6551f7ab80c40bb9d425a99890d05d4d",
+              "body_utf8_bytes": 8927,
+              "cap": 35000,
+              "estimate": 9951,
+              "margin": 25049,
+              "reason": null,
+              "reservation_usd": 0.060862,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        },
+        "40000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 11346,
+              "body_sha256": "9113c980d9098a9919942dcb17f1d15189c90b2724cbec1054d47319f2d1b33b",
+              "body_utf8_bytes": 11346,
+              "cap": 64000,
+              "estimate": 12370,
+              "margin": 51630,
+              "reason": null,
+              "reservation_usd": 0.00051954,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 4915,
+              "state_longest_margin": 27085
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 8927,
+              "body_sha256": "b1b141e4c02da394c4a1447a13aaaa9c6551f7ab80c40bb9d425a99890d05d4d",
+              "body_utf8_bytes": 8927,
+              "cap": 40000,
+              "estimate": 9951,
+              "margin": 30049,
+              "reason": null,
+              "reservation_usd": 0.060862,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        }
+      },
+      "fixture": "multiline-venue",
+      "full_source_in_each_arm": true,
+      "guards_change_body_bytes": false,
+      "inventory_sha256": "da335e158f324b1505caa4fac34ccc7aad87ee23e956c8aa35789488be2cad3c",
+      "observed": false,
+      "paired_evidence_equal": true,
+      "payload_sha256": "e6b4fd64c2463b1f43be9389f18427676abd1bfd47dcfbde46d26c7347e7eba4",
+      "provenance": "authored development",
+      "record_sha256": "075b2be19cfe9abcebfcdbc17218464cb4fe83471028187bdef0791c7aa6effc",
+      "semantic_acceptance": false,
+      "source_text_sha256": "c4da1088e2aa9e01a8fa7d1a6996ec0ae455261b0976ab7496b55f235a215eab"
+    },
+    {
+      "comparison": {
+        "35000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 11953,
+              "body_sha256": "22981e7029d133059cfc3f91f3e5ffb9e3f3b4ac8f2cd2617537f5be1ed00780",
+              "body_utf8_bytes": 11953,
+              "cap": 64000,
+              "estimate": 12977,
+              "margin": 51023,
+              "reason": null,
+              "reservation_usd": 0.000545034,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 5522,
+              "state_longest_margin": 26478
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 9622,
+              "body_sha256": "bd3047e30f8a8fba2d79757771caf43a74582cae8611fc7350fcab5fdc1ce4ce",
+              "body_utf8_bytes": 9622,
+              "cap": 35000,
+              "estimate": 10646,
+              "margin": 24354,
+              "reason": null,
+              "reservation_usd": 0.062252,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        },
+        "40000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 11953,
+              "body_sha256": "22981e7029d133059cfc3f91f3e5ffb9e3f3b4ac8f2cd2617537f5be1ed00780",
+              "body_utf8_bytes": 11953,
+              "cap": 64000,
+              "estimate": 12977,
+              "margin": 51023,
+              "reason": null,
+              "reservation_usd": 0.000545034,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 5522,
+              "state_longest_margin": 26478
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 9622,
+              "body_sha256": "bd3047e30f8a8fba2d79757771caf43a74582cae8611fc7350fcab5fdc1ce4ce",
+              "body_utf8_bytes": 9622,
+              "cap": 40000,
+              "estimate": 10646,
+              "margin": 29354,
+              "reason": null,
+              "reservation_usd": 0.062252,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        }
+      },
+      "fixture": "qualified-help-alternatives",
+      "full_source_in_each_arm": true,
+      "guards_change_body_bytes": false,
+      "inventory_sha256": "f10d6ded1e8ee362f84786cdafd957ef77bc7ec23d13d0767d4752d48a027564",
+      "observed": false,
+      "paired_evidence_equal": true,
+      "payload_sha256": "bdd2014314586b3728f70926f77ce51a29c514e7dd4fcadd7ee081c55e2ea25f",
+      "provenance": "authored development",
+      "record_sha256": "666ccae8e1ffddf18fbd605dffc70a545f63aef10ac7bbd48e342b72e4b61c7d",
+      "semantic_acceptance": false,
+      "source_text_sha256": "c0399fb47dc46065e5f537b921e8ac0f34f1c7cc06efdee040a81d925e4f854a"
+    },
+    {
+      "comparison": {
+        "35000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 11226,
+              "body_sha256": "327396a9e8bb0fa6c3a2fb15b101e8c9e37cdce0ca2293d38a55dec03c30ff97",
+              "body_utf8_bytes": 11226,
+              "cap": 64000,
+              "estimate": 12250,
+              "margin": 51750,
+              "reason": null,
+              "reservation_usd": 0.0005145,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 4795,
+              "state_longest_margin": 27205
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 8737,
+              "body_sha256": "356510809d37aaf93fd6aa6608802bea00e726a7ec622316ff998fe07bd9509b",
+              "body_utf8_bytes": 8737,
+              "cap": 35000,
+              "estimate": 9761,
+              "margin": 25239,
+              "reason": null,
+              "reservation_usd": 0.060482,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        },
+        "40000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 11226,
+              "body_sha256": "327396a9e8bb0fa6c3a2fb15b101e8c9e37cdce0ca2293d38a55dec03c30ff97",
+              "body_utf8_bytes": 11226,
+              "cap": 64000,
+              "estimate": 12250,
+              "margin": 51750,
+              "reason": null,
+              "reservation_usd": 0.0005145,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 4795,
+              "state_longest_margin": 27205
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 8737,
+              "body_sha256": "356510809d37aaf93fd6aa6608802bea00e726a7ec622316ff998fe07bd9509b",
+              "body_utf8_bytes": 8737,
+              "cap": 40000,
+              "estimate": 9761,
+              "margin": 30239,
+              "reason": null,
+              "reservation_usd": 0.060482,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        }
+      },
+      "fixture": "disclosure-exception",
+      "full_source_in_each_arm": true,
+      "guards_change_body_bytes": false,
+      "inventory_sha256": "92a44f2b14c7a74da149c2fa0d82676e7bc43bf3307843d4e241ca3907c9f048",
+      "observed": false,
+      "paired_evidence_equal": true,
+      "payload_sha256": "702ac536b43d1ebf681983d789f70e5ee76989c26a9be543c9c854db2b006327",
+      "provenance": "authored development",
+      "record_sha256": "2d6b41986bca0104528a12244a011408c1fb5418ac3707d61a266fc70e720741",
+      "semantic_acceptance": false,
+      "source_text_sha256": "392f01139748f42ae88a5491eea1022bbaf1776cf0757af89ce0c73903b7c843"
+    },
+    {
+      "comparison": {
+        "35000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 12617,
+              "body_sha256": "d16aa58ca7fd69a67e4098463f63a7811b4f45f26b21e4d21ab7c0114b9e49fe",
+              "body_utf8_bytes": 12617,
+              "cap": 64000,
+              "estimate": 13641,
+              "margin": 50359,
+              "reason": null,
+              "reservation_usd": 0.000572922,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 6186,
+              "state_longest_margin": 25814
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 10328,
+              "body_sha256": "67fa81de476cd1cf155ea0e5edc3301c0e8b713f616756417fcced9bcda96231",
+              "body_utf8_bytes": 10328,
+              "cap": 35000,
+              "estimate": 11352,
+              "margin": 23648,
+              "reason": null,
+              "reservation_usd": 0.063664,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        },
+        "40000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 12617,
+              "body_sha256": "d16aa58ca7fd69a67e4098463f63a7811b4f45f26b21e4d21ab7c0114b9e49fe",
+              "body_utf8_bytes": 12617,
+              "cap": 64000,
+              "estimate": 13641,
+              "margin": 50359,
+              "reason": null,
+              "reservation_usd": 0.000572922,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 6186,
+              "state_longest_margin": 25814
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 10328,
+              "body_sha256": "67fa81de476cd1cf155ea0e5edc3301c0e8b713f616756417fcced9bcda96231",
+              "body_utf8_bytes": 10328,
+              "cap": 40000,
+              "estimate": 11352,
+              "margin": 28648,
+              "reason": null,
+              "reservation_usd": 0.063664,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        }
+      },
+      "fixture": "accessibility-relative-and-asap",
+      "full_source_in_each_arm": true,
+      "guards_change_body_bytes": false,
+      "inventory_sha256": "6f2bb1bd8e4d528d7b6e78941d19ab933b53f1c3cba61a966205824d056236e3",
+      "observed": false,
+      "paired_evidence_equal": true,
+      "payload_sha256": "ce9b6edb598bc9d7b6f52c828f8fbe6b08fa35a45b4803c87a221df2f96edaff",
+      "provenance": "authored development",
+      "record_sha256": "f12728cfb65b625fdcdb127f2d41bf9a78a895bf765005895c6e79ae148a7a4d",
+      "semantic_acceptance": false,
+      "source_text_sha256": "8610f399cd718ecce151b48bd0b161961852b831ab3bc174d821efce37caf8af"
+    },
+    {
+      "comparison": {
+        "35000": {
+          "admission": {
+            "jev": {
+              "admitted": false,
+              "body_codepoints": 51517,
+              "body_sha256": "404dc3af4a19b6009aa9b7819d99ab693aa7888d8e3a9ca03861e863106f727c",
+              "body_utf8_bytes": 51517,
+              "cap": 64000,
+              "estimate": 52541,
+              "margin": 11459,
+              "reason": "Jev state + longest question overlimit; no clipping",
+              "reservation_usd": null,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 45086,
+              "state_longest_margin": -13086
+            },
+            "stronger": {
+              "admitted": false,
+              "body_codepoints": 49156,
+              "body_sha256": "35abb1a692e8645a52b9ea9d1c4bf60b179680c28a925ea9003fd10042875225",
+              "body_utf8_bytes": 49156,
+              "cap": 35000,
+              "estimate": 50180,
+              "margin": -15180,
+              "reason": "OpenRouter input overlimit; no clipping",
+              "reservation_usd": null,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        },
+        "40000": {
+          "admission": {
+            "jev": {
+              "admitted": false,
+              "body_codepoints": 51517,
+              "body_sha256": "404dc3af4a19b6009aa9b7819d99ab693aa7888d8e3a9ca03861e863106f727c",
+              "body_utf8_bytes": 51517,
+              "cap": 64000,
+              "estimate": 52541,
+              "margin": 11459,
+              "reason": "Jev state + longest question overlimit; no clipping",
+              "reservation_usd": null,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 45086,
+              "state_longest_margin": -13086
+            },
+            "stronger": {
+              "admitted": false,
+              "body_codepoints": 49156,
+              "body_sha256": "35abb1a692e8645a52b9ea9d1c4bf60b179680c28a925ea9003fd10042875225",
+              "body_utf8_bytes": 49156,
+              "cap": 40000,
+              "estimate": 50180,
+              "margin": -10180,
+              "reason": "proposed stronger input/cap violation",
+              "reservation_usd": null,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        }
+      },
+      "fixture": "existing-authored-size-stress",
+      "full_source_in_each_arm": true,
+      "guards_change_body_bytes": false,
+      "inventory_sha256": "076f053d63194e07e4f0c4a17fd09171e4fed01c20fc9efe27798fa00b4c23c7",
+      "observed": false,
+      "paired_evidence_equal": true,
+      "payload_sha256": "436bec9079929f6cc1a2a59f7f59a22f64c4541a11f5d5e6cd8672106c04e722",
+      "provenance": "existing R7 authored sizing pattern; structural only, descriptions not semantically accepted",
+      "record_sha256": "c1ce29102bfc5124de9ac012f5c305b538ac13f52c2813bbbcae6b0bac3d0210",
+      "semantic_acceptance": false,
+      "source_text_sha256": "50ea7a4149f2e4831db9b0ea83174c33d6d497e2d1733c3dacbf7cca1718f2d0"
+    },
+    {
+      "comparison": {
+        "35000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 12411,
+              "body_sha256": "64984c3e2db7d646a2d4436ff4bea08c131135cd0074721ffb5228ae480c9c43",
+              "body_utf8_bytes": 12411,
+              "cap": 64000,
+              "estimate": 13435,
+              "margin": 50565,
+              "reason": null,
+              "reservation_usd": 0.00056427,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 5980,
+              "state_longest_margin": 26020
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 10074,
+              "body_sha256": "9f54c4538d8b22a169fc510ac355a9684b2a0f1bc4c2dbae4599103312ed2ed5",
+              "body_utf8_bytes": 10074,
+              "cap": 35000,
+              "estimate": 11098,
+              "margin": 23902,
+              "reason": null,
+              "reservation_usd": 0.063156,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        },
+        "40000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 12411,
+              "body_sha256": "64984c3e2db7d646a2d4436ff4bea08c131135cd0074721ffb5228ae480c9c43",
+              "body_utf8_bytes": 12411,
+              "cap": 64000,
+              "estimate": 13435,
+              "margin": 50565,
+              "reason": null,
+              "reservation_usd": 0.00056427,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 5980,
+              "state_longest_margin": 26020
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 10074,
+              "body_sha256": "9f54c4538d8b22a169fc510ac355a9684b2a0f1bc4c2dbae4599103312ed2ed5",
+              "body_utf8_bytes": 10074,
+              "cap": 40000,
+              "estimate": 11098,
+              "margin": 28902,
+              "reason": null,
+              "reservation_usd": 0.063156,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        }
+      },
+      "fixture": "represented-source-ambiguity-claimed_complete",
+      "full_source_in_each_arm": true,
+      "guards_change_body_bytes": false,
+      "inventory_sha256": "89510fda68b5edea45d831ae85834efe3267aa3084f7d8ab553a025e7686e663",
+      "observed": false,
+      "paired_evidence_equal": true,
+      "payload_sha256": "586c6588c07d3590a5c91566cfe3c8237239d586ad5ce49abf9a857c5f4d035b",
+      "provenance": "authored coverage/source-certainty distinction; no semantic acceptance",
+      "record_sha256": "f68c9dc2a96638ba02c039536aa53e1655442e4b7a4753dc16f6412343852f17",
+      "semantic_acceptance": false,
+      "source_text_sha256": "6d0cfa5ff221f77bedaa2cc4000d4390f7869115e5b0abac253a57a9b1cd9479"
+    },
+    {
+      "comparison": {
+        "35000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 12401,
+              "body_sha256": "896efed3784c6fa892eadbc1651bec0e20f91ceb7c3710528c02ef1f68015801",
+              "body_utf8_bytes": 12401,
+              "cap": 64000,
+              "estimate": 13425,
+              "margin": 50575,
+              "reason": null,
+              "reservation_usd": 0.00056385,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 5970,
+              "state_longest_margin": 26030
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 10066,
+              "body_sha256": "873d629f6d6c8c8a8bc79b0c4eb6f939714ccb6430598b30178efdc2eb91eff3",
+              "body_utf8_bytes": 10066,
+              "cap": 35000,
+              "estimate": 11090,
+              "margin": 23910,
+              "reason": null,
+              "reservation_usd": 0.06314,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        },
+        "40000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 12401,
+              "body_sha256": "896efed3784c6fa892eadbc1651bec0e20f91ceb7c3710528c02ef1f68015801",
+              "body_utf8_bytes": 12401,
+              "cap": 64000,
+              "estimate": 13425,
+              "margin": 50575,
+              "reason": null,
+              "reservation_usd": 0.00056385,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 5970,
+              "state_longest_margin": 26030
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 10066,
+              "body_sha256": "873d629f6d6c8c8a8bc79b0c4eb6f939714ccb6430598b30178efdc2eb91eff3",
+              "body_utf8_bytes": 10066,
+              "cap": 40000,
+              "estimate": 11090,
+              "margin": 28910,
+              "reason": null,
+              "reservation_usd": 0.06314,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        }
+      },
+      "fixture": "represented-source-ambiguity-uncertain",
+      "full_source_in_each_arm": true,
+      "guards_change_body_bytes": false,
+      "inventory_sha256": "1e3dffccd29d0c8d2f7e0e4c733fe904a74e9e0649913f4cffa7634d84d85104",
+      "observed": false,
+      "paired_evidence_equal": true,
+      "payload_sha256": "6bb3f2ca3b5c763c19972b18198f7e1d2de2784e8d2c584cd0e8c020bb3c3ae8",
+      "provenance": "authored coverage/source-certainty distinction; no semantic acceptance",
+      "record_sha256": "799b1c9a0a2d7a7d3e68619b549e9ef3fd0a174bbe8068cf79bb78e330125272",
+      "semantic_acceptance": false,
+      "source_text_sha256": "6d0cfa5ff221f77bedaa2cc4000d4390f7869115e5b0abac253a57a9b1cd9479"
+    },
+    {
+      "comparison": {
+        "35000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 37420,
+              "body_sha256": "eef00bf020ecf37fd6b659375e41d3be99e69698295e9a7bf048d6ef220c9ed4",
+              "body_utf8_bytes": 37420,
+              "cap": 64000,
+              "estimate": 38444,
+              "margin": 25556,
+              "reason": null,
+              "reservation_usd": 0.001614648,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 30989,
+              "state_longest_margin": 1011
+            },
+            "stronger": {
+              "admitted": false,
+              "body_codepoints": 37297,
+              "body_sha256": "231a5dcff466acb7275d8ef1ba0f2c1b5b8f6d2df344e33f8db869791b3e13cf",
+              "body_utf8_bytes": 37297,
+              "cap": 35000,
+              "estimate": 38321,
+              "margin": -3321,
+              "reason": "OpenRouter input overlimit; no clipping",
+              "reservation_usd": null,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        },
+        "40000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 37420,
+              "body_sha256": "eef00bf020ecf37fd6b659375e41d3be99e69698295e9a7bf048d6ef220c9ed4",
+              "body_utf8_bytes": 37420,
+              "cap": 64000,
+              "estimate": 38444,
+              "margin": 25556,
+              "reason": null,
+              "reservation_usd": 0.001614648,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 30989,
+              "state_longest_margin": 1011
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 37297,
+              "body_sha256": "231a5dcff466acb7275d8ef1ba0f2c1b5b8f6d2df344e33f8db869791b3e13cf",
+              "body_utf8_bytes": 37297,
+              "cap": 40000,
+              "estimate": 38321,
+              "margin": 1679,
+              "reason": null,
+              "reservation_usd": 0.11760200000000001,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        }
+      },
+      "fixture": "paid-diagnostic-other",
+      "full_source_in_each_arm": true,
+      "guards_change_body_bytes": false,
+      "inventory_sha256": "d08edd025ee86ec0c536827b77d3c55e1d776ec76f407507f27c7c0365cff0b8",
+      "observed": false,
+      "paired_evidence_equal": true,
+      "payload_sha256": "9ce801bcc7d54a9990b86cfc08325835f6cc339cca1f2896368029443e53c02a",
+      "provenance": "unobserved one-field development copy; semantic acceptance false",
+      "record_sha256": "d56d2c9cc512bff081a116993802a3851d3d51ecd8ff59b8ce27d74849ac700b",
+      "semantic_acceptance": false,
+      "source_text_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5"
+    },
+    {
+      "comparison": {
+        "35000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 37444,
+              "body_sha256": "cb3c301159add80121bd24f2a340e5d2fd35cff21e7383b602dd337a89f6fd42",
+              "body_utf8_bytes": 37444,
+              "cap": 64000,
+              "estimate": 38468,
+              "margin": 25532,
+              "reason": null,
+              "reservation_usd": 0.001615656,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 31013,
+              "state_longest_margin": 987
+            },
+            "stronger": {
+              "admitted": false,
+              "body_codepoints": 37323,
+              "body_sha256": "237cfa40741fa9369b09ddeb0cf1d9aa1d9b48f4a541a8e7961e1e7e32ea9654",
+              "body_utf8_bytes": 37323,
+              "cap": 35000,
+              "estimate": 38347,
+              "margin": -3347,
+              "reason": "OpenRouter input overlimit; no clipping",
+              "reservation_usd": null,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        },
+        "40000": {
+          "admission": {
+            "jev": {
+              "admitted": true,
+              "body_codepoints": 37444,
+              "body_sha256": "cb3c301159add80121bd24f2a340e5d2fd35cff21e7383b602dd337a89f6fd42",
+              "body_utf8_bytes": 37444,
+              "cap": 64000,
+              "estimate": 38468,
+              "margin": 25532,
+              "reason": null,
+              "reservation_usd": 0.001615656,
+              "schema_version": "round7.admission.v1",
+              "stage": "jev",
+              "state_longest_cap": 32000,
+              "state_longest_estimate": 31013,
+              "state_longest_margin": 987
+            },
+            "stronger": {
+              "admitted": true,
+              "body_codepoints": 37323,
+              "body_sha256": "237cfa40741fa9369b09ddeb0cf1d9aa1d9b48f4a541a8e7961e1e7e32ea9654",
+              "body_utf8_bytes": 37323,
+              "cap": 40000,
+              "estimate": 38347,
+              "margin": 1653,
+              "reason": null,
+              "reservation_usd": 0.11765400000000001,
+              "schema_version": "round7.admission.v1",
+              "stage": "stronger",
+              "state_longest_cap": null,
+              "state_longest_estimate": null,
+              "state_longest_margin": null
+            }
+          },
+          "synthetic_dispatches": []
+        }
+      },
+      "fixture": "paid-diagnostic-uncertain",
+      "full_source_in_each_arm": true,
+      "guards_change_body_bytes": false,
+      "inventory_sha256": "0e0c768dc94cc66fbd42340b60c68322c223cd5e1525976c0c8aaa40b4f00e58",
+      "observed": false,
+      "paired_evidence_equal": true,
+      "payload_sha256": "c92cec117b5f7cccd03cc3577f9d65620155fc3c5ffca7e518690f679e03e36e",
+      "provenance": "unobserved one-field development copy; semantic acceptance false",
+      "record_sha256": "a725ef9c837bec27d778c76a2ebc16adb1e59628636b5f94aa66c42bf257d53c",
+      "semantic_acceptance": false,
+      "source_text_sha256": "eb78439c4016840a13e770706868eb05c88ee19f85f6477a9da75a64ed044af5"
+    }
+  ],
+  "immutable_input_files_verified": 52,
+  "inventory_request": {
+    "candidate_admission": {
+      "admitted": true,
+      "body_sha256": "6d54b497757db64d003a5bcb75f7ce9b1f302e78f2babcec301b7757f6aaeca0",
+      "body_utf8_bytes": 21117,
+      "cap": 35000,
+      "estimate": 22141,
+      "reason": null,
+      "reservation_usd": 0.167162,
+      "schema_version": "round7.admission.v1",
+      "stage": "inventory",
+      "state_longest_cap": null,
+      "state_longest_estimate": null
+    },
+    "candidate_body_sha256": "6d54b497757db64d003a5bcb75f7ce9b1f302e78f2babcec301b7757f6aaeca0",
+    "candidate_estimate": 22141,
+    "changed_fields": [
+      "messages[0].content (append exact prompt-delta.txt)"
+    ],
+    "estimate_delta": 2777,
+    "model_provider_reasoning_output_cap_unchanged": true,
+    "old_body_sha256": "c95bb1fbb9b514ca5b15c0ccabd1b34f2267d22ce71e28aadf76bb109efb3809",
+    "old_estimate": 19364,
+    "old_reservation_usd": 0.16160800000000003,
+    "reservation_delta_usd": 0.005554,
+    "schema_unchanged": true,
+    "source_user_payload_unchanged": true
+  },
+  "log_sha256": "da02d6df85492ec0e83c155d88cb8b4cc1385d3b4c8f3e326f38fe7baeaaf868",
+  "network_process_guard": true,
+  "passed": true,
+  "production_eligible": false,
+  "prompt_delta_sha256": "90a6f51531f5e26c9e1530a9b7b6c9feebde3b0742e238303839b8c975bf70b6",
+  "provider_calls": 0,
+  "schema_version": "round8-offline-contract.report.v1",
+  "source_truth_decoded": false,
+  "tests": 12,
+  "unmeasured": [
+    "candidate prompt model generation",
+    "generation consistency improvement",
+    "semantic correctness/completeness improvement",
+    "unseen-source generalization",
+    "actual provider token counts or context capacity for candidate bodies",
+    "new generated output size/cost"
+  ],
+  "write_guard": "only owned new root; review excluded"
+}

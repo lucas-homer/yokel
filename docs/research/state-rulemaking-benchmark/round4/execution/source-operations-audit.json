@@ -1,0 +1,404 @@
+{
+  "schema_version": "round4.source-operations-audit.v1",
+  "purpose": "Read-only operational collection/boundary accounting from frozen evidence; no parser accuracy or provider cost estimates.",
+  "source_freeze": "freeze-S.json",
+  "source_freeze_sha256": "500b9ae205f2c2b04d544a7b5e11c544fbc586ec8ad091af7493f4a064970cc3",
+  "evidence": {
+    "sources/search-access-ledger.jsonl": "fa3809f437470dae02ea3c4b651ecfab48dc539cee553cd99564b2608d33a6d3",
+    "sources/source-metadata.json": "f4d6c95be62ade4caec2dd1a1ca540aa733a33799f2700ed23a410803f318e4b",
+    "sources/discovery-links.json": "df557bbaa6beba6386aaf689f6092a83b24894efb7f98c5ef36a01c11323e922",
+    "sources/collection-audit.json": "dfd6ad4beae94f5dd923049fbd33181260db88ff8416e4b453741c609c9f093c",
+    "sources/retention-manifest.json": "0a10b5539a1531d4ffcf3983fdde396f77d14824419e26eaae09fc911fe8d504",
+    "execution/collection-decision.json": "ed0dfa390d9a5f5904a3e38bf1f6abcc92e21b55dcc33609f4f67285b9a46479"
+  },
+  "access": {
+    "search_queries_executed": 48,
+    "recorded_curl_download_attempts": 21,
+    "unique_candidate_urls_attempted": 21,
+    "successful_original_pdfs": 17,
+    "failed_downloads": 4,
+    "download_success_fraction": 0.8095238095238095,
+    "failures_by_reason": {
+      "HTTP_403": 2,
+      "HTTP_404": 1,
+      "TLS_connection_failure_curl_35": 1
+    },
+    "failure_details": [
+      {
+        "candidate_id": "nh-adopted",
+        "state": "NH",
+        "reason": "HTTP_403",
+        "curl_exit": 0,
+        "http_status": "403"
+      },
+      {
+        "candidate_id": "ok-occ",
+        "state": "OK",
+        "reason": "HTTP_404",
+        "curl_exit": 0,
+        "http_status": "404"
+      },
+      {
+        "candidate_id": "tn-drug",
+        "state": "TN",
+        "reason": "HTTP_403",
+        "curl_exit": 0,
+        "http_status": "403"
+      },
+      {
+        "candidate_id": "tn-insurance",
+        "state": "TN",
+        "reason": "TLS_connection_failure_curl_35",
+        "curl_exit": 35,
+        "http_status": "000"
+      }
+    ],
+    "counting_limit": "21 counts recorded curl attempts, not all browser/search/index accesses. Web fetch403, cache misses, and JavaScript-only viewer checks are separate; absence of an HTTP response is not an additional PDF download failure. Repeated failure/eligibility ledger rows are not counted twice.",
+    "additional_access_checks": [
+      {
+        "url": "https://adem.alabama.gov/sites/default/files/2026-05/05-26div1and6.html",
+        "result": "HTML notice; linked PDFs are rule text/summary, not notice PDF; no synthetic conversion."
+      },
+      {
+        "url": "https://www.opers.ok.gov/proposed-rules-and-rule-impact-statements-2027/",
+        "result": "web cache miss; not selected"
+      },
+      {
+        "url": "https://public.occ.ok.gov/WebLink/Docview.aspx?id=20989989",
+        "result": "JS viewer only in web tool; no original PDF available through observed link; no inferred endpoint used"
+      }
+    ]
+  },
+  "selection": {
+    "selected_notices": 12,
+    "selected_states": 10,
+    "not_selected_candidates": 9,
+    "not_selected_successful_pdfs": 5,
+    "reasons": {
+      "access_failure": 4,
+      "not_agency_rulemaking_notice": 2,
+      "general_stratum_already_filled": 2,
+      "later_ranked_register_not_needed": 1
+    },
+    "exclusion_details": [
+      {
+        "candidate_id": "de-proposed",
+        "reason": "General stratum already filled by earlier eligible candidates; retained unused."
+      },
+      {
+        "candidate_id": "hi-comment",
+        "reason": "Public testimony submission, not an agency rulemaking notice."
+      },
+      {
+        "candidate_id": "nh-adopted",
+        "reason": "HTTP403; no bypass."
+      },
+      {
+        "candidate_id": "nj-proposal",
+        "reason": "General stratum already filled by earlier eligible candidates; retained unused, not replaced based on parser outcomes."
+      },
+      {
+        "candidate_id": "ok-negative",
+        "reason": "Later-ranked register; earlier Q041 register provided eligible lifecycle notice, so this candidate is not selected."
+      },
+      {
+        "candidate_id": "ok-occ",
+        "reason": "HTTP404; no PDF retrieved."
+      },
+      {
+        "candidate_id": "sc-be",
+        "reason": "Utility application and hearing affidavit, not a rulemaking notice."
+      },
+      {
+        "candidate_id": "tn-drug",
+        "reason": "HTTP403 in web retrieval and ordinary curl retrieval; no access-control bypass."
+      },
+      {
+        "candidate_id": "tn-insurance",
+        "reason": "TLS connection failure; no PDF retrieved."
+      }
+    ],
+    "old_original_pdf_overlap": 0,
+    "native_text_length_exclusions": 0,
+    "parser_outcome_based_replacements": 0,
+    "scope_counts": {
+      "unknown": 5,
+      "full_notice": 5,
+      "slice": 2
+    }
+  },
+  "volume": {
+    "selected_original_pdf_pages": 2438,
+    "selected_input_pages": 52,
+    "aggregate_original_to_input_ratio": 46.88461538461539,
+    "aggregate_input_fraction": 0.02132895816242822,
+    "selected_original_pdf_bytes": 77423003,
+    "all_successful_candidate_original_pages": 2730,
+    "all_successful_candidate_original_bytes": 88126799,
+    "page_reduced_inputs": 8,
+    "unmodified_full_original_inputs": 4,
+    "page_images_retained": 52,
+    "largest_original": {
+      "document_id": "doc-b00441b94ff1",
+      "candidate_id": "ok-current",
+      "state": "OK",
+      "scope": "unknown",
+      "original_pages": 1508,
+      "input_pages": 1,
+      "original_to_input_ratio": 1508.0,
+      "input_fraction_of_original": 0.000663129973474801,
+      "physical_original_pages": [
+        28
+      ],
+      "boundary_evidence": "First substantive notice in first-ranked register: Title140 OAR25-382 on physical28/printed906; full notice retained. Same physical page also contains complete Title442 notice. Whole page preserved and scope unknown; target segmentation not certified.",
+      "page_image_count": 1
+    },
+    "per_document": [
+      {
+        "document_id": "doc-0511d79a7aa6",
+        "candidate_id": "la-ada",
+        "state": "LA",
+        "scope": "unknown",
+        "original_pages": 3,
+        "input_pages": 3,
+        "original_to_input_ratio": 1.0,
+        "input_fraction_of_original": 1.0,
+        "physical_original_pages": [
+          1,
+          2,
+          3
+        ],
+        "boundary_evidence": "Publisher supplied three-page register excerpt; target Open Meetings via Electronic Means begins right column of page1; preceding notice tail and other material remain. Multiple scopes, no segmentation assertion.",
+        "page_image_count": 3
+      },
+      {
+        "document_id": "doc-7035335ec6ae",
+        "candidate_id": "ar-marketing",
+        "state": "AR",
+        "scope": "full_notice",
+        "original_pages": 25,
+        "input_pages": 1,
+        "original_to_input_ratio": 25.0,
+        "input_fraction_of_original": 0.04,
+        "physical_original_pages": [
+          9
+        ],
+        "boundary_evidence": "Entire one-page NOTICE OF RULEMAKING through director signature. Surrounding packet contains supporting filings and rule text; none are represented as part of the standalone notice.",
+        "page_image_count": 1
+      },
+      {
+        "document_id": "doc-6de1104bdc54",
+        "candidate_id": "sc-register",
+        "state": "SC",
+        "scope": "full_notice",
+        "original_pages": 50,
+        "input_pages": 2,
+        "original_to_input_ratio": 25.0,
+        "input_fraction_of_original": 0.04,
+        "physical_original_pages": [
+          15,
+          16
+        ],
+        "boundary_evidence": "First proposed regulation in register: Document5447 starts physical15/printed8; concludes physical16/printed9; next notice begins physical17. All physical page content retained.",
+        "page_image_count": 2
+      },
+      {
+        "document_id": "doc-cc8a5c237cc2",
+        "candidate_id": "nh-agr",
+        "state": "NH",
+        "scope": "full_notice",
+        "original_pages": 4,
+        "input_pages": 4,
+        "original_to_input_ratio": 1.0,
+        "input_fraction_of_original": 1.0,
+        "physical_original_pages": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "boundary_evidence": "Entire standalone four-page Rulemaking Notice Form Agr2500 including fiscal impact continuation.",
+        "page_image_count": 4
+      },
+      {
+        "document_id": "doc-27f924e9b9d3",
+        "candidate_id": "vt-rulemaking",
+        "state": "VT",
+        "scope": "slice",
+        "original_pages": 37,
+        "input_pages": 6,
+        "original_to_input_ratio": 6.166666666666667,
+        "input_fraction_of_original": 0.16216216216216217,
+        "physical_original_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "boundary_evidence": "Complete six-page Final Proposed coversheet; later adopting page, analyses and rule text remain in original. Scope slice because complete filing package is larger.",
+        "page_image_count": 6
+      },
+      {
+        "document_id": "doc-6d4517336d61",
+        "candidate_id": "tn-packet",
+        "state": "TN",
+        "scope": "unknown",
+        "original_pages": 245,
+        "input_pages": 10,
+        "original_to_input_ratio": 24.5,
+        "input_fraction_of_original": 0.04081632653061224,
+        "physical_original_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "boundary_evidence": "Complete first agency record: staff abstract, supporting statements, filed rules and certification through physical10; next agency starts11. Mixed record components; no single-notice scope assertion.",
+        "page_image_count": 10
+      },
+      {
+        "document_id": "doc-bab42aac1958",
+        "candidate_id": "vt-emergency",
+        "state": "VT",
+        "scope": "slice",
+        "original_pages": 23,
+        "input_pages": 5,
+        "original_to_input_ratio": 4.6,
+        "input_fraction_of_original": 0.21739130434782608,
+        "physical_original_pages": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "boundary_evidence": "Complete five-page Emergency Rule coversheet; later adopting page, analyses and rule text remain in original. Scope slice for larger filing package.",
+        "page_image_count": 5
+      },
+      {
+        "document_id": "doc-eb83abf91c18",
+        "candidate_id": "tn-withdrawal",
+        "state": "TN",
+        "scope": "unknown",
+        "original_pages": 402,
+        "input_pages": 12,
+        "original_to_input_ratio": 33.5,
+        "input_fraction_of_original": 0.029850746268656716,
+        "physical_original_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "boundary_evidence": "First agency record is Tennessee Businesses Against Trafficking, not the withdrawal mentioned in search title. Includes complete record through physical12; next agency starts13. Multiple record components, scope unknown.",
+        "page_image_count": 12
+      },
+      {
+        "document_id": "doc-09c6b865024f",
+        "candidate_id": "id-negotiated",
+        "state": "ID",
+        "scope": "full_notice",
+        "original_pages": 134,
+        "input_pages": 1,
+        "original_to_input_ratio": 134.0,
+        "input_fraction_of_original": 0.007462686567164179,
+        "physical_original_pages": [
+          90
+        ],
+        "boundary_evidence": "Complete single-page Docket62-0101-2301 notice; printed and physical90. Negotiated meetings depend on responses; no adjacent notice on retained page.",
+        "page_image_count": 1
+      },
+      {
+        "document_id": "doc-03fab2becee5",
+        "candidate_id": "hi-election",
+        "state": "HI",
+        "scope": "full_notice",
+        "original_pages": 6,
+        "input_pages": 6,
+        "original_to_input_ratio": 1.0,
+        "input_fraction_of_original": 1.0,
+        "physical_original_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "boundary_evidence": "Entire six-page publisher notice including testimony and post-hearing relative timing; no rule attachment truncation.",
+        "page_image_count": 6
+      },
+      {
+        "document_id": "doc-de7ceb52736b",
+        "candidate_id": "nj-adoption",
+        "state": "NJ",
+        "scope": "unknown",
+        "original_pages": 1,
+        "input_pages": 1,
+        "original_to_input_ratio": 1.0,
+        "input_fraction_of_original": 1.0,
+        "physical_original_pages": [
+          1
+        ],
+        "boundary_evidence": "Entire one-page publisher PDF. Standard of Need administrative change appears in right column below preceding adoption text that spans both columns. Neighbor retained; scope unknown and no target segmentation assertion.",
+        "page_image_count": 1
+      },
+      {
+        "document_id": "doc-b00441b94ff1",
+        "candidate_id": "ok-current",
+        "state": "OK",
+        "scope": "unknown",
+        "original_pages": 1508,
+        "input_pages": 1,
+        "original_to_input_ratio": 1508.0,
+        "input_fraction_of_original": 0.000663129973474801,
+        "physical_original_pages": [
+          28
+        ],
+        "boundary_evidence": "First substantive notice in first-ranked register: Title140 OAR25-382 on physical28/printed906; full notice retained. Same physical page also contains complete Title442 notice. Whole page preserved and scope unknown; target segmentation not certified.",
+        "page_image_count": 1
+      }
+    ],
+    "interpretation": "Page ratio measures retained input reduction, not an achieved end-to-end cost saving. Entire originals were downloaded and native-extracted before reviewer boundary selection; full-source discovery/segmentation cost remains."
+  },
+  "automation_limits": [
+    "The prepared48 queries and returned search order were recorded, but candidate relevance, publisher-link traversal, access triage, strata assignment and notice selection required agent judgment. No unattended discovery recall was evaluated.",
+    "Boundary selection was reviewer-guided using native text and rendered originals; pypdf copying, pdftotext extraction, rendering, hashes and page maps were mechanical. The frozen pipeline receives preselected pages, so its scores cannot establish automatic full-register segmentation accuracy.",
+    "Five full_notice inputs include some manually delimited standalone notices inside packets/registers; full_notice describes collection scope, not automated target detection.",
+    "Five unknown inputs retain multiple notices or record components, and two slice inputs retain complete cover forms from larger packages. No implicit target resolution or whole-original absence guarantee follows.",
+    "Four publisher scans carry embedded OCR and are concentrated in two related state filing families. No image-only-without-text-layer coverage is established.",
+    "Queries were completed before queued candidate processing ended; the primary accepted this disclosed search-order deviation for diagnostic use. Frozen source records were not rewritten.",
+    "The ledger is not a complete per-tool stopwatch or billing log. Query timestamps can reflect persistence time and parallel downloads prevent summing wall-clock intervals as active labor."
+  ],
+  "cost_accounting": {
+    "source_stage_provider_model_calls": 0,
+    "source_stage_paid_parser_calls": 0,
+    "search_service_dollar_cost": null,
+    "human_or_agent_active_minutes": null,
+    "native_processing_cpu_seconds": null,
+    "network_transfer_including_failures_headers_indexes": null,
+    "measured_retained_successful_original_bytes": 88126799,
+    "note": "Unknown costs remain null. This audit performs no new searches, downloads, models, parsers or pipeline runs; it reads existing diagnostics only."
+  },
+  "verification": {
+    "all_retained_source_hashes_verified": true,
+    "source_artifacts_modified": false,
+    "only_new_output": "execution/source-operations-audit.json"
+  }
+}

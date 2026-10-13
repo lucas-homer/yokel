@@ -1,0 +1,46 @@
+{
+  "status": "collector_complete_pending_independent_review",
+  "units": 8,
+  "input_pages": 22,
+  "states": [
+    "AK",
+    "IA",
+    "KS",
+    "ME",
+    "MN",
+    "OR",
+    "UT",
+    "WI"
+  ],
+  "families": 8,
+  "original_pdfs": 8,
+  "fields": 74,
+  "critical_fields": 65,
+  "provisional_reference_eligible": 7,
+  "independent_review_complete": false,
+  "parser_execution_authorized_by_this_artifact": false,
+  "new_cloud_parser_outputs_inspected": false,
+  "bucket_counts": {
+    "lifecycle_change": 1,
+    "scanned_filled_form": 2,
+    "clean_standalone_pdf": 2,
+    "dense_register_layout": 3
+  },
+  "native_extraction": {
+    "role": "collector navigation/transcription aid, not scored round2 native arm",
+    "library": "pypdf",
+    "version": "6.10.0",
+    "python": "3.12.14",
+    "script": "prepare.py",
+    "command": "PdfReader page.extract_text() default; exact text retained by page"
+  },
+  "rendering": {
+    "command": "pdftoppm -scale-to 1600 -png input.pdf page",
+    "complete_pages_inspected": 22
+  },
+  "unresolved": [
+    "H06 general box20 calendar days versus target20 working days; critical max-extension field uncertain; no legal resolution.",
+    "Independent image-only source review and final experiment-wide configuration/reference freeze required before heldout parsing.",
+    "Source collection was not preregistered; final family/reference freeze is prospective only."
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "validator_path": "/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-spike/validate.py",
+  "validator_sha256": "5de3cc3d4a405c5dce8a3911a564c3f090df4472140bba361a20d2aadbef8153",
+  "warning": "Synthetic probes. Acceptance of semantic mutations is expected unless separately source-reviewed.",
+  "cases": [
+    {
+      "case": "valid_baseline",
+      "category": "control",
+      "desired": "accept",
+      "outcome": "accept",
+      "details": []
+    },
+    {
+      "case": "missing_quote",
+      "category": "control",
+      "desired": "reject",
+      "outcome": "reject",
+      "details": [
+        {
+          "observation_id": "synthetic-filing",
+          "errors": [
+            "evidence quote not found verbatim"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "hash_tampering",
+      "category": "control",
+      "desired": "reject",
+      "outcome": "reject",
+      "details": [
+        {
+          "artifact_id": "synthetic-text",
+          "errors": [
+            "artifact hash mismatch"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "invalid_date",
+      "category": "control",
+      "desired": "reject",
+      "outcome": "reject",
+      "details": [
+        {
+          "observation_id": "synthetic-filing",
+          "errors": [
+            "invalid calendar date"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "duplicate_id",
+      "category": "control",
+      "desired": "reject",
+      "outcome": "reject",
+      "details": [
+        {
+          "observation_id": "synthetic-filing",
+          "errors": [
+            "duplicate observation id"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "path_escape",
+      "category": "control",
+      "desired": "reject",
+      "outcome": "reject",
+      "details": [
+        {
+          "artifact_id": "synthetic-text",
+          "errors": [
+            "artifact path invalid/missing"
+          ]
+        },
+        {
+          "observation_id": "synthetic-filing",
+          "errors": [
+            "text evidence artifact unreadable or invalid"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "provenance_fields_wrong_types",
+      "category": "contract_gap",
+      "desired": "reject",
+      "outcome": "accept",
+      "details": []
+    },
+    {
+      "case": "fresh_artifact_has_no_retrieval_time",
+      "category": "contract_gap",
+      "desired": "reject",
+      "outcome": "accept",
+      "details": []
+    },
+    {
+      "case": "unresolved_zone_but_claimed_instant",
+      "category": "contract_gap",
+      "desired": "reject",
+      "outcome": "accept",
+      "details": []
+    },
+    {
+      "case": "zone_and_instant_contradict",
+      "category": "consistency_gap",
+      "desired": "reject",
+      "outcome": "accept",
+      "details": []
+    },
+    {
+      "case": "infinite_relative_duration",
+      "category": "contract_gap",
+      "desired": "reject",
+      "outcome": "accept",
+      "details": []
+    },
+    {
+      "case": "wrong_date_role_with_exact_quote",
+      "category": "semantic_review_required",
+      "desired": "reject",
+      "outcome": "accept",
+      "details": []
+    },
+    {
+      "case": "wrong_locator_with_exact_quote",
+      "category": "semantic_review_required",
+      "desired": "reject",
+      "outcome": "accept",
+      "details": []
+    },
+    {
+      "case": "twenty_vs_twentyfive_swap",
+      "category": "semantic_review_required",
+      "desired": "reject",
+      "outcome": "accept",
+      "details": []
+    },
+    {
+      "case": "partial_withdrawal_becomes_full",
+      "category": "semantic_review_required",
+      "desired": "reject",
+      "outcome": "accept",
+      "details": []
+    },
+    {
+      "case": "visual_claim_without_saved_review_note",
+      "category": "contract_gap",
+      "desired": "reject",
+      "outcome": "accept",
+      "details": []
+    },
+    {
+      "case": "nonobject_observation_crashes",
+      "category": "robustness_gap",
+      "desired": "reject",
+      "outcome": "crash",
+      "details": {
+        "exception": "AttributeError",
+        "message": "'NoneType' object has no attribute 'get'"
+      }
+    },
+    {
+      "case": "nonobject_manifest_crashes",
+      "category": "robustness_gap",
+      "desired": "reject",
+      "outcome": "crash",
+      "details": {
+        "exception": "AttributeError",
+        "message": "'NoneType' object has no attribute 'get'"
+      }
+    }
+  ]
+}

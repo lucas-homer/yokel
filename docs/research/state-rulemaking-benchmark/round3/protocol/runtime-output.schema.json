@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Round three four dimension evaluation wrapper",
+  "description": "Internal aggregation wrapper, not provider response or mandatory extra adapter output. Preserve exact adapter result separately.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "method",
+    "operation_status",
+    "dimensions",
+    "deterministic_blocking_issues",
+    "text_disposition",
+    "action_readiness",
+    "input_sha256",
+    "raw_result_sha256"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "method": {
+      "enum": [
+        "deterministic",
+        "deterministic_plus_jev",
+        "deterministic_plus_general"
+      ]
+    },
+    "operation_status": {
+      "enum": [
+        "completed",
+        "abstained_hard_check",
+        "schema_invalid",
+        "provider_error",
+        "timeout_uncertain",
+        "not_attempted"
+      ]
+    },
+    "dimensions": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "support",
+            "role",
+            "condition",
+            "conflict"
+          ],
+          "properties": {
+            "support": {
+              "type": "object",
+              "required": [
+                "label"
+              ],
+              "properties": {
+                "label": {
+                  "enum": [
+                    "supported",
+                    "contradicted",
+                    "insufficient"
+                  ]
+                },
+                "raw_label": {
+                  "enum": [
+                    "supported",
+                    "contradicted",
+                    "insufficient"
+                  ]
+                },
+                "probabilities": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "confidence": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "role": {
+              "type": "object",
+              "required": [
+                "label"
+              ],
+              "properties": {
+                "label": {
+                  "enum": [
+                    "matched",
+                    "mismatched",
+                    "insufficient"
+                  ]
+                },
+                "raw_label": {
+                  "enum": [
+                    "matched",
+                    "mismatched",
+                    "insufficient"
+                  ]
+                },
+                "probabilities": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "confidence": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "condition": {
+              "type": "object",
+              "required": [
+                "label"
+              ],
+              "properties": {
+                "label": {
+                  "enum": [
+                    "preserved",
+                    "omitted_or_changed",
+                    "insufficient"
+                  ]
+                },
+                "raw_label": {
+                  "enum": [
+                    "preserved",
+                    "omitted_or_changed",
+                    "insufficient"
+                  ]
+                },
+                "probabilities": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "confidence": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "conflict": {
+              "type": "object",
+              "required": [
+                "label"
+              ],
+              "properties": {
+                "label": {
+                  "enum": [
+                    "present",
+                    "absent",
+                    "insufficient"
+                  ]
+                },
+                "raw_label": {
+                  "enum": [
+                    "present",
+                    "absent",
+                    "insufficient"
+                  ]
+                },
+                "probabilities": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "confidence": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "deterministic_blocking_issues": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "text_disposition": {
+      "enum": [
+        "text_supported_only",
+        "escalate"
+      ]
+    },
+    "action_readiness": {
+      "enum": [
+        "not_verified",
+        "verified_for_shadow_only"
+      ]
+    },
+    "input_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "raw_result_sha256": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

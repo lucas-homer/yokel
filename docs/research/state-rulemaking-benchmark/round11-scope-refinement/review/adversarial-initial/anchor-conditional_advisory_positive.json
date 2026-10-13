@@ -1,0 +1,108 @@
+{
+  "case": {
+    "source": "If you plan to speak, preregistration is strongly encouraged.",
+    "inventory": [
+      {
+        "id": "i",
+        "kind": "instruction",
+        "value": "preregister",
+        "modality": "advisory",
+        "condition": "if you plan to speak",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "If you plan to speak, preregistration is strongly encouraged.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      }
+    ],
+    "classified_inventory": [
+      {
+        "id": "i",
+        "kind": "instruction",
+        "value": "preregister",
+        "modality": "advisory",
+        "condition": "if you plan to speak",
+        "qualifications": [],
+        "dependencies": [],
+        "evidence": [
+          {
+            "quote": "If you plan to speak, preregistration is strongly encouraged.",
+            "occurrence": 1
+          }
+        ],
+        "uncertainty": "none"
+      }
+    ],
+    "scopes": {
+      "i": {
+        "category": "required_participation",
+        "basis": "participation_function",
+        "reason": "Synthetic source-only adjudication of instruction",
+        "evidence": [
+          {
+            "quote": "If you plan to speak, preregistration is strongly encouraged.",
+            "occurrence": 1
+          }
+        ]
+      }
+    },
+    "operative": {
+      "i": {
+        "condition": "if you plan to speak",
+        "kind": "instruction",
+        "modality": "advisory",
+        "qualifications": [],
+        "value": "preregister"
+      }
+    },
+    "mappings": {
+      "i": {
+        "status": "matched",
+        "refs": [
+          "i"
+        ],
+        "reason": "Synthetic exact operative recovery"
+      }
+    },
+    "source_review": {
+      "status": "source_only_frozen",
+      "source_sha256": "7d075fc4f91b99ec57b85ace5fec592a73c155881703a2677d041653c9baec87",
+      "inventory_sha256": "8e3ce46fdae9926871c08c03ca51671689ea628b34b9f3aa9e61672f6b526869",
+      "scopes_sha256": "1248c942f3c90150b189c1842e07bf856019e8ab490e77f03eafe3415083ba81"
+    },
+    "record_audit": {
+      "status": "not_run",
+      "reviewed_refs": [],
+      "unsupported_refs": [],
+      "unknown_refs": []
+    }
+  },
+  "name": "anchor-conditional_advisory_positive",
+  "expected": {
+    "valid": true,
+    "required_scope_status": "all_required_inventoried_units_matched"
+  },
+  "actual": {
+    "accepted": true,
+    "result": {
+      "required_scope_status": "all_required_inventoried_units_matched",
+      "unresolved_scope": [],
+      "required_unknown": [],
+      "required_defects": [],
+      "effective_mappings": {
+        "i": "matched"
+      },
+      "background_diagnostics": {},
+      "source_completeness": "reviewer_attestation_only",
+      "record_fidelity": "unverified",
+      "unsupported_record_refs": [],
+      "production_ready": false,
+      "live_compatibility": "unverified"
+    }
+  },
+  "expectation_met": true
+}
