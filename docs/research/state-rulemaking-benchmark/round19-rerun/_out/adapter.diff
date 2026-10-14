@@ -1,0 +1,154 @@
+--- round18-rerun/adapter/SPEC.md
++++ round19-rerun/adapter/SPEC.md
+@@ -1,9 +1,10 @@
+-# Adapter r1.5
++# Adapter r1.6
+ 
+-Copy of R17 adapter-r1-4. Namespace r18.paid-rerun.v1; new wire/recon pins.
++Copy of R18 adapter r1.5. Namespace r19.paid-rerun.v1; new wire pin.
++Frozen R18 recon path and pin are reused directly.
+ Frozen source metadata retains its old wire provenance, while the active wire
+-is pinned independently through R18 wire READY. Host source lookup uses frozen
+-R17 sources; native shim loads R18 adapter/host_driver.py. A3 timeout 600 s,
++is pinned independently through R19 wire READY. Host source lookup uses frozen
++R17 sources; native shim loads R19 adapter/host_driver.py. A3 timeout 600 s,
+ shim 1740 s and native 1800 s remain unchanged.
+ 
+ A6 sites: release_gate init_constants checks integer U0 >= 0 and all-call
+--- round18-rerun/adapter/pin_ready.py
++++ round19-rerun/adapter/pin_ready.py
+@@ -1,10 +1,10 @@
+-"""R18 offline payload/dependency verification (shared pin utility)."""
++"""R19 offline payload/dependency verification (shared pin utility)."""
+ import importlib.util
+ from pathlib import Path
+ import sys
+ HERE=Path(__file__).resolve().parent
+ path=HERE.parent/'pin_ready.py'
+-s=importlib.util.spec_from_file_location('r18_shared_pins',path)
++s=importlib.util.spec_from_file_location('r19_shared_pins',path)
+ m=importlib.util.module_from_spec(s)
+ s.loader.exec_module(m)
+ if __name__=='__main__':
+--- round18-rerun/adapter/r17_adapter.py
++++ round19-rerun/adapter/r17_adapter.py
+@@ -17,14 +17,15 @@
+ from contextlib import contextmanager
+ 
+ HERE = Path(__file__).resolve().parent
+-R18 = HERE.parent
+-BENCH = R18.parent
++R19 = HERE.parent
++BENCH = R19.parent
++R18 = BENCH / 'round18-rerun'
+ R17 = BENCH / 'round17-paid-comparison'
+ DESIGN = R17 / 'design-r3-1'
+ RECON_SHA = '64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140'
+-WIRE_SHA = '0f8e44476b509a28b68739f83c0e557198a9990079bf8c108ff00071ecd56bef'
++WIRE_SHA = 'f17af0190dbc35eeeeeb1df00afe594f555f0a4df80aa9cb842083d9713c0ffb'
+ CALLS = [f'S{i}-OPQ' for i in (1, 2, 3)] + [f'S{i}-FULL' for i in (1, 2, 3)]
+-NAMESPACE = 'r18.paid-rerun.v1'
++NAMESPACE = 'r19.paid-rerun.v1'
+ POST_URL = 'https://openrouter.ai/api/v1/chat/completions'
+ KEY_URL = 'https://openrouter.ai/api/v1/key'
+ KEY_LABEL = 'DocketClock'
+@@ -156,9 +157,9 @@
+     require(read(R18 / 'recon/READY.json')['files']['r17recon.py']['sha256'] == RECON_SHA, 'a4_recon_pin')
+     require(read(R17 / 'sources-r2/READY.json')['upstream']['wire']['sha256'] == '662268ba0774d7ef5a121ec4af90003a3836c07e4ce5a5ae551a413fe8375ab1',
+             'source_wire_pin')
+-    require(read(R18 / 'wire/READY.json')['sha256']['wire.py'] == WIRE_SHA, 'r18_wire_pin')
++    require(read(R19 / 'wire/READY.json')['sha256']['wire.py'] == WIRE_SHA, 'r19_wire_pin')
+     return (load_pinned('r17_exact_recon', R18 / 'recon/r17recon.py', RECON_SHA),
+-            load_pinned('r17_exact_wire', R18 / 'wire/wire.py', WIRE_SHA))
++            load_pinned('r17_exact_wire', R19 / 'wire/wire.py', WIRE_SHA))
+ 
+ 
+ recon, wire = dependencies()
+--- round18-rerun/adapter/run_tests.sh
++++ round19-rerun/adapter/run_tests.sh
+@@ -2,4 +2,4 @@
+ # Offline unittest only; synthetic transports and environments.
+ set -eu
+ cd "$(dirname "$0")"
+-"${R18_TEST_PYTHON:-python3}" -I -S -B -m unittest discover -s . -p 'test_*.py' -v
++"${R19_TEST_PYTHON:-python3}" -I -S -B -m unittest discover -s . -p 'test_*.py' -v
+--- round18-rerun/adapter/test_a7.py
++++ round19-rerun/adapter/test_a7.py
+@@ -0,0 +1,62 @@
++"""Namespace isolation and exact adapter retarget proof; synthetic transports only."""
++import copy
++from pathlib import Path
++import tempfile
++import unittest
++import test_adapter as t
++
++a = t.a
++HERE = Path(__file__).resolve().parent
++
++
++class R19IsolationTests(unittest.TestCase):
++    def setUp(self):
++        self.tmp = tempfile.TemporaryDirectory(dir=t.OUT)
++        self.addCleanup(self.tmp.cleanup)
++        self.h = t.Harness(self.tmp.name)
++
++    def legacy_release(self, *, legacy_ledger):
++        h = self.h
++        entries = h.entries()
++        legacy_init = copy.deepcopy(entries[0])
++        legacy_init['namespace'] = 'r18.paid-rerun.v1'
++        h.release['init_sha256'] = a.sha(a.encode(legacy_init))
++        h.save_release()
++        if legacy_ledger:
++            entries[0] = legacy_init
++        entries[1]['release_sha256'] = a.sha(h.release_path.read_bytes())
++        h.rewrite_ledger(entries)
++
++    def refused_without_effects(self, reason):
++        before = (self.h.run / 'ledger.jsonl').read_bytes()
++        with self.assertRaisesRegex(a.Refused, reason):
++            self.h.execute()
++        self.assertEqual((self.h.run / 'ledger.jsonl').read_bytes(), before)
++        self.assertEqual(self.h.posts, [])
++        self.assertEqual(self.h.key_reads, [])
++        self.assertFalse((self.h.run / 'job1').exists())
++
++    def test_r18_namespace_ledger_release_pair_refused_before_reads_or_reserve(self):
++        self.legacy_release(legacy_ledger=True)
++        self.refused_without_effects('^init_namespace_key$')
++
++    def test_r18_release_cannot_bind_r19_init_even_with_updated_bind_hash(self):
++        self.legacy_release(legacy_ledger=False)
++        self.refused_without_effects('^release_init_hash$')
++
++    def test_adapter_only_paths_wire_pin_namespace_change(self):
++        baseline = (a.BENCH / 'round18-rerun/adapter/r17_adapter.py').read_text()
++        old_pin = a.sha((a.BENCH / 'round18-rerun/wire/wire.py').read_bytes())
++        expected = baseline.replace('R18 = HERE.parent\nBENCH = R18.parent',
++            "R19 = HERE.parent\nBENCH = R19.parent\nR18 = BENCH / 'round18-rerun'")
++        expected = expected.replace("R18 / 'wire/", "R19 / 'wire/")
++        expected = expected.replace("'r18_wire_pin'", "'r19_wire_pin'")
++        expected = expected.replace("NAMESPACE = 'r18.paid-rerun.v1'", "NAMESPACE = 'r19.paid-rerun.v1'")
++        expected = expected.replace("WIRE_SHA = '" + old_pin + "'", "WIRE_SHA = '" + a.WIRE_SHA + "'")
++        self.assertEqual((HERE / 'r17_adapter.py').read_text(), expected)
++        self.assertEqual(a.RECON_SHA, '64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140')
++        self.assertEqual(Path(a.recon.__file__), a.BENCH / 'round18-rerun/recon/r17recon.py')
++
++
++if __name__ == '__main__':
++    unittest.main(verbosity=2)
+--- round18-rerun/adapter/verify_ready.py
++++ round19-rerun/adapter/verify_ready.py
+@@ -1,10 +1,10 @@
+-"""R18 offline payload/dependency verification (shared pin utility)."""
++"""R19 offline payload/dependency verification (shared pin utility)."""
+ import importlib.util
+ from pathlib import Path
+ import sys
+ HERE=Path(__file__).resolve().parent
+ path=HERE.parent/'pin_ready.py'
+-s=importlib.util.spec_from_file_location('r18_shared_pins',path)
++s=importlib.util.spec_from_file_location('r19_shared_pins',path)
+ m=importlib.util.module_from_spec(s)
+ s.loader.exec_module(m)
+ if __name__=='__main__':

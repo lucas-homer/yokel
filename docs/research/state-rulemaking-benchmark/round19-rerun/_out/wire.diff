@@ -1,0 +1,194 @@
+--- round18-rerun/wire/SPEC.md
++++ round19-rerun/wire/SPEC.md
+@@ -1,15 +1,10 @@
+-# r16.w2.2 / r16.e3
++# r16.w2.3 / r16.e4
+ 
+-Copied from R16 protocol-w2-1. Only wire.py lines 1, 15–16 and the added prompt
+-line 318 change. A5 is appended verbatim to both profile prompts assembled by
+-build(). Response/schema/codec/validator code and dependency pins are unchanged.
+-`../_out/wire.diff` and test_r18.py prove the exact allowed text transformation.
+-
+-The R17 S1 regression reads content.body and reconstructs source from plan.json,
+-merges unit 51's two if L leaves in memory, removes the redundant link/leaf,
+-and validates against a new R18 plan. Original still fails role_cardinality.
+-No reference scoring or repaired output publication occurs.
+-
+-Existing tests are adapted only for frozen sibling paths and A5 request sizing.
+-The frozen independent suite retains its pre-existing single expected source
+-envelope assertion failure (54/55); no unexpected failure is permitted.
++Copy of R18 wire; only revision/envelope labels and the conditional A7 append
++change in wire.py. A7 plus newline follows A5 only for opaque. Full prompt is
++byte-identical to R18; schema/codec/validator/guards/dependency pins are fixed.
++test_r18.py retains the A5 mechanical regression and tests the exact allowed
++R18-to-R19 source transformation. test_a7.py checks all three frozen sources-r2
++under both profiles, comparing every body field and reporting guarded sizes.
++No output is scored. The independent suite retains its one historical expected
++source-envelope assertion failure (54/55); no unexpected failure is permitted.
+--- round18-rerun/wire/test_a7.py
++++ round19-rerun/wire/test_a7.py
+@@ -0,0 +1,89 @@
++"""Exact A7-only delta on all frozen sources-r2, both profiles; offline only."""
++import copy
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import unittest
++
++HERE = Path(__file__).resolve().parent
++BENCH = HERE.parent.parent
++SENTENCE = ('For an exemption or exception, preserve the exact exempted case and exemption '
++    'wording in the linked L leaf even when already stated in the unit assertion, using if '
++    'when the unit asserts the exemption itself and unless when the clause carves out of '
++    'the unit assertion; explanatory reasons alone do not preserve the exempted case.')
++
++
++def load(name, path):
++    s = importlib.util.spec_from_file_location(name, path)
++    m = importlib.util.module_from_spec(s)
++    s.loader.exec_module(m)
++    return m
++
++
++w = load('r19_a7_wire', HERE / 'wire.py')
++old = load('r18_a7_baseline', BENCH / 'round18-rerun/wire/wire.py')
++SOURCES = BENCH / 'round17-paid-comparison/sources-r2'
++SOURCE_IDS = ('26-19-039', '26-19-041', '26-19-106')
++
++
++def plans():
++    ready = json.loads((SOURCES / 'READY.json').read_bytes())
++    assert ready['selected'] == list(SOURCE_IDS)
++    for sid in SOURCE_IDS:
++        raw = (SOURCES / sid / 'parsed-body.txt').read_bytes()
++        assert hashlib.sha256(raw).hexdigest() == ready['files'][sid + '/parsed-body.txt']['sha256']
++        source = raw.decode('utf-8')
++        for profile in ('opaque', 'full'):
++            yield sid, profile, old.build(source, profile), w.build(source, profile)
++
++
++class A7Tests(unittest.TestCase):
++    def test_opaque_prompt_exact_normative_append_after_a5(self):
++        amendment = (HERE.parent / 'amendments/A7.md').read_text()
++        self.assertIn('> "' + SENTENCE + '"\n', amendment)
++        before, after = old._system_prompt('opaque'), w._system_prompt('opaque')
++        self.assertEqual(after.encode(), before.encode() + (SENTENCE + '\n').encode())
++        self.assertTrue(before.endswith('Never emit two links of the same role on one unit.\n'))
++        self.assertEqual(after.count(SENTENCE), 1)
++
++    def test_full_prompt_byte_identical_to_r18(self):
++        self.assertEqual(w._system_prompt('full').encode(), old._system_prompt('full').encode())
++
++    def test_all_other_body_keys_equal_all_three_sources_both_profiles(self):
++        for sid, profile, before, after in plans():
++            with self.subTest(source=sid, profile=profile):
++                self.assertEqual(before['table'], after['table'])
++                expected = copy.deepcopy(before['body'])
++                if profile == 'opaque':
++                    expected['messages'][0]['content'] += SENTENCE + '\n'
++                self.assertEqual(after['body'], expected)
++                self.assertEqual(set(after['body']), set(before['body']))
++                self.assertEqual(after['body']['messages'][1:], before['body']['messages'][1:])
++                self.assertEqual(after['body']['messages'][0]['role'], 'system')
++                if profile == 'full':
++                    self.assertEqual(w.common.encode(after['body']), old.common.encode(before['body']))
++
++    def test_six_requests_under_40000_guard_with_size_receipt(self):
++        measurements = []
++        for sid, profile, before, after in plans():
++            with self.subTest(source=sid, profile=profile):
++                before_raw = old.common.encode(before['body'])
++                raw = w.common.encode(after['body'])
++                delta = len(raw) - len(before_raw)
++                expected_delta = len(w.common.encode(SENTENCE + '\n')) - 2 if profile == 'opaque' else 0
++                self.assertEqual(delta, expected_delta)
++                self.assertLess(len(raw) + 1024, 40000)
++                measurements.append(dict(source_id=sid, profile=profile,
++                    r18_body_bytes=len(before_raw), body_bytes=len(raw),
++                    guarded_bytes=len(raw) + 1024, guard_limit=40000,
++                    residual_guard_bytes=40000 - len(raw) - 1024, body_byte_delta=delta))
++        value = dict(prompt_utf8_byte_delta=dict(opaque=len((SENTENCE + '\n').encode()), full=0),
++            encoded_prompt_byte_delta=dict(opaque=len(w.common.encode(SENTENCE + '\n')) - 2, full=0),
++            requests=measurements, provider_calls=0, network_calls=0)
++        (HERE.parent / '_out/request-sizes.json').write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
++        print('R19 A7 request sizes:', json.dumps(value, sort_keys=True))
++
++
++if __name__ == '__main__':
++    unittest.main(verbosity=2)
+--- round18-rerun/wire/test_r18.py
++++ round19-rerun/wire/test_r18.py
+@@ -1,4 +1,4 @@
+-"""A5 prompt-only proof and mechanical regression; never score the R17 output."""
++"""A7 prompt-only proof and mechanical regression; never score the R17 output."""
+ import copy
+ import importlib.util
+ import json
+@@ -12,7 +12,7 @@
+     s.loader.exec_module(m)
+     return m
+ w = load('r18_wire_regression', HERE/'wire.py')
+-old = load('r17_frozen_wire', w.BENCH/'round16-wire-compat/protocol-w2-1/wire.py')
++old = load('r17_frozen_wire', w.BENCH/'round18-rerun/wire/wire.py')
+ SENTENCE = ('If a unit has several conditions of the same role (if, onlyif, unless or obj), '
+     'emit a single link of that role to one L leaf whose fragments cover each condition in '
+     'source order (up to 8). Never emit two links of the same role on one unit.')
+@@ -21,13 +21,13 @@
+ class A5Tests(unittest.TestCase):
+     def test_only_prompt_and_version_text_changes(self):
+         original = Path(old.__file__).read_text()
+-        expected = original.replace('r16.w2.1', 'r16.w2.2').replace('r16.e2', 'r16.e3')
+-        expected = expected.replace('    return prompt\n', '    prompt += '+repr(SENTENCE+'\n')+'\n    return prompt\n')
++        expected = original.replace('r16.w2.2', 'r16.w2.3').replace('r16.e3', 'r16.e4')
++        expected = expected.replace('    return prompt\n', "    if profile == 'opaque':\n        prompt += 'For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\\n'\n    return prompt\n")
+         self.assertEqual((HERE/'wire.py').read_text(), expected)
+         for profile in ('opaque', 'full'):
+             before = old.build('Operators must file notices.', profile)
+             after = w.build('Operators must file notices.', profile)
+-            self.assertEqual(after['body']['messages'][0]['content'], before['body']['messages'][0]['content'] + SENTENCE+'\n')
++            self.assertEqual(after['body']['messages'][0]['content'], before['body']['messages'][0]['content'] + ('For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\n' if profile == 'opaque' else ''))
+             self.assertEqual(after['body']['response_format'], before['body']['response_format'])
+             self.assertEqual(after['table'], before['table'])
+ 
+--- round18-rerun/wire/test_wire.py
++++ round19-rerun/wire/test_wire.py
+@@ -491,8 +491,8 @@
+             before = old_wire._system_prompt(profile)
+             after = wire._system_prompt(profile)
+             self.assertEqual(before.count(old), 1)
+-            self.assertEqual(after, before.replace(old, new) + 'If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.\n')
+-            self.assertEqual(len(common.encode(after)) - len(common.encode(before)), 82 + len('If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.') + 2)
++            self.assertEqual(after, before.replace(old, new) + 'If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.\n' + ('For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\n' if profile == 'opaque' else ''))
++            self.assertEqual(len(common.encode(after)) - len(common.encode(before)), 82 + len('If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.') + 2 + (len(common.encode('For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\n')) - 2 if profile == 'opaque' else 0))
+ 
+     def test_T4_both_profiles_lint_and_checker(self):
+         for profile, count in [('full', 30), ('opaque', 25)]:
+--- round18-rerun/wire/wire.py
++++ round19-rerun/wire/wire.py
+@@ -1,4 +1,4 @@
+-"""Offline r16.w2.2 revision: unchanged r16.w1 response, r16.e3 request envelope."""
++"""Offline r16.w2.3 revision: unchanged r16.w1 response, r16.e4 request envelope."""
+ import copy
+ import hashlib
+ import importlib.util
+@@ -12,8 +12,8 @@
+ R15_READY_SHA256 = 'dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50'
+ COMMON_SHA256 = 'a341e11b6b0d49b130c28d8881ef4b71748161bcfc0d15c41384bc150f35bdc5'
+ VERSION = 'r16.w1'
+-REVISION = 'r16.w2.2'
+-ENVELOPE_VERSION = 'r16.e3'
++REVISION = 'r16.w2.3'
++ENVELOPE_VERSION = 'r16.e4'
+ FRAGMENT_KEYS = ('a', 'h', 'ho', 'z', 't', 'to')
+ 
+ 
+@@ -316,6 +316,8 @@
+                    'clauses in exact fragments and their source-supported links; use uncertainty '
+                    'and qual for unresolved logic. Do not emit typed-logic nodes.\n')
+     prompt += 'If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.\n'
++    if profile == 'opaque':
++        prompt += 'For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\n'
+     return prompt
+ 
+ 

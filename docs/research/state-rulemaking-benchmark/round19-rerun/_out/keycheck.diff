@@ -1,0 +1,37 @@
+--- round18-rerun/keycheck/README.md
++++ round19-rerun/keycheck/README.md
+@@ -1,4 +1,4 @@
+-# R18 keycheck v3
++# R19 keycheck v3
+ 
+ Offline copy of keycheck-job-v2. Future primary-owned metadata job uses the same
+ fixed GET, TLS/diagnostic rules, timeout and native grammar. PASS accepts a
+@@ -8,7 +8,7 @@
+ 
+ Prepare only unsigned proposals with make_keycheck_proposal.py using a fresh
+ reviewed stage containing adapter.py (keycheck.py bytes) and accepted REVIEW.md.
+-Use scope docketclock-research-r18-authorized-20261014, fresh expiry and the
++Use scope docketclock-research-r19-authorized-20261014, fresh expiry and the
+ existing authorized native credential route; do not include credential values.
+ Primary owns review/sign/check/run and baseline acceptance. No such command
+ was executed by this offline implementation. See ../release-prep/README.md.
+--- round18-rerun/keycheck/make_keycheck_proposal.py
++++ round19-rerun/keycheck/make_keycheck_proposal.py
+@@ -60,7 +60,7 @@
+     need(0 < len(pins) <= 10000 and core['timeout_max_seconds'] >= 30)
+     need(all(within(p, core['dependency_roots']) and p.is_file() for p in pins))
+     files = {str(p): digest(p) for p in sorted(pins)}
+-    job_id = 'r18-keycheck-v3-' + time.strftime('%Y%m%d%H%M%S', time.gmtime(now)) + '-' + uuid.uuid4().hex[:12]
++    job_id = 'r19-keycheck-v3-' + time.strftime('%Y%m%d%H%M%S', time.gmtime(now)) + '-' + uuid.uuid4().hex[:12]
+     proposal = {'schema_version': 'yokel.research-job.v1', 'job_id': job_id,
+         'scope_id': scope_id, 'project': 'yokel.docketclock.research',
+         'expires_unix': expires_unix, 'provider_variables': ['OPENROUTER_API_KEY'],
+@@ -69,7 +69,7 @@
+         'budget': {'prior_nanousd': prior_nanousd, 'reservation_nanousd': 0,
+                    'ceiling_nanousd': ceiling_nanousd},
+         'review': {'path': str(review), 'sha256': files[str(review)]}}
+-    manifest = {'schema_version': 'r18.keycheck-stage.v3', 'job_id': job_id,
++    manifest = {'schema_version': 'r19.keycheck-stage.v3', 'job_id': job_id,
+         'stage': str(stage), 'files': [
+             {'source': str(HERE / 'keycheck.py'), 'staged': str(adapter), 'sha256': files[str(adapter)]},
+             {'role': 'primary-accepted-independent-review', 'staged': str(review), 'sha256': files[str(review)]}],

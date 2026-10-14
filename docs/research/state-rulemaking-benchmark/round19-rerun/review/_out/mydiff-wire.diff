@@ -1,0 +1,311 @@
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/READY.json /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/READY.json
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/READY.json	2026-10-14 11:41:50
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/READY.json	2026-10-14 14:27:50
+@@ -24,15 +24,15 @@
+     }
+   },
+   "dispatch_authorized": false,
+-  "envelope_version": "r16.e3",
++  "envelope_version": "r16.e4",
+   "files": {
+     "ERRATA.md": {
+       "bytes": 653,
+       "sha256": "5892ce577773de980c1dee03ccdb565fb7fbecc2bd7bc0ba8f5a6d97ef0faa8c"
+     },
+     "SPEC.md": {
+-      "bytes": 869,
+-      "sha256": "4d40850cc9b98ed73626121232bf21ac585c4e7c2aec40cb3c1760e66e14670d"
++      "bytes": 649,
++      "sha256": "4d2d8ec5dd4c595b5ded964ff5760d7159227f46d159dce786adf276ecdca233"
+     },
+     "frozen-inputs.json": {
+       "bytes": 9866,
+@@ -42,21 +42,25 @@
+       "bytes": 3888,
+       "sha256": "a9fd117af03b196cf28b9909ea59a349c69d2d33a1b53bfaa2394c0676c64d3d"
+     },
++    "test_a7.py": {
++      "bytes": 4474,
++      "sha256": "d7ec4d1228752a2a65777d741192e3d19450f363c5bd7ff6a20641c7a3e8d3cb"
++    },
+     "test_r18.py": {
+-      "bytes": 3173,
+-      "sha256": "0cae52bfd00233dfc0714e29228a4c97931f6618dfce360b7447aca04d17f838"
++      "bytes": 3853,
++      "sha256": "818a234428fbc84cb0134849897dad6dec93e6be18364cfad42d499b6d74a3e9"
+     },
+     "test_wire.py": {
+-      "bytes": 40980,
+-      "sha256": "b7eaf80fb2fba0b90451d2cc690e43b514ba46b75b4d50b86e27631cfcf08c8e"
++      "bytes": 41739,
++      "sha256": "4dd244b625b35745c28455bf47a667d3c429af27fe12b8dad49fd2acf2dbe72b"
+     },
+     "verify.py": {
+       "bytes": 1634,
+       "sha256": "74962ef8137d2f463eca886892879997b201260c5ebdddb67a6e783b7c1623cf"
+     },
+     "wire.py": {
+-      "bytes": 16123,
+-      "sha256": "0f8e44476b509a28b68739f83c0e557198a9990079bf8c108ff00071ecd56bef"
++      "bytes": 16502,
++      "sha256": "f17af0190dbc35eeeeeb1df00afe594f555f0a4df80aa9cb842083d9713c0ffb"
+     }
+   },
+   "frozen_inputs_unchanged": true,
+@@ -78,18 +82,19 @@
+   "network_calls": 0,
+   "production_eligible": false,
+   "provider_calls": 0,
+-  "revision": "r16.w2.2",
+-  "schema_version": "r18.offline-ready.v1",
++  "revision": "r16.w2.3",
++  "schema_version": "r19.offline-ready.v1",
+   "self_pin": "READY excludes itself; primary pins exact hash externally",
+   "sha256": {
+     "ERRATA.md": "5892ce577773de980c1dee03ccdb565fb7fbecc2bd7bc0ba8f5a6d97ef0faa8c",
+-    "SPEC.md": "4d40850cc9b98ed73626121232bf21ac585c4e7c2aec40cb3c1760e66e14670d",
++    "SPEC.md": "4d2d8ec5dd4c595b5ded964ff5760d7159227f46d159dce786adf276ecdca233",
+     "frozen-inputs.json": "ca1e68a36ca2c9082d99f6ad16e3ca2acb9499e8d4fbb04b00278f7fda638721",
+     "run_independent.py": "a9fd117af03b196cf28b9909ea59a349c69d2d33a1b53bfaa2394c0676c64d3d",
+-    "test_r18.py": "0cae52bfd00233dfc0714e29228a4c97931f6618dfce360b7447aca04d17f838",
+-    "test_wire.py": "b7eaf80fb2fba0b90451d2cc690e43b514ba46b75b4d50b86e27631cfcf08c8e",
++    "test_a7.py": "d7ec4d1228752a2a65777d741192e3d19450f363c5bd7ff6a20641c7a3e8d3cb",
++    "test_r18.py": "818a234428fbc84cb0134849897dad6dec93e6be18364cfad42d499b6d74a3e9",
++    "test_wire.py": "4dd244b625b35745c28455bf47a667d3c429af27fe12b8dad49fd2acf2dbe72b",
+     "verify.py": "74962ef8137d2f463eca886892879997b201260c5ebdddb67a6e783b7c1623cf",
+-    "wire.py": "0f8e44476b509a28b68739f83c0e557198a9990079bf8c108ff00071ecd56bef"
++    "wire.py": "f17af0190dbc35eeeeeb1df00afe594f555f0a4df80aa9cb842083d9713c0ffb"
+   },
+   "signing_key_accessed": false,
+   "status": "READY_OFFLINE_IMPLEMENTATION",
+@@ -104,11 +109,11 @@
+       ],
+       "output": "_out/python312-tests.txt",
+       "output_pin": {
+-        "bytes": 11168,
+-        "sha256": "9b68c9c8875c4404d3b289d5068cf8f2614afa35b2353b993cad85029dee5fea"
++        "bytes": 13035,
++        "sha256": "a413786eb331dc80b04d85ffe822a477cde8cbf6eecf1c9322f08799eb48528d"
+       },
+-      "passed": 100,
+-      "run": 100
++      "passed": 104,
++      "run": 104
+     },
+     "system": {
+       "executable": "/usr/local/bin/python3",
+@@ -120,11 +125,11 @@
+       ],
+       "output": "_out/system-tests.txt",
+       "output_pin": {
+-        "bytes": 11168,
+-        "sha256": "bbbe507084c74dc8606e8009c2594a30e1f8faf0911eb6d611b1762bf27cb8ac"
++        "bytes": 13035,
++        "sha256": "65d34c03e6d2feba13b4dc7e2c307db435937d037d223a00072ff40bfda06747"
+       },
+-      "passed": 100,
+-      "run": 100
++      "passed": 104,
++      "run": 104
+     }
+   },
+   "version": "r16.w1"
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/SPEC.md /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/SPEC.md
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/SPEC.md	2026-10-14 11:31:58
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/SPEC.md	2026-10-14 14:24:43
+@@ -1,15 +1,10 @@
+-# r16.w2.2 / r16.e3
++# r16.w2.3 / r16.e4
+ 
+-Copied from R16 protocol-w2-1. Only wire.py lines 1, 15–16 and the added prompt
+-line 318 change. A5 is appended verbatim to both profile prompts assembled by
+-build(). Response/schema/codec/validator code and dependency pins are unchanged.
+-`../_out/wire.diff` and test_r18.py prove the exact allowed text transformation.
+-
+-The R17 S1 regression reads content.body and reconstructs source from plan.json,
+-merges unit 51's two if L leaves in memory, removes the redundant link/leaf,
+-and validates against a new R18 plan. Original still fails role_cardinality.
+-No reference scoring or repaired output publication occurs.
+-
+-Existing tests are adapted only for frozen sibling paths and A5 request sizing.
+-The frozen independent suite retains its pre-existing single expected source
+-envelope assertion failure (54/55); no unexpected failure is permitted.
++Copy of R18 wire; only revision/envelope labels and the conditional A7 append
++change in wire.py. A7 plus newline follows A5 only for opaque. Full prompt is
++byte-identical to R18; schema/codec/validator/guards/dependency pins are fixed.
++test_r18.py retains the A5 mechanical regression and tests the exact allowed
++R18-to-R19 source transformation. test_a7.py checks all three frozen sources-r2
++under both profiles, comparing every body field and reporting guarded sizes.
++No output is scored. The independent suite retains its one historical expected
++source-envelope assertion failure (54/55); no unexpected failure is permitted.
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/test_a7.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/test_a7.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/test_a7.py	1969-12-31 16:00:00
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/test_a7.py	2026-10-14 14:24:16
+@@ -0,0 +1,89 @@
++"""Exact A7-only delta on all frozen sources-r2, both profiles; offline only."""
++import copy
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import unittest
++
++HERE = Path(__file__).resolve().parent
++BENCH = HERE.parent.parent
++SENTENCE = ('For an exemption or exception, preserve the exact exempted case and exemption '
++    'wording in the linked L leaf even when already stated in the unit assertion, using if '
++    'when the unit asserts the exemption itself and unless when the clause carves out of '
++    'the unit assertion; explanatory reasons alone do not preserve the exempted case.')
++
++
++def load(name, path):
++    s = importlib.util.spec_from_file_location(name, path)
++    m = importlib.util.module_from_spec(s)
++    s.loader.exec_module(m)
++    return m
++
++
++w = load('r19_a7_wire', HERE / 'wire.py')
++old = load('r18_a7_baseline', BENCH / 'round18-rerun/wire/wire.py')
++SOURCES = BENCH / 'round17-paid-comparison/sources-r2'
++SOURCE_IDS = ('26-19-039', '26-19-041', '26-19-106')
++
++
++def plans():
++    ready = json.loads((SOURCES / 'READY.json').read_bytes())
++    assert ready['selected'] == list(SOURCE_IDS)
++    for sid in SOURCE_IDS:
++        raw = (SOURCES / sid / 'parsed-body.txt').read_bytes()
++        assert hashlib.sha256(raw).hexdigest() == ready['files'][sid + '/parsed-body.txt']['sha256']
++        source = raw.decode('utf-8')
++        for profile in ('opaque', 'full'):
++            yield sid, profile, old.build(source, profile), w.build(source, profile)
++
++
++class A7Tests(unittest.TestCase):
++    def test_opaque_prompt_exact_normative_append_after_a5(self):
++        amendment = (HERE.parent / 'amendments/A7.md').read_text()
++        self.assertIn('> "' + SENTENCE + '"\n', amendment)
++        before, after = old._system_prompt('opaque'), w._system_prompt('opaque')
++        self.assertEqual(after.encode(), before.encode() + (SENTENCE + '\n').encode())
++        self.assertTrue(before.endswith('Never emit two links of the same role on one unit.\n'))
++        self.assertEqual(after.count(SENTENCE), 1)
++
++    def test_full_prompt_byte_identical_to_r18(self):
++        self.assertEqual(w._system_prompt('full').encode(), old._system_prompt('full').encode())
++
++    def test_all_other_body_keys_equal_all_three_sources_both_profiles(self):
++        for sid, profile, before, after in plans():
++            with self.subTest(source=sid, profile=profile):
++                self.assertEqual(before['table'], after['table'])
++                expected = copy.deepcopy(before['body'])
++                if profile == 'opaque':
++                    expected['messages'][0]['content'] += SENTENCE + '\n'
++                self.assertEqual(after['body'], expected)
++                self.assertEqual(set(after['body']), set(before['body']))
++                self.assertEqual(after['body']['messages'][1:], before['body']['messages'][1:])
++                self.assertEqual(after['body']['messages'][0]['role'], 'system')
++                if profile == 'full':
++                    self.assertEqual(w.common.encode(after['body']), old.common.encode(before['body']))
++
++    def test_six_requests_under_40000_guard_with_size_receipt(self):
++        measurements = []
++        for sid, profile, before, after in plans():
++            with self.subTest(source=sid, profile=profile):
++                before_raw = old.common.encode(before['body'])
++                raw = w.common.encode(after['body'])
++                delta = len(raw) - len(before_raw)
++                expected_delta = len(w.common.encode(SENTENCE + '\n')) - 2 if profile == 'opaque' else 0
++                self.assertEqual(delta, expected_delta)
++                self.assertLess(len(raw) + 1024, 40000)
++                measurements.append(dict(source_id=sid, profile=profile,
++                    r18_body_bytes=len(before_raw), body_bytes=len(raw),
++                    guarded_bytes=len(raw) + 1024, guard_limit=40000,
++                    residual_guard_bytes=40000 - len(raw) - 1024, body_byte_delta=delta))
++        value = dict(prompt_utf8_byte_delta=dict(opaque=len((SENTENCE + '\n').encode()), full=0),
++            encoded_prompt_byte_delta=dict(opaque=len(w.common.encode(SENTENCE + '\n')) - 2, full=0),
++            requests=measurements, provider_calls=0, network_calls=0)
++        (HERE.parent / '_out/request-sizes.json').write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
++        print('R19 A7 request sizes:', json.dumps(value, sort_keys=True))
++
++
++if __name__ == '__main__':
++    unittest.main(verbosity=2)
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/test_r18.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/test_r18.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/test_r18.py	2026-10-14 11:30:13
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/test_r18.py	2026-10-14 14:23:04
+@@ -1,4 +1,4 @@
+-"""A5 prompt-only proof and mechanical regression; never score the R17 output."""
++"""A7 prompt-only proof and mechanical regression; never score the R17 output."""
+ import copy
+ import importlib.util
+ import json
+@@ -12,7 +12,7 @@
+     s.loader.exec_module(m)
+     return m
+ w = load('r18_wire_regression', HERE/'wire.py')
+-old = load('r17_frozen_wire', w.BENCH/'round16-wire-compat/protocol-w2-1/wire.py')
++old = load('r17_frozen_wire', w.BENCH/'round18-rerun/wire/wire.py')
+ SENTENCE = ('If a unit has several conditions of the same role (if, onlyif, unless or obj), '
+     'emit a single link of that role to one L leaf whose fragments cover each condition in '
+     'source order (up to 8). Never emit two links of the same role on one unit.')
+@@ -21,13 +21,13 @@
+ class A5Tests(unittest.TestCase):
+     def test_only_prompt_and_version_text_changes(self):
+         original = Path(old.__file__).read_text()
+-        expected = original.replace('r16.w2.1', 'r16.w2.2').replace('r16.e2', 'r16.e3')
+-        expected = expected.replace('    return prompt\n', '    prompt += '+repr(SENTENCE+'\n')+'\n    return prompt\n')
++        expected = original.replace('r16.w2.2', 'r16.w2.3').replace('r16.e3', 'r16.e4')
++        expected = expected.replace('    return prompt\n', "    if profile == 'opaque':\n        prompt += 'For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\\n'\n    return prompt\n")
+         self.assertEqual((HERE/'wire.py').read_text(), expected)
+         for profile in ('opaque', 'full'):
+             before = old.build('Operators must file notices.', profile)
+             after = w.build('Operators must file notices.', profile)
+-            self.assertEqual(after['body']['messages'][0]['content'], before['body']['messages'][0]['content'] + SENTENCE+'\n')
++            self.assertEqual(after['body']['messages'][0]['content'], before['body']['messages'][0]['content'] + ('For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\n' if profile == 'opaque' else ''))
+             self.assertEqual(after['body']['response_format'], before['body']['response_format'])
+             self.assertEqual(after['table'], before['table'])
+ 
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/test_wire.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/test_wire.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/test_wire.py	2026-10-14 11:35:32
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/test_wire.py	2026-10-14 14:23:04
+@@ -491,8 +491,8 @@
+             before = old_wire._system_prompt(profile)
+             after = wire._system_prompt(profile)
+             self.assertEqual(before.count(old), 1)
+-            self.assertEqual(after, before.replace(old, new) + 'If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.\n')
+-            self.assertEqual(len(common.encode(after)) - len(common.encode(before)), 82 + len('If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.') + 2)
++            self.assertEqual(after, before.replace(old, new) + 'If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.\n' + ('For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\n' if profile == 'opaque' else ''))
++            self.assertEqual(len(common.encode(after)) - len(common.encode(before)), 82 + len('If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.') + 2 + (len(common.encode('For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\n')) - 2 if profile == 'opaque' else 0))
+ 
+     def test_T4_both_profiles_lint_and_checker(self):
+         for profile, count in [('full', 30), ('opaque', 25)]:
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/wire.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/wire.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/wire/wire.py	2026-10-14 11:26:04
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/wire/wire.py	2026-10-14 14:23:04
+@@ -1,4 +1,4 @@
+-"""Offline r16.w2.2 revision: unchanged r16.w1 response, r16.e3 request envelope."""
++"""Offline r16.w2.3 revision: unchanged r16.w1 response, r16.e4 request envelope."""
+ import copy
+ import hashlib
+ import importlib.util
+@@ -12,8 +12,8 @@
+ R15_READY_SHA256 = 'dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50'
+ COMMON_SHA256 = 'a341e11b6b0d49b130c28d8881ef4b71748161bcfc0d15c41384bc150f35bdc5'
+ VERSION = 'r16.w1'
+-REVISION = 'r16.w2.2'
+-ENVELOPE_VERSION = 'r16.e3'
++REVISION = 'r16.w2.3'
++ENVELOPE_VERSION = 'r16.e4'
+ FRAGMENT_KEYS = ('a', 'h', 'ho', 'z', 't', 'to')
+ 
+ 
+@@ -316,6 +316,8 @@
+                    'clauses in exact fragments and their source-supported links; use uncertainty '
+                    'and qual for unresolved logic. Do not emit typed-logic nodes.\n')
+     prompt += 'If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.\n'
++    if profile == 'opaque':
++        prompt += 'For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\n'
+     return prompt
+ 
+ 

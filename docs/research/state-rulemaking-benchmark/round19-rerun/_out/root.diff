@@ -1,0 +1,618 @@
+--- round18-rerun/SPEC.md
++++ round19-rerun/SPEC.md
+@@ -1,20 +1,23 @@
+-# R18 offline implementation
++# R19 offline implementation
+ 
+-Owned scope is this directory only. Frozen R16/R17 inputs are copied or reused,
+-never modified. `implement_offline.py` records their complete SHA256 inventory
+-before copying. Generated historical proposals/logs are not current R18 evidence.
++Owned scope is this directory only. `amendments/A7.md` is normative and untouched.
++`implement_offline.py` records the complete frozen R14–R18 SHA256 inventory before
++copying R18's pinned offline payloads. Historical live proposals/logs are excluded.
+ 
+-Wire r16.w2.2 / request envelope r16.e3 changes only A5 prompt text and version
+-labels. Response r16.w1, schema, codec, r15.1 validator and cardinality are fixed.
+-Adapter r1.5 and recon apply A6's non-negative integer nanoUSD baseline U0;
+-keycheck v3 records its candidate without asserting primary acceptance.
+-Release preparation reuses the P-ACCEPT design and frozen R17 gates/sources.
++Wire r16.w2.3 / envelope r16.e4 adds exactly A7 plus newline after A5, only for
++opaque. The full prompt is byte-identical to R18. Schema, codec, validator,
++cardinality, guards and dependency pins are unchanged. Adapter r1.6 changes only
++active paths, wire pin and namespace; A6 accounting is unchanged. Recon is loaded
++directly from frozen R18 by its old pin. Keycheck v3 executable is byte-identical.
++Release preparation preserves the R17 P-ACCEPT design, sources, reference/gate/
++scoring evidence and normalized historical CAP-ACCEPTANCE; A7 enters its pin closure.
+ 
+-Run `python3 -I -S -B offline_tests.py` with each authorized interpreter; then
+-`python3 -I -S -B pin_ready.py` and `python3 -I -S -B pin_ready.py --verify`.
+-These commands perform local tests and hashing only. Tests inject synthetic
+-transports/environments; no actual credentials, native tools, provider or
+-network calls. Logs and test counts are under each folder's `_out/`.
++Run `python3 -I -S -B offline_tests.py` and the same command with
++`/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3.12`;
++then `python3 -I -S -B pin_ready.py` and `python3 -I -S -B pin_ready.py --verify`.
++These are local tests/hashing only, using synthetic transports/environments.
++No network, provider, credential, native runner, signing or release command runs.
+ 
+-READY means offline implementation only. Fresh keycheck, machine baseline,
+-independent review, bootstrap evidence and primary release remain outstanding.
++READY means offline implementation only. Fresh keycheck/U0, independent review,
++primary acceptance, bootstrap evidence and release remain primary-owned work.
++Component receipts, R18 diffs/hunk summary and six request sizes are under `_out/`.
+--- round18-rerun/DESIGN-NOTE.md
++++ round19-rerun/DESIGN-NOTE.md
+@@ -1,18 +1,17 @@
+-# R18 design selection
++# R19 design selection
+ 
+-Reuse `round17-paid-comparison/design-r3-1-paccept/` byte-for-byte, including its
+-original fixture/check pair, scoring rules, thresholds and P-ACCEPT evidence.
+-The adapter design-freeze gate excludes the separately pinned recon artifact,
+-so a changed design copy is unnecessary. R18 recon is an A6 runtime amendment;
+-the original recon stays in the design fixtures for historical gate evidence.
++Reuse frozen `round17-paid-comparison/design-r3-1-paccept/`, references, fixture
++gates, scoring manifest and CAP-ACCEPTANCE exactly as R18 did. A5/A6 are retained
++verbatim; A7 changes only opaque prompt guidance. No historical paid output is
++re-scored. S1 alone is weak evidence: uninspected S2/S3 carry generalization weight.
++Call order, futility rule, thresholds and outcomes remain fixed.
+ 
+-`amendments/A5-A6.md` is normative: A5 changes both prompts only; A6 records
+-machine-checked U0 at INIT. Account usage is U0 plus cumulative reported costs;
+-run accounting retains conservative debits and excludes U0. R17's dedicated-key
+-attestation remains historical evidence; A6 authorizes reuse for R18. No fresh
+-key state or review acceptance is asserted by this implementation.
++Reuse `round18-rerun/recon/r17recon.py` directly at SHA256
++`64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140`.
++The R19 staging closure includes that file and its original READY. Fresh keycheck
++must measure integer U0; no candidate or expected amount is primary acceptance.
+ 
+-Namespace `r18.paid-rerun.v1`; scope
+-`docketclock-research-r18-authorized-20261014`. Three fresh OPQ calls; no FULL,
+-no retry, no repaired R17 scoring. FLOOR 270000000, OPERATING 1800000000,
+-CAP 2000000000 nanoUSD; user's accepted $3 tolerance remains evidence.
++Namespace `r19.paid-rerun.v1`; scope
++`docketclock-research-r19-authorized-20261014`. Three fresh OPQ cells S1/S2/S3 =
++26-19-039/041/106; no FULL, no retry. FLOOR 270000000, OPERATING 1800000000,
++CAP 2000000000 nanoUSD; the existing accepted $3 tolerance remains evidence.
+--- round18-rerun/implement_offline.py
++++ round19-rerun/implement_offline.py
+@@ -1,133 +1,230 @@
+-"""One-time offline copy/amendment utility; writes only beneath this R18 directory."""
++"""One-time offline R18 + A7 build; writes only beneath this R19 directory."""
+ import difflib
+ import hashlib
+ import json
+ from pathlib import Path
+-import shutil
+ 
+ HERE = Path(__file__).resolve().parent
+ BENCH = HERE.parent
+-R17 = BENCH / 'round17-paid-comparison'
+-SENTENCE = ('If a unit has several conditions of the same role (if, onlyif, unless or obj), '
+-    'emit a single link of that role to one L leaf whose fragments cover each condition in '
+-    'source order (up to 8). Never emit two links of the same role on one unit.')
+-
+-def sha(p):
+-    return hashlib.sha256(p.read_bytes()).hexdigest()
++R18 = BENCH / 'round18-rerun'
++FOLDERS = ('wire', 'recon', 'adapter', 'keycheck', 'release-prep')
++
++
++def sha(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
+ 
+ def frozen():
+     return {p.relative_to(BENCH).as_posix(): sha(p)
+-        for root in (BENCH/'round16-wire-compat', R17)
+-        for p in sorted(root.rglob('*')) if p.is_file()}
++            for round_no in range(14, 19)
++            for root in sorted(BENCH.glob('round' + str(round_no) + '-*'))
++            for p in sorted(root.rglob('*')) if p.is_file()}
++
++
++def sentence():
++    lines = (HERE / 'amendments/A7.md').read_text().splitlines()
++    quoted = [line[3:-1] for line in lines if line.startswith('> "') and line.endswith('"')]
++    assert len(quoted) == 1, 'A7 must have exactly one normative quoted sentence'
++    return quoted[0]
++
++
++def write(rel, text):
++    path = HERE / rel
++    assert path.is_relative_to(HERE) and rel != 'amendments/A7.md'
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(text)
++
+ 
+ def edit(rel, pairs):
+-    p = HERE/rel
+-    text = p.read_text()
++    text = (HERE / rel).read_text()
+     for old, new in pairs:
+         assert old in text, (rel, old)
+         text = text.replace(old, new)
+-    p.write_text(text)
++    write(rel, text)
++
++
++def retarget(text):
++    return text.replace('round18-rerun', 'round19-rerun').replace('R18', 'R19').replace('r18', 'r19')
++
++
++def update_docs():
++    write('wire/SPEC.md', """# r16.w2.3 / r16.e4
++
++Copy of R18 wire; only revision/envelope labels and the conditional A7 append
++change in wire.py. A7 plus newline follows A5 only for opaque. Full prompt is
++byte-identical to R18; schema/codec/validator/guards/dependency pins are fixed.
++test_r18.py retains the A5 mechanical regression and tests the exact allowed
++R18-to-R19 source transformation. test_a7.py checks all three frozen sources-r2
++under both profiles, comparing every body field and reporting guarded sizes.
++No output is scored. The independent suite retains its one historical expected
++source-envelope assertion failure (54/55); no unexpected failure is permitted.
++""")
++    text = retarget((R18 / 'adapter/SPEC.md').read_text())
++    text = text.replace('# Adapter r1.5', '# Adapter r1.6')
++    text = text.replace('Copy of R17 adapter-r1-4. Namespace r19.paid-rerun.v1; new wire/recon pins.',
++        'Copy of R18 adapter r1.5. Namespace r19.paid-rerun.v1; new wire pin.\nFrozen R18 recon path and pin are reused directly.')
++    write('adapter/SPEC.md', text)
++    write('recon/SPEC.md', """# A6 recon reused from frozen R18
++
++No R19 recon executable copy. Adapter loads ../round18-rerun/recon/r17recon.py
++by SHA256 64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140.
++Its original READY is pinned and staged alongside the engine. R19 tests differ
++only in the engine path; the three original tests and all A6 behavior remain.
++NOTE.md is the unchanged historical A4 note inherited by R18, not the A6 pin.
++""")
++    edit('release-prep/README.md', [('recon artifact to R19 recon', 'recon artifact to frozen R18 recon')])
++    edit('release-prep/SPEC.md', [
++        ('active stage/run/adapter/wire/recon point to R19.', 'active stage/run/adapter/wire point to R19.\nRecon points to the unchanged frozen R18 engine and READY.'),
++        ('A5/A6 and DESIGN-NOTE are pinned.', 'A5/A6, A7 and DESIGN-NOTE are pinned.')])
++
+ 
+ def main():
+-    out = HERE/'_out'
+-    out.mkdir(exist_ok=True)
+-    (out/'frozen-before.json').write_text(json.dumps(frozen(), sort_keys=True, indent=2)+'\n')
+-    for src, dst in ((BENCH/'round16-wire-compat/protocol-w2-1', 'wire'),
+-                     (R17/'adapter-r1-4', 'adapter'), (R17/'recon-a4', 'recon'),
+-                     (R17/'keycheck-job-v2', 'keycheck'), (R17/'release-prep-a4-r2', 'release-prep')):
+-        shutil.copytree(src, HERE/dst, ignore=shutil.ignore_patterns(
+-            '__pycache__', 'evidence-*', 'proposals-*', 'primary-review*', 'LIVE-VARS.txt'))
+-        # Keep the adapter's copied, byte-identical review repros; discard prior logs.
+-        history = HERE/dst/'_out'
+-        if history.exists():
+-            for p in history.iterdir():
+-                if p.name != 'round2-repros':
+-                    shutil.rmtree(p) if p.is_dir() else p.unlink()
+-        else:
+-            history.mkdir()
++    assert not any((HERE / f).exists() for f in FOLDERS), 'one-time build: refuse existing components'
++    a7_before = sha(HERE / 'amendments/A7.md')
++    write('_out/frozen-before.json', json.dumps(frozen(), sort_keys=True, indent=2) + '\n')
++    # Copy the reviewed offline payload inventory, not live records or old logs.
++    for folder in FOLDERS:
++        ready = json.loads((R18 / folder / 'READY.json').read_bytes())
++        for name in ready['files']:
++            if name == 'STAGE-MANIFEST.json' or (folder == 'recon' and name == 'r17recon.py'):
++                continue
++            src, dst = R18 / folder / name, HERE / folder / name
++            assert sha(src) == ready['files'][name]['sha256'], str(src)
++            dst.parent.mkdir(parents=True, exist_ok=True)
++            dst.write_bytes(src.read_bytes())
++        (HERE / folder / '_out').mkdir(exist_ok=True)
++    write('amendments/A5-A6.md', (R18 / 'amendments/A5-A6.md').read_text())
++
+     edit('wire/wire.py', [
+-        ('Offline r16.w2.1 revision: unchanged r16.w1 response, r16.e2 request envelope.',
+-         'Offline r16.w2.2 revision: unchanged r16.w1 response, r16.e3 request envelope.'),
+-        ("REVISION = 'r16.w2.1'", "REVISION = 'r16.w2.2'"),
+-        ("ENVELOPE_VERSION = 'r16.e2'", "ENVELOPE_VERSION = 'r16.e3'"),
+-        ('    return prompt\n', '    prompt += '+repr(SENTENCE+'\n')+'\n    return prompt\n')])
+-    edit('wire/test_wire.py', [
+-        ("ROOT.parent / 'protocol/wire.py'", "BENCH / 'round16-wire-compat/protocol/wire.py'"),
+-        ("ROOT.parent / 'design", "BENCH / 'round16-wire-compat/design"),
+-        ('self.assertEqual(after, before.replace(old, new))',
+-         'self.assertEqual(after, before.replace(old, new) + '+repr(SENTENCE+'\n')+')'),
+-        ('self.assertEqual(len(common.encode(after)) - len(common.encode(before)), 82)',
+-         'self.assertEqual(len(common.encode(after)) - len(common.encode(before)), 82 + len('+repr(SENTENCE)+') + 2)')])
+-    # verify.inputs remains scoped to frozen R16, including in its synthetic scope test.
+-    edit('wire/verify.py', [("ROOT.parent / name", "tests.BENCH / 'round16-wire-compat' / name")])
+-    edit('recon/r17recon.py', [
+-        ('def key_limit_ok(limit, required_calls):', 'def key_limit_ok(limit, required_calls, initial_usage=0):'),
+-        ('return type(limit) is int and required_calls * FLOOR <= limit <= KEY_MAX',
+-         'return (type(limit) is int and type(initial_usage) is int and initial_usage >= 0\n'
+-         '            and required_calls * FLOOR <= limit - initial_usage and limit <= KEY_MAX)'),
+-        ('prev_usage: last reconciled usage (0 at INIT).', 'prev_usage: last reconciled usage (U0 at INIT).'),
+-        ("    tol, floor = i * TOL_PER_CALL, prev_usage", "    baseline = pinned.get('key_initial_usage', 0)\n    tol, floor = i * TOL_PER_CALL, prev_usage"),
+-        ('if u > cumulative_reported + tol:', 'if u > baseline + cumulative_reported + tol:'),
+-        ('if abs(u - cumulative_reported) <= tol:', 'if abs(u - (baseline + cumulative_reported)) <= tol:'),
+-        ('highest key usage since zero', 'highest key usage above INIT baseline U0'),
+-        ('return max(0, highest_usage - total)', "return max(0, highest_usage - entries[0].get('key_initial_usage', 0) - total)")])
++        ('r16.w2.2', 'r16.w2.3'), ('r16.e3', 'r16.e4'),
++        ('    return prompt\n', "    if profile == 'opaque':\n        prompt += " + repr(sentence() + '\n') + '\n    return prompt\n')])
++    a7_literal = repr(sentence() + '\n')
++    old_assert = "self.assertEqual(after, before.replace(old, new) + "
++    text = (HERE / 'wire/test_wire.py').read_text()
++    lines = text.splitlines(True)
++    for i, line in enumerate(lines):
++        if old_assert in line:
++            lines[i] = line.rstrip()[:-1] + " + (" + a7_literal + " if profile == 'opaque' else ''))\n"
++        if '82 + len(' in line:
++            lines[i] = line.rstrip()[:-1] + " + (len(common.encode(" + a7_literal + ")) - 2 if profile == 'opaque' else 0))\n"
++    write('wire/test_wire.py', ''.join(lines))
++    # Retain the A5 mechanical regression; compare the prompt delta to frozen R18.
++    edit('wire/test_r18.py', [
++        ('A5 prompt-only proof', 'A7 prompt-only proof'),
++        ("w.BENCH/'round16-wire-compat/protocol-w2-1/wire.py'", "w.BENCH/'round18-rerun/wire/wire.py'"),
++        ("original.replace('r16.w2.1', 'r16.w2.2').replace('r16.e2', 'r16.e3')", "original.replace('r16.w2.2', 'r16.w2.3').replace('r16.e3', 'r16.e4')"),
++        ("'    prompt += '+repr(SENTENCE+'\\n')+'\\n    return prompt\\n'", repr("    if profile == 'opaque':\n        prompt += " + a7_literal + '\n    return prompt\n')),
++        ("before['body']['messages'][0]['content'] + SENTENCE+'\\n'", "before['body']['messages'][0]['content'] + (" + a7_literal + " if profile == 'opaque' else '')")])
++
+     edit('adapter/r17_adapter.py', [
+-        ('R17 = HERE.parent\nBENCH = R17.parent\nDESIGN = R17',
+-         "R18 = HERE.parent\nBENCH = R18.parent\nR17 = BENCH / 'round17-paid-comparison'\nDESIGN = R17"),
+-        ("NAMESPACE = 'r17.paid-comparison.v1'", "NAMESPACE = 'r18.paid-rerun.v1'"),
+-        ("R17 / 'recon-a4/", "R18 / 'recon/"),
+-        ("BENCH / 'round16-wire-compat/protocol-w2-1/wire.py'", "R18 / 'wire/wire.py'"),
+-        ("== WIRE_SHA,\n            'source_wire_pin'", "== '662268ba0774d7ef5a121ec4af90003a3836c07e4ce5a5ae551a413fe8375ab1',\n            'source_wire_pin'"),
+-        ("    return (load_pinned('r17_exact_recon'", "    require(read(R18 / 'wire/READY.json')['sha256']['wire.py'] == WIRE_SHA, 'r18_wire_pin')\n    return (load_pinned('r17_exact_recon'"),
+-        ("'FLOOR': recon.FLOOR, 'KEY_MAX': recon.KEY_MAX, 'key_initial_usage': 0,", "'FLOOR': recon.FLOOR, 'KEY_MAX': recon.KEY_MAX,"),
+-        ("    calls = release.get('required_calls')", "    require(type(init.get('key_initial_usage')) is int and init['key_initial_usage'] >= 0,\n            'init_constants')\n    calls = release.get('required_calls')"),
+-        ("recon.key_limit_ok(init.get('key_limit'), len(calls))", "recon.key_limit_ok(init.get('key_limit'), len(calls), init['key_initial_usage'])"),
+-        ("machine.get('usage') == 0", "type(machine.get('usage')) is int and machine['usage'] == init['key_initial_usage']"),
+-        ("machine.get('limit_remaining') == init['key_limit']", "type(machine.get('limit_remaining')) is int\n            and machine['limit_remaining'] == init['key_limit'] - init['key_initial_usage']"),
+-        ("if e['type'] == 'RECONCILED'), 0)", "if e['type'] == 'RECONCILED'), entries[0]['key_initial_usage'])"),
+-        ("pinned = dict(limit=entries[0]['key_limit'], limit_reset=entries[0]['key_limit_reset'])",
+-         "pinned = dict(limit=entries[0]['key_limit'], limit_reset=entries[0]['key_limit_reset'],\n                  key_initial_usage=entries[0]['key_initial_usage'])"),
+-        ("abs(pre['usage'] - cumulative) <= count * 1000", "abs(pre['usage'] - (ledger.entries[0]['key_initial_usage'] + cumulative)) <= count * 1000"),
+-        ("RECON_SHA = '8c98fabdc73fad10336698fa695869966a631d5a7d99b797725f2c711b1b6bb0'", "RECON_SHA = '"+sha(HERE/'recon/r17recon.py')+"'"),
+-        ("WIRE_SHA = '662268ba0774d7ef5a121ec4af90003a3836c07e4ce5a5ae551a413fe8375ab1'", "WIRE_SHA = '"+sha(HERE/'wire/wire.py')+"'")])
+-    edit('adapter/native_entry.py', [("'adapter-r1-4/host_driver.py'", "'adapter/host_driver.py'")])
+-    edit('adapter/test_native.py', [("'adapter-r1-4/host_driver.py'", "'adapter/host_driver.py'")])
+-    edit('adapter/test_adapter.py', [("a.R17 / 'recon-a4/r17recon.py'", "a.R18 / 'recon/r17recon.py'")])
+-    edit('adapter/test_a4.py', [('def test_nonzero_initial_usage_refused', 'def test_negative_initial_usage_refused'),
+-                             ("self.refused_init('key_initial_usage', 1,", "self.refused_init('key_initial_usage', -1,")])
+-    edit('adapter/test_repros.py', [("REVIEW = HERE.parent / 'adapter-review'", "REVIEW = HERE.parent.parent / 'round17-paid-comparison/adapter-review'")])
+-    edit('adapter/test_round2.py', [("original = HERE.parent / 'adapter-review-r2'", "original = HERE.parent.parent / 'round17-paid-comparison/adapter-review-r2'")])
+-    edit('keycheck/keycheck.py', [
+-        ("'r17.keycheck-failure.v2'", "'r18.keycheck-failure.v3'"),
+-        ("'limit_remaining': decimal.Decimal('50.00'), 'limit_reset': None,\n            'usage': decimal.Decimal('0')", "'limit_remaining': None, 'limit_reset': None,\n            'usage': None"),
+-        ("checks['label'] = label_check", "checks['usage'] = fields['usage'] is not None and numeric(fields['usage'])\n    if fields['limit'] is not None and fields['usage'] is not None:\n        with decimal.localcontext() as ctx:\n            span = max(fields['limit'].adjusted(), fields['usage'].adjusted(), 0) - min(\n                fields['limit'].as_tuple().exponent, fields['usage'].as_tuple().exponent, 0) + 2\n            typed(span <= MAX_RAW, 'limit_remaining', None)\n            ctx.prec = max(28, span)\n            checks['limit_remaining'] = fields['limit_remaining'] == fields['limit'] - fields['usage']\n    else:\n        checks['limit_remaining'] = False\n    checks['label'] = label_check"),
+-        ("metadata = {'label_kind'", "metadata = {'key_initial_usage_candidate_usd': fields['usage'],\n        'label_kind'")])
+-    edit('keycheck/test_keycheck.py', [("'r17.keycheck-failure.v2'", "'r18.keycheck-failure.v3'")])
+-    for name in ('stage.py', 'make_proposals.py', 'release_records.py', 'test_release_prep.py', 'test_findings.py'):
+-        p = HERE/'release-prep'/name
+-        text = p.read_text().replace('adapter-r1-4', 'adapter')
+-        # Active run/stage namespace is R18; historical evidence paths handled separately.
+-        text = text.replace('round17-paid-comparison', 'round18-rerun')
+-        text = text.replace('recon-a4/', 'recon/')
+-        p.write_text(text)
+-    edit('release-prep/release_records.py', [
+-        ('def init_record(a, budget):', 'def init_record(a, budget, key_initial_usage):\n    a.require(type(key_initial_usage) is int and key_initial_usage >= 0, "key_initial_usage")'),
+-        ('key_initial_usage=0,', 'key_initial_usage=key_initial_usage,'),
+-        ("init.add_argument('--budget', type=Path, required=True)", "init.add_argument('--budget', type=Path, required=True)\n    init.add_argument('--key-initial-usage', type=int, required=True, help='machine-checked U0 in integer nanoUSD')"),
+-        ('init_record(a, args.budget.read_bytes())', 'init_record(a, args.budget.read_bytes(), args.key_initial_usage)')])
+-    edit('release-prep/make_proposals.py', [("'r17-s1-opq-'", "'r18-s1-opq-'"),
+-        ("job_id = 'r17-'", "job_id = 'r18-'"),
+-        ("default='r17-paid-comparison'", "default='docketclock-research-r18-authorized-20261014'"),
+-        (".r17-stage", ".r18-stage")])
+-    edit('release-prep/stage.py', [(".r17-stage", ".r18-stage")])
+-    # A4 evidence is reused verbatim. No new human or machine acceptance is fabricated.
+-    edit('release-prep/normalize_evidence.py', [("RUN = HERE.parent / 'run'", "RUN = HERE.parent.parent / 'round17-paid-comparison/run'")])
+-    edit('release-prep/test_findings.py', [('records.init_record(a, b\'synthetic budget\')', "records.init_record(a, b'synthetic budget', 59_408_500)")])
+-    for src, dst in ((BENCH/'round16-wire-compat/protocol-w2-1/wire.py', HERE/'wire/wire.py'),
+-                     (R17/'recon-a4/r17recon.py', HERE/'recon/r17recon.py')):
+-        (out/(dst.parent.name+'.diff')).write_text(''.join(difflib.unified_diff(
+-            src.read_text().splitlines(True), dst.read_text().splitlines(True),
+-            fromfile=src.relative_to(BENCH).as_posix(), tofile=dst.relative_to(BENCH).as_posix())))
++        ('R18 = HERE.parent\nBENCH = R18.parent', "R19 = HERE.parent\nBENCH = R19.parent\nR18 = BENCH / 'round18-rerun'"),
++        ("R18 / 'wire/", "R19 / 'wire/"),
++        ("'r18_wire_pin'", "'r19_wire_pin'"),
++        ("NAMESPACE = 'r18.paid-rerun.v1'", "NAMESPACE = 'r19.paid-rerun.v1'"),
++        ("WIRE_SHA = '" + sha(R18 / 'wire/wire.py') + "'", "WIRE_SHA = '" + sha(HERE / 'wire/wire.py') + "'")])
++    # R18 recon code and READY stay at their frozen path with their exact old pins.
++    edit('recon/test_recon.py', [("HERE / 'r17recon.py'", "HERE.parent.parent / 'round18-rerun/recon/r17recon.py'")])
++    for rel in ('adapter/pin_ready.py', 'adapter/verify_ready.py', 'adapter/run_tests.sh',
++                'release-prep/pin_ready.py', 'keycheck/README.md'):
++        write(rel, retarget((HERE / rel).read_text()))
++    # Keep keycheck.py and its failure grammar byte-identical; only job/stage IDs move.
++    edit('keycheck/make_keycheck_proposal.py', [('r18-keycheck-v3-', 'r19-keycheck-v3-'),
++                                              ('r18.keycheck-stage.v3', 'r19.keycheck-stage.v3')])
++    for name in ('stage.py', 'prepare_manifest.py', 'make_proposals.py', 'release_records.py',
++                 'test_release_prep.py', 'test_findings.py', 'test_a6.py', 'README.md', 'SPEC.md'):
++        rel = 'release-prep/' + name
++        write(rel, retarget((HERE / rel).read_text()))
++    edit('release-prep/prepare_manifest.py', [("('amendments/A5-A6.md', 'DESIGN-NOTE.md'", "('amendments/A5-A6.md', 'amendments/A7.md', 'DESIGN-NOTE.md'")])
++    edit('release-prep/test_a6.py', [
++        ("self.assertIn('round19-rerun/recon/r17recon.py',manifest)", "self.assertIn('round18-rerun/recon/r17recon.py',manifest)\n        self.assertIn('round19-rerun/amendments/A7.md',manifest)")])
++    edit('release-prep/test_release_prep.py', [
++        ("for name in ('recon/r17recon.py', 'recon/READY.json',", "for name in ('recon/READY.json',"),
++        ("self.assertIn('round17-paid-comparison/design-r3-1/fixtures/r17recon.py', manifest['files'])", "self.assertIn('round17-paid-comparison/design-r3-1/fixtures/r17recon.py', manifest['files'])\n        for name in ('r17recon.py', 'READY.json'):\n            rel = 'round18-rerun/recon/' + name\n            self.assertEqual(manifest['files'][rel], st.digest(st.read_regular(st.BENCH / rel)))")])
++
++    write('offline_tests.py', retarget((R18 / 'offline_tests.py').read_text()))
++    pins = retarget((R18 / 'pin_ready.py').read_text())
++    pins = pins.replace("wire='r16.w2.2'", "wire='r16.w2.3'").replace("adapter='r1.5'", "adapter='r1.6'")
++    pins = pins.replace("envelope_version='r16.e3'", "envelope_version='r16.e4'")
++    pins = pins.replace("for root in (BENCH/'round16-wire-compat', BENCH/'round17-paid-comparison')", "for round_no in range(14,19)\n        for root in sorted(BENCH.glob('round'+str(round_no)+'-*'))")
++    pins = pins.replace('frozen R16/R17 bytes', 'frozen R14–R18 bytes').replace('frozen_R16_R17_unchanged', 'frozen_R14_R18_unchanged')
++    pins = pins.replace("'round19-rerun/recon/r17recon.py','round19-rerun/recon/READY.json'", "'round18-rerun/recon/r17recon.py','round18-rerun/recon/READY.json'")
++    pins = pins.replace("    if folder == 'adapter':", "    if folder == 'recon':\n        names += ['round18-rerun/recon/r17recon.py','round18-rerun/recon/READY.json']\n    if folder == 'adapter':", 1)
++    pins = pins.replace("['round19-rerun/amendments/A5-A6.md', 'round19-rerun/DESIGN-NOTE.md']", "['round19-rerun/amendments/A5-A6.md', 'round19-rerun/amendments/A7.md', 'round19-rerun/DESIGN-NOTE.md']")
++    pins = pins.replace("roots.update({'amendments/A5-A6.md':pin(HERE/'amendments/A5-A6.md')})", "roots.update({n:pin(HERE/n) for n in ('amendments/A5-A6.md','amendments/A7.md','review/REVIEW.md')})")
++    write('pin_ready.py', pins)
++    update_docs()
++    assert sha(HERE / 'amendments/A7.md') == a7_before, 'A7 changed'
++    assert frozen() == json.loads((HERE / '_out/frozen-before.json').read_bytes()), 'frozen input drift'
++    print('R18 payload copied; A7 applied; frozen R14–R18 inventory unchanged.')
++
++
++def diff_reports():
++    summaries = {}
++    for folder in FOLDERS:
++        src, dst = R18 / folder, HERE / folder
++        names = set(json.loads((src / 'READY.json').read_bytes())['files'])
++        names |= {p.relative_to(dst).as_posix() for p in dst.rglob('*') if p.is_file()
++                  and p.name != 'READY.json' and '_out' not in p.relative_to(dst).parts}
++        combined = []
++        for name in sorted(names):
++            if name == 'STAGE-MANIFEST.json':
++                continue  # Derived pin closure gets its own diff after final pinning.
++            before = (src / name).read_text() if (src / name).exists() else ''
++            after = (dst / name).read_text() if (dst / name).exists() else ''
++            if before == after:
++                continue
++            if folder == 'recon' and name == 'r17recon.py':
++                summaries[folder + '/' + name] = dict(action='referenced, not copied',
++                    path='round18-rerun/recon/r17recon.py', sha256=sha(src / name), hunks=[])
++                continue
++            diff = list(difflib.unified_diff(before.splitlines(True), after.splitlines(True),
++                fromfile=(src / name).relative_to(BENCH).as_posix(),
++                tofile=(dst / name).relative_to(BENCH).as_posix()))
++            combined.extend(diff)
++            summaries[folder + '/' + name] = dict(
++                added=sum(x.startswith('+') and not x.startswith('+++') for x in diff),
++                removed=sum(x.startswith('-') and not x.startswith('---') for x in diff),
++                hunks=[x.rstrip() for x in diff if x.startswith('@@')],
++                changes=[x.rstrip() for x in diff if x[:1] in ('+','-') and not x.startswith(('+++','---'))])
++        write('_out/' + folder + '.diff', ''.join(combined))
++    before = (R18 / 'release-prep/STAGE-MANIFEST.json').read_text()
++    after = (HERE / 'release-prep/STAGE-MANIFEST.json').read_text()
++    diff = list(difflib.unified_diff(before.splitlines(True), after.splitlines(True),
++        fromfile='round18-rerun/release-prep/STAGE-MANIFEST.json', tofile='round19-rerun/release-prep/STAGE-MANIFEST.json'))
++    write('_out/stage-manifest.diff', ''.join(diff))
++    summaries['release-prep/STAGE-MANIFEST.json'] = dict(
++        reason='Derived hash closure: R19 paths/payload pins/A7; R18 recon pins reused; frozen R17 evidence unchanged.',
++        hunks=[x.rstrip() for x in diff if x.startswith('@@')])
++    for group, names in (
++        ('root', ('SPEC.md', 'DESIGN-NOTE.md', 'implement_offline.py', 'offline_tests.py', 'pin_ready.py', 'FILES-WRITTEN.txt')),
++        ('ready', tuple(folder + '/READY.json' for folder in FOLDERS))):
++        combined = []
++        for name in names:
++            before = (R18 / name).read_text()
++            after = (HERE / name).read_text()
++            diff = list(difflib.unified_diff(before.splitlines(True), after.splitlines(True),
++                fromfile='round18-rerun/' + name, tofile='round19-rerun/' + name))
++            combined.extend(diff)
++            summaries[name] = dict(reason=('Derived payload/dependency/test pins and R19 revision/namespace metadata.'
++                if group == 'ready' else 'Offline build/verification/documentation/inventory retargeted to R19 + A7; frozen inputs expanded to R14–R18.'),
++                added=sum(x.startswith('+') and not x.startswith('+++') for x in diff),
++                removed=sum(x.startswith('-') and not x.startswith('---') for x in diff),
++                hunks=[x.rstrip() for x in diff if x.startswith('@@')])
++        write('_out/' + group + '.diff', ''.join(combined))
++    summaries['_policy'] = dict(
++        runtime_deltas='wire: revision/envelope + opaque-only A7; adapter: roots/wire pin/namespace; keycheck proposal: job/stage labels; release-prep: R19 roots/scope/A7 pin closure',
++        unchanged_executables=['adapter/host_driver.py','adapter/native_entry.py','keycheck/keycheck.py',
++                               'keycheck/measure_bootstrap.py','release-prep/normalize_evidence.py'],
++        recon='Frozen R18 engine referenced by unchanged hash; no copied executable.',
++        beyond_listed_dispatch_ledger_key_changes=False,
++        root_READY='Pins final roots/component READY/amendments/review/_out; intentionally excluded from its own diffs to avoid hash recursion.')
++    for name in summaries['_policy']['unchanged_executables']:
++        assert (R18 / name).read_bytes() == (HERE / name).read_bytes(), name
++    assert (R18 / 'amendments/A5-A6.md').read_bytes() == (HERE / 'amendments/A5-A6.md').read_bytes()
++    for name in ('KEY-ATTESTATION.json','CAP-ACCEPTANCE.json'):
++        assert (R18 / 'release-prep/evidence' / name).read_bytes() == (HERE / 'release-prep/evidence' / name).read_bytes()
++    write('_out/diff-summary.json', json.dumps(summaries, sort_keys=True, indent=2) + '\n')
++
+ 
+ if __name__ == '__main__':
+     main()
+--- round18-rerun/offline_tests.py
++++ round19-rerun/offline_tests.py
+@@ -1,4 +1,4 @@
+-"""Run local unittest suites with a credential-free environment, logging only in R18."""
++"""Run local unittest suites with a credential-free environment, logging only in R19."""
+ import importlib.util
+ import json
+ from pathlib import Path
+--- round18-rerun/pin_ready.py
++++ round19-rerun/pin_ready.py
+@@ -1,4 +1,4 @@
+-"""Pin R18 payloads and verify frozen inputs; no execution or credential access."""
++"""Pin R19 payloads and verify frozen inputs; no execution or credential access."""
+ import argparse
+ import difflib
+ import hashlib
+@@ -9,7 +9,7 @@
+ HERE = Path(__file__).resolve().parent
+ BENCH = HERE.parent
+ FOLDERS = ('wire', 'recon', 'adapter', 'keycheck', 'release-prep')
+-REVISIONS = dict(wire='r16.w2.2', recon='A6', adapter='r1.5', keycheck='v3', **{'release-prep':'R18'})
++REVISIONS = dict(wire='r16.w2.3', recon='A6', adapter='r1.6', keycheck='v3', **{'release-prep':'R19'})
+ 
+ def pin(path):
+     raw = path.read_bytes()
+@@ -23,12 +23,13 @@
+ 
+ def frozen():
+     return {p.relative_to(BENCH).as_posix(): pin(p)['sha256']
+-        for root in (BENCH/'round16-wire-compat', BENCH/'round17-paid-comparison')
++        for round_no in range(14,19)
++        for root in sorted(BENCH.glob('round'+str(round_no)+'-*'))
+         for p in sorted(root.rglob('*')) if p.is_file()}
+ 
+ def verify_frozen():
+     before = json.loads((HERE/'_out/frozen-before.json').read_bytes())
+-    assert frozen() == before, 'frozen R16/R17 bytes or file inventory changed'
++    assert frozen() == before, 'frozen R14–R18 bytes or file inventory changed'
+ 
+ def dependencies(folder):
+     names = []
+@@ -36,19 +37,21 @@
+         names += ['round14-semantic-contract/runtime/common.py']
+         prefix = 'round15-condition-preservation/protocol-revised/'
+         names += [prefix+n for n in ('READY.json','compact.py','request-settings.json','stage-a.system.txt')]
++    if folder == 'recon':
++        names += ['round18-rerun/recon/r17recon.py','round18-rerun/recon/READY.json']
+     if folder == 'adapter':
+-        names += ['round18-rerun/wire/wire.py', 'round18-rerun/wire/READY.json',
++        names += ['round19-rerun/wire/wire.py', 'round19-rerun/wire/READY.json',
+                   'round18-rerun/recon/r17recon.py','round18-rerun/recon/READY.json',
+                   'round17-paid-comparison/design-r3-1/READY.primary.json',
+                   'round17-paid-comparison/sources-r2/READY.json']
+     if folder == 'release-prep':
+-        names += ['round18-rerun/'+f+'/READY.json' for f in ('wire','recon','adapter')]
+-        names += ['round18-rerun/amendments/A5-A6.md', 'round18-rerun/DESIGN-NOTE.md']
++        names += ['round19-rerun/'+f+'/READY.json' for f in ('wire','recon','adapter')]
++        names += ['round19-rerun/amendments/A5-A6.md', 'round19-rerun/amendments/A7.md', 'round19-rerun/DESIGN-NOTE.md']
+     return {n:pin(BENCH/n) for n in names}
+ 
+ def manifest():
+     path = HERE/'release-prep/prepare_manifest.py'
+-    s = importlib.util.spec_from_file_location('r18_build_manifest',path)
++    s = importlib.util.spec_from_file_location('r19_build_manifest',path)
+     m = importlib.util.module_from_spec(s)
+     s.loader.exec_module(m)
+     value = m.build()
+@@ -70,7 +73,7 @@
+             tests[k] = dict(run=item['run'], passed=item['run'], failed=0,
+                 executable=r['interpreter'], flags=r['flags'], output='_out/'+k+'-tests.txt',
+                 output_pin=pin(root/'_out'/ (k+'-tests.txt')))
+-        ready = dict(schema_version='r18.offline-ready.v1', revision=REVISIONS[folder],
++        ready = dict(schema_version='r19.offline-ready.v1', revision=REVISIONS[folder],
+             status='PRELIMINARY_UNTESTED' if bootstrap else 'READY_OFFLINE_IMPLEMENTATION',
+             files=files, sha256={n:p['sha256'] for n,p in files.items()},
+             dependencies=dependencies(folder), tests=tests, frozen_inputs_unchanged=True,
+@@ -79,10 +82,10 @@
+             dispatch_authorized=False, production_eligible=False,
+             self_pin='READY excludes itself; primary pins exact hash externally')
+         if folder=='wire':
+-            ready.update(version='r16.w1', envelope_version='r16.e3',
++            ready.update(version='r16.w1', envelope_version='r16.e4',
+                 independent_suite={k:r['suites']['independent'] for k,r in results.items()})
+         if folder=='adapter':
+-            ready.update(namespace='r18.paid-rerun.v1', scope='docketclock-research-r18-authorized-20261014',
++            ready.update(namespace='r19.paid-rerun.v1', scope='docketclock-research-r19-authorized-20261014',
+                 FLOOR=270000000, OPERATING=1800000000, CAP=2000000000, required_calls=['S1-OPQ','S2-OPQ','S3-OPQ'])
+         if folder=='release-prep':
+             ready.update(manifest_status='prospective; baseline/review/bootstrap extras and run evidence installation pending',
+@@ -91,7 +94,7 @@
+     if not bootstrap:
+         roots = {p.name:pin(p) for p in HERE.iterdir() if p.is_file() and p.name!='READY.json'}
+         roots.update({f+'/READY.json':pin(HERE/f/'READY.json') for f in FOLDERS})
+-        roots.update({'amendments/A5-A6.md':pin(HERE/'amendments/A5-A6.md')})
++        roots.update({n:pin(HERE/n) for n in ('amendments/A5-A6.md','amendments/A7.md','review/REVIEW.md')})
+         roots.update({'_out/'+p.name:pin(p) for p in (HERE/'_out').iterdir() if p.is_file()})
+         (HERE/'READY.json').write_text(json.dumps(dict(status='READY_OFFLINE_IMPLEMENTATION',
+             files=roots, tests=results, provider_calls=0, credentials_accessed=False,
+@@ -112,14 +115,14 @@
+             assert pin(root/item['output'])==item['output_pin'], folder
+         hashes[folder]=pin(root/'READY.json')['sha256']
+     m=json.loads((HERE/'release-prep/STAGE-MANIFEST.json').read_bytes())
+-    aliases={n:'round18-rerun/release-prep/evidence/'+Path(n).name
+-             for n in m['files'] if n.startswith('round18-rerun/run/')}
++    aliases={n:'round19-rerun/release-prep/evidence/'+Path(n).name
++             for n in m['files'] if n.startswith('round19-rerun/run/')}
+     for name, expected in m['files'].items():
+         assert pin(BENCH/aliases.get(name,name))['sha256']==expected, name
+     r=json.loads((HERE/'READY.json').read_bytes())
+     for name, expected in r['files'].items():
+         assert pin(HERE/name)==expected, name
+-    print(json.dumps(dict(all_pins_verified=True, frozen_R16_R17_unchanged=True,
++    print(json.dumps(dict(all_pins_verified=True, frozen_R14_R18_unchanged=True,
+         prospective_run_aliases=aliases, READY_sha256=hashes),sort_keys=True))
+ 
+ def main():
+--- round18-rerun/FILES-WRITTEN.txt
++++ round19-rerun/FILES-WRITTEN.txt
+@@ -1,4 +1,3 @@
+-# R18 files created/copied/updated; amendments/A5-A6.md was pre-existing and unchanged.
+ DESIGN-NOTE.md
+ FILES-WRITTEN.txt
+ READY.json
+@@ -6,20 +5,21 @@
+ _out/adapter.diff
+ _out/diff-summary.json
+ _out/frozen-before.json
+-_out/host_driver.diff
+ _out/keycheck.diff
+-_out/native_entry.diff
+ _out/python312-results.json
++_out/ready.diff
+ _out/recon.diff
++_out/release-prep.diff
++_out/request-sizes.json
++_out/root.diff
++_out/stage-manifest.diff
+ _out/system-results.json
+ _out/wire.diff
+ adapter/READY.json
+ adapter/SPEC.md
+ adapter/_out/python312-tests.txt
+ adapter/_out/repro-r1-4.txt
+-adapter/_out/round2-repros/REVIEW.md
+ adapter/_out/round2-repros/_load.py
+-adapter/_out/round2-repros/orig-repros-vs-r1-1.txt
+ adapter/_out/round2-repros/orig-repros/_load.py
+ adapter/_out/round2-repros/orig-repros/repro_double_post_lock_break.py
+ adapter/_out/round2-repros/orig-repros/repro_gate_change_bricks_ledger.py
+@@ -37,7 +37,6 @@
+ adapter/_out/round2-repros/repro_hd_timeout_row2.py
+ adapter/_out/round2-repros/repro_hd_trust_store.py
+ adapter/_out/round2-repros/repro_hd_wire.py
+-adapter/_out/round2-repros/results.txt
+ adapter/_out/round2-repros/run_all.sh
+ adapter/_out/system-tests.txt
+ adapter/fake_http.py
+@@ -59,6 +58,7 @@
+ adapter/run_tests.sh
+ adapter/test_a4.py
+ adapter/test_a6.py
++adapter/test_a7.py
+ adapter/test_adapter.py
+ adapter/test_host_driver.py
+ adapter/test_native.py
+@@ -66,6 +66,7 @@
+ adapter/test_revision.py
+ adapter/test_round2.py
+ adapter/verify_ready.py
++amendments/A5-A6.md
+ implement_offline.py
+ keycheck/README.md
+ keycheck/READY.json
+@@ -84,7 +85,6 @@
+ recon/SPEC.md
+ recon/_out/python312-tests.txt
+ recon/_out/system-tests.txt
+-recon/r17recon.py
+ recon/test_recon.py
+ release-prep/A3-TIMEOUT.md
+ release-prep/LIVE-DISPOSITION.md
+@@ -105,6 +105,7 @@
+ release-prep/test_a6.py
+ release-prep/test_findings.py
+ release-prep/test_release_prep.py
++review/REVIEW.md
+ wire/ERRATA.md
+ wire/READY.json
+ wire/SPEC.md
+@@ -114,6 +115,7 @@
+ wire/_out/system-tests.txt
+ wire/frozen-inputs.json
+ wire/run_independent.py
++wire/test_a7.py
+ wire/test_r18.py
+ wire/test_wire.py
+ wire/verify.py

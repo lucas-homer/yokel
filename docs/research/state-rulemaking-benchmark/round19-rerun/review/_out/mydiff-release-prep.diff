@@ -1,0 +1,503 @@
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/README.md /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/README.md
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/README.md	2026-10-14 11:33:09
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/README.md	2026-10-14 14:24:43
+@@ -1,13 +1,13 @@
+-# Ordered R18 runbook (future primary-owned steps)
++# Ordered R19 runbook (future primary-owned steps)
+ 
+ This is offline preparation, not live release evidence. Use the bundled Python
+ 3.12 with `-I -S -B`. Exactly S1-OPQ → S2-OPQ → S3-OPQ, no FULL, no retry.
+-P-ACCEPT; namespace `r18.paid-rerun.v1`; scope
+-`docketclock-research-r18-authorized-20261014`. FLOOR $0.27, OPERATING $1.80,
++P-ACCEPT; namespace `r19.paid-rerun.v1`; scope
++`docketclock-research-r19-authorized-20261014`. FLOOR $0.27, OPERATING $1.80,
+ design CAP $2, accepted spend tolerance $3. Non-resetting key limit $50.
+ 
+-Let PREP be this folder; STAGE the new content-addressed stage; R18 be
+-`$STAGE/round18-rerun`; BENCH be the source benchmark. Live stage roots must
++Let PREP be this folder; STAGE the new content-addressed stage; R19 be
++`$STAGE/round19-rerun`; BENCH be the source benchmark. Live stage roots must
+ come from the reviewed deployment core; this .t3 checkout is not a live root.
+ 
+ 1. **Keycheck v3.** Independently review/freeze `../keycheck`, prepare its
+@@ -21,7 +21,7 @@
+    Author fresh KEY-MACHINE.json with endpoint/response hash, confirmed USD
+    usage field documentation, accepted_by_primary=true, usage=U0,
+    limit=50000000000, remaining=50000000000−U0, reset=null. Install the unchanged
+-   evidence/KEY-ATTESTATION.json and CAP-ACCEPTANCE.json under the new R18 run/;
++   evidence/KEY-ATTESTATION.json and CAP-ACCEPTANCE.json under the new R19 run/;
+    A6, rather than the historical zero-use assertion, governs key reuse.
+    Supply fresh baseline, bootstrap, accepted cross-provider implementation
+    review and required evidence as `--evidence BENCH-relative-path=sha256`.
+@@ -34,14 +34,14 @@
+    requires a fresh stage and fresh proposals.
+ 4. **INIT.** Use the staged helper, exclusively:
+    `release_records.py --stage "$STAGE" init --budget <staged-P-ACCEPT-BUDGET.md> --key-initial-usage <U0>`.
+-   Pin canonical INIT without its JSONL newline. The ledger is new R18 history;
+-   never reset/truncate R17 or an existing R18 ledger.
++   Pin canonical INIT without its JSONL newline. The ledger is new R19 history;
++   never reset/truncate R17 or an existing R19 ledger.
+ 5. **Release.** Author a fresh release-input.json (r17.release.v1 compatibility
+-   grammar). Map adapter/tests/adapter_ready/host_driver to R18 adapter; wire
+-   is imported from R18 wire; recon artifact to R18 recon. Map design roles to
++   grammar). Map adapter/tests/adapter_ready/host_driver to R19 adapter; wire
++   is imported from R19 wire; recon artifact to frozen R18 recon. Map design roles to
+    frozen P-ACCEPT design, and other frozen gates/manifests to their R17 paths.
+-   K3 machine_check must use the fresh R18 baseline evidence. For each new OPQ
+-   cell build its plan from the frozen source with the R18 wire and recompute
++   K3 machine_check must use the fresh R19 baseline evidence. For each new OPQ
++   cell build its plan from the frozen source with the R19 wire and recompute
+    plan_request_sha256 and sha256(adapter.dispatched(plan)); derive unchanged
+    thresholds from the scoring manifest. Do not reuse R17 call hashes. Publish
+    through release_records.py --stage "$STAGE" release --input <fresh-input>.
+@@ -53,11 +53,11 @@
+    accepted review closure and positive measured bootstrap reserve before signing.
+ 8. **S1 sign/check/run.** Generate exactly one fresh unsigned proposal using
+    make_proposals.py --stage "$STAGE" --output <fresh-dir> --cell S1-OPQ
+-   --scope docketclock-research-r18-authorized-20261014 --batch <unique-id>
+-   --expires-unix <within-7-days> --prior-nanousd <R18-ledger-aggregate>
+-   --release "$R18/run/RELEASE.json" --review <staged-accepted-review>.
++   --scope docketclock-research-r19-authorized-20261014 --batch <unique-id>
++   --expires-unix <within-7-days> --prior-nanousd <R19-ledger-aggregate>
++   --release "$R19/run/RELEASE.json" --review <staged-accepted-review>.
+    Primary reviews, signs, checks and runs once using the existing native
+-   workflow. The budget prior is R18's conservative aggregate, not account U0.
++   workflow. The budget prior is R19's conservative aggregate, not account U0.
+ 9. **Adjudicate.** A1 Fable and A2 Opus, one fresh session each, followed by
+    primary acceptance of the protocol gate. No repair/re-score of R17 S1.
+ 10. **S2.** Repeat gate/proposal/sign/check/run for S2-OPQ with --gate naming
+@@ -66,7 +66,7 @@
+     accounting/results. No later cell is signed without its required gate.
+ 
+ HALT, kill, retained lock, torn ledger or dispatch uncertainty stops launches.
+-Preserve all evidence; use the frozen R17 recovery procedure with R18 paths.
++Preserve all evidence; use the frozen R17 recovery procedure with R19 paths.
+ Before a proven-unmarked dispatch, only a fresh authorized job may re-admit;
+ after a mark/uncertainty, accounting recovery halts without resend. Never infer
+ a dead lock owner or replay a consumed job. A usage drop or unexplained excess
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/READY.json /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/READY.json
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/READY.json	2026-10-14 11:41:50
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/READY.json	2026-10-14 14:27:50
+@@ -2,25 +2,29 @@
+   "committed": false,
+   "credentials_accessed": false,
+   "dependencies": {
+-    "round18-rerun/DESIGN-NOTE.md": {
+-      "bytes": 1066,
+-      "sha256": "24aa0395aa2f49eedaac95b359975346943277601ced6439daff69bb8d32ad2f"
++    "round19-rerun/DESIGN-NOTE.md": {
++      "bytes": 979,
++      "sha256": "39dbdffc334f74dc7d7cd760a4ed6cc12edfd8b9ed62cbdebe143fb69df38916"
+     },
+-    "round18-rerun/adapter/READY.json": {
+-      "bytes": 15430,
+-      "sha256": "c66a3b9d71fcd338e0cb7b28262713101338845f356374efd2510b7f916047b2"
++    "round19-rerun/adapter/READY.json": {
++      "bytes": 15647,
++      "sha256": "6023fbca350c19d3f5d4ac7db7855fe3d16a9cc830e6019ad1dde263a8588e9f"
+     },
+-    "round18-rerun/amendments/A5-A6.md": {
++    "round19-rerun/amendments/A5-A6.md": {
+       "bytes": 1658,
+       "sha256": "5d0eae23ea6f8cd104af5a7a909bcea76213ed3edf36e944d49778f44305e8b1"
+     },
+-    "round18-rerun/recon/READY.json": {
+-      "bytes": 2196,
+-      "sha256": "89211e1796a2b8fb66a5c6b00acba6e95eb2612e6660d59c1844bbce1dbc21e5"
++    "round19-rerun/amendments/A7.md": {
++      "bytes": 2154,
++      "sha256": "9774df5023682078e61717c19378816e34744c1acacbb353adc1e52efa77b1c7"
+     },
+-    "round18-rerun/wire/READY.json": {
+-      "bytes": 4324,
+-      "sha256": "08870dd3252b099d6189a86dcff363ec49155e7c25d3682ad0797b03f5c24418"
++    "round19-rerun/recon/READY.json": {
++      "bytes": 2282,
++      "sha256": "a5b9e14feed33f46914b87c21e2076132ef509ec8ed6e23956a8e2de413383b8"
++    },
++    "round19-rerun/wire/READY.json": {
++      "bytes": 4541,
++      "sha256": "1b9e30e3397a5a58a248e0e63edd6d321e9ccea887888edc9e3ff22083362dbe"
+     }
+   },
+   "design": "round17-paid-comparison/design-r3-1-paccept",
+@@ -35,16 +39,16 @@
+       "sha256": "03ce9609a0372ec26574fcd1fff98c84443efa3d5a83381b4323d71979ee291c"
+     },
+     "README.md": {
+-      "bytes": 5546,
+-      "sha256": "9a6c39f8c3cbff825439078cedff0cc6dfc8a99aeb020709f29ae1789316d14d"
++      "bytes": 5553,
++      "sha256": "787322d70e233901dbf9b1d3b2449e0e066119647547798de976d7b009fa8780"
+     },
+     "SPEC.md": {
+-      "bytes": 939,
+-      "sha256": "33d7878c6aa48c334cf8ec28cf9cc2cce86216ff3399f89c199f00db3d71753a"
++      "bytes": 996,
++      "sha256": "bdfe128b3b28038461da085299cf14a3855ec738c810f5b682e66344e510b8c5"
+     },
+     "STAGE-MANIFEST.json": {
+-      "bytes": 20642,
+-      "sha256": "230a214845b1910a482285c8adacec5efba6069e00d462a86ce1271b1d9d366d"
++      "bytes": 21043,
++      "sha256": "81290d0846ad11e9970980ba691e3c4a599dbd0835df546b150d2e03bd5ce412"
+     },
+     "evidence/CAP-ACCEPTANCE.json": {
+       "bytes": 8362,
+@@ -56,7 +60,7 @@
+     },
+     "make_proposals.py": {
+       "bytes": 12141,
+-      "sha256": "4c5cca7c0b84c9dad004d1dc0dd865b03fd93d396c8edd545f540a07ff4a3359"
++      "sha256": "d32fa171b3c043d3c2dab138c5c6c1b3da42b3af34e8c29123195447e31a6d27"
+     },
+     "normalize_evidence.py": {
+       "bytes": 3611,
+@@ -64,31 +68,31 @@
+     },
+     "pin_ready.py": {
+       "bytes": 363,
+-      "sha256": "0b1bf8a022411a65295afe159f61413cab839944ee520e53001087c67ea158cd"
++      "sha256": "c65511d01698d8079ed46b9baa46b5e4c75e15eaa60e998041ba217c335213dc"
+     },
+     "prepare_manifest.py": {
+-      "bytes": 3991,
+-      "sha256": "64ccc8e487daf1e73c37d2cc7147e46218a81d8751518cdca7c0493c2f2528f6"
++      "bytes": 4011,
++      "sha256": "916aeb6091461a476483d651e332c2868214e3ef5c06181272a7dc45d0d2f598"
+     },
+     "release_records.py": {
+       "bytes": 3033,
+-      "sha256": "bda820bb728c5992a70ae16d03e2f71a766f1fbc8279b491af1e34dac7dd61c0"
++      "sha256": "ae27265ba153610b7c5cb2a5313824920fe2544db0e540c32afd765f8f8045d3"
+     },
+     "stage.py": {
+       "bytes": 5124,
+-      "sha256": "c08309413055a0155c08930072c3a14669e8a1a41b685809aabe4ae2d9fd3012"
++      "sha256": "87994fe63a92b372babe612010db9a565343e6fad93d4a755e4344a2cc7db0a8"
+     },
+     "test_a6.py": {
+-      "bytes": 2069,
+-      "sha256": "26f693842c012df900b7bd33454be826b6d455ebabedc260d07decf9cadae3c7"
++      "bytes": 2134,
++      "sha256": "891f72e850a7eeef34abd003f7a0de5df6297f15b842d87109499ddb67bc92e5"
+     },
+     "test_findings.py": {
+       "bytes": 8996,
+       "sha256": "26279ec5d6d0a2da9a7e8d90a7465a1ccf17504150bdf9df7d487b7fa5e60192"
+     },
+     "test_release_prep.py": {
+-      "bytes": 12617,
+-      "sha256": "02abb65573f67372338dab9b3b6589f4bc74cfc8f72d8cc823b6fdfb25077d41"
++      "bytes": 12792,
++      "sha256": "28896904d6ac898a3531c2c261b5cbfbf5ec9a56828e3b4dbbb94387fcb626f9"
+     }
+   },
+   "fresh_machine_evidence": false,
+@@ -98,26 +102,26 @@
+   "network_calls": 0,
+   "production_eligible": false,
+   "provider_calls": 0,
+-  "revision": "R18",
+-  "schema_version": "r18.offline-ready.v1",
++  "revision": "R19",
++  "schema_version": "r19.offline-ready.v1",
+   "self_pin": "READY excludes itself; primary pins exact hash externally",
+   "sha256": {
+     "A3-TIMEOUT.md": "3a9c7c3a626dd9776013a3942891556bbfdcde8eab807f081d29bd3a29eee091",
+     "LIVE-DISPOSITION.md": "03ce9609a0372ec26574fcd1fff98c84443efa3d5a83381b4323d71979ee291c",
+-    "README.md": "9a6c39f8c3cbff825439078cedff0cc6dfc8a99aeb020709f29ae1789316d14d",
+-    "SPEC.md": "33d7878c6aa48c334cf8ec28cf9cc2cce86216ff3399f89c199f00db3d71753a",
+-    "STAGE-MANIFEST.json": "230a214845b1910a482285c8adacec5efba6069e00d462a86ce1271b1d9d366d",
++    "README.md": "787322d70e233901dbf9b1d3b2449e0e066119647547798de976d7b009fa8780",
++    "SPEC.md": "bdfe128b3b28038461da085299cf14a3855ec738c810f5b682e66344e510b8c5",
++    "STAGE-MANIFEST.json": "81290d0846ad11e9970980ba691e3c4a599dbd0835df546b150d2e03bd5ce412",
+     "evidence/CAP-ACCEPTANCE.json": "42d6686f274048b072c635f6edf50184d2745fff0ec30be8e150f380c1f4d6ef",
+     "evidence/KEY-ATTESTATION.json": "0368c515f3f13ad58384472501466b5968cc120ed818843a1511e34686a0e58f",
+-    "make_proposals.py": "4c5cca7c0b84c9dad004d1dc0dd865b03fd93d396c8edd545f540a07ff4a3359",
++    "make_proposals.py": "d32fa171b3c043d3c2dab138c5c6c1b3da42b3af34e8c29123195447e31a6d27",
+     "normalize_evidence.py": "7d980447e8c2f4ba1376bea14b913060398e8c8b070cad0fa5ba706ea96571d4",
+-    "pin_ready.py": "0b1bf8a022411a65295afe159f61413cab839944ee520e53001087c67ea158cd",
+-    "prepare_manifest.py": "64ccc8e487daf1e73c37d2cc7147e46218a81d8751518cdca7c0493c2f2528f6",
+-    "release_records.py": "bda820bb728c5992a70ae16d03e2f71a766f1fbc8279b491af1e34dac7dd61c0",
+-    "stage.py": "c08309413055a0155c08930072c3a14669e8a1a41b685809aabe4ae2d9fd3012",
+-    "test_a6.py": "26f693842c012df900b7bd33454be826b6d455ebabedc260d07decf9cadae3c7",
++    "pin_ready.py": "c65511d01698d8079ed46b9baa46b5e4c75e15eaa60e998041ba217c335213dc",
++    "prepare_manifest.py": "916aeb6091461a476483d651e332c2868214e3ef5c06181272a7dc45d0d2f598",
++    "release_records.py": "ae27265ba153610b7c5cb2a5313824920fe2544db0e540c32afd765f8f8045d3",
++    "stage.py": "87994fe63a92b372babe612010db9a565343e6fad93d4a755e4344a2cc7db0a8",
++    "test_a6.py": "891f72e850a7eeef34abd003f7a0de5df6297f15b842d87109499ddb67bc92e5",
+     "test_findings.py": "26279ec5d6d0a2da9a7e8d90a7465a1ccf17504150bdf9df7d487b7fa5e60192",
+-    "test_release_prep.py": "02abb65573f67372338dab9b3b6589f4bc74cfc8f72d8cc823b6fdfb25077d41"
++    "test_release_prep.py": "28896904d6ac898a3531c2c261b5cbfbf5ec9a56828e3b4dbbb94387fcb626f9"
+   },
+   "signing_key_accessed": false,
+   "status": "READY_OFFLINE_IMPLEMENTATION",
+@@ -133,7 +137,7 @@
+       "output": "_out/python312-tests.txt",
+       "output_pin": {
+         "bytes": 3232,
+-        "sha256": "25410b0310407dfc509869d88db0e0113c996f8fd3abc460c7e0129611edbd06"
++        "sha256": "0d5cd9525d347149abf80823203376bf42b53e05d4aa16a13277b78f35986a56"
+       },
+       "passed": 23,
+       "run": 23
+@@ -149,7 +153,7 @@
+       "output": "_out/system-tests.txt",
+       "output_pin": {
+         "bytes": 3232,
+-        "sha256": "da4450accfe05708f09b4947ef9d7a584785723c429959e437e481b2aeb8c879"
++        "sha256": "23e5f73bf1846d5569d848d550a8dc84a98ea6d78602e3e2d7016dba70edebce"
+       },
+       "passed": 23,
+       "run": 23
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/SPEC.md /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/SPEC.md
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/SPEC.md	2026-10-14 11:31:58
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/SPEC.md	2026-10-14 14:24:43
+@@ -1,15 +1,16 @@
+-# R18 release preparation
++# R19 release preparation
+ 
+-Adapted from release-prep-a4-r2; active stage/run/adapter/wire/recon point to R18.
++Adapted from release-prep-a4-r2; active stage/run/adapter/wire point to R19.
++Recon points to the unchanged frozen R18 engine and READY.
+ prepare_manifest reuses frozen R17 P-ACCEPT design, source bytes, references,
+ scoring manifest and accepted fixture/role gates. Original design metadata and
+-fixture pair remain staged for offline imports. A5/A6 and DESIGN-NOTE are pinned.
++fixture pair remain staged for offline imports. A5/A6, A7 and DESIGN-NOTE are pinned.
+ Historical zero-usage machine evidence and paid outputs are excluded.
+ 
+ INIT requires --key-initial-usage in integer nanoUSD; release/bind remain
+ exclusive durable records. Existing r17.release/stage/native-args schemas are
+ retained as compatible grammars; only the ledger namespace and scope change.
+-Fresh R18 machine/review/bootstrap evidence is supplied as explicit manifest
++Fresh R19 machine/review/bootstrap evidence is supplied as explicit manifest
+ extras. The candidate manifest is prospective until primary installation.
+ 
+ Tests stage synthetic trees only and generate unsigned proposals; they invoke
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/STAGE-MANIFEST.json /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/STAGE-MANIFEST.json
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/STAGE-MANIFEST.json	2026-10-14 11:56:53
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/STAGE-MANIFEST.json	2026-10-14 14:27:50
+@@ -1 +1 @@
+-{"files":{"round14-semantic-contract/runtime/common.py":"a341e11b6b0d49b130c28d8881ef4b71748161bcfc0d15c41384bc150f35bdc5","round15-condition-preservation/protocol-revised/READY.json":"dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50","round15-condition-preservation/protocol-revised/compact.py":"8e7faec0d3c3fd5d16cabf58977804a401ca904f441f535af2e59fda9163ff6a","round15-condition-preservation/protocol-revised/request-settings.json":"43d3b4f7886d84c528a07ff3ba0901a2be1ff42a6b503853ee87e1e6985b1ac2","round15-condition-preservation/protocol-revised/stage-a.system.txt":"49edae001b41ac63f32a5a049484544b219b5f1bf68a0b7f3dbc3e5dc5196f70","round17-paid-comparison/amendments/A4-key-limit-label/AMENDMENT.md":"d8826cf2b8f6ec5add43aa027af9cb8529ea21b69a2e90b2b13e13631d1c3538","round17-paid-comparison/design-r3-1-paccept/ADJUDICATION-SPEC.md":"1eca88fc0c54e22a77eab0e8e729b09a52eb0086fa05c0fcaec9f146ac9234d0","round17-paid-comparison/design-r3-1-paccept/BUDGET.md":"5997797dd1d857306d4912db6836df6af1a59f48fe8f4c063b2edf3717cf6715","round17-paid-comparison/design-r3-1-paccept/DISPOSITION.md":"6d37c5e9e0c967297f8dcfe67106ca86e2772fd5c91652ffe528ff079dc565d4","round17-paid-comparison/design-r3-1-paccept/PROTOCOL.md":"d75f858850a44e59c65346b4709b59dbce839d9fa3188f986a2021d632bde3f9","round17-paid-comparison/design-r3-1-paccept/READY.json":"0447025ba981b20dc88163e997d906bb1acf5ea1f598cc60e0159376f9a50793","round17-paid-comparison/design-r3-1-paccept/READY.primary.json":"944aeb9ab5173e4a31f0c9c7f3923965533ac3fb90d2f2c459415e66e29017f4","round17-paid-comparison/design-r3-1-paccept/REFERENCE-SPEC.md":"ef660c68af39c3c4a7e74dd8f7a1ab5eaf883cd15225d3f6b3f17692d1bb05a0","round17-paid-comparison/design-r3-1-paccept/fixtures/README.md":"a30ff70128f6f80010da2cf7fdd4ac20520f9da362ed33c4a60e6aeaf9d53687","round17-paid-comparison/design-r3-1-paccept/fixtures/cases.json":"53d501b69f3c8c8e98403c3f3c3111be84de0d1b39e95d6c53f8cdaec132da8b","round17-paid-comparison/design-r3-1-paccept/fixtures/cases.src.json":"18e11a263dc19148b751a24275fc1ff57e5ce11edc1d76da0736fd183795e4ca","round17-paid-comparison/design-r3-1-paccept/fixtures/check.py":"d7e04f113159f50f6ad3c7dedff63e22840f879c3e96a20e7e615fba4d3ee444","round17-paid-comparison/design-r3-1-paccept/fixtures/r17recon.py":"5295a66700fee54b2e03344003e5638a5728b1949eedf0945062950cc40e33ff","round17-paid-comparison/design-r3-1-paccept/fixtures/r17score.py":"4834cf66eb0019df73b8a5e81bb5b51c43111fe51204b0f01d36b60ed76c163b","round17-paid-comparison/design-r3-1-paccept/verify/mutation_pass.py":"715a8d315dacc4da051d0ce34623649581e6fe739252b8731e99482a73200171","round17-paid-comparison/design-r3-1-paccept/verify/probe_r3_1.py":"551f8f553d99c9038766451c911b3b84067bf8ad4fb0630e46442f5f5c3b4bc2","round17-paid-comparison/design-r3-1-paccept/verify/red_against_r3.py":"ede08a4bd63475832c67796c9060af981aed6f950ff668df883fca46d3a99bc6","round17-paid-comparison/design-r3-1/ADJUDICATION-SPEC.md":"1eca88fc0c54e22a77eab0e8e729b09a52eb0086fa05c0fcaec9f146ac9234d0","round17-paid-comparison/design-r3-1/BUDGET.md":"7cb99c52d2b6ce920ec7d6d0c83f9bc17f9142e8683ba81dafa803b574b097c8","round17-paid-comparison/design-r3-1/DISPOSITION.md":"6d37c5e9e0c967297f8dcfe67106ca86e2772fd5c91652ffe528ff079dc565d4","round17-paid-comparison/design-r3-1/PROTOCOL.md":"d75f858850a44e59c65346b4709b59dbce839d9fa3188f986a2021d632bde3f9","round17-paid-comparison/design-r3-1/READY.json":"ef9734cebd4ddb4aad29512d81c0a0a296f853c8cbd19a4a86a8f0106cf582f0","round17-paid-comparison/design-r3-1/READY.primary.json":"35b19756602aac89746f373313315a23c24d28b65d6318683a78ad1d4dceb9ed","round17-paid-comparison/design-r3-1/REFERENCE-SPEC.md":"ef660c68af39c3c4a7e74dd8f7a1ab5eaf883cd15225d3f6b3f17692d1bb05a0","round17-paid-comparison/design-r3-1/fixtures/README.md":"a30ff70128f6f80010da2cf7fdd4ac20520f9da362ed33c4a60e6aeaf9d53687","round17-paid-comparison/design-r3-1/fixtures/cases.json":"53d501b69f3c8c8e98403c3f3c3111be84de0d1b39e95d6c53f8cdaec132da8b","round17-paid-comparison/design-r3-1/fixtures/cases.src.json":"18e11a263dc19148b751a24275fc1ff57e5ce11edc1d76da0736fd183795e4ca","round17-paid-comparison/design-r3-1/fixtures/check.py":"d7e04f113159f50f6ad3c7dedff63e22840f879c3e96a20e7e615fba4d3ee444","round17-paid-comparison/design-r3-1/fixtures/r17recon.py":"5295a66700fee54b2e03344003e5638a5728b1949eedf0945062950cc40e33ff","round17-paid-comparison/design-r3-1/fixtures/r17score.py":"4834cf66eb0019df73b8a5e81bb5b51c43111fe51204b0f01d36b60ed76c163b","round17-paid-comparison/design-r3-1/verify/mutation_pass.py":"715a8d315dacc4da051d0ce34623649581e6fe739252b8731e99482a73200171","round17-paid-comparison/design-r3-1/verify/probe_r3_1.py":"551f8f553d99c9038766451c911b3b84067bf8ad4fb0630e46442f5f5c3b4bc2","round17-paid-comparison/design-r3-1/verify/red_against_r3.py":"ede08a4bd63475832c67796c9060af981aed6f950ff668df883fca46d3a99bc6","round17-paid-comparison/primary-acceptance/A1-FIXTURE-GATE.json":"0659cf9b93bd87168a4d5ae58af788853fcb6d7570e8c51bf93367645fa7809c","round17-paid-comparison/primary-acceptance/A2-FIXTURE-GATE.json":"fbb9d6a4ecc2a74e88637717a1f73b7bc973f9210902b1d65d8b82e0ebc7193e","round17-paid-comparison/primary-acceptance/ROLES-AUTH.json":"b3aea21d2583c712189bb394371e7accaa3595daf3914b4f540f237edfc4e033","round17-paid-comparison/reference/26-19-039/AUTHOR-NOTES.md":"d34b235d6d62aa051e0fe2f83951bc4484670bc78b74e1add88daf1001278526","round17-paid-comparison/reference/26-19-039/AUTHOR-PACKET.json":"bddfbc64a205f557bb636723a6d8ed20c9d921d62542078194eef020a4ea053f","round17-paid-comparison/reference/26-19-039/REPLY-1.json":"3a67253ee9b2d69bb798927c822083851e83ff3293f334661dfd47e801ca794d","round17-paid-comparison/reference/26-19-039/REPLY-PACKET.json":"cc090fb6c4d6a0da141e56573436c2659cb52a8bfd22f90245a2144db66ed7ce","round17-paid-comparison/reference/26-19-039/RESPONSE-1.json":"66cbeb9ca5c3cf9dbae2f030f54e470070ff1b510ed07056164fea24fe8657fc","round17-paid-comparison/reference/26-19-039/RESPONSE-PACKET.json":"b962602b2716e23929a974ed421db8318463ff5f857773864662826589400a54","round17-paid-comparison/reference/26-19-039/REVIEW-1.json":"ebc54e2062b5784cf48e0ded68c1acf55276df4fd3e48f6fbfb05be77c5aa1fe","round17-paid-comparison/reference/26-19-039/REVIEW-PACKET.json":"f26492b0cf1a9cb3d3471a7ff6529c1ded3ffa997bc778dcf630beee34eb9784","round17-paid-comparison/reference/26-19-039/check-draft-1.json":"43c7cab5d16685666ef5e71cdb1c6788595b8b2a9b51ee7f6fa56c7e17a82f2f","round17-paid-comparison/reference/26-19-039/check-draft-2.json":"b78198d7d203682b773b1388771cefd61f40d0eb47b0dac31dc2c1f5a1101b0f","round17-paid-comparison/reference/26-19-039/check-final.json":"b78198d7d203682b773b1388771cefd61f40d0eb47b0dac31dc2c1f5a1101b0f","round17-paid-comparison/reference/26-19-039/draft-1.json":"d2ffb4230ca8d8da3846cbd36de2af0dad060ddb5793ae385f999f3afa429997","round17-paid-comparison/reference/26-19-039/draft-2.json":"a4a8d8dc3de474dfe759a24af8451b9e01d0f8c6dd9fd5353f9041c7032db778","round17-paid-comparison/reference/26-19-039/reference.json":"a4a8d8dc3de474dfe759a24af8451b9e01d0f8c6dd9fd5353f9041c7032db778","round17-paid-comparison/reference/26-19-041/AUTHOR-NOTES.md":"2f0d947b10e83e99a2fbaab3969969acb50d9fe53af34a5adbea843a3b404616","round17-paid-comparison/reference/26-19-041/AUTHOR-PACKET.json":"aab285a480b5d74b5f028a99d651452179c9d602bd5d62d619638c1ed78a60d2","round17-paid-comparison/reference/26-19-041/CONTESTED.json":"afc80b5801a70663342f10b855663117bbc5d6c3a54113db48633f7e75ccc5fc","round17-paid-comparison/reference/26-19-041/REPLY-1.json":"1b6f29d2a812c4fdacbb843e1a198f3e4709747359e76a70988f5a87be3fe974","round17-paid-comparison/reference/26-19-041/REPLY-PACKET.json":"532f14f36d4eb96a6b319919fcf441e456eb70b6add8d0bfc0ad2d33f9e7892a","round17-paid-comparison/reference/26-19-041/RESPONSE-1.json":"d8e481f8a7af82b768b469d90370db588d883d5605867f67dc8121807746a1e8","round17-paid-comparison/reference/26-19-041/RESPONSE-PACKET.json":"1380f05453a0251d50ec80503a3eb3d0f0df40741465b6b0e69946b39954ff50","round17-paid-comparison/reference/26-19-041/REVIEW-1.json":"33a0e913e01bf797a897720523185da3dfb6634de5fbb9666dfe34be328b2433","round17-paid-comparison/reference/26-19-041/REVIEW-PACKET.json":"01ffe839bd1f7140372fd96d6f66797c1ab8c2e5a9a571fa2132224599a55df9","round17-paid-comparison/reference/26-19-041/check-draft-1.json":"22f52b906334f2067aedc8e762a2fb1c90e00a636c7bff3ffe5bcc3677bb11c2","round17-paid-comparison/reference/26-19-041/check-draft-2.json":"db70dd5c2469230f06acbc1a73e66e23128e5d00aec5d95569312a23cf827261","round17-paid-comparison/reference/26-19-041/check-final.json":"db70dd5c2469230f06acbc1a73e66e23128e5d00aec5d95569312a23cf827261","round17-paid-comparison/reference/26-19-041/draft-1.json":"0ac3fc1e65ac87f9746b490c9810d32466a3e496f620ca89d5fac45621209993","round17-paid-comparison/reference/26-19-041/draft-2.json":"cd58e31c8559e377b2cba3604cf8a0ed3f4ac1f0cf5542c8bb002555d7677471","round17-paid-comparison/reference/26-19-041/reference.json":"cd58e31c8559e377b2cba3604cf8a0ed3f4ac1f0cf5542c8bb002555d7677471","round17-paid-comparison/reference/26-19-106/AUTHOR-NOTES.md":"d5d8828b4679895738e28267fcba0dfa30e094678f9f1cbf03dbae3d3dc15f28","round17-paid-comparison/reference/26-19-106/AUTHOR-PACKET.json":"8942562fec5c298ca44f53894f81e3d60939a675e06de3095a3b94f09d882571","round17-paid-comparison/reference/26-19-106/REPLY-1.json":"09e9eb4dfbc205440f56785a1090001b3065024d7f2ee320f599d5d8e97f1d2c","round17-paid-comparison/reference/26-19-106/REPLY-PACKET.json":"e3447d06cd38fd3b85b8ab1688e83667e3cbefc9476bb3f319bf73da82b089ff","round17-paid-comparison/reference/26-19-106/RESPONSE-1.json":"322a4956145459e211ff053405a1d179c04e67e994f9615fa2bce6b885835c62","round17-paid-comparison/reference/26-19-106/RESPONSE-PACKET.json":"f1965a35132f53b58cd8a2120cfb21ac9a7f211a7d8cdf54ef8dfb92bc9e63e2","round17-paid-comparison/reference/26-19-106/REVIEW-1.json":"0f407e978650e01a8974f54c6df6e6aeaa20fe8c1d58804f1b8150a6ab7b5227","round17-paid-comparison/reference/26-19-106/REVIEW-PACKET.json":"49ea74e6f9d6ffad572f5573897538f7b92ecd9d393d35a17aea1b33a37e8fcd","round17-paid-comparison/reference/26-19-106/check-draft-1.json":"5bdbd832793262a832e757a5f41970f45b9df5ca0bec655d52b0a0851f2f71f8","round17-paid-comparison/reference/26-19-106/check-draft-2.json":"c38d6e0bd6c9d78c3eb7b6a5b8af164e2e3b4d2276f563b56eb51cd449f7fa77","round17-paid-comparison/reference/26-19-106/check-final.json":"c38d6e0bd6c9d78c3eb7b6a5b8af164e2e3b4d2276f563b56eb51cd449f7fa77","round17-paid-comparison/reference/26-19-106/draft-1.json":"5996ca4e5dd40527b7c9522020dd8da7c22340ec4c43b895da789bd6f0b194d5","round17-paid-comparison/reference/26-19-106/draft-2.json":"f820268289eb4285f672ffc659869f9b39899309101be20e2de4c2c2380ea65a","round17-paid-comparison/reference/26-19-106/reference.json":"f820268289eb4285f672ffc659869f9b39899309101be20e2de4c2c2380ea65a","round17-paid-comparison/reference/ACCEPTANCE.json":"954549742934a158b949bc32d4ff11734918632156b7a70bcbceeee4a6871d66","round17-paid-comparison/reference/E8-SUFFICIENCY.json":"031c9f93bd2b4992d5c690286776740e8f228cf8e7b756cd649abb2652e4ceed","round17-paid-comparison/reference/READY.json":"e47520bacbd85f5b336a5dbcb8dc4e4a20559219693801460ebbd436cfe0aa23","round17-paid-comparison/reference/make_reply_packet.py":"4bce61c8d3bfe79a4d68bc55bee3e07c3dad0262560098cd03ea4b621c948bab","round17-paid-comparison/reference/make_response_packet.py":"9c2e387a6556a1452254bff8b05e7387959adc9d02297f73652d1127ba33a69d","round17-paid-comparison/scoring-manifest/MANIFEST.json":"62838370968de7a93347b7a9e7dda307ad49650a22a639904351fedf79b8911d","round17-paid-comparison/sources-r2/26-19-039/parsed-body.txt":"9fffbf50f8d1cd0015d6fc41bfe0dfd5e60e4976bd42eb2e4f396fdcc28b39b3","round17-paid-comparison/sources-r2/26-19-041/parsed-body.txt":"82868cf622ab60cba98f438eb0b443cf36a4745b45188e7a36f643bd155de4f5","round17-paid-comparison/sources-r2/26-19-106/parsed-body.txt":"d105eb947913e37c609851d7346d5a1490f34ecb6f48541723464114ca3205c8","round17-paid-comparison/sources-r2/READY.json":"55afccdfe98d705165a51fb7d965ebbe3876d414a76e91b5f0791b3b8eb92560","round18-rerun/DESIGN-NOTE.md":"24aa0395aa2f49eedaac95b359975346943277601ced6439daff69bb8d32ad2f","round18-rerun/adapter/READY.json":"c66a3b9d71fcd338e0cb7b28262713101338845f356374efd2510b7f916047b2","round18-rerun/adapter/SPEC.md":"f6e1e638e725591a2f580edf6d0d7288ad3767e0bdeb2d0026d7f0453a304dc2","round18-rerun/adapter/_out/round2-repros/_load.py":"bae679fe1e268218293eac2dad5f2caa8f99d340307e817f9b96cdc3c557f6c8","round18-rerun/adapter/_out/round2-repros/orig-repros/_load.py":"4a3967906bb8dbaabdb4756f03844d0f0bd730f0e02798b938a4474c58c9f57e","round18-rerun/adapter/_out/round2-repros/orig-repros/repro_double_post_lock_break.py":"90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c","round18-rerun/adapter/_out/round2-repros/orig-repros/repro_gate_change_bricks_ledger.py":"727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f","round18-rerun/adapter/_out/round2-repros/orig-repros/repro_headers_leak.py":"6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903","round18-rerun/adapter/_out/round2-repros/orig-repros/repro_incomplete_cell_allows_next.py":"89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf","round18-rerun/adapter/_out/round2-repros/orig-repros/repro_mark_fsync_failure.py":"a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47","round18-rerun/adapter/_out/round2-repros/orig-repros/repro_negative_sleep.py":"3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c","round18-rerun/adapter/_out/round2-repros/orig-repros/repro_partial_receipt_bricks_recover.py":"5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043","round18-rerun/adapter/_out/round2-repros/orig-repros/repro_recover_rehalts_completed.py":"71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140","round18-rerun/adapter/_out/round2-repros/orig-repros/run_all.sh":"794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3","round18-rerun/adapter/_out/round2-repros/repro_3call_plan.py":"833abad6db36c0c8f53a0877229b6bb4eb0350f7503c3732a2b799e3cda68c5d","round18-rerun/adapter/_out/round2-repros/repro_hd_cli_misc.py":"f015e2f35a1ea97332a413ee9bdc32c9045e417d69bb5cc454e7561f810b1b92","round18-rerun/adapter/_out/round2-repros/repro_hd_key_fields.py":"a28b261d26fe748d704519209f87c3b8bdcf9b55fc83fbe460d57e2ec18ff216","round18-rerun/adapter/_out/round2-repros/repro_hd_sigint_cli.py":"be13c6432460040435242d20c323ef32faf6b9cb3f72517f7f297b9cfd9c9075","round18-rerun/adapter/_out/round2-repros/repro_hd_timeout_row2.py":"5ca7455dbe12068e67a4b9ebaf74f8205c5d8bbc62108d6bfa9c7090a147c037","round18-rerun/adapter/_out/round2-repros/repro_hd_trust_store.py":"18067bc0bf60a0ee79743bed6b4bb43465938ffed60782b5be1a5f54e7ff52e5","round18-rerun/adapter/_out/round2-repros/repro_hd_wire.py":"a645c1e6cd74ef092c10db94f654aeaba49d6a07d21eb99d9c66bc389e18e20c","round18-rerun/adapter/_out/round2-repros/run_all.sh":"e53c696685f2b3df5f0f28d61b75f7bf7297d489aa76df86f12be146b07b6e9b","round18-rerun/adapter/fake_http.py":"1d9d3a3b4dee2bd8758e3e589162eb3ae997aa8f2a4f1a74bd0a8cefbcf4da92","round18-rerun/adapter/host_driver.py":"a707eda00510000722a08b17b90b690e3d3ccdc7a67a02f55a4097cd9a4b094e","round18-rerun/adapter/native_entry.py":"12dfc5468e9f462d6556cf81466e7f85b48c2736544399047ff1d43e9a5a57f9","round18-rerun/adapter/pin_ready.py":"0b1bf8a022411a65295afe159f61413cab839944ee520e53001087c67ea158cd","round18-rerun/adapter/r17_adapter.py":"e185fe750b0871a5caff95bfd854c743f1499ae0f587d4d50028ebcde310714b","round18-rerun/adapter/repro-baseline.txt":"75cbb8e68179e266609a6e274a29a116e42466f12dd194acc8d3d9509b1618a8","round18-rerun/adapter/repros/_load.py":"fd3843deb51fedff91cad629c93d45fe89e5b1fd6a25b01a55652146a212746c","round18-rerun/adapter/repros/repro_double_post_lock_break.py":"90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c","round18-rerun/adapter/repros/repro_gate_change_bricks_ledger.py":"727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f","round18-rerun/adapter/repros/repro_headers_leak.py":"6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903","round18-rerun/adapter/repros/repro_incomplete_cell_allows_next.py":"89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf","round18-rerun/adapter/repros/repro_mark_fsync_failure.py":"a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47","round18-rerun/adapter/repros/repro_negative_sleep.py":"3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c","round18-rerun/adapter/repros/repro_partial_receipt_bricks_recover.py":"5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043","round18-rerun/adapter/repros/repro_recover_rehalts_completed.py":"71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140","round18-rerun/adapter/repros/run_all.sh":"794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3","round18-rerun/adapter/run_tests.sh":"2af0b5c3c8321a8eede09bb311173eae26ba9c9652cfe0043eae8053953a03ad","round18-rerun/adapter/test_a4.py":"fec591e0c8b368915b831c7b8aa9ab990aa6981b8d9b24e47c52d82b0697ba5f","round18-rerun/adapter/test_a6.py":"426feed09d114e4cae0cd518be2db13c4cf8fff3253ea5aa6fbafb1a617829a0","round18-rerun/adapter/test_adapter.py":"43267a4d7f506af25ae869d39df00e6ebc21888bc8cf7f355e20dacd70069781","round18-rerun/adapter/test_host_driver.py":"0ab4a73dec0d197cd5295b36abef17965846a0eae01435581a1fe9670867b8e4","round18-rerun/adapter/test_native.py":"0ec48690e6f95c847f6cd51ad6a495277f31fc82ce468f97d88dec32b30fbd67","round18-rerun/adapter/test_repros.py":"e8b89a3a5e6e30345c8afbc4466449989fc9d47ffedf3f368902a65a307a7b39","round18-rerun/adapter/test_revision.py":"d5b401e35c615847ddd93965164c06304c6a5d9fcbc11d103128b295227a6363","round18-rerun/adapter/test_round2.py":"40ce441438a7b34d654e0af6ab7547c64aeb41bc4f77bfdd0c502957c91f3d81","round18-rerun/adapter/verify_ready.py":"d681c657f3999558030242ae5b5339b877bdcfb42ef2bd959e3449446822f7be","round18-rerun/amendments/A5-A6.md":"5d0eae23ea6f8cd104af5a7a909bcea76213ed3edf36e944d49778f44305e8b1","round18-rerun/keycheck/evidence-20261014T184417Z-6afadbe884e3/KEY-MACHINE.json":"bdcb96dfda0a70fa9c34b2324ea6f03ed92d548922f16686d4f7e1fcc68737ae","round18-rerun/keycheck/evidence-20261014T184417Z-6afadbe884e3/RUN-BOUNDARIES.json":"0876c7ccafda8516156aa654b861fdbcbb130be2a64afbbf2965deb7a3bf0f74","round18-rerun/keycheck/evidence-20261014T184417Z-6afadbe884e3/native-run-receipt.txt":"63bf3c93c07f2226d89acbd2343e73c4e5c57026c0382443431fb40a46080ba5","round18-rerun/keycheck/primary-review/REVIEW.md":"a3c39077478a3a2598a72e8569e8b2d5de693401e7a7adc2a9ae565db1c4e7d4","round18-rerun/primary-acceptance/KEY-MACHINE.json":"4f6aa8e98215de80b3f5ec6eb469789d9eb3c4c6f886a871fb464fe2683d6e2b","round18-rerun/recon/NOTE.md":"4ce31450c2595f82564bd41413b38c97e5334d58d51ec8487489cfda955ada4c","round18-rerun/recon/READY.json":"89211e1796a2b8fb66a5c6b00acba6e95eb2612e6660d59c1844bbce1dbc21e5","round18-rerun/recon/SPEC.md":"df0b6630211d51730bd3a16b184f692368e9a6466aff39bd4dcc764fb00e86ad","round18-rerun/recon/r17recon.py":"64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140","round18-rerun/recon/test_recon.py":"78d10944a5621b741224c59e119a0bf29c3e06e459ce4341a1746d6015488bfa","round18-rerun/release-prep/README.md":"9a6c39f8c3cbff825439078cedff0cc6dfc8a99aeb020709f29ae1789316d14d","round18-rerun/release-prep/SPEC.md":"33d7878c6aa48c334cf8ec28cf9cc2cce86216ff3399f89c199f00db3d71753a","round18-rerun/release-prep/evidence/CAP-ACCEPTANCE.json":"42d6686f274048b072c635f6edf50184d2745fff0ec30be8e150f380c1f4d6ef","round18-rerun/release-prep/evidence/KEY-ATTESTATION.json":"0368c515f3f13ad58384472501466b5968cc120ed818843a1511e34686a0e58f","round18-rerun/release-prep/make_proposals.py":"4c5cca7c0b84c9dad004d1dc0dd865b03fd93d396c8edd545f540a07ff4a3359","round18-rerun/release-prep/prepare_manifest.py":"64ccc8e487daf1e73c37d2cc7147e46218a81d8751518cdca7c0493c2f2528f6","round18-rerun/release-prep/release_records.py":"bda820bb728c5992a70ae16d03e2f71a766f1fbc8279b491af1e34dac7dd61c0","round18-rerun/release-prep/stage.py":"c08309413055a0155c08930072c3a14669e8a1a41b685809aabe4ae2d9fd3012","round18-rerun/review/REVIEW.md":"6253222eb16521ff641fc6bfada515b8084cfe9c4e397264813b4d21805a7f51","round18-rerun/review/_out/repro_init_baseline.txt":"95aeea628d99ed55f4c0ac32af056421a4be7baa1ac43b74a817285dafe10f9c","round18-rerun/review/_out/repro_probe_shapes.txt":"63e72ef96298eb74757275582dea3c0f438dd83b14cdb35acfd02f9566156d7a","round18-rerun/review/_out/repro_recon_a6.txt":"df7cc3c0678acd9bc41274ed7554ef144b0e8a29b7035ba9fde7b4f316235439","round18-rerun/review/_out/repro_wire_prompt_only.txt":"256a7ce4cabe091aad9c57cc454a04e24b6df5aaa9de670b4b857cfb7bd6e999","round18-rerun/review/repro_init_baseline.py":"6cea880ee81c5069a412b1da8247486da01a07614a130c0a095bcbb4566fa937","round18-rerun/review/repro_probe_shapes.py":"89937f04ecc693002f4e08d77197b92fa987ce2d572a644267f71578d17161e4","round18-rerun/review/repro_recon_a6.py":"ea7beef5e97cea0a2237acd391e52d050c5d1a2d6123d8f88441c11abce448fe","round18-rerun/review/repro_wire_prompt_only.py":"3bc548b649f358a46fc016c1c08209cd6c394513f9301b9dd18a970fa5305f75","round18-rerun/run/CAP-ACCEPTANCE.json":"42d6686f274048b072c635f6edf50184d2745fff0ec30be8e150f380c1f4d6ef","round18-rerun/run/KEY-ATTESTATION.json":"0368c515f3f13ad58384472501466b5968cc120ed818843a1511e34686a0e58f","round18-rerun/wire/ERRATA.md":"5892ce577773de980c1dee03ccdb565fb7fbecc2bd7bc0ba8f5a6d97ef0faa8c","round18-rerun/wire/READY.json":"08870dd3252b099d6189a86dcff363ec49155e7c25d3682ad0797b03f5c24418","round18-rerun/wire/SPEC.md":"4d40850cc9b98ed73626121232bf21ac585c4e7c2aec40cb3c1760e66e14670d","round18-rerun/wire/frozen-inputs.json":"ca1e68a36ca2c9082d99f6ad16e3ca2acb9499e8d4fbb04b00278f7fda638721","round18-rerun/wire/run_independent.py":"a9fd117af03b196cf28b9909ea59a349c69d2d33a1b53bfaa2394c0676c64d3d","round18-rerun/wire/test_r18.py":"0cae52bfd00233dfc0714e29228a4c97931f6618dfce360b7447aca04d17f838","round18-rerun/wire/test_wire.py":"b7eaf80fb2fba0b90451d2cc690e43b514ba46b75b4d50b86e27631cfcf08c8e","round18-rerun/wire/verify.py":"74962ef8137d2f463eca886892879997b201260c5ebdddb67a6e783b7c1623cf","round18-rerun/wire/wire.py":"0f8e44476b509a28b68739f83c0e557198a9990079bf8c108ff00071ecd56bef"},"schema_version":"r17.stage.v1"}
+\ No newline at end of file
++{"files":{"round14-semantic-contract/runtime/common.py":"a341e11b6b0d49b130c28d8881ef4b71748161bcfc0d15c41384bc150f35bdc5","round15-condition-preservation/protocol-revised/READY.json":"dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50","round15-condition-preservation/protocol-revised/compact.py":"8e7faec0d3c3fd5d16cabf58977804a401ca904f441f535af2e59fda9163ff6a","round15-condition-preservation/protocol-revised/request-settings.json":"43d3b4f7886d84c528a07ff3ba0901a2be1ff42a6b503853ee87e1e6985b1ac2","round15-condition-preservation/protocol-revised/stage-a.system.txt":"49edae001b41ac63f32a5a049484544b219b5f1bf68a0b7f3dbc3e5dc5196f70","round17-paid-comparison/amendments/A4-key-limit-label/AMENDMENT.md":"d8826cf2b8f6ec5add43aa027af9cb8529ea21b69a2e90b2b13e13631d1c3538","round17-paid-comparison/design-r3-1-paccept/ADJUDICATION-SPEC.md":"1eca88fc0c54e22a77eab0e8e729b09a52eb0086fa05c0fcaec9f146ac9234d0","round17-paid-comparison/design-r3-1-paccept/BUDGET.md":"5997797dd1d857306d4912db6836df6af1a59f48fe8f4c063b2edf3717cf6715","round17-paid-comparison/design-r3-1-paccept/DISPOSITION.md":"6d37c5e9e0c967297f8dcfe67106ca86e2772fd5c91652ffe528ff079dc565d4","round17-paid-comparison/design-r3-1-paccept/PROTOCOL.md":"d75f858850a44e59c65346b4709b59dbce839d9fa3188f986a2021d632bde3f9","round17-paid-comparison/design-r3-1-paccept/READY.json":"0447025ba981b20dc88163e997d906bb1acf5ea1f598cc60e0159376f9a50793","round17-paid-comparison/design-r3-1-paccept/READY.primary.json":"944aeb9ab5173e4a31f0c9c7f3923965533ac3fb90d2f2c459415e66e29017f4","round17-paid-comparison/design-r3-1-paccept/REFERENCE-SPEC.md":"ef660c68af39c3c4a7e74dd8f7a1ab5eaf883cd15225d3f6b3f17692d1bb05a0","round17-paid-comparison/design-r3-1-paccept/fixtures/README.md":"a30ff70128f6f80010da2cf7fdd4ac20520f9da362ed33c4a60e6aeaf9d53687","round17-paid-comparison/design-r3-1-paccept/fixtures/cases.json":"53d501b69f3c8c8e98403c3f3c3111be84de0d1b39e95d6c53f8cdaec132da8b","round17-paid-comparison/design-r3-1-paccept/fixtures/cases.src.json":"18e11a263dc19148b751a24275fc1ff57e5ce11edc1d76da0736fd183795e4ca","round17-paid-comparison/design-r3-1-paccept/fixtures/check.py":"d7e04f113159f50f6ad3c7dedff63e22840f879c3e96a20e7e615fba4d3ee444","round17-paid-comparison/design-r3-1-paccept/fixtures/r17recon.py":"5295a66700fee54b2e03344003e5638a5728b1949eedf0945062950cc40e33ff","round17-paid-comparison/design-r3-1-paccept/fixtures/r17score.py":"4834cf66eb0019df73b8a5e81bb5b51c43111fe51204b0f01d36b60ed76c163b","round17-paid-comparison/design-r3-1-paccept/verify/mutation_pass.py":"715a8d315dacc4da051d0ce34623649581e6fe739252b8731e99482a73200171","round17-paid-comparison/design-r3-1-paccept/verify/probe_r3_1.py":"551f8f553d99c9038766451c911b3b84067bf8ad4fb0630e46442f5f5c3b4bc2","round17-paid-comparison/design-r3-1-paccept/verify/red_against_r3.py":"ede08a4bd63475832c67796c9060af981aed6f950ff668df883fca46d3a99bc6","round17-paid-comparison/design-r3-1/ADJUDICATION-SPEC.md":"1eca88fc0c54e22a77eab0e8e729b09a52eb0086fa05c0fcaec9f146ac9234d0","round17-paid-comparison/design-r3-1/BUDGET.md":"7cb99c52d2b6ce920ec7d6d0c83f9bc17f9142e8683ba81dafa803b574b097c8","round17-paid-comparison/design-r3-1/DISPOSITION.md":"6d37c5e9e0c967297f8dcfe67106ca86e2772fd5c91652ffe528ff079dc565d4","round17-paid-comparison/design-r3-1/PROTOCOL.md":"d75f858850a44e59c65346b4709b59dbce839d9fa3188f986a2021d632bde3f9","round17-paid-comparison/design-r3-1/READY.json":"ef9734cebd4ddb4aad29512d81c0a0a296f853c8cbd19a4a86a8f0106cf582f0","round17-paid-comparison/design-r3-1/READY.primary.json":"35b19756602aac89746f373313315a23c24d28b65d6318683a78ad1d4dceb9ed","round17-paid-comparison/design-r3-1/REFERENCE-SPEC.md":"ef660c68af39c3c4a7e74dd8f7a1ab5eaf883cd15225d3f6b3f17692d1bb05a0","round17-paid-comparison/design-r3-1/fixtures/README.md":"a30ff70128f6f80010da2cf7fdd4ac20520f9da362ed33c4a60e6aeaf9d53687","round17-paid-comparison/design-r3-1/fixtures/cases.json":"53d501b69f3c8c8e98403c3f3c3111be84de0d1b39e95d6c53f8cdaec132da8b","round17-paid-comparison/design-r3-1/fixtures/cases.src.json":"18e11a263dc19148b751a24275fc1ff57e5ce11edc1d76da0736fd183795e4ca","round17-paid-comparison/design-r3-1/fixtures/check.py":"d7e04f113159f50f6ad3c7dedff63e22840f879c3e96a20e7e615fba4d3ee444","round17-paid-comparison/design-r3-1/fixtures/r17recon.py":"5295a66700fee54b2e03344003e5638a5728b1949eedf0945062950cc40e33ff","round17-paid-comparison/design-r3-1/fixtures/r17score.py":"4834cf66eb0019df73b8a5e81bb5b51c43111fe51204b0f01d36b60ed76c163b","round17-paid-comparison/design-r3-1/verify/mutation_pass.py":"715a8d315dacc4da051d0ce34623649581e6fe739252b8731e99482a73200171","round17-paid-comparison/design-r3-1/verify/probe_r3_1.py":"551f8f553d99c9038766451c911b3b84067bf8ad4fb0630e46442f5f5c3b4bc2","round17-paid-comparison/design-r3-1/verify/red_against_r3.py":"ede08a4bd63475832c67796c9060af981aed6f950ff668df883fca46d3a99bc6","round17-paid-comparison/primary-acceptance/A1-FIXTURE-GATE.json":"0659cf9b93bd87168a4d5ae58af788853fcb6d7570e8c51bf93367645fa7809c","round17-paid-comparison/primary-acceptance/A2-FIXTURE-GATE.json":"fbb9d6a4ecc2a74e88637717a1f73b7bc973f9210902b1d65d8b82e0ebc7193e","round17-paid-comparison/primary-acceptance/ROLES-AUTH.json":"b3aea21d2583c712189bb394371e7accaa3595daf3914b4f540f237edfc4e033","round17-paid-comparison/reference/26-19-039/AUTHOR-NOTES.md":"d34b235d6d62aa051e0fe2f83951bc4484670bc78b74e1add88daf1001278526","round17-paid-comparison/reference/26-19-039/AUTHOR-PACKET.json":"bddfbc64a205f557bb636723a6d8ed20c9d921d62542078194eef020a4ea053f","round17-paid-comparison/reference/26-19-039/REPLY-1.json":"3a67253ee9b2d69bb798927c822083851e83ff3293f334661dfd47e801ca794d","round17-paid-comparison/reference/26-19-039/REPLY-PACKET.json":"cc090fb6c4d6a0da141e56573436c2659cb52a8bfd22f90245a2144db66ed7ce","round17-paid-comparison/reference/26-19-039/RESPONSE-1.json":"66cbeb9ca5c3cf9dbae2f030f54e470070ff1b510ed07056164fea24fe8657fc","round17-paid-comparison/reference/26-19-039/RESPONSE-PACKET.json":"b962602b2716e23929a974ed421db8318463ff5f857773864662826589400a54","round17-paid-comparison/reference/26-19-039/REVIEW-1.json":"ebc54e2062b5784cf48e0ded68c1acf55276df4fd3e48f6fbfb05be77c5aa1fe","round17-paid-comparison/reference/26-19-039/REVIEW-PACKET.json":"f26492b0cf1a9cb3d3471a7ff6529c1ded3ffa997bc778dcf630beee34eb9784","round17-paid-comparison/reference/26-19-039/check-draft-1.json":"43c7cab5d16685666ef5e71cdb1c6788595b8b2a9b51ee7f6fa56c7e17a82f2f","round17-paid-comparison/reference/26-19-039/check-draft-2.json":"b78198d7d203682b773b1388771cefd61f40d0eb47b0dac31dc2c1f5a1101b0f","round17-paid-comparison/reference/26-19-039/check-final.json":"b78198d7d203682b773b1388771cefd61f40d0eb47b0dac31dc2c1f5a1101b0f","round17-paid-comparison/reference/26-19-039/draft-1.json":"d2ffb4230ca8d8da3846cbd36de2af0dad060ddb5793ae385f999f3afa429997","round17-paid-comparison/reference/26-19-039/draft-2.json":"a4a8d8dc3de474dfe759a24af8451b9e01d0f8c6dd9fd5353f9041c7032db778","round17-paid-comparison/reference/26-19-039/reference.json":"a4a8d8dc3de474dfe759a24af8451b9e01d0f8c6dd9fd5353f9041c7032db778","round17-paid-comparison/reference/26-19-041/AUTHOR-NOTES.md":"2f0d947b10e83e99a2fbaab3969969acb50d9fe53af34a5adbea843a3b404616","round17-paid-comparison/reference/26-19-041/AUTHOR-PACKET.json":"aab285a480b5d74b5f028a99d651452179c9d602bd5d62d619638c1ed78a60d2","round17-paid-comparison/reference/26-19-041/CONTESTED.json":"afc80b5801a70663342f10b855663117bbc5d6c3a54113db48633f7e75ccc5fc","round17-paid-comparison/reference/26-19-041/REPLY-1.json":"1b6f29d2a812c4fdacbb843e1a198f3e4709747359e76a70988f5a87be3fe974","round17-paid-comparison/reference/26-19-041/REPLY-PACKET.json":"532f14f36d4eb96a6b319919fcf441e456eb70b6add8d0bfc0ad2d33f9e7892a","round17-paid-comparison/reference/26-19-041/RESPONSE-1.json":"d8e481f8a7af82b768b469d90370db588d883d5605867f67dc8121807746a1e8","round17-paid-comparison/reference/26-19-041/RESPONSE-PACKET.json":"1380f05453a0251d50ec80503a3eb3d0f0df40741465b6b0e69946b39954ff50","round17-paid-comparison/reference/26-19-041/REVIEW-1.json":"33a0e913e01bf797a897720523185da3dfb6634de5fbb9666dfe34be328b2433","round17-paid-comparison/reference/26-19-041/REVIEW-PACKET.json":"01ffe839bd1f7140372fd96d6f66797c1ab8c2e5a9a571fa2132224599a55df9","round17-paid-comparison/reference/26-19-041/check-draft-1.json":"22f52b906334f2067aedc8e762a2fb1c90e00a636c7bff3ffe5bcc3677bb11c2","round17-paid-comparison/reference/26-19-041/check-draft-2.json":"db70dd5c2469230f06acbc1a73e66e23128e5d00aec5d95569312a23cf827261","round17-paid-comparison/reference/26-19-041/check-final.json":"db70dd5c2469230f06acbc1a73e66e23128e5d00aec5d95569312a23cf827261","round17-paid-comparison/reference/26-19-041/draft-1.json":"0ac3fc1e65ac87f9746b490c9810d32466a3e496f620ca89d5fac45621209993","round17-paid-comparison/reference/26-19-041/draft-2.json":"cd58e31c8559e377b2cba3604cf8a0ed3f4ac1f0cf5542c8bb002555d7677471","round17-paid-comparison/reference/26-19-041/reference.json":"cd58e31c8559e377b2cba3604cf8a0ed3f4ac1f0cf5542c8bb002555d7677471","round17-paid-comparison/reference/26-19-106/AUTHOR-NOTES.md":"d5d8828b4679895738e28267fcba0dfa30e094678f9f1cbf03dbae3d3dc15f28","round17-paid-comparison/reference/26-19-106/AUTHOR-PACKET.json":"8942562fec5c298ca44f53894f81e3d60939a675e06de3095a3b94f09d882571","round17-paid-comparison/reference/26-19-106/REPLY-1.json":"09e9eb4dfbc205440f56785a1090001b3065024d7f2ee320f599d5d8e97f1d2c","round17-paid-comparison/reference/26-19-106/REPLY-PACKET.json":"e3447d06cd38fd3b85b8ab1688e83667e3cbefc9476bb3f319bf73da82b089ff","round17-paid-comparison/reference/26-19-106/RESPONSE-1.json":"322a4956145459e211ff053405a1d179c04e67e994f9615fa2bce6b885835c62","round17-paid-comparison/reference/26-19-106/RESPONSE-PACKET.json":"f1965a35132f53b58cd8a2120cfb21ac9a7f211a7d8cdf54ef8dfb92bc9e63e2","round17-paid-comparison/reference/26-19-106/REVIEW-1.json":"0f407e978650e01a8974f54c6df6e6aeaa20fe8c1d58804f1b8150a6ab7b5227","round17-paid-comparison/reference/26-19-106/REVIEW-PACKET.json":"49ea74e6f9d6ffad572f5573897538f7b92ecd9d393d35a17aea1b33a37e8fcd","round17-paid-comparison/reference/26-19-106/check-draft-1.json":"5bdbd832793262a832e757a5f41970f45b9df5ca0bec655d52b0a0851f2f71f8","round17-paid-comparison/reference/26-19-106/check-draft-2.json":"c38d6e0bd6c9d78c3eb7b6a5b8af164e2e3b4d2276f563b56eb51cd449f7fa77","round17-paid-comparison/reference/26-19-106/check-final.json":"c38d6e0bd6c9d78c3eb7b6a5b8af164e2e3b4d2276f563b56eb51cd449f7fa77","round17-paid-comparison/reference/26-19-106/draft-1.json":"5996ca4e5dd40527b7c9522020dd8da7c22340ec4c43b895da789bd6f0b194d5","round17-paid-comparison/reference/26-19-106/draft-2.json":"f820268289eb4285f672ffc659869f9b39899309101be20e2de4c2c2380ea65a","round17-paid-comparison/reference/26-19-106/reference.json":"f820268289eb4285f672ffc659869f9b39899309101be20e2de4c2c2380ea65a","round17-paid-comparison/reference/ACCEPTANCE.json":"954549742934a158b949bc32d4ff11734918632156b7a70bcbceeee4a6871d66","round17-paid-comparison/reference/E8-SUFFICIENCY.json":"031c9f93bd2b4992d5c690286776740e8f228cf8e7b756cd649abb2652e4ceed","round17-paid-comparison/reference/READY.json":"e47520bacbd85f5b336a5dbcb8dc4e4a20559219693801460ebbd436cfe0aa23","round17-paid-comparison/reference/make_reply_packet.py":"4bce61c8d3bfe79a4d68bc55bee3e07c3dad0262560098cd03ea4b621c948bab","round17-paid-comparison/reference/make_response_packet.py":"9c2e387a6556a1452254bff8b05e7387959adc9d02297f73652d1127ba33a69d","round17-paid-comparison/scoring-manifest/MANIFEST.json":"62838370968de7a93347b7a9e7dda307ad49650a22a639904351fedf79b8911d","round17-paid-comparison/sources-r2/26-19-039/parsed-body.txt":"9fffbf50f8d1cd0015d6fc41bfe0dfd5e60e4976bd42eb2e4f396fdcc28b39b3","round17-paid-comparison/sources-r2/26-19-041/parsed-body.txt":"82868cf622ab60cba98f438eb0b443cf36a4745b45188e7a36f643bd155de4f5","round17-paid-comparison/sources-r2/26-19-106/parsed-body.txt":"d105eb947913e37c609851d7346d5a1490f34ecb6f48541723464114ca3205c8","round17-paid-comparison/sources-r2/READY.json":"55afccdfe98d705165a51fb7d965ebbe3876d414a76e91b5f0791b3b8eb92560","round18-rerun/recon/READY.json":"89211e1796a2b8fb66a5c6b00acba6e95eb2612e6660d59c1844bbce1dbc21e5","round18-rerun/recon/r17recon.py":"64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140","round19-rerun/DESIGN-NOTE.md":"39dbdffc334f74dc7d7cd760a4ed6cc12edfd8b9ed62cbdebe143fb69df38916","round19-rerun/adapter/READY.json":"6023fbca350c19d3f5d4ac7db7855fe3d16a9cc830e6019ad1dde263a8588e9f","round19-rerun/adapter/SPEC.md":"845bba54e716dd9a76352890bf58ade8e9d561d915a68e46d36d323479097e13","round19-rerun/adapter/_out/round2-repros/_load.py":"bae679fe1e268218293eac2dad5f2caa8f99d340307e817f9b96cdc3c557f6c8","round19-rerun/adapter/_out/round2-repros/orig-repros/_load.py":"4a3967906bb8dbaabdb4756f03844d0f0bd730f0e02798b938a4474c58c9f57e","round19-rerun/adapter/_out/round2-repros/orig-repros/repro_double_post_lock_break.py":"90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c","round19-rerun/adapter/_out/round2-repros/orig-repros/repro_gate_change_bricks_ledger.py":"727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f","round19-rerun/adapter/_out/round2-repros/orig-repros/repro_headers_leak.py":"6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903","round19-rerun/adapter/_out/round2-repros/orig-repros/repro_incomplete_cell_allows_next.py":"89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf","round19-rerun/adapter/_out/round2-repros/orig-repros/repro_mark_fsync_failure.py":"a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47","round19-rerun/adapter/_out/round2-repros/orig-repros/repro_negative_sleep.py":"3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c","round19-rerun/adapter/_out/round2-repros/orig-repros/repro_partial_receipt_bricks_recover.py":"5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043","round19-rerun/adapter/_out/round2-repros/orig-repros/repro_recover_rehalts_completed.py":"71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140","round19-rerun/adapter/_out/round2-repros/orig-repros/run_all.sh":"794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3","round19-rerun/adapter/_out/round2-repros/repro_3call_plan.py":"833abad6db36c0c8f53a0877229b6bb4eb0350f7503c3732a2b799e3cda68c5d","round19-rerun/adapter/_out/round2-repros/repro_hd_cli_misc.py":"f015e2f35a1ea97332a413ee9bdc32c9045e417d69bb5cc454e7561f810b1b92","round19-rerun/adapter/_out/round2-repros/repro_hd_key_fields.py":"a28b261d26fe748d704519209f87c3b8bdcf9b55fc83fbe460d57e2ec18ff216","round19-rerun/adapter/_out/round2-repros/repro_hd_sigint_cli.py":"be13c6432460040435242d20c323ef32faf6b9cb3f72517f7f297b9cfd9c9075","round19-rerun/adapter/_out/round2-repros/repro_hd_timeout_row2.py":"5ca7455dbe12068e67a4b9ebaf74f8205c5d8bbc62108d6bfa9c7090a147c037","round19-rerun/adapter/_out/round2-repros/repro_hd_trust_store.py":"18067bc0bf60a0ee79743bed6b4bb43465938ffed60782b5be1a5f54e7ff52e5","round19-rerun/adapter/_out/round2-repros/repro_hd_wire.py":"a645c1e6cd74ef092c10db94f654aeaba49d6a07d21eb99d9c66bc389e18e20c","round19-rerun/adapter/_out/round2-repros/run_all.sh":"e53c696685f2b3df5f0f28d61b75f7bf7297d489aa76df86f12be146b07b6e9b","round19-rerun/adapter/fake_http.py":"1d9d3a3b4dee2bd8758e3e589162eb3ae997aa8f2a4f1a74bd0a8cefbcf4da92","round19-rerun/adapter/host_driver.py":"a707eda00510000722a08b17b90b690e3d3ccdc7a67a02f55a4097cd9a4b094e","round19-rerun/adapter/native_entry.py":"12dfc5468e9f462d6556cf81466e7f85b48c2736544399047ff1d43e9a5a57f9","round19-rerun/adapter/pin_ready.py":"c65511d01698d8079ed46b9baa46b5e4c75e15eaa60e998041ba217c335213dc","round19-rerun/adapter/r17_adapter.py":"db275ba74a44c687dce12d955dc3483dcbe52f4650100d2686b96a73df101828","round19-rerun/adapter/repro-baseline.txt":"75cbb8e68179e266609a6e274a29a116e42466f12dd194acc8d3d9509b1618a8","round19-rerun/adapter/repros/_load.py":"fd3843deb51fedff91cad629c93d45fe89e5b1fd6a25b01a55652146a212746c","round19-rerun/adapter/repros/repro_double_post_lock_break.py":"90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c","round19-rerun/adapter/repros/repro_gate_change_bricks_ledger.py":"727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f","round19-rerun/adapter/repros/repro_headers_leak.py":"6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903","round19-rerun/adapter/repros/repro_incomplete_cell_allows_next.py":"89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf","round19-rerun/adapter/repros/repro_mark_fsync_failure.py":"a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47","round19-rerun/adapter/repros/repro_negative_sleep.py":"3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c","round19-rerun/adapter/repros/repro_partial_receipt_bricks_recover.py":"5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043","round19-rerun/adapter/repros/repro_recover_rehalts_completed.py":"71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140","round19-rerun/adapter/repros/run_all.sh":"794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3","round19-rerun/adapter/run_tests.sh":"59e403c905274c001f61d2d3d3774e1bc70d5f2d5da638fbc43f2b03a431773e","round19-rerun/adapter/test_a4.py":"fec591e0c8b368915b831c7b8aa9ab990aa6981b8d9b24e47c52d82b0697ba5f","round19-rerun/adapter/test_a6.py":"426feed09d114e4cae0cd518be2db13c4cf8fff3253ea5aa6fbafb1a617829a0","round19-rerun/adapter/test_a7.py":"82f8a82198762dff8e13a5dd14b349cc7317845c861a4c5deb5cab527d1a2d1a","round19-rerun/adapter/test_adapter.py":"43267a4d7f506af25ae869d39df00e6ebc21888bc8cf7f355e20dacd70069781","round19-rerun/adapter/test_host_driver.py":"0ab4a73dec0d197cd5295b36abef17965846a0eae01435581a1fe9670867b8e4","round19-rerun/adapter/test_native.py":"0ec48690e6f95c847f6cd51ad6a495277f31fc82ce468f97d88dec32b30fbd67","round19-rerun/adapter/test_repros.py":"e8b89a3a5e6e30345c8afbc4466449989fc9d47ffedf3f368902a65a307a7b39","round19-rerun/adapter/test_revision.py":"d5b401e35c615847ddd93965164c06304c6a5d9fcbc11d103128b295227a6363","round19-rerun/adapter/test_round2.py":"40ce441438a7b34d654e0af6ab7547c64aeb41bc4f77bfdd0c502957c91f3d81","round19-rerun/adapter/verify_ready.py":"6ef5da8e3d0a21ba52b7be975129005bbe3daee1d9aec07b89ba0d606b5f959b","round19-rerun/amendments/A5-A6.md":"5d0eae23ea6f8cd104af5a7a909bcea76213ed3edf36e944d49778f44305e8b1","round19-rerun/amendments/A7.md":"9774df5023682078e61717c19378816e34744c1acacbb353adc1e52efa77b1c7","round19-rerun/recon/NOTE.md":"4ce31450c2595f82564bd41413b38c97e5334d58d51ec8487489cfda955ada4c","round19-rerun/recon/READY.json":"a5b9e14feed33f46914b87c21e2076132ef509ec8ed6e23956a8e2de413383b8","round19-rerun/recon/SPEC.md":"e2f87139512ba4690645fb427e6e60d57022bf623617f5bd3e4baee5b1fd6c9f","round19-rerun/recon/test_recon.py":"33c0069f13e9f0ca73f4a573ac06fbca1aaf2dfd882b3bf821639c8d5fe17c59","round19-rerun/release-prep/README.md":"787322d70e233901dbf9b1d3b2449e0e066119647547798de976d7b009fa8780","round19-rerun/release-prep/SPEC.md":"bdfe128b3b28038461da085299cf14a3855ec738c810f5b682e66344e510b8c5","round19-rerun/release-prep/evidence/CAP-ACCEPTANCE.json":"42d6686f274048b072c635f6edf50184d2745fff0ec30be8e150f380c1f4d6ef","round19-rerun/release-prep/evidence/KEY-ATTESTATION.json":"0368c515f3f13ad58384472501466b5968cc120ed818843a1511e34686a0e58f","round19-rerun/release-prep/make_proposals.py":"d32fa171b3c043d3c2dab138c5c6c1b3da42b3af34e8c29123195447e31a6d27","round19-rerun/release-prep/prepare_manifest.py":"916aeb6091461a476483d651e332c2868214e3ef5c06181272a7dc45d0d2f598","round19-rerun/release-prep/release_records.py":"ae27265ba153610b7c5cb2a5313824920fe2544db0e540c32afd765f8f8045d3","round19-rerun/release-prep/stage.py":"87994fe63a92b372babe612010db9a565343e6fad93d4a755e4344a2cc7db0a8","round19-rerun/run/CAP-ACCEPTANCE.json":"42d6686f274048b072c635f6edf50184d2745fff0ec30be8e150f380c1f4d6ef","round19-rerun/run/KEY-ATTESTATION.json":"0368c515f3f13ad58384472501466b5968cc120ed818843a1511e34686a0e58f","round19-rerun/wire/ERRATA.md":"5892ce577773de980c1dee03ccdb565fb7fbecc2bd7bc0ba8f5a6d97ef0faa8c","round19-rerun/wire/READY.json":"1b9e30e3397a5a58a248e0e63edd6d321e9ccea887888edc9e3ff22083362dbe","round19-rerun/wire/SPEC.md":"4d2d8ec5dd4c595b5ded964ff5760d7159227f46d159dce786adf276ecdca233","round19-rerun/wire/frozen-inputs.json":"ca1e68a36ca2c9082d99f6ad16e3ca2acb9499e8d4fbb04b00278f7fda638721","round19-rerun/wire/run_independent.py":"a9fd117af03b196cf28b9909ea59a349c69d2d33a1b53bfaa2394c0676c64d3d","round19-rerun/wire/test_a7.py":"d7ec4d1228752a2a65777d741192e3d19450f363c5bd7ff6a20641c7a3e8d3cb","round19-rerun/wire/test_r18.py":"818a234428fbc84cb0134849897dad6dec93e6be18364cfad42d499b6d74a3e9","round19-rerun/wire/test_wire.py":"4dd244b625b35745c28455bf47a667d3c429af27fe12b8dad49fd2acf2dbe72b","round19-rerun/wire/verify.py":"74962ef8137d2f463eca886892879997b201260c5ebdddb67a6e783b7c1623cf","round19-rerun/wire/wire.py":"f17af0190dbc35eeeeeb1df00afe594f555f0a4df80aa9cb842083d9713c0ffb"},"schema_version":"r17.stage.v1"}
+\ No newline at end of file
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/make_proposals.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/make_proposals.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/make_proposals.py	2026-10-14 11:26:04
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/make_proposals.py	2026-10-14 14:23:04
+@@ -15,7 +15,7 @@
+ spec = importlib.util.spec_from_file_location('r17_staging', HERE / 'stage.py')
+ st = importlib.util.module_from_spec(spec)
+ spec.loader.exec_module(st)
+-R17 = 'round18-rerun'
++R17 = 'round19-rerun'
+ ADAPTER = R17 + '/adapter'
+ CELLS = ['S1-OPQ', 'S2-OPQ', 'S3-OPQ']
+ SAFE = 2**52 - 1
+@@ -127,7 +127,7 @@
+ def generate(stage, output, manifest, core, *, draft, scope, batch, expires, prior,
+              cells=CELLS, release=None, gate=None, review=None):
+     stage = st.no_symlinks(stage)
+-    require(identifier(scope) and identifier('r18-s1-opq-' + batch), 'scope/batch')
++    require(identifier(scope) and identifier('r19-s1-opq-' + batch), 'scope/batch')
+     require(cells and len(set(cells)) == len(cells) and all(c in CELLS for c in cells), 'cells')
+     if not draft:
+         require(len(cells) == 1, 'non-draft requires exactly one --cell')
+@@ -149,7 +149,7 @@
+     review = review or stage / ADAPTER / 'SPEC.md'
+     created = []
+     for cell in cells:
+-        job_id = 'r18-' + cell.lower() + '-' + batch
++        job_id = 'r19-' + cell.lower() + '-' + batch
+         job_rel = R17 + '/native-jobs/' + job_id
+         job_final = stage / job_rel
+         job_write = (output / 'native-jobs' / job_id) if draft else job_final
+@@ -198,7 +198,7 @@
+     p.add_argument('--stage', type=Path)
+     p.add_argument('--output', type=Path, required=True)
+     p.add_argument('--draft', action='store_true')
+-    p.add_argument('--scope', default='docketclock-research-r18-authorized-20261014')
++    p.add_argument('--scope', default='docketclock-research-r19-authorized-20261014')
+     p.add_argument('--batch', default=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d%H%M%S'))
+     p.add_argument('--expires-unix', type=int, default=int(time.time()) + 86400)
+     p.add_argument('--prior-nanousd', type=int, default=0)
+@@ -211,7 +211,7 @@
+         p.error('non-draft requires exactly one --cell')
+     m = st.load_manifest()
+     core = json.loads(st.read_regular(st.CORE))
+-    target = args.stage or Path.home() / 'dev/yokel/.r18-stage' / st.content_id(m)
++    target = args.stage or Path.home() / 'dev/yokel/.r19-stage' / st.content_id(m)
+     for path in generate(target, args.output, m, core, draft=args.draft, scope=args.scope,
+             batch=args.batch, expires=args.expires_unix, prior=args.prior_nanousd,
+             cells=args.cell or CELLS, release=args.release, gate=args.gate, review=args.review):
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/pin_ready.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/pin_ready.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/pin_ready.py	2026-10-14 11:37:10
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/pin_ready.py	2026-10-14 14:23:04
+@@ -1,10 +1,10 @@
+-"""R18 offline payload/dependency verification (shared pin utility)."""
++"""R19 offline payload/dependency verification (shared pin utility)."""
+ import importlib.util
+ from pathlib import Path
+ import sys
+ HERE=Path(__file__).resolve().parent
+ path=HERE.parent/'pin_ready.py'
+-s=importlib.util.spec_from_file_location('r18_shared_pins',path)
++s=importlib.util.spec_from_file_location('r19_shared_pins',path)
+ m=importlib.util.module_from_spec(s)
+ s.loader.exec_module(m)
+ if __name__=='__main__':
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/prepare_manifest.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/prepare_manifest.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/prepare_manifest.py	2026-10-14 11:30:13
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/prepare_manifest.py	2026-10-14 14:23:04
+@@ -1,15 +1,15 @@
+-"""Offline R18 staging closure; reuse frozen R17 evidence, never paid outputs."""
++"""Offline R19 staging closure; reuse frozen R17 evidence, never paid outputs."""
+ import argparse
+ import importlib.util
+ import json
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-spec = importlib.util.spec_from_file_location('r18_manifest_stage', HERE / 'stage.py')
++spec = importlib.util.spec_from_file_location('r19_manifest_stage', HERE / 'stage.py')
+ st = importlib.util.module_from_spec(spec)
+ spec.loader.exec_module(st)
+ R17 = 'round17-paid-comparison'
+-R18 = 'round18-rerun'
++R19 = 'round19-rerun'
+ DESIGN = R17 + '/design-r3-1-paccept'
+ 
+ def build(bench=st.BENCH, extras=None, require_installed=False):
+@@ -23,8 +23,8 @@
+             st.relative(name)
+             files[prefix + '/' + name] = item['sha256'] if isinstance(item, dict) else item
+     for folder in ('adapter', 'wire', 'recon'):
+-        r = metadata(R18 + '/' + folder + '/READY.json')
+-        table(R18 + '/' + folder, r['files'])
++        r = metadata(R19 + '/' + folder + '/READY.json')
++        table(R19 + '/' + folder, r['files'])
+         for name, item in r['dependencies'].items():
+             files[name] = item['sha256']
+     for design in (DESIGN, R17 + '/design-r3-1'):
+@@ -45,16 +45,16 @@
+         st.relative(item['path'])
+         files[item['path']] = item['sha256']
+     for name in ('KEY-ATTESTATION.json', 'CAP-ACCEPTANCE.json'):
+-        normalized = R18 + '/release-prep/evidence/' + name
++        normalized = R19 + '/release-prep/evidence/' + name
+         raw = st.read_regular(bench / normalized)
+         files[normalized] = st.digest(raw)
+-        files[R18 + '/run/' + name] = st.digest(raw)
+-        if require_installed and st.read_regular(bench / R18 / 'run' / name) != raw:
++        files[R19 + '/run/' + name] = st.digest(raw)
++        if require_installed and st.read_regular(bench / R19 / 'run' / name) != raw:
+             raise ValueError('normalized evidence not installed: ' + name)
+-    for name in ('amendments/A5-A6.md', 'DESIGN-NOTE.md', 'release-prep/README.md',
++    for name in ('amendments/A5-A6.md', 'amendments/A7.md', 'DESIGN-NOTE.md', 'release-prep/README.md',
+                  'release-prep/SPEC.md', 'release-prep/prepare_manifest.py', 'release-prep/stage.py',
+                  'release-prep/release_records.py', 'release-prep/make_proposals.py'):
+-        files[R18 + '/' + name] = st.digest(st.read_regular(bench / R18 / name))
++        files[R19 + '/' + name] = st.digest(st.read_regular(bench / R19 / name))
+     amendment = R17 + '/amendments/A4-key-limit-label/AMENDMENT.md'
+     files[amendment] = st.digest(st.read_regular(bench / amendment))
+     for name, h in (extras or {}).items():
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/release_records.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/release_records.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/release_records.py	2026-10-14 11:26:04
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/release_records.py	2026-10-14 14:23:04
+@@ -5,7 +5,7 @@
+ 
+ 
+ def adapter(stage):
+-    path = stage / 'round18-rerun/adapter/r17_adapter.py'
++    path = stage / 'round19-rerun/adapter/r17_adapter.py'
+     spec = importlib.util.spec_from_file_location('primary_records_adapter', path)
+     a = importlib.util.module_from_spec(spec)
+     spec.loader.exec_module(a)
+@@ -34,7 +34,7 @@
+     args = p.parse_args()
+     stage = args.stage.resolve()
+     a = adapter(stage)
+-    run = stage / 'round18-rerun/run'
++    run = stage / 'round19-rerun/run'
+     if args.step == 'init':
+         assert args.budget.resolve().is_relative_to(stage)
+         raw = a.encode(init_record(a, args.budget.read_bytes(), args.key_initial_usage)) + b'\n'
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/stage.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/stage.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/stage.py	2026-10-14 11:26:04
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/stage.py	2026-10-14 14:23:04
+@@ -143,7 +143,7 @@
+ 
+ def main():
+     p = argparse.ArgumentParser(description=__doc__)
+-    p.add_argument('--parent', type=Path, default=Path.home() / 'dev/yokel/.r18-stage')
++    p.add_argument('--parent', type=Path, default=Path.home() / 'dev/yokel/.r19-stage')
+     args = p.parse_args()
+     core = json.loads(read_regular(CORE))
+     print(stage(BENCH, args.parent, load_manifest(), allowed_roots=core['adapter_roots']))
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/test_a6.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/test_a6.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/test_a6.py	2026-10-14 11:37:10
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/test_a6.py	2026-10-14 14:23:04
+@@ -11,15 +11,15 @@
+     m=importlib.util.module_from_spec(s)
+     s.loader.exec_module(m)
+     return m
+-r=load('r18_records',HERE/'release_records.py')
+-m=load('r18_manifest',HERE/'prepare_manifest.py')
+-a=load('r18_adapter_prep',HERE.parent/'adapter/r17_adapter.py')
++r=load('r19_records',HERE/'release_records.py')
++m=load('r19_manifest',HERE/'prepare_manifest.py')
++a=load('r19_adapter_prep',HERE.parent/'adapter/r17_adapter.py')
+ 
+ class BaselinePrepTests(unittest.TestCase):
+     def test_init_requires_recorded_integer_baseline(self):
+         value=r.init_record(a,b'synthetic budget',59_408_500)
+         self.assertEqual(value['key_initial_usage'],59_408_500)
+-        self.assertEqual(value['namespace'],'r18.paid-rerun.v1')
++        self.assertEqual(value['namespace'],'r19.paid-rerun.v1')
+         for u in (-1,True,1.5,'1',None):
+             with self.subTest(u=u),self.assertRaises(a.Refused):
+                 r.init_record(a,b'synthetic budget',u)
+@@ -36,9 +36,10 @@
+                      'reference/ACCEPTANCE.json','scoring-manifest/MANIFEST.json'):
+             self.assertIn('round17-paid-comparison/'+name,manifest)
+         self.assertFalse(any('/run-live/' in n or n.endswith('/KEY-MACHINE.json') or n.endswith('/content.body') for n in manifest))
+-        self.assertIn('round18-rerun/amendments/A5-A6.md',manifest)
+-        self.assertIn('round18-rerun/wire/wire.py',manifest)
++        self.assertIn('round19-rerun/amendments/A5-A6.md',manifest)
++        self.assertIn('round19-rerun/wire/wire.py',manifest)
+         self.assertIn('round18-rerun/recon/r17recon.py',manifest)
++        self.assertIn('round19-rerun/amendments/A7.md',manifest)
+ 
+ if __name__=='__main__':
+     unittest.main(verbosity=2)
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/test_release_prep.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/test_release_prep.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/release-prep/test_release_prep.py	2026-10-14 11:38:25
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/release-prep/test_release_prep.py	2026-10-14 14:23:04
+@@ -68,7 +68,7 @@
+             if name.startswith('round17-paid-comparison/reference/') or name.endswith('/parsed-body.txt'):
+                 raw = b'SYNTHETIC frozen member\n'
+             else:
+-                raw = st.read_regular(st.BENCH / ('round18-rerun/release-prep/evidence/' + Path(name).name if name.startswith('round18-rerun/run/') else name))
++                raw = st.read_regular(st.BENCH / ('round19-rerun/release-prep/evidence/' + Path(name).name if name.startswith('round19-rerun/run/') else name))
+             dst = fixture / name
+             dst.parent.mkdir(parents=True, exist_ok=True)
+             dst.write_bytes(raw)
+@@ -95,13 +95,16 @@
+         accepted = json.loads(st.read_regular(st.BENCH / 'round17-paid-comparison/run-live/stage-run/RELEASE.json'))['artifacts']['reference_ready']
+         expected[accepted['path']] = accepted['sha256']
+         self.assertEqual(refs(manifest), expected)
+-        for name in ('recon/r17recon.py', 'recon/READY.json',
++        for name in ('recon/READY.json',
+                      'adapter/r17_adapter.py', 'adapter/native_entry.py',
+                      'adapter/READY.json', 'release-prep/evidence/KEY-ATTESTATION.json'):
+             rel = p.R17 + '/' + name
+             self.assertEqual(manifest['files'][rel], st.digest(st.read_regular(st.BENCH / rel)))
+         self.assertFalse(any(n.startswith(p.R17 + '/adapter-r1-3/') for n in manifest['files']))
+         self.assertIn('round17-paid-comparison/design-r3-1/fixtures/r17recon.py', manifest['files'])
++        for name in ('r17recon.py', 'READY.json'):
++            rel = 'round18-rerun/recon/' + name
++            self.assertEqual(manifest['files'][rel], st.digest(st.read_regular(st.BENCH / rel)))
+ 
+     def test_existing_target_refused(self):
+         stage = self.staged()

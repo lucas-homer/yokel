@@ -1,0 +1,11 @@
+  scenario 3 result.json: {"action_ready": false, "automatic_retry": false, "call": "S1-OPQ", "debit": 0, "halt": null, "invoice_verified": false, "production_eligible": false, "state": 1}
+control: state 13, posts=1
+legacy ledger+release ns=r18.paid-rerun.v1: init_namespace_key (ledger unchanged, 0 key reads, 0 POST, no attempt dir)
+legacy ledger+release ns=r17.paid-comparison.v1: init_namespace_key (ledger unchanged, 0 key reads, 0 POST, no attempt dir)
+R18 release init hash on R19 ledger: release_init_hash (ledger unchanged, 0 key reads, 0 POST)
+R18-wire call pins in R19 release: pre_dispatch_pause [inner release_body_hashes] (0 POST, 1 key preflight read, ledger tail [('RESERVE', 'S1-OPQ', None, None), ('RESOLVE', 'S1-OPQ', False, 0)]; no DISPATCH_MARK, no request/intent receipt; receipts ['key-preflight.json', 'result.json', 'stop.json'])
+FULL cell against OPQ-only release: manifest_slots (0 key reads, 0 POST, ledger unchanged)
+FULL cell before any OPQ cell: wrong_cell_order (0 key reads, 0 POST, ledger unchanged)
+R18 adapter bytes as release artifact: adapter_self_pin (ledger unchanged, 0 key reads, 0 POST)
+recon pin: shared with R18 by design (64794fdd…); isolation rests on namespace + release/init hash + wire call pins
+OK: no R17/R18 ledger, release, call pin or adapter artifact can bind to or dispatch an R19 cell

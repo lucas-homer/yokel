@@ -1,0 +1,266 @@
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/recon/READY.json /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/recon/READY.json
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/recon/READY.json	2026-10-14 11:41:50
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/recon/READY.json	2026-10-14 14:27:50
+@@ -1,7 +1,16 @@
+ {
+   "committed": false,
+   "credentials_accessed": false,
+-  "dependencies": {},
++  "dependencies": {
++    "round18-rerun/recon/READY.json": {
++      "bytes": 2196,
++      "sha256": "89211e1796a2b8fb66a5c6b00acba6e95eb2612e6660d59c1844bbce1dbc21e5"
++    },
++    "round18-rerun/recon/r17recon.py": {
++      "bytes": 6766,
++      "sha256": "64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140"
++    }
++  },
+   "dispatch_authorized": false,
+   "files": {
+     "NOTE.md": {
+@@ -9,16 +18,12 @@
+       "sha256": "4ce31450c2595f82564bd41413b38c97e5334d58d51ec8487489cfda955ada4c"
+     },
+     "SPEC.md": {
+-      "bytes": 560,
+-      "sha256": "df0b6630211d51730bd3a16b184f692368e9a6466aff39bd4dcc764fb00e86ad"
++      "bytes": 425,
++      "sha256": "e2f87139512ba4690645fb427e6e60d57022bf623617f5bd3e4baee5b1fd6c9f"
+     },
+-    "r17recon.py": {
+-      "bytes": 6766,
+-      "sha256": "64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140"
+-    },
+     "test_recon.py": {
+-      "bytes": 2462,
+-      "sha256": "78d10944a5621b741224c59e119a0bf29c3e06e459ce4341a1746d6015488bfa"
++      "bytes": 2530,
++      "sha256": "33c0069f13e9f0ca73f4a573ac06fbca1aaf2dfd882b3bf821639c8d5fe17c59"
+     }
+   },
+   "frozen_inputs_unchanged": true,
+@@ -27,13 +32,12 @@
+   "production_eligible": false,
+   "provider_calls": 0,
+   "revision": "A6",
+-  "schema_version": "r18.offline-ready.v1",
++  "schema_version": "r19.offline-ready.v1",
+   "self_pin": "READY excludes itself; primary pins exact hash externally",
+   "sha256": {
+     "NOTE.md": "4ce31450c2595f82564bd41413b38c97e5334d58d51ec8487489cfda955ada4c",
+-    "SPEC.md": "df0b6630211d51730bd3a16b184f692368e9a6466aff39bd4dcc764fb00e86ad",
+-    "r17recon.py": "64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140",
+-    "test_recon.py": "78d10944a5621b741224c59e119a0bf29c3e06e459ce4341a1746d6015488bfa"
++    "SPEC.md": "e2f87139512ba4690645fb427e6e60d57022bf623617f5bd3e4baee5b1fd6c9f",
++    "test_recon.py": "33c0069f13e9f0ca73f4a573ac06fbca1aaf2dfd882b3bf821639c8d5fe17c59"
+   },
+   "signing_key_accessed": false,
+   "status": "READY_OFFLINE_IMPLEMENTATION",
+@@ -49,7 +53,7 @@
+       "output": "_out/python312-tests.txt",
+       "output_pin": {
+         "bytes": 632,
+-        "sha256": "784e72cf8cd5abd59a198871c32c320a60001372c13651e14bde29e3ad3c73a7"
++        "sha256": "b8b0a5c79749c6b02094bec5f08c0cb75b61d60accaf9fe804fe9abe67f06607"
+       },
+       "passed": 3,
+       "run": 3
+@@ -65,7 +69,7 @@
+       "output": "_out/system-tests.txt",
+       "output_pin": {
+         "bytes": 632,
+-        "sha256": "38c0d11eb6f11e8104f50860c60a9e82b60fc1bc040062fa8692fa04ddc4f254"
++        "sha256": "7fc330ee1de32cc4ba7ae25a770bede176a959ed0e17032bd10f234bb96197a2"
+       },
+       "passed": 3,
+       "run": 3
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/recon/SPEC.md /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/recon/SPEC.md
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/recon/SPEC.md	2026-10-14 11:31:58
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/recon/SPEC.md	2026-10-14 14:24:43
+@@ -1,10 +1,7 @@
+-# A6 recon revision
++# A6 recon reused from frozen R18
+ 
+-Minimal copy of R17 recon-a4/r17recon.py. key_limit_ok subtracts optional U0
+-from available capacity while retaining KEY_MAX. reconcile compares observed
+-absolute usage with U0 plus cumulative reported cost. close_debit subtracts
+-INIT's U0 from highest absolute usage before retaining excess run cost.
+-
+-Zero-baseline compatibility is retained for frozen ledger fixtures. Schedules,
+-tolerance, FLOOR, OPERATING, debit/admission/no-retry and halt rules are fixed.
+-Exact diff is `../_out/recon.diff`; original fixture engine is never edited.
++No R19 recon executable copy. Adapter loads ../round18-rerun/recon/r17recon.py
++by SHA256 64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140.
++Its original READY is pinned and staged alongside the engine. R19 tests differ
++only in the engine path; the three original tests and all A6 behavior remain.
++NOTE.md is the unchanged historical A4 note inherited by R18, not the A6 pin.
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/recon/r17recon.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/recon/r17recon.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/recon/r17recon.py	2026-10-14 11:26:04
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/recon/r17recon.py	1969-12-31 16:00:00
+@@ -1,144 +0,0 @@
+-#!/usr/bin/env python3
+-"""R17 design-r3.1 reference semantics for ledger admission and key-usage reconciliation
+-(BUDGET §4-§5). Pure functions over already-parsed values: no I/O, no network, no credentials.
+-The adapter (PROTOCOL P3) must implement exactly these rules; check.py pins them with fixtures.
+-
+-All money is integer nanoUSD. Provider decimals are parsed exactly (Decimal from the raw JSON
+-token, never a binary float) by `parse_usd`.
+-"""
+-from decimal import Decimal, ROUND_CEILING
+-
+-CAP = 2_000_000_000
+-OPERATING = 1_800_000_000
+-FLOOR = 270_000_000
+-KEY_MAX = 50_000_000_000
+-TOL_PER_CALL = 1_000                   # nanoUSD per possibly-dispatched attempt, cumulative
+-READ_SCHEDULE_S = (0, 60, 300, 900)    # elapsed seconds after the attempt resolved
+-RELEASE_POLICIES = ('P-HARD', 'P-ACCEPT')  # BUDGET §0; UNSET or anything else never admits
+-
+-
+-class LedgerError(ValueError):
+-    pass
+-
+-
+-def parse_usd(token):
+-    """Exact decimal string -> nanoUSD, rounded up. Rejects non-finite or negative values."""
+-    if not isinstance(token, str):
+-        raise LedgerError('money must arrive as the raw decimal token (a string)')
+-    d = Decimal(token)
+-    if not d.is_finite() or d < 0:
+-        raise LedgerError(f'bad money token {token!r}')
+-    return int((d * 1_000_000_000).to_integral_value(rounding=ROUND_CEILING))
+-
+-
+-def key_limit_ok(limit, required_calls, initial_usage=0):
+-    """INIT condition: the verified, non-resetting key limit funds every required call at FLOOR
+-    and is no higher than KEY_MAX."""
+-    return (type(limit) is int and type(initial_usage) is int and initial_usage >= 0
+-            and required_calls * FLOOR <= limit - initial_usage and limit <= KEY_MAX)
+-
+-
+-def _calls(entries, kind):
+-    return [e['call'] for e in entries if e['type'] == kind]
+-
+-
+-def pending(entries):
+-    """Calls with more RESERVE than RESOLVE entries (a re-admitted, never-dispatched call
+-    has one RESERVE/RESOLVE pair per attempt)."""
+-    open_ = {}
+-    for e in entries:
+-        if e['type'] in ('RESERVE', 'RESOLVE'):
+-            open_[e['call']] = open_.get(e['call'], 0) + (1 if e['type'] == 'RESERVE' else -1)
+-    return sorted(c for c, n in open_.items() if n > 0)
+-
+-
+-def aggregate(entries):
+-    """Σ RESOLVE.debit + Σ RECONCILE_UP.debit + FLOOR per pending RESERVE."""
+-    total = sum(e['debit'] for e in entries if e['type'] in ('RESOLVE', 'RECONCILE_UP'))
+-    return total + FLOOR * len(pending(entries))
+-
+-
+-def admit(entries, call, key_usage):
+-    """Admission for `call`, evaluated under the exclusive lock BEFORE its RESERVE is written.
+-    entries: ledger entries (dicts with 'type' and, where relevant, 'call', 'debit',
+-    'dispatched'; INIT and BIND_RELEASE carry 'release_policy'). key_usage: the last RECONCILED provider usage (nanoUSD).
+-    Returns (True, None) or (False, reason)."""
+-    types = [e['type'] for e in entries]
+-    if not types or types[0] != 'INIT':
+-        return False, 'no INIT'
+-    init = entries[0]
+-    if init.get('release_policy') not in RELEASE_POLICIES:
+-        return False, 'release policy unset or unrecognised'
+-    if 'HALT' in types:
+-        return False, 'halted'
+-    if 'BIND_RELEASE' not in types:
+-        return False, 'release record not bound'
+-    if any(e.get('release_policy') != init['release_policy'] for e in entries if e['type'] == 'BIND_RELEASE'):
+-        return False, 'release policy differs between INIT and BIND_RELEASE'
+-    if call not in init['required_calls']:
+-        return False, 'not a required call'
+-    if pending(entries):
+-        return False, 'an attempt is unresolved'
+-    marked, reconciled = _calls(entries, 'DISPATCH_MARK'), set(_calls(entries, 'RECONCILED'))
+-    if any(c not in reconciled for c in marked):
+-        return False, 'key usage not reconciled for a dispatched attempt'
+-    done = {e['call'] for e in entries if e['type'] == 'RESOLVE' and e['dispatched']} | set(_calls(entries, 'SKIP'))
+-    if call in done:
+-        return False, 'call already completed or skipped (no retry)'
+-    remaining = sum(1 for c in init['required_calls'] if c not in done)
+-    need = remaining * FLOOR
+-    if aggregate(entries) + need > OPERATING:
+-        return False, 'operating limit'
+-    if key_usage + need > init['key_limit']:
+-        return False, 'key capacity'
+-    return True, None
+-
+-
+-def debit(reported=None, prompt_tokens=None, completion_tokens=None, key_delta=None):
+-    """BUDGET §4 rule 4: max(FLOOR, reported, rate estimate, attributable key usage)."""
+-    terms = [FLOOR]
+-    if reported is not None:
+-        terms.append(reported)
+-    if prompt_tokens is not None and completion_tokens is not None:
+-        terms.append(prompt_tokens * 2_500 + completion_tokens * 10_000)
+-    if key_delta is not None:
+-        terms.append(key_delta)
+-    return max(terms)
+-
+-
+-def reconcile(i, cumulative_reported, prev_usage, pinned, reads):
+-    """BUDGET §5 RECON after possibly-dispatched attempt number i (1-based, cumulative).
+-    cumulative_reported: Σ ceil(reported cost) over attempts 1..i (None if any is missing).
+-    prev_usage: last reconciled usage (U0 at INIT). pinned: {'limit', 'limit_reset'} from INIT.
+-    reads: [(elapsed_s, read)] in time order, read = None (read error) or a dict with
+-    'usage', 'limit', 'limit_reset'. Returns ('RECONCILED', usage) or ('HALT', reason)."""
+-    if len(reads) > len(READ_SCHEDULE_S):
+-        return 'HALT', 'too many reads'
+-    for (elapsed, _), due in zip(reads, READ_SCHEDULE_S):
+-        if elapsed < due:
+-            return 'HALT', 'read before its scheduled time'
+-    baseline = pinned.get('key_initial_usage', 0)
+-    tol, floor = i * TOL_PER_CALL, prev_usage
+-    for _, read in reads:
+-        if read is None:
+-            continue
+-        if read['limit'] is None or read['limit'] != pinned['limit'] or read['limit_reset'] != pinned['limit_reset']:
+-            return 'HALT', 'limit changed, unlimited or resetting'
+-        u = read['usage']
+-        if type(u) is not int or u < floor:
+-            return 'HALT', 'usage regressed or invalid'
+-        floor = u    # R3-S3: below any earlier read of this sequence is a regression too
+-        if cumulative_reported is None:
+-            continue
+-        if u > baseline + cumulative_reported + tol:
+-            return 'HALT', 'usage exceeds reported cost'
+-        if abs(u - (baseline + cumulative_reported)) <= tol:
+-            return 'RECONCILED', u
+-    return 'HALT', 'KEY_USAGE_UNRECONCILED'
+-
+-
+-def close_debit(entries, highest_usage):
+-    """Run-close retention: max(Σ conservative debits, highest key usage above INIT baseline U0).
+-    Returns the upward RECONCILE_UP amount (0 if none is needed)."""
+-    total = sum(e['debit'] for e in entries if e['type'] in ('RESOLVE', 'RECONCILE_UP'))
+-    return max(0, highest_usage - entries[0].get('key_initial_usage', 0) - total)
+diff -ruN -x _out -x __pycache__ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/recon/test_recon.py /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/recon/test_recon.py
+--- /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round18-rerun/recon/test_recon.py	2026-10-14 11:30:40
++++ /Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round19-rerun/recon/test_recon.py	2026-10-14 14:23:04
+@@ -17,7 +17,7 @@
+ 
+ class ReconTests(unittest.TestCase):
+     def test_a6_recon_baseline_and_close_retention(self):
+-        amended = load('recon_a6', HERE / 'r17recon.py')
++        amended = load('recon_a6', HERE.parent.parent / 'round18-rerun/recon/r17recon.py')
+         u0 = 59_408_500
+         pinned = dict(limit=amended.KEY_MAX, limit_reset=None, key_initial_usage=u0)
+         def read(u):
+@@ -41,7 +41,7 @@
+ 
+     def test_only_exported_constant_changes(self):
+         original = load('recon_original', ORIGINAL / 'r17recon.py')
+-        amended = load('recon_a4', HERE / 'r17recon.py')
++        amended = load('recon_a4', HERE.parent.parent / 'round18-rerun/recon/r17recon.py')
+         self.assertEqual(amended.KEY_MAX, 50_000_000_000)
+         for name in ('CAP', 'OPERATING', 'FLOOR', 'TOL_PER_CALL', 'READ_SCHEDULE_S', 'RELEASE_POLICIES'):
+             self.assertEqual(getattr(original, name), getattr(amended, name), name)

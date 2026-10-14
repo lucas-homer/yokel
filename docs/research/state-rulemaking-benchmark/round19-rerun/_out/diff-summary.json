@@ -1,0 +1,751 @@
+{
+  "DESIGN-NOTE.md": {
+    "added": 14,
+    "hunks": [
+      "@@ -1,18 +1,17 @@"
+    ],
+    "reason": "Offline build/verification/documentation/inventory retargeted to R19 + A7; frozen inputs expanded to R14\u2013R18.",
+    "removed": 15
+  },
+  "FILES-WRITTEN.txt": {
+    "added": 9,
+    "hunks": [
+      "@@ -1,4 +1,3 @@",
+      "@@ -6,20 +5,21 @@",
+      "@@ -37,7 +37,6 @@",
+      "@@ -59,6 +58,7 @@",
+      "@@ -66,6 +66,7 @@",
+      "@@ -84,7 +85,6 @@",
+      "@@ -105,6 +105,7 @@",
+      "@@ -114,6 +115,7 @@"
+    ],
+    "reason": "Offline build/verification/documentation/inventory retargeted to R19 + A7; frozen inputs expanded to R14\u2013R18.",
+    "removed": 7
+  },
+  "SPEC.md": {
+    "added": 19,
+    "hunks": [
+      "@@ -1,20 +1,23 @@"
+    ],
+    "reason": "Offline build/verification/documentation/inventory retargeted to R19 + A7; frozen inputs expanded to R14\u2013R18.",
+    "removed": 16
+  },
+  "_policy": {
+    "beyond_listed_dispatch_ledger_key_changes": false,
+    "recon": "Frozen R18 engine referenced by unchanged hash; no copied executable.",
+    "root_READY": "Pins final roots/component READY/amendments/review/_out; intentionally excluded from its own diffs to avoid hash recursion.",
+    "runtime_deltas": "wire: revision/envelope + opaque-only A7; adapter: roots/wire pin/namespace; keycheck proposal: job/stage labels; release-prep: R19 roots/scope/A7 pin closure",
+    "unchanged_executables": [
+      "adapter/host_driver.py",
+      "adapter/native_entry.py",
+      "keycheck/keycheck.py",
+      "keycheck/measure_bootstrap.py",
+      "release-prep/normalize_evidence.py"
+    ]
+  },
+  "adapter/READY.json": {
+    "added": 36,
+    "hunks": [
+      "@@ -41,20 +41,20 @@",
+      "@@ -146,11 +146,11 @@",
+      "@@ -198,7 +198,7 @@",
+      "@@ -208,6 +208,10 @@",
+      "@@ -234,11 +238,11 @@",
+      "@@ -248,12 +252,12 @@",
+      "@@ -276,8 +280,8 @@",
+      "@@ -289,16 +293,17 @@",
+      "@@ -313,11 +318,11 @@",
+      "@@ -329,11 +334,11 @@"
+    ],
+    "reason": "Derived payload/dependency/test pins and R19 revision/namespace metadata.",
+    "removed": 31
+  },
+  "adapter/SPEC.md": {
+    "added": 5,
+    "changes": [
+      "-# Adapter r1.5",
+      "+# Adapter r1.6",
+      "-Copy of R17 adapter-r1-4. Namespace r18.paid-rerun.v1; new wire/recon pins.",
+      "+Copy of R18 adapter r1.5. Namespace r19.paid-rerun.v1; new wire pin.",
+      "+Frozen R18 recon path and pin are reused directly.",
+      "-is pinned independently through R18 wire READY. Host source lookup uses frozen",
+      "-R17 sources; native shim loads R18 adapter/host_driver.py. A3 timeout 600 s,",
+      "+is pinned independently through R19 wire READY. Host source lookup uses frozen",
+      "+R17 sources; native shim loads R19 adapter/host_driver.py. A3 timeout 600 s,"
+    ],
+    "hunks": [
+      "@@ -1,9 +1,10 @@"
+    ],
+    "removed": 4
+  },
+  "adapter/pin_ready.py": {
+    "added": 2,
+    "changes": [
+      "-\"\"\"R18 offline payload/dependency verification (shared pin utility).\"\"\"",
+      "+\"\"\"R19 offline payload/dependency verification (shared pin utility).\"\"\"",
+      "-s=importlib.util.spec_from_file_location('r18_shared_pins',path)",
+      "+s=importlib.util.spec_from_file_location('r19_shared_pins',path)"
+    ],
+    "hunks": [
+      "@@ -1,10 +1,10 @@"
+    ],
+    "removed": 2
+  },
+  "adapter/r17_adapter.py": {
+    "added": 7,
+    "changes": [
+      "-R18 = HERE.parent",
+      "-BENCH = R18.parent",
+      "+R19 = HERE.parent",
+      "+BENCH = R19.parent",
+      "+R18 = BENCH / 'round18-rerun'",
+      "-WIRE_SHA = '0f8e44476b509a28b68739f83c0e557198a9990079bf8c108ff00071ecd56bef'",
+      "+WIRE_SHA = 'f17af0190dbc35eeeeeb1df00afe594f555f0a4df80aa9cb842083d9713c0ffb'",
+      "-NAMESPACE = 'r18.paid-rerun.v1'",
+      "+NAMESPACE = 'r19.paid-rerun.v1'",
+      "-    require(read(R18 / 'wire/READY.json')['sha256']['wire.py'] == WIRE_SHA, 'r18_wire_pin')",
+      "+    require(read(R19 / 'wire/READY.json')['sha256']['wire.py'] == WIRE_SHA, 'r19_wire_pin')",
+      "-            load_pinned('r17_exact_wire', R18 / 'wire/wire.py', WIRE_SHA))",
+      "+            load_pinned('r17_exact_wire', R19 / 'wire/wire.py', WIRE_SHA))"
+    ],
+    "hunks": [
+      "@@ -17,14 +17,15 @@",
+      "@@ -156,9 +157,9 @@"
+    ],
+    "removed": 6
+  },
+  "adapter/run_tests.sh": {
+    "added": 1,
+    "changes": [
+      "-\"${R18_TEST_PYTHON:-python3}\" -I -S -B -m unittest discover -s . -p 'test_*.py' -v",
+      "+\"${R19_TEST_PYTHON:-python3}\" -I -S -B -m unittest discover -s . -p 'test_*.py' -v"
+    ],
+    "hunks": [
+      "@@ -2,4 +2,4 @@"
+    ],
+    "removed": 1
+  },
+  "adapter/test_a7.py": {
+    "added": 62,
+    "changes": [
+      "+\"\"\"Namespace isolation and exact adapter retarget proof; synthetic transports only.\"\"\"",
+      "+import copy",
+      "+from pathlib import Path",
+      "+import tempfile",
+      "+import unittest",
+      "+import test_adapter as t",
+      "+",
+      "+a = t.a",
+      "+HERE = Path(__file__).resolve().parent",
+      "+",
+      "+",
+      "+class R19IsolationTests(unittest.TestCase):",
+      "+    def setUp(self):",
+      "+        self.tmp = tempfile.TemporaryDirectory(dir=t.OUT)",
+      "+        self.addCleanup(self.tmp.cleanup)",
+      "+        self.h = t.Harness(self.tmp.name)",
+      "+",
+      "+    def legacy_release(self, *, legacy_ledger):",
+      "+        h = self.h",
+      "+        entries = h.entries()",
+      "+        legacy_init = copy.deepcopy(entries[0])",
+      "+        legacy_init['namespace'] = 'r18.paid-rerun.v1'",
+      "+        h.release['init_sha256'] = a.sha(a.encode(legacy_init))",
+      "+        h.save_release()",
+      "+        if legacy_ledger:",
+      "+            entries[0] = legacy_init",
+      "+        entries[1]['release_sha256'] = a.sha(h.release_path.read_bytes())",
+      "+        h.rewrite_ledger(entries)",
+      "+",
+      "+    def refused_without_effects(self, reason):",
+      "+        before = (self.h.run / 'ledger.jsonl').read_bytes()",
+      "+        with self.assertRaisesRegex(a.Refused, reason):",
+      "+            self.h.execute()",
+      "+        self.assertEqual((self.h.run / 'ledger.jsonl').read_bytes(), before)",
+      "+        self.assertEqual(self.h.posts, [])",
+      "+        self.assertEqual(self.h.key_reads, [])",
+      "+        self.assertFalse((self.h.run / 'job1').exists())",
+      "+",
+      "+    def test_r18_namespace_ledger_release_pair_refused_before_reads_or_reserve(self):",
+      "+        self.legacy_release(legacy_ledger=True)",
+      "+        self.refused_without_effects('^init_namespace_key$')",
+      "+",
+      "+    def test_r18_release_cannot_bind_r19_init_even_with_updated_bind_hash(self):",
+      "+        self.legacy_release(legacy_ledger=False)",
+      "+        self.refused_without_effects('^release_init_hash$')",
+      "+",
+      "+    def test_adapter_only_paths_wire_pin_namespace_change(self):",
+      "+        baseline = (a.BENCH / 'round18-rerun/adapter/r17_adapter.py').read_text()",
+      "+        old_pin = a.sha((a.BENCH / 'round18-rerun/wire/wire.py').read_bytes())",
+      "+        expected = baseline.replace('R18 = HERE.parent\\nBENCH = R18.parent',",
+      "+            \"R19 = HERE.parent\\nBENCH = R19.parent\\nR18 = BENCH / 'round18-rerun'\")",
+      "+        expected = expected.replace(\"R18 / 'wire/\", \"R19 / 'wire/\")",
+      "+        expected = expected.replace(\"'r18_wire_pin'\", \"'r19_wire_pin'\")",
+      "+        expected = expected.replace(\"NAMESPACE = 'r18.paid-rerun.v1'\", \"NAMESPACE = 'r19.paid-rerun.v1'\")",
+      "+        expected = expected.replace(\"WIRE_SHA = '\" + old_pin + \"'\", \"WIRE_SHA = '\" + a.WIRE_SHA + \"'\")",
+      "+        self.assertEqual((HERE / 'r17_adapter.py').read_text(), expected)",
+      "+        self.assertEqual(a.RECON_SHA, '64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140')",
+      "+        self.assertEqual(Path(a.recon.__file__), a.BENCH / 'round18-rerun/recon/r17recon.py')",
+      "+",
+      "+",
+      "+if __name__ == '__main__':",
+      "+    unittest.main(verbosity=2)"
+    ],
+    "hunks": [
+      "@@ -0,0 +1,62 @@"
+    ],
+    "removed": 0
+  },
+  "adapter/verify_ready.py": {
+    "added": 2,
+    "changes": [
+      "-\"\"\"R18 offline payload/dependency verification (shared pin utility).\"\"\"",
+      "+\"\"\"R19 offline payload/dependency verification (shared pin utility).\"\"\"",
+      "-s=importlib.util.spec_from_file_location('r18_shared_pins',path)",
+      "+s=importlib.util.spec_from_file_location('r19_shared_pins',path)"
+    ],
+    "hunks": [
+      "@@ -1,10 +1,10 @@"
+    ],
+    "removed": 2
+  },
+  "implement_offline.py": {
+    "added": 208,
+    "hunks": [
+      "@@ -1,133 +1,230 @@"
+    ],
+    "reason": "Offline build/verification/documentation/inventory retargeted to R19 + A7; frozen inputs expanded to R14\u2013R18.",
+    "removed": 111
+  },
+  "keycheck/README.md": {
+    "added": 2,
+    "changes": [
+      "-# R18 keycheck v3",
+      "+# R19 keycheck v3",
+      "-Use scope docketclock-research-r18-authorized-20261014, fresh expiry and the",
+      "+Use scope docketclock-research-r19-authorized-20261014, fresh expiry and the"
+    ],
+    "hunks": [
+      "@@ -1,4 +1,4 @@",
+      "@@ -8,7 +8,7 @@"
+    ],
+    "removed": 2
+  },
+  "keycheck/READY.json": {
+    "added": 7,
+    "hunks": [
+      "@@ -6,7 +6,7 @@",
+      "@@ -18,7 +18,7 @@",
+      "@@ -39,13 +39,13 @@",
+      "@@ -64,7 +64,7 @@",
+      "@@ -80,7 +80,7 @@"
+    ],
+    "reason": "Derived payload/dependency/test pins and R19 revision/namespace metadata.",
+    "removed": 7
+  },
+  "keycheck/make_keycheck_proposal.py": {
+    "added": 2,
+    "changes": [
+      "-    job_id = 'r18-keycheck-v3-' + time.strftime('%Y%m%d%H%M%S', time.gmtime(now)) + '-' + uuid.uuid4().hex[:12]",
+      "+    job_id = 'r19-keycheck-v3-' + time.strftime('%Y%m%d%H%M%S', time.gmtime(now)) + '-' + uuid.uuid4().hex[:12]",
+      "-    manifest = {'schema_version': 'r18.keycheck-stage.v3', 'job_id': job_id,",
+      "+    manifest = {'schema_version': 'r19.keycheck-stage.v3', 'job_id': job_id,"
+    ],
+    "hunks": [
+      "@@ -60,7 +60,7 @@",
+      "@@ -69,7 +69,7 @@"
+    ],
+    "removed": 2
+  },
+  "offline_tests.py": {
+    "added": 1,
+    "hunks": [
+      "@@ -1,4 +1,4 @@"
+    ],
+    "reason": "Offline build/verification/documentation/inventory retargeted to R19 + A7; frozen inputs expanded to R14\u2013R18.",
+    "removed": 1
+  },
+  "pin_ready.py": {
+    "added": 18,
+    "hunks": [
+      "@@ -1,4 +1,4 @@",
+      "@@ -9,7 +9,7 @@",
+      "@@ -23,12 +23,13 @@",
+      "@@ -36,19 +37,21 @@",
+      "@@ -70,7 +73,7 @@",
+      "@@ -79,10 +82,10 @@",
+      "@@ -91,7 +94,7 @@",
+      "@@ -112,14 +115,14 @@"
+    ],
+    "reason": "Offline build/verification/documentation/inventory retargeted to R19 + A7; frozen inputs expanded to R14\u2013R18.",
+    "removed": 15
+  },
+  "recon/READY.json": {
+    "added": 19,
+    "hunks": [
+      "@@ -1,7 +1,16 @@",
+      "@@ -9,16 +18,12 @@",
+      "@@ -27,13 +32,12 @@",
+      "@@ -49,7 +53,7 @@",
+      "@@ -65,7 +69,7 @@"
+    ],
+    "reason": "Derived payload/dependency/test pins and R19 revision/namespace metadata.",
+    "removed": 15
+  },
+  "recon/SPEC.md": {
+    "added": 6,
+    "changes": [
+      "-# A6 recon revision",
+      "+# A6 recon reused from frozen R18",
+      "-Minimal copy of R17 recon-a4/r17recon.py. key_limit_ok subtracts optional U0",
+      "-from available capacity while retaining KEY_MAX. reconcile compares observed",
+      "-absolute usage with U0 plus cumulative reported cost. close_debit subtracts",
+      "-INIT's U0 from highest absolute usage before retaining excess run cost.",
+      "-",
+      "-Zero-baseline compatibility is retained for frozen ledger fixtures. Schedules,",
+      "-tolerance, FLOOR, OPERATING, debit/admission/no-retry and halt rules are fixed.",
+      "-Exact diff is `../_out/recon.diff`; original fixture engine is never edited.",
+      "+No R19 recon executable copy. Adapter loads ../round18-rerun/recon/r17recon.py",
+      "+by SHA256 64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140.",
+      "+Its original READY is pinned and staged alongside the engine. R19 tests differ",
+      "+only in the engine path; the three original tests and all A6 behavior remain.",
+      "+NOTE.md is the unchanged historical A4 note inherited by R18, not the A6 pin."
+    ],
+    "hunks": [
+      "@@ -1,10 +1,7 @@"
+    ],
+    "removed": 9
+  },
+  "recon/r17recon.py": {
+    "action": "referenced, not copied",
+    "hunks": [],
+    "path": "round18-rerun/recon/r17recon.py",
+    "sha256": "64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140"
+  },
+  "recon/test_recon.py": {
+    "added": 2,
+    "changes": [
+      "-        amended = load('recon_a6', HERE / 'r17recon.py')",
+      "+        amended = load('recon_a6', HERE.parent.parent / 'round18-rerun/recon/r17recon.py')",
+      "-        amended = load('recon_a4', HERE / 'r17recon.py')",
+      "+        amended = load('recon_a4', HERE.parent.parent / 'round18-rerun/recon/r17recon.py')"
+    ],
+    "hunks": [
+      "@@ -17,7 +17,7 @@",
+      "@@ -41,7 +41,7 @@"
+    ],
+    "removed": 2
+  },
+  "release-prep/README.md": {
+    "added": 17,
+    "changes": [
+      "-# Ordered R18 runbook (future primary-owned steps)",
+      "+# Ordered R19 runbook (future primary-owned steps)",
+      "-P-ACCEPT; namespace `r18.paid-rerun.v1`; scope",
+      "-`docketclock-research-r18-authorized-20261014`. FLOOR $0.27, OPERATING $1.80,",
+      "+P-ACCEPT; namespace `r19.paid-rerun.v1`; scope",
+      "+`docketclock-research-r19-authorized-20261014`. FLOOR $0.27, OPERATING $1.80,",
+      "-Let PREP be this folder; STAGE the new content-addressed stage; R18 be",
+      "-`$STAGE/round18-rerun`; BENCH be the source benchmark. Live stage roots must",
+      "+Let PREP be this folder; STAGE the new content-addressed stage; R19 be",
+      "+`$STAGE/round19-rerun`; BENCH be the source benchmark. Live stage roots must",
+      "-   evidence/KEY-ATTESTATION.json and CAP-ACCEPTANCE.json under the new R18 run/;",
+      "+   evidence/KEY-ATTESTATION.json and CAP-ACCEPTANCE.json under the new R19 run/;",
+      "-   Pin canonical INIT without its JSONL newline. The ledger is new R18 history;",
+      "-   never reset/truncate R17 or an existing R18 ledger.",
+      "+   Pin canonical INIT without its JSONL newline. The ledger is new R19 history;",
+      "+   never reset/truncate R17 or an existing R19 ledger.",
+      "-   grammar). Map adapter/tests/adapter_ready/host_driver to R18 adapter; wire",
+      "-   is imported from R18 wire; recon artifact to R18 recon. Map design roles to",
+      "+   grammar). Map adapter/tests/adapter_ready/host_driver to R19 adapter; wire",
+      "+   is imported from R19 wire; recon artifact to frozen R18 recon. Map design roles to",
+      "-   K3 machine_check must use the fresh R18 baseline evidence. For each new OPQ",
+      "-   cell build its plan from the frozen source with the R18 wire and recompute",
+      "+   K3 machine_check must use the fresh R19 baseline evidence. For each new OPQ",
+      "+   cell build its plan from the frozen source with the R19 wire and recompute",
+      "-   --scope docketclock-research-r18-authorized-20261014 --batch <unique-id>",
+      "-   --expires-unix <within-7-days> --prior-nanousd <R18-ledger-aggregate>",
+      "-   --release \"$R18/run/RELEASE.json\" --review <staged-accepted-review>.",
+      "+   --scope docketclock-research-r19-authorized-20261014 --batch <unique-id>",
+      "+   --expires-unix <within-7-days> --prior-nanousd <R19-ledger-aggregate>",
+      "+   --release \"$R19/run/RELEASE.json\" --review <staged-accepted-review>.",
+      "-   workflow. The budget prior is R18's conservative aggregate, not account U0.",
+      "+   workflow. The budget prior is R19's conservative aggregate, not account U0.",
+      "-Preserve all evidence; use the frozen R17 recovery procedure with R18 paths.",
+      "+Preserve all evidence; use the frozen R17 recovery procedure with R19 paths."
+    ],
+    "hunks": [
+      "@@ -1,13 +1,13 @@",
+      "@@ -21,7 +21,7 @@",
+      "@@ -34,14 +34,14 @@",
+      "@@ -53,11 +53,11 @@",
+      "@@ -66,7 +66,7 @@"
+    ],
+    "removed": 17
+  },
+  "release-prep/READY.json": {
+    "added": 47,
+    "hunks": [
+      "@@ -2,25 +2,29 @@",
+      "@@ -35,16 +39,16 @@",
+      "@@ -56,7 +60,7 @@",
+      "@@ -64,31 +68,31 @@",
+      "@@ -98,26 +102,26 @@",
+      "@@ -133,7 +137,7 @@",
+      "@@ -149,7 +153,7 @@"
+    ],
+    "reason": "Derived payload/dependency/test pins and R19 revision/namespace metadata.",
+    "removed": 43
+  },
+  "release-prep/SPEC.md": {
+    "added": 5,
+    "changes": [
+      "-# R18 release preparation",
+      "+# R19 release preparation",
+      "-Adapted from release-prep-a4-r2; active stage/run/adapter/wire/recon point to R18.",
+      "+Adapted from release-prep-a4-r2; active stage/run/adapter/wire point to R19.",
+      "+Recon points to the unchanged frozen R18 engine and READY.",
+      "-fixture pair remain staged for offline imports. A5/A6 and DESIGN-NOTE are pinned.",
+      "+fixture pair remain staged for offline imports. A5/A6, A7 and DESIGN-NOTE are pinned.",
+      "-Fresh R18 machine/review/bootstrap evidence is supplied as explicit manifest",
+      "+Fresh R19 machine/review/bootstrap evidence is supplied as explicit manifest"
+    ],
+    "hunks": [
+      "@@ -1,15 +1,16 @@"
+    ],
+    "removed": 4
+  },
+  "release-prep/STAGE-MANIFEST.json": {
+    "hunks": [
+      "@@ -1 +1 @@"
+    ],
+    "reason": "Derived hash closure: R19 paths/payload pins/A7; R18 recon pins reused; frozen R17 evidence unchanged."
+  },
+  "release-prep/make_proposals.py": {
+    "added": 5,
+    "changes": [
+      "-R17 = 'round18-rerun'",
+      "+R17 = 'round19-rerun'",
+      "-    require(identifier(scope) and identifier('r18-s1-opq-' + batch), 'scope/batch')",
+      "+    require(identifier(scope) and identifier('r19-s1-opq-' + batch), 'scope/batch')",
+      "-        job_id = 'r18-' + cell.lower() + '-' + batch",
+      "+        job_id = 'r19-' + cell.lower() + '-' + batch",
+      "-    p.add_argument('--scope', default='docketclock-research-r18-authorized-20261014')",
+      "+    p.add_argument('--scope', default='docketclock-research-r19-authorized-20261014')",
+      "-    target = args.stage or Path.home() / 'dev/yokel/.r18-stage' / st.content_id(m)",
+      "+    target = args.stage or Path.home() / 'dev/yokel/.r19-stage' / st.content_id(m)"
+    ],
+    "hunks": [
+      "@@ -15,7 +15,7 @@",
+      "@@ -127,7 +127,7 @@",
+      "@@ -149,7 +149,7 @@",
+      "@@ -198,7 +198,7 @@",
+      "@@ -211,7 +211,7 @@"
+    ],
+    "removed": 5
+  },
+  "release-prep/pin_ready.py": {
+    "added": 2,
+    "changes": [
+      "-\"\"\"R18 offline payload/dependency verification (shared pin utility).\"\"\"",
+      "+\"\"\"R19 offline payload/dependency verification (shared pin utility).\"\"\"",
+      "-s=importlib.util.spec_from_file_location('r18_shared_pins',path)",
+      "+s=importlib.util.spec_from_file_location('r19_shared_pins',path)"
+    ],
+    "hunks": [
+      "@@ -1,10 +1,10 @@"
+    ],
+    "removed": 2
+  },
+  "release-prep/prepare_manifest.py": {
+    "added": 10,
+    "changes": [
+      "-\"\"\"Offline R18 staging closure; reuse frozen R17 evidence, never paid outputs.\"\"\"",
+      "+\"\"\"Offline R19 staging closure; reuse frozen R17 evidence, never paid outputs.\"\"\"",
+      "-spec = importlib.util.spec_from_file_location('r18_manifest_stage', HERE / 'stage.py')",
+      "+spec = importlib.util.spec_from_file_location('r19_manifest_stage', HERE / 'stage.py')",
+      "-R18 = 'round18-rerun'",
+      "+R19 = 'round19-rerun'",
+      "-        r = metadata(R18 + '/' + folder + '/READY.json')",
+      "-        table(R18 + '/' + folder, r['files'])",
+      "+        r = metadata(R19 + '/' + folder + '/READY.json')",
+      "+        table(R19 + '/' + folder, r['files'])",
+      "-        normalized = R18 + '/release-prep/evidence/' + name",
+      "+        normalized = R19 + '/release-prep/evidence/' + name",
+      "-        files[R18 + '/run/' + name] = st.digest(raw)",
+      "-        if require_installed and st.read_regular(bench / R18 / 'run' / name) != raw:",
+      "+        files[R19 + '/run/' + name] = st.digest(raw)",
+      "+        if require_installed and st.read_regular(bench / R19 / 'run' / name) != raw:",
+      "-    for name in ('amendments/A5-A6.md', 'DESIGN-NOTE.md', 'release-prep/README.md',",
+      "+    for name in ('amendments/A5-A6.md', 'amendments/A7.md', 'DESIGN-NOTE.md', 'release-prep/README.md',",
+      "-        files[R18 + '/' + name] = st.digest(st.read_regular(bench / R18 / name))",
+      "+        files[R19 + '/' + name] = st.digest(st.read_regular(bench / R19 / name))"
+    ],
+    "hunks": [
+      "@@ -1,15 +1,15 @@",
+      "@@ -23,8 +23,8 @@",
+      "@@ -45,16 +45,16 @@"
+    ],
+    "removed": 10
+  },
+  "release-prep/release_records.py": {
+    "added": 2,
+    "changes": [
+      "-    path = stage / 'round18-rerun/adapter/r17_adapter.py'",
+      "+    path = stage / 'round19-rerun/adapter/r17_adapter.py'",
+      "-    run = stage / 'round18-rerun/run'",
+      "+    run = stage / 'round19-rerun/run'"
+    ],
+    "hunks": [
+      "@@ -5,7 +5,7 @@",
+      "@@ -34,7 +34,7 @@"
+    ],
+    "removed": 2
+  },
+  "release-prep/stage.py": {
+    "added": 1,
+    "changes": [
+      "-    p.add_argument('--parent', type=Path, default=Path.home() / 'dev/yokel/.r18-stage')",
+      "+    p.add_argument('--parent', type=Path, default=Path.home() / 'dev/yokel/.r19-stage')"
+    ],
+    "hunks": [
+      "@@ -143,7 +143,7 @@"
+    ],
+    "removed": 1
+  },
+  "release-prep/test_a6.py": {
+    "added": 7,
+    "changes": [
+      "-r=load('r18_records',HERE/'release_records.py')",
+      "-m=load('r18_manifest',HERE/'prepare_manifest.py')",
+      "-a=load('r18_adapter_prep',HERE.parent/'adapter/r17_adapter.py')",
+      "+r=load('r19_records',HERE/'release_records.py')",
+      "+m=load('r19_manifest',HERE/'prepare_manifest.py')",
+      "+a=load('r19_adapter_prep',HERE.parent/'adapter/r17_adapter.py')",
+      "-        self.assertEqual(value['namespace'],'r18.paid-rerun.v1')",
+      "+        self.assertEqual(value['namespace'],'r19.paid-rerun.v1')",
+      "-        self.assertIn('round18-rerun/amendments/A5-A6.md',manifest)",
+      "-        self.assertIn('round18-rerun/wire/wire.py',manifest)",
+      "+        self.assertIn('round19-rerun/amendments/A5-A6.md',manifest)",
+      "+        self.assertIn('round19-rerun/wire/wire.py',manifest)",
+      "+        self.assertIn('round19-rerun/amendments/A7.md',manifest)"
+    ],
+    "hunks": [
+      "@@ -11,15 +11,15 @@",
+      "@@ -36,9 +36,10 @@"
+    ],
+    "removed": 6
+  },
+  "release-prep/test_release_prep.py": {
+    "added": 5,
+    "changes": [
+      "-                raw = st.read_regular(st.BENCH / ('round18-rerun/release-prep/evidence/' + Path(name).name if name.startswith('round18-rerun/run/') else name))",
+      "+                raw = st.read_regular(st.BENCH / ('round19-rerun/release-prep/evidence/' + Path(name).name if name.startswith('round19-rerun/run/') else name))",
+      "-        for name in ('recon/r17recon.py', 'recon/READY.json',",
+      "+        for name in ('recon/READY.json',",
+      "+        for name in ('r17recon.py', 'READY.json'):",
+      "+            rel = 'round18-rerun/recon/' + name",
+      "+            self.assertEqual(manifest['files'][rel], st.digest(st.read_regular(st.BENCH / rel)))"
+    ],
+    "hunks": [
+      "@@ -68,7 +68,7 @@",
+      "@@ -95,13 +95,16 @@"
+    ],
+    "removed": 2
+  },
+  "wire/READY.json": {
+    "added": 28,
+    "hunks": [
+      "@@ -24,15 +24,15 @@",
+      "@@ -42,21 +42,25 @@",
+      "@@ -78,18 +82,19 @@",
+      "@@ -104,11 +109,11 @@",
+      "@@ -120,11 +125,11 @@"
+    ],
+    "reason": "Derived payload/dependency/test pins and R19 revision/namespace metadata.",
+    "removed": 23
+  },
+  "wire/SPEC.md": {
+    "added": 9,
+    "changes": [
+      "-# r16.w2.2 / r16.e3",
+      "+# r16.w2.3 / r16.e4",
+      "-Copied from R16 protocol-w2-1. Only wire.py lines 1, 15\u201316 and the added prompt",
+      "-line 318 change. A5 is appended verbatim to both profile prompts assembled by",
+      "-build(). Response/schema/codec/validator code and dependency pins are unchanged.",
+      "-`../_out/wire.diff` and test_r18.py prove the exact allowed text transformation.",
+      "-",
+      "-The R17 S1 regression reads content.body and reconstructs source from plan.json,",
+      "-merges unit 51's two if L leaves in memory, removes the redundant link/leaf,",
+      "-and validates against a new R18 plan. Original still fails role_cardinality.",
+      "-No reference scoring or repaired output publication occurs.",
+      "-",
+      "-Existing tests are adapted only for frozen sibling paths and A5 request sizing.",
+      "-The frozen independent suite retains its pre-existing single expected source",
+      "-envelope assertion failure (54/55); no unexpected failure is permitted.",
+      "+Copy of R18 wire; only revision/envelope labels and the conditional A7 append",
+      "+change in wire.py. A7 plus newline follows A5 only for opaque. Full prompt is",
+      "+byte-identical to R18; schema/codec/validator/guards/dependency pins are fixed.",
+      "+test_r18.py retains the A5 mechanical regression and tests the exact allowed",
+      "+R18-to-R19 source transformation. test_a7.py checks all three frozen sources-r2",
+      "+under both profiles, comparing every body field and reporting guarded sizes.",
+      "+No output is scored. The independent suite retains its one historical expected",
+      "+source-envelope assertion failure (54/55); no unexpected failure is permitted."
+    ],
+    "hunks": [
+      "@@ -1,15 +1,10 @@"
+    ],
+    "removed": 14
+  },
+  "wire/test_a7.py": {
+    "added": 89,
+    "changes": [
+      "+\"\"\"Exact A7-only delta on all frozen sources-r2, both profiles; offline only.\"\"\"",
+      "+import copy",
+      "+import hashlib",
+      "+import importlib.util",
+      "+import json",
+      "+from pathlib import Path",
+      "+import unittest",
+      "+",
+      "+HERE = Path(__file__).resolve().parent",
+      "+BENCH = HERE.parent.parent",
+      "+SENTENCE = ('For an exemption or exception, preserve the exact exempted case and exemption '",
+      "+    'wording in the linked L leaf even when already stated in the unit assertion, using if '",
+      "+    'when the unit asserts the exemption itself and unless when the clause carves out of '",
+      "+    'the unit assertion; explanatory reasons alone do not preserve the exempted case.')",
+      "+",
+      "+",
+      "+def load(name, path):",
+      "+    s = importlib.util.spec_from_file_location(name, path)",
+      "+    m = importlib.util.module_from_spec(s)",
+      "+    s.loader.exec_module(m)",
+      "+    return m",
+      "+",
+      "+",
+      "+w = load('r19_a7_wire', HERE / 'wire.py')",
+      "+old = load('r18_a7_baseline', BENCH / 'round18-rerun/wire/wire.py')",
+      "+SOURCES = BENCH / 'round17-paid-comparison/sources-r2'",
+      "+SOURCE_IDS = ('26-19-039', '26-19-041', '26-19-106')",
+      "+",
+      "+",
+      "+def plans():",
+      "+    ready = json.loads((SOURCES / 'READY.json').read_bytes())",
+      "+    assert ready['selected'] == list(SOURCE_IDS)",
+      "+    for sid in SOURCE_IDS:",
+      "+        raw = (SOURCES / sid / 'parsed-body.txt').read_bytes()",
+      "+        assert hashlib.sha256(raw).hexdigest() == ready['files'][sid + '/parsed-body.txt']['sha256']",
+      "+        source = raw.decode('utf-8')",
+      "+        for profile in ('opaque', 'full'):",
+      "+            yield sid, profile, old.build(source, profile), w.build(source, profile)",
+      "+",
+      "+",
+      "+class A7Tests(unittest.TestCase):",
+      "+    def test_opaque_prompt_exact_normative_append_after_a5(self):",
+      "+        amendment = (HERE.parent / 'amendments/A7.md').read_text()",
+      "+        self.assertIn('> \"' + SENTENCE + '\"\\n', amendment)",
+      "+        before, after = old._system_prompt('opaque'), w._system_prompt('opaque')",
+      "+        self.assertEqual(after.encode(), before.encode() + (SENTENCE + '\\n').encode())",
+      "+        self.assertTrue(before.endswith('Never emit two links of the same role on one unit.\\n'))",
+      "+        self.assertEqual(after.count(SENTENCE), 1)",
+      "+",
+      "+    def test_full_prompt_byte_identical_to_r18(self):",
+      "+        self.assertEqual(w._system_prompt('full').encode(), old._system_prompt('full').encode())",
+      "+",
+      "+    def test_all_other_body_keys_equal_all_three_sources_both_profiles(self):",
+      "+        for sid, profile, before, after in plans():",
+      "+            with self.subTest(source=sid, profile=profile):",
+      "+                self.assertEqual(before['table'], after['table'])",
+      "+                expected = copy.deepcopy(before['body'])",
+      "+                if profile == 'opaque':",
+      "+                    expected['messages'][0]['content'] += SENTENCE + '\\n'",
+      "+                self.assertEqual(after['body'], expected)",
+      "+                self.assertEqual(set(after['body']), set(before['body']))",
+      "+                self.assertEqual(after['body']['messages'][1:], before['body']['messages'][1:])",
+      "+                self.assertEqual(after['body']['messages'][0]['role'], 'system')",
+      "+                if profile == 'full':",
+      "+                    self.assertEqual(w.common.encode(after['body']), old.common.encode(before['body']))",
+      "+",
+      "+    def test_six_requests_under_40000_guard_with_size_receipt(self):",
+      "+        measurements = []",
+      "+        for sid, profile, before, after in plans():",
+      "+            with self.subTest(source=sid, profile=profile):",
+      "+                before_raw = old.common.encode(before['body'])",
+      "+                raw = w.common.encode(after['body'])",
+      "+                delta = len(raw) - len(before_raw)",
+      "+                expected_delta = len(w.common.encode(SENTENCE + '\\n')) - 2 if profile == 'opaque' else 0",
+      "+                self.assertEqual(delta, expected_delta)",
+      "+                self.assertLess(len(raw) + 1024, 40000)",
+      "+                measurements.append(dict(source_id=sid, profile=profile,",
+      "+                    r18_body_bytes=len(before_raw), body_bytes=len(raw),",
+      "+                    guarded_bytes=len(raw) + 1024, guard_limit=40000,",
+      "+                    residual_guard_bytes=40000 - len(raw) - 1024, body_byte_delta=delta))",
+      "+        value = dict(prompt_utf8_byte_delta=dict(opaque=len((SENTENCE + '\\n').encode()), full=0),",
+      "+            encoded_prompt_byte_delta=dict(opaque=len(w.common.encode(SENTENCE + '\\n')) - 2, full=0),",
+      "+            requests=measurements, provider_calls=0, network_calls=0)",
+      "+        (HERE.parent / '_out/request-sizes.json').write_text(json.dumps(value, indent=2, sort_keys=True) + '\\n')",
+      "+        print('R19 A7 request sizes:', json.dumps(value, sort_keys=True))",
+      "+",
+      "+",
+      "+if __name__ == '__main__':",
+      "+    unittest.main(verbosity=2)"
+    ],
+    "hunks": [
+      "@@ -0,0 +1,89 @@"
+    ],
+    "removed": 0
+  },
+  "wire/test_r18.py": {
+    "added": 5,
+    "changes": [
+      "-\"\"\"A5 prompt-only proof and mechanical regression; never score the R17 output.\"\"\"",
+      "+\"\"\"A7 prompt-only proof and mechanical regression; never score the R17 output.\"\"\"",
+      "-old = load('r17_frozen_wire', w.BENCH/'round16-wire-compat/protocol-w2-1/wire.py')",
+      "+old = load('r17_frozen_wire', w.BENCH/'round18-rerun/wire/wire.py')",
+      "-        expected = original.replace('r16.w2.1', 'r16.w2.2').replace('r16.e2', 'r16.e3')",
+      "-        expected = expected.replace('    return prompt\\n', '    prompt += '+repr(SENTENCE+'\\n')+'\\n    return prompt\\n')",
+      "+        expected = original.replace('r16.w2.2', 'r16.w2.3').replace('r16.e3', 'r16.e4')",
+      "+        expected = expected.replace('    return prompt\\n', \"    if profile == 'opaque':\\n        prompt += 'For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\\\\n'\\n    return prompt\\n\")",
+      "-            self.assertEqual(after['body']['messages'][0]['content'], before['body']['messages'][0]['content'] + SENTENCE+'\\n')",
+      "+            self.assertEqual(after['body']['messages'][0]['content'], before['body']['messages'][0]['content'] + ('For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\\n' if profile == 'opaque' else ''))"
+    ],
+    "hunks": [
+      "@@ -1,4 +1,4 @@",
+      "@@ -12,7 +12,7 @@",
+      "@@ -21,13 +21,13 @@"
+    ],
+    "removed": 5
+  },
+  "wire/test_wire.py": {
+    "added": 2,
+    "changes": [
+      "-            self.assertEqual(after, before.replace(old, new) + 'If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.\\n')",
+      "-            self.assertEqual(len(common.encode(after)) - len(common.encode(before)), 82 + len('If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.') + 2)",
+      "+            self.assertEqual(after, before.replace(old, new) + 'If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.\\n' + ('For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\\n' if profile == 'opaque' else ''))",
+      "+            self.assertEqual(len(common.encode(after)) - len(common.encode(before)), 82 + len('If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.') + 2 + (len(common.encode('For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\\n')) - 2 if profile == 'opaque' else 0))"
+    ],
+    "hunks": [
+      "@@ -491,8 +491,8 @@"
+    ],
+    "removed": 2
+  },
+  "wire/wire.py": {
+    "added": 5,
+    "changes": [
+      "-\"\"\"Offline r16.w2.2 revision: unchanged r16.w1 response, r16.e3 request envelope.\"\"\"",
+      "+\"\"\"Offline r16.w2.3 revision: unchanged r16.w1 response, r16.e4 request envelope.\"\"\"",
+      "-REVISION = 'r16.w2.2'",
+      "-ENVELOPE_VERSION = 'r16.e3'",
+      "+REVISION = 'r16.w2.3'",
+      "+ENVELOPE_VERSION = 'r16.e4'",
+      "+    if profile == 'opaque':",
+      "+        prompt += 'For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.\\n'"
+    ],
+    "hunks": [
+      "@@ -1,4 +1,4 @@",
+      "@@ -12,8 +12,8 @@",
+      "@@ -316,6 +316,8 @@"
+    ],
+    "removed": 3
+  }
+}

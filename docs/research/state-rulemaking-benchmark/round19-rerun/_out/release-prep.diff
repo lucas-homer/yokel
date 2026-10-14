@@ -1,0 +1,310 @@
+--- round18-rerun/release-prep/README.md
++++ round19-rerun/release-prep/README.md
+@@ -1,13 +1,13 @@
+-# Ordered R18 runbook (future primary-owned steps)
++# Ordered R19 runbook (future primary-owned steps)
+ 
+ This is offline preparation, not live release evidence. Use the bundled Python
+ 3.12 with `-I -S -B`. Exactly S1-OPQ → S2-OPQ → S3-OPQ, no FULL, no retry.
+-P-ACCEPT; namespace `r18.paid-rerun.v1`; scope
+-`docketclock-research-r18-authorized-20261014`. FLOOR $0.27, OPERATING $1.80,
++P-ACCEPT; namespace `r19.paid-rerun.v1`; scope
++`docketclock-research-r19-authorized-20261014`. FLOOR $0.27, OPERATING $1.80,
+ design CAP $2, accepted spend tolerance $3. Non-resetting key limit $50.
+ 
+-Let PREP be this folder; STAGE the new content-addressed stage; R18 be
+-`$STAGE/round18-rerun`; BENCH be the source benchmark. Live stage roots must
++Let PREP be this folder; STAGE the new content-addressed stage; R19 be
++`$STAGE/round19-rerun`; BENCH be the source benchmark. Live stage roots must
+ come from the reviewed deployment core; this .t3 checkout is not a live root.
+ 
+ 1. **Keycheck v3.** Independently review/freeze `../keycheck`, prepare its
+@@ -21,7 +21,7 @@
+    Author fresh KEY-MACHINE.json with endpoint/response hash, confirmed USD
+    usage field documentation, accepted_by_primary=true, usage=U0,
+    limit=50000000000, remaining=50000000000−U0, reset=null. Install the unchanged
+-   evidence/KEY-ATTESTATION.json and CAP-ACCEPTANCE.json under the new R18 run/;
++   evidence/KEY-ATTESTATION.json and CAP-ACCEPTANCE.json under the new R19 run/;
+    A6, rather than the historical zero-use assertion, governs key reuse.
+    Supply fresh baseline, bootstrap, accepted cross-provider implementation
+    review and required evidence as `--evidence BENCH-relative-path=sha256`.
+@@ -34,14 +34,14 @@
+    requires a fresh stage and fresh proposals.
+ 4. **INIT.** Use the staged helper, exclusively:
+    `release_records.py --stage "$STAGE" init --budget <staged-P-ACCEPT-BUDGET.md> --key-initial-usage <U0>`.
+-   Pin canonical INIT without its JSONL newline. The ledger is new R18 history;
+-   never reset/truncate R17 or an existing R18 ledger.
++   Pin canonical INIT without its JSONL newline. The ledger is new R19 history;
++   never reset/truncate R17 or an existing R19 ledger.
+ 5. **Release.** Author a fresh release-input.json (r17.release.v1 compatibility
+-   grammar). Map adapter/tests/adapter_ready/host_driver to R18 adapter; wire
+-   is imported from R18 wire; recon artifact to R18 recon. Map design roles to
++   grammar). Map adapter/tests/adapter_ready/host_driver to R19 adapter; wire
++   is imported from R19 wire; recon artifact to frozen R18 recon. Map design roles to
+    frozen P-ACCEPT design, and other frozen gates/manifests to their R17 paths.
+-   K3 machine_check must use the fresh R18 baseline evidence. For each new OPQ
+-   cell build its plan from the frozen source with the R18 wire and recompute
++   K3 machine_check must use the fresh R19 baseline evidence. For each new OPQ
++   cell build its plan from the frozen source with the R19 wire and recompute
+    plan_request_sha256 and sha256(adapter.dispatched(plan)); derive unchanged
+    thresholds from the scoring manifest. Do not reuse R17 call hashes. Publish
+    through release_records.py --stage "$STAGE" release --input <fresh-input>.
+@@ -53,11 +53,11 @@
+    accepted review closure and positive measured bootstrap reserve before signing.
+ 8. **S1 sign/check/run.** Generate exactly one fresh unsigned proposal using
+    make_proposals.py --stage "$STAGE" --output <fresh-dir> --cell S1-OPQ
+-   --scope docketclock-research-r18-authorized-20261014 --batch <unique-id>
+-   --expires-unix <within-7-days> --prior-nanousd <R18-ledger-aggregate>
+-   --release "$R18/run/RELEASE.json" --review <staged-accepted-review>.
++   --scope docketclock-research-r19-authorized-20261014 --batch <unique-id>
++   --expires-unix <within-7-days> --prior-nanousd <R19-ledger-aggregate>
++   --release "$R19/run/RELEASE.json" --review <staged-accepted-review>.
+    Primary reviews, signs, checks and runs once using the existing native
+-   workflow. The budget prior is R18's conservative aggregate, not account U0.
++   workflow. The budget prior is R19's conservative aggregate, not account U0.
+ 9. **Adjudicate.** A1 Fable and A2 Opus, one fresh session each, followed by
+    primary acceptance of the protocol gate. No repair/re-score of R17 S1.
+ 10. **S2.** Repeat gate/proposal/sign/check/run for S2-OPQ with --gate naming
+@@ -66,7 +66,7 @@
+     accounting/results. No later cell is signed without its required gate.
+ 
+ HALT, kill, retained lock, torn ledger or dispatch uncertainty stops launches.
+-Preserve all evidence; use the frozen R17 recovery procedure with R18 paths.
++Preserve all evidence; use the frozen R17 recovery procedure with R19 paths.
+ Before a proven-unmarked dispatch, only a fresh authorized job may re-admit;
+ after a mark/uncertainty, accounting recovery halts without resend. Never infer
+ a dead lock owner or replay a consumed job. A usage drop or unexplained excess
+--- round18-rerun/release-prep/SPEC.md
++++ round19-rerun/release-prep/SPEC.md
+@@ -1,15 +1,16 @@
+-# R18 release preparation
++# R19 release preparation
+ 
+-Adapted from release-prep-a4-r2; active stage/run/adapter/wire/recon point to R18.
++Adapted from release-prep-a4-r2; active stage/run/adapter/wire point to R19.
++Recon points to the unchanged frozen R18 engine and READY.
+ prepare_manifest reuses frozen R17 P-ACCEPT design, source bytes, references,
+ scoring manifest and accepted fixture/role gates. Original design metadata and
+-fixture pair remain staged for offline imports. A5/A6 and DESIGN-NOTE are pinned.
++fixture pair remain staged for offline imports. A5/A6, A7 and DESIGN-NOTE are pinned.
+ Historical zero-usage machine evidence and paid outputs are excluded.
+ 
+ INIT requires --key-initial-usage in integer nanoUSD; release/bind remain
+ exclusive durable records. Existing r17.release/stage/native-args schemas are
+ retained as compatible grammars; only the ledger namespace and scope change.
+-Fresh R18 machine/review/bootstrap evidence is supplied as explicit manifest
++Fresh R19 machine/review/bootstrap evidence is supplied as explicit manifest
+ extras. The candidate manifest is prospective until primary installation.
+ 
+ Tests stage synthetic trees only and generate unsigned proposals; they invoke
+--- round18-rerun/release-prep/make_proposals.py
++++ round19-rerun/release-prep/make_proposals.py
+@@ -15,7 +15,7 @@
+ spec = importlib.util.spec_from_file_location('r17_staging', HERE / 'stage.py')
+ st = importlib.util.module_from_spec(spec)
+ spec.loader.exec_module(st)
+-R17 = 'round18-rerun'
++R17 = 'round19-rerun'
+ ADAPTER = R17 + '/adapter'
+ CELLS = ['S1-OPQ', 'S2-OPQ', 'S3-OPQ']
+ SAFE = 2**52 - 1
+@@ -127,7 +127,7 @@
+ def generate(stage, output, manifest, core, *, draft, scope, batch, expires, prior,
+              cells=CELLS, release=None, gate=None, review=None):
+     stage = st.no_symlinks(stage)
+-    require(identifier(scope) and identifier('r18-s1-opq-' + batch), 'scope/batch')
++    require(identifier(scope) and identifier('r19-s1-opq-' + batch), 'scope/batch')
+     require(cells and len(set(cells)) == len(cells) and all(c in CELLS for c in cells), 'cells')
+     if not draft:
+         require(len(cells) == 1, 'non-draft requires exactly one --cell')
+@@ -149,7 +149,7 @@
+     review = review or stage / ADAPTER / 'SPEC.md'
+     created = []
+     for cell in cells:
+-        job_id = 'r18-' + cell.lower() + '-' + batch
++        job_id = 'r19-' + cell.lower() + '-' + batch
+         job_rel = R17 + '/native-jobs/' + job_id
+         job_final = stage / job_rel
+         job_write = (output / 'native-jobs' / job_id) if draft else job_final
+@@ -198,7 +198,7 @@
+     p.add_argument('--stage', type=Path)
+     p.add_argument('--output', type=Path, required=True)
+     p.add_argument('--draft', action='store_true')
+-    p.add_argument('--scope', default='docketclock-research-r18-authorized-20261014')
++    p.add_argument('--scope', default='docketclock-research-r19-authorized-20261014')
+     p.add_argument('--batch', default=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d%H%M%S'))
+     p.add_argument('--expires-unix', type=int, default=int(time.time()) + 86400)
+     p.add_argument('--prior-nanousd', type=int, default=0)
+@@ -211,7 +211,7 @@
+         p.error('non-draft requires exactly one --cell')
+     m = st.load_manifest()
+     core = json.loads(st.read_regular(st.CORE))
+-    target = args.stage or Path.home() / 'dev/yokel/.r18-stage' / st.content_id(m)
++    target = args.stage or Path.home() / 'dev/yokel/.r19-stage' / st.content_id(m)
+     for path in generate(target, args.output, m, core, draft=args.draft, scope=args.scope,
+             batch=args.batch, expires=args.expires_unix, prior=args.prior_nanousd,
+             cells=args.cell or CELLS, release=args.release, gate=args.gate, review=args.review):
+--- round18-rerun/release-prep/pin_ready.py
++++ round19-rerun/release-prep/pin_ready.py
+@@ -1,10 +1,10 @@
+-"""R18 offline payload/dependency verification (shared pin utility)."""
++"""R19 offline payload/dependency verification (shared pin utility)."""
+ import importlib.util
+ from pathlib import Path
+ import sys
+ HERE=Path(__file__).resolve().parent
+ path=HERE.parent/'pin_ready.py'
+-s=importlib.util.spec_from_file_location('r18_shared_pins',path)
++s=importlib.util.spec_from_file_location('r19_shared_pins',path)
+ m=importlib.util.module_from_spec(s)
+ s.loader.exec_module(m)
+ if __name__=='__main__':
+--- round18-rerun/release-prep/prepare_manifest.py
++++ round19-rerun/release-prep/prepare_manifest.py
+@@ -1,15 +1,15 @@
+-"""Offline R18 staging closure; reuse frozen R17 evidence, never paid outputs."""
++"""Offline R19 staging closure; reuse frozen R17 evidence, never paid outputs."""
+ import argparse
+ import importlib.util
+ import json
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-spec = importlib.util.spec_from_file_location('r18_manifest_stage', HERE / 'stage.py')
++spec = importlib.util.spec_from_file_location('r19_manifest_stage', HERE / 'stage.py')
+ st = importlib.util.module_from_spec(spec)
+ spec.loader.exec_module(st)
+ R17 = 'round17-paid-comparison'
+-R18 = 'round18-rerun'
++R19 = 'round19-rerun'
+ DESIGN = R17 + '/design-r3-1-paccept'
+ 
+ def build(bench=st.BENCH, extras=None, require_installed=False):
+@@ -23,8 +23,8 @@
+             st.relative(name)
+             files[prefix + '/' + name] = item['sha256'] if isinstance(item, dict) else item
+     for folder in ('adapter', 'wire', 'recon'):
+-        r = metadata(R18 + '/' + folder + '/READY.json')
+-        table(R18 + '/' + folder, r['files'])
++        r = metadata(R19 + '/' + folder + '/READY.json')
++        table(R19 + '/' + folder, r['files'])
+         for name, item in r['dependencies'].items():
+             files[name] = item['sha256']
+     for design in (DESIGN, R17 + '/design-r3-1'):
+@@ -45,16 +45,16 @@
+         st.relative(item['path'])
+         files[item['path']] = item['sha256']
+     for name in ('KEY-ATTESTATION.json', 'CAP-ACCEPTANCE.json'):
+-        normalized = R18 + '/release-prep/evidence/' + name
++        normalized = R19 + '/release-prep/evidence/' + name
+         raw = st.read_regular(bench / normalized)
+         files[normalized] = st.digest(raw)
+-        files[R18 + '/run/' + name] = st.digest(raw)
+-        if require_installed and st.read_regular(bench / R18 / 'run' / name) != raw:
++        files[R19 + '/run/' + name] = st.digest(raw)
++        if require_installed and st.read_regular(bench / R19 / 'run' / name) != raw:
+             raise ValueError('normalized evidence not installed: ' + name)
+-    for name in ('amendments/A5-A6.md', 'DESIGN-NOTE.md', 'release-prep/README.md',
++    for name in ('amendments/A5-A6.md', 'amendments/A7.md', 'DESIGN-NOTE.md', 'release-prep/README.md',
+                  'release-prep/SPEC.md', 'release-prep/prepare_manifest.py', 'release-prep/stage.py',
+                  'release-prep/release_records.py', 'release-prep/make_proposals.py'):
+-        files[R18 + '/' + name] = st.digest(st.read_regular(bench / R18 / name))
++        files[R19 + '/' + name] = st.digest(st.read_regular(bench / R19 / name))
+     amendment = R17 + '/amendments/A4-key-limit-label/AMENDMENT.md'
+     files[amendment] = st.digest(st.read_regular(bench / amendment))
+     for name, h in (extras or {}).items():
+--- round18-rerun/release-prep/release_records.py
++++ round19-rerun/release-prep/release_records.py
+@@ -5,7 +5,7 @@
+ 
+ 
+ def adapter(stage):
+-    path = stage / 'round18-rerun/adapter/r17_adapter.py'
++    path = stage / 'round19-rerun/adapter/r17_adapter.py'
+     spec = importlib.util.spec_from_file_location('primary_records_adapter', path)
+     a = importlib.util.module_from_spec(spec)
+     spec.loader.exec_module(a)
+@@ -34,7 +34,7 @@
+     args = p.parse_args()
+     stage = args.stage.resolve()
+     a = adapter(stage)
+-    run = stage / 'round18-rerun/run'
++    run = stage / 'round19-rerun/run'
+     if args.step == 'init':
+         assert args.budget.resolve().is_relative_to(stage)
+         raw = a.encode(init_record(a, args.budget.read_bytes(), args.key_initial_usage)) + b'\n'
+--- round18-rerun/release-prep/stage.py
++++ round19-rerun/release-prep/stage.py
+@@ -143,7 +143,7 @@
+ 
+ def main():
+     p = argparse.ArgumentParser(description=__doc__)
+-    p.add_argument('--parent', type=Path, default=Path.home() / 'dev/yokel/.r18-stage')
++    p.add_argument('--parent', type=Path, default=Path.home() / 'dev/yokel/.r19-stage')
+     args = p.parse_args()
+     core = json.loads(read_regular(CORE))
+     print(stage(BENCH, args.parent, load_manifest(), allowed_roots=core['adapter_roots']))
+--- round18-rerun/release-prep/test_a6.py
++++ round19-rerun/release-prep/test_a6.py
+@@ -11,15 +11,15 @@
+     m=importlib.util.module_from_spec(s)
+     s.loader.exec_module(m)
+     return m
+-r=load('r18_records',HERE/'release_records.py')
+-m=load('r18_manifest',HERE/'prepare_manifest.py')
+-a=load('r18_adapter_prep',HERE.parent/'adapter/r17_adapter.py')
++r=load('r19_records',HERE/'release_records.py')
++m=load('r19_manifest',HERE/'prepare_manifest.py')
++a=load('r19_adapter_prep',HERE.parent/'adapter/r17_adapter.py')
+ 
+ class BaselinePrepTests(unittest.TestCase):
+     def test_init_requires_recorded_integer_baseline(self):
+         value=r.init_record(a,b'synthetic budget',59_408_500)
+         self.assertEqual(value['key_initial_usage'],59_408_500)
+-        self.assertEqual(value['namespace'],'r18.paid-rerun.v1')
++        self.assertEqual(value['namespace'],'r19.paid-rerun.v1')
+         for u in (-1,True,1.5,'1',None):
+             with self.subTest(u=u),self.assertRaises(a.Refused):
+                 r.init_record(a,b'synthetic budget',u)
+@@ -36,9 +36,10 @@
+                      'reference/ACCEPTANCE.json','scoring-manifest/MANIFEST.json'):
+             self.assertIn('round17-paid-comparison/'+name,manifest)
+         self.assertFalse(any('/run-live/' in n or n.endswith('/KEY-MACHINE.json') or n.endswith('/content.body') for n in manifest))
+-        self.assertIn('round18-rerun/amendments/A5-A6.md',manifest)
+-        self.assertIn('round18-rerun/wire/wire.py',manifest)
++        self.assertIn('round19-rerun/amendments/A5-A6.md',manifest)
++        self.assertIn('round19-rerun/wire/wire.py',manifest)
+         self.assertIn('round18-rerun/recon/r17recon.py',manifest)
++        self.assertIn('round19-rerun/amendments/A7.md',manifest)
+ 
+ if __name__=='__main__':
+     unittest.main(verbosity=2)
+--- round18-rerun/release-prep/test_release_prep.py
++++ round19-rerun/release-prep/test_release_prep.py
+@@ -68,7 +68,7 @@
+             if name.startswith('round17-paid-comparison/reference/') or name.endswith('/parsed-body.txt'):
+                 raw = b'SYNTHETIC frozen member\n'
+             else:
+-                raw = st.read_regular(st.BENCH / ('round18-rerun/release-prep/evidence/' + Path(name).name if name.startswith('round18-rerun/run/') else name))
++                raw = st.read_regular(st.BENCH / ('round19-rerun/release-prep/evidence/' + Path(name).name if name.startswith('round19-rerun/run/') else name))
+             dst = fixture / name
+             dst.parent.mkdir(parents=True, exist_ok=True)
+             dst.write_bytes(raw)
+@@ -95,13 +95,16 @@
+         accepted = json.loads(st.read_regular(st.BENCH / 'round17-paid-comparison/run-live/stage-run/RELEASE.json'))['artifacts']['reference_ready']
+         expected[accepted['path']] = accepted['sha256']
+         self.assertEqual(refs(manifest), expected)
+-        for name in ('recon/r17recon.py', 'recon/READY.json',
++        for name in ('recon/READY.json',
+                      'adapter/r17_adapter.py', 'adapter/native_entry.py',
+                      'adapter/READY.json', 'release-prep/evidence/KEY-ATTESTATION.json'):
+             rel = p.R17 + '/' + name
+             self.assertEqual(manifest['files'][rel], st.digest(st.read_regular(st.BENCH / rel)))
+         self.assertFalse(any(n.startswith(p.R17 + '/adapter-r1-3/') for n in manifest['files']))
+         self.assertIn('round17-paid-comparison/design-r3-1/fixtures/r17recon.py', manifest['files'])
++        for name in ('r17recon.py', 'READY.json'):
++            rel = 'round18-rerun/recon/' + name
++            self.assertEqual(manifest['files'][rel], st.digest(st.read_regular(st.BENCH / rel)))
+ 
+     def test_existing_target_refused(self):
+         stage = self.staged()

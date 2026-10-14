@@ -1,0 +1,39 @@
+--- round18-rerun/recon/SPEC.md
++++ round19-rerun/recon/SPEC.md
+@@ -1,10 +1,7 @@
+-# A6 recon revision
++# A6 recon reused from frozen R18
+ 
+-Minimal copy of R17 recon-a4/r17recon.py. key_limit_ok subtracts optional U0
+-from available capacity while retaining KEY_MAX. reconcile compares observed
+-absolute usage with U0 plus cumulative reported cost. close_debit subtracts
+-INIT's U0 from highest absolute usage before retaining excess run cost.
+-
+-Zero-baseline compatibility is retained for frozen ledger fixtures. Schedules,
+-tolerance, FLOOR, OPERATING, debit/admission/no-retry and halt rules are fixed.
+-Exact diff is `../_out/recon.diff`; original fixture engine is never edited.
++No R19 recon executable copy. Adapter loads ../round18-rerun/recon/r17recon.py
++by SHA256 64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140.
++Its original READY is pinned and staged alongside the engine. R19 tests differ
++only in the engine path; the three original tests and all A6 behavior remain.
++NOTE.md is the unchanged historical A4 note inherited by R18, not the A6 pin.
+--- round18-rerun/recon/test_recon.py
++++ round19-rerun/recon/test_recon.py
+@@ -17,7 +17,7 @@
+ 
+ class ReconTests(unittest.TestCase):
+     def test_a6_recon_baseline_and_close_retention(self):
+-        amended = load('recon_a6', HERE / 'r17recon.py')
++        amended = load('recon_a6', HERE.parent.parent / 'round18-rerun/recon/r17recon.py')
+         u0 = 59_408_500
+         pinned = dict(limit=amended.KEY_MAX, limit_reset=None, key_initial_usage=u0)
+         def read(u):
+@@ -41,7 +41,7 @@
+ 
+     def test_only_exported_constant_changes(self):
+         original = load('recon_original', ORIGINAL / 'r17recon.py')
+-        amended = load('recon_a4', HERE / 'r17recon.py')
++        amended = load('recon_a4', HERE.parent.parent / 'round18-rerun/recon/r17recon.py')
+         self.assertEqual(amended.KEY_MAX, 50_000_000_000)
+         for name in ('CAP', 'OPERATING', 'FLOOR', 'TOL_PER_CALL', 'READ_SCHEDULE_S', 'RELEASE_POLICIES'):
+             self.assertEqual(getattr(original, name), getattr(amended, name), name)
