@@ -1,0 +1,11 @@
+--- design-r3-1/fixtures/r17recon.py
++++ recon-a4/r17recon.py
+@@ -11,7 +11,7 @@
+ CAP = 2_000_000_000
+ OPERATING = 1_800_000_000
+ FLOOR = 270_000_000
+-KEY_MAX = 1_730_000_000
++KEY_MAX = 50_000_000_000
+ TOL_PER_CALL = 1_000                   # nanoUSD per possibly-dispatched attempt, cumulative
+ READ_SCHEDULE_S = (0, 60, 300, 900)    # elapsed seconds after the attempt resolved
+ RELEASE_POLICIES = ('P-HARD', 'P-ACCEPT')  # BUDGET §0; UNSET or anything else never admits

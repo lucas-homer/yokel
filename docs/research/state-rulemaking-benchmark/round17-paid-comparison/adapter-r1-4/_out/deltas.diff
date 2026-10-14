@@ -1,0 +1,465 @@
+--- adapter-r1-3/SPEC.md
++++ adapter-r1-4/SPEC.md
+@@ -1,3 +1,51 @@
++# Adapter r1.4 — offline A4 deltas from r1.3
++
++A4 changes only the dedicated key ceiling/label and their pinned authority.
++KEY_LABEL is `DocketClock`; KEY_MAX is 50_000_000_000 nanoUSD ($50.00).
++Non-resetting limit and zero initial usage are still mandatory. The actual R17
++plan is three OPQ calls; synthetic six-call tests remain regression coverage.
++
++The import now checks recon-a4/READY.json and loads recon-a4/r17recon.py with
++SHA-256 `8c98fabdc73fad10336698fa695869966a631d5a7d99b797725f2c711b1b6bb0`.
++Release recon artifacts are separately hash-pinned rather than required inside
++the frozen design directory. Original design artifacts retain their original
++freeze; the amended recon must be the release recon and INIT recon pin.
++The native shim resolves adapter-r1-4/host_driver.py.
++
++FLOOR $0.27, OPERATING $1.80, CAP $2.00, all-remaining-call reservations,
++admission, reconciliation, debit, anomaly halts, no-retry and A3 timeouts stay
++unchanged. The provider ceiling no longer backstops CAP; the accepted residual
++risk in A4 remains. No live evidence or release approval is synthesized here.
++
++Original L01–L25 tests run frozen check.py with its ORIGINAL engine. The new
++A4 comparison runs the same 25 unchanged cases against recon-a4: ONLY
++L18-key-limit-bounds changes ($1.74 / six calls: False -> True). Its result
++vector is [True, True, True, False] versus [True, False, True, False]. L12
++retains its HALT outcome (its explicit original limit is also a mismatch now).
++
++Ten A4 tests cover three successful synthetic OPQ calls at $50/usage zero,
++above-$50/resetting/nonzero-usage/wrong-label refusals, attestation/machine
++refusals, independent OPERATING bounds (including seventh FLOOR and reserving
++all remaining calls), and the exact L-fixture outcome comparison. Together
++with the inherited 190 tests, 200 adapter tests run per interpreter. Monetary
++precision parser examples retaining $1.73 are intentional historical inputs.
++
++Commands: `R17_TEST_PYTHON=<python> sh adapter-r1-4/run_tests.sh`; all Python
++scripts use `-I -S -B`. Both required interpreters are recorded in READY.json.
++Logs under _out are excluded from payload pins; suite outputs have their own
++recorded hashes. verify_ready.py reruns all three folders' suites and verifies
++every inventory/dependency/READY pin and the frozen inputs afterward.
++
++All edits are confined to adapter-r1-4, recon-a4 and release-prep-a4. No network,
++provider, executor, runner, release, signing or credential operation was run.
++No actual parsed source body or reference content was read. Repro subprocesses
++use synthetic transports/evidence and remain offline. Independent primary
++review, normalized live evidence and staging/signing remain outstanding.
++
++---
++
++## Inherited r1.3 specification (historical; A4 deltas above take precedence)
++
+ # R17 P3 dispatch adapter r1.2 and host driver — offline candidate
+ 
+ This directory implements one invocation / one cell / at most one POST. It grants no
+--- adapter-r1-3/native_entry.py
++++ adapter-r1-4/native_entry.py
+@@ -26,7 +26,7 @@
+         config = json.loads((here / 'arguments.json').read_bytes())
+         if set(config) != {'schema_version', 'host_sha256', 'args'} or config['schema_version'] != 'r17.native-args.v1':
+             return 2
+-        host = here.parents[1] / 'adapter-r1-3/host_driver.py'
++        host = here.parents[1] / 'adapter-r1-4/host_driver.py'
+         raw = host.read_bytes()
+         if hashlib.sha256(raw).hexdigest() != config['host_sha256']:
+             return 2
+--- adapter-r1-3/pin_ready.py
++++ adapter-r1-4/pin_ready.py
+@@ -1,4 +1,5 @@
+-"""Pin this offline candidate without opening source texts or references; stdlib only."""
++"""Freeze A4 offline payloads after both interpreter suites; never reads body/reference files."""
++import argparse
+ import hashlib
+ import json
+ from pathlib import Path
+@@ -7,6 +8,7 @@
+ HERE = Path(__file__).resolve().parent
+ R17 = HERE.parent
+ BENCH = R17.parent
++FOLDERS = ('recon-a4', 'adapter-r1-4', 'release-prep-a4')
+ 
+ 
+ def pin(path):
+@@ -15,105 +17,77 @@
+ 
+ 
+ def forbidden(name):
+-    return ('reference/' in name or name.endswith('/parsed-body.txt') or name.endswith('/original.htm'))
++    return 'reference/' in name or name.endswith(('/parsed-body.txt', '/original.htm'))
+ 
+ 
+-old = json.loads((R17 / 'adapter/READY.json').read_bytes())
+-# Check the frozen original payload against its recorded pins, not just our copy.
+-for name, expected in old['files'].items():
+-    assert pin(R17 / 'adapter' / name) == expected, 'frozen_adapter_changed:' + name
+-files = {p.relative_to(HERE).as_posix(): pin(p) for p in sorted(HERE.rglob('*'))
+-         if '_out' not in p.relative_to(HERE).parts and p.is_file() and p.name != 'READY.json'}
+-assert not any('__pycache__' in n or '/.review-' in n or '/.offline-' in n for n in files)
+-assert not any(forbidden(n) for n in files)
+-deps = dict(old['dependencies'])
+-for name, expected in deps.items():
+-    assert not forbidden(name), 'forbidden_dependency'
+-    assert pin(BENCH / name) == expected, 'frozen_dependency_changed:' + name
+-for path in sorted((R17 / 'adapter').iterdir()):
+-    if path.is_file():
+-        deps[path.relative_to(BENCH).as_posix()] = pin(path)
+-for path in sorted((R17 / 'adapter-review').iterdir()):
+-    if path.is_file():
+-        deps[path.relative_to(BENCH).as_posix()] = pin(path)
+-# Record actual frozen r1.1 bytes: its known stale repro pin is documented in S6,
+-# never repaired in place. These dependency pins detect any subsequent mutation.
+-for path in sorted((R17 / 'adapter-r1-1').rglob('*')):
+-    if path.is_file():
+-        deps[path.relative_to(BENCH).as_posix()] = pin(path)
+-deps['round17-paid-comparison/adapter-review-r2/REVIEW.md'] = pin(R17 / 'adapter-review-r2/REVIEW.md')
+-for path in sorted((R17 / 'adapter-review-r2').rglob('*')):
+-    if path.is_file() and path.suffix in ('.py', '.sh'):
+-        deps[path.relative_to(BENCH).as_posix()] = pin(path)
+-prior = json.loads((R17 / 'adapter-r1-2/READY.json').read_bytes())
+-for name, expected in prior['files'].items():
+-    assert pin(R17 / 'adapter-r1-2' / name) == expected, 'frozen_r1_2_changed:' + name
+-    deps['round17-paid-comparison/adapter-r1-2/' + name] = expected
+-deps['round17-paid-comparison/adapter-r1-2/READY.json'] = pin(R17 / 'adapter-r1-2/READY.json')
+-output = (HERE / '_out/test-output.txt').read_text()
+-counts = [int(n) for n in re.findall(r'^Ran (\d+) tests', output, re.M)]
+-assert counts == [102, 26, 23, 9, 20, 10], counts
+-assert len(re.findall(r'^OK$', output, re.M)) == 6
+-assert not re.search(r'^FAILED|^ERROR:|^FAIL:', output, re.M)
+-review_map = {f'S{i}': 'fixed' for i in range(1, 7)}
+-review_map.update({f'N{i}': ('documented_deferred' if i in (6, 7, 10, 11) else 'fixed')
+-                   for i in range(1, 14)})
+-review_map.update({f'N{i}': ('documented_deferred' if i == 17 else 'fixed') for i in range(14, 22)})
+-ready = dict(schema_version='r17.adapter-ready.v1', revision='r1.3',
+-    status='READY_OFFLINE_IMPLEMENTATION', release_policy='UNSET',
+-    files=files, sha256={n: v['sha256'] for n, v in files.items()}, dependencies=deps,
+-    self_pin='READY.json excludes itself; P7 must pin this exact file hash externally.',
+-    excluded_paths=['_out/**'],
+-    output_policy='All generated logs and temporary test artifacts under excluded _out; no CA bundle pin.',
+-    tests=dict(run=sum(counts), passed=sum(counts), failed=0, result='OK',
+-        original_adapter_integration_tests=77, revision_adapter_and_cli_tests=26,
+-        adapter_integration_tests=103, host_driver_tests=23, ledger_fixture_tests=25,
+-        ledger_fixture_ids='L01-L25 (pin/engine only, not adapter coverage)',
+-        repro_behavior_checks=8, repro_copy_integrity_tests=1,
+-        round2_targeted_tests=20, native_integration_tests=10, pin_stability_test='python3 -I -S -B adapter-r1-3/verify_ready.py (1 additional test; reruns all 190)',
+-        command='sh adapter-r1-3/run_tests.sh', python_flags='python3 -I -S -B <script>',
+-        temporary_writes='adapter-r1-3/_out; removed except logs/repro copies',
+-        output='_out/test-output.txt',
+-        transport='fake HTTPSConnection and real http.client over fake sockets only', environment='replacement synthetic mapping only',
+-        clock='fake, plus patched production-clock boundary test'),
+-    repros=dict(baseline_reproduced=8, r1_1_fixed_behavior=8,
+-        copies_changed_only='round-1 _load.py adapter import and temporary output directory; round-2 _load.py import paths only',
+-        command='sh adapter-r1-3/repros/run_all.sh',
+-        original_exit_convention='0 = finding reproduced; all 8 now exit 1',
+-        output='_out/repro-r1-3.txt', behavioral_assertions='test_repros.py',
+-        round2_command='sh adapter-r1-3/_out/round2-repros/run_all.sh',
+-        round2_output='_out/round2-repro-output.txt',
+-        round2_results={'repro_3call_plan.py': 0, 'repro_hd_cli_misc.py': 1,
+-            'repro_hd_key_fields.py': 0, 'repro_hd_sigint_cli.py': 1,
+-            'repro_hd_timeout_row2.py': 0, 'repro_hd_trust_store.py': 1, 'repro_hd_wire.py': 0},
+-        interpretation='SPEC.md round-2 repro disposition; unchanged assertions sometimes expect old defects'),
+-    dispositions=review_map,
+-    H_mapping={f'H{i}': ('external_pre_run_NTP_evidence' if i == 10 else
+-        'implemented_and_offline_tested_with_external_signature_and_READY_pin' if i == 9 else
+-        'implemented_and_offline_tested_with_operator_serialization_and_lock_evidence' if i == 8 else
+-        'implemented_and_offline_tested') for i in range(1, 11)},
+-    H_mapping_details='SPEC.md Host driver H1-H10 mapping',
+-    credential_boundary='Only uninvoked production post_once/key_info read OPENROUTER_API_KEY. Tests replace environment and HTTPSConnection; no real credential access.',
+-    credentials_accessed=False, network_calls=0, provider_calls=0, native_runner_or_jobs_run=False,
+-    r17_source_texts_read=False, r17_reference_files_read=False, frozen_adapter_unchanged=True,
+-    committed=False, paid_release_authorized=False, action_ready=False, production_eligible=False,
+-    invoice_verified=False,
+-    P7_outstanding=['Independent primary re-review and pin of r1.3 + host driver',
+-        'P0/P1/P5/P6/P8 evidence and gates; real policy remains UNSET',
+-        'Live usage field/units confirmation and dedicated-key zero machine check',
+-        'Signed INIT/C6 release/BIND_RELEASE and externally pinned READY hash',
+-        'Mini NTP sync evidence and unverified hardware durability',
+-        'N6 wall clock, N7 FULL reporting vocabulary, N10 library hook, N11 F_FULLFSYNC deferred',
+-        'Per-call staged adjudication and frozen OPQ pass before FULL'])
+-ready['A3'] = dict(post_read_seconds=600, connect_write_seconds=15, key_get_total_seconds=15, post_total_seconds=615, conservative_cell_seconds=1590, recovery_only_seconds=960, local_job_deadline_seconds=1740, native_timeout_seconds=1800)
+-ready['tests']['interpreters'] = json.loads((HERE / '_out/interpreters.json').read_bytes())
+-ready['repros']['round2_results_provenance'] = 'Inherited r1.2 historic output; round-2 unchanged-repro integrity and behavioral regressions pass under r1.3. Raw round-2 repro scripts were not rerun in r1.3.'
+-(HERE / 'READY.json').write_text(json.dumps(ready, sort_keys=True, indent=2) + '\n')
+-# Verify every local/dependency pin after writing, including the pinning script itself.
+-for name, expected in ready['files'].items():
+-    assert pin(HERE / name) == expected, name
+-for name, expected in ready['dependencies'].items():
+-    assert pin(BENCH / name) == expected, name
+-print('READY r1.3: 190 tests passed; 25 engine fixtures excluded from adapter coverage; 8/8 round-1 repro fixes.')
+-print('All payload/dependency pins verified; frozen adapter verified unchanged.')
+-print('READY.json sha256=' + pin(HERE / 'READY.json')['sha256'])
++def payload(root):
++    return {p.relative_to(root).as_posix(): pin(p) for p in sorted(root.rglob('*'))
++            if p.is_file() and '_out' not in p.relative_to(root).parts and p.name != 'READY.json'}
++
++
++def verify_frozen():
++    before = json.loads((R17 / 'recon-a4/_out/frozen-before.json').read_bytes())
++    actual = {p.relative_to(R17).as_posix(): pin(p)
++              for folder in ('adapter-r1-3', 'release-prep', 'design-r3-1')
++              for p in sorted((R17 / folder).rglob('*')) if p.is_file()}
++    assert actual == before, 'frozen inputs changed'
++    return before
++
++
++def write(folder):
++    frozen = verify_frozen()
++    root = R17 / folder
++    files = payload(root)
++    assert not any(forbidden(n) or '__pycache__' in n for n in files)
++    dependencies = {'round17-paid-comparison/' + n: v for n, v in frozen.items()}
++    prior = json.loads((R17 / 'adapter-r1-3/READY.json').read_bytes())
++    dependencies.update(prior['dependencies'])
++    for n in ('amendments/A4-key-limit-label/AMENDMENT.md', 'run/KEY-ATTESTATION.json'):
++        dependencies['round17-paid-comparison/' + n] = pin(R17 / n)
++    if folder != 'recon-a4':
++        for n, v in payload(R17 / 'recon-a4').items():
++            dependencies['round17-paid-comparison/recon-a4/' + n] = v
++        dependencies['round17-paid-comparison/recon-a4/READY.json'] = pin(R17 / 'recon-a4/READY.json')
++    if folder == 'release-prep-a4':
++        for n, v in payload(HERE).items():
++            dependencies['round17-paid-comparison/adapter-r1-4/' + n] = v
++        dependencies['round17-paid-comparison/adapter-r1-4/READY.json'] = pin(HERE / 'READY.json')
++    expected = {'recon-a4': [3], 'adapter-r1-4': [102, 26, 23, 9, 20, 10, 10], 'release-prep-a4': [13]}[folder]
++    interpreters = {}
++    paths = {'python312': '/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3.12',
++             'system': '/usr/local/bin/python3'}
++    for label, path in paths.items():
++        log = '_out/' + label + '-tests.txt'
++        output = (root / log).read_text()
++        counts = [int(n) for n in re.findall(r'^Ran (\d+) tests', output, re.M)]
++        assert counts == expected, (folder, label, counts, expected)
++        assert len(re.findall(r'^OK$', output, re.M)) == len(expected)
++        assert not re.search(r'^FAILED|^ERROR:|^FAIL:', output, re.M)
++        interpreters[label] = dict(executable=path, flags=['-I', '-S', '-B'], counts=counts,
++                                   run=sum(counts), passed=sum(counts), failed=0,
++                                   output=log, output_pin=pin(root / log))
++    ready = dict(schema_version='r17.a4-ready.v1', revision='r1.4' if folder == 'adapter-r1-4' else 'A4',
++                 status='READY_OFFLINE_IMPLEMENTATION', files=files,
++                 sha256={n: v['sha256'] for n, v in files.items()}, dependencies=dependencies,
++                 excluded_paths=['_out/**'], tests=interpreters,
++                 amendment='A4-key-limit-label', key_label='DocketClock', key_max_nanousd=50_000_000_000,
++                 FLOOR=270_000_000, OPERATING=1_800_000_000, CAP=2_000_000_000,
++                 ledger_fixture_changes={'L18-key-limit-bounds': '$1.74 / six calls: False -> True; other 24 unchanged'},
++                 release_policy='UNSET (offline candidate; live evidence remains primary-owned)',
++                 network_calls=0, provider_calls=0, credentials_accessed=False,
++                 source_bodies_read=False, reference_contents_read=False, frozen_inputs_unchanged=True,
++                 runner_executor_release_commands_run=False, committed=False,
++                 paid_release_authorized=False, action_ready=False, production_eligible=False,
++                 self_pin='READY.json excludes itself; pin its exact hash externally before release.',
++                 final_verification='adapter-r1-4/verify_ready.py verifies all three READY inventories, dependencies and frozen inputs after full suites')
++    for n, v in dependencies.items():
++        assert not forbidden(n), n
++        assert pin(BENCH / n) == v, n
++    (root / 'READY.json').write_text(json.dumps(ready, sort_keys=True, indent=2) + '\n')
++    print(folder, 'READY:', sum(expected), 'tests per interpreter; sha256=' + pin(root / 'READY.json')['sha256'])
++
++
++if __name__ == '__main__':
++    p = argparse.ArgumentParser(description=__doc__)
++    p.add_argument('folder', choices=FOLDERS)
++    write(p.parse_args().folder)
+--- adapter-r1-3/r17_adapter.py
++++ adapter-r1-4/r17_adapter.py
+@@ -20,13 +20,13 @@
+ R17 = HERE.parent
+ BENCH = R17.parent
+ DESIGN = R17 / 'design-r3-1'
+-RECON_SHA = '5295a66700fee54b2e03344003e5638a5728b1949eedf0945062950cc40e33ff'
++RECON_SHA = '8c98fabdc73fad10336698fa695869966a631d5a7d99b797725f2c711b1b6bb0'
+ WIRE_SHA = '662268ba0774d7ef5a121ec4af90003a3836c07e4ce5a5ae551a413fe8375ab1'
+ CALLS = [f'S{i}-OPQ' for i in (1, 2, 3)] + [f'S{i}-FULL' for i in (1, 2, 3)]
+ NAMESPACE = 'r17.paid-comparison.v1'
+ POST_URL = 'https://openrouter.ai/api/v1/chat/completions'
+ KEY_URL = 'https://openrouter.ai/api/v1/key'
+-KEY_LABEL = 'yokel-r17-paid-comparison'
++KEY_LABEL = 'DocketClock'
+ MAX_RAW = 2_000_000
+ HEADER_NAMES = {'content-type', 'date', 'x-request-id', 'x-openrouter-request-id',
+                 'x-openai-request-id', 'openai-request-id'}
+@@ -152,10 +152,10 @@
+ 
+ def dependencies():
+     primary = read(DESIGN / 'READY.primary.json')['sha256']
+-    require(primary['fixtures/r17recon.py'] == RECON_SHA, 'primary_recon_pin')
++    require(read(R17 / 'recon-a4/READY.json')['files']['r17recon.py']['sha256'] == RECON_SHA, 'a4_recon_pin')
+     require(read(R17 / 'sources-r2/READY.json')['upstream']['wire']['sha256'] == WIRE_SHA,
+             'source_wire_pin')
+-    return (load_pinned('r17_exact_recon', DESIGN / 'fixtures/r17recon.py', RECON_SHA),
++    return (load_pinned('r17_exact_recon', R17 / 'recon-a4/r17recon.py', RECON_SHA),
+             load_pinned('r17_exact_wire', BENCH / 'round16-wire-compat/protocol-w2-1/wire.py', WIRE_SHA))
+ 
+ 
+@@ -429,7 +429,7 @@
+     require(design_ready.get('release_policy') == policy
+             and strict(artifacts['design_ready'][1]).get('release_policy') == policy, 'design_ready_policy')
+     for name in ('protocol', 'budget', 'reference_spec', 'adjudication_spec', 'scorer',
+-                 'recon', 'cases', 'cases_src', 'check'):
++                 'cases', 'cases_src', 'check'):
+         path, raw = artifacts[name]
+         relative = path.relative_to(design_path.parent).as_posix()
+         require(design_ready['sha256'].get(relative) == sha(raw), 'design_freeze_pin')
+--- adapter-r1-3/run_tests.sh
++++ adapter-r1-4/run_tests.sh
+@@ -8,3 +8,4 @@
+ "${R17_TEST_PYTHON:-python3}" -I -S -B test_repros.py
+ "${R17_TEST_PYTHON:-python3}" -I -S -B test_round2.py
+ "${R17_TEST_PYTHON:-python3}" -I -S -B test_native.py
++"${R17_TEST_PYTHON:-python3}" -I -S -B test_a4.py
+--- adapter-r1-3/test_adapter.py
++++ adapter-r1-4/test_adapter.py
+@@ -37,7 +37,7 @@
+     pass
+ 
+ 
+-def packet(usage, limit=1_730_000_000, reset=None):
++def packet(usage, limit=50_000_000_000, reset=None):
+     # Decimal JSON is authored as exact text, never via binary floating point.
+     def decimal(n):
+         return 'null' if n is None else f'{n // 10**9}.{n % 10**9:09d}'
+@@ -97,7 +97,7 @@
+                        cases_src='fixtures/cases.src.json', check='fixtures/check.py')
+         design_pins = {}
+         for name, filename in mapping.items():
+-            raw = (a.DESIGN / filename).read_bytes()
++            raw = ((a.R17 / 'recon-a4/r17recon.py') if name == 'recon' else (a.DESIGN / filename)).read_bytes()
+             if name == 'budget':
+                 raw = raw.replace(b'RELEASE_POLICY = UNSET', b'RELEASE_POLICY = P-HARD')
+             artifacts[name] = self.write('design/' + filename, raw)
+@@ -855,7 +855,7 @@
+ 
+ 
+ class ReferenceLedgerTests(unittest.TestCase):
+-    """L01–L25 through the adapter's exact imported engine, using pinned fixture expectations."""
++    """L01–L25 against the frozen original engine; A4 comparison is in test_a4.py."""
+ 
+ 
+ primary = a.read(a.DESIGN / 'READY.primary.json')['sha256']
+@@ -863,7 +863,7 @@
+     assert a.sha((a.DESIGN / filename).read_bytes()) == primary[filename]
+ checker = a.load_pinned('r17_fixture_checker', a.DESIGN / 'fixtures/check.py', primary['fixtures/check.py'])
+ # Route its pure ledger harness through the adapter's module, not a separate reimplementation.
+-checker.L = a.recon
++# Original fixtures retain the ORIGINAL engine loaded by frozen check.py.
+ cases = json.loads((a.DESIGN / 'fixtures/cases.json').read_bytes())['ledger']['cases']
+ assert len(cases) == 25
+ for case in cases:
+--- adapter-r1-3/test_native.py
++++ adapter-r1-4/test_native.py
+@@ -70,7 +70,7 @@
+         spec = importlib.util.spec_from_file_location('r17_native_fake', HERE / 'fake_http.py')
+         f = importlib.util.module_from_spec(spec)
+         spec.loader.exec_module(f)
+-        sock = f.FakeSocket(f.http_response(body=b'{"data":{"usage":0,"limit":1.73,"limit_remaining":1.73,"limit_reset":null}}'))
++        sock = f.FakeSocket(f.http_response(body=b'{"data":{"usage":0,"limit":50.00,"limit_remaining":50.00,"limit_reset":null}}'))
+         tr = f.Transport([sock])
+         with patch.object(d.os, 'environ', f.FakeEnv()), patch.object(d.http.client, 'HTTPSConnection', tr.cls), \
+              patch.object(d, 'deadline', wraps=d.deadline) as alarms:
+@@ -101,7 +101,7 @@
+             root = Path(tmp)
+             job = root / 'native-jobs/test-id'
+             job.mkdir(parents=True)
+-            host = root / 'adapter-r1-3/host_driver.py'
++            host = root / 'adapter-r1-4/host_driver.py'
+             host.parent.mkdir()
+             raw = b"def main(args):\n    return 42 if args == ['SYNTHETIC'] else 1\n"
+             host.write_bytes(raw)
+--- adapter-r1-3/test_repros.py
++++ adapter-r1-4/test_repros.py
+@@ -20,7 +20,7 @@
+             chunks.append('### ' + path.name + '\n' + result.stdout.decode('utf-8') +
+                           '\nexit=' + str(result.returncode) + '\n')
+         cls.output = ''.join(chunks)
+-        (HERE / '_out/repro-r1-3.txt').write_text(cls.output)
++        (HERE / '_out/repro-r1-4.txt').write_text(cls.output)
+         cls.sections = {}
+         for section in cls.output.split('### ')[1:]:
+             name, text = section.split('\n', 1)
+--- adapter-r1-3/verify_ready.py
++++ adapter-r1-4/verify_ready.py
+@@ -1,44 +1,53 @@
+-"""Re-run the full offline suite and assert every READY pin stays unchanged."""
++"""Verify every A4 READY pin after full offline suites on the invoking interpreter."""
+ import hashlib
++import importlib.util
+ import json
+ from pathlib import Path
+ import subprocess
+-import os
+ import sys
+-import unittest
+ 
+ HERE = Path(__file__).resolve().parent
+-BENCH = HERE.parent.parent
++R17 = HERE.parent
++BENCH = R17.parent
++spec = importlib.util.spec_from_file_location('a4_pinning', HERE / 'pin_ready.py')
++p = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(p)
+ 
+-def pin(path):
+-    raw = path.read_bytes()
+-    return dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+ 
+-class ReadyTests(unittest.TestCase):
+-    def test_full_suite_preserves_every_ready_pin(self):
+-        ready = json.loads((HERE / 'READY.json').read_bytes())
+-        self.assertEqual(ready['revision'], 'r1.3')
+-        self.assertFalse(any(n.startswith('_out/') for n in ready['files']))
+-        self.assertEqual(ready['sha256'], {n: v['sha256'] for n, v in ready['files'].items()})
+-        def verify():
+-            for name, expected in ready['files'].items():
+-                self.assertEqual(pin(HERE / name), expected, name)
+-            for name, expected in ready['dependencies'].items():
+-                self.assertNotIn('reference/', name)
+-                self.assertFalse(name.endswith(('/parsed-body.txt', '/original.htm')))
+-                self.assertEqual(pin(BENCH / name), expected, name)
+-            actual = {p.relative_to(HERE).as_posix() for p in HERE.rglob('*')
+-                      if p.is_file() and '_out' not in p.relative_to(HERE).parts and p.name != 'READY.json'}
+-            self.assertEqual(actual, set(ready['files']))
+-        verify()
+-        ready_pin = pin(HERE / 'READY.json')
+-        result = subprocess.run(['sh', str(HERE / 'run_tests.sh')], cwd=HERE, env={'R17_TEST_PYTHON': sys.executable, 'PATH': '/usr/bin:/bin'},
+-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
+-        (HERE / '_out/test-output.txt').write_bytes(result.stdout)
+-        verify()
+-        self.assertEqual(pin(HERE / 'READY.json'), ready_pin)
+-        self.assertEqual(result.returncode, 0, result.stdout.decode('utf-8'))
+-        print('Full suite passed; every payload/dependency hash and READY.json unchanged.')
++def verify():
++    p.verify_frozen()
++    hashes = {}
++    for folder in p.FOLDERS:
++        root = R17 / folder
++        ready = json.loads((root / 'READY.json').read_bytes())
++        assert p.payload(root) == ready['files'], folder + ': payload inventory drift'
++        assert ready['sha256'] == {n: v['sha256'] for n, v in ready['files'].items()}
++        for name, expected in ready['dependencies'].items():
++            assert not p.forbidden(name), name
++            assert p.pin(BENCH / name) == expected, name
++        for item in ready['tests'].values():
++            assert p.pin(root / item['output']) == item['output_pin'], item['output']
++        hashes[folder] = p.pin(root / 'READY.json')['sha256']
++    return hashes
++
++
++def main():
++    before = verify()
++    commands = [
++        ('recon-a4', [sys.executable, '-I', '-S', '-B', str(R17 / 'recon-a4/test_recon.py')]),
++        ('adapter-r1-4', ['sh', str(HERE / 'run_tests.sh')]),
++        ('release-prep-a4', [sys.executable, '-I', '-S', '-B', str(R17 / 'release-prep-a4/test_release_prep.py')])]
++    for folder, command in commands:
++        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
++                                env={'PATH': '/usr/bin:/bin', 'R17_TEST_PYTHON': sys.executable}, check=False)
++        (R17 / folder / '_out' / ('verify-' + Path(sys.executable).name + '-tests.txt')).write_bytes(result.stdout)
++        assert result.returncode == 0, result.stdout.decode()
++    assert verify() == before, 'READY hash drift after suites'
++    print(json.dumps(dict(interpreter=sys.executable, flags=['-I', '-S', '-B'],
++                          suites={'recon':3, 'adapter':200, 'release_prep':13},
++                          full_suites_passed=True, frozen_inputs_unchanged=True,
++                          all_payload_dependency_and_READY_pins_unchanged=True, ready_sha256=before), sort_keys=True))
++
+ 
+ if __name__ == '__main__':
+-    unittest.main(verbosity=2)
++    main()

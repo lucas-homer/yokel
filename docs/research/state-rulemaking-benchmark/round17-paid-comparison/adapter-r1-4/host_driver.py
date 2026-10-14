@@ -1,0 +1,278 @@
+"""Reviewed offline candidate. Import is inert; only explicit callbacks can use HTTPS.
+
+Run one cell with python3 -I -S -B host_driver.py and the adapter CLI arguments,
+except --driver and --driver-sha256 (derived from this file). No stale-lock removal.
+"""
+import contextlib
+import hashlib
+import http.client
+import importlib.util
+import json
+import os
+from pathlib import Path
+import re
+import signal
+import ssl
+import threading
+import time
+import sys
+
+HERE = Path(__file__).resolve().parent
+POST_URL = 'https://openrouter.ai/api/v1/chat/completions'
+KEY_URL = 'https://openrouter.ai/api/v1/key'
+MAX_RAW = 2_000_000
+TIMEOUT_S = 600
+CONNECT_WRITE_S = 15
+KEY_TIMEOUT_S = 15
+POST_TOTAL_S = CONNECT_WRITE_S + TIMEOUT_S
+JOB_DEADLINE_S = 1740
+CA_BUNDLE = Path('/etc/ssl/cert.pem')
+HEADER_NAMES = {'content-type', 'date', 'x-request-id', 'x-openrouter-request-id',
+                'x-openai-request-id', 'openai-request-id'}
+
+
+class DriverError(RuntimeError):
+    """Messages are fixed strings, with no retained transport exception context."""
+
+
+@contextlib.contextmanager
+def deadline(seconds):
+    """POSIX elapsed deadline, including DNS and trickled reads; preserves outer alarm.
+
+    Main-thread only. A timer already owned by our job shim is nested by taking
+    the earlier deadline; unrelated process alarms refuse before transport.
+    """
+    if threading.current_thread() is not threading.main_thread():
+        raise DriverError('deadline_main_thread_required')
+    handler = signal.getsignal(signal.SIGALRM)
+    remaining, interval = signal.getitimer(signal.ITIMER_REAL)
+    if interval or (remaining and not getattr(handler, 'r17_deadline', False)):
+        raise DriverError('deadline_conflict')
+    start = time.monotonic()
+    outer_first = bool(remaining and remaining <= seconds)
+    fired = False
+    def expired(signum, frame):
+        nonlocal fired
+        fired = True
+        if outer_first:
+            handler(signum, frame)
+        raise DriverError('transport_deadline')
+    expired.r17_deadline = True
+    signal.signal(signal.SIGALRM, expired)
+    signal.setitimer(signal.ITIMER_REAL, min(seconds, remaining) if remaining else seconds)
+    try:
+        yield
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, handler)
+        if remaining and not (fired and outer_first):
+            signal.setitimer(signal.ITIMER_REAL, max(0.000001, remaining - (time.monotonic() - start)))
+
+
+def filter_headers(headers):
+    result = {}
+    for name, value in headers.items():
+        if not isinstance(name, str) or not isinstance(value, str):
+            continue
+        name = name.lower()
+        if name not in HEADER_NAMES and not re.fullmatch(r'x-ratelimit-[a-z0-9-]+', name):
+            continue
+        if re.search(r'sk-or-|bearer\s|authorization|set-cookie', value, re.I):
+            continue
+        if '\r' in value or '\n' in value:
+            continue
+        result[name] = value[:1024]
+    return result
+
+
+def _tls_context():
+    # PROTOCOL_TLS_CLIENT enables CERT_REQUIRED + hostname checking. Avoid
+    # create_default_context's SSLKEYLOGFILE lookup; this driver never enables logs.
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    # Explicit cafile bypasses SSL_CERT_FILE/SSL_CERT_DIR and default discovery.
+    raw = CA_BUNDLE.read_bytes()
+    context.load_verify_locations(cafile=str(CA_BUNDLE))
+    if context.cert_store_stats()['x509_ca'] == 0:
+        raise DriverError('tls_no_trust_anchors')
+    if CA_BUNDLE.read_bytes() != raw:
+        raise DriverError('tls_bundle_changed')
+    context.r17_ca_sha256 = hashlib.sha256(raw).hexdigest()
+    return context
+
+
+def _request(method, path, body, key):
+    """Raw http.client has no redirect/retry/proxy machinery. One fresh TLS session."""
+    connection, packet, failed = None, None, False
+    headers, response, raw, safe_headers = None, None, None, None
+    ca_sha256, interrupted = None, None
+    try:
+        if (not isinstance(key, str) or not key or not key.isascii()
+                or any(ord(c) <= 32 or ord(c) == 127 for c in key)):
+            raise DriverError('credential_unavailable')
+        with deadline(POST_TOTAL_S if method == 'POST' else KEY_TIMEOUT_S):
+            with deadline(CONNECT_WRITE_S):
+                context = _tls_context()
+                ca_sha256 = getattr(context, 'r17_ca_sha256', None)
+                if context.verify_mode != ssl.CERT_REQUIRED or not context.check_hostname:
+                    raise DriverError('tls_unverified')
+                connection = http.client.HTTPSConnection('openrouter.ai', timeout=TIMEOUT_S if method == 'POST' else KEY_TIMEOUT_S, context=context)
+                headers = {'Authorization': 'Bearer ' + key, 'Connection': 'close'}
+                if method == 'POST':
+                    headers.update({'Content-Type': 'application/json', 'Content-Length': str(len(body))})
+                connection.request(method, path, body=body, headers=headers)
+            with deadline(TIMEOUT_S if method == 'POST' else KEY_TIMEOUT_S):
+                response = connection.getresponse()
+                # The sentinel byte detects overflow without an unbounded read or second read.
+                raw = response.read(MAX_RAW + 1)
+                if not isinstance(raw, bytes) or len(raw) > MAX_RAW:
+                    raise DriverError('body_overflow')
+                if type(response.status) is not int or not 100 <= response.status <= 599:
+                    raise DriverError('status_invalid')
+                # A credential echoed in any permitted response field never crosses the seam.
+                safe_headers = filter_headers(dict(response.getheaders()))
+                if key.encode('ascii') in raw or any(key in v for v in safe_headers.values()):
+                    raise DriverError('response_sensitive')
+                packet = dict(status=response.status, raw=raw, headers=safe_headers,
+                              tls_ca_sha256=ca_sha256)
+    except Exception:
+        failed = True
+    except BaseException as exc:
+        interrupted = ('keyboard' if isinstance(exc, KeyboardInterrupt) else
+                       'exit' if isinstance(exc, SystemExit) else 'base')
+    finally:
+        if connection is not None:
+            try:
+                connection.close()
+            except Exception:
+                failed = True
+            except BaseException as exc:
+                interrupted = ('keyboard' if isinstance(exc, KeyboardInterrupt) else
+                               'exit' if isinstance(exc, SystemExit) else 'base')
+        # Drop holders of the key, response echoes and http.client's private buffers.
+        # Re-raise fresh exceptions outside handlers, without transport traceback/context.
+        del key, headers, connection, response, raw, safe_headers
+    if interrupted == 'keyboard':
+        raise KeyboardInterrupt
+    if interrupted == 'exit':
+        raise SystemExit
+    if interrupted:
+        raise BaseException('transport_interrupted')
+    # Raise outside the except block: __context__ cannot retain the original exception.
+    if failed:
+        error = DriverError('transport_failed')
+        error.tls_ca_sha256 = ca_sha256
+        raise error
+    return packet
+
+
+def post_once(url, exact_bytes):
+    if url != POST_URL or type(exact_bytes) is not bytes:
+        raise DriverError('request_refused')
+    key = os.environ.get('OPENROUTER_API_KEY')
+    try:
+        return _request('POST', '/api/v1/chat/completions', exact_bytes, key)
+    finally:
+        del key
+
+
+class Token(str):
+    """Raw numeric JSON token; never converted through float."""
+
+
+def _key_fields(raw):
+    def pairs(items):
+        result = {}
+        for k, v in items:
+            if k in result:
+                raise DriverError('key_response_invalid')
+            result[k] = v
+        return result
+    def constant(_):
+        raise DriverError('key_response_invalid')
+    value = json.loads(raw.decode('utf-8'), object_pairs_hook=pairs, parse_float=Token,
+                       parse_int=Token, parse_constant=constant)
+    data = value['data']
+    if not isinstance(data, dict):
+        raise DriverError('key_response_invalid')
+    fields = []
+    for name in ('usage', 'limit', 'limit_remaining', 'limit_reset'):
+        v = data[name]
+        if name == 'limit_reset':
+            if v is not None and (type(v) is not str or len(v) > 100):
+                raise DriverError('key_response_invalid')
+            token = json.dumps(v, ensure_ascii=False, allow_nan=False)
+        elif isinstance(v, Token):
+            token = str(v)
+        elif v is None:
+            token = 'null'
+        else:
+            raise DriverError('key_response_invalid')
+        fields.append(json.dumps(name) + ':' + token)
+    return ('{' + ','.join(fields) + '}').encode('utf-8')
+
+
+def key_info(url):
+    if url != KEY_URL:
+        raise DriverError('request_refused')
+    key = os.environ.get('OPENROUTER_API_KEY')
+    try:
+        packet = _request('GET', '/api/v1/key', None, key)
+    finally:
+        del key
+    failed, fields = False, None
+    try:
+        if packet['status'] != 200:
+            raise DriverError('key_http_status')
+        fields = _key_fields(packet['raw'])
+    except Exception:
+        failed = True
+    if failed:
+        error = DriverError('key_response_invalid')
+        error.tls_ca_sha256 = packet['tls_ca_sha256']
+        raise error
+    return dict(fields=fields, response_sha256=hashlib.sha256(packet['raw']).hexdigest(),
+                tls_ca_sha256=packet['tls_ca_sha256'])
+
+
+def source(cell):
+    """Exact UTF-8 source, with no newline translation or alternate source fallback."""
+    if cell not in [f'S{i}-{arm}' for arm in ('OPQ', 'FULL') for i in (1, 2, 3)]:
+        raise DriverError('source_cell_invalid')
+    root = HERE.parent / 'sources-r2'
+    ready = json.loads((root / 'READY.json').read_bytes())
+    selected = ready['selected']
+    if (not isinstance(selected, list) or len(selected) != 3 or selected != sorted(selected)
+            or len(set(selected)) != 3
+            or not all(isinstance(s, str) and re.fullmatch(r'[A-Za-z0-9_-]+', s) for s in selected)):
+        raise DriverError('source_metadata_invalid')
+    raw = (root / selected[int(cell[1]) - 1] / 'parsed-body.txt').read_bytes()
+    return raw.decode('utf-8')
+
+
+def _main(argv=None):
+    # No imports of benchmark executables and no credential lookup at module import.
+    path = HERE / 'r17_adapter.py'
+    spec = importlib.util.spec_from_file_location('r17_host_adapter', path)
+    adapter = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(adapter)
+    args = list(sys.argv[1:] if argv is None else argv)
+    if any(v == '--driver' or v == '--driver-sha256' or v.startswith('--driver=')
+           or v.startswith('--driver-sha256=') for v in args):
+        print('R17 refusal: driver_override. No retry.', file=sys.stderr)
+        return 2
+    self_path = Path(__file__).resolve()
+    args += ['--driver', str(self_path), '--driver-sha256',
+             hashlib.sha256(self_path.read_bytes()).hexdigest()]
+    return adapter.main(args, recover_first=True)
+
+
+def main(argv=None):
+    try:
+        return _main(argv)
+    except Exception:
+        print('R17 stopped: host_driver_failure. No retry.', file=sys.stderr)
+        return 4
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -1,0 +1,270 @@
+### repro_r4_shim_grammar.py
+ok   exact grammar runs host once, exit = host return  HOST ['SYNTHETIC'] True ['R17_PROBE']
+ok   shim arms >1700 s before host runs
+ok   host sees no R17* environment influence beyond what the runner sets  (the shim passes the environment through untouched; the runner supplies only HOME/PATH/LANG/key)
+ok   argv [] refused (exit 2, host never ran)
+ok   argv ['--live-initial', '--live-initial'] refused (exit 2, host never ran)
+ok   argv ['--live-initial', '--cell', 'S1-OPQ'] refused (exit 2, host never ran)
+ok   argv ['--LIVE-INITIAL'] refused (exit 2, host never ran)
+ok   argv ['--live-initial=1'] refused (exit 2, host never ran)
+ok   argv ['--cell', 'S1-OPQ'] refused (exit 2, host never ran)
+ok   argv ['-h'] refused (exit 2, host never ran)
+ok   argv ['--live-initial', ''] refused (exit 2, host never ran)
+ok   interpreter flags ['-I', '-S'] refused (exit 2)
+ok   interpreter flags ['-I', '-B'] refused (exit 2)
+ok   interpreter flags ['-S', '-B'] refused (exit 2)
+ok   interpreter flags [] refused (exit 2)
+ok   config extra key refused before host (exit 2)
+ok   config missing args refused before host (exit 2)
+ok   config wrong schema refused before host (exit 2)
+ok   config host hash drift refused before host (exit 2)
+ok   config host hash upper-case refused before host (exit 2)
+ok   config args not a list: host still called with the raw value (NOTE: shim does not type-check args)  HOST SYNTHETIC True ['R17_PROBE']
+ok   duplicate "args" key: json.loads keeps the LAST value (NOTE: shim uses plain json.loads, not strict)  HOST ['OTHER'] True ['R17_PROBE']
+ok   host_driver drift refused (exit 2)
+ok   host exception -> exit 4 with fixed message, timer disarmed
+ok   shim copied elsewhere cannot find a host -> exit 4 (FileNotFoundError is a generic shim failure; host never ran)
+ok   a different host next to a relocated shim is refused by the signed hash (exit 2)
+ok   pre-armed ITIMER_REAL refused (exit 2)
+HOST ['SYNTHETIC'] True []
+ok   unit: exact grammar OK with synthetic host
+ok   timer disarmed after return
+ok   real host refuses a signed --driver override (exit 2)
+ok   real host refuses a signed --driver-sha256 (exit 2)
+ok   adapter CLI exposes --lock-evidence and --opq-freeze (signed args could select them; NOTE)
+SUMMARY shim grammar: 32 of 32 checks held
+exit=0
+### repro_r4_deadline_kill.py
+# A3 arithmetic
+ok   constants: TIMEOUT 600, connect 15, key 15, POST total 615, job deadline 1740
+ok   normal cell worst transport = 15 + 615 + 900 + 4*15 = 1590 (Sol)  1590
+ok   tighter bound: reads are absolute offsets, so only the LAST GET adds: 15+615+900+15 = 1545
+ok   marked recovery worst case 900 + 4*15 = 960 (no POST)
+ok   1590 < 1740 < 1800
+   margin after transport: 150 s for Python work; 60 s before the native kill
+   NOTE: the native 1800 s clock starts before `op run` secret resolution and the pre-exec pin hashing;
+         the shim's 1740 s clock starts after them. The 60 s reserve shrinks by that bootstrap time.
+# nested deadline semantics (real signals)
+ok   shim timer earlier than host deadlines -> shim handler runs -> os._exit(4)
+ok   inner host deadline fires -> DriverError, shim timer re-armed (remaining < 5)  driver transport_deadline 4.79
+ok   outer host deadline (615-like) fires through the inner -> DriverError, shim timer re-armed  driver transport_deadline 4.79
+ok   no expiry: shim timer restored with elapsed time subtracted  completed 4.89
+ok   inner fires first, then shim (0.5) fires during the remaining sleep? no: DriverError exits the sleep  driver transport_deadline 0.3
+ok   shim deadline expiring inside a hung POST send -> os._exit(4), no exception path, no retry
+# kill at each stage against the real adapter (child processes)
+ok   pre-mark/alarm: child died as expected  rc=4 
+ok   pre-mark/alarm: ledger.lock RETAINED (next run refuses, exit 3)
+ok   pre-mark/alarm: last entry RESERVE, no DISPATCH_MARK  ['INIT', 'BIND_RELEASE', 'RESERVE']
+ok   pre-mark/alarm: next dispatch with lock retained -> lock_or_claim_exists, 0 POST 0 GET  {'outcome': 'lock_or_claim_exists', 'posts': 0, 'reads': 0}
+ok   pre-mark/alarm: recovery -> RESOLVE dispatched=False debit 0, 0 key reads, no HALT  {'recovered': ['S1-OPQ'], 'key_reads': 0, 'posts': 0} ['INIT', 'BIND_RELEASE', 'RESERVE', 'LOCK_RECOVERED', 'RESOLVE']
+ok   pre-mark/alarm: next dispatch after unmarked recovery -> exactly ONE POST (re-admission by design)  {'outcome': 'executed', 'posts': 1, 'reads': 5}
+ok   pre-mark/alarm: ledger chain still verifies after recovery
+ok   pre-mark/sigterm: child died as expected  rc=-15 
+ok   pre-mark/sigterm: ledger.lock RETAINED (next run refuses, exit 3)
+ok   pre-mark/sigterm: last entry RESERVE, no DISPATCH_MARK  ['INIT', 'BIND_RELEASE', 'RESERVE']
+ok   pre-mark/sigterm: next dispatch with lock retained -> lock_or_claim_exists, 0 POST 0 GET  {'outcome': 'lock_or_claim_exists', 'posts': 0, 'reads': 0}
+ok   pre-mark/sigterm: recovery -> RESOLVE dispatched=False debit 0, 0 key reads, no HALT  {'recovered': ['S1-OPQ'], 'key_reads': 0, 'posts': 0} ['INIT', 'BIND_RELEASE', 'RESERVE', 'LOCK_RECOVERED', 'RESOLVE']
+ok   pre-mark/sigterm: next dispatch after unmarked recovery -> exactly ONE POST (re-admission by design)  {'outcome': 'executed', 'posts': 1, 'reads': 5}
+ok   pre-mark/sigterm: ledger chain still verifies after recovery
+ok   mid-post/alarm: child died as expected  rc=4 
+ok   mid-post/alarm: ledger.lock RETAINED (next run refuses, exit 3)
+ok   mid-post/alarm: last entry DISPATCH_MARK, no RESOLVE  ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK']
+ok   mid-post/alarm: no response/status receipt yet
+ok   mid-post/alarm: next dispatch with lock retained -> lock_or_claim_exists, 0 POST 0 GET  {'outcome': 'lock_or_claim_exists', 'posts': 0, 'reads': 0}
+ok   mid-post/alarm: recovery -> RESOLVE dispatched=True debit>=FLOOR, HALT, 0 POST  {'recovered': ['S1-OPQ'], 'key_reads': 4, 'posts': 0} ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'LOCK_RECOVERED', 'RESOLVE', 'HALT']
+ok   mid-post/alarm: total reconciliation reads <= 4 across crash + recovery  receipts=4 recovery_reads=4
+ok   mid-post/alarm: next dispatch after marked recovery refused before any POST (refused:wrong_cell_order; admit(S2)=(False, 'halted'))  {'outcome': 'refused:wrong_cell_order', 'posts': 0, 'reads': 0}
+ok   mid-post/alarm: ledger chain still verifies after recovery
+ok   mid-post/sigterm: child died as expected  rc=-15 
+ok   mid-post/sigterm: ledger.lock RETAINED (next run refuses, exit 3)
+ok   mid-post/sigterm: last entry DISPATCH_MARK, no RESOLVE  ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK']
+ok   mid-post/sigterm: no response/status receipt yet
+ok   mid-post/sigterm: next dispatch with lock retained -> lock_or_claim_exists, 0 POST 0 GET  {'outcome': 'lock_or_claim_exists', 'posts': 0, 'reads': 0}
+ok   mid-post/sigterm: recovery -> RESOLVE dispatched=True debit>=FLOOR, HALT, 0 POST  {'recovered': ['S1-OPQ'], 'key_reads': 4, 'posts': 0} ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'LOCK_RECOVERED', 'RESOLVE', 'HALT']
+ok   mid-post/sigterm: total reconciliation reads <= 4 across crash + recovery  receipts=4 recovery_reads=4
+ok   mid-post/sigterm: next dispatch after marked recovery refused before any POST (refused:wrong_cell_order; admit(S2)=(False, 'halted'))  {'outcome': 'refused:wrong_cell_order', 'posts': 0, 'reads': 0}
+ok   mid-post/sigterm: ledger chain still verifies after recovery
+ok   mid-recon/alarm: child died as expected  rc=4 
+ok   mid-recon/alarm: ledger.lock RETAINED (next run refuses, exit 3)
+ok   mid-recon/alarm: DISPATCH_MARK present, recon-0.json and recon-60 intent claim exist, no RESOLVE  ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK']
+ok   mid-recon/alarm: next dispatch with lock retained -> lock_or_claim_exists, 0 POST 0 GET  {'outcome': 'lock_or_claim_exists', 'posts': 0, 'reads': 0}
+ok   mid-recon/alarm: recovery -> RESOLVE dispatched=True debit>=FLOOR, HALT, 0 POST  {'recovered': ['S1-OPQ'], 'key_reads': 1, 'posts': 0} ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'LOCK_RECOVERED', 'RESOLVE', 'RECONCILED', 'HALT']
+ok   mid-recon/alarm: total reconciliation reads <= 4 across crash + recovery  receipts=3 recovery_reads=1
+ok   mid-recon/alarm: next dispatch after marked recovery refused before any POST (refused:wrong_cell_order; admit(S2)=(False, 'halted'))  {'outcome': 'refused:wrong_cell_order', 'posts': 0, 'reads': 0}
+ok   mid-recon/alarm: ledger chain still verifies after recovery
+ok   mid-recon/sigterm: child died as expected  rc=-15 
+ok   mid-recon/sigterm: ledger.lock RETAINED (next run refuses, exit 3)
+ok   mid-recon/sigterm: DISPATCH_MARK present, recon-0.json and recon-60 intent claim exist, no RESOLVE  ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK']
+ok   mid-recon/sigterm: next dispatch with lock retained -> lock_or_claim_exists, 0 POST 0 GET  {'outcome': 'lock_or_claim_exists', 'posts': 0, 'reads': 0}
+ok   mid-recon/sigterm: recovery -> RESOLVE dispatched=True debit>=FLOOR, HALT, 0 POST  {'recovered': ['S1-OPQ'], 'key_reads': 1, 'posts': 0} ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'LOCK_RECOVERED', 'RESOLVE', 'RECONCILED', 'HALT']
+ok   mid-recon/sigterm: total reconciliation reads <= 4 across crash + recovery  receipts=3 recovery_reads=1
+ok   mid-recon/sigterm: next dispatch after marked recovery refused before any POST (refused:wrong_cell_order; admit(S2)=(False, 'halted'))  {'outcome': 'refused:wrong_cell_order', 'posts': 0, 'reads': 0}
+ok   mid-recon/sigterm: ledger chain still verifies after recovery
+SUMMARY deadline/kill: 59 of 59 checks held
+exit=0
+### repro_r4_a4_bounds.py
+ok   only KEY_MAX differs between engines
+ok   adapter imports recon-a4 (KEY_MAX $50) and KEY_LABEL DocketClock
+# key_limit_ok(limit, 3): old vs new
+   $0.8            old=False new=False
+   $0.81           old=True  new=True
+   $1.73           old=True  new=True
+   $1.74           old=False new=True
+   $49.99          old=False new=True
+   $50.0           old=False new=True
+   $50.000000001   old=False new=False
+   $100            old=False new=False
+ok   new admits INIT key limits in [$0.81, $50]; old admitted [$0.81, $1.73]
+# admission for the NEXT call (new engine, key_limit $50)
+   done=0 aggregate=$0.00 usage=$0.00 -> (True, None)
+   done=1 aggregate=$0.27 usage=$0.27 -> (True, None)
+   done=1 aggregate=$1.50 usage=$1.50 -> (False, 'operating limit')
+   done=1 aggregate=$1.53 usage=$1.53 -> (False, 'operating limit')
+   done=1 aggregate=$1.54 usage=$1.54 -> (False, 'operating limit')
+   done=2 aggregate=$1.26 usage=$1.26 -> (True, None)
+   done=2 aggregate=$1.27 usage=$1.27 -> (True, None)
+   done=2 aggregate=$1.53 usage=$1.53 -> (True, None)
+   done=2 aggregate=$1.54 usage=$1.54 -> (False, 'operating limit')
+ok   OPERATING binds: 1 done at $1.53 -> remaining 2 x FLOOR = $0.54 -> $2.07 > $1.80 refused
+ok   OPERATING binds: 2 done at $1.26 -> +$0.27 = $1.53 <= $1.80 admitted
+ok   OPERATING binds: 2 done at $1.54 -> +$0.27 = $1.81 > $1.80 refused
+ok   all-remaining reservation: RECONCILE_UP $1.00 before any call -> 1.00 + 3 x 0.27 = 1.81 refused
+ok                              RECONCILE_UP $0.99 -> 0.99 + 0.81 = 1.80 admitted (boundary)
+# admit() differences old($1.73 key) vs new($50 key) over the grid: 56 states
+   done=1 aggregate=$1.20 usage=$1.20 old=(False, 'key capacity') new=(True, None)
+   done=1 aggregate=$1.21 usage=$1.20 old=(False, 'key capacity') new=(True, None)
+   done=1 aggregate=$1.21 usage=$1.21 old=(False, 'key capacity') new=(True, None)
+   done=1 aggregate=$1.22 usage=$1.20 old=(False, 'key capacity') new=(True, None)
+   done=1 aggregate=$1.22 usage=$1.21 old=(False, 'key capacity') new=(True, None)
+   done=1 aggregate=$1.22 usage=$1.22 old=(False, 'key capacity') new=(True, None)
+ok   every difference is the old "key capacity" refusal where usage + remaining x FLOOR lies in ($1.73, $1.80]
+   i.e. the $50 key admits a next call when reconciled usage is up to $0.07 higher than before; the OPERATING $1.80 and
+   CAP $2.00 bounds, FLOOR reservation of all remaining calls, no-retry and debit>FLOOR halts are unchanged.
+ok   live key limit ($1.73) != INIT key_limit ($50) -> refused pre_dispatch_pause, 0 POST
+ok   live key with limit_reset -> refused pre_dispatch_pause, 0 POST
+ok   live usage $0.000005 at S1 with 0 marks -> refused (tolerance count*1000 nano = 0), 0 POST
+ok   one call whose key delta is $0.80 (> FLOOR): debit $0.80, HALT debit_exceeds_floor, 1 POST  (800000000, 'debit_exceeds_floor')
+ok   S2 after that HALT -> refused (staged_result_binding; CLI probe admit(S2)=(False, 'halted')), still 1 POST total
+SUMMARY A4 bounds: 14 of 14 checks held
+exit=0
+### repro_r4_stage.py
+ok   copies exactly the pinned members plus the receipt; unpinned stray/_out files are NOT copied  ['STAGE-MANIFEST.json', 'round17-paid-comparison/adapter-r1-4/host_driver.py', 'round17-paid-comparison/adapter-r1-4/native_entry.py', 'round17-paid-comparison/reference/E/ref.json', 'round17-paid-comparison/sources-r2/x/parsed-body.txt']
+ok   target name is the manifest content id
+ok   every copied byte matches its pin
+ok   receipt equals canonical manifest
+ok   staged files are owner-only (0600) and dirs 0700
+ok   existing target refused (FileExistsError), nothing overwritten
+ok   source hash drift refused (source hash mismatch: round17-paid-comparison/reference/E/ref.json); partial stage left for inspection, not reused
+ok   partial stage reuse refused
+ok   file symlink member refused (ValueError)
+ok   intermediate directory symlink inside the source refused (ValueError)
+ok   destination parent symlink refused (ValueError)
+ok   hardlinked source member is copied (regular file; hash-verified) - NOTE, not a defect
+ok   relative('../x') refused
+ok   relative('/abs') refused
+ok   relative('a/../b') refused
+ok   relative('a/./b') refused
+ok   relative('a//b') refused
+ok   relative('a/') refused
+ok   relative('') refused
+ok   relative('round17-paid-comparison/adapter-r1-4/..') refused
+ok   parent outside refused (target outside adapter roots)
+ok   parent allowed refused (target outside adapter roots)
+ok   bad manifest refused
+ok   bad manifest refused
+ok   bad manifest refused
+ok   bad manifest refused
+ok   stage.py CLI with a temp --parent refuses (target outside adapter roots) and creates nothing  research/state-rulemaking-benchmark/round17-paid-comparison/release-prep-a4/stage.py", line 103, in stage
+    raise ValueError('target outside adapter roots')
+ValueError: target outside adapter roots
+
+ok   ~/dev/yokel/.r17-stage untouched by this review
+ok   bundled stdlib exists, is user-owned and writable, and is not a signed file pin (NOTE: runner trust boundary)
+SUMMARY stage: 29 of 29 checks held
+exit=0
+### repro_r4_proposals.py
+ok   three drafts
+ok   r17-s1-opq-draft-a4-20261014.json: bytes == Manifest.h-style canonical JSON (strcmp order, compact)
+ok   r17-s1-opq-draft-a4-20261014.json: no duplicate keys, parses strictly
+ok   r17-s1-opq-draft-a4-20261014.json: exact top-level keys
+ok   r17-s1-opq-draft-a4-20261014.json: job_id ^[a-z][a-z0-9-]{0,63}$ and equals file stem
+ok   r17-s1-opq-draft-a4-20261014.json: OpenRouter-only provider subset
+ok   r17-s1-opq-draft-a4-20261014.json: argv = [python_path,-I,-S,-B,<adapter_root>/.../adapter.py,--live-initial]
+ok   r17-s1-opq-draft-a4-20261014.json: files pin python and the shim; every path within dependency roots; 64-hex lowercase
+ok   r17-s1-opq-draft-a4-20261014.json: timeout 1800 within core max
+ok   r17-s1-opq-draft-a4-20261014.json: budget ints, prior+reservation<=ceiling, reservation $0.27, ceiling $2.00
+ok   r17-s1-opq-draft-a4-20261014.json: review path is a file pin with the same hash
+ok   r17-s1-opq-draft-a4-20261014.json: review pin is adapter-r1-4/SPEC.md (the implementer's spec, NOT an independent review) - NOTE
+   expiry 1792080791 = now+85189 s (drafts were written with +86400; must be (now, now+7d] at check-job AND at every run stage)
+ok   r17-s1-opq-draft-a4-20261014.json: arguments.json for this job is pinned
+ok   r17-s1-opq-draft-a4-20261014.json: offline validate() accepts (check_files=False; prospective paths do not exist yet)
+ok   r17-s1-opq-draft-a4-20261014.json: with check_files=True the draft fails (stage absent) - as documented, drafts are not signable
+ok   r17-s2-opq-draft-a4-20261014.json: bytes == Manifest.h-style canonical JSON (strcmp order, compact)
+ok   r17-s2-opq-draft-a4-20261014.json: no duplicate keys, parses strictly
+ok   r17-s2-opq-draft-a4-20261014.json: exact top-level keys
+ok   r17-s2-opq-draft-a4-20261014.json: job_id ^[a-z][a-z0-9-]{0,63}$ and equals file stem
+ok   r17-s2-opq-draft-a4-20261014.json: OpenRouter-only provider subset
+ok   r17-s2-opq-draft-a4-20261014.json: argv = [python_path,-I,-S,-B,<adapter_root>/.../adapter.py,--live-initial]
+ok   r17-s2-opq-draft-a4-20261014.json: files pin python and the shim; every path within dependency roots; 64-hex lowercase
+ok   r17-s2-opq-draft-a4-20261014.json: timeout 1800 within core max
+ok   r17-s2-opq-draft-a4-20261014.json: budget ints, prior+reservation<=ceiling, reservation $0.27, ceiling $2.00
+ok   r17-s2-opq-draft-a4-20261014.json: review path is a file pin with the same hash
+ok   r17-s2-opq-draft-a4-20261014.json: review pin is adapter-r1-4/SPEC.md (the implementer's spec, NOT an independent review) - NOTE
+   expiry 1792080791 = now+85189 s (drafts were written with +86400; must be (now, now+7d] at check-job AND at every run stage)
+ok   r17-s2-opq-draft-a4-20261014.json: arguments.json for this job is pinned
+ok   r17-s2-opq-draft-a4-20261014.json: offline validate() accepts (check_files=False; prospective paths do not exist yet)
+ok   r17-s2-opq-draft-a4-20261014.json: with check_files=True the draft fails (stage absent) - as documented, drafts are not signable
+ok   r17-s3-opq-draft-a4-20261014.json: bytes == Manifest.h-style canonical JSON (strcmp order, compact)
+ok   r17-s3-opq-draft-a4-20261014.json: no duplicate keys, parses strictly
+ok   r17-s3-opq-draft-a4-20261014.json: exact top-level keys
+ok   r17-s3-opq-draft-a4-20261014.json: job_id ^[a-z][a-z0-9-]{0,63}$ and equals file stem
+ok   r17-s3-opq-draft-a4-20261014.json: OpenRouter-only provider subset
+ok   r17-s3-opq-draft-a4-20261014.json: argv = [python_path,-I,-S,-B,<adapter_root>/.../adapter.py,--live-initial]
+ok   r17-s3-opq-draft-a4-20261014.json: files pin python and the shim; every path within dependency roots; 64-hex lowercase
+ok   r17-s3-opq-draft-a4-20261014.json: timeout 1800 within core max
+ok   r17-s3-opq-draft-a4-20261014.json: budget ints, prior+reservation<=ceiling, reservation $0.27, ceiling $2.00
+ok   r17-s3-opq-draft-a4-20261014.json: review path is a file pin with the same hash
+ok   r17-s3-opq-draft-a4-20261014.json: review pin is adapter-r1-4/SPEC.md (the implementer's spec, NOT an independent review) - NOTE
+   expiry 1792080791 = now+85189 s (drafts were written with +86400; must be (now, now+7d] at check-job AND at every run stage)
+ok   r17-s3-opq-draft-a4-20261014.json: arguments.json for this job is pinned
+ok   r17-s3-opq-draft-a4-20261014.json: offline validate() accepts (check_files=False; prospective paths do not exist yet)
+ok   r17-s3-opq-draft-a4-20261014.json: with check_files=True the draft fails (stage absent) - as documented, drafts are not signable
+ok   job ids unique and per cell
+ok   S1 has no --staged-gate; S2/S3 point at run/gates/<cell>.json
+   NOTE: drafts use scope_id "r17-paid-comparison" and priors 0/0.27/0.54 as placeholders (README says so).
+ok   TRAP: omitting --cell with one --gate generates all three proposals in one batch
+ok   TRAP: S3's signed arguments.json points at the SAME gate file as S2
+   (the adapter refuses a gate whose call set differs from the completed calls: staged_gate_call_set; see repro_r4_readme_values.py)
+ok   existing output directory refused
+ok   re-using a batch id: existing native-jobs/<job-id> in the stage refused
+ok   prior 1.20 + 3 x 0.27 > 2.00 refused (aggregate reservations exceed ceiling)
+ok   non-draft S2 without --gate refused
+ok   expiry beyond 7 days refused by the offline validator
+SUMMARY proposals: 52 of 52 checks held
+exit=0
+### repro_r4_readme_values.py
+# release-prep/README.md (the only document with the ordered release steps) vs r1.4 constants
+ok   release-prep/README.md still says KEY_MAX:1730000000 (INIT KEY_MAX $1.73)
+ok   release-prep/README.md still says key_label:'yokel-r17-paid-comparison' (INIT key_label)
+ok   release-prep/README.md still says 5295a66700fee54b2e03344003e5638a5728b1949eedf0945062950cc40e33ff (INIT recon_sha256 (design engine))
+ok   release-prep/README.md still says $1.73 key (human key step)
+ok   release-prep/README.md still says adapter-r1-3 (artifact mapping to r1.3)
+ok   release-prep-a4/README.md has no ordered release steps of its own (defers: "Update INIT constants, label and recon hash")
+ok   release-prep-a4/README.md does not state the r1.4 INIT values (KEY_MAX 50000000000 / recon 8c98fab...)
+# r1.4 refuses INIT written with the README's r1.3 values (fail closed)
+ok   INIT KEY_MAX 1730000000 -> refused init_constants, 0 POST
+ok   INIT key_label yokel-r17-paid-comparison -> refused init_namespace_key, 0 POST
+ok   INIT recon_sha256 = design engine -> refused init_static_pins, 0 POST
+ok   RELEASE.json recon artifact = design-r3-1 engine -> refused release_recon_pin, 0 POST
+ok   RELEASE.json adapter artifact mapped to adapter-r1-3 -> refused freeze_pin, 0 POST
+# the evidence files pinned by release-prep-a4/STAGE-MANIFEST.json, as they stand
+ok   run/KEY-ATTESTATION.json (limit_usd string, used_only_for_r17 string, no creation_date, limit_reset "none") -> refused K3_attestation, 0 POST
+ok   run/CAP-ACCEPTANCE.json as policy_evidence under P-ACCEPT (no accepted_by_primary/verbatim_acceptance/residual_risk_accepted) -> refused policy_evidence, 0 POST
+   -> the A4 stage manifest pins evidence bytes the adapter will refuse; after normalization the manifest, stage and proposals must be regenerated.
+# a prior-cell gate reused for a later cell
+ok   S1 and S2 completed (2 POSTs)
+ok   S3 with the gate that admitted S2 (lists only S1) -> refused staged_gate_call_set, still 2 POSTs
+ok   S3 with no gate -> refused adjudication_pause
+SUMMARY readme/evidence values: 17 of 17 checks held
+exit=0
+### overall exit=0

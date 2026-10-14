@@ -2,13 +2,14 @@
   "schema": "r17.preflight-status.v1",
   "date": "2026-10-13",
   "P0_release_policy": {
-    "state": "PENDING_USER",
+    "state": "ACCEPTED",
     "selected": "P-ACCEPT",
-    "evidence": "run/CAP-ACCEPTANCE.json (awaiting verbatim affirmation of residual-risk statement)"
+    "evidence": "run/CAP-ACCEPTANCE.json"
   },
   "P1_dedicated_key": {
-    "state": "PENDING_USER",
-    "required": "R17-only OpenRouter key, non-resetting limit, 3x$0.27 <= L <= $1.73"
+    "state": "ATTESTED; machine check at release",
+    "evidence": "run/KEY-ATTESTATION.json",
+    "amendment": "A4"
   },
   "P2_ledger": {
     "state": "BLOCKED_ON_P0_P1"
@@ -50,5 +51,11 @@
   "pre_run_todo": [
     "capture /etc/ssl/cert.pem sha256 on the Mini at release (N28)",
     "optional: commit+push reference freeze before OPQ1 (E7) if user authorizes"
-  ]
+  ],
+  "E7_external_ordering": {
+    "state": "DONE",
+    "commit": "c5e6d1c",
+    "remote": "origin/research/state-rulemaking",
+    "date": "2026-10-14"
+  }
 }

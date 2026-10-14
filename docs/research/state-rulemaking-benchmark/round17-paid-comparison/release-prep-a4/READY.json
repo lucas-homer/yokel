@@ -1,0 +1,1139 @@
+{
+  "CAP": 2000000000,
+  "FLOOR": 270000000,
+  "OPERATING": 1800000000,
+  "action_ready": false,
+  "amendment": "A4-key-limit-label",
+  "committed": false,
+  "credentials_accessed": false,
+  "dependencies": {
+    "round14-semantic-contract/runtime/adapter.py": {
+      "bytes": 20251,
+      "sha256": "1aeadf4312b9ed8713403798255b9a66e83e709961792a5a0546938a87442803"
+    },
+    "round14-semantic-contract/runtime/common.py": {
+      "bytes": 5581,
+      "sha256": "a341e11b6b0d49b130c28d8881ef4b71748161bcfc0d15c41384bc150f35bdc5"
+    },
+    "round14-semantic-contract/runtime/contract.py": {
+      "bytes": 1764,
+      "sha256": "f85205edc8ab62b23dd3f88363d845d762b83c61e0ece1ecddf35e4970d3869c"
+    },
+    "round15-condition-preservation/protocol-revised/READY.json": {
+      "bytes": 4739,
+      "sha256": "dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50"
+    },
+    "round15-condition-preservation/protocol-revised/compact.py": {
+      "bytes": 21113,
+      "sha256": "8e7faec0d3c3fd5d16cabf58977804a401ca904f441f535af2e59fda9163ff6a"
+    },
+    "round15-condition-preservation/protocol-revised/request-settings.json": {
+      "bytes": 342,
+      "sha256": "43d3b4f7886d84c528a07ff3ba0901a2be1ff42a6b503853ee87e1e6985b1ac2"
+    },
+    "round15-condition-preservation/protocol-revised/stage-a.system.txt": {
+      "bytes": 6869,
+      "sha256": "49edae001b41ac63f32a5a049484544b219b5f1bf68a0b7f3dbc3e5dc5196f70"
+    },
+    "round16-wire-compat/protocol-w2-1/READY.json": {
+      "bytes": 4254,
+      "sha256": "73f80427ba959cc403433beebc2b2f8d2539c9cfa760df0230035f002e8bd062"
+    },
+    "round16-wire-compat/protocol-w2-1/wire.py": {
+      "bytes": 15865,
+      "sha256": "662268ba0774d7ef5a121ec4af90003a3836c07e4ce5a5ae551a413fe8375ab1"
+    },
+    "round17-paid-comparison/PRIMARY-DECISIONS.md": {
+      "bytes": 1514,
+      "sha256": "64f1028bb7e458043a7b95cee1b972312ae97eec3bc7e12dd559e311970e5051"
+    },
+    "round17-paid-comparison/adapter-r1-1/READY.json": {
+      "bytes": 15818,
+      "sha256": "849498d0b0f8a3945f49d8940b7252aae31f30261aef1d26b12c6ed8aa3e5557"
+    },
+    "round17-paid-comparison/adapter-r1-1/SPEC.md": {
+      "bytes": 30686,
+      "sha256": "c9ec2292b65b43d83fb4195d6ede1f5ec5498260088be2332175164196f3ee87"
+    },
+    "round17-paid-comparison/adapter-r1-1/host_driver.py": {
+      "bytes": 7416,
+      "sha256": "26e179ec2adcc676d514ac35f257f562b079ab0e79409c5766fa5b9db4209366"
+    },
+    "round17-paid-comparison/adapter-r1-1/pin_ready.py": {
+      "bytes": 5377,
+      "sha256": "b06b971c6addf00f4b3252d95904439be8f406400adbf928667fd3e90ac5edc5"
+    },
+    "round17-paid-comparison/adapter-r1-1/r17_adapter.py": {
+      "bytes": 62645,
+      "sha256": "0f04829d9ca79cdebaf64498110c5a1f984e2304f035ef8d1823e4c5fc9b8f1e"
+    },
+    "round17-paid-comparison/adapter-r1-1/repro-baseline.txt": {
+      "bytes": 2486,
+      "sha256": "75cbb8e68179e266609a6e274a29a116e42466f12dd194acc8d3d9509b1618a8"
+    },
+    "round17-paid-comparison/adapter-r1-1/repro-r1-1.txt": {
+      "bytes": 4477,
+      "sha256": "f29cc8e4febce1fa2c86ecf0e56bc8ca673984215a2e6fc7f0499eb97f4a4d57"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/_load.py": {
+      "bytes": 1008,
+      "sha256": "c9c4cb98cebd92d650866565d1c1f2c3922e0bda8181fd929b69861d73e6d2f0"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_double_post_lock_break.py": {
+      "bytes": 3078,
+      "sha256": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_gate_change_bricks_ledger.py": {
+      "bytes": 2222,
+      "sha256": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_headers_leak.py": {
+      "bytes": 1402,
+      "sha256": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_incomplete_cell_allows_next.py": {
+      "bytes": 1463,
+      "sha256": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_mark_fsync_failure.py": {
+      "bytes": 2141,
+      "sha256": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_negative_sleep.py": {
+      "bytes": 1236,
+      "sha256": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_partial_receipt_bricks_recover.py": {
+      "bytes": 1394,
+      "sha256": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_recover_rehalts_completed.py": {
+      "bytes": 1269,
+      "sha256": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/run_all.sh": {
+      "bytes": 227,
+      "sha256": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3"
+    },
+    "round17-paid-comparison/adapter-r1-1/run_tests.sh": {
+      "bytes": 256,
+      "sha256": "7842a66bf145bb7b64664457f5ab4be1ce20656c8215ee7bea5d8f0abdcc4207"
+    },
+    "round17-paid-comparison/adapter-r1-1/test-output.txt": {
+      "bytes": 17421,
+      "sha256": "105ae9f26ec4f739db2888144a0350be2de23dadeae8d12fc4a0b8fad3ed981b"
+    },
+    "round17-paid-comparison/adapter-r1-1/test_adapter.py": {
+      "bytes": 42488,
+      "sha256": "eca2fc4dd7069f303f725d95470cdf5bc18d990486861ac9048129142b4f3808"
+    },
+    "round17-paid-comparison/adapter-r1-1/test_host_driver.py": {
+      "bytes": 18289,
+      "sha256": "7ac4a34f95a5da42685368daff26d26aa039c0c4d923a5aebd4a838a94ca19cb"
+    },
+    "round17-paid-comparison/adapter-r1-1/test_repros.py": {
+      "bytes": 3432,
+      "sha256": "252daddf686b3b1712969b7c6c975c5af503680d4e8beaa457886f023acf3f8f"
+    },
+    "round17-paid-comparison/adapter-r1-1/test_revision.py": {
+      "bytes": 17233,
+      "sha256": "3b9e7479e553cdf3d5282ff8915f88b5e29abc68c41f393d4f47c8db13b969d5"
+    },
+    "round17-paid-comparison/adapter-r1-2/READY.json": {
+      "bytes": 25209,
+      "sha256": "7bd3135ce3e4479de80873d961e78214cf2d264d7cd8d557b67eb52571cc058a"
+    },
+    "round17-paid-comparison/adapter-r1-2/SPEC.md": {
+      "bytes": 38918,
+      "sha256": "d5444d8cfc670c118163bf6c80c128d77228dc508e9ce07a0bd8877a42b01193"
+    },
+    "round17-paid-comparison/adapter-r1-2/fake_http.py": {
+      "bytes": 5718,
+      "sha256": "1d9d3a3b4dee2bd8758e3e589162eb3ae997aa8f2a4f1a74bd0a8cefbcf4da92"
+    },
+    "round17-paid-comparison/adapter-r1-2/host_driver.py": {
+      "bytes": 9383,
+      "sha256": "96b50e215037acbcf3235cf01179dfe4b9454da8c9165c8d4795af3380970bc0"
+    },
+    "round17-paid-comparison/adapter-r1-2/pin_ready.py": {
+      "bytes": 7061,
+      "sha256": "571c9433aa73ccfb71cb84e9174a14d09b66780c3ab3dd76b404eb4f3cec6fe5"
+    },
+    "round17-paid-comparison/adapter-r1-2/r17_adapter.py": {
+      "bytes": 65502,
+      "sha256": "c9a0ca00badd45779e449fa5840cf3df0fecc3a9eb046182332e9bc835980af3"
+    },
+    "round17-paid-comparison/adapter-r1-2/repro-baseline.txt": {
+      "bytes": 2486,
+      "sha256": "75cbb8e68179e266609a6e274a29a116e42466f12dd194acc8d3d9509b1618a8"
+    },
+    "round17-paid-comparison/adapter-r1-2/repros/_load.py": {
+      "bytes": 1024,
+      "sha256": "fd3843deb51fedff91cad629c93d45fe89e5b1fd6a25b01a55652146a212746c"
+    },
+    "round17-paid-comparison/adapter-r1-2/repros/repro_double_post_lock_break.py": {
+      "bytes": 3078,
+      "sha256": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c"
+    },
+    "round17-paid-comparison/adapter-r1-2/repros/repro_gate_change_bricks_ledger.py": {
+      "bytes": 2222,
+      "sha256": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f"
+    },
+    "round17-paid-comparison/adapter-r1-2/repros/repro_headers_leak.py": {
+      "bytes": 1402,
+      "sha256": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903"
+    },
+    "round17-paid-comparison/adapter-r1-2/repros/repro_incomplete_cell_allows_next.py": {
+      "bytes": 1463,
+      "sha256": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf"
+    },
+    "round17-paid-comparison/adapter-r1-2/repros/repro_mark_fsync_failure.py": {
+      "bytes": 2141,
+      "sha256": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47"
+    },
+    "round17-paid-comparison/adapter-r1-2/repros/repro_negative_sleep.py": {
+      "bytes": 1236,
+      "sha256": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c"
+    },
+    "round17-paid-comparison/adapter-r1-2/repros/repro_partial_receipt_bricks_recover.py": {
+      "bytes": 1394,
+      "sha256": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043"
+    },
+    "round17-paid-comparison/adapter-r1-2/repros/repro_recover_rehalts_completed.py": {
+      "bytes": 1269,
+      "sha256": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140"
+    },
+    "round17-paid-comparison/adapter-r1-2/repros/run_all.sh": {
+      "bytes": 227,
+      "sha256": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3"
+    },
+    "round17-paid-comparison/adapter-r1-2/run_tests.sh": {
+      "bytes": 288,
+      "sha256": "3e80d8ae0efcd85ea25382f72bec062e432229b36b404600f6805eb8b4908585"
+    },
+    "round17-paid-comparison/adapter-r1-2/test_adapter.py": {
+      "bytes": 42532,
+      "sha256": "ff68dd1ec0bb9c7e4b754169ca8637bc8242d681389aac8e2c1576f0884bdf4c"
+    },
+    "round17-paid-comparison/adapter-r1-2/test_host_driver.py": {
+      "bytes": 18365,
+      "sha256": "72893c73cb249e1c433ee647d64b59d3b3fa8ebf052f2497f817f17f951b4278"
+    },
+    "round17-paid-comparison/adapter-r1-2/test_repros.py": {
+      "bytes": 3591,
+      "sha256": "a2a38bcb4ed040ddffb6e65ff3f7dfba4ed317ca035b52d633c6ec333575c852"
+    },
+    "round17-paid-comparison/adapter-r1-2/test_revision.py": {
+      "bytes": 17324,
+      "sha256": "d5b401e35c615847ddd93965164c06304c6a5d9fcbc11d103128b295227a6363"
+    },
+    "round17-paid-comparison/adapter-r1-2/test_round2.py": {
+      "bytes": 19277,
+      "sha256": "a5b3e80c189d2bda93fbea7c3d06dc29ef2be53932ccf78e49f6670c903d15fe"
+    },
+    "round17-paid-comparison/adapter-r1-2/verify_ready.py": {
+      "bytes": 1986,
+      "sha256": "6f188fc91335199998631861d11a2026b55e6df0cdb5a820dcb72be90d5d63aa"
+    },
+    "round17-paid-comparison/adapter-r1-3/READY.json": {
+      "bytes": 31355,
+      "sha256": "de5004f70a0ad153cc17c35e1437aab35f9559da85a2450c0dde896550f33288"
+    },
+    "round17-paid-comparison/adapter-r1-3/SPEC.md": {
+      "bytes": 43210,
+      "sha256": "211b9639f799bfa1e5c2b8fc774a650a11fa530ad60b25e8070b234aef3d2fb4"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/interpreters.json": {
+      "bytes": 704,
+      "sha256": "e748193e0ad2145f7e482d8acc994b607fce0a6647d9b4a1f0adb4311cf9e6e4"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/pin-output.txt": {
+      "bytes": 262,
+      "sha256": "eb82d8ba3f9bcb54a716116fa94fc22dd5034b66c267780cca87ad80a97bcd63"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/prepare.py": {
+      "bytes": 1008,
+      "sha256": "f44840d70ccfa22e902a24975bf191d3722905872c150c078e446d8edc025347"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/python312-baseline.txt": {
+      "bytes": 10278,
+      "sha256": "f0241b0f521b4105e94e0a3f0d16e781e800d1e030a4c9785817e6d5d7313b58"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/python312-ca.json": {
+      "bytes": 428,
+      "sha256": "504ce6fdbfae91e5cf74d63858415a67c23b359cee565d0230221777340ae89f"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/python312-pin-verification.txt": {
+      "bytes": 285,
+      "sha256": "701dc3413c32ce23e15a49cadb635f1fc25afd4dd8b625e03fc9c51aa5d5a4c3"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/python312-tests.txt": {
+      "bytes": 21534,
+      "sha256": "1d02358aaf78bde550392308cb6773cd80e4effb00f877f3798a1f2943ec49ab"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/r1-1-repro-output.txt": {
+      "bytes": 4477,
+      "sha256": "f29cc8e4febce1fa2c86ecf0e56bc8ca673984215a2e6fc7f0499eb97f4a4d57"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/r1-1-test-output.txt": {
+      "bytes": 17421,
+      "sha256": "105ae9f26ec4f739db2888144a0350be2de23dadeae8d12fc4a0b8fad3ed981b"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/ready-verification.txt": {
+      "bytes": 285,
+      "sha256": "5202c993a3d48dbabfd4aaa6821ec12c09feb73c3a8af1ed7e3f7d2f8f22a2a7"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/repro-r1-2.txt": {
+      "bytes": 4475,
+      "sha256": "537a2d60ee5d1f0249772b55a7ae01d66cbf7015e3e2ead150c2d5b930bfcc85"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/repro-r1-3.txt": {
+      "bytes": 4173,
+      "sha256": "e7ed60aaebe2cebeaaf3c534e7ecfdd810ce499405658a7dd0facc6547e4ac72"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repro-output.txt": {
+      "bytes": 37641,
+      "sha256": "aeb170db0404117334d2d255a511148c7b5da6cd09dd8ebcb72d85ddca1f906b"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/REVIEW.md": {
+      "bytes": 20539,
+      "sha256": "9e5abc8da8f5dee228092686633290f48ed00664468fd00c5375d6007029c1af"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/_load.py": {
+      "bytes": 5726,
+      "sha256": "bae679fe1e268218293eac2dad5f2caa8f99d340307e817f9b96cdc3c557f6c8"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/orig-repros-vs-r1-1.txt": {
+      "bytes": 4507,
+      "sha256": "d5237fdf7cad89aa7fa21be123e33e2d210aec4649108ef0d471d62d5fc6e52c"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/orig-repros/_load.py": {
+      "bytes": 1022,
+      "sha256": "4a3967906bb8dbaabdb4756f03844d0f0bd730f0e02798b938a4474c58c9f57e"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/orig-repros/repro_double_post_lock_break.py": {
+      "bytes": 3078,
+      "sha256": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/orig-repros/repro_gate_change_bricks_ledger.py": {
+      "bytes": 2222,
+      "sha256": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/orig-repros/repro_headers_leak.py": {
+      "bytes": 1402,
+      "sha256": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/orig-repros/repro_incomplete_cell_allows_next.py": {
+      "bytes": 1463,
+      "sha256": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/orig-repros/repro_mark_fsync_failure.py": {
+      "bytes": 2141,
+      "sha256": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/orig-repros/repro_negative_sleep.py": {
+      "bytes": 1236,
+      "sha256": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/orig-repros/repro_partial_receipt_bricks_recover.py": {
+      "bytes": 1394,
+      "sha256": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/orig-repros/repro_recover_rehalts_completed.py": {
+      "bytes": 1269,
+      "sha256": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/orig-repros/run_all.sh": {
+      "bytes": 227,
+      "sha256": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/repro_3call_plan.py": {
+      "bytes": 8784,
+      "sha256": "833abad6db36c0c8f53a0877229b6bb4eb0350f7503c3732a2b799e3cda68c5d"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/repro_hd_cli_misc.py": {
+      "bytes": 4524,
+      "sha256": "f015e2f35a1ea97332a413ee9bdc32c9045e417d69bb5cc454e7561f810b1b92"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/repro_hd_key_fields.py": {
+      "bytes": 4647,
+      "sha256": "a28b261d26fe748d704519209f87c3b8bdcf9b55fc83fbe460d57e2ec18ff216"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/repro_hd_sigint_cli.py": {
+      "bytes": 7074,
+      "sha256": "be13c6432460040435242d20c323ef32faf6b9cb3f72517f7f297b9cfd9c9075"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/repro_hd_timeout_row2.py": {
+      "bytes": 2462,
+      "sha256": "5ca7455dbe12068e67a4b9ebaf74f8205c5d8bbc62108d6bfa9c7090a147c037"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/repro_hd_trust_store.py": {
+      "bytes": 2547,
+      "sha256": "18067bc0bf60a0ee79743bed6b4bb43465938ffed60782b5be1a5f54e7ff52e5"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/repro_hd_wire.py": {
+      "bytes": 8143,
+      "sha256": "a645c1e6cd74ef092c10db94f654aeaba49d6a07d21eb99d9c66bc389e18e20c"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/results.txt": {
+      "bytes": 16341,
+      "sha256": "75237b160fb5466bc543b179cb30e3257635b1d1cfeced7f77447ba0c96e797a"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-repros/run_all.sh": {
+      "bytes": 537,
+      "sha256": "e53c696685f2b3df5f0f28d61b75f7bf7297d489aa76df86f12be146b07b6e9b"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/round2-test-output.txt": {
+      "bytes": 2840,
+      "sha256": "48aa1c20722bba27cbd50898da0d2efd1ad8bbda573c4ebd8d7f1534c81de753"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/system-pin-verification.txt": {
+      "bytes": 285,
+      "sha256": "62bf12058710a76a6c081fd553c49a616436f9029f8d24978c15d89ac7ec1dbb"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/system-tests.txt": {
+      "bytes": 21534,
+      "sha256": "aa694f7a0ed41a9e53c72a99a168b5d0874c33194b926c1a0724500c6056ede7"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/test-output.txt": {
+      "bytes": 21534,
+      "sha256": "e8f6e3391de82ec775b701c8683680b80be7132e3ee46d7818ac7a2aae44b848"
+    },
+    "round17-paid-comparison/adapter-r1-3/_out/update_spec.py": {
+      "bytes": 10646,
+      "sha256": "56a445871d49738d552035dfbc51198ff87d94b9346b4f9e3110dca53d8abeaf"
+    },
+    "round17-paid-comparison/adapter-r1-3/fake_http.py": {
+      "bytes": 5718,
+      "sha256": "1d9d3a3b4dee2bd8758e3e589162eb3ae997aa8f2a4f1a74bd0a8cefbcf4da92"
+    },
+    "round17-paid-comparison/adapter-r1-3/host_driver.py": {
+      "bytes": 11373,
+      "sha256": "74990ace54cd6d4d095d7cc1e5f943d445895774324a1fc56fc878e511e86534"
+    },
+    "round17-paid-comparison/adapter-r1-3/native_entry.py": {
+      "bytes": 1871,
+      "sha256": "222400e7831ce8d1cd21f2817bd055e8af6b0c16b7a59dee23799b6ad4866258"
+    },
+    "round17-paid-comparison/adapter-r1-3/pin_ready.py": {
+      "bytes": 7997,
+      "sha256": "a910ed30824843d90c30179637d009d72e35057696be6e5c25d841cf16531832"
+    },
+    "round17-paid-comparison/adapter-r1-3/r17_adapter.py": {
+      "bytes": 65502,
+      "sha256": "c9a0ca00badd45779e449fa5840cf3df0fecc3a9eb046182332e9bc835980af3"
+    },
+    "round17-paid-comparison/adapter-r1-3/repro-baseline.txt": {
+      "bytes": 2486,
+      "sha256": "75cbb8e68179e266609a6e274a29a116e42466f12dd194acc8d3d9509b1618a8"
+    },
+    "round17-paid-comparison/adapter-r1-3/repros/_load.py": {
+      "bytes": 1024,
+      "sha256": "fd3843deb51fedff91cad629c93d45fe89e5b1fd6a25b01a55652146a212746c"
+    },
+    "round17-paid-comparison/adapter-r1-3/repros/repro_double_post_lock_break.py": {
+      "bytes": 3078,
+      "sha256": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c"
+    },
+    "round17-paid-comparison/adapter-r1-3/repros/repro_gate_change_bricks_ledger.py": {
+      "bytes": 2222,
+      "sha256": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f"
+    },
+    "round17-paid-comparison/adapter-r1-3/repros/repro_headers_leak.py": {
+      "bytes": 1402,
+      "sha256": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903"
+    },
+    "round17-paid-comparison/adapter-r1-3/repros/repro_incomplete_cell_allows_next.py": {
+      "bytes": 1463,
+      "sha256": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf"
+    },
+    "round17-paid-comparison/adapter-r1-3/repros/repro_mark_fsync_failure.py": {
+      "bytes": 2141,
+      "sha256": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47"
+    },
+    "round17-paid-comparison/adapter-r1-3/repros/repro_negative_sleep.py": {
+      "bytes": 1236,
+      "sha256": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c"
+    },
+    "round17-paid-comparison/adapter-r1-3/repros/repro_partial_receipt_bricks_recover.py": {
+      "bytes": 1394,
+      "sha256": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043"
+    },
+    "round17-paid-comparison/adapter-r1-3/repros/repro_recover_rehalts_completed.py": {
+      "bytes": 1269,
+      "sha256": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140"
+    },
+    "round17-paid-comparison/adapter-r1-3/repros/run_all.sh": {
+      "bytes": 227,
+      "sha256": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3"
+    },
+    "round17-paid-comparison/adapter-r1-3/run_tests.sh": {
+      "bytes": 452,
+      "sha256": "702b25a1c4a6bfa5f1aeae04fad506dd353e9061ffd68b00fbcb9db8ccdfdee6"
+    },
+    "round17-paid-comparison/adapter-r1-3/test_adapter.py": {
+      "bytes": 42532,
+      "sha256": "ff68dd1ec0bb9c7e4b754169ca8637bc8242d681389aac8e2c1576f0884bdf4c"
+    },
+    "round17-paid-comparison/adapter-r1-3/test_host_driver.py": {
+      "bytes": 18365,
+      "sha256": "72893c73cb249e1c433ee647d64b59d3b3fa8ebf052f2497f817f17f951b4278"
+    },
+    "round17-paid-comparison/adapter-r1-3/test_native.py": {
+      "bytes": 5806,
+      "sha256": "61988e098a803f6fef43f84069ec1fb6045d34ed6b81489eda3b4f358425d937"
+    },
+    "round17-paid-comparison/adapter-r1-3/test_repros.py": {
+      "bytes": 3819,
+      "sha256": "329fd447f4d4d173e95b1f38d57b500e471304c81e6b6bc76fdbff0abe268ba9"
+    },
+    "round17-paid-comparison/adapter-r1-3/test_revision.py": {
+      "bytes": 17324,
+      "sha256": "d5b401e35c615847ddd93965164c06304c6a5d9fcbc11d103128b295227a6363"
+    },
+    "round17-paid-comparison/adapter-r1-3/test_round2.py": {
+      "bytes": 19277,
+      "sha256": "33396312c56e4f9c0dbfc167492518fbaa5b3d163e5982a53e360b9e68c13432"
+    },
+    "round17-paid-comparison/adapter-r1-3/verify_ready.py": {
+      "bytes": 2073,
+      "sha256": "a0d7b6d7732da920b0ca642cc5991623472bf3643695830d8f02ead32112a59f"
+    },
+    "round17-paid-comparison/adapter-r1-4/READY.json": {
+      "bytes": 48799,
+      "sha256": "cb15fca1b44c756526a0fe2854249aca2a9efc913e61747f79652ce8169199f0"
+    },
+    "round17-paid-comparison/adapter-r1-4/SPEC.md": {
+      "bytes": 46007,
+      "sha256": "e090f2e6a21d785cfb4b9f952740480db7cbf9d1eeb852c69ba9110898257e7f"
+    },
+    "round17-paid-comparison/adapter-r1-4/fake_http.py": {
+      "bytes": 5718,
+      "sha256": "1d9d3a3b4dee2bd8758e3e589162eb3ae997aa8f2a4f1a74bd0a8cefbcf4da92"
+    },
+    "round17-paid-comparison/adapter-r1-4/host_driver.py": {
+      "bytes": 11373,
+      "sha256": "74990ace54cd6d4d095d7cc1e5f943d445895774324a1fc56fc878e511e86534"
+    },
+    "round17-paid-comparison/adapter-r1-4/native_entry.py": {
+      "bytes": 1871,
+      "sha256": "522e9e6d6c276f928c27f48cb5414968c98be545d410948f7c1d0bbc80e3b2f4"
+    },
+    "round17-paid-comparison/adapter-r1-4/pin_ready.py": {
+      "bytes": 4955,
+      "sha256": "b472b5f445293d1f563358662263d5987b2669017045bf6926b4b7b0af62dd42"
+    },
+    "round17-paid-comparison/adapter-r1-4/r17_adapter.py": {
+      "bytes": 65507,
+      "sha256": "e3046a9a560b90567c29584e5a5a85b6795453b9e373c94bf099fc01a602ec7c"
+    },
+    "round17-paid-comparison/adapter-r1-4/repro-baseline.txt": {
+      "bytes": 2486,
+      "sha256": "75cbb8e68179e266609a6e274a29a116e42466f12dd194acc8d3d9509b1618a8"
+    },
+    "round17-paid-comparison/adapter-r1-4/repros/_load.py": {
+      "bytes": 1024,
+      "sha256": "fd3843deb51fedff91cad629c93d45fe89e5b1fd6a25b01a55652146a212746c"
+    },
+    "round17-paid-comparison/adapter-r1-4/repros/repro_double_post_lock_break.py": {
+      "bytes": 3078,
+      "sha256": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c"
+    },
+    "round17-paid-comparison/adapter-r1-4/repros/repro_gate_change_bricks_ledger.py": {
+      "bytes": 2222,
+      "sha256": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f"
+    },
+    "round17-paid-comparison/adapter-r1-4/repros/repro_headers_leak.py": {
+      "bytes": 1402,
+      "sha256": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903"
+    },
+    "round17-paid-comparison/adapter-r1-4/repros/repro_incomplete_cell_allows_next.py": {
+      "bytes": 1463,
+      "sha256": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf"
+    },
+    "round17-paid-comparison/adapter-r1-4/repros/repro_mark_fsync_failure.py": {
+      "bytes": 2141,
+      "sha256": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47"
+    },
+    "round17-paid-comparison/adapter-r1-4/repros/repro_negative_sleep.py": {
+      "bytes": 1236,
+      "sha256": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c"
+    },
+    "round17-paid-comparison/adapter-r1-4/repros/repro_partial_receipt_bricks_recover.py": {
+      "bytes": 1394,
+      "sha256": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043"
+    },
+    "round17-paid-comparison/adapter-r1-4/repros/repro_recover_rehalts_completed.py": {
+      "bytes": 1269,
+      "sha256": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140"
+    },
+    "round17-paid-comparison/adapter-r1-4/repros/run_all.sh": {
+      "bytes": 227,
+      "sha256": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3"
+    },
+    "round17-paid-comparison/adapter-r1-4/run_tests.sh": {
+      "bytes": 502,
+      "sha256": "eaf255cd8ec09677f46f1c874ea8d51f1cf9340a9775a108423103396ea0aeef"
+    },
+    "round17-paid-comparison/adapter-r1-4/test_a4.py": {
+      "bytes": 6494,
+      "sha256": "5058db0ae800139c97e5ea8e475bd8490a7dcc12dc13f4f74452fb4e9510884f"
+    },
+    "round17-paid-comparison/adapter-r1-4/test_adapter.py": {
+      "bytes": 42634,
+      "sha256": "32081493f0d6247c109837912eee15d2633124a70638e159db4a189a1cbcf6f3"
+    },
+    "round17-paid-comparison/adapter-r1-4/test_host_driver.py": {
+      "bytes": 18365,
+      "sha256": "72893c73cb249e1c433ee647d64b59d3b3fa8ebf052f2497f817f17f951b4278"
+    },
+    "round17-paid-comparison/adapter-r1-4/test_native.py": {
+      "bytes": 5808,
+      "sha256": "b0852214cf17359c06c6a2c02967d83b6fef3bae3f7dc5d57f8b2368fdf85d02"
+    },
+    "round17-paid-comparison/adapter-r1-4/test_repros.py": {
+      "bytes": 3819,
+      "sha256": "70d888d3dc2b334094dcc7df63956440f7ff9b3b43d36f2b34ad3316067a820d"
+    },
+    "round17-paid-comparison/adapter-r1-4/test_revision.py": {
+      "bytes": 17324,
+      "sha256": "d5b401e35c615847ddd93965164c06304c6a5d9fcbc11d103128b295227a6363"
+    },
+    "round17-paid-comparison/adapter-r1-4/test_round2.py": {
+      "bytes": 19277,
+      "sha256": "33396312c56e4f9c0dbfc167492518fbaa5b3d163e5982a53e360b9e68c13432"
+    },
+    "round17-paid-comparison/adapter-r1-4/verify_ready.py": {
+      "bytes": 2348,
+      "sha256": "4864ad3f91eec5ab87ec5e1df0559082ea33271a075a270d1f2087dc3b8ee693"
+    },
+    "round17-paid-comparison/adapter-review-r2/REVIEW.md": {
+      "bytes": 20539,
+      "sha256": "9e5abc8da8f5dee228092686633290f48ed00664468fd00c5375d6007029c1af"
+    },
+    "round17-paid-comparison/adapter-review-r2/_load.py": {
+      "bytes": 5736,
+      "sha256": "a876f73568f5963a16c0174c8557a8eb669ae0b23b6452fb0476330ea70a301b"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/_load.py": {
+      "bytes": 1032,
+      "sha256": "3f97f55d1161f5d51442da4fde243e300b755e5c4ca8d3b3b1cc9b6466e46d4a"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_double_post_lock_break.py": {
+      "bytes": 3078,
+      "sha256": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_gate_change_bricks_ledger.py": {
+      "bytes": 2222,
+      "sha256": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_headers_leak.py": {
+      "bytes": 1402,
+      "sha256": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_incomplete_cell_allows_next.py": {
+      "bytes": 1463,
+      "sha256": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_mark_fsync_failure.py": {
+      "bytes": 2141,
+      "sha256": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_negative_sleep.py": {
+      "bytes": 1236,
+      "sha256": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_partial_receipt_bricks_recover.py": {
+      "bytes": 1394,
+      "sha256": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_recover_rehalts_completed.py": {
+      "bytes": 1269,
+      "sha256": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/run_all.sh": {
+      "bytes": 227,
+      "sha256": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_3call_plan.py": {
+      "bytes": 8784,
+      "sha256": "833abad6db36c0c8f53a0877229b6bb4eb0350f7503c3732a2b799e3cda68c5d"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_cli_misc.py": {
+      "bytes": 4524,
+      "sha256": "f015e2f35a1ea97332a413ee9bdc32c9045e417d69bb5cc454e7561f810b1b92"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_key_fields.py": {
+      "bytes": 4647,
+      "sha256": "a28b261d26fe748d704519209f87c3b8bdcf9b55fc83fbe460d57e2ec18ff216"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_sigint_cli.py": {
+      "bytes": 7074,
+      "sha256": "be13c6432460040435242d20c323ef32faf6b9cb3f72517f7f297b9cfd9c9075"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_timeout_row2.py": {
+      "bytes": 2462,
+      "sha256": "5ca7455dbe12068e67a4b9ebaf74f8205c5d8bbc62108d6bfa9c7090a147c037"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_trust_store.py": {
+      "bytes": 2547,
+      "sha256": "18067bc0bf60a0ee79743bed6b4bb43465938ffed60782b5be1a5f54e7ff52e5"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_wire.py": {
+      "bytes": 8143,
+      "sha256": "a645c1e6cd74ef092c10db94f654aeaba49d6a07d21eb99d9c66bc389e18e20c"
+    },
+    "round17-paid-comparison/adapter-review-r2/run_all.sh": {
+      "bytes": 537,
+      "sha256": "e53c696685f2b3df5f0f28d61b75f7bf7297d489aa76df86f12be146b07b6e9b"
+    },
+    "round17-paid-comparison/adapter-review/READY.json": {
+      "bytes": 1176,
+      "sha256": "a94e1d6370994bd0cdaa4c3f6b8923c6ad72f219bfac9bb957bf6e157fecdb71"
+    },
+    "round17-paid-comparison/adapter-review/REVIEW.md": {
+      "bytes": 18719,
+      "sha256": "c95b9cb8962fcb6320d1373c53052e2764eb16dd62f1757874ad56ceb1f50e73"
+    },
+    "round17-paid-comparison/adapter-review/_load.py": {
+      "bytes": 1020,
+      "sha256": "88b48a5b572dd26adb47d8decf87670210a61f4643833f5387ae21f2ebc0f45f"
+    },
+    "round17-paid-comparison/adapter-review/repro_double_post_lock_break.py": {
+      "bytes": 3078,
+      "sha256": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c"
+    },
+    "round17-paid-comparison/adapter-review/repro_gate_change_bricks_ledger.py": {
+      "bytes": 2222,
+      "sha256": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f"
+    },
+    "round17-paid-comparison/adapter-review/repro_headers_leak.py": {
+      "bytes": 1402,
+      "sha256": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903"
+    },
+    "round17-paid-comparison/adapter-review/repro_incomplete_cell_allows_next.py": {
+      "bytes": 1463,
+      "sha256": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf"
+    },
+    "round17-paid-comparison/adapter-review/repro_mark_fsync_failure.py": {
+      "bytes": 2141,
+      "sha256": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47"
+    },
+    "round17-paid-comparison/adapter-review/repro_negative_sleep.py": {
+      "bytes": 1236,
+      "sha256": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c"
+    },
+    "round17-paid-comparison/adapter-review/repro_partial_receipt_bricks_recover.py": {
+      "bytes": 1394,
+      "sha256": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043"
+    },
+    "round17-paid-comparison/adapter-review/repro_recover_rehalts_completed.py": {
+      "bytes": 1269,
+      "sha256": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140"
+    },
+    "round17-paid-comparison/adapter-review/run_all.sh": {
+      "bytes": 227,
+      "sha256": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3"
+    },
+    "round17-paid-comparison/adapter/READY.json": {
+      "bytes": 6584,
+      "sha256": "0db336ae791413c6ef98b53c4a2c153de4cace9b4ae2f820641907728f04a06e"
+    },
+    "round17-paid-comparison/adapter/SPEC.md": {
+      "bytes": 18307,
+      "sha256": "40a6e0f25ef8e61e0fa035c06b57e3ddd271930b4628d08232b37bd8af896603"
+    },
+    "round17-paid-comparison/adapter/r17_adapter.py": {
+      "bytes": 54413,
+      "sha256": "ef26fd3f7025a0ea2683a42f7604584fa41cc4bb6bbca087cea2a4579bbc85b3"
+    },
+    "round17-paid-comparison/adapter/test-output.txt": {
+      "bytes": 10278,
+      "sha256": "2e7b987fee69b7bc9ebcac2c99c0f59f8d3a2d1092896298e6bad8cee3d85b7d"
+    },
+    "round17-paid-comparison/adapter/test_adapter.py": {
+      "bytes": 42488,
+      "sha256": "eca2fc4dd7069f303f725d95470cdf5bc18d990486861ac9048129142b4f3808"
+    },
+    "round17-paid-comparison/amendments/A4-key-limit-label/AMENDMENT.md": {
+      "bytes": 2016,
+      "sha256": "d8826cf2b8f6ec5add43aa027af9cb8529ea21b69a2e90b2b13e13631d1c3538"
+    },
+    "round17-paid-comparison/design-r3-1/ADJUDICATION-SPEC.md": {
+      "bytes": 25177,
+      "sha256": "1eca88fc0c54e22a77eab0e8e729b09a52eb0086fa05c0fcaec9f146ac9234d0"
+    },
+    "round17-paid-comparison/design-r3-1/BUDGET.md": {
+      "bytes": 21395,
+      "sha256": "7cb99c52d2b6ce920ec7d6d0c83f9bc17f9142e8683ba81dafa803b574b097c8"
+    },
+    "round17-paid-comparison/design-r3-1/DISPOSITION.md": {
+      "bytes": 30229,
+      "sha256": "6d37c5e9e0c967297f8dcfe67106ca86e2772fd5c91652ffe528ff079dc565d4"
+    },
+    "round17-paid-comparison/design-r3-1/PROTOCOL.md": {
+      "bytes": 34775,
+      "sha256": "d75f858850a44e59c65346b4709b59dbce839d9fa3188f986a2021d632bde3f9"
+    },
+    "round17-paid-comparison/design-r3-1/READY.json": {
+      "bytes": 2809,
+      "sha256": "ef9734cebd4ddb4aad29512d81c0a0a296f853c8cbd19a4a86a8f0106cf582f0"
+    },
+    "round17-paid-comparison/design-r3-1/READY.primary.json": {
+      "bytes": 1554,
+      "sha256": "35b19756602aac89746f373313315a23c24d28b65d6318683a78ad1d4dceb9ed"
+    },
+    "round17-paid-comparison/design-r3-1/REFERENCE-SPEC.md": {
+      "bytes": 18987,
+      "sha256": "ef660c68af39c3c4a7e74dd8f7a1ab5eaf883cd15225d3f6b3f17692d1bb05a0"
+    },
+    "round17-paid-comparison/design-r3-1/fixtures/README.md": {
+      "bytes": 5302,
+      "sha256": "a30ff70128f6f80010da2cf7fdd4ac20520f9da362ed33c4a60e6aeaf9d53687"
+    },
+    "round17-paid-comparison/design-r3-1/fixtures/cases.json": {
+      "bytes": 331000,
+      "sha256": "53d501b69f3c8c8e98403c3f3c3111be84de0d1b39e95d6c53f8cdaec132da8b"
+    },
+    "round17-paid-comparison/design-r3-1/fixtures/cases.src.json": {
+      "bytes": 177114,
+      "sha256": "18e11a263dc19148b751a24275fc1ff57e5ce11edc1d76da0736fd183795e4ca"
+    },
+    "round17-paid-comparison/design-r3-1/fixtures/check.py": {
+      "bytes": 38435,
+      "sha256": "d7e04f113159f50f6ad3c7dedff63e22840f879c3e96a20e7e615fba4d3ee444"
+    },
+    "round17-paid-comparison/design-r3-1/fixtures/r17recon.py": {
+      "bytes": 6526,
+      "sha256": "5295a66700fee54b2e03344003e5638a5728b1949eedf0945062950cc40e33ff"
+    },
+    "round17-paid-comparison/design-r3-1/fixtures/r17score.py": {
+      "bytes": 52263,
+      "sha256": "4834cf66eb0019df73b8a5e81bb5b51c43111fe51204b0f01d36b60ed76c163b"
+    },
+    "round17-paid-comparison/design-r3-1/verify/mutation_pass.py": {
+      "bytes": 4164,
+      "sha256": "715a8d315dacc4da051d0ce34623649581e6fe739252b8731e99482a73200171"
+    },
+    "round17-paid-comparison/design-r3-1/verify/probe_r3_1.py": {
+      "bytes": 18146,
+      "sha256": "551f8f553d99c9038766451c911b3b84067bf8ad4fb0630e46442f5f5c3b4bc2"
+    },
+    "round17-paid-comparison/design-r3-1/verify/red_against_r3.py": {
+      "bytes": 963,
+      "sha256": "ede08a4bd63475832c67796c9060af981aed6f950ff668df883fca46d3a99bc6"
+    },
+    "round17-paid-comparison/dispatch-inventory/INVENTORY.md": {
+      "bytes": 14482,
+      "sha256": "77440531598249f54a1a0754429f3fbbbb0b94bea37fc3c182d35efcc25967a9"
+    },
+    "round17-paid-comparison/recon-a4/NOTE.md": {
+      "bytes": 591,
+      "sha256": "4ce31450c2595f82564bd41413b38c97e5334d58d51ec8487489cfda955ada4c"
+    },
+    "round17-paid-comparison/recon-a4/READY.json": {
+      "bytes": 42449,
+      "sha256": "1648ccc1219e15c6d47ab12111f8152014f155629cb4c3d06886b38821b5ef2b"
+    },
+    "round17-paid-comparison/recon-a4/SPEC.md": {
+      "bytes": 789,
+      "sha256": "2509f791dfd452e06ffebf1905e63fa2f47621a2f1b79c68ccab1a096a0efdbb"
+    },
+    "round17-paid-comparison/recon-a4/r17recon.py": {
+      "bytes": 6527,
+      "sha256": "8c98fabdc73fad10336698fa695869966a631d5a7d99b797725f2c711b1b6bb0"
+    },
+    "round17-paid-comparison/recon-a4/test_recon.py": {
+      "bytes": 1875,
+      "sha256": "f41a8bb58e5c26f37d1294e02474315dcf10005348466033aa2a03739e114130"
+    },
+    "round17-paid-comparison/release-prep/A3-TIMEOUT.md": {
+      "bytes": 3445,
+      "sha256": "3a9c7c3a626dd9776013a3942891556bbfdcde8eab807f081d29bd3a29eee091"
+    },
+    "round17-paid-comparison/release-prep/README.md": {
+      "bytes": 13894,
+      "sha256": "460e52a7e28aefacb207e5582d4dd9928a096d6f16f4b1f9bf35b5762eb988ae"
+    },
+    "round17-paid-comparison/release-prep/STAGE-MANIFEST.json": {
+      "bytes": 12793,
+      "sha256": "bc1790faf7eb607620553891b67ad363419ef51fd37f31ecf374af8df4785095"
+    },
+    "round17-paid-comparison/release-prep/_out/OFFLINE-RESULT.json": {
+      "bytes": 3301,
+      "sha256": "f97a5fe6a8adf77c4e7204fff7d3edec4176e87b1d3efa2919ec40f0f912a22c"
+    },
+    "round17-paid-comparison/release-prep/_out/installed-runner-hash-check.json": {
+      "bytes": 224,
+      "sha256": "65f485282e0e0af55d4ab2970ad02cf0c6cfdf2635977da902b31dd0e8863c4c"
+    },
+    "round17-paid-comparison/release-prep/_out/proposals-draft-before-final-read-deadline/UNSIGNED.txt": {
+      "bytes": 108,
+      "sha256": "a1755bfa4fb0b365a656e5fab8ff4d51f0e77d291a5c64399c905640e03a63ac"
+    },
+    "round17-paid-comparison/release-prep/_out/proposals-draft-before-final-read-deadline/native-jobs/r17-s1-opq-draft-20261014/adapter.py": {
+      "bytes": 1931,
+      "sha256": "4492e18db3f4814415195a4a79beb7eff3f25daa9a4974a0f4843ec09782df4c"
+    },
+    "round17-paid-comparison/release-prep/_out/proposals-draft-before-final-read-deadline/native-jobs/r17-s1-opq-draft-20261014/arguments.json": {
+      "bytes": 650,
+      "sha256": "566453361cbd852185c0695e87cd049cf7b685fd499668002bb55b7037615c88"
+    },
+    "round17-paid-comparison/release-prep/_out/proposals-draft-before-final-read-deadline/native-jobs/r17-s2-opq-draft-20261014/adapter.py": {
+      "bytes": 1931,
+      "sha256": "4492e18db3f4814415195a4a79beb7eff3f25daa9a4974a0f4843ec09782df4c"
+    },
+    "round17-paid-comparison/release-prep/_out/proposals-draft-before-final-read-deadline/native-jobs/r17-s2-opq-draft-20261014/arguments.json": {
+      "bytes": 812,
+      "sha256": "e8e3133046c73a0ed2ac69ab3e9477889ea8c14171160e35477e1a6210b6a3ab"
+    },
+    "round17-paid-comparison/release-prep/_out/proposals-draft-before-final-read-deadline/native-jobs/r17-s3-opq-draft-20261014/adapter.py": {
+      "bytes": 1931,
+      "sha256": "4492e18db3f4814415195a4a79beb7eff3f25daa9a4974a0f4843ec09782df4c"
+    },
+    "round17-paid-comparison/release-prep/_out/proposals-draft-before-final-read-deadline/native-jobs/r17-s3-opq-draft-20261014/arguments.json": {
+      "bytes": 812,
+      "sha256": "af758f184d175a9f9917fcbf68657717e339f3f9a829841eda95a1de0c84d5b6"
+    },
+    "round17-paid-comparison/release-prep/_out/proposals-draft-before-final-read-deadline/r17-s1-opq-draft-20261014.json": {
+      "bytes": 24092,
+      "sha256": "fa598c49dcfd3a343f332a4e7ab86d331d84985afac2e15f21055e2f9fd2dafa"
+    },
+    "round17-paid-comparison/release-prep/_out/proposals-draft-before-final-read-deadline/r17-s2-opq-draft-20261014.json": {
+      "bytes": 24100,
+      "sha256": "48d1955b5ccc0ee394b2cebcf61e460a0044bb211734a363257135f7a65d6999"
+    },
+    "round17-paid-comparison/release-prep/_out/proposals-draft-before-final-read-deadline/r17-s3-opq-draft-20261014.json": {
+      "bytes": 24100,
+      "sha256": "354fbd51266023d89ddecf88e660a3607f56369796c84fdff1b98ae81e7a861d"
+    },
+    "round17-paid-comparison/release-prep/_out/python312-tests.txt": {
+      "bytes": 1551,
+      "sha256": "8f8331b1bd03946066acffe2828c85364d494b7c87b37802cca5290f1fce3a3e"
+    },
+    "round17-paid-comparison/release-prep/_out/system-tests.txt": {
+      "bytes": 1551,
+      "sha256": "643b4e3818558679d647c1482391d1d512efd39e142d7a289a1223b514c7e52e"
+    },
+    "round17-paid-comparison/release-prep/make_proposals.py": {
+      "bytes": 11179,
+      "sha256": "d2b2bee04752279c0c7636a5975ea451e60fdddd03209f7083516ccf335b0d93"
+    },
+    "round17-paid-comparison/release-prep/prepare_manifest.py": {
+      "bytes": 3553,
+      "sha256": "cb79a1caa9862a4e43b9a6c99207e811e1226931411dbf9b72cd5cb844a1942a"
+    },
+    "round17-paid-comparison/release-prep/proposals-draft/UNSIGNED.txt": {
+      "bytes": 108,
+      "sha256": "a1755bfa4fb0b365a656e5fab8ff4d51f0e77d291a5c64399c905640e03a63ac"
+    },
+    "round17-paid-comparison/release-prep/proposals-draft/native-jobs/r17-s1-opq-draft-20261014/adapter.py": {
+      "bytes": 1871,
+      "sha256": "222400e7831ce8d1cd21f2817bd055e8af6b0c16b7a59dee23799b6ad4866258"
+    },
+    "round17-paid-comparison/release-prep/proposals-draft/native-jobs/r17-s1-opq-draft-20261014/arguments.json": {
+      "bytes": 650,
+      "sha256": "b21eeaba9ca1e370408c03ff20f370ed961c0bc32a805acb4cdad16b40022da3"
+    },
+    "round17-paid-comparison/release-prep/proposals-draft/native-jobs/r17-s2-opq-draft-20261014/adapter.py": {
+      "bytes": 1871,
+      "sha256": "222400e7831ce8d1cd21f2817bd055e8af6b0c16b7a59dee23799b6ad4866258"
+    },
+    "round17-paid-comparison/release-prep/proposals-draft/native-jobs/r17-s2-opq-draft-20261014/arguments.json": {
+      "bytes": 812,
+      "sha256": "4b2a8e650e0a8e808b941584e2cfd3c0bb9b7d0640b7f758bf1adbde6563c532"
+    },
+    "round17-paid-comparison/release-prep/proposals-draft/native-jobs/r17-s3-opq-draft-20261014/adapter.py": {
+      "bytes": 1871,
+      "sha256": "222400e7831ce8d1cd21f2817bd055e8af6b0c16b7a59dee23799b6ad4866258"
+    },
+    "round17-paid-comparison/release-prep/proposals-draft/native-jobs/r17-s3-opq-draft-20261014/arguments.json": {
+      "bytes": 812,
+      "sha256": "c9ed584a2f00e733800a85617acf6b2505b9d8572dcf9822a68dfe5a5dd9233e"
+    },
+    "round17-paid-comparison/release-prep/proposals-draft/r17-s1-opq-draft-20261014.json": {
+      "bytes": 24092,
+      "sha256": "2e8197ffbc1e82ce35a3dba65cb21cafbec6a6c8f187417d39126bf8d63eab3b"
+    },
+    "round17-paid-comparison/release-prep/proposals-draft/r17-s2-opq-draft-20261014.json": {
+      "bytes": 24100,
+      "sha256": "15d7fcccabad6a32ebc6703c02aff6413e47d2072b3196a1b7aa2e4c4aff8743"
+    },
+    "round17-paid-comparison/release-prep/proposals-draft/r17-s3-opq-draft-20261014.json": {
+      "bytes": 24100,
+      "sha256": "18f5aae48200c9e9185d50be4275d7728c48b03b4313fc52c3fb25078fde4ca3"
+    },
+    "round17-paid-comparison/release-prep/stage.py": {
+      "bytes": 5124,
+      "sha256": "1041c67a316cc49f5c1e9cbc28d7dabd267db1376bcb68c68eea2afc660a4dcc"
+    },
+    "round17-paid-comparison/release-prep/test_release_prep.py": {
+      "bytes": 10648,
+      "sha256": "5b866025fb4286721aa22a28b26bb07e1073f9326df83e1859af62e85078fb7e"
+    },
+    "round17-paid-comparison/run/KEY-ATTESTATION.json": {
+      "bytes": 824,
+      "sha256": "f6f3eae8813a390a1133f55b9b990ae537c68a90b09e3e8d7dc619bdf547b338"
+    },
+    "round17-paid-comparison/sources-r2/READY.json": {
+      "bytes": 9430,
+      "sha256": "55afccdfe98d705165a51fb7d965ebbe3876d414a76e91b5f0791b3b8eb92560"
+    }
+  },
+  "excluded_paths": [
+    "_out/**"
+  ],
+  "files": {
+    "A3-TIMEOUT.md": {
+      "bytes": 3445,
+      "sha256": "3a9c7c3a626dd9776013a3942891556bbfdcde8eab807f081d29bd3a29eee091"
+    },
+    "README.md": {
+      "bytes": 3354,
+      "sha256": "5b5daa2dd055f8d0ac0c6f4d5ff5cbab819379f2353e742629b20da8343b7a30"
+    },
+    "SPEC.md": {
+      "bytes": 1227,
+      "sha256": "26cf9414ef4b5b7e7117ab1c0eb6b371a69087a5914460bcd5d58c4e77dc2281"
+    },
+    "STAGE-MANIFEST.json": {
+      "bytes": 13727,
+      "sha256": "b002868382bde1f6e1961adae003e111d37794543f80aa3ad07f01b5fa5059cb"
+    },
+    "make_proposals.py": {
+      "bytes": 11179,
+      "sha256": "f24593dc9b965d835a0bbe19dcb84e5fde25b149e2cebabe792d56ff365f2d4f"
+    },
+    "prepare_manifest.py": {
+      "bytes": 3837,
+      "sha256": "388dfb28076db7f34b8e364a5dc02b12e239bc1349280f4b9f6d8fe88f92df91"
+    },
+    "proposals-draft/UNSIGNED.txt": {
+      "bytes": 108,
+      "sha256": "a1755bfa4fb0b365a656e5fab8ff4d51f0e77d291a5c64399c905640e03a63ac"
+    },
+    "proposals-draft/native-jobs/r17-s1-opq-draft-a4-20261014/adapter.py": {
+      "bytes": 1871,
+      "sha256": "522e9e6d6c276f928c27f48cb5414968c98be545d410948f7c1d0bbc80e3b2f4"
+    },
+    "proposals-draft/native-jobs/r17-s1-opq-draft-a4-20261014/arguments.json": {
+      "bytes": 656,
+      "sha256": "d4e4ca47729221714b283fa9b805ba1ec7e9ab195e102d79f1f347135f161806"
+    },
+    "proposals-draft/native-jobs/r17-s2-opq-draft-a4-20261014/adapter.py": {
+      "bytes": 1871,
+      "sha256": "522e9e6d6c276f928c27f48cb5414968c98be545d410948f7c1d0bbc80e3b2f4"
+    },
+    "proposals-draft/native-jobs/r17-s2-opq-draft-a4-20261014/arguments.json": {
+      "bytes": 818,
+      "sha256": "6e52e38332237769e30015723d7525ebef0cf98c84acc7c3051a076ea3206f22"
+    },
+    "proposals-draft/native-jobs/r17-s3-opq-draft-a4-20261014/adapter.py": {
+      "bytes": 1871,
+      "sha256": "522e9e6d6c276f928c27f48cb5414968c98be545d410948f7c1d0bbc80e3b2f4"
+    },
+    "proposals-draft/native-jobs/r17-s3-opq-draft-a4-20261014/arguments.json": {
+      "bytes": 818,
+      "sha256": "1cecd758ab0fa6bc4acf33b7cc9e3060e637cc46354a34b1e31c3b7009cc12f3"
+    },
+    "proposals-draft/r17-s1-opq-draft-a4-20261014.json": {
+      "bytes": 25822,
+      "sha256": "0dbc1624559c4eeaad304bb017b297c3f238ccb5f71ab785de51515851711b9c"
+    },
+    "proposals-draft/r17-s2-opq-draft-a4-20261014.json": {
+      "bytes": 25830,
+      "sha256": "fae94e2f3eb38d85876e932158c23fdbee8b76a7c7f9e7da567134999891c5b6"
+    },
+    "proposals-draft/r17-s3-opq-draft-a4-20261014.json": {
+      "bytes": 25830,
+      "sha256": "c2a0792b146e5747ebc19e107ed3f955e74368d4a67e9bd8a902fd5c3921e556"
+    },
+    "stage.py": {
+      "bytes": 5124,
+      "sha256": "1041c67a316cc49f5c1e9cbc28d7dabd267db1376bcb68c68eea2afc660a4dcc"
+    },
+    "test_release_prep.py": {
+      "bytes": 11649,
+      "sha256": "b18c71af0df24a2252342a8b19dc0f4077f194e6ee1413f341732f14fbe1b17a"
+    }
+  },
+  "final_verification": "adapter-r1-4/verify_ready.py verifies all three READY inventories, dependencies and frozen inputs after full suites",
+  "frozen_inputs_unchanged": true,
+  "key_label": "DocketClock",
+  "key_max_nanousd": 50000000000,
+  "ledger_fixture_changes": {
+    "L18-key-limit-bounds": "$1.74 / six calls: False -> True; other 24 unchanged"
+  },
+  "network_calls": 0,
+  "paid_release_authorized": false,
+  "production_eligible": false,
+  "provider_calls": 0,
+  "reference_contents_read": false,
+  "release_policy": "UNSET (offline candidate; live evidence remains primary-owned)",
+  "revision": "A4",
+  "runner_executor_release_commands_run": false,
+  "schema_version": "r17.a4-ready.v1",
+  "self_pin": "READY.json excludes itself; pin its exact hash externally before release.",
+  "sha256": {
+    "A3-TIMEOUT.md": "3a9c7c3a626dd9776013a3942891556bbfdcde8eab807f081d29bd3a29eee091",
+    "README.md": "5b5daa2dd055f8d0ac0c6f4d5ff5cbab819379f2353e742629b20da8343b7a30",
+    "SPEC.md": "26cf9414ef4b5b7e7117ab1c0eb6b371a69087a5914460bcd5d58c4e77dc2281",
+    "STAGE-MANIFEST.json": "b002868382bde1f6e1961adae003e111d37794543f80aa3ad07f01b5fa5059cb",
+    "make_proposals.py": "f24593dc9b965d835a0bbe19dcb84e5fde25b149e2cebabe792d56ff365f2d4f",
+    "prepare_manifest.py": "388dfb28076db7f34b8e364a5dc02b12e239bc1349280f4b9f6d8fe88f92df91",
+    "proposals-draft/UNSIGNED.txt": "a1755bfa4fb0b365a656e5fab8ff4d51f0e77d291a5c64399c905640e03a63ac",
+    "proposals-draft/native-jobs/r17-s1-opq-draft-a4-20261014/adapter.py": "522e9e6d6c276f928c27f48cb5414968c98be545d410948f7c1d0bbc80e3b2f4",
+    "proposals-draft/native-jobs/r17-s1-opq-draft-a4-20261014/arguments.json": "d4e4ca47729221714b283fa9b805ba1ec7e9ab195e102d79f1f347135f161806",
+    "proposals-draft/native-jobs/r17-s2-opq-draft-a4-20261014/adapter.py": "522e9e6d6c276f928c27f48cb5414968c98be545d410948f7c1d0bbc80e3b2f4",
+    "proposals-draft/native-jobs/r17-s2-opq-draft-a4-20261014/arguments.json": "6e52e38332237769e30015723d7525ebef0cf98c84acc7c3051a076ea3206f22",
+    "proposals-draft/native-jobs/r17-s3-opq-draft-a4-20261014/adapter.py": "522e9e6d6c276f928c27f48cb5414968c98be545d410948f7c1d0bbc80e3b2f4",
+    "proposals-draft/native-jobs/r17-s3-opq-draft-a4-20261014/arguments.json": "1cecd758ab0fa6bc4acf33b7cc9e3060e637cc46354a34b1e31c3b7009cc12f3",
+    "proposals-draft/r17-s1-opq-draft-a4-20261014.json": "0dbc1624559c4eeaad304bb017b297c3f238ccb5f71ab785de51515851711b9c",
+    "proposals-draft/r17-s2-opq-draft-a4-20261014.json": "fae94e2f3eb38d85876e932158c23fdbee8b76a7c7f9e7da567134999891c5b6",
+    "proposals-draft/r17-s3-opq-draft-a4-20261014.json": "c2a0792b146e5747ebc19e107ed3f955e74368d4a67e9bd8a902fd5c3921e556",
+    "stage.py": "1041c67a316cc49f5c1e9cbc28d7dabd267db1376bcb68c68eea2afc660a4dcc",
+    "test_release_prep.py": "b18c71af0df24a2252342a8b19dc0f4077f194e6ee1413f341732f14fbe1b17a"
+  },
+  "source_bodies_read": false,
+  "status": "READY_OFFLINE_IMPLEMENTATION",
+  "tests": {
+    "python312": {
+      "counts": [
+        13
+      ],
+      "executable": "/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "failed": 0,
+      "flags": [
+        "-I",
+        "-S",
+        "-B"
+      ],
+      "output": "_out/python312-tests.txt",
+      "output_pin": {
+        "bytes": 1715,
+        "sha256": "76a5c088770ec94af2a7f34a541253cc36dd9a7905826bbcd091208d8dc1108b"
+      },
+      "passed": 13,
+      "run": 13
+    },
+    "system": {
+      "counts": [
+        13
+      ],
+      "executable": "/usr/local/bin/python3",
+      "failed": 0,
+      "flags": [
+        "-I",
+        "-S",
+        "-B"
+      ],
+      "output": "_out/system-tests.txt",
+      "output_pin": {
+        "bytes": 1715,
+        "sha256": "37ac0639deb3ccc435f1853daba6f5ec2be095b693dec3386aae671a384a6d98"
+      },
+      "passed": 13,
+      "run": 13
+    }
+  }
+}

@@ -1,0 +1,84 @@
+
+### repro_double_post_lock_break.py
+original invocation ended with Refused recovery_required
+POSTs for S1-OPQ: 1
+ledger entries:
+  INIT::
+  BIND_RELEASE::
+  RESERVE:S1-OPQ:job-first
+  LOCK_RECOVERED::
+  RESOLVE:S1-OPQ:job-first
+  RESERVE:S1-OPQ:job-second
+  DISPATCH_MARK:S1-OPQ:job-second
+  RESOLVE:S1-OPQ:job-second
+  RECONCILED:S1-OPQ:
+ledger chain loads cleanly: True
+exit=1
+
+### repro_gate_change_bricks_ledger.py
+second invocation refused with: pre_dispatch_pause
+POSTs so far: 1
+ledger tail: [('BIND_RELEASE', None, None), ('RESERVE', 'S1-OPQ', None), ('DISPATCH_MARK', 'S1-OPQ', None), ('RESOLVE', 'S1-OPQ', True), ('RECONCILED', 'S1-OPQ', None), ('RESERVE', 'S2-OPQ', None), ('RESOLVE', 'S2-OPQ', False)]
+execute_once S2-OPQ fresh job: Refused: pre_dispatch_pause
+recover(): OK
+ledger bricked (both paths refuse on ledger_impossible_skip): False
+exit=1
+
+### repro_headers_leak.py
+state 13 halt None
+status.json contains the synthetic bearer token: False
+status.json contains set-cookie: False
+exit=1
+
+### repro_incomplete_cell_allows_next.py
+job1 has completed.json: False | ledger: ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'RESOLVE', 'RECONCILED']
+Traceback (most recent call last):
+  File "/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round17-paid-comparison/adapter-review-r2/orig-repros/repro_incomplete_cell_allows_next.py", line 30, in <module>
+    r = h.execute('S2-OPQ', 'job2', staged_path=stage)
+  File "/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round17-paid-comparison/adapter-r1-1/test_adapter.py", line 197, in execute
+    return a.execute_once(cell=cell, source=SOURCE, release_path=self.release_path,
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        run_root=self.run, attempt_dir=self.run / job, job_id=job, post=self.post,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        key_info=self.key_info, clock=self.clock, artifact_root=self.root, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round17-paid-comparison/adapter-r1-1/r17_adapter.py", line 908, in execute_once
+    require(not recovery_calls(ledger), 'recovery_required')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round17-paid-comparison/adapter-r1-1/r17_adapter.py", line 43, in require
+    raise Refused(code)
+r17_adapter_tested.Refused: recovery_required
+exit=1
+
+### repro_mark_fsync_failure.py
+invocation ended with Refused: recovery_required
+POSTs: 0
+ledger tail: [('RESERVE', None, None), ('DISPATCH_MARK', None, None), ('HALT', None, None)]
+next invocation refused with: recovery_required
+exit=1
+
+### repro_negative_sleep.py
+no error
+exit=1
+
+### repro_partial_receipt_bricks_recover.py
+recover succeeded
+exit=1
+
+### repro_recover_rehalts_completed.py
+cell ended normally: halt = KEY_USAGE_UNRECONCILED ; stop.json exists = True
+recover() returned []
+entries before: ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'RESOLVE', 'HALT']
+entries after : ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'RESOLVE', 'HALT']
+Traceback (most recent call last):
+  File "/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round17-paid-comparison/adapter-review-r2/orig-repros/repro_recover_rehalts_completed.py", line 22, in <module>
+    print('recovered.json:', (h.run / 'job1/recovered.json').read_bytes().decode())
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_abc.py", line 625, in read_bytes
+    with self.open(mode='rb') as f:
+         ~~~~~~~~~^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round17-paid-comparison/adapter-review-r2/orig-repros/.review-9j35i5wm/run/job1/recovered.json'
+exit=1

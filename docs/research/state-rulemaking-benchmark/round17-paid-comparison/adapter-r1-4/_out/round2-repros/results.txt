@@ -1,0 +1,324 @@
+
+### repro_3call_plan.py
+==============================================================================
+A. happy path, three cells
+==============================================================================
+ok   S1-OPQ admitted and valid (R=3)
+ok   S2-OPQ admitted and valid (R=2)
+ok   S3-OPQ admitted and valid (R=1)
+ok   three POSTs
+ok   aggregate 3*FLOOR
+ok   no SKIP entries after a clean 3-call run
+ok   post-run admit(S1-OPQ) refused: call already completed or skipped (no retry)
+ok   post-run admit(S2-OPQ) refused: call already completed or skipped (no retry)
+ok   post-run admit(S3-OPQ) refused: call already completed or skipped (no retry)
+ok   post-run admit(S1-FULL) refused: not a required call
+ok   post-run admit(S2-FULL) refused: not a required call
+ok   post-run admit(S3-FULL) refused: not a required call
+ok   S1-FULL refused: release_call_set
+ok   S1-OPQ refused: wrong_cell_order
+ok   still three POSTs
+==============================================================================
+B. admission R values at the key limit boundary
+==============================================================================
+ok   key_limit_ok(3*FLOOR,3) true; (3*FLOOR-1,3) false; (3*FLOOR,6) false
+ok   S1-OPQ dispatched with L = 3*FLOOR
+ok   S2-OPQ dispatched with L = 3*FLOOR
+ok   S3-OPQ dispatched with L = 3*FLOOR
+ok   three POSTs at the exact key limit
+ok   L = 3*FLOOR-1 refused at release_gate: key_limit
+ok   recon.admit also refuses: key capacity
+ok   no POST
+==============================================================================
+C. semantic futility after S1 skips exactly the two remaining OPQ cells
+==============================================================================
+ok   refused: semantic_futility_stop
+ok   SKIPs: [('S2-OPQ', 'OPQ-semantic-futility'), ('S3-OPQ', 'OPQ-semantic-futility')]
+ok   one POST
+ok   S3-OPQ refused afterwards: call already completed or skipped (no retry)
+==============================================================================
+D. mechanical futility on S1 (finish=length) skips exactly S2-OPQ, S3-OPQ with D1
+==============================================================================
+ok   state 11, no halt
+ok   SKIPs: [('S2-OPQ', 'D1'), ('S3-OPQ', 'D1')]
+ok   S2 refused: wrong_cell_order
+ok   one POST
+==============================================================================
+E. plan/manifest consistency refusals
+==============================================================================
+ok   6-call plan with 4 compounds refused: manifest_slots
+ok   no POST
+ok   3-call plan with 5 compounds refused: P6_E8_counts
+ok   INIT/release call-set disagreement refused: required_calls
+
+problems: []
+exit=0
+
+### repro_hd_cli_misc.py
+==============================================================================
+1. overrides refused
+==============================================================================
+ok   refused ['--cell', 'S1-OPQ', '--driver', 'x.py']
+ok   refused ['--driver-sha256=00']
+ok   refused ['--cell', 'S1-OPQ', '--driver=x.py']
+==============================================================================
+2. argv routing and derived pin
+==============================================================================
+ok   adapter.main called with recover_first=True
+ok   user argv forwarded verbatim
+ok   own path+hash appended
+ok   CLI routing reads no env, opens nothing
+==============================================================================
+3. renamed driver copy (SPEC example: reviewed-host-driver.py)
+==============================================================================
+note renamed copy raises FileNotFoundError (uncaught, raw traceback, exit 1): host_driver.py
+ok   fails closed (no adapter invocation) but not via a clean refusal code
+==============================================================================
+4. adapter import failure escapes host main() uncaught
+==============================================================================
+note adapter import error propagates raw: dependency_pin:synthetic (exit code would be 1, no fixed refusal line)
+ok   no env read before/after the failed import
+==============================================================================
+5. driver import is inert
+==============================================================================
+ok   import reads no env, opens no connection
+ok   exports present
+
+problems: []
+exit=0
+
+### repro_hd_key_fields.py
+==============================================================================
+1. numeric tokens survive verbatim and parse exactly
+==============================================================================
+     (note) parse_usd(1.0000000000000000000000000000001) = 1000000000 (exact ceiling would be 1000000001; >28 sig. digits never occur for USD)
+ok   token b'0.1' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'0.1') == 100000000
+ok   token b'0.10' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'0.10') == 100000000
+ok   token b'1.7300000000000000001' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'1.7300000000000000001') == 1730000001
+ok   token b'1e-9' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'1e-9') == 1
+ok   token b'1E-10' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'1E-10') == 1
+ok   token b'0' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'0') == 0
+ok   token b'-0' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'-0') == 0
+ok   token b'1.730e0' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'1.730e0') == 1730000000
+ok   token b'0.000000001' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'0.000000001') == 1
+ok   token b'1234567890123456789' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'1234567890123456789') == 1234567890123456789000000000
+ok   token b'0.3' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'0.3') == 300000000
+==============================================================================
+2. adapter key_read on driver packets
+==============================================================================
+ok   usage rounded UP to nanoUSD: {'usage': 12345679, 'limit': 1730000000, 'limit_reset': None}
+ok   response_sha256 over original bytes
+==============================================================================
+3. envelope and shape refusals (no key echo, no chained context)
+==============================================================================
+ok   refused b'{"usage":0,"limit":1,"limit_remaining":1' -> key_response_invalid
+ok   refused b'[]' -> key_response_invalid
+ok   refused b'{"data":[]}' -> key_response_invalid
+ok   refused b'{"data":null}' -> key_response_invalid
+ok   refused b'{"data":{"usage":0}}' -> key_response_invalid
+ok   refused b'{"data":{"usage":"0.1","limit":1,"limit_' -> key_response_invalid
+ok   refused b'{"data":{"usage":NaN,"limit":1,"limit_re' -> key_response_invalid
+ok   refused b'{"data":{"usage":0,"limit":1,"limit_rema' -> key_response_invalid
+ok   refused b'{"data":{"usage":{"a":1},"limit":1,"limi' -> key_response_invalid
+ok   refused b'{"data":{"usage":0,"usage":1,"limit":1,"' -> key_response_invalid
+ok   refused b'\xef\xbb\xbf{"data":{"usage":0,"limit":1,"limit_r' -> key_response_invalid
+ok   refused b'{"data":{"usage":0,"limit":1,"limit_rema' -> key_response_invalid
+ok   refused b'{"data":{"usage":0,"limit":1,"limit_rema' -> transport_failed
+==============================================================================
+4. permitted shapes
+==============================================================================
+ok   string reset forwarded
+ok   null limit forwarded (adapter halts on it)
+ok   non-200 key status 201 refused
+ok   non-200 key status 204 refused
+ok   non-200 key status 301 refused
+ok   non-200 key status 401 refused
+ok   non-200 key status 429 refused
+ok   non-200 key status 500 refused
+
+problems: []
+exit=0
+
+### repro_hd_sigint_cli.py
+==============================================================================
+1. SIGINT arrives while the POST is being written
+==============================================================================
+ok   default traceback text carries no key
+ok   nothing on stderr carries the key (stderr='')
+     traceback frames: ['File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/http/client.py", line 1093, in _send_output', 'File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/http/client.py", line 1057, in send', 'File "/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round17-paid-comparison/adapter-review-r2/_load.py", line 117, in sendall']
+ok   one (interrupted) POST attempt, no re-send
+ok   connection closed in finally
+ok   ledger.lock RETAINED (crash evidence; adapter never unlinks on BaseException)
+ok   ledger tail is DISPATCH_MARK, no RESOLVE: ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK']
+ok   no unexpected-halt sidecar (BaseException skips except-branch)
+ok   no response receipt
+==============================================================================
+2. next CLI invocation (recover-first) with the lock still present
+==============================================================================
+ok   exit 3, lock untouched: 'R17 lock/claim exists; no lock was broken. No retry.'
+ok   lock still present
+ok   no attempt dir claimed
+ok   still one POST ever
+==============================================================================
+3. operator records owner-death evidence, removes lock, runs library recover()
+==============================================================================
+ok   CLI exposes no lock-evidence option (library call required)
+ok   recovered S1-OPQ
+ok   LOCK_RECOVERED is the next entry after the crash
+ok   RESOLVE dispatched=True debit=FLOOR
+ok   terminal HALT: ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'LOCK_RECOVERED', 'RESOLVE', 'HALT']
+ok   recovery made 4 GETs and no POST
+ok   recovered.json written
+==============================================================================
+4. CLI after recovery
+==============================================================================
+ok   exit 2 refusal (halted run): 'R17 refusal: gate_refused. No retry.'
+ok   no transport use
+ok   key absent from every receipt under run/
+
+problems: []
+exit=0
+
+### repro_hd_timeout_row2.py
+==============================================================================
+silent server beyond TIMEOUT_S = 60 s
+==============================================================================
+POSTs on the wire: 1 | request fully written: True
+result state: 2 | halt: KEY_USAGE_UNRECONCILED | debit: 270000000 (FLOOR=270000000)
+ledger: ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'RESOLVE', 'HALT']
+next cell admission: False halted
+
+R14 evidence: round14 adapter.py used urlopen(timeout=180) for max_tokens 8192 and the one live call finished at 7,231 completion tokens; R14 job proposals set timeout_seconds 1800. R17 doubles the output cap to 16,384 with a 60 s socket timeout.
+exit=0
+
+### repro_hd_trust_store.py
+==============================================================================
+1. trust anchors on this host with the driver context
+==============================================================================
+verify_mode CERT_REQUIRED: True | check_hostname: True
+x509 trust anchors loaded: 0
+default verify paths: DefaultVerifyPaths(cafile=None, capath=None, openssl_cafile_env='SSL_CERT_FILE', openssl_cafile='/Library/Frameworks/Python.framework/Versions/3.13/etc/openssl/cert.pem', openssl_capath_env='SSL_CERT_DIR', openssl_capath='/Library/Frameworks/Python.framework/Versions/3.13/etc/openssl/certs')
+driver tls_unverified check would pass with an EMPTY store: True
+==============================================================================
+2. SSL_CERT_FILE redirects the trust store
+==============================================================================
+x509 trust anchors after SSL_CERT_FILE=<synthetic CA>: 1
+subjects: [((('commonName', 'review-synthetic-ca'),),)]
+env-supplied CA is now trusted by the driver context: True
+exit=0
+
+### repro_hd_wire.py
+==============================================================================
+1. exact bytes, one request, headers
+==============================================================================
+ok   exactly one connection used
+ok   body bytes on the wire identical to exact_bytes
+ok   request line
+ok   Host: openrouter.ai
+ok   Content-Length = len(exact_bytes)
+ok   Content-Type json
+ok   Connection: close
+ok   no Expect: 100-continue
+ok   request not chunked
+ok   Accept-Encoding identity (no compression)
+ok   one POST on the wire
+ok   exactly one Content-Length and one Host header (http.client did not add duplicates)
+ok   packet status/raw
+ok   headers reduced to allowlist: {'content-type': 'application/json', 'x-request-id': 'req-1'}
+ok   key absent from packet repr
+ok   host pinned, port 443, timeout=60
+ok   connection closed after use
+ok   env names read: ['OPENROUTER_API_KEY']
+==============================================================================
+2. server 100 Continue preamble: consumed, no second send
+==============================================================================
+ok   100-continue preamble skipped, final status 200
+ok   still exactly one POST
+==============================================================================
+3. redirect returned, not followed
+==============================================================================
+ok   307 returned as status; one connection
+ok   Location header not forwarded
+==============================================================================
+4. broken pipe mid-send: one attempt, generic error, no key anywhere
+==============================================================================
+ok   DriverError transport_failed
+ok   no chained exception
+ok   key absent from traceback text and repr
+ok   no second connection / re-send after broken pipe
+     (note) frame locals of the raised DriverError contain the key: True
+==============================================================================
+5. remote disconnect before status line: one attempt
+==============================================================================
+ok   RemoteDisconnected -> one attempt, no retry
+==============================================================================
+6. bounded body: chunked and content-length framing over MAX_RAW
+==============================================================================
+ok   chunked: oversize refused with generic error
+ok   chunked: one request, socket closed
+ok   chunked: largest single read request 65536
+ok   content-length: oversize refused with generic error
+ok   content-length: one request, socket closed
+ok   content-length: largest single read request 2000001
+ok   close-delimited: oversize refused with generic error
+ok   close-delimited: one request, socket closed
+ok   close-delimited: largest single read request 2000001
+ok   exactly MAX_RAW chunked body accepted
+==============================================================================
+7. key_info GET through real http.client
+==============================================================================
+ok   GET request line
+ok   GET has no body / content-length
+ok   fields exact
+ok   label dropped
+==============================================================================
+8. TLS context: verification on, hostname check, no keylog
+==============================================================================
+ok   CERT_REQUIRED + check_hostname
+ok   SSLKEYLOGFILE ignored (keylog_filename None)
+ok   minimum TLS >= 1.2 (771)
+     trust anchors loaded on THIS host by load_default_certs(): x509=0
+ok   only OPENROUTER_API_KEY ever read from env
+
+problems: []
+exit=0
+
+### original round-1 repros against r1.1 (exit 0 = finding still reproduces)
+### repro_double_post_lock_break.py
+exit=1
+### repro_gate_change_bricks_ledger.py
+exit=1
+### repro_headers_leak.py
+exit=1
+### repro_incomplete_cell_allows_next.py
+exit=1
+### repro_mark_fsync_failure.py
+exit=1
+### repro_negative_sleep.py
+exit=1
+### repro_partial_receipt_bricks_recover.py
+exit=1
+### repro_recover_rehalts_completed.py
+exit=1
