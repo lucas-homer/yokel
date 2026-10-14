@@ -1,0 +1,37 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {"role": "A1", "model": "claude-fable-5-1", "effort": "high", "session": "r18-adj-S1-OPQ-A1"},
+  "call_id": "S1-OPQ",
+  "source_id": "26-19-039",
+  "output_sha256": "7fc94b1df9958dfe11b3652b8df0bb15ae7e236cca2024d47051c323d8325f70",
+  "reference_sha256": "a4a8d8dc3de474dfe759a24af8451b9e01d0f8c6dd9fd5353f9041c7032db778",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [{"unit": 7, "form": "direct"}],
+      "basis": "Unit 7 states that the proposal is exempt, naming nothing it is exempt from, which is exactly the target's assertion; its evidence (111-172) covers the quote and the R1 clause."
+    },
+    {
+      "tid": "T2",
+      "units": [{"unit": 45, "form": "inverse"}],
+      "basis": "Unit 45 states that the rule is exempt from the RCW 34.05.328 requirements including a cost-benefit analysis, i.e. the target's implied assertion (those requirements apply) does not hold for the named thing, this rule; its evidence (3211-3456) overlaps the quote and the R2 clause. Unit 44 concerns a different object (school district fiscal impact statement) and does not map."
+    },
+    {
+      "tid": "T3",
+      "units": [{"unit": 46, "form": "inverse"}],
+      "basis": "Unit 46 states that the proposal (or portions of it) is fully exempt from Regulatory Fairness Act requirements, denying the target's implied assertion for the named exempted thing; its evidence overlaps the quote, the R3 clause (3457-3588) and the R4 clause (4103-4120). Units 47-49 restate the explanation of exemptions (what the statutes require of the board) and assert different things, so they do not map."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {"tid": "T1", "note": "Unit 7 is phrased as a report ('is stated to be exempt') rather than a bare assertion; treated as direct because a reader takes it as the source's exemption assertion."},
+      {"tid": "T2", "note": "Inverse versus opposite is close: the exempted population is 'this rule', the whole object of the implied target rather than a sub-population. Chosen inverse because the unit names the exempted thing, matching the exemption-statement pattern in question 2; the first half of the unit ('a cost-benefit analysis is not required') is the plain negated obligation the reference lists as out of scope, but the unit as a whole asserts the exemption."},
+      {"tid": "T3", "note": "Unit 46 folds both the 'proposal or portions' sentence (R3) and the 'Is fully exempt' scope sentence (R4) into one assertion and is hedged with 'is stated to be'; treated as a single inverse mapping covering the target. Same inverse-versus-opposite closeness as T2."}
+    ],
+    "reference_defects": [],
+    "other": [
+      "Unit 46's evidence spans both R3 and R4 clauses, so the one unit supports both relations on T3.",
+      "No unit asserts the T2 or T3 implied targets in the direct (applies) direction; all mapped units are exemption denials."
+    ]
+  }
+}

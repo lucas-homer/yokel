@@ -1,0 +1,128 @@
+test_from_compact_returns_fresh_objects (frozen_independent.AliasingTests.test_from_compact_returns_fresh_objects)
+§4 T5 / 'fresh objects, no aliasing'. ... ok
+test_to_compact_returns_fresh_objects (frozen_independent.AliasingTests.test_to_compact_returns_fresh_objects)
+§4: 'all leaf values copied by value (deep copy)'. ... ok
+test_validate_response_result_parts_do_not_alias (frozen_independent.AliasingTests.test_validate_response_result_parts_do_not_alias)
+§4 T5 on decode_response: mutating compact or expanded must not mutate the other, nor the table. ... ok
+test_build_default_profile_is_full_and_bad_profile_raises (frozen_independent.BuildTests.test_build_default_profile_is_full_and_bad_profile_raises)
+Interface: build(source, profile='full'); other profiles raise. ... ok
+test_build_guard_reports_or_rejects_oversize_and_rejects_bad_source (frozen_independent.BuildTests.test_build_guard_reports_or_rejects_oversize_and_rejects_bad_source)
+§1 guard (len(encode(body)) + 1024 <= 40000) and §7 (over-guard profiles are measured and marked ✗): ... ok
+test_build_schema_is_the_fixed_5085_byte_form (frozen_independent.BuildTests.test_build_schema_is_the_fixed_5085_byte_form)
+§7: A1 schema bytes are 5,085 and independent of span count below 1,000 spans. ... ok
+test_plan_counts_and_schema_binding (frozen_independent.BuildTests.test_plan_counts_and_schema_binding)
+§1: guard is len(encode(body)) + 1024 <= 40000; the body carries strict json_schema == schema(source, table, profile). ... ok
+test_system_prompt_names_the_wire_version (frozen_independent.BuildTests.test_system_prompt_names_the_wire_version)
+§3 W1 + §9 edit 1: the prompt asks for an r16.w1 envelope, not r15.1. ... ok
+test_user_envelope_is_pinned_and_source_exact (frozen_independent.BuildTests.test_user_envelope_is_pinned_and_source_exact)
+§1 contract.py:14: user envelope keys {source_text, source_text_sha256, span_table, span_table_sha256}, source untouched. ... FAIL
+test_fragment_object_fields_are_positional_by_key_name (frozen_independent.CodecShapeTests.test_fragment_object_fields_are_positional_by_key_name)
+§3 W2 example: ["s3","Comments must",1,"s4","p.m.",1] <-> {a,h,ho,z,t,to}; key order is irrelevant. ... ok
+test_from_compact_is_pure_structure_even_for_semantically_invalid_compacts (frozen_independent.CodecShapeTests.test_from_compact_is_pure_structure_even_for_semantically_invalid_compacts)
+§4 T2: an invalid r15.1 fixture still maps to a wire and keeps its r15.1 error code after to_compact. ... ok
+test_from_compact_matches_design_wire_shape (frozen_independent.CodecShapeTests.test_from_compact_matches_design_wire_shape)
+§3: four syntactic changes only; every other key, value, order and ID string identical. ... ok
+test_to_compact_inverts_from_compact_bijectively (frozen_independent.CodecShapeTests.test_to_compact_inverts_from_compact_bijectively)
+§4 T1: canonical(from_wire(to_wire(C))) == canonical(C) and to_wire(from_wire(W)) == W. ... ok
+test_to_compact_never_coerces_scalar_types (frozen_independent.CodecShapeTests.test_to_compact_never_coerces_scalar_types)
+§4: decode never repairs or coerces. A bool/float/str in an integer slot is rejected or passed through untouched. ... ok
+test_to_compact_rejects_structural_wire_violations (frozen_independent.CodecShapeTests.test_to_compact_rejects_structural_wire_violations)
+§4 from_wire requires: closed envelope, v==r16.w1, lists, y list <=1, {c,z,b}, {a,h,ho,z,t,to}. ... ok
+test_wire_error_carries_a_code (frozen_independent.CodecShapeTests.test_wire_error_carries_a_code)
+Interface: WireError(Exception) with .code. ... ok
+test_y_empty_list_is_null_and_singleton_is_the_deadline (frozen_independent.CodecShapeTests.test_y_empty_list_is_null_and_singleton_is_the_deadline)
+§3 W3 + design note: y:[] <-> null; [Y] <-> Y; an all-absent deadline is NOT collapsed to []. ... ok
+test_all_absent_deadline_requires_unit_uncertainty_exactly_as_r15_1 (frozen_independent.PipelineAcceptTests.test_all_absent_deadline_requires_unit_uncertainty_exactly_as_r15_1)
+§5 row 15: absent dimensions need unit q!=0 ('deadline_uncertainty'); the codec must not drop the explicit form. ... ok
+test_boundary_values_accepted (frozen_independent.PipelineAcceptTests.test_boundary_values_accepted)
+§5 rows 4, 16: c400 valid, unit ID 160 valid below the count sentinel, 159 units, 399 nodes+links, depth 12, 48-codepoint anchor. ... ok
+test_expanded_fragments_are_tuples_not_objects (frozen_independent.PipelineAcceptTests.test_expanded_fragments_are_tuples_not_objects)
+§4: expansion records the original fragment TUPLE (r15.1 shape), not the wire object. ... ok
+test_expanded_record_has_no_wire_version_and_keeps_r15_1_flags (frozen_independent.PipelineAcceptTests.test_expanded_record_has_no_wire_version_and_keeps_r15_1_flags)
+§5 row 23 and §8 R7/Q5: the expanded record stays round15.expanded-inventory.v2 and never names r16.w1. ... ok
+test_expanded_record_is_byte_identical_to_r15_1 (frozen_independent.PipelineAcceptTests.test_expanded_record_is_byte_identical_to_r15_1)
+§4: E is produced by the unchanged R.expand, so expanded is byte-identical to r15.1 for the same content. ... ok
+test_key_order_in_raw_json_does_not_change_meaning (frozen_independent.PipelineAcceptTests.test_key_order_in_raw_json_does_not_change_meaning)
+§1 checker ignores key order; §4 maps by key name. Reversed fragment keys and b/z/c dimension order decode identically. ... ok
+test_occurrence_indexes_are_one_based_and_not_swapped (frozen_independent.PipelineAcceptTests.test_occurrence_indexes_are_one_based_and_not_swapped)
+SPEC fragment rule via §3 W2: ho picks the head, to is conditional on it; off-by-one or ho/to swap changes the text. ... ok
+test_opaque_profile_accepts_clause_only_wires_identically (frozen_independent.PipelineAcceptTests.test_opaque_profile_accepts_clause_only_wires_identically)
+§3 opaque profile: the result decodes to the same r15.1 object under both profiles. ... ok
+test_start_and_end_spans_are_not_swapped (frozen_independent.PipelineAcceptTests.test_start_and_end_spans_are_not_swapped)
+§3 W2: a is the start span, z the end span; a cross-row fragment resolves only in that direction. ... ok
+test_y_empty_list_means_not_a_deadline_never_unknown (frozen_independent.PipelineAcceptTests.test_y_empty_list_means_not_a_deadline_never_unknown)
+§3 design note: y:[] is a positive non-deadline claim == r15.1 null; the 'unknown' deadline form is an explicit all-absent object. ... ok
+test_capacity_sentinels_and_depth_keep_r15_1_codes (frozen_independent.PipelineRejectTests.test_capacity_sentinels_and_depth_keep_r15_1_codes)
+§5 row 4 and §4 T2: 160 units / 400 nodes pass the schema bounds and are rejected by r15.1 sentinels; depth 13 → graph_depth. ... ok
+test_checker_rejections_are_wire_errors (frozen_independent.PipelineRejectTests.test_checker_rejections_are_wire_errors)
+§4 D2: schema_errors on the WIRE object → WireError (no normalization, no partial expansion). ... ok
+test_host_only_invariants_keep_their_r15_1_codes (frozen_independent.PipelineRejectTests.test_host_only_invariants_keep_their_r15_1_codes)
+§5 rows 8/11/16/21 + §4 T2: span membership, node-ID syntax/range, nonblankness and resolution are host checks with r15.1 codes. ... ok
+test_no_partial_expansion_on_final_node_error (frozen_independent.PipelineRejectTests.test_no_partial_expansion_on_final_node_error)
+§4: 'Any failure rejects the whole response ... no partial expansion' (r15.1 final-node precedent). ... ok
+test_non_stop_finish_reason_rejects_before_parsing (frozen_independent.PipelineRejectTests.test_non_stop_finish_reason_rejects_before_parsing)
+§4 D0 / §5 row 25: finish_reason != stop rejects first, even for unparsable raw. ... ok
+test_opaque_profile_rejects_typed_nodes_and_children (frozen_independent.PipelineRejectTests.test_opaque_profile_rejects_typed_nodes_and_children)
+§3 opaque profile: AND/OR/NOT/EXC/ALT or any child list must be a checker rejection under profile='opaque'. ... ok
+test_r15_1_compact_shape_is_not_accepted_on_the_wire (frozen_independent.PipelineRejectTests.test_r15_1_compact_shape_is_not_accepted_on_the_wire)
+§3 W1/§4: the checker runs on the wire; an r15.1 compact (tuples, y null, v r15.1) is rejected, never auto-upgraded. ... ok
+test_raw_guards_apply_to_the_wire_text (frozen_independent.PipelineRejectTests.test_raw_guards_apply_to_the_wire_text)
+§4 D1/T6 and §5 row 22: r15.1 strict_load limits on the raw WIRE with r15.1 codes. ... ok
+test_raw_size_boundary_is_inclusive (frozen_independent.PipelineRejectTests.test_raw_size_boundary_is_inclusive)
+§5 row 22: raw <= 600,000 B is accepted. ... ok
+test_short_but_absent_span_ids_with_wider_tables (frozen_independent.PipelineRejectTests.test_short_but_absent_span_ids_with_wider_tables)
+§4 T3 'short but absent': a 3-char ID like s99 passes maxLength 3 on a 10-row table and must fail on the host. ... ok
+test_stale_table_and_wrong_source_reject (frozen_independent.PipelineRejectTests.test_stale_table_and_wrong_source_reject)
+§5 row 3 + r15.1 exact_host_table: a tampered table or a different source must not validate. ... ok
+test_unknown_profile_rejected_on_validate_response (frozen_independent.PipelineRejectTests.test_unknown_profile_rejected_on_validate_response)
+Interface: profiles other than full/opaque are a caller error, not a silent fallback to full. ... ok
+test_all_reference_fixtures_validate_and_wire_roundtrip (frozen_independent.ReferenceSelfTests.test_all_reference_fixtures_validate_and_wire_roundtrip)
+§4 losslessness argument: ref_from_wire(ref_to_wire(C)) == C and the wire is schema-clean. ... ok
+test_authored_fixture_matches_frozen_positive_and_expanded (frozen_independent.ReferenceSelfTests.test_authored_fixture_matches_frozen_positive_and_expanded)
+§4: expected values come from the pinned r15.1 fixtures (positive.json, expanded.json). ... ok
+test_checker_caught_negatives_are_rejected_by_expected_schema (frozen_independent.ReferenceSelfTests.test_checker_caught_negatives_are_rejected_by_expected_schema)
+§4 T3: every listed wire negative yields a schema error from the unchanged checker. ... ok
+test_draft_schema_figures_from_design (frozen_independent.ReferenceSelfTests.test_draft_schema_figures_from_design)
+§6/§7: draft is checker-accepted, depth 8, 13 object schemas, 73 properties, 5,085 bytes. ... ok
+test_host_only_negatives_pass_schema_but_fail_r15_1_with_claimed_code (frozen_independent.ReferenceSelfTests.test_host_only_negatives_pass_schema_but_fail_r15_1_with_claimed_code)
+§5 rows 8/11/16/21: these must slip past the checker and be caught by r15.1 validate. ... ok
+test_occurrence_oracle_values (frozen_independent.ReferenceSelfTests.test_occurrence_oracle_values)
+SPEC fragment rule: head occurrence then conditional tail; literal offsets on row s8. ... ok
+test_full_schema_equals_pinned_draft_instantiated_for_source (frozen_independent.SchemaTests.test_full_schema_equals_pinned_draft_instantiated_for_source)
+§3 + schema.draft.json: only h/t enums and the span-ID maxLength W depend on the source. ... ok
+test_opaque_profile_differs_only_in_operator_enum_and_child_cap (frozen_independent.SchemaTests.test_opaque_profile_differs_only_in_operator_enum_and_child_cap)
+§3 'opaque profile': same wire with o enum ["L","R"] and node a maxItems:0. ... ok
+test_provider_rules_depth_and_counts (frozen_independent.SchemaTests.test_provider_rules_depth_and_counts)
+§6 + inventory §3: closed objects, all required, nesting <= 10 (OpenAI), 13 objects / 73 properties / depth 8. ... ok
+test_schema_accepts_every_valid_wire_and_the_draft_is_not_forgotten (frozen_independent.SchemaTests.test_schema_accepts_every_valid_wire_and_the_draft_is_not_forgotten)
+§4 T1: no false schema rejection on any valid fixture, under the schema the codec itself emits. ... ok
+test_schema_binds_source_hash_and_table_digest (frozen_independent.SchemaTests.test_schema_binds_source_hash_and_table_digest)
+§5 row 3: h = source SHA-256, t = canonical table digest, single-value enums. ... ok
+test_schema_lint_closes_the_checker_meta_gap (frozen_independent.SchemaTests.test_schema_lint_closes_the_checker_meta_gap)
+§4 T4 / §8 R4: every node declares a scalar type; objects closed and fully required; no type lists; ... ok
+test_schema_result_is_fresh_per_call (frozen_independent.SchemaTests.test_schema_result_is_fresh_per_call)
+§4 T5 analogue: mutating one returned schema must not change the next call's result. ... ok
+test_span_id_width_tracks_the_table_and_node_width_is_fixed (frozen_independent.SchemaTests.test_span_id_width_tracks_the_table_and_node_width_is_fixed)
+§3 W4 (W = longest span ID) and node ID 2..4 regardless of table size. ... ok
+test_unknown_profile_raises_value_error (frozen_independent.SchemaTests.test_unknown_profile_raises_value_error)
+Interface: other profiles raise ValueError. ... ok
+test_wire_module_imports_or_is_absent (frozen_independent.WireModuleTests.test_wire_module_imports_or_is_absent)
+Interface: protocol/wire.py must import under -I -S -B by path with no side effects. ... ok
+
+======================================================================
+FAIL: test_user_envelope_is_pinned_and_source_exact (frozen_independent.BuildTests.test_user_envelope_is_pinned_and_source_exact)
+§1 contract.py:14: user envelope keys {source_text, source_text_sha256, span_table, span_table_sha256}, source untouched.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round16-wire-compat/testing/test_independent.py", line 1021, in test_user_envelope_is_pinned_and_source_exact
+    self.assertEqual(set(user), {'source_text', 'source_text_sha256', 'span_table', 'span_table_sha256'})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the second set but not the first:
+'source_text'
+
+----------------------------------------------------------------------
+Ran 55 tests in 1.712s
+
+FAILED (failures=1)
+
+{"tests_run": 55, "tests_passed": 54, "failures": [{"test": "frozen_independent.BuildTests.test_user_envelope_is_pinned_and_source_exact", "reason": "Intended r16.e2 delta: source_text removed; exact source remains in span-table rows.", "traceback": "Traceback (most recent call last):\n  File \"/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round16-wire-compat/testing/test_independent.py\", line 1021, in test_user_envelope_is_pinned_and_source_exact\n    self.assertEqual(set(user), {'source_text', 'source_text_sha256', 'span_table', 'span_table_sha256'})\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Items in the second set but not the first:\n'source_text'\n"}], "errors": [], "skipped": 0, "intended_failures": 1, "unexpected_failures": [], "raw_suite_success": false, "accepted": true, "suite_sha256": "8b4403071b91008af3030cdc6362a56c49f7b0c40ba3084b2c1eb56d27f2ec30", "suite_unchanged": true, "api_adapter": "mandatory originating plan supplied to frozen legacy callers", "plan_bound_calls": 170, "wire_path": "protocol-w2-1/wire.py", "invocation": "python3 -I -S -B protocol-w2-1/run_independent.py"}

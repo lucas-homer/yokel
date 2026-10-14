@@ -1,0 +1,60 @@
+--- round17-paid-comparison/keycheck-job-v2/keycheck.py
++++ round18-rerun/keycheck/keycheck.py
+@@ -25,8 +25,8 @@
+ MAX_RAW = 65536
+ TIMEOUT_SECONDS = 15
+ EXPECTED = {'label': 'DocketClock', 'limit': decimal.Decimal('50.00'),
+-            'limit_remaining': decimal.Decimal('50.00'), 'limit_reset': None,
+-            'usage': decimal.Decimal('0')}
++            'limit_remaining': None, 'limit_reset': None,
++            'usage': None}
+ REQUIRED = ('label', 'limit', 'usage')
+ MASKED_LABEL_RE = re.compile(r'sk-or-v1-[0-9a-f]{3,8}\.\.\.[0-9a-f]{3,8}', re.ASCII)
+ FAILURE_STAGES = frozenset(('key_env_invalid', 'tls_context', 'connect',
+@@ -48,7 +48,7 @@
+ def failure_record(stage, *, status=None, error_code=None, missing=None,
+                    field=None, type_name=None):
+     require(stage in FAILURE_STAGES)
+-    record = {'schema_version': 'r17.keycheck-failure.v2', 'stage': stage}
++    record = {'schema_version': 'r18.keycheck-failure.v3', 'stage': stage}
+     if stage == 'response_status':
+         if type(status) is int:
+             record['status'] = status
+@@ -233,8 +233,27 @@
+     if 'name' in fields and fields['name'] != EXPECTED['label']:
+         label_check = False
+     checks = {name: fields[name] == expected for name, expected in EXPECTED.items() if name != 'label'}
++    checks['usage'] = fields['usage'] is not None and numeric(fields['usage'])
++    if fields['limit'] is not None and fields['usage'] is not None:
++        with decimal.localcontext() as ctx:
++            span = max(fields['limit'].adjusted(), fields['usage'].adjusted(), 0) - min(
++                fields['limit'].as_tuple().exponent, fields['usage'].as_tuple().exponent, 0) + 2
++            typed(span <= MAX_RAW, 'limit_remaining', None)
++            ctx.prec = max(28, span)
++            checks['limit_remaining'] = fields['limit_remaining'] == fields['limit'] - fields['usage']
++    else:
++        checks['limit_remaining'] = False
+     checks['label'] = label_check
+-    metadata = {'label_kind': 'masked_key' if masked else 'plain_name',
++    candidate = None
++    if checks['usage']:
++        with decimal.localcontext() as ctx:
++            candidate_span = max(fields['usage'].adjusted(), 0) - min(fields['usage'].as_tuple().exponent, 0) + 12
++            typed(candidate_span <= MAX_RAW, 'usage', None)
++            ctx.prec = max(28, candidate_span)
++            candidate = int((fields['usage'] * decimal.Decimal(10**9)).to_integral_value(rounding=decimal.ROUND_CEILING))
++    metadata = {'key_initial_usage_candidate_usd': fields['usage'],
++        'key_initial_usage_candidate_nanousd': candidate,
++        'label_kind': 'masked_key' if masked else 'plain_name',
+         'label_name_verifiable': not masked,
+         'label_check': 'not_machine_verifiable' if label_check == 'not_machine_verifiable'
+                        else 'match' if label_check is True else 'mismatch',
+@@ -304,7 +323,7 @@
+             fields, checks, metadata = parse_fields(raw, key)
+             passed = all(v is True for n, v in checks.items() if n != 'label') and (
+                 checks['label'] is True or checks['label'] == 'not_machine_verifiable')
+-            result = {'schema_version': 'r17.key-machine.v2', 'endpoint': ENDPOINT,
++            result = {'schema_version': 'r18.key-machine.v3', 'endpoint': ENDPOINT,
+                 'request_started_at': utc(request_wall_ns), 'retrieved_at': utc(retrieved_ns),
+                 'retrieved_wall_ns': retrieved_ns, 'response_sha256': hashlib.sha256(raw).hexdigest(),
+                 'tls_ca_sha256': ca_sha256, 'currency': 'USD', 'fields': fields,

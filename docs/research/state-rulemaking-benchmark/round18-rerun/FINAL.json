@@ -1,0 +1,27 @@
+{
+  "schema": "r18.final.v1",
+  "date": "2026-10-14",
+  "outcome": "O3",
+  "outcome_meaning": "O3: clause-only bar unreachable after S1 under both adjudicators; S2/S3 not run (pre-registered futility). Typed layer untestable (E8).",
+  "A5_effect": "Prompt fix worked mechanically: S1 output validated (state 13); R17 failed role_cardinality on the same source.",
+  "S1_OPQ": {
+    "state": 13,
+    "validated": true,
+    "completion_tokens": 4785,
+    "reported_cost_usd": "0.059411",
+    "scores": "Both adjudicators (exact agreement 3/3): R2, R3, R4 (EXCEPT, live) = absent; R1 excluded (UNRESOLVED). Mappings identical: T1->unit 7 direct, T2->unit 45 inverse, T3->unit 46 inverse.",
+    "why_absent": "Units 45/46 assert the exemptions and carry `if` links to leaves c9/c10, but those leaves do not carry the reference clause text for the exempted case, so the exception clauses are not preserved on a leaf (ADJ B2)."
+  },
+  "spend": {
+    "R18_provider_reported_usd": "0.059411",
+    "R18_key_usage_delta_nanousd": 59411000,
+    "R18_ledger_debit_nanousd": 270000000,
+    "cumulative_key_usage_usd": "0.1188195 (R17 0.0594085 + R18 0.059411)",
+    "invoice_verified": false
+  },
+  "interpretation": "With n=1 scored source this is a failed pre-registered bar, not a general verdict. The output asserted the exemptions but encoded them as `if` conditions with leaves that do not hold the exempted-case text; whether this is a prompt-guidance gap (how to express EXCEPT in the clause-only profile) or a model limitation is not established.",
+  "records": {
+    "decision": "adjudication/decision-s1/decide.out.json",
+    "ledger": "run-live/stage-run/ledger.jsonl"
+  }
+}

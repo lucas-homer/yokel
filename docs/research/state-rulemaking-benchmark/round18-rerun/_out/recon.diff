@@ -1,0 +1,53 @@
+--- round17-paid-comparison/recon-a4/r17recon.py
++++ round18-rerun/recon/r17recon.py
+@@ -31,10 +31,11 @@
+     return int((d * 1_000_000_000).to_integral_value(rounding=ROUND_CEILING))
+ 
+ 
+-def key_limit_ok(limit, required_calls):
++def key_limit_ok(limit, required_calls, initial_usage=0):
+     """INIT condition: the verified, non-resetting key limit funds every required call at FLOOR
+     and is no higher than KEY_MAX."""
+-    return type(limit) is int and required_calls * FLOOR <= limit <= KEY_MAX
++    return (type(limit) is int and type(initial_usage) is int and initial_usage >= 0
++            and required_calls * FLOOR <= limit - initial_usage and limit <= KEY_MAX)
+ 
+ 
+ def _calls(entries, kind):
+@@ -108,7 +109,7 @@
+ def reconcile(i, cumulative_reported, prev_usage, pinned, reads):
+     """BUDGET §5 RECON after possibly-dispatched attempt number i (1-based, cumulative).
+     cumulative_reported: Σ ceil(reported cost) over attempts 1..i (None if any is missing).
+-    prev_usage: last reconciled usage (0 at INIT). pinned: {'limit', 'limit_reset'} from INIT.
++    prev_usage: last reconciled usage (U0 at INIT). pinned: {'limit', 'limit_reset'} from INIT.
+     reads: [(elapsed_s, read)] in time order, read = None (read error) or a dict with
+     'usage', 'limit', 'limit_reset'. Returns ('RECONCILED', usage) or ('HALT', reason)."""
+     if len(reads) > len(READ_SCHEDULE_S):
+@@ -116,6 +117,7 @@
+     for (elapsed, _), due in zip(reads, READ_SCHEDULE_S):
+         if elapsed < due:
+             return 'HALT', 'read before its scheduled time'
++    baseline = pinned.get('key_initial_usage', 0)
+     tol, floor = i * TOL_PER_CALL, prev_usage
+     for _, read in reads:
+         if read is None:
+@@ -128,15 +130,15 @@
+         floor = u    # R3-S3: below any earlier read of this sequence is a regression too
+         if cumulative_reported is None:
+             continue
+-        if u > cumulative_reported + tol:
++        if u > baseline + cumulative_reported + tol:
+             return 'HALT', 'usage exceeds reported cost'
+-        if abs(u - cumulative_reported) <= tol:
++        if abs(u - (baseline + cumulative_reported)) <= tol:
+             return 'RECONCILED', u
+     return 'HALT', 'KEY_USAGE_UNRECONCILED'
+ 
+ 
+ def close_debit(entries, highest_usage):
+-    """Run-close retention: max(Σ conservative debits, highest key usage since zero).
++    """Run-close retention: max(Σ conservative debits, highest key usage above INIT baseline U0).
+     Returns the upward RECONCILE_UP amount (0 if none is needed)."""
+     total = sum(e['debit'] for e in entries if e['type'] in ('RESOLVE', 'RECONCILE_UP'))
+-    return max(0, highest_usage - total)
++    return max(0, highest_usage - entries[0].get('key_initial_usage', 0) - total)

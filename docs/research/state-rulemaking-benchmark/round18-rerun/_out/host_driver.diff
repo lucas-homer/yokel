@@ -1,0 +1,11 @@
+--- round17-paid-comparison/adapter-r1-4/host_driver.py
++++ round18-rerun/adapter/host_driver.py
+@@ -238,7 +238,7 @@
+     """Exact UTF-8 source, with no newline translation or alternate source fallback."""
+     if cell not in [f'S{i}-{arm}' for arm in ('OPQ', 'FULL') for i in (1, 2, 3)]:
+         raise DriverError('source_cell_invalid')
+-    root = HERE.parent / 'sources-r2'
++    root = HERE.parent.parent / 'round17-paid-comparison/sources-r2'
+     ready = json.loads((root / 'READY.json').read_bytes())
+     selected = ready['selected']
+     if (not isinstance(selected, list) or len(selected) != 3 or selected != sorted(selected)

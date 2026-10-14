@@ -1,0 +1,97 @@
+--- round17-paid-comparison/adapter-r1-4/r17_adapter.py
++++ round18-rerun/adapter/r17_adapter.py
+@@ -17,13 +17,14 @@
+ from contextlib import contextmanager
+ 
+ HERE = Path(__file__).resolve().parent
+-R17 = HERE.parent
+-BENCH = R17.parent
++R18 = HERE.parent
++BENCH = R18.parent
++R17 = BENCH / 'round17-paid-comparison'
+ DESIGN = R17 / 'design-r3-1'
+-RECON_SHA = '8c98fabdc73fad10336698fa695869966a631d5a7d99b797725f2c711b1b6bb0'
+-WIRE_SHA = '662268ba0774d7ef5a121ec4af90003a3836c07e4ce5a5ae551a413fe8375ab1'
++RECON_SHA = '64794fdda2f345559a5399ccd8e83142a93e621fcb5c6e79842209a4d4c27140'
++WIRE_SHA = '0f8e44476b509a28b68739f83c0e557198a9990079bf8c108ff00071ecd56bef'
+ CALLS = [f'S{i}-OPQ' for i in (1, 2, 3)] + [f'S{i}-FULL' for i in (1, 2, 3)]
+-NAMESPACE = 'r17.paid-comparison.v1'
++NAMESPACE = 'r18.paid-rerun.v1'
+ POST_URL = 'https://openrouter.ai/api/v1/chat/completions'
+ KEY_URL = 'https://openrouter.ai/api/v1/key'
+ KEY_LABEL = 'DocketClock'
+@@ -152,11 +153,12 @@
+ 
+ def dependencies():
+     primary = read(DESIGN / 'READY.primary.json')['sha256']
+-    require(read(R17 / 'recon-a4/READY.json')['files']['r17recon.py']['sha256'] == RECON_SHA, 'a4_recon_pin')
+-    require(read(R17 / 'sources-r2/READY.json')['upstream']['wire']['sha256'] == WIRE_SHA,
++    require(read(R18 / 'recon/READY.json')['files']['r17recon.py']['sha256'] == RECON_SHA, 'a4_recon_pin')
++    require(read(R17 / 'sources-r2/READY.json')['upstream']['wire']['sha256'] == '662268ba0774d7ef5a121ec4af90003a3836c07e4ce5a5ae551a413fe8375ab1',
+             'source_wire_pin')
+-    return (load_pinned('r17_exact_recon', R17 / 'recon-a4/r17recon.py', RECON_SHA),
+-            load_pinned('r17_exact_wire', BENCH / 'round16-wire-compat/protocol-w2-1/wire.py', WIRE_SHA))
++    require(read(R18 / 'wire/READY.json')['sha256']['wire.py'] == WIRE_SHA, 'r18_wire_pin')
++    return (load_pinned('r17_exact_recon', R18 / 'recon/r17recon.py', RECON_SHA),
++            load_pinned('r17_exact_wire', R18 / 'wire/wire.py', WIRE_SHA))
+ 
+ 
+ recon, wire = dependencies()
+@@ -402,13 +404,15 @@
+     require(init.get('namespace') == NAMESPACE and init.get('key_label') == KEY_LABEL,
+             'init_namespace_key')
+     require(all(init.get(k) == v for k, v in {'CAP': recon.CAP, 'OPERATING': recon.OPERATING,
+-            'FLOOR': recon.FLOOR, 'KEY_MAX': recon.KEY_MAX, 'key_initial_usage': 0,
++            'FLOOR': recon.FLOOR, 'KEY_MAX': recon.KEY_MAX,
+             'key_limit_reset': None}.items()), 'init_constants')
++    require(type(init.get('key_initial_usage')) is int and init['key_initial_usage'] >= 0,
++            'init_constants')
+     calls = release.get('required_calls')
+     require(type(release.get('typed_testable')) is bool, 'typed_testable')
+     require(calls == (CALLS if release['typed_testable'] else CALLS[:3])
+             and init.get('required_calls') == calls, 'required_calls')
+-    require(recon.key_limit_ok(init.get('key_limit'), len(calls)), 'key_limit')
++    require(recon.key_limit_ok(init.get('key_limit'), len(calls), init['key_initial_usage']), 'key_limit')
+     require(release.get('init_sha256') == sha(encode(init)), 'release_init_hash')
+     binds = [e for e in ledger.entries if e['type'] == 'BIND_RELEASE']
+     require(len(binds) == 1 and binds[0].get('release_sha256') == sha(release_raw)
+@@ -481,8 +485,9 @@
+     require(machine.get('endpoint') == KEY_URL and machine.get('documentation_confirmed') is True
+             and machine.get('usage_units') == 'USD' and machine.get('usage_field') == 'usage'
+             and machine.get('response_sha256') and machine.get('accepted_by_primary') is True
+-            and machine.get('usage') == 0 and machine.get('limit') == init['key_limit']
+-            and machine.get('limit_remaining') == init['key_limit']
++            and type(machine.get('usage')) is int and machine['usage'] == init['key_initial_usage'] and machine.get('limit') == init['key_limit']
++            and type(machine.get('limit_remaining')) is int
++            and machine['limit_remaining'] == init['key_limit'] - init['key_initial_usage']
+             and machine.get('limit_reset') is None, 'K3_machine_check')
+     auth = strict(artifacts['roles_auth'][1])
+     require(auth.get('authMethod') == 'claude.ai' and auth.get('anthropic_api_key_override') is False
+@@ -525,7 +530,7 @@
+ 
+ 
+ def last_usage(entries):
+-    return next((e['U'] for e in reversed(entries) if e['type'] == 'RECONCILED'), 0)
++    return next((e['U'] for e in reversed(entries) if e['type'] == 'RECONCILED'), entries[0]['key_initial_usage'])
+ 
+ 
+ def staged_gate(ledger, cell, release_hash, reference_hash, gate_path=None, opq_freeze=None):
+@@ -839,7 +844,8 @@
+     cumulative = reported_sum(entries, None if already_resolved else terms)
+     previous = last_usage([e for e in entries if e['type'] != 'RECONCILED' or e['call'] != cell])
+     reads, highest = [], previous
+-    pinned = dict(limit=entries[0]['key_limit'], limit_reset=entries[0]['key_limit_reset'])
++    pinned = dict(limit=entries[0]['key_limit'], limit_reset=entries[0]['key_limit_reset'],
++                  key_initial_usage=entries[0]['key_initial_usage'])
+     verdict = ('HALT', 'KEY_USAGE_UNRECONCILED')
+     for due in recon.READ_SCHEDULE_S:
+         path = folder / f'recon-{due}.json'
+@@ -943,7 +949,7 @@
+             count = sum(e['type'] == 'DISPATCH_MARK' for e in ledger.entries)
+             cumulative = reported_sum(ledger.entries)
+             require(cumulative is not None and pre['usage'] >= previous
+-                    and abs(pre['usage'] - cumulative) <= count * 1000, 'pre_key_usage')
++                    and abs(pre['usage'] - (ledger.entries[0]['key_initial_usage'] + cumulative)) <= count * 1000, 'pre_key_usage')
+             put(folder / 'key-preflight.json', dict(parsed=pre, **meta))
+             ledger.append('RESERVE', call=cell, job_id=job_id, attempt_dir=folder.name,
+                           floor=recon.FLOOR, staged_gate_sha256=gate_hash)

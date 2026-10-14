@@ -1,0 +1,185 @@
+{
+  "credentials_accessed": false,
+  "files": {
+    "DESIGN-NOTE.md": {
+      "bytes": 1066,
+      "sha256": "24aa0395aa2f49eedaac95b359975346943277601ced6439daff69bb8d32ad2f"
+    },
+    "FILES-WRITTEN.txt": {
+      "bytes": 3789,
+      "sha256": "0ef3bd9928ce41c01e8f6ef956f32e9d65f315d973005a602b7aaea63eaef820"
+    },
+    "SPEC.md": {
+      "bytes": 1192,
+      "sha256": "f6fe38964086c9df7bfc9ac7b1ed6a181b888a7cbfbeb4d6076be3f7d54076fe"
+    },
+    "_out/adapter.diff": {
+      "bytes": 5945,
+      "sha256": "da910c982c85692af2bfd926681947fb335c231f783b81f0f98b372af1ca09ca"
+    },
+    "_out/diff-summary.json": {
+      "bytes": 398,
+      "sha256": "34090ee3c33aa935b9c53239773704e1ac7b2f4bde98c31bbd1c6b2b32a0264a"
+    },
+    "_out/frozen-before.json": {
+      "bytes": 151326,
+      "sha256": "bc19656cf857e40b6cbe348d22af539ed409eab7f548dd426a3b8246f8add1fa"
+    },
+    "_out/host_driver.diff": {
+      "bytes": 636,
+      "sha256": "8cd5f84bd00fde531b2787e590820a2310ed854c5342c3cc9029e3a87a28b84c"
+    },
+    "_out/keycheck.diff": {
+      "bytes": 3599,
+      "sha256": "bec4a25db23e7de6c55802ff45f8ec029c5b0a11d18cd6200766c48480a31483"
+    },
+    "_out/native_entry.diff": {
+      "bytes": 578,
+      "sha256": "905ed829895a384384318892e54536e362b8921e7571f9ed33b54d5847d49c8c"
+    },
+    "_out/python312-results.json": {
+      "bytes": 962,
+      "sha256": "c8e73a4a1d036bc377a568ac890207673e4ec563b717f9aaffd3bfea5132c2b7"
+    },
+    "_out/recon.diff": {
+      "bytes": 2755,
+      "sha256": "1238c1c3f4397773516719780a0fa418d56b6cb81c85392cb1ddfedc06729c52"
+    },
+    "_out/system-results.json": {
+      "bytes": 912,
+      "sha256": "c3a43ba8851b412983e0a2e2da679af53cd609b3440ef34380cf23de23208c3f"
+    },
+    "_out/wire.diff": {
+      "bytes": 1270,
+      "sha256": "4995a46f2ff84b491f9eeb8fba5fdf57f88230d64eb88d789253d181f193b935"
+    },
+    "adapter/READY.json": {
+      "bytes": 15430,
+      "sha256": "c66a3b9d71fcd338e0cb7b28262713101338845f356374efd2510b7f916047b2"
+    },
+    "amendments/A5-A6.md": {
+      "bytes": 1658,
+      "sha256": "5d0eae23ea6f8cd104af5a7a909bcea76213ed3edf36e944d49778f44305e8b1"
+    },
+    "implement_offline.py": {
+      "bytes": 11084,
+      "sha256": "e6a6d3eafbcf74ede83357babe55378f0e5e7a02a0ef395566915a66bd54f950"
+    },
+    "keycheck/READY.json": {
+      "bytes": 2916,
+      "sha256": "86bf7ed0611b854969c76a842776a7b27e460c5c33e749b65aca6e892f0da075"
+    },
+    "offline_tests.py": {
+      "bytes": 2688,
+      "sha256": "34f3b2df3de2d21f6d5d512df2451c89f6e7a90726ea0880e2ae6288ddf65195"
+    },
+    "pin_ready.py": {
+      "bytes": 6977,
+      "sha256": "e662beb8e198614609b07b87c3c541e22241f2d5a2aa689dff9399a558c27046"
+    },
+    "recon/READY.json": {
+      "bytes": 2196,
+      "sha256": "89211e1796a2b8fb66a5c6b00acba6e95eb2612e6660d59c1844bbce1dbc21e5"
+    },
+    "release-prep/READY.json": {
+      "bytes": 5985,
+      "sha256": "cadceebc1813e1ecbee1ce0ac8ef07e040f063043d2122b32aaf09e6060ba049"
+    },
+    "wire/READY.json": {
+      "bytes": 4324,
+      "sha256": "08870dd3252b099d6189a86dcff363ec49155e7c25d3682ad0797b03f5c24418"
+    }
+  },
+  "frozen_inputs_unchanged": true,
+  "paid_release_authorized": false,
+  "provider_calls": 0,
+  "status": "READY_OFFLINE_IMPLEMENTATION",
+  "tests": {
+    "python312": {
+      "all_passed": true,
+      "flags": [
+        "-I",
+        "-S",
+        "-B"
+      ],
+      "interpreter": "/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "suites": {
+        "adapter": {
+          "output": "adapter/_out/python312-tests.txt",
+          "passed": true,
+          "run": 211
+        },
+        "independent": {
+          "accepted": true,
+          "expected_failures": 1,
+          "passed": 54,
+          "run": 55
+        },
+        "keycheck": {
+          "output": "keycheck/_out/python312-tests.txt",
+          "passed": true,
+          "run": 46
+        },
+        "recon": {
+          "output": "recon/_out/python312-tests.txt",
+          "passed": true,
+          "run": 3
+        },
+        "release-prep": {
+          "output": "release-prep/_out/python312-tests.txt",
+          "passed": true,
+          "run": 23
+        },
+        "wire": {
+          "output": "wire/_out/python312-tests.txt",
+          "passed": true,
+          "run": 100
+        }
+      },
+      "version": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]"
+    },
+    "system": {
+      "all_passed": true,
+      "flags": [
+        "-I",
+        "-S",
+        "-B"
+      ],
+      "interpreter": "/usr/local/bin/python3",
+      "suites": {
+        "adapter": {
+          "output": "adapter/_out/system-tests.txt",
+          "passed": true,
+          "run": 211
+        },
+        "independent": {
+          "accepted": true,
+          "expected_failures": 1,
+          "passed": 54,
+          "run": 55
+        },
+        "keycheck": {
+          "output": "keycheck/_out/system-tests.txt",
+          "passed": true,
+          "run": 46
+        },
+        "recon": {
+          "output": "recon/_out/system-tests.txt",
+          "passed": true,
+          "run": 3
+        },
+        "release-prep": {
+          "output": "release-prep/_out/system-tests.txt",
+          "passed": true,
+          "run": 23
+        },
+        "wire": {
+          "output": "wire/_out/system-tests.txt",
+          "passed": true,
+          "run": 100
+        }
+      },
+      "version": "3.13.7 (v3.13.7:bcee1c32211, Aug 14 2025, 19:10:51) [Clang 16.0.0 (clang-1600.0.26.6)]"
+    }
+  }
+}

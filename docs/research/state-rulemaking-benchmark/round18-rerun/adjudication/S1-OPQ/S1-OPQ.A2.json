@@ -1,0 +1,33 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {"role": "A2", "model": "claude-opus-5-5", "effort": "high", "session": "r18-adj-S1-OPQ-A2"},
+  "call_id": "S1-OPQ",
+  "source_id": "26-19-039",
+  "output_sha256": "7fc94b1df9958dfe11b3652b8df0bb15ae7e236cca2024d47051c323d8325f70",
+  "reference_sha256": "a4a8d8dc3de474dfe759a24af8451b9e01d0f8c6dd9fd5353f9041c7032db778",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [{"unit": 7, "form": "direct"}],
+      "basis": "Unit 7 states that the proposal is exempt, which is the target's assertion itself (the exempting wording, with nothing named as exempted from); its evidence [111,172] covers the target quote [120,129]."
+    },
+    {
+      "tid": "T2",
+      "units": [{"unit": 45, "form": "inverse"}],
+      "basis": "Unit 45 states the rule is exempt from RCW 34.05.328's requirements, including a cost-benefit analysis, i.e. the implied requirements do not hold for a named case (this rule); its evidence [3211,3456] overlaps the target quote and the R2 clause."
+    },
+    {
+      "tid": "T3",
+      "units": [{"unit": 46, "form": "inverse"}],
+      "basis": "Unit 46 states the proposal is fully exempt from Regulatory Fairness Act requirements, denying the implied target for the named exempted proposal; its evidence covers the target quote, the R3 clause and the R4 clause."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {"tid": "T2", "note": "Inverse vs opposite is close: the target gloss already includes 'to this rule', so 'the rule is exempt' could be read as a plain denial for the same object (opposite). I chose inverse because the unit has the 'X is exempt from Y' shape with X named as the carved-out case, matching the reference's EXCEPT/PART 'This rule'. The unit's first clause ('A cost-benefit analysis is not required under RCW 34.05.328') is on its own a plain denial (opposite), and it is merged into the same unit."},
+      {"tid": "T3", "note": "Inverse vs opposite is close for the same reason as T2. Unit 46 also merges the R3 sentence ('proposal, or portions of the proposal') and the R4 'Is fully exempt' scope field into one assertion; mapped once as inverse."}
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

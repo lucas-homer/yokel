@@ -1,0 +1,27 @@
+--- round16-wire-compat/protocol-w2-1/wire.py
++++ round18-rerun/wire/wire.py
+@@ -1,4 +1,4 @@
+-"""Offline r16.w2.1 revision: unchanged r16.w1 response, r16.e2 request envelope."""
++"""Offline r16.w2.2 revision: unchanged r16.w1 response, r16.e3 request envelope."""
+ import copy
+ import hashlib
+ import importlib.util
+@@ -12,8 +12,8 @@
+ R15_READY_SHA256 = 'dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50'
+ COMMON_SHA256 = 'a341e11b6b0d49b130c28d8881ef4b71748161bcfc0d15c41384bc150f35bdc5'
+ VERSION = 'r16.w1'
+-REVISION = 'r16.w2.1'
+-ENVELOPE_VERSION = 'r16.e2'
++REVISION = 'r16.w2.2'
++ENVELOPE_VERSION = 'r16.e3'
+ FRAGMENT_KEYS = ('a', 'h', 'ho', 'z', 't', 'to')
+ 
+ 
+@@ -315,6 +315,7 @@
+         prompt += ('Opaque profile: only L/R nodes with a=[] are permitted. Preserve complete '
+                    'clauses in exact fragments and their source-supported links; use uncertainty '
+                    'and qual for unresolved logic. Do not emit typed-logic nodes.\n')
++    prompt += 'If a unit has several conditions of the same role (if, onlyif, unless or obj), emit a single link of that role to one L leaf whose fragments cover each condition in source order (up to 8). Never emit two links of the same role on one unit.\n'
+     return prompt
+ 
+ 

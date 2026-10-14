@@ -1,0 +1,2 @@
+# Primary review: R18 keycheck v3 (2026-10-14)
+v3 differs from the live-proven, primary-reviewed v2 only in its PASS conditions. Usage is recorded rather than required to be 0, limit_remaining must equal limit - usage, and the U0 candidate is computed in nanoUSD (ceiling). The GET path, TLS, key handling and sanitized failure stages are byte-identical to v2. Accepted for one zero-reservation metadata run.

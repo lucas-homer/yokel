@@ -1,0 +1,11 @@
+--- round17-paid-comparison/adapter-r1-4/native_entry.py
++++ round18-rerun/adapter/native_entry.py
+@@ -26,7 +26,7 @@
+         config = json.loads((here / 'arguments.json').read_bytes())
+         if set(config) != {'schema_version', 'host_sha256', 'args'} or config['schema_version'] != 'r17.native-args.v1':
+             return 2
+-        host = here.parents[1] / 'adapter-r1-4/host_driver.py'
++        host = here.parents[1] / 'adapter/host_driver.py'
+         raw = host.read_bytes()
+         if hashlib.sha256(raw).hexdigest() != config['host_sha256']:
+             return 2
