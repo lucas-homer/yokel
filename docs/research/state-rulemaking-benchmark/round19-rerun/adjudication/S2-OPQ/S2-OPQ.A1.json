@@ -1,0 +1,116 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r19-adj-S2-OPQ-A1"
+  },
+  "call_id": "S2-OPQ",
+  "source_id": "26-19-041",
+  "output_sha256": "b5d8732c3ff696fd82567242508f024bd23021ec57ca2866a9268201840545b2",
+  "reference_sha256": "cd58e31c8559e377b2cba3604cf8a0ed3f4ac1f0cf5542c8bb002555d7677471",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 9,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 9 states that registrants will receive a confirmation email containing webinar joining information, the same assertion as the target; its evidence span covers the quote and the 'After registering' clause."
+    },
+    {
+      "tid": "T2",
+      "units": [
+        {
+          "unit": 22,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 22 states that submitted data may meet current or historical CMS requirements (framed as the stated intent), which a reader takes as the target's assertion; evidence covers the quote and the 'as long as' clause. Units 20 and 21 assert different things (the Jan 1, 2025 minimum; inclusion of additional elements) and do not map."
+    },
+    {
+      "tid": "T3",
+      "units": [
+        {
+          "unit": 34,
+          "form": "inverse"
+        },
+        {
+          "unit": 55,
+          "form": "inverse"
+        },
+        {
+          "unit": 56,
+          "form": "inverse"
+        },
+        {
+          "unit": 57,
+          "form": "inverse"
+        }
+      ],
+      "basis": "Unit 34 states the entire proposed rule is exempt from the cost-benefit analysis with grounds per subsection, denying the implied target for a named population (the rule and its subsections). Units 55-57 each state that a specific subsection is exempt from analysis (with its grounds), so each denies the target for a named case; all overlap the R3/R4 clauses."
+    },
+    {
+      "tid": "T4",
+      "units": [
+        {
+          "unit": 35,
+          "form": "inverse"
+        }
+      ],
+      "basis": "Unit 35 states the entire proposal is fully exempt from Regulatory Fairness Act requirements, denying the implied target for the named population (the entire proposal); evidence covers the quote and the R5, R6 and R9 clauses."
+    },
+    {
+      "tid": "T5",
+      "units": [
+        {
+          "unit": 35,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 35 also states that the rule applies only to licensed acute care hospitals not defined as small businesses, which a reader takes as asserting the rule applies to a population of hospitals, with the restriction folded in; evidence covers the quote and the R7 clause."
+    },
+    {
+      "tid": "T6",
+      "units": [
+        {
+          "unit": 45,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 45 states that to meet subsection (1) a hospital may submit a machine-readable file meeting 45 CFR Part 180 subparts A and B, the target's assertion; evidence covers the quote and the 'if' clause. Units 17, 21 and 22 concern the narrative and do not overlap T6 (M2)."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T2",
+        "note": "Unit 22 is framed as 'the stated intent allows', a reporting frame around the target's assertion rather than the bare assertion; mapped direct because a reader still takes it as making the claim that data may meet current or historical CMS requirements."
+      },
+      {
+        "tid": "T3",
+        "note": "Unit 34 opens with the flat denial 'A cost-benefit analysis is not required' (opposite-like) but goes on to name the exempted population ('the entire proposed rule', subsections (1)-(3)), so by question order it is inverse rather than opposite. Unit 34 is also broader than the target (it bundles the per-subsection grounds)."
+      },
+      {
+        "tid": "T3",
+        "note": "Units 55, 56 and 57 are primarily about the grounds for each subsection's exemption; they presuppose and restate that each subsection is exempt from analysis, so they were mapped inverse as restatements. Unit 56 does not use the word 'analysis' and relies on context. A stricter reader might count only unit 34."
+      },
+      {
+        "tid": "T4",
+        "note": "Unit 35 bundles the RFA exemption, its statutory ground, the applicability restriction and the 'fully exempt' scope line into one assertion; it is broader than T4 but clearly denies RFA requirements applying to the proposal."
+      },
+      {
+        "tid": "T5",
+        "note": "Unit 35's applicability content is narrower than T5 (the 'only ... not small business' restriction is folded into the assertion text) and is secondary to its main exemption claim; mapped direct under M3 because a reader takes it as stating which hospitals the rule applies to."
+      }
+    ],
+    "reference_defects": [],
+    "other": [
+      "Units 7, 8 and 10 share unit 9's evidence span but assert different things (hearing time, registration instruction, written comments) and were not mapped to T1.",
+      "Unit 42 (hospital shall submit a machine-readable file annually) was not mapped to T5: it asserts a submission duty, not applicability, and its evidence does not overlap the T5 quote or R7 clause."
+    ]
+  }
+}

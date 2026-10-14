@@ -1,0 +1,37 @@
+{
+  "schema": "r19.final.v1",
+  "date": "2026-10-14",
+  "outcome": "O3",
+  "outcome_meaning": "O3: clause-only bar unreachable after S2 under both adjudicators; S3 not run (pre-registered futility). Typed layer untestable (E8).",
+  "A7_effect": "Fixed the R18 failure mode: every EXCEPT relation now has complete clause text on a leaf (S1 R2-R4 and S2 R3-R6, R9; R18 S1 had 0/3). But all 7 score 'broad', not 'correct': the leaves also carry extra text above 2x the clause length (M8). Broad counts as acceptable, not correct.",
+  "S1_OPQ": {
+    "source": "26-19-039",
+    "state": 13, "validated": true, "completion_tokens": 5188, "reported_cost_usd": "0.063596",
+    "scores": "A1 = A2 (exact 3/3): R2, R3, R4 (EXCEPT) broad; R1 excluded (UNRESOLVED)."
+  },
+  "S2_OPQ": {
+    "source": "26-19-041 (never inspected before this run)",
+    "state": 13, "validated": true, "completion_tokens": 5682, "reported_cost_usd": "0.069321",
+    "scores": "A1 = A2 (exact 9/9): R1, R2, R8 (COND, critical) correct; R3-R6, R9 (EXCEPT) broad; R7 (RESTRICT, critical) scope_change.",
+    "decisive_failure": "R7 'only licensed acute care hospitals which do not meet the definition of small business': unit 35 links it with role 'if' (sufficient condition) instead of 'onlyif' (restriction), so the scope changes. This is a critical harmful verdict, failing D4 on its own."
+  },
+  "S3_OPQ": "SKIP (futility)",
+  "agreement": "Pooled exact agreement 12/12, kappa 1.",
+  "bar_arithmetic": "D3 needs correct >= 12/15 pooled. After S2: 3 correct of 12 scored, with 3 relations left in S3, so unreachable on D3 independently of the D4 critical failure.",
+  "spend": {
+    "R19_provider_reported_usd": "0.132917",
+    "R19_key_usage_delta_nanousd": 132917000,
+    "R19_ledger_debit_nanousd": 540000000,
+    "U0_nanousd": 118819500,
+    "final_key_usage_nanousd": 251736500,
+    "cumulative_key_usage_usd": "0.2517365 (R17 0.0594085 + R18 0.059411 + R19 0.132917)",
+    "close_debit_nanousd": 0,
+    "invoice_verified": false
+  },
+  "interpretation": "A7 worked as intended: the R18 missing-text failure is gone, including on a source not inspected when A7 was written (S2). Two different gaps remain. (1) Breadth: EXCEPT leaves over-quote, so they score broad, not correct. (2) Role choice: a critical 'only' restriction was encoded as 'if'. The prompt defines onlyif ('source restriction'); this is n=1 and not established as a prompt gap versus a model error. The clause-only profile has not met its pre-registered bar in three rounds (R17 mechanical, R18 missing text, R19 breadth plus one critical role error).",
+  "records": {
+    "decisions": ["adjudication/decision-s1/decide.out.json", "adjudication/decision-s2/decide.out.json"],
+    "ledger": "run-live/stage-run/ledger.jsonl",
+    "gate_S2": "run-live/gates/S2-OPQ.json"
+  }
+}

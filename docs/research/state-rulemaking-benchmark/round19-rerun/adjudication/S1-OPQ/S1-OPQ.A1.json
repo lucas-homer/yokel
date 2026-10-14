@@ -1,0 +1,70 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r19-adj-S1-OPQ-A1"
+  },
+  "call_id": "S1-OPQ",
+  "source_id": "26-19-039",
+  "output_sha256": "fa6733c67eacfe35a11dfcedb6ad790b2f33b53143fb0e49b514fa1ffa5fb815",
+  "reference_sha256": "a4a8d8dc3de474dfe759a24af8451b9e01d0f8c6dd9fd5353f9041c7032db778",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 7,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 7 states that the proposal is exempt under RCW 34.05.310(4) or 34.05.330(1); its evidence [111,172] covers the target quote and the R1 clause. Same actor (the proposal), same assertion (is exempt), same modality."
+    },
+    {
+      "tid": "T2",
+      "units": [
+        {
+          "unit": 41,
+          "form": "inverse"
+        }
+      ],
+      "basis": "Unit 41 states that the rule is exempt from the RCW 34.05.328 requirements including a cost-benefit analysis, i.e. the implied target (those requirements apply) does not hold for the named exempted thing, this rule. Evidence [3211,3456] overlaps the target quote and the R2 clause."
+    },
+    {
+      "tid": "T3",
+      "units": [
+        {
+          "unit": 42,
+          "form": "inverse"
+        },
+        {
+          "unit": 46,
+          "form": "inverse"
+        }
+      ],
+      "basis": "Unit 42 states that the proposal or portions of it are exempt from the Regulatory Fairness Act, denying the implied target for the named population; evidence overlaps the target quote and the R3 clause. Unit 46 states that the rule proposal is fully exempt, restating the exemption for the whole proposal; evidence [4064,4120] overlaps the R4 clause."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T2",
+        "note": "inverse vs opposite is close: the exempted thing (this rule) is the same object the gloss names, so the unit could be read as a flat denial. Chose inverse because the unit names the exempted thing and the circumstance (content dictated by statute), matching the \"X is exempt from Y\" pattern in question 2."
+      },
+      {
+        "tid": "T3",
+        "note": "Unit 46 does not itself name the Regulatory Fairness Act; what the rule proposal is fully exempt from is supplied only by the enclosing block. Mapped inverse because the reference attaches R4 to T3 on the same basis and a reader of the unit with its evidence takes it as the scope of that exemption. A stricter reading would leave unit 46 unmapped."
+      },
+      {
+        "tid": "T1",
+        "note": "Unit 7 hedges with \"is reported exempt\"; treated as attribution wording, not a change in modality direction."
+      }
+    ],
+    "reference_defects": [],
+    "other": [
+      "Units 43, 44 and 45 restate the Explanation of exemptions (statutory mandates), not the applicability of the Regulatory Fairness Act, so they do not map to T3.",
+      "No unit separately asserts \"A cost-benefit analysis is not required under RCW 34.05.328\"; unit 41 evidence spans that sentence but its assertion is only the exemption statement."
+    ]
+  }
+}

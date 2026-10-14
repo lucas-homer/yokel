@@ -1,0 +1,27 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {"role": "A2", "model": "claude-opus-5-5", "effort": "high", "session": "r19-adj-S2-OPQ-A2"},
+  "call_id": "S2-OPQ",
+  "source_id": "26-19-041",
+  "output_sha256": "b5d8732c3ff696fd82567242508f024bd23021ec57ca2866a9268201840545b2",
+  "reference_sha256": "cd58e31c8559e377b2cba3604cf8a0ed3f4ac1f0cf5542c8bb002555d7677471",
+  "mappings": [
+    {"tid": "T1", "units": [{"unit": 9, "form": "direct"}], "basis": "Unit 9 states that registrants will receive a confirmation email containing webinar joining information; its evidence (431-754) covers the target quote."},
+    {"tid": "T2", "units": [{"unit": 22, "form": "direct"}], "basis": "Unit 22 states that submitted data may meet current or historical CMS requirements; its evidence (1711-2518) covers the target quote and the R2 clause."},
+    {"tid": "T3", "units": [{"unit": 34, "form": "inverse"}], "basis": "Unit 34 states a cost-benefit analysis is not required because the entire proposed rule (with each of subsections (1)-(3)) is exempt, i.e. the analysis requirement does not hold for the named exempted rule/subsections; its evidence covers the R3/R4 clauses."},
+    {"tid": "T4", "units": [{"unit": 35, "form": "inverse"}], "basis": "Unit 35 states the entire proposal is fully exempt from Regulatory Fairness Act requirements, naming the exempted proposal; its evidence covers the target quote and the R5/R6/R9 clauses."},
+    {"tid": "T5", "units": [{"unit": 35, "form": "direct"}], "basis": "Unit 35 also states the proposal applies only to licensed acute care hospitals not defined as small businesses, which asserts the rule applies to a hospital population; its evidence (4651-4864) covers the target quote and R7 clause."},
+    {"tid": "T6", "units": [{"unit": 45, "form": "direct"}], "basis": "Unit 45 states that to meet subsection (1) a hospital may submit a machine-readable file meeting 45 C.F.R. Part 180 subparts A and B; its evidence (5422-5767) covers the target quote and R8 clause."}
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {"tid": "T2", "note": "Units 20 and 21 share the same broad evidence span (1711-2518) but assert different things (the Jan 1, 2025 federal minimum; permission to include additional CMS elements); not mapped under M1/M3."},
+      {"tid": "T3", "note": "Unit 34 classed inverse rather than opposite because it names the exempted case ('the entire proposed rule', subsections (1)-(3)), mirroring the reference's EXCEPT framing; its leading clause 'A cost-benefit analysis is not required' alone would read as opposite. Unit 34 is also broader (folds in the per-subsection grounds)."},
+      {"tid": "T3", "note": "Units 55, 56 and 57 overlap the R4 clauses and presuppose per-subsection analysis exemptions, but their assertions are the grounds/explanations for the exemptions (a different assertion); not mapped. Unit 55 ('Subsection (1)'s analysis exemption is explained as procedural') is the closest and could arguably be read as inverse for subsection (1)."},
+      {"tid": "T4", "note": "Unit 35 classed inverse (names 'the entire proposal' as exempt), consistent with T3; it is broader, also folding in the applicability restriction and statutory citations."},
+      {"tid": "T5", "note": "Unit 35 is broader than T5: the applicability to licensed acute care hospitals is folded in as the reason for the RFA exemption. Mapped direct under M3/M7 because a reader takes it as stating whom the rule applies to. Unit 18 (hospitals licensed under chapter 70.41 RCW) and unit 42 have no evidence overlap with T5 and are not mapped."}
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

@@ -1,0 +1,2851 @@
+{
+ "call_id": "S2-OPQ",
+ "source_id": "26-19-041",
+ "part_a": "## Part A — Adjudicator brief (the only part shown to adjudicators)\n\n### A1. Inputs and isolation\n\nYou receive one packet containing exactly:\n\n1. the source text;\n2. the frozen reference for that source (format `r17.ref.v3`). Use its targets, and use each relation's `clause` only for rule M2; you may ignore `rationale`;\n3. one extraction output record: a JSON object with `units` (each has `id`, `assertion` and `evidence`, a list of `[start, end]` codepoint ranges into the source), `nodes` and `links`;\n4. the values `call_id`, `source_id`, `output_sha256` and `reference_sha256`, which you copy into your answer unchanged;\n5. this Part A.\n\nWork in a **fresh session** with no other context. Do not open other files, other outputs, other adjudicators' files or any scores. You will not be told which output format variant produced the record. Do not infer quality from structure. Your job is the mapping only.\n\n### A2. The mapping task\n\nFor **every** reference target (`T1`, `T2`, ...), list the output units that assert the target, each with a `form`. Decide the form by asking these questions in order, using the unit's `assertion` read with its `evidence`:\n\n1. **`direct`**: does the unit state the target's assertion itself, with the same action, the same actor or object, and the same modality direction? (\"Comments must be received by the agency.\")\n2. **`inverse`**: does the unit state that the target's assertion does **not** hold for a population, case or circumstance **that the assertion names**? (\"Small vendors are exempt from the fee\", when the target is \"the fee [applies]\"; \"The rule does not apply to tribal land.\")\n3. **`opposite`**: does the unit deny the target's assertion for the same actor, action or object **without naming any** such population, case or circumstance? (\"No hearing will be held.\" \"Night markets need not close by midnight.\")\n4. Otherwise the unit does not map to this target.\n\nRules:\n\n- **M1 Meaning first.** Map from the assertion's meaning. Overlapping evidence alone is never enough.\n- **M2 Evidence must touch.** A mapped unit's `evidence` must overlap the target's quote or the `clause` of at least one of that target's relations. Never map a unit with no such overlap. If you think one should be mapped anyway, record a `mapping_doubts` note instead.\n- **M3 Scope.** A unit whose assertion is **broader** than the target (for example the whole paragraph's gist) or **narrower** (for example the target with a condition folded into the assertion text) still maps `direct` if a reader of that unit would take it as making the target's assertion. Note the breadth in `mapping_doubts`. A unit asserting a **different** assertion (a different actor, action or object) does not map.\n- **M4 Denials are mapped, not dropped.** A unit that contradicts the target is listed as `opposite` (question 3). Do not leave it out and do not move it to notes.\n- **M5 Several units.** List every unit that independently asserts the target (duplicates and restatements). Order does not matter.\n- **M6 None.** If no unit asserts the target, give an empty list. That is a legitimate answer.\n- **M7 Many-to-many.** One unit may map to several targets if it genuinely asserts each one.\n- **M8 Do not judge conditions.** Do not look at whether the conditions, links or nodes are right. Map from the assertion and evidence only. Condition handling is scored mechanically after you finish.\n\n### A3. Notes (never change scores)\n\n- `mapping_doubts`: a list of `{\"tid\": \"T1\", \"note\": \"...\"}` for close decisions.\n- `reference_defects`: a list of `{\"rid\": \"R2\" or null, \"kind\": k, \"note\": \"...\"}` where you believe the reference itself is wrong. `k` is one of `missing_relation`, `wrong_target`, `wrong_class`, `segmentation`, `critical_flag`, `quote`, `other`. These feed a sensitivity analysis only.\n- `other`: a list of strings.\n\n### A4. Output (exactly one JSON object)\n\n```json\n{\n  \"spec_version\": \"r17.adj.v2\",\n  \"adjudicator\": {\"role\": \"A1\", \"model\": \"claude-fable-5-1\", \"effort\": \"high\", \"session\": \"<thread id>\"},\n  \"call_id\": \"<given>\",\n  \"source_id\": \"<given>\",\n  \"output_sha256\": \"<given>\",\n  \"reference_sha256\": \"<given>\",\n  \"mappings\": [\n    {\"tid\": \"T1\", \"units\": [{\"unit\": 3, \"form\": \"direct\"}], \"basis\": \"Unit 3 states that ...\"}\n  ],\n  \"notes\": {\"mapping_doubts\": [], \"reference_defects\": [], \"other\": []}\n}\n```\n\nEvery reference target appears exactly once in `mappings`. `basis` is one or two sentences; it is kept for audit and never compared.\n\n---\n",
+ "part_a_sha256": "1ed8a0a33caf4eef8d440c9f5bab322f929a91b27656592a8616c02867516fcf",
+ "source": "WSR 26-19-041\n\nPROPOSED RULES\n\nDEPARTMENT OF HEALTH\n\n[Filed September 11, 2026, 7:54 a.m.]\n\nOriginal Notice.\n\nPreproposal statement of inquiry was filed as WSR 25-23-011.\n\nTitle of Rule and Other Identifying Information: Hospital price transparency requirements; the department of health (department) is proposing new WAC 246-320-148 to provide clarity and direction related to hospital price transparency reporting requirements.\n\nHearing Location(s): On October 27, 2026, at 2:00 p.m., via Zoom. Register in advance for this webinar at https://us02web.zoom.us/webinar/register/WN_ciEnX_8PQQm7RlxIwJUlng. After registering, you will receive a confirmation email containing information about joining the webinar. You may also submit comments in writing. \n\nDate of Intended Adoption: November 3, 2026.\n\nSubmit Written Comments to: Tiffani Buck, Department of Health, P.O. Box 47853, Olympia, WA 98504-7853, email ochsfacilities@doh.wa.gov, web https://fortress.wa.gov/doh/policyreview/, beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.\n\nAssistance for Persons with Disabilities: Contact Tiffani Buck, phone 564-233-1121, TTY 711, email ochsfacilities@doh.wa.gov, by October 13, 2026.\n\nPurpose of the Proposal and Its Anticipated Effects, Including Any Changes in Existing Rules: The proposed new WAC 246-320-148: \n\n(1) Establishes an annual deadline of July 1st for hospitals to submit their price transparency data to the department in subsection; \n\n(2) Clarifies which data requirements may be submitted; and \n\n(3) Ties this reporting requirement to existing enforcement authority for hospitals licensed under chapter  70.41 RCW and chapter 246-320 WAC in subsection for clarity.\n\nSubsection (2) of the proposed rule addresses confusion expressed by hospitals regarding state requirements under RCW  70.41.560 and federal price transparency requirements under 42 C.F.R. Part 180 by clarifying that the federal requirements, as they existed as of January 1, 2025, are the required minimum. However, any additional or different types of data elements beyond what was required as of January 1, 2025, by the Centers for Medicare and Medicaid Services (CMS) may be included in the data submitted to the department. The intent is to clarify that data submitted to the department may meet the current or historical CMS requirements, as long as CMS has not removed reporting requirements. Changes made by CMS to 45 C.F.R. Part 180 since January 1, 2025, have only added data reporting elements. \n\nReasons Supporting Proposal: The proposed new rule incorporates the requirements of RCW  70.41.560 while clarifying how the department will interpret if the hospitals have met them or not. Together, RCW  70.41.560 and the proposed new rule set a standard that will improve compliance, allow hospitals to report in a way that meets requirements of this state legislature as well as federal standards, and increase the amount of information available to the public regarding the costs for services and items. It also provides some flexibility to hospitals in an effort to reduce the burden of repetitive and slightly different reporting requirements. Rule making is necessary to provide enforceable minimum standards for the reporting of hospital price transparency and cost data while aligning with RCW  70.41.560.\n\nStatutory Authority for Adoption: RCW  70.41.030 and SSB 5493 (chapter 146, Laws of 2025), codified under RCW  70.41.560. \n\nStatute Being Implemented: RCW  70.41.560.\n\nRule is not necessitated by federal law, federal or state court decision.\n\nName of Proponent: Department of health, governmental.\n\nName of Agency Personnel Responsible for Drafting, Implementation, and Enforcement: Tiffani Buck, 111 Israel Road S.E., Tumwater, WA 98501, 564-233-1121.\n\nA school district fiscal impact statement is not required under RCW  28A.305.135.\n\nA cost-benefit analysis is not required under RCW  34.05.328. The entire proposed rule is exempt from analysis: Subsection (1) is exempt under RCW  34.05.328 (5)(c)(i) as it is a procedural rule; subsection (2) is exempt under RCW  34.05.328 (5)(b)(iii) as it incorporates Washington state statute without material change and RCW  34.05.328 (5)(b)(iv) as it clarifies that submission of additional information is not in violation of the law; and subsection (3) is exempt under RCW  34.05.328 (5)(b)(iv) as it provides clarity by connecting data reporting requirements to existing enforcement standards in rule.\n\nThis rule proposal, or portions of the proposal, is exempt from requirements of the Regulatory Fairness Act because the proposal: \n\nIs exempt under RCW  19.85.025(4).\n\nExplanation of exemptions: The entire proposed rule is exempt under RCW  19.85.025(4) as it only applies to licensed acute care hospitals which do not meet the definition of \"small business\" under RCW  19.85.020.\n\nScope of exemption for rule proposal:\n\nIs fully exempt.\n\nSeptember 10, 2026\n\nKristin Peterson, JD\n\nChief of Policy\n\n for Dennis E. Worsham\n\nSecretary of Health\n\nRDS-7332.2\n\nNEW SECTION\n\nWAC 246-320-148Hospital price transparency reporting requirements.\n\n\n(1) A hospital shall submit a machine-readable file containing the most recent list of all standard charges as described in RCW  70.41.560 to the department on an annual basis beginning July 1, 2027. All lists required under RCW  70.41.560 and this section must be submitted by July 1st of each year.\n\n(2) To meet the requirements of subsection (1) of this section, a hospital may submit to the department a machine-readable file that meets the requirements for rules related to hospital price transparency pursuant to Title 45 C.F.R. Part 180, subparts A and B, if the information submitted is not less than what was required on January 1, 2025.\n\n(3) The department may assess fines under WAC 246-320-013 against a hospital that fails to comply with this section.",
+ "reference": {
+  "spec_version": "r17.ref.v3",
+  "source_id": "26-19-041",
+  "source_text_sha256": "82868cf622ab60cba98f438eb0b443cf36a4745b45188e7a36f643bd155de4f5",
+  "targets": [
+   {
+    "tid": "T1",
+    "quote": {
+     "text": "you will receive a confirmation email containing information about joining the webinar",
+     "start": 624,
+     "end": 710,
+     "occurrence": 1
+    },
+    "gloss": "Registrants receive a confirmation email with webinar joining information."
+   },
+   {
+    "tid": "T2",
+    "quote": {
+     "text": "data submitted to the department may meet the current or historical CMS requirements",
+     "start": 2270,
+     "end": 2354,
+     "occurrence": 1
+    },
+    "gloss": "Submitted data may meet either current or historical CMS requirements."
+   },
+   {
+    "tid": "T3",
+    "quote": {
+     "text": "analysis",
+     "start": 3973,
+     "end": 3981,
+     "occurrence": 2
+    },
+    "gloss": "implied: the cost-benefit analysis requirement applies to the proposed rule"
+   },
+   {
+    "tid": "T4",
+    "quote": {
+     "text": "requirements of the Regulatory Fairness Act",
+     "start": 4547,
+     "end": 4590,
+     "occurrence": 1
+    },
+    "gloss": "implied: the requirements of the Regulatory Fairness Act apply to this rule proposal"
+   },
+   {
+    "tid": "T5",
+    "quote": {
+     "text": "applies to",
+     "start": 4748,
+     "end": 4758,
+     "occurrence": 1
+    },
+    "gloss": "The proposed rule applies to a population of hospitals."
+   },
+   {
+    "tid": "T6",
+    "quote": {
+     "text": "a hospital may submit to the department a machine-readable file that meets the requirements for rules related to hospital price transparency pursuant to Title 45 C.F.R. Part 180, subparts A and B",
+     "start": 5486,
+     "end": 5681,
+     "occurrence": 1
+    },
+    "gloss": "A hospital may satisfy subsection (1) by submitting a federal-format (45 CFR 180) machine-readable file."
+   }
+  ],
+  "relations": [
+   {
+    "rid": "R1",
+    "tid": "T1",
+    "class": "COND",
+    "introducer": [
+     {
+      "text": "After",
+      "start": 605,
+      "end": 610,
+      "occurrence": 1
+     }
+    ],
+    "clause": [
+     {
+      "text": "After registering",
+      "start": 605,
+      "end": 622,
+      "occurrence": 1
+     }
+    ],
+    "excluded": [],
+    "logic": {
+     "nid": "N1",
+     "op": "PART",
+     "quotes": [
+      {
+       "text": "registering",
+       "start": 611,
+       "end": 622,
+       "occurrence": 1
+      }
+     ],
+     "markers": []
+    },
+    "rationale": "'After' is a temporal trigger: the joining information arrives once the person has registered; nothing says it is the only route, so COND.",
+    "critical": true,
+    "critical_reason": "Decides how a member of the public obtains the information needed to join the hearing webinar.",
+    "contested": false,
+    "contested_reason": ""
+   },
+   {
+    "rid": "R2",
+    "tid": "T2",
+    "class": "COND",
+    "introducer": [
+     {
+      "text": "as long as",
+      "start": 2356,
+      "end": 2366,
+      "occurrence": 1
+     }
+    ],
+    "clause": [
+     {
+      "text": "as long as CMS has not removed reporting requirements",
+      "start": 2356,
+      "end": 2409,
+      "occurrence": 1
+     }
+    ],
+    "excluded": [],
+    "logic": {
+     "nid": "N1",
+     "op": "PART",
+     "quotes": [
+      {
+       "text": "CMS has",
+       "start": 2367,
+       "end": 2374,
+       "occurrence": 1
+      },
+      {
+       "text": "removed reporting requirements",
+       "start": 2379,
+       "end": 2409,
+       "occurrence": 1
+      }
+     ],
+     "markers": [
+      {
+       "text": "not",
+       "start": 2375,
+       "end": 2378,
+       "occurrence": 1
+      }
+     ]
+    },
+    "rationale": "'as long as' states the circumstance under which the permission holds; it is conditional wording without an explicit exclusive marker such as 'only', so COND rather than RESTRICT. 'not' negates only this component's predicate (CMS has removed), so it is a PART marker (rule 4).",
+    "critical": true,
+    "critical_reason": "Decides whether a hospital's submission meeting historical rather than current CMS requirements is acceptable.",
+    "contested": false,
+    "contested_reason": ""
+   },
+   {
+    "rid": "R3",
+    "tid": "T3",
+    "class": "EXCEPT",
+    "introducer": [
+     {
+      "text": "is exempt from",
+      "start": 3958,
+      "end": 3972,
+      "occurrence": 1
+     }
+    ],
+    "clause": [
+     {
+      "text": "The entire proposed rule is exempt from",
+      "start": 3933,
+      "end": 3972,
+      "occurrence": 1
+     }
+    ],
+    "excluded": [],
+    "logic": {
+     "nid": "N1",
+     "op": "PART",
+     "quotes": [
+      {
+       "text": "The entire proposed rule",
+       "start": 3933,
+       "end": 3957,
+       "occurrence": 1
+      }
+     ],
+     "markers": []
+    },
+    "rationale": "Assertion phrased as the exception itself (rule 6). No sentence states that the analysis is required, but the sentence names the thing exempted from ('analysis'), so that noun phrase is the implied target (rule 6.2); the PART is the exempted thing, the entire proposed rule.",
+    "critical": false,
+    "critical_reason": "",
+    "contested": false,
+    "contested_reason": ""
+   },
+   {
+    "rid": "R4",
+    "tid": "T3",
+    "class": "EXCEPT",
+    "introducer": [
+     {
+      "text": "is exempt",
+      "start": 3998,
+      "end": 4007,
+      "occurrence": 2
+     }
+    ],
+    "clause": [
+     {
+      "text": "Subsection (1) is exempt",
+      "start": 3983,
+      "end": 4007,
+      "occurrence": 1
+     },
+     {
+      "text": "subsection (2) is exempt",
+      "start": 4067,
+      "end": 4091,
+      "occurrence": 1
+     },
+     {
+      "text": "and subsection (3) is exempt",
+      "start": 4313,
+      "end": 4341,
+      "occurrence": 1
+     }
+    ],
+    "excluded": [],
+    "logic": {
+     "nid": "N1",
+     "op": "AND",
+     "markers": [
+      {
+       "text": "and",
+       "start": 4313,
+       "end": 4316,
+       "occurrence": 20
+      },
+      {
+       "text": "is exempt",
+       "start": 4082,
+       "end": 4091,
+       "occurrence": 3
+      },
+      {
+       "text": "is exempt",
+       "start": 4332,
+       "end": 4341,
+       "occurrence": 4
+      }
+     ],
+     "children": [
+      {
+       "nid": "N2",
+       "op": "PART",
+       "quotes": [
+        {
+         "text": "Subsection (1)",
+         "start": 3983,
+         "end": 3997,
+         "occurrence": 1
+        }
+       ],
+       "markers": []
+      },
+      {
+       "nid": "N3",
+       "op": "PART",
+       "quotes": [
+        {
+         "text": "subsection (2)",
+         "start": 4067,
+         "end": 4081,
+         "occurrence": 1
+        }
+       ],
+       "markers": []
+      },
+      {
+       "nid": "N4",
+       "op": "PART",
+       "quotes": [
+        {
+         "text": "subsection (3)",
+         "start": 4317,
+         "end": 4331,
+         "occurrence": 1
+        }
+       ],
+       "markers": []
+      }
+     ]
+    },
+    "rationale": "Assertion phrased as the exception (rule 6) on the implied analysis target, elaborating R3 subsection by subsection. The three subsection clauses are one semicolon-delimited list closed by an explicit 'and' with the exempting expression repeated, so under rule 2 (applied before rule 3) they are one relation: an AND node over the three subsection PARTs, with the final 'and' and the repeated 'is exempt' as markers of the joining node. The statutory citations and the 'as it ...' grounds (including the inner 'and' joining subsection (2)'s two grounds) are reasons for the exemption, not conditions, and are outside the clause.",
+    "critical": false,
+    "critical_reason": "",
+    "contested": false,
+    "contested_reason": ""
+   },
+   {
+    "rid": "R5",
+    "tid": "T4",
+    "class": "EXCEPT",
+    "introducer": [
+     {
+      "text": "is exempt from",
+      "start": 4532,
+      "end": 4546,
+      "occurrence": 2
+     }
+    ],
+    "clause": [
+     {
+      "text": "This rule proposal, or portions of the proposal, is exempt from",
+      "start": 4483,
+      "end": 4546,
+      "occurrence": 1
+     }
+    ],
+    "excluded": [],
+    "logic": {
+     "nid": "N1",
+     "op": "OR",
+     "markers": [
+      {
+       "text": "or",
+       "start": 4503,
+       "end": 4505,
+       "occurrence": 42
+      }
+     ],
+     "children": [
+      {
+       "nid": "N2",
+       "op": "PART",
+       "quotes": [
+        {
+         "text": "This rule proposal",
+         "start": 4483,
+         "end": 4501,
+         "occurrence": 1
+        }
+       ],
+       "markers": []
+      },
+      {
+       "nid": "N3",
+       "op": "PART",
+       "quotes": [
+        {
+         "text": "portions of the proposal",
+         "start": 4506,
+         "end": 4530,
+         "occurrence": 1
+        }
+       ],
+       "markers": []
+      }
+     ]
+    },
+    "rationale": "Assertion phrased as the exception (rule 6); the sentence names the thing exempted from, so that noun phrase is the implied target (rule 6.2). The exempted subject is coordinated by an explicit 'or', so it is an OR node over two PARTs (rule 4). 'because the proposal: Is exempt under RCW 19.85.025(4)' states the ground, not a condition, and is outside the clause.",
+    "critical": false,
+    "critical_reason": "",
+    "contested": false,
+    "contested_reason": ""
+   },
+   {
+    "rid": "R6",
+    "tid": "T4",
+    "class": "EXCEPT",
+    "introducer": [
+     {
+      "text": "is exempt",
+      "start": 4703,
+      "end": 4712,
+      "occurrence": 6
+     }
+    ],
+    "clause": [
+     {
+      "text": "The entire proposed rule is exempt",
+      "start": 4678,
+      "end": 4712,
+      "occurrence": 2
+     }
+    ],
+    "excluded": [],
+    "logic": {
+     "nid": "N1",
+     "op": "PART",
+     "quotes": [
+      {
+       "text": "The entire proposed rule",
+       "start": 4678,
+       "end": 4702,
+       "occurrence": 2
+      }
+     ],
+     "markers": []
+    },
+    "rationale": "Separately introduced restatement of the Regulatory Fairness Act exemption (rule 3) under the 'Explanation of exemptions' heading; this sentence does not itself name the thing exempted from, but the immediately preceding sentence does, so it attaches to T4 rather than being UNRESOLVED under rule 6.3. The citation and the 'as it only applies...' ground are outside the clause (the 'only' restriction is R7).",
+    "critical": false,
+    "critical_reason": "",
+    "contested": false,
+    "contested_reason": ""
+   },
+   {
+    "rid": "R7",
+    "tid": "T5",
+    "class": "RESTRICT",
+    "introducer": [
+     {
+      "text": "only",
+      "start": 4743,
+      "end": 4747,
+      "occurrence": 2
+     }
+    ],
+    "clause": [
+     {
+      "text": "only",
+      "start": 4743,
+      "end": 4747,
+      "occurrence": 2
+     },
+     {
+      "text": "licensed acute care hospitals which do not meet the definition of \"small business\" under RCW  19.85.020",
+      "start": 4759,
+      "end": 4862,
+      "occurrence": 1
+     }
+    ],
+    "excluded": [],
+    "logic": {
+     "nid": "N1",
+     "op": "PART",
+     "quotes": [
+      {
+       "text": "licensed acute care hospitals which do",
+       "start": 4759,
+       "end": 4797,
+       "occurrence": 1
+      },
+      {
+       "text": "meet the definition of \"small business\" under RCW  19.85.020",
+       "start": 4802,
+       "end": 4862,
+       "occurrence": 1
+      }
+     ],
+     "markers": [
+      {
+       "text": "not",
+       "start": 4798,
+       "end": 4801,
+       "occurrence": 7
+      }
+     ]
+    },
+    "rationale": "Exclusive wording 'only' limits the population the rule applies to, so RESTRICT with the whole restricted population as the PART, head noun included (rule 7); the clause is discontinuous around the target words 'applies to'. 'not' negates only the relative-clause predicate of this component (do meet the definition), so it is a PART marker rather than a NOT node.",
+    "critical": true,
+    "critical_reason": "Decides which hospitals the rule applies to at all (only licensed acute care hospitals).",
+    "contested": false,
+    "contested_reason": ""
+   },
+   {
+    "rid": "R8",
+    "tid": "T6",
+    "class": "COND",
+    "introducer": [
+     {
+      "text": "if",
+      "start": 5683,
+      "end": 5685,
+      "occurrence": 14
+     }
+    ],
+    "clause": [
+     {
+      "text": "if the information submitted is not less than what was required on January 1, 2025",
+      "start": 5683,
+      "end": 5765,
+      "occurrence": 1
+     }
+    ],
+    "excluded": [],
+    "logic": {
+     "nid": "N1",
+     "op": "PART",
+     "quotes": [
+      {
+       "text": "the information submitted is",
+       "start": 5686,
+       "end": 5714,
+       "occurrence": 1
+      },
+      {
+       "text": "less than what was required on January 1, 2025",
+       "start": 5719,
+       "end": 5765,
+       "occurrence": 1
+      }
+     ],
+     "markers": [
+      {
+       "text": "not",
+       "start": 5715,
+       "end": 5718,
+       "occurrence": 8
+      }
+     ]
+    },
+    "rationale": "'if' gives the circumstance under which the permission to submit the federal-format file holds; no exclusive wording, so COND. The object qualifier 'that meets the requirements ... subparts A and B' is part of the target (rule 7). 'not' negates only this component's predicate (is less than), so it is a PART marker split around the negator.",
+    "critical": true,
+    "critical_reason": "Decides whether a hospital's federal-format submission satisfies the state reporting requirement.",
+    "contested": false,
+    "contested_reason": ""
+   },
+   {
+    "rid": "R9",
+    "tid": "T4",
+    "class": "EXCEPT",
+    "introducer": [
+     {
+      "text": "Is exempt",
+      "start": 4615,
+      "end": 4624,
+      "occurrence": 1
+     }
+    ],
+    "clause": [
+     {
+      "text": "the proposal",
+      "start": 4599,
+      "end": 4611,
+      "occurrence": 2
+     },
+     {
+      "text": "Is exempt",
+      "start": 4615,
+      "end": 4624,
+      "occurrence": 1
+     }
+    ],
+    "excluded": [],
+    "logic": {
+     "nid": "N1",
+     "op": "PART",
+     "quotes": [
+      {
+       "text": "the proposal",
+       "start": 4599,
+       "end": 4611,
+       "occurrence": 2
+      }
+     ],
+     "markers": []
+    },
+    "rationale": "Assertion phrased as the exception (rule 6) inside the because-clause of the R5 sentence: its subject is 'the proposal' (the colon and line breaks are form-template punctuation, not a sentence boundary) and the same sentence names the thing exempted from, the requirements of the Regulatory Fairness Act, so it attaches to T4 (rule 6.2). It is a separately introduced exempting expression (rules 1 and 3), so it is its own relation rather than part of R5. 'because' links it to R5 as a reason and the citation 'under RCW 19.85.025(4)' is authority, so both stay outside the clause, as with the other exemption grounds.",
+    "critical": false,
+    "critical_reason": "",
+    "contested": false,
+    "contested_reason": ""
+   }
+  ],
+  "out_of_scope_notes": [
+   "'have only added data reporting elements' (Purpose paragraph): 'only' is a focus adverb on the verb describing CMS's past changes, not a restriction on the application of an assertion; not recorded.",
+   "'how the department will interpret if the hospitals have met them or not' (Reasons paragraph): 'if' is an embedded question (whether), not a condition; not recorded.",
+   "'A school district fiscal impact statement is not required under RCW 28A.305.135' and 'A cost-benefit analysis is not required under RCW 34.05.328': plain negated statements of agency procedure that name neither an exempted population nor a governing assertion; no condition clause to record under rules 3-6.",
+   "The 'as ...' grounds after each 'is exempt' (e.g. 'as it is a procedural rule') and the statutory citations are reasons/authority for the exemptions, not conditions, restrictions or exceptions; they are left outside the relation clauses (R4, R6, R9).",
+   "'Scope of exemption for rule proposal:' / 'Is fully exempt.' is a form-template heading and its selected option: 'Is fully exempt.' is a sentence with no subject and names nothing exempted from, and 'rule proposal' appears only as the object of 'for' inside the heading label, so there is no stated exempted population to quote as a PART (rule 6); it restates the scope of the Regulatory Fairness Act exemption already recorded in R5/R6/R9 and is not recorded as a relation.",
+   "'To meet the requirements of subsection (1) of this section' (WAC (2)): purpose clause, not a condition; left outside T6/R10.",
+   "WAC (3) 'against a hospital that fails to comply with this section': relative-clause qualifier of the object, part of the assertion under rule 7; no relation recorded.",
+   "Comment and assistance deadlines ('beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.'; 'by October 13, 2026') and 'beginning July 1, 2027' are temporal qualifiers with no condition introducer; not recorded.",
+   "Extraction artifacts: double spaces inside citations (e.g. 'RCW  70.41.560') and missing space in 'WAC 246-320-148Hospital'."
+  ]
+ },
+ "output": {
+  "action_ready": false,
+  "completeness": "unverified",
+  "condition_coverage": "unverified",
+  "evaluation": "not_performed",
+  "evidence_match": "exact",
+  "links": [
+   {
+    "evidence": [],
+    "node_id": "c1",
+    "q": 0,
+    "r": "",
+    "role": "if",
+    "unit_id": 9
+   },
+   {
+    "evidence": [],
+    "node_id": "c2",
+    "q": 0,
+    "r": "",
+    "role": "obj",
+    "unit_id": 12
+   },
+   {
+    "evidence": [],
+    "node_id": "c14",
+    "q": 0,
+    "r": "",
+    "role": "obj",
+    "unit_id": 14
+   },
+   {
+    "evidence": [],
+    "node_id": "c15",
+    "q": 0,
+    "r": "",
+    "role": "if",
+    "unit_id": 18
+   },
+   {
+    "evidence": [],
+    "node_id": "c3",
+    "q": 0,
+    "r": "",
+    "role": "obj",
+    "unit_id": 21
+   },
+   {
+    "evidence": [],
+    "node_id": "c4",
+    "q": 0,
+    "r": "",
+    "role": "if",
+    "unit_id": 22
+   },
+   {
+    "evidence": [],
+    "node_id": "c5",
+    "q": 2,
+    "r": "Statutory basis cannot be resolved from supplied text.",
+    "role": "qual",
+    "unit_id": 33
+   },
+   {
+    "evidence": [],
+    "node_id": "c6",
+    "q": 0,
+    "r": "",
+    "role": "if",
+    "unit_id": 34
+   },
+   {
+    "evidence": [],
+    "node_id": "c7",
+    "q": 0,
+    "r": "",
+    "role": "if",
+    "unit_id": 35
+   },
+   {
+    "evidence": [],
+    "node_id": "c8",
+    "q": 0,
+    "r": "",
+    "role": "obj",
+    "unit_id": 42
+   },
+   {
+    "evidence": [],
+    "node_id": "c9",
+    "q": 0,
+    "r": "",
+    "role": "obj",
+    "unit_id": 44
+   },
+   {
+    "evidence": [],
+    "node_id": "c10",
+    "q": 0,
+    "r": "",
+    "role": "if",
+    "unit_id": 45
+   },
+   {
+    "evidence": [],
+    "node_id": "c11",
+    "q": 0,
+    "r": "",
+    "role": "obj",
+    "unit_id": 45
+   },
+   {
+    "evidence": [],
+    "node_id": "c12",
+    "q": 0,
+    "r": "",
+    "role": "if",
+    "unit_id": 46
+   },
+   {
+    "evidence": [],
+    "node_id": "c13",
+    "q": 2,
+    "r": "Referenced authority's content remains unresolved.",
+    "role": "acts",
+    "unit_id": 46
+   }
+  ],
+  "nodes": [
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s15",
+      "end": 711,
+      "fragment": [
+       "s15",
+       "After registering",
+       1,
+       "s15",
+       "joining the webinar.",
+       1
+      ],
+      "start": 605,
+      "text": "After registering, you will receive a confirmation email containing information about joining the webinar.",
+      "z": "s15"
+     }
+    ],
+    "id": "c1",
+    "model_gloss": "Registration precedes confirmation email.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s19",
+      "end": 1063,
+      "fragment": [
+       "s19",
+       "Submit Written Comments to:",
+       1,
+       "s19",
+       "at 11:59 p.m.",
+       1
+      ],
+      "start": 801,
+      "text": "Submit Written Comments to: Tiffani Buck, Department of Health, P.O. Box 47853, Olympia, WA 98504-7853, email ochsfacilities@doh.wa.gov, web https://fortress.wa.gov/doh/policyreview/, beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.",
+      "z": "s19"
+     }
+    ],
+    "id": "c2",
+    "model_gloss": "Written-comment submission window and destination.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s31",
+      "end": 2239,
+      "fragment": [
+       "s31",
+       "However, any additional",
+       1,
+       "s31",
+       "submitted to the department.",
+       1
+      ],
+      "start": 2019,
+      "text": "However, any additional or different types of data elements beyond what was required as of January 1, 2025, by the Centers for Medicare and Medicaid Services (CMS) may be included in the data submitted to the department.",
+      "z": "s31"
+     }
+    ],
+    "id": "c3",
+    "model_gloss": "Minimum federal requirements and permitted additional data.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s31",
+      "end": 2410,
+      "fragment": [
+       "s31",
+       "as long as CMS",
+       1,
+       "s31",
+       "reporting requirements.",
+       1
+      ],
+      "start": 2356,
+      "text": "as long as CMS has not removed reporting requirements.",
+      "z": "s31"
+     }
+    ],
+    "id": "c4",
+    "model_gloss": "CMS must not have removed reporting requirements.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s45",
+      "end": 3869,
+      "fragment": [
+       "s45",
+       "A school district",
+       1,
+       "s45",
+       "28A.305.135.",
+       1
+      ],
+      "start": 3788,
+      "text": "A school district fiscal impact statement is not required under RCW  28A.305.135.",
+      "z": "s45"
+     }
+    ],
+    "id": "c5",
+    "model_gloss": "School district fiscal impact statement exemption reference.",
+    "op": "R",
+    "q": 2,
+    "r": "Referenced statute is not supplied.",
+    "unresolved_reference": true
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s47",
+      "end": 4481,
+      "fragment": [
+       "s47",
+       "The entire proposed rule",
+       1,
+       "s47",
+       "standards in rule.",
+       1
+      ],
+      "start": 3933,
+      "text": "The entire proposed rule is exempt from analysis: Subsection (1) is exempt under RCW  34.05.328 (5)(c)(i) as it is a procedural rule; subsection (2) is exempt under RCW  34.05.328 (5)(b)(iii) as it incorporates Washington state statute without material change and RCW  34.05.328 (5)(b)(iv) as it clarifies that submission of additional information is not in violation of the law; and subsection (3) is exempt under RCW  34.05.328 (5)(b)(iv) as it provides clarity by connecting data reporting requirements to existing enforcement standards in rule.",
+      "z": "s47"
+     }
+    ],
+    "id": "c6",
+    "model_gloss": "Entire proposed rule cost-benefit exemption and subsection grounds.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s49",
+      "end": 4612,
+      "fragment": [
+       "s49",
+       "This rule proposal",
+       1,
+       "s49",
+       "proposal:",
+       1
+      ],
+      "start": 4483,
+      "text": "This rule proposal, or portions of the proposal, is exempt from requirements of the Regulatory Fairness Act because the proposal:",
+      "z": "s49"
+     },
+     {
+      "a": "s51",
+      "end": 4649,
+      "fragment": [
+       "s51",
+       "Is exempt",
+       1,
+       "s51",
+       "19.85.025(4).",
+       1
+      ],
+      "start": 4615,
+      "text": "Is exempt under RCW  19.85.025(4).",
+      "z": "s51"
+     },
+     {
+      "a": "s53",
+      "end": 4863,
+      "fragment": [
+       "s53",
+       "Explanation of exemptions:",
+       1,
+       "s53",
+       "19.85.020.",
+       1
+      ],
+      "start": 4651,
+      "text": "Explanation of exemptions: The entire proposed rule is exempt under RCW  19.85.025(4) as it only applies to licensed acute care hospitals which do not meet the definition of \"small business\" under RCW  19.85.020.",
+      "z": "s53"
+     },
+     {
+      "a": "s55",
+      "end": 4920,
+      "fragment": [
+       "s55",
+       "Scope of exemption",
+       1,
+       "s57",
+       "Is fully exempt.",
+       1
+      ],
+      "start": 4865,
+      "text": "Scope of exemption for rule proposal:\n\nIs fully exempt.",
+      "z": "s57"
+     }
+    ],
+    "id": "c7",
+    "model_gloss": "Regulatory Fairness Act exemption and exempted hospitals.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s76",
+      "end": 5319,
+      "fragment": [
+       "s76",
+       "a machine-readable file",
+       1,
+       "s76",
+       "July 1, 2027.",
+       1
+      ],
+      "start": 5148,
+      "text": "a machine-readable file containing the most recent list of all standard charges as described in RCW  70.41.560 to the department on an annual basis beginning July 1, 2027.",
+      "z": "s76"
+     }
+    ],
+    "id": "c8",
+    "model_gloss": "Annual submission contents, reporting basis and commencement.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s76",
+      "end": 5420,
+      "fragment": [
+       "s76",
+       "All lists required",
+       1,
+       "s76",
+       "July 1st of each year.",
+       1
+      ],
+      "start": 5320,
+      "text": "All lists required under RCW  70.41.560 and this section must be submitted by July 1st of each year.",
+      "z": "s76"
+     }
+    ],
+    "id": "c9",
+    "model_gloss": "Required lists covered by the annual deadline.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s78",
+      "end": 5766,
+      "fragment": [
+       "s78",
+       "if the information submitted",
+       1,
+       "s78",
+       "January 1, 2025.",
+       1
+      ],
+      "start": 5683,
+      "text": "if the information submitted is not less than what was required on January 1, 2025.",
+      "z": "s78"
+     }
+    ],
+    "id": "c10",
+    "model_gloss": "Optional federal-compliant file and minimum-information condition.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s78",
+      "end": 5682,
+      "fragment": [
+       "s78",
+       "To meet the requirements",
+       1,
+       "s78",
+       "subparts A and B,",
+       1
+      ],
+      "start": 5426,
+      "text": "To meet the requirements of subsection (1) of this section, a hospital may submit to the department a machine-readable file that meets the requirements for rules related to hospital price transparency pursuant to Title 45 C.F.R. Part 180, subparts A and B,",
+      "z": "s78"
+     }
+    ],
+    "id": "c11",
+    "model_gloss": "Federal file requirements used to satisfy subsection (1).",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s80",
+      "end": 5884,
+      "fragment": [
+       "s80",
+       "against a hospital",
+       1,
+       "s80",
+       "this section.",
+       1
+      ],
+      "start": 5826,
+      "text": "against a hospital that fails to comply with this section.",
+      "z": "s80"
+     }
+    ],
+    "id": "c12",
+    "model_gloss": "Hospital noncompliance permits fines.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s80",
+      "end": 5825,
+      "fragment": [
+       "s80",
+       "under WAC 246-320-013",
+       1,
+       "s80",
+       "under WAC 246-320-013",
+       1
+      ],
+      "start": 5804,
+      "text": "under WAC 246-320-013",
+      "z": "s80"
+     }
+    ],
+    "id": "c13",
+    "model_gloss": "Fine authority reference.",
+    "op": "R",
+    "q": 2,
+    "r": "WAC 246-320-013 contents are not supplied.",
+    "unresolved_reference": true
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s21",
+      "end": 1211,
+      "fragment": [
+       "s21",
+       "Assistance for Persons",
+       1,
+       "s21",
+       "October 13, 2026.",
+       1
+      ],
+      "start": 1065,
+      "text": "Assistance for Persons with Disabilities: Contact Tiffani Buck, phone 564-233-1121, TTY 711, email ochsfacilities@doh.wa.gov, by October 13, 2026.",
+      "z": "s21"
+     }
+    ],
+    "id": "c14",
+    "model_gloss": "Disability-assistance contact instructions.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   },
+   {
+    "args": [],
+    "evidence": [
+     {
+      "a": "s29",
+      "end": 1709,
+      "fragment": [
+       "s29",
+       "hospitals licensed",
+       1,
+       "s29",
+       "in subsection for clarity.",
+       1
+      ],
+      "start": 1615,
+      "text": "hospitals licensed under chapter  70.41 RCW and chapter 246-320 WAC in subsection for clarity.",
+      "z": "s29"
+     }
+    ],
+    "id": "c15",
+    "model_gloss": "Historical enforcement context for licensed hospitals.",
+    "op": "L",
+    "q": 0,
+    "r": "",
+    "unresolved_reference": false
+   }
+  ],
+  "production_eligible": false,
+  "schema_version": "round15.expanded-inventory.v2",
+  "semantic_validity": "unverified",
+  "source_text_sha256": "82868cf622ab60cba98f438eb0b443cf36a4745b45188e7a36f643bd155de4f5",
+  "span_table_sha256": "28cb9c76dd6cebe8f90ee247de63dfd58cf1ec2a00b90e8030d43ebdf0652b92",
+  "terminal_marker": "END",
+  "units": [
+   {
+    "applicability": "none_reported",
+    "assertion": "WSR 26-19-041 is an original notice of proposed rules.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 14,
+      "occurrence": 1,
+      "quote": "WSR 26-19-041\n",
+      "span_id": "s1",
+      "start": 0
+     },
+     {
+      "end": 30,
+      "occurrence": 1,
+      "quote": "PROPOSED RULES\n",
+      "span_id": "s3",
+      "start": 15
+     },
+     {
+      "end": 109,
+      "occurrence": 1,
+      "quote": "Original Notice.\n",
+      "span_id": "s9",
+      "start": 92
+     }
+    ],
+    "id": 1,
+    "kind": "identity",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Department of health is the governmental proponent.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 52,
+      "occurrence": 1,
+      "quote": "DEPARTMENT OF HEALTH\n",
+      "span_id": "s5",
+      "start": 31
+     },
+     {
+      "end": 3632,
+      "occurrence": 1,
+      "quote": "Name of Proponent: Department of health, governmental.\n",
+      "span_id": "s41",
+      "start": 3577
+     }
+    ],
+    "id": 2,
+    "kind": "identity",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     1
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The notice was filed September 11, 2026.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 91,
+      "occurrence": 1,
+      "quote": "[Filed September 11, 2026, 7:54 a.m.]\n",
+      "span_id": "s7",
+      "start": 53
+     }
+    ],
+    "id": 3,
+    "kind": "timing",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     1
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The filing clock time was 7:54 a.m.; no timezone is reported.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 91,
+      "occurrence": 1,
+      "quote": "[Filed September 11, 2026, 7:54 a.m.]\n",
+      "span_id": "s7",
+      "start": 53
+     }
+    ],
+    "id": 4,
+    "kind": "timing",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     3
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The preproposal statement of inquiry was filed as WSR 25-23-011.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 171,
+      "occurrence": 1,
+      "quote": "Preproposal statement of inquiry was filed as WSR 25-23-011.\n",
+      "span_id": "s11",
+      "start": 110
+     }
+    ],
+    "id": 5,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     1
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The department proposes new WAC 246-320-148, Hospital price transparency reporting requirements, to clarify and direct hospital reporting.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 430,
+      "occurrence": 1,
+      "quote": "Title of Rule and Other Identifying Information: Hospital price transparency requirements; the department of health (department) is proposing new WAC 246-320-148 to provide clarity and direction related to hospital price transparency reporting requirements.\n",
+      "span_id": "s13",
+      "start": 172
+     },
+     {
+      "end": 1342,
+      "occurrence": 1,
+      "quote": "Purpose of the Proposal and Its Anticipated Effects, Including Any Changes in Existing Rules: The proposed new WAC 246-320-148: \n",
+      "span_id": "s23",
+      "start": 1213
+     },
+     {
+      "end": 5050,
+      "occurrence": 1,
+      "quote": "NEW SECTION\n",
+      "span_id": "s71",
+      "start": 5038
+     },
+     {
+      "end": 5118,
+      "occurrence": 1,
+      "quote": "WAC 246-320-148Hospital price transparency reporting requirements.\n",
+      "span_id": "s73",
+      "start": 5051
+     }
+    ],
+    "id": 6,
+    "kind": "rule_transition",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     2
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The hearing is October 27, 2026, at 2:00 p.m.; no timezone is reported.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 754,
+      "occurrence": 1,
+      "quote": "Hearing Location(s): On October 27, 2026, at 2:00 p.m., via Zoom. Register in advance for this webinar at https://us02web.zoom.us/webinar/register/WN_ciEnX_8PQQm7RlxIwJUlng. After registering, you will receive a confirmation email containing information about joining the webinar. You may also submit comments in writing. \n",
+      "span_id": "s15",
+      "start": 431
+     }
+    ],
+    "id": 7,
+    "kind": "timing",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     1
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Hearing participants are instructed to register in advance for the Zoom webinar at https://us02web.zoom.us/webinar/register/WN_ciEnX_8PQQm7RlxIwJUlng.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 754,
+      "occurrence": 1,
+      "quote": "Hearing Location(s): On October 27, 2026, at 2:00 p.m., via Zoom. Register in advance for this webinar at https://us02web.zoom.us/webinar/register/WN_ciEnX_8PQQm7RlxIwJUlng. After registering, you will receive a confirmation email containing information about joining the webinar. You may also submit comments in writing. \n",
+      "span_id": "s15",
+      "start": 431
+     }
+    ],
+    "id": 8,
+    "kind": "instruction",
+    "modality": "unknown",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     7
+    ],
+    "uncertainty": "source_ambiguous",
+    "uncertainty_reason": "Imperative registration instruction does not specify whether attendance requires registration."
+   },
+   {
+    "applicability": "reported_nonexhaustive",
+    "assertion": "Registrants will receive a confirmation email containing webinar joining information.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "r": "",
+      "role": "if",
+      "unit_id": 9
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 754,
+      "occurrence": 1,
+      "quote": "Hearing Location(s): On October 27, 2026, at 2:00 p.m., via Zoom. Register in advance for this webinar at https://us02web.zoom.us/webinar/register/WN_ciEnX_8PQQm7RlxIwJUlng. After registering, you will receive a confirmation email containing information about joining the webinar. You may also submit comments in writing. \n",
+      "span_id": "s15",
+      "start": 431
+     }
+    ],
+    "id": 9,
+    "kind": "phase",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     8
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Participants may also submit comments in writing.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 754,
+      "occurrence": 1,
+      "quote": "Hearing Location(s): On October 27, 2026, at 2:00 p.m., via Zoom. Register in advance for this webinar at https://us02web.zoom.us/webinar/register/WN_ciEnX_8PQQm7RlxIwJUlng. After registering, you will receive a confirmation email containing information about joining the webinar. You may also submit comments in writing. \n",
+      "span_id": "s15",
+      "start": 431
+     }
+    ],
+    "id": 10,
+    "kind": "instruction",
+    "modality": "optional",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     7
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Intended adoption date is November 3, 2026.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 800,
+      "occurrence": 1,
+      "quote": "Date of Intended Adoption: November 3, 2026.\n",
+      "span_id": "s17",
+      "start": 755
+     }
+    ],
+    "id": 11,
+    "kind": "timing",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Written commenters are instructed to submit to Tiffani Buck, Department of Health, using the stated postal, email or web destinations and submission window.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c2",
+      "q": 0,
+      "r": "",
+      "role": "obj",
+      "unit_id": 12
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1064,
+      "occurrence": 1,
+      "quote": "Submit Written Comments to: Tiffani Buck, Department of Health, P.O. Box 47853, Olympia, WA 98504-7853, email ochsfacilities@doh.wa.gov, web https://fortress.wa.gov/doh/policyreview/, beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.\n",
+      "span_id": "s19",
+      "start": 801
+     }
+    ],
+    "id": 12,
+    "kind": "instruction",
+    "modality": "unknown",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     10
+    ],
+    "uncertainty": "source_ambiguous",
+    "uncertainty_reason": "Submission instruction is imperative but participation is optional; directive force is not expressly specified."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Written comments are due by October 27, 2026, at 11:59 p.m.",
+    "condition_links": [],
+    "deadline": {
+     "b": {
+      "evidence": [],
+      "reason": "",
+      "state": "absent"
+     },
+     "c": {
+      "evidence": [
+       {
+        "a": "s19",
+        "end": 1063,
+        "fragment": [
+         "s19",
+         "11:59 p.m.",
+         1,
+         "s19",
+         "11:59 p.m.",
+         1
+        ],
+        "start": 1053,
+        "text": "11:59 p.m.",
+        "z": "s19"
+       }
+      ],
+      "reason": "",
+      "state": "stated"
+     },
+     "z": {
+      "evidence": [],
+      "reason": "",
+      "state": "absent"
+     }
+    },
+    "evidence": [
+     {
+      "end": 1064,
+      "occurrence": 1,
+      "quote": "Submit Written Comments to: Tiffani Buck, Department of Health, P.O. Box 47853, Olympia, WA 98504-7853, email ochsfacilities@doh.wa.gov, web https://fortress.wa.gov/doh/policyreview/, beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.\n",
+      "span_id": "s19",
+      "start": 801
+     }
+    ],
+    "id": 13,
+    "kind": "timing",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     12
+    ],
+    "uncertainty": "source_ambiguous",
+    "uncertainty_reason": "Timezone and receipt-versus-dispatch basis are absent."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Persons seeking disability assistance are instructed to contact Tiffani Buck at phone 564-233-1121, TTY 711, or ochsfacilities@doh.wa.gov.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c14",
+      "q": 0,
+      "r": "",
+      "role": "obj",
+      "unit_id": 14
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1212,
+      "occurrence": 1,
+      "quote": "Assistance for Persons with Disabilities: Contact Tiffani Buck, phone 564-233-1121, TTY 711, email ochsfacilities@doh.wa.gov, by October 13, 2026.\n",
+      "span_id": "s21",
+      "start": 1065
+     }
+    ],
+    "id": 14,
+    "kind": "instruction",
+    "modality": "unknown",
+    "relationship_member_ids": [],
+    "required_unit_ids": [],
+    "uncertainty": "source_ambiguous",
+    "uncertainty_reason": "Contact instruction does not expressly specify directive force."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Disability-assistance contact deadline is October 13, 2026.",
+    "condition_links": [],
+    "deadline": {
+     "b": {
+      "evidence": [],
+      "reason": "",
+      "state": "absent"
+     },
+     "c": {
+      "evidence": [],
+      "reason": "",
+      "state": "absent"
+     },
+     "z": {
+      "evidence": [],
+      "reason": "",
+      "state": "absent"
+     }
+    },
+    "evidence": [
+     {
+      "end": 1212,
+      "occurrence": 1,
+      "quote": "Assistance for Persons with Disabilities: Contact Tiffani Buck, phone 564-233-1121, TTY 711, email ochsfacilities@doh.wa.gov, by October 13, 2026.\n",
+      "span_id": "s21",
+      "start": 1065
+     }
+    ],
+    "id": 15,
+    "kind": "timing",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     14
+    ],
+    "uncertainty": "source_ambiguous",
+    "uncertainty_reason": "Clock, timezone and receipt-versus-dispatch basis are absent."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The proposal is described as establishing an annual July 1st deadline for hospitals to submit price transparency data to the department.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1478,
+      "occurrence": 1,
+      "quote": "(1) Establishes an annual deadline of July 1st for hospitals to submit their price transparency data to the department in subsection; \n",
+      "span_id": "s25",
+      "start": 1343
+     }
+    ],
+    "id": 16,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "The narrative says 'in subsection' without supplying a subsection number."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The proposal is described as clarifying which data requirements may be submitted.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1540,
+      "occurrence": 1,
+      "quote": "(2) Clarifies which data requirements may be submitted; and \n",
+      "span_id": "s27",
+      "start": 1479
+     }
+    ],
+    "id": 17,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "reported_nonexhaustive",
+    "assertion": "The proposal ties reporting to existing enforcement authority for hospitals licensed under chapter  70.41 RCW and chapter 246-320 WAC, for clarity.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c15",
+      "q": 0,
+      "r": "",
+      "role": "if",
+      "unit_id": 18
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1710,
+      "occurrence": 1,
+      "quote": "(3) Ties this reporting requirement to existing enforcement authority for hospitals licensed under chapter  70.41 RCW and chapter 246-320 WAC in subsection for clarity.\n",
+      "span_id": "s29",
+      "start": 1541
+     }
+    ],
+    "id": 18,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "The narrative says 'in subsection' without a subsection number; cited enforcement provisions are not supplied."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Subsection (2) addresses hospitals' expressed confusion about RCW  70.41.560 state requirements and federal requirements under 42 C.F.R. Part 180.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 2518,
+      "occurrence": 1,
+      "quote": "Subsection (2) of the proposed rule addresses confusion expressed by hospitals regarding state requirements under RCW  70.41.560 and federal price transparency requirements under 42 C.F.R. Part 180 by clarifying that the federal requirements, as they existed as of January 1, 2025, are the required minimum. However, any additional or different types of data elements beyond what was required as of January 1, 2025, by the Centers for Medicare and Medicaid Services (CMS) may be included in the data submitted to the department. The intent is to clarify that data submitted to the department may meet the current or historical CMS requirements, as long as CMS has not removed reporting requirements. Changes made by CMS to 45 C.F.R. Part 180 since January 1, 2025, have only added data reporting elements. \n",
+      "span_id": "s31",
+      "start": 1711
+     }
+    ],
+    "id": 19,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The proposal narrative identifies federal requirements as they existed January 1, 2025, as the required minimum.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 2518,
+      "occurrence": 1,
+      "quote": "Subsection (2) of the proposed rule addresses confusion expressed by hospitals regarding state requirements under RCW  70.41.560 and federal price transparency requirements under 42 C.F.R. Part 180 by clarifying that the federal requirements, as they existed as of January 1, 2025, are the required minimum. However, any additional or different types of data elements beyond what was required as of January 1, 2025, by the Centers for Medicare and Medicaid Services (CMS) may be included in the data submitted to the department. The intent is to clarify that data submitted to the department may meet the current or historical CMS requirements, as long as CMS has not removed reporting requirements. Changes made by CMS to 45 C.F.R. Part 180 since January 1, 2025, have only added data reporting elements. \n",
+      "span_id": "s31",
+      "start": 1711
+     }
+    ],
+    "id": 20,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     19
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "Federal requirements as of the stated date are referenced but not reproduced."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Additional or different CMS data elements beyond the January 1, 2025 requirements may be included in data submitted to the department.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c3",
+      "q": 0,
+      "r": "",
+      "role": "obj",
+      "unit_id": 21
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 2518,
+      "occurrence": 1,
+      "quote": "Subsection (2) of the proposed rule addresses confusion expressed by hospitals regarding state requirements under RCW  70.41.560 and federal price transparency requirements under 42 C.F.R. Part 180 by clarifying that the federal requirements, as they existed as of January 1, 2025, are the required minimum. However, any additional or different types of data elements beyond what was required as of January 1, 2025, by the Centers for Medicare and Medicaid Services (CMS) may be included in the data submitted to the department. The intent is to clarify that data submitted to the department may meet the current or historical CMS requirements, as long as CMS has not removed reporting requirements. Changes made by CMS to 45 C.F.R. Part 180 since January 1, 2025, have only added data reporting elements. \n",
+      "span_id": "s31",
+      "start": 1711
+     }
+    ],
+    "id": 21,
+    "kind": "background",
+    "modality": "optional",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     20
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "reported_nonexhaustive",
+    "assertion": "The stated intent allows submitted data to meet current or historical CMS requirements.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c4",
+      "q": 0,
+      "r": "",
+      "role": "if",
+      "unit_id": 22
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 2518,
+      "occurrence": 1,
+      "quote": "Subsection (2) of the proposed rule addresses confusion expressed by hospitals regarding state requirements under RCW  70.41.560 and federal price transparency requirements under 42 C.F.R. Part 180 by clarifying that the federal requirements, as they existed as of January 1, 2025, are the required minimum. However, any additional or different types of data elements beyond what was required as of January 1, 2025, by the Centers for Medicare and Medicaid Services (CMS) may be included in the data submitted to the department. The intent is to clarify that data submitted to the department may meet the current or historical CMS requirements, as long as CMS has not removed reporting requirements. Changes made by CMS to 45 C.F.R. Part 180 since January 1, 2025, have only added data reporting elements. \n",
+      "span_id": "s31",
+      "start": 1711
+     }
+    ],
+    "id": 22,
+    "kind": "background",
+    "modality": "optional",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     20
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The narrative states CMS changes to 45 C.F.R. Part 180 since January 1, 2025 have only added data reporting elements.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 2518,
+      "occurrence": 1,
+      "quote": "Subsection (2) of the proposed rule addresses confusion expressed by hospitals regarding state requirements under RCW  70.41.560 and federal price transparency requirements under 42 C.F.R. Part 180 by clarifying that the federal requirements, as they existed as of January 1, 2025, are the required minimum. However, any additional or different types of data elements beyond what was required as of January 1, 2025, by the Centers for Medicare and Medicaid Services (CMS) may be included in the data submitted to the department. The intent is to clarify that data submitted to the department may meet the current or historical CMS requirements, as long as CMS has not removed reporting requirements. Changes made by CMS to 45 C.F.R. Part 180 since January 1, 2025, have only added data reporting elements. \n",
+      "span_id": "s31",
+      "start": 1711
+     }
+    ],
+    "id": 23,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     20
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The proposed rule incorporates RCW  70.41.560 requirements and clarifies how the department interprets whether hospitals meet them.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 3333,
+      "occurrence": 1,
+      "quote": "Reasons Supporting Proposal: The proposed new rule incorporates the requirements of RCW  70.41.560 while clarifying how the department will interpret if the hospitals have met them or not. Together, RCW  70.41.560 and the proposed new rule set a standard that will improve compliance, allow hospitals to report in a way that meets requirements of this state legislature as well as federal standards, and increase the amount of information available to the public regarding the costs for services and items. It also provides some flexibility to hospitals in an effort to reduce the burden of repetitive and slightly different reporting requirements. Rule making is necessary to provide enforceable minimum standards for the reporting of hospital price transparency and cost data while aligning with RCW  70.41.560.\n",
+      "span_id": "s33",
+      "start": 2519
+     }
+    ],
+    "id": 24,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The statute and proposed rule are expected to improve compliance and allow reporting meeting state legislative and federal standards.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 3333,
+      "occurrence": 1,
+      "quote": "Reasons Supporting Proposal: The proposed new rule incorporates the requirements of RCW  70.41.560 while clarifying how the department will interpret if the hospitals have met them or not. Together, RCW  70.41.560 and the proposed new rule set a standard that will improve compliance, allow hospitals to report in a way that meets requirements of this state legislature as well as federal standards, and increase the amount of information available to the public regarding the costs for services and items. It also provides some flexibility to hospitals in an effort to reduce the burden of repetitive and slightly different reporting requirements. Rule making is necessary to provide enforceable minimum standards for the reporting of hospital price transparency and cost data while aligning with RCW  70.41.560.\n",
+      "span_id": "s33",
+      "start": 2519
+     }
+    ],
+    "id": 25,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     24
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The proposal is expected to increase public information about costs of services and items.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 3333,
+      "occurrence": 1,
+      "quote": "Reasons Supporting Proposal: The proposed new rule incorporates the requirements of RCW  70.41.560 while clarifying how the department will interpret if the hospitals have met them or not. Together, RCW  70.41.560 and the proposed new rule set a standard that will improve compliance, allow hospitals to report in a way that meets requirements of this state legislature as well as federal standards, and increase the amount of information available to the public regarding the costs for services and items. It also provides some flexibility to hospitals in an effort to reduce the burden of repetitive and slightly different reporting requirements. Rule making is necessary to provide enforceable minimum standards for the reporting of hospital price transparency and cost data while aligning with RCW  70.41.560.\n",
+      "span_id": "s33",
+      "start": 2519
+     }
+    ],
+    "id": 26,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     24
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The proposal gives hospitals flexibility to reduce repetitive and slightly different reporting burdens.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 3333,
+      "occurrence": 1,
+      "quote": "Reasons Supporting Proposal: The proposed new rule incorporates the requirements of RCW  70.41.560 while clarifying how the department will interpret if the hospitals have met them or not. Together, RCW  70.41.560 and the proposed new rule set a standard that will improve compliance, allow hospitals to report in a way that meets requirements of this state legislature as well as federal standards, and increase the amount of information available to the public regarding the costs for services and items. It also provides some flexibility to hospitals in an effort to reduce the burden of repetitive and slightly different reporting requirements. Rule making is necessary to provide enforceable minimum standards for the reporting of hospital price transparency and cost data while aligning with RCW  70.41.560.\n",
+      "span_id": "s33",
+      "start": 2519
+     }
+    ],
+    "id": 27,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     24
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Rule making is described as necessary for enforceable minimum hospital price transparency and cost-data reporting standards aligned with RCW  70.41.560.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 3333,
+      "occurrence": 1,
+      "quote": "Reasons Supporting Proposal: The proposed new rule incorporates the requirements of RCW  70.41.560 while clarifying how the department will interpret if the hospitals have met them or not. Together, RCW  70.41.560 and the proposed new rule set a standard that will improve compliance, allow hospitals to report in a way that meets requirements of this state legislature as well as federal standards, and increase the amount of information available to the public regarding the costs for services and items. It also provides some flexibility to hospitals in an effort to reduce the burden of repetitive and slightly different reporting requirements. Rule making is necessary to provide enforceable minimum standards for the reporting of hospital price transparency and cost data while aligning with RCW  70.41.560.\n",
+      "span_id": "s33",
+      "start": 2519
+     }
+    ],
+    "id": 28,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     24
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Adoption authority is RCW  70.41.030 and SSB 5493, chapter 146, Laws of 2025, codified under RCW  70.41.560.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 3457,
+      "occurrence": 1,
+      "quote": "Statutory Authority for Adoption: RCW  70.41.030 and SSB 5493 (chapter 146, Laws of 2025), codified under RCW  70.41.560. \n",
+      "span_id": "s35",
+      "start": 3334
+     }
+    ],
+    "id": 29,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "Cited authority texts are not supplied."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The statute being implemented is RCW  70.41.560.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 3501,
+      "occurrence": 1,
+      "quote": "Statute Being Implemented: RCW  70.41.560.\n",
+      "span_id": "s37",
+      "start": 3458
+     }
+    ],
+    "id": 30,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "Implemented statute is not supplied."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The rule is not necessitated by federal law or federal or state court decision.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 3576,
+      "occurrence": 1,
+      "quote": "Rule is not necessitated by federal law, federal or state court decision.\n",
+      "span_id": "s39",
+      "start": 3502
+     }
+    ],
+    "id": 31,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Tiffani Buck is responsible for drafting, implementation and enforcement; address 111 Israel Road S.E., Tumwater, WA 98501; phone 564-233-1121.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 3787,
+      "occurrence": 1,
+      "quote": "Name of Agency Personnel Responsible for Drafting, Implementation, and Enforcement: Tiffani Buck, 111 Israel Road S.E., Tumwater, WA 98501, 564-233-1121.\n",
+      "span_id": "s43",
+      "start": 3633
+     }
+    ],
+    "id": 32,
+    "kind": "identity",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     2
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "unknown",
+    "assertion": "A school district fiscal impact statement is not required under RCW  28A.305.135.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c5",
+      "q": 2,
+      "r": "Statutory basis cannot be resolved from supplied text.",
+      "role": "qual",
+      "unit_id": 33
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 3870,
+      "occurrence": 1,
+      "quote": "A school district fiscal impact statement is not required under RCW  28A.305.135.\n",
+      "span_id": "s45",
+      "start": 3788
+     }
+    ],
+    "id": 33,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "Referenced statute is absent; its applicability criteria remain unresolved."
+   },
+   {
+    "applicability": "reported_nonexhaustive",
+    "assertion": "A cost-benefit analysis is not required under RCW  34.05.328; the entire proposed rule is exempt, with separate stated grounds for subsections (1), (2) and (3).",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c6",
+      "q": 0,
+      "r": "",
+      "role": "if",
+      "unit_id": 34
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 4482,
+      "occurrence": 1,
+      "quote": "A cost-benefit analysis is not required under RCW  34.05.328. The entire proposed rule is exempt from analysis: Subsection (1) is exempt under RCW  34.05.328 (5)(c)(i) as it is a procedural rule; subsection (2) is exempt under RCW  34.05.328 (5)(b)(iii) as it incorporates Washington state statute without material change and RCW  34.05.328 (5)(b)(iv) as it clarifies that submission of additional information is not in violation of the law; and subsection (3) is exempt under RCW  34.05.328 (5)(b)(iv) as it provides clarity by connecting data reporting requirements to existing enforcement standards in rule.\n",
+      "span_id": "s47",
+      "start": 3871
+     }
+    ],
+    "id": 34,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "Referenced statutory exemption provisions are not supplied."
+   },
+   {
+    "applicability": "reported_nonexhaustive",
+    "assertion": "The entire proposal is fully exempt from Regulatory Fairness Act requirements under RCW  19.85.025(4), applying only to licensed acute care hospitals not defined as small business under RCW  19.85.020.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c7",
+      "q": 0,
+      "r": "",
+      "role": "if",
+      "unit_id": 35
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 4614,
+      "occurrence": 1,
+      "quote": "This rule proposal, or portions of the proposal, is exempt from requirements of the Regulatory Fairness Act because the proposal: \n",
+      "span_id": "s49",
+      "start": 4483
+     },
+     {
+      "end": 4650,
+      "occurrence": 1,
+      "quote": "Is exempt under RCW  19.85.025(4).\n",
+      "span_id": "s51",
+      "start": 4615
+     },
+     {
+      "end": 4864,
+      "occurrence": 1,
+      "quote": "Explanation of exemptions: The entire proposed rule is exempt under RCW  19.85.025(4) as it only applies to licensed acute care hospitals which do not meet the definition of \"small business\" under RCW  19.85.020.\n",
+      "span_id": "s53",
+      "start": 4651
+     },
+     {
+      "end": 4903,
+      "occurrence": 1,
+      "quote": "Scope of exemption for rule proposal:\n",
+      "span_id": "s55",
+      "start": 4865
+     },
+     {
+      "end": 4921,
+      "occurrence": 1,
+      "quote": "Is fully exempt.\n",
+      "span_id": "s57",
+      "start": 4904
+     }
+    ],
+    "id": 35,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "Referenced statutory definitions and exemption text are not supplied."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The signature block bears September 10, 2026; the precise date function is unstated.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 4941,
+      "occurrence": 1,
+      "quote": "September 10, 2026\n",
+      "span_id": "s59",
+      "start": 4922
+     }
+    ],
+    "id": 36,
+    "kind": "timing",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     1
+    ],
+    "uncertainty": "function_unresolved",
+    "uncertainty_reason": "Date is placed before the signature block without an explicit function label."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Kristin Peterson, JD, is identified as Chief of Policy.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 4963,
+      "occurrence": 1,
+      "quote": "Kristin Peterson, JD\n",
+      "span_id": "s61",
+      "start": 4942
+     },
+     {
+      "end": 4980,
+      "occurrence": 1,
+      "quote": "Chief of Policy\n",
+      "span_id": "s63",
+      "start": 4964
+     }
+    ],
+    "id": 37,
+    "kind": "identity",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     1
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Dennis E. Worsham is identified as Secretary of Health.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 5004,
+      "occurrence": 1,
+      "quote": " for Dennis E. Worsham\n",
+      "span_id": "s65",
+      "start": 4981
+     },
+     {
+      "end": 5025,
+      "occurrence": 1,
+      "quote": "Secretary of Health\n",
+      "span_id": "s67",
+      "start": 5005
+     }
+    ],
+    "id": 38,
+    "kind": "identity",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     1
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Kristin Peterson signs for Dennis E. Worsham.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 4963,
+      "occurrence": 1,
+      "quote": "Kristin Peterson, JD\n",
+      "span_id": "s61",
+      "start": 4942
+     },
+     {
+      "end": 4980,
+      "occurrence": 1,
+      "quote": "Chief of Policy\n",
+      "span_id": "s63",
+      "start": 4964
+     },
+     {
+      "end": 5004,
+      "occurrence": 1,
+      "quote": " for Dennis E. Worsham\n",
+      "span_id": "s65",
+      "start": 4981
+     },
+     {
+      "end": 5025,
+      "occurrence": 1,
+      "quote": "Secretary of Health\n",
+      "span_id": "s67",
+      "start": 5005
+     }
+    ],
+    "id": 39,
+    "kind": "relationship",
+    "modality": "informational",
+    "relationship_member_ids": [
+     37,
+     38
+    ],
+    "required_unit_ids": [],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The proposed rule text bears identifier RDS-7332.2.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 5037,
+      "occurrence": 1,
+      "quote": "RDS-7332.2\n",
+      "span_id": "s69",
+      "start": 5026
+     }
+    ],
+    "id": 40,
+    "kind": "identity",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The new section is WAC 246-320-148, Hospital price transparency reporting requirements.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 5050,
+      "occurrence": 1,
+      "quote": "NEW SECTION\n",
+      "span_id": "s71",
+      "start": 5038
+     },
+     {
+      "end": 5118,
+      "occurrence": 1,
+      "quote": "WAC 246-320-148Hospital price transparency reporting requirements.\n",
+      "span_id": "s73",
+      "start": 5051
+     }
+    ],
+    "id": 41,
+    "kind": "identity",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     6
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "A hospital shall submit to the department a machine-readable file containing the most recent list of all standard charges described in RCW  70.41.560 annually.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c8",
+      "q": 0,
+      "r": "",
+      "role": "obj",
+      "unit_id": 42
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 5421,
+      "occurrence": 1,
+      "quote": "(1) A hospital shall submit a machine-readable file containing the most recent list of all standard charges as described in RCW  70.41.560 to the department on an annual basis beginning July 1, 2027. All lists required under RCW  70.41.560 and this section must be submitted by July 1st of each year.\n",
+      "span_id": "s76",
+      "start": 5120
+     }
+    ],
+    "id": 42,
+    "kind": "instruction",
+    "modality": "mandatory",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     41
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "RCW  70.41.560 charge descriptions are not supplied."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Annual hospital file submission begins July 1, 2027.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 5421,
+      "occurrence": 1,
+      "quote": "(1) A hospital shall submit a machine-readable file containing the most recent list of all standard charges as described in RCW  70.41.560 to the department on an annual basis beginning July 1, 2027. All lists required under RCW  70.41.560 and this section must be submitted by July 1st of each year.\n",
+      "span_id": "s76",
+      "start": 5120
+     }
+    ],
+    "id": 43,
+    "kind": "phase",
+    "modality": "mandatory",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     42
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "All lists required under RCW  70.41.560 and this section must be submitted by July 1st of each year.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c9",
+      "q": 0,
+      "r": "",
+      "role": "obj",
+      "unit_id": 44
+     }
+    ],
+    "deadline": {
+     "b": {
+      "evidence": [],
+      "reason": "",
+      "state": "absent"
+     },
+     "c": {
+      "evidence": [],
+      "reason": "",
+      "state": "absent"
+     },
+     "z": {
+      "evidence": [],
+      "reason": "",
+      "state": "absent"
+     }
+    },
+    "evidence": [
+     {
+      "end": 5421,
+      "occurrence": 1,
+      "quote": "(1) A hospital shall submit a machine-readable file containing the most recent list of all standard charges as described in RCW  70.41.560 to the department on an annual basis beginning July 1, 2027. All lists required under RCW  70.41.560 and this section must be submitted by July 1st of each year.\n",
+      "span_id": "s76",
+      "start": 5120
+     }
+    ],
+    "id": 44,
+    "kind": "timing",
+    "modality": "mandatory",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     42
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "Clock, timezone and receipt-versus-dispatch basis are absent; referenced statutory lists are not supplied."
+   },
+   {
+    "applicability": "reported_nonexhaustive",
+    "assertion": "To meet subsection (1), a hospital may submit a machine-readable file meeting hospital price transparency rules under Title 45 C.F.R. Part 180, subparts A and B.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c10",
+      "q": 0,
+      "r": "",
+      "role": "if",
+      "unit_id": 45
+     },
+     {
+      "evidence": [],
+      "node_id": "c11",
+      "q": 0,
+      "r": "",
+      "role": "obj",
+      "unit_id": 45
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 5767,
+      "occurrence": 1,
+      "quote": "(2) To meet the requirements of subsection (1) of this section, a hospital may submit to the department a machine-readable file that meets the requirements for rules related to hospital price transparency pursuant to Title 45 C.F.R. Part 180, subparts A and B, if the information submitted is not less than what was required on January 1, 2025.\n",
+      "span_id": "s78",
+      "start": 5422
+     }
+    ],
+    "id": 45,
+    "kind": "instruction",
+    "modality": "optional",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     41,
+     42
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "Title 45 C.F.R. Part 180, subparts A and B and historical requirements are not supplied."
+   },
+   {
+    "applicability": "reported_nonexhaustive",
+    "assertion": "The department may assess fines under WAC 246-320-013 against a hospital failing to comply with this section.",
+    "condition_links": [
+     {
+      "evidence": [],
+      "node_id": "c12",
+      "q": 0,
+      "r": "",
+      "role": "if",
+      "unit_id": 46
+     },
+     {
+      "evidence": [],
+      "node_id": "c13",
+      "q": 2,
+      "r": "Referenced authority's content remains unresolved.",
+      "role": "acts",
+      "unit_id": 46
+     }
+    ],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 5884,
+      "occurrence": 1,
+      "quote": "(3) The department may assess fines under WAC 246-320-013 against a hospital that fails to comply with this section.",
+      "span_id": "s80",
+      "start": 5768
+     }
+    ],
+    "id": 46,
+    "kind": "instruction",
+    "modality": "optional",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     41
+    ],
+    "uncertainty": "reference_unresolved",
+    "uncertainty_reason": "WAC 246-320-013 fine authority is not supplied."
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Written-comment postal endpoint is P.O. Box 47853, Olympia, WA 98504-7853.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1064,
+      "occurrence": 1,
+      "quote": "Submit Written Comments to: Tiffani Buck, Department of Health, P.O. Box 47853, Olympia, WA 98504-7853, email ochsfacilities@doh.wa.gov, web https://fortress.wa.gov/doh/policyreview/, beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.\n",
+      "span_id": "s19",
+      "start": 801
+     }
+    ],
+    "id": 47,
+    "kind": "endpoint",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     12
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The postal endpoint serves written submissions to Tiffani Buck, Department of Health.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1064,
+      "occurrence": 1,
+      "quote": "Submit Written Comments to: Tiffani Buck, Department of Health, P.O. Box 47853, Olympia, WA 98504-7853, email ochsfacilities@doh.wa.gov, web https://fortress.wa.gov/doh/policyreview/, beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.\n",
+      "span_id": "s19",
+      "start": 801
+     }
+    ],
+    "id": 48,
+    "kind": "endpoint_role",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     47,
+     12
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Email endpoint is ochsfacilities@doh.wa.gov.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1064,
+      "occurrence": 1,
+      "quote": "Submit Written Comments to: Tiffani Buck, Department of Health, P.O. Box 47853, Olympia, WA 98504-7853, email ochsfacilities@doh.wa.gov, web https://fortress.wa.gov/doh/policyreview/, beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.\n",
+      "span_id": "s19",
+      "start": 801
+     },
+     {
+      "end": 1212,
+      "occurrence": 1,
+      "quote": "Assistance for Persons with Disabilities: Contact Tiffani Buck, phone 564-233-1121, TTY 711, email ochsfacilities@doh.wa.gov, by October 13, 2026.\n",
+      "span_id": "s21",
+      "start": 1065
+     }
+    ],
+    "id": 49,
+    "kind": "endpoint",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The email endpoint serves written comments.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1064,
+      "occurrence": 1,
+      "quote": "Submit Written Comments to: Tiffani Buck, Department of Health, P.O. Box 47853, Olympia, WA 98504-7853, email ochsfacilities@doh.wa.gov, web https://fortress.wa.gov/doh/policyreview/, beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.\n",
+      "span_id": "s19",
+      "start": 801
+     }
+    ],
+    "id": 50,
+    "kind": "endpoint_role",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     49,
+     12
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The email endpoint serves disability-assistance contact.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1212,
+      "occurrence": 1,
+      "quote": "Assistance for Persons with Disabilities: Contact Tiffani Buck, phone 564-233-1121, TTY 711, email ochsfacilities@doh.wa.gov, by October 13, 2026.\n",
+      "span_id": "s21",
+      "start": 1065
+     }
+    ],
+    "id": 51,
+    "kind": "endpoint_role",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     49,
+     14
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Web endpoint is https://fortress.wa.gov/doh/policyreview/.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1064,
+      "occurrence": 1,
+      "quote": "Submit Written Comments to: Tiffani Buck, Department of Health, P.O. Box 47853, Olympia, WA 98504-7853, email ochsfacilities@doh.wa.gov, web https://fortress.wa.gov/doh/policyreview/, beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.\n",
+      "span_id": "s19",
+      "start": 801
+     }
+    ],
+    "id": 52,
+    "kind": "endpoint",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     12
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "The policyreview web endpoint serves written comments.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1064,
+      "occurrence": 1,
+      "quote": "Submit Written Comments to: Tiffani Buck, Department of Health, P.O. Box 47853, Olympia, WA 98504-7853, email ochsfacilities@doh.wa.gov, web https://fortress.wa.gov/doh/policyreview/, beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.\n",
+      "span_id": "s19",
+      "start": 801
+     }
+    ],
+    "id": 53,
+    "kind": "endpoint_role",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     52,
+     12
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Written-comment submission begins at the time and date of this filing.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 1064,
+      "occurrence": 1,
+      "quote": "Submit Written Comments to: Tiffani Buck, Department of Health, P.O. Box 47853, Olympia, WA 98504-7853, email ochsfacilities@doh.wa.gov, web https://fortress.wa.gov/doh/policyreview/, beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.\n",
+      "span_id": "s19",
+      "start": 801
+     }
+    ],
+    "id": 54,
+    "kind": "timing",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     12,
+     3,
+     4
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Subsection (1)'s analysis exemption is explained as procedural under RCW  34.05.328 (5)(c)(i).",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 4482,
+      "occurrence": 1,
+      "quote": "A cost-benefit analysis is not required under RCW  34.05.328. The entire proposed rule is exempt from analysis: Subsection (1) is exempt under RCW  34.05.328 (5)(c)(i) as it is a procedural rule; subsection (2) is exempt under RCW  34.05.328 (5)(b)(iii) as it incorporates Washington state statute without material change and RCW  34.05.328 (5)(b)(iv) as it clarifies that submission of additional information is not in violation of the law; and subsection (3) is exempt under RCW  34.05.328 (5)(b)(iv) as it provides clarity by connecting data reporting requirements to existing enforcement standards in rule.\n",
+      "span_id": "s47",
+      "start": 3871
+     }
+    ],
+    "id": 55,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     34
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Subsection (2)'s exemption grounds are incorporation of state statute without material change and clarification that additional information submission does not violate law.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 4482,
+      "occurrence": 1,
+      "quote": "A cost-benefit analysis is not required under RCW  34.05.328. The entire proposed rule is exempt from analysis: Subsection (1) is exempt under RCW  34.05.328 (5)(c)(i) as it is a procedural rule; subsection (2) is exempt under RCW  34.05.328 (5)(b)(iii) as it incorporates Washington state statute without material change and RCW  34.05.328 (5)(b)(iv) as it clarifies that submission of additional information is not in violation of the law; and subsection (3) is exempt under RCW  34.05.328 (5)(b)(iv) as it provides clarity by connecting data reporting requirements to existing enforcement standards in rule.\n",
+      "span_id": "s47",
+      "start": 3871
+     }
+    ],
+    "id": 56,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     34
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   },
+   {
+    "applicability": "none_reported",
+    "assertion": "Subsection (3)'s exemption under RCW  34.05.328 (5)(b)(iv) is explained as clarity linking data reporting to existing enforcement standards.",
+    "condition_links": [],
+    "deadline": null,
+    "evidence": [
+     {
+      "end": 4482,
+      "occurrence": 1,
+      "quote": "A cost-benefit analysis is not required under RCW  34.05.328. The entire proposed rule is exempt from analysis: Subsection (1) is exempt under RCW  34.05.328 (5)(c)(i) as it is a procedural rule; subsection (2) is exempt under RCW  34.05.328 (5)(b)(iii) as it incorporates Washington state statute without material change and RCW  34.05.328 (5)(b)(iv) as it clarifies that submission of additional information is not in violation of the law; and subsection (3) is exempt under RCW  34.05.328 (5)(b)(iv) as it provides clarity by connecting data reporting requirements to existing enforcement standards in rule.\n",
+      "span_id": "s47",
+      "start": 3871
+     }
+    ],
+    "id": 57,
+    "kind": "background",
+    "modality": "informational",
+    "relationship_member_ids": [],
+    "required_unit_ids": [
+     34
+    ],
+    "uncertainty": "none",
+    "uncertainty_reason": ""
+   }
+  ]
+ },
+ "output_sha256": "b5d8732c3ff696fd82567242508f024bd23021ec57ca2866a9268201840545b2",
+ "reference_sha256": "cd58e31c8559e377b2cba3604cf8a0ed3f4ac1f0cf5542c8bb002555d7677471"
+}

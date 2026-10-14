@@ -1,0 +1,34 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {"role": "A2", "model": "claude-opus-5-5", "effort": "high", "session": "r19-adj-S1-OPQ-A2"},
+  "call_id": "S1-OPQ",
+  "source_id": "26-19-039",
+  "output_sha256": "fa6733c67eacfe35a11dfcedb6ad790b2f33b53143fb0e49b514fa1ffa5fb815",
+  "reference_sha256": "a4a8d8dc3de474dfe759a24af8451b9e01d0f8c6dd9fd5353f9041c7032db778",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [{"unit": 7, "form": "direct"}],
+      "basis": "Unit 7 states the proposal is exempt under RCW 34.05.310(4) or 34.05.330(1), which is the target's exemption assertion; its evidence [111,172) covers the quote 'is exempt' [120,129). No other unit's evidence touches the T1 quote or R1 clause."
+    },
+    {
+      "tid": "T2",
+      "units": [{"unit": 41, "form": "inverse"}],
+      "basis": "Unit 41 states the rule is exempt from the RCW 34.05.328 requirements including a cost-benefit analysis, i.e. the implied target (those requirements apply) does not hold for 'this rule', the population the reference names as exempted; evidence [3211,3456) overlaps the quote [3298,3367)."
+    },
+    {
+      "tid": "T3",
+      "units": [{"unit": 42, "form": "inverse"}, {"unit": 46, "form": "inverse"}],
+      "basis": "Unit 42 states the proposal or portions of it are exempt from the Regulatory Fairness Act, denying the implied target for the named population (evidence overlaps the quote [3521,3564)). Unit 46 states the rule proposal is fully exempt in the RFA scope-of-exemption field, matching R4, and its evidence overlaps R4's clause [4087,4118)."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {"tid": "T2", "note": "Unit 41 is slightly broader than the target: it also folds in the preceding sentence 'A cost-benefit analysis is not required under RCW 34.05.328' and the 'because ... dictated by statute' reason. Still read as making the exemption assertion; mapped inverse because 'This rule' is the exempted thing named in R2."},
+      {"tid": "T3", "note": "Unit 46's assertion ('the rule proposal is fully exempt') does not itself name the Regulatory Fairness Act; the link to T3 relies on the scope-field context and on unit 46 depending on unit 42. Mapped inverse following the reference's own attachment of R4 to T3; a stricter reading of M1 could leave it unmapped."},
+      {"tid": "T3", "note": "Unit 42 is broader than R3: it adds the RCW 19.85.025(3) authority and the statutory-dictation reason. The core assertion (proposal or portions exempt from RFA requirements) matches the target's denial."}
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}
