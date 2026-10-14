@@ -1,0 +1,51 @@
+R17 scoring manifest validation (offline, 2026-10-14). Python: python3 -I -S -B. No network, provider or credential access.
+Frozen scorer: design-r3-1/fixtures/r17score.py sha256 4834cf66eb0019df73b8a5e81bb5b51c43111fe51204b0f01d36b60ed76c163b (pinned by design-r3-1/READY.primary.json).
+parsed-body.txt files were hashed and passed to r17score; their text was not inspected.
+
+# 1. build_manifest.py (in-process: validate_reference, E8 cross-check, decide --interim, negative controls)
+validate-reference 26-19-039: ok (relations=4, live=3, compounds=1)
+  26-19-039: non-live relations excluded: {'R1': 'UNRESOLVED'}
+validate-reference 26-19-041: ok (relations=9, live=9, compounds=2)
+  26-19-041: non-live relations excluded: none
+validate-reference 26-19-106: ok (relations=3, live=3, compounds=1)
+  26-19-106: non-live relations excluded: none
+26-19-041 CONTESTED.json: 1 item(s), kind missing_relation; not present in reference.json, so no live id to drop
+decide --interim (all 6 cells pending, in-process): accepted; outcome=None; state={"full": {"A1": "reachable", "A2": "reachable"}, "full_mechanical_fail": false, "halted_phase": null, "opq": {"A1": "reachable", "A2": "reachable"}, "opq_mechanical_fail": false, "typed_testable": false}
+decide (final) with pending cells: rejected as expected: S1-OPQ: pending calls are allowed only in an interim decision
+negative control "drop a live relation": rejected (S2: live relation set or critical flags differ from the manifest)
+negative control "flip a critical flag": rejected (S1: live relation set or critical flags differ from the manifest)
+negative control "drop a compound": rejected (S3: compound set differs from the manifest)
+negative control "wrong reference sha": rejected (S1: reference sha256)
+negative control "wrong adjudicator model": rejected (manifest adjudicators must be exactly A1/A2 with the pinned models)
+negative control "excluded_sessions not a list": rejected (manifest excluded_sessions must list the reference author/reviewer session ids)
+PROTOCOL §11 row N=15: | 15 | 14 | 12 | 14 | matches D2/D3
+MANIFEST.json sha256 62838370968de7a93347b7a9e7dda307ad49650a22a639904351fedf79b8911d
+
+# 2. Scorer CLI
+## CLI: r17score.py validate-reference (frozen scorer sha256 4834cf66eb0019df73b8a5e81bb5b51c43111fe51204b0f01d36b60ed76c163b)
+26-19-039: {"compounds": 1, "live": 3, "ok": true, "relations": 4}
+exit=0
+26-19-041: {"compounds": 2, "live": 9, "ok": true, "relations": 9}
+exit=0
+26-19-106: {"compounds": 1, "live": 3, "ok": true, "relations": 3}
+exit=0
+
+## CLI: r17score.py decide validation/DECISION.json --interim (all six cells pending)
+exit=0
+outcome= None phases= {"OPQ": {"A1": {"bar": null, "state": "reachable"}, "A2": {"bar": null, "state": "reachable"}}} state= {"full": {"A1": "reachable", "A2": "reachable"}, "full_mechanical_fail": false, "halted_phase": null, "opq": {"A1": "reachable", "A2": "reachable"}, "opq_mechanical_fail": false, "typed_testable": false}
+
+## CLI: same input without --interim (must reject pending cells)
+REJECTED: S1-FULL: pending calls are allowed only in an interim decision
+exit=1
+
+# 3. Adapter r1.4 release_gate manifest/threshold block, executed verbatim
+executing adapter lines 492 - 515
+release.thresholds == MANIFEST.thresholds, typed_testable=false: PASS (manifest_slots, manifest_critical_flags, P6_E8_counts, threshold_table, source_order, source_freeze_hash)
+negative control: D3_correct off by one: REFUSED threshold_table
+negative control: typed_testable=true: REFUSED manifest_slots
+
+# 4. Adapter r1.4 release_gate design-role block, executed verbatim against design-r3-1-paccept
+adapter r1.4 sha256 e3046a9a560b90567c29584e5a5a85b6795453b9e373c94bf099fc01a602ec7c
+executing adapter lines 422 - 435
+design-r3-1-paccept: design-role checks PASS under P-ACCEPT
+design-r3-1: REFUSED budget_policy_unset_or_mismatch

@@ -7,8 +7,12 @@
     "evidence": "run/CAP-ACCEPTANCE.json"
   },
   "P1_dedicated_key": {
-    "state": "ATTESTED; machine check at release",
-    "evidence": "run/KEY-ATTESTATION.json",
+    "state": "MACHINE-VERIFIED",
+    "evidence": [
+      "run/KEY-ATTESTATION.json",
+      "primary-acceptance/KEY-MACHINE.json"
+    ],
+    "job": "r17-keycheck-v2-20261014175823-6f20f7c43689",
     "amendment": "A4"
   },
   "P2_ledger": {
@@ -31,18 +35,24 @@
   "P5_scoring_gate": {
     "state": "PASSED",
     "amendment": "A1-p5-batching",
-    "ready_sha256": "26212468e9a9e2d8a66a17c7bde179f4dcbe77f4bba775ebf01e96119e12c2a8"
+    "ready_sha256": "26212468e9a9e2d8a66a17c7bde179f4dcbe77f4bba775ebf01e96119e12c2a8",
+    "acceptance": [
+      "primary-acceptance/A1-FIXTURE-GATE.json",
+      "primary-acceptance/A2-FIXTURE-GATE.json"
+    ]
   },
   "P6_references": {
     "state": "FROZEN",
     "ready_sha256": "e47520bacbd85f5b336a5dbcb8dc4e4a20559219693801460ebbd436cfe0aa23",
-    "amendment": "A2-packet-file-delivery"
+    "amendment": "A2-packet-file-delivery",
+    "acceptance": "reference/ACCEPTANCE.json"
   },
   "P7_release_record": {
     "state": "BLOCKED_ON_P0_P1_P2"
   },
   "P8_auth": {
-    "state": "AT_RELEASE"
+    "state": "ACCEPTED",
+    "evidence": "primary-acceptance/ROLES-AUTH.json"
   },
   "P9_futility": {
     "state": "DONE",
@@ -57,5 +67,10 @@
     "commit": "c5e6d1c",
     "remote": "origin/research/state-rulemaking",
     "date": "2026-10-14"
+  },
+  "N29_bootstrap": {
+    "state": "MEASURED",
+    "bootstrap_seconds": "2.000285875",
+    "native_reserve_seconds": "57.999714125"
   }
 }

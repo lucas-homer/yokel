@@ -1,0 +1,15 @@
+## CLI: r17score.py validate-reference (frozen scorer sha256 4834cf66eb0019df73b8a5e81bb5b51c43111fe51204b0f01d36b60ed76c163b)
+26-19-039: {"compounds": 1, "live": 3, "ok": true, "relations": 4}
+exit=0
+26-19-041: {"compounds": 2, "live": 9, "ok": true, "relations": 9}
+exit=0
+26-19-106: {"compounds": 1, "live": 3, "ok": true, "relations": 3}
+exit=0
+
+## CLI: r17score.py decide validation/DECISION.json --interim (all six cells pending)
+exit=0
+outcome= None phases= {"OPQ": {"A1": {"bar": null, "state": "reachable"}, "A2": {"bar": null, "state": "reachable"}}} state= {"full": {"A1": "reachable", "A2": "reachable"}, "full_mechanical_fail": false, "halted_phase": null, "opq": {"A1": "reachable", "A2": "reachable"}, "opq_mechanical_fail": false, "typed_testable": false}
+
+## CLI: same input without --interim (must reject pending cells)
+REJECTED: S1-FULL: pending calls are allowed only in an interim decision
+exit=1

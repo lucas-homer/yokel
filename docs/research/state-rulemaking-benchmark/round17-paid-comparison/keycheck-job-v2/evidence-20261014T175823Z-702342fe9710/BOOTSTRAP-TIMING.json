@@ -1,0 +1,36 @@
+{
+  "accepted_by_primary": false,
+  "adapter_entry_at": "2026-10-14T17:58:34.803087+00:00",
+  "adapter_entry_monotonic_ns": 1798568917248375,
+  "adapter_entry_wall_ns": 1792000714803087000,
+  "adapter_initialization_seconds": 0.015838916,
+  "adapter_ready_at": "2026-10-14T17:58:34.818924+00:00",
+  "adapter_ready_monotonic_ns": 1798568933087291,
+  "adapter_ready_wall_ns": 1792000714818924000,
+  "adapter_timing_sha256": "9ed9f3499ce04b75b67251dff5e21d7e3149507f92fbc1dd35f895b34b036f7a",
+  "bootstrap_seconds": "2.000285875",
+  "boundaries": {
+    "entry": "After import time, before remaining adapter imports.",
+    "missing": "Native launch/deadline, op resolution, pre-exec pin hashing, interpreter startup and import time are not exposed by the runner.",
+    "ready": "After argument/output preflight, immediately before timing publication and metadata GET."
+  },
+  "measurement_gap": "Native deadline start remains unexposed; outer start includes validation, initial pin hashing, claim, Keychain lookup, identity and supervisor launch before the native job deadline. This wider interval also includes op resolution, pre-exec pin hashing and adapter initialization.",
+  "measurement_kind": "conservative_outer_run_to_adapter_ready_upper_bound",
+  "native_receipt_sha256": "63bf3c93c07f2226d89acbd2343e73c4e5c57026c0382443431fb40a46080ba5",
+  "native_reserve_seconds": "57.999714125",
+  "numeric_encoding": "exact decimal seconds as strings for joined measurements",
+  "positive_native_reserve": true,
+  "primary_run_boundaries": {
+    "after_run_monotonic_ns": 1798569116253333,
+    "after_run_wall_ns": 1792000715002092000,
+    "before_run_monotonic_ns": 1798566932801416,
+    "before_run_wall_ns": 1792000712818645000,
+    "job_id": "r17-keycheck-v2-20261014175823-6f20f7c43689",
+    "returncode": 0,
+    "same_host_boot_and_monotonic_clock_confirmed_by_primary": true
+  },
+  "run_boundaries_sha256": "e544e6829a3ad50595584b3529de7bb26de6f4b2658eaa3f46824109f3121ba7",
+  "runner_start_exposed": false,
+  "runner_start_monotonic_ns": null,
+  "schema_version": "r17.bootstrap-timing.v1"
+}

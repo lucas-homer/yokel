@@ -1,0 +1,30 @@
+{
+  "schema": "r17.cap-acceptance.v1",
+  "status": "ACCEPTED",
+  "release_policy_selected": "P-ACCEPT",
+  "date": "2026-10-13",
+  "user_statement_verbatim": "$3 is fine",
+  "context": {
+    "question_asked": "How strict does the R17 $2 cap need to be? OpenRouter's docs don't say whether a key's credit limit can stop a request that's already running.",
+    "options_shown": [
+      "P-ACCEPT (Recommended): Run on an R17-only key limited to $1.73, with your written acceptance that the bound is conditional. Crossing $2 would need one call to cost more than about $0.27, roughly 3x R14's actual $0.089. Expected spend is $0.40-0.90.",
+      "P-HARD: Release only with documented charge-time enforcement or a proven all-in cost bound. Neither exists today, so R17 stays unreleased until one does."
+    ],
+    "primary_interpretation": "User accepts a conditional bound and states a personal spend tolerance of $3.00 (above the $2.00 design cap). Design numbers are unchanged: key limit <= $1.73, FLOOR $0.27, OPERATING $1.80."
+  },
+  "required_residual_risk_statement": "If the key limit is enforced only when a request is admitted, one admitted request can be charged after usage reaches the limit. Spend is then at most $1.73 plus that request's charge. That charge is at most $0.26384, giving at most $1.99384, only if CN1-CN4 hold; if any of them fails, no bound is established and total spend can exceed $2.00. Reported usage is not invoice-verified (CN5).",
+  "residual_risk_affirmation_verbatim": "accept re residual risk statement.",
+  "affirmation_date": "2026-10-14",
+  "affirmation_context": "User reply to the primary quoting required_residual_risk_statement verbatim and asking for \"accept\". User also stated a personal spend tolerance of $3 (\"$3 is fine\", 2026-10-13).",
+  "key_delivery": {
+    "option": "A (temporary swap)",
+    "detail": "New R17-only OpenRouter key (non-resetting $1.73 limit) placed in the existing runner-referenced 1Password item 2yi6d5ymf5qoy55ixnju3r5ayu for the run window; prior value kept in a backup item and restored after R17. User-approved 2026-10-14."
+  },
+  "amendment_A4": {
+    "key_label": "DocketClock",
+    "key_limit_usd": "50.00",
+    "limit_reset": "none (user-stated)",
+    "user_statement_verbatim": "I set the limit to $50 and not resetting. They didn't have an easy way to set the limit to such a custom amount. It's fine. Don't worry about it.",
+    "date": "2026-10-14"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "adjudicators": {
+    "A1": {
+      "effort": "high",
+      "model": "claude-fable-5-1"
+    },
+    "A2": {
+      "effort": "high",
+      "model": "claude-opus-5-5"
+    }
+  },
+  "excluded_sessions": [
+    "r17-ref-author-26-19-039-r1",
+    "r17-ref-review-26-19-039-r1",
+    "r17-ref-response-26-19-039-r1",
+    "r17-ref-reply-26-19-039-r1",
+    "r17-ref-author-26-19-041-r1",
+    "r17-ref-review-26-19-041-r1",
+    "r17-ref-response-26-19-041-r1",
+    "r17-ref-reply-26-19-041-r1",
+    "r17-ref-author-26-19-106-r1",
+    "r17-ref-review-26-19-106-r1",
+    "r17-ref-response-26-19-106-r1",
+    "r17-ref-reply-26-19-106-r1",
+    "r17-gate-A1-b1",
+    "r17-gate-A1-b2",
+    "r17-gate-A1-b3",
+    "r17-gate-A1-b4",
+    "r17-gate-A1-b5",
+    "r17-gate-A1-b6",
+    "r17-gate-A1-b7",
+    "r17-gate-A2-b1",
+    "r17-gate-A2-b2",
+    "r17-gate-A2-b3",
+    "r17-gate-A2-b4",
+    "r17-gate-A2-b5",
+    "r17-gate-A2-b6",
+    "r17-gate-A2-b7"
+  ],
+  "sources": {
+    "S1": {
+      "compounds": {
+        "R3:N1": false
+      },
+      "reference_file": "round17-paid-comparison/reference/26-19-039/reference.json",
+      "reference_sha256": "a4a8d8dc3de474dfe759a24af8451b9e01d0f8c6dd9fd5353f9041c7032db778",
+      "relations": {
+        "R2": false,
+        "R3": false,
+        "R4": false
+      },
+      "source_file": "round17-paid-comparison/sources-r2/26-19-039/parsed-body.txt",
+      "source_id": "26-19-039",
+      "source_sha256": "9fffbf50f8d1cd0015d6fc41bfe0dfd5e60e4976bd42eb2e4f396fdcc28b39b3"
+    },
+    "S2": {
+      "compounds": {
+        "R4:N1": false,
+        "R5:N1": false
+      },
+      "reference_file": "round17-paid-comparison/reference/26-19-041/reference.json",
+      "reference_sha256": "cd58e31c8559e377b2cba3604cf8a0ed3f4ac1f0cf5542c8bb002555d7677471",
+      "relations": {
+        "R1": true,
+        "R2": true,
+        "R3": false,
+        "R4": false,
+        "R5": false,
+        "R6": false,
+        "R7": true,
+        "R8": true,
+        "R9": false
+      },
+      "source_file": "round17-paid-comparison/sources-r2/26-19-041/parsed-body.txt",
+      "source_id": "26-19-041",
+      "source_sha256": "82868cf622ab60cba98f438eb0b443cf36a4745b45188e7a36f643bd155de4f5"
+    },
+    "S3": {
+      "compounds": {
+        "R4:N1": false
+      },
+      "reference_file": "round17-paid-comparison/reference/26-19-106/reference.json",
+      "reference_sha256": "f820268289eb4285f672ffc659869f9b39899309101be20e2de4c2c2380ea65a",
+      "relations": {
+        "R3": false,
+        "R4": false,
+        "R5": false
+      },
+      "source_file": "round17-paid-comparison/sources-r2/26-19-106/parsed-body.txt",
+      "source_id": "26-19-106",
+      "source_sha256": "d105eb947913e37c609851d7346d5a1490f34ecb6f48541723464114ca3205c8"
+    }
+  },
+  "spec_version": "r17.manifest.v2",
+  "thresholds": {
+    "D2": 14,
+    "D2_source": [
+      3,
+      7,
+      3
+    ],
+    "D3_acceptable": 14,
+    "D3_correct": 12,
+    "N": 15,
+    "N_c": 4,
+    "T4": 4,
+    "critical": 4,
+    "critical_compounds": 0,
+    "critical_per_source": [
+      0,
+      4,
+      0
+    ],
+    "n_s": [
+      3,
+      9,
+      3
+    ]
+  },
+  "typed_testable": false
+}

@@ -1,0 +1,89 @@
+{
+  "actions_performed": {
+    "committed": false,
+    "keychain_accessed": false,
+    "live_proposal_created": false,
+    "native_commands_executed": [],
+    "network_or_provider_calls": 0,
+    "real_credentials_read": false,
+    "signing_key_accessed": false
+  },
+  "bootstrap": {
+    "adapter_receipt": "partial initialization with explicit null bootstrap/reserve",
+    "live_measurement_available": false,
+    "native_start_exposed": false,
+    "primary_join": "offline measure_bootstrap.py computes conservative outer-run-to-adapter-ready bound; native start remains unexposed; requires positive reserve"
+  },
+  "created_at": "2026-10-14T17:48:24.974699+00:00",
+  "files": {
+    "README.md": {
+      "bytes": 8089,
+      "sha256": "d361e3967b5b1f33448c0673dc84efbc21e56f7fb21f25c51ea3e4a48147ca2d"
+    },
+    "SPEC.md": {
+      "bytes": 9082,
+      "sha256": "851a6753cf19fdb490f6cf3c7f9083d7b29198ebb59f7767bd9fd8184713373e"
+    },
+    "keycheck.py": {
+      "bytes": 9781,
+      "sha256": "d7bdfa345ce08112c648dc9fc245374a420b9e43cb23a3ac55620117b50fca75"
+    },
+    "make_keycheck_proposal.py": {
+      "bytes": 5189,
+      "sha256": "63904b2b9a307e3abaafea1f8f0edfcdc581c0b8412e73efad2928a176fff2e8"
+    },
+    "measure_bootstrap.py": {
+      "bytes": 2685,
+      "sha256": "20083b6fe8379726011c05ba9a0faf65a5ee3637c912b0b5ccb0cdb0bf753e91"
+    },
+    "test-output.txt": {
+      "bytes": 2576,
+      "sha256": "67949eac7d6389b606fe883cb84d0abd129deeab8f2b3894045eee153642557e"
+    },
+    "test_keycheck.py": {
+      "bytes": 18346,
+      "sha256": "0ec6da340cd9b2ce0e3ab8c1b32a7267fad54eba8efe74e01625f564755db6aa"
+    }
+  },
+  "native_compatibility": {
+    "argument_grammar": "python3.12 -I -S -B /canonical/permitted/stage/adapter.py --live-initial",
+    "expiry_max_seconds": 604800,
+    "runtime_pins": "interpreter + complete stdlib/cached-bytecode/extensions + bundled top-level dylibs; excludes site-packages",
+    "stage_copy": "keycheck.py -> adapter.py (exact bytes; suffix required by Manifest.h)",
+    "staged_files": [
+      "adapter.py",
+      "REVIEW.md"
+    ],
+    "timeout_seconds": 30
+  },
+  "primary_remaining": [
+    "Independent review acceptance",
+    "Fresh permitted stage and unsigned proposal (scope, expiry, verified budget values)",
+    "Primary signing and native check-job",
+    "Human-approved fixed-reference key window / unlocked enrolled Keychain",
+    "One-shot native run with primary outer timestamps",
+    "Review metadata and conservative timing evidence; confirm units/documentation and set acceptance flags in final evidence copies"
+  ],
+  "runbook": "README.md",
+  "schema_version": "r17.keycheck-ready.v1",
+  "status": "OFFLINE_TESTED_PENDING_PRIMARY_REVIEW_STAGE_SIGN_AND_LIVE_MEASUREMENT",
+  "tests": {
+    "command": "/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 -I -S -B docs/research/state-rulemaking-benchmark/round17-paid-comparison/keycheck-job/test_keycheck.py",
+    "credentials": "synthetic values only",
+    "failed": 0,
+    "passed": 17,
+    "proposal_cli": "offline synthetic-core staged-copy integration; full actual runtime pins; temporary artifacts deleted",
+    "transport": "fake socket at http.client connection seam; real socket construction blocked in adapter tests"
+  },
+  "zero_cost_contract": {
+    "completion_requests": 0,
+    "max_requests_per_attempt": 1,
+    "provider_variables": [
+      "OPENROUTER_API_KEY"
+    ],
+    "redirects": 0,
+    "reservation_nanousd": 0,
+    "retries": 0,
+    "sole_request": "GET https://openrouter.ai/api/v1/key"
+  }
+}

@@ -1,0 +1,56 @@
+diff -ru design-r3-1/BUDGET.md design-r3-1-paccept/BUDGET.md
+--- design-r3-1/BUDGET.md	2026-10-13 16:41:05
++++ design-r3-1-paccept/BUDGET.md	2026-10-14 10:39:33
+@@ -9,8 +9,10 @@
+ ## 0. Release policy slot — USER SELECTION REQUIRED
+ 
+ ```text
+-RELEASE_POLICY = UNSET        allowed values: P-HARD | P-ACCEPT
++RELEASE_POLICY = P-ACCEPT     allowed values: P-HARD | P-ACCEPT
+ ```
++
++**Selection note (2026-10-14).** The user selected P-ACCEPT. The evidence is `round17-paid-comparison/run/CAP-ACCEPTANCE.json` (sha256 `c0dfc30914b96fe369f2124f4f7aca88a4c0e5786c7892767995cab8ae40fa06`) and `round17-paid-comparison/run/KEY-ATTESTATION.json` (sha256 `f6f3eae8813a390a1133f55b9b990ae537c68a90b09e3e8d7dc619bdf547b338`). This release reads the frozen design together with four amendments: A1, P5 fixture gate in batches (`round17-paid-comparison/amendments/A1-p5-batching/AMENDMENT.md`, `b683f32129a0fed549941fd492e31cc5aa701a16ecb88e3d3cc46bd5a61734fe`); A2, packet file delivery (`round17-paid-comparison/amendments/A2-packet-file-delivery/AMENDMENT.md`, `3827175eb37c0e4b473923f79fa5cdce4ff1152122d9427ce9bb9f2d5667aa7e`); A3, a 600 s POST response timeout (`round17-paid-comparison/release-prep/A3-TIMEOUT.md`, `3a9c7c3a626dd9776013a3942891556bbfdcde8eab807f081d29bd3a29eee091`); and A4, `KEY_MAX` $50.00 and key label `DocketClock` (`round17-paid-comparison/amendments/A4-key-limit-label/AMENDMENT.md`, `d8826cf2b8f6ec5add43aa027af9cb8529ea21b69a2e90b2b13e13631d1c3538`). Under A4, the $1.73 key limit in this section and in §1 and §4 is superseded. The provider key limit caps spend at $50.00, and the $2.00 bound rests on the ledger (§4) and CN1–CN4. All other text in this file is unchanged from `../design-r3-1/`.
+ 
+ The user replaces `UNSET` with exactly one value here and in `READY.json` (`release_policy`). The same value is written into `INIT` and the release record, and admission refuses `UNSET`, a missing or unknown value, or any disagreement between `INIT` and `BIND_RELEASE` (§4 rule 4; L19–L23). That check is defense in depth. Whether the policy's evidence (E-1/E-2 acceptance, or the user's written acceptance) exists and is accepted is a recorded human decision that the release gate (PROTOCOL P7) verifies; selecting a value alone never satisfies it. Nothing else in this design changes with the choice: every mechanism in §1–§5 applies under both variants, and each variant below is complete as written. **While the value is `UNSET`, the paid phase stays unreleased.** An approval of a hard cap is not an acceptance of a conditional budget, and this design does not infer one.
+ 
+diff -ru design-r3-1/READY.json design-r3-1-paccept/READY.json
+--- design-r3-1/READY.json	2026-10-13 16:42:46
++++ design-r3-1-paccept/READY.json	2026-10-14 10:39:50
+@@ -2,7 +2,7 @@
+   "design": "r17.d3.1",
+   "frozen": null,
+   "state": "unfrozen: targeted round-3 revision of design-r3 (frozen, unchanged); not releasable",
+-  "release_policy": "UNSET",
++  "release_policy": "P-ACCEPT",
+   "release_policy_allowed": [
+     "P-HARD",
+     "P-ACCEPT"
+@@ -43,9 +43,10 @@
+   },
+   "sha256": {
+     "ADJUDICATION-SPEC.md": "1eca88fc0c54e22a77eab0e8e729b09a52eb0086fa05c0fcaec9f146ac9234d0",
+-    "BUDGET.md": "7cb99c52d2b6ce920ec7d6d0c83f9bc17f9142e8683ba81dafa803b574b097c8",
++    "BUDGET.md": "5997797dd1d857306d4912db6836df6af1a59f48fe8f4c063b2edf3717cf6715",
+     "DISPOSITION.md": "6d37c5e9e0c967297f8dcfe67106ca86e2772fd5c91652ffe528ff079dc565d4",
+     "PROTOCOL.md": "d75f858850a44e59c65346b4709b59dbce839d9fa3188f986a2021d632bde3f9",
++    "READY.primary.json": "944aeb9ab5173e4a31f0c9c7f3923965533ac3fb90d2f2c459415e66e29017f4",
+     "REFERENCE-SPEC.md": "ef660c68af39c3c4a7e74dd8f7a1ab5eaf883cd15225d3f6b3f17692d1bb05a0",
+     "fixtures/README.md": "a30ff70128f6f80010da2cf7fdd4ac20520f9da362ed33c4a60e6aeaf9d53687",
+     "fixtures/cases.json": "53d501b69f3c8c8e98403c3f3c3111be84de0d1b39e95d6c53f8cdaec132da8b",
+diff -ru design-r3-1/READY.primary.json design-r3-1-paccept/READY.primary.json
+--- design-r3-1/READY.primary.json	2026-10-13 16:47:58
++++ design-r3-1-paccept/READY.primary.json	2026-10-14 10:39:50
+@@ -1,10 +1,10 @@
+ {
+   "frozen": "2026-10-13",
+   "frozen_by": "primary (claudeAgent/claude-opus-5-5)",
+-  "release_policy": "UNSET",
++  "release_policy": "P-ACCEPT",
+   "sha256": {
+     "ADJUDICATION-SPEC.md": "1eca88fc0c54e22a77eab0e8e729b09a52eb0086fa05c0fcaec9f146ac9234d0",
+-    "BUDGET.md": "7cb99c52d2b6ce920ec7d6d0c83f9bc17f9142e8683ba81dafa803b574b097c8",
++    "BUDGET.md": "5997797dd1d857306d4912db6836df6af1a59f48fe8f4c063b2edf3717cf6715",
+     "DISPOSITION.md": "6d37c5e9e0c967297f8dcfe67106ca86e2772fd5c91652ffe528ff079dc565d4",
+     "PROTOCOL.md": "d75f858850a44e59c65346b4709b59dbce839d9fa3188f986a2021d632bde3f9",
+     "REFERENCE-SPEC.md": "ef660c68af39c3c4a7e74dd8f7a1ab5eaf883cd15225d3f6b3f17692d1bb05a0",
+Only in design-r3-1-paccept: RELEASE-POLICY.diff

@@ -1,0 +1,58 @@
+{
+  "design": "r17.d3.1",
+  "frozen": null,
+  "state": "unfrozen: targeted round-3 revision of design-r3 (frozen, unchanged); not releasable",
+  "release_policy": "P-ACCEPT",
+  "release_policy_allowed": [
+    "P-HARD",
+    "P-ACCEPT"
+  ],
+  "release_policy_note": "Selected by the user only (BUDGET.md \u00a70). While UNSET the paid phase stays unreleased. Ledger admission also refuses UNSET (r17recon.admit; L19-L23).",
+  "supersedes": "../design-r3/ (frozen, unchanged)",
+  "responds_to": "../protocol-review-r3/REVIEW.md",
+  "spec_versions": {
+    "reference": "r17.ref.v3",
+    "adjudication": "r17.adj.v2",
+    "manifest": "r17.manifest.v2",
+    "fixtures": "r17.fixtures.v2"
+  },
+  "offline_check": {
+    "command": "python3 -I -S -B fixtures/check.py",
+    "failures": 0,
+    "scorer_checks": {
+      "assembly": 23,
+      "decisions": 15,
+      "gate_selftest": 10,
+      "gold_cases": 70,
+      "ledger": 25,
+      "reference_examples": 9,
+      "reference_invalid": 9,
+      "scorer_cases": 71
+    },
+    "adjudicator_gate": "not run (P5 requires --adjudications)"
+  },
+  "verification": {
+    "probe": "python3 -I -S -B verify/probe_r3_1.py (ported protocol-review-r3/probe.py; all assertions pass, r3.1 behaviour)",
+    "red_against_r3": "python3 -I -S -B verify/red_against_r3.py (17 new attack/guard fixtures fail under frozen r3; twins pass)",
+    "mutation": "python3 -I -S -B verify/mutation_pass.py (249 flips, 0 missed)",
+    "sha256": {
+      "verify/mutation_pass.py": "715a8d315dacc4da051d0ce34623649581e6fe739252b8731e99482a73200171",
+      "verify/probe_r3_1.py": "551f8f553d99c9038766451c911b3b84067bf8ad4fb0630e46442f5f5c3b4bc2",
+      "verify/red_against_r3.py": "ede08a4bd63475832c67796c9060af981aed6f950ff668df883fca46d3a99bc6"
+    }
+  },
+  "sha256": {
+    "ADJUDICATION-SPEC.md": "1eca88fc0c54e22a77eab0e8e729b09a52eb0086fa05c0fcaec9f146ac9234d0",
+    "BUDGET.md": "5997797dd1d857306d4912db6836df6af1a59f48fe8f4c063b2edf3717cf6715",
+    "DISPOSITION.md": "6d37c5e9e0c967297f8dcfe67106ca86e2772fd5c91652ffe528ff079dc565d4",
+    "PROTOCOL.md": "d75f858850a44e59c65346b4709b59dbce839d9fa3188f986a2021d632bde3f9",
+    "READY.primary.json": "944aeb9ab5173e4a31f0c9c7f3923965533ac3fb90d2f2c459415e66e29017f4",
+    "REFERENCE-SPEC.md": "ef660c68af39c3c4a7e74dd8f7a1ab5eaf883cd15225d3f6b3f17692d1bb05a0",
+    "fixtures/README.md": "a30ff70128f6f80010da2cf7fdd4ac20520f9da362ed33c4a60e6aeaf9d53687",
+    "fixtures/cases.json": "53d501b69f3c8c8e98403c3f3c3111be84de0d1b39e95d6c53f8cdaec132da8b",
+    "fixtures/cases.src.json": "18e11a263dc19148b751a24275fc1ff57e5ce11edc1d76da0736fd183795e4ca",
+    "fixtures/check.py": "d7e04f113159f50f6ad3c7dedff63e22840f879c3e96a20e7e615fba4d3ee444",
+    "fixtures/r17recon.py": "5295a66700fee54b2e03344003e5638a5728b1949eedf0945062950cc40e33ff",
+    "fixtures/r17score.py": "4834cf66eb0019df73b8a5e81bb5b51c43111fe51204b0f01d36b60ed76c163b"
+  }
+}

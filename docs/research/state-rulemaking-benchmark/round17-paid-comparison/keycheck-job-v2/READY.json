@@ -1,0 +1,164 @@
+{
+  "actions_performed": {
+    "committed": false,
+    "keychain_accessed": false,
+    "live_proposal_created": false,
+    "native_commands_executed": [],
+    "network_or_provider_calls": 0,
+    "real_credentials_read": false,
+    "signing_key_accessed": false
+  },
+  "bootstrap": {
+    "adapter_receipt": "partial initialization with explicit null bootstrap/reserve",
+    "live_measurement_available": false,
+    "native_start_exposed": false,
+    "primary_join": "offline measure_bootstrap.py computes conservative outer-run-to-adapter-ready bound; native start remains unexposed; requires positive reserve"
+  },
+  "created_at": "2026-10-14T17:57:36.395734+00:00",
+  "failure_receipt": {
+    "excluded": [
+      "key",
+      "key fragments",
+      "raw body",
+      "headers",
+      "exception text",
+      "response-controlled field names"
+    ],
+    "extras": {
+      "field_type": [
+        "allowlisted field name (dynamic usage names normalized to usage_*)",
+        "Python type name only"
+      ],
+      "missing_fields": [
+        "missing expected field names only"
+      ],
+      "response_status": [
+        "integer status",
+        "optional integer top-level error.code as error_code"
+      ]
+    },
+    "publication": "same O_EXCL/O_NOFOLLOW mode0600 + file and parent fsync as other receipts",
+    "schema_version": "r17.keycheck-failure.v2"
+  },
+  "failure_stages": [
+    "key_env_invalid",
+    "tls_context",
+    "connect",
+    "request_send",
+    "response_status",
+    "body_too_large",
+    "key_echo_in_body",
+    "json_parse",
+    "missing_fields",
+    "field_type",
+    "label_shape",
+    "deadline"
+  ],
+  "files": {
+    "README.md": {
+      "bytes": 10580,
+      "sha256": "a59e9976e8aebc1c51be91423a843d9994b57858a84b26dab92242eeb386b8a8"
+    },
+    "SPEC.md": {
+      "bytes": 15420,
+      "sha256": "e5453970afb97afcc2d55764b4219638e132da3161978333d0e7ed3bd15be528"
+    },
+    "keycheck.py": {
+      "bytes": 16326,
+      "sha256": "d53d52bac5de906eff4779887bab4b78ebc95d49fc84aa566781c0d513526bfa"
+    },
+    "make_keycheck_proposal.py": {
+      "bytes": 5208,
+      "sha256": "d5905d10f9a8daac668180a550d7d5056e0848a8abd69edd214ffcf10078541d"
+    },
+    "measure_bootstrap.py": {
+      "bytes": 2685,
+      "sha256": "20083b6fe8379726011c05ba9a0faf65a5ee3637c912b0b5ccb0cdb0bf753e91"
+    },
+    "primary-review/REVIEW.md": {
+      "bytes": 1808,
+      "sha256": "4375b4738ff2cdcedf0976ddce9b913d8bfe4a9a00075bef03c0fc2a59d1a892"
+    },
+    "test-output.txt": {
+      "bytes": 4928,
+      "sha256": "d6d849f1558f592c40a0f6037dbacb782616e67f0ffd2d67dcdda613633551f3"
+    },
+    "test_keycheck.py": {
+      "bytes": 33850,
+      "sha256": "9b03721cd1d1d49653ce96bad902cb79f4836d2bb5fb22d4a62272378adc06af"
+    }
+  },
+  "frozen_v1_public_file_hashes_verified": {
+    "README.md": true,
+    "SPEC.md": true,
+    "keycheck.py": true,
+    "make_keycheck_proposal.py": true,
+    "measure_bootstrap.py": true,
+    "test-output.txt": true,
+    "test_keycheck.py": true
+  },
+  "hard_pass_conditions": [
+    "usage == 0",
+    "limit == 50",
+    "limit_reset is null",
+    "limit_remaining == 50",
+    "label/name matches DocketClock or is explicitly not_machine_verifiable with user attestation required"
+  ],
+  "historical_review": "primary-review/REVIEW.md is copied v1 history with a warning; NOT v2 acceptance",
+  "implementation_scope": "docs/research/state-rulemaking-benchmark/round17-paid-comparison/keycheck-job-v2",
+  "label_policy": {
+    "masked_label": "omitted; label_kind=masked_key; label_name_verifiable=false",
+    "matching": "re.ASCII + fullmatch; lowercase hex, 3-8 characters each side, three literal dots",
+    "optional_name": "safe printable string length 1-100; exact DocketClock check",
+    "regex": "sk-or-v1-[0-9a-f]{3,8}\\.\\.\\.[0-9a-f]{3,8}",
+    "without_name": "label_check and checks.label=not_machine_verifiable; user_attestation_required=true; primary acceptance remains false"
+  },
+  "live_failure_cause": "Unknown; masked data.label is an unverified hypothesis, supported only by synthetic tests.",
+  "native_compatibility": {
+    "argument_grammar": "python3.12 -I -S -B /canonical/permitted/stage/adapter.py --live-initial",
+    "expiry_max_seconds": 604800,
+    "runtime_pins": "interpreter + complete stdlib/cached-bytecode/extensions + bundled top-level dylibs; excludes site-packages",
+    "stage_copy": "keycheck.py -> adapter.py (exact bytes; suffix required by Manifest.h)",
+    "staged_files": [
+      "adapter.py",
+      "REVIEW.md"
+    ],
+    "timeout_seconds": 30
+  },
+  "optional_fields": {
+    "limit_remaining": "missing computes exact limit - usage when numeric; limit_remaining_computed=true",
+    "limit_reset": "missing normalizes to null; limit_reset_present=false"
+  },
+  "primary_remaining": [
+    "Independent v2 review acceptance (historical v1 review is not accepted for v2)",
+    "Fresh permitted v2 stage, batch and unsigned proposal/job ID with verified scope, expiry and budget",
+    "Primary signing/check and one-shot live run only under the primary live-run authorization",
+    "Preserve sanitized failure/timing receipts on failure; never reuse a consumed ID",
+    "Review financial checks, name evidence or user attestation, units/documentation and conservative timing; primary acceptance remains pending"
+  ],
+  "runbook": "README.md",
+  "schema_version": "r17.keycheck-ready.v2",
+  "status": "OFFLINE_TESTED_PENDING_PRIMARY_REVIEW_STAGE_SIGN_AND_LIVE_MEASUREMENT",
+  "tests": {
+    "command": "/Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3.12 -I -S -B docs/research/state-rulemaking-benchmark/round17-paid-comparison/keycheck-job-v2/test_keycheck.py",
+    "credentials": "synthetic values only",
+    "failed": 0,
+    "passed": 39,
+    "proposal_cli": "offline synthetic-core staged-copy integration; full actual runtime pins; temporary artifacts deleted",
+    "seeded_fuzz_cases": 80,
+    "seeded_fuzz_failure_receipts": 160,
+    "static_validation": "all Python sources and the documented future-run Python wrapper parse without execution",
+    "transport": "synthetic fake socket at http.client connection seam; real socket construction and DNS blocked in adapter tests"
+  },
+  "zero_cost_contract": {
+    "completion_requests": 0,
+    "max_requests_per_attempt": 1,
+    "provider_variables": [
+      "OPENROUTER_API_KEY"
+    ],
+    "redirects": 0,
+    "reservation_nanousd": 0,
+    "retries": 0,
+    "sole_request": "GET https://openrouter.ai/api/v1/key"
+  }
+}
