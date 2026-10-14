@@ -1,0 +1,90 @@
+{
+  "classification": "a_prompt_guidance_gap",
+  "evidence": [
+    {
+      "claim": "Reference clause text is absent from all original leaves but present in mapped unit evidence.",
+      "reference": "round17-paid-comparison/reference/26-19-039/reference.json#/relations",
+      "ranges": {
+        "R2": [
+          3273,
+          3297
+        ],
+        "R3": [
+          3457,
+          3520
+        ],
+        "R4": [
+          4087,
+          4118
+        ]
+      },
+      "original_leaf_ranges": {
+        "c9": [
+          3369,
+          3454
+        ],
+        "c10": [
+          3599,
+          3694
+        ]
+      }
+    },
+    {
+      "claim": "The prompt supplies general preservation and assertion-relative roles but no inverse-exemption leaf guidance.",
+      "file": "exact-system-prompt.txt",
+      "lines": [
+        4,
+        8,
+        15,
+        16
+      ]
+    },
+    {
+      "claim": "Unchanged assertions and inverse mappings plus corrected leaves yield correct EXCEPT scores with existing if links.",
+      "file": "counterfactual/scores.json"
+    },
+    {
+      "claim": "B2 requires leaf clause parts; B4 accepts inverse plus if for EXCEPT.",
+      "file": "round17-paid-comparison/design-r3-1-paccept/ADJUDICATION-SPEC.md",
+      "sections": [
+        "B2",
+        "B4",
+        "B5"
+      ]
+    }
+  ],
+  "counterfactual": {
+    "file": "counterfactual/output.wire.json",
+    "validates": true,
+    "validator_output": {
+      "validates": true,
+      "validator": "unchanged r16.w2.2 validate_response and pinned r15.1 validate/expand/contract",
+      "baseline_validates": true,
+      "exact_request_messages_and_schema_match": true,
+      "changed_nodes": [
+        "c9",
+        "c10"
+      ],
+      "units_and_links_unchanged": true,
+      "scores": {
+        "A1": {
+          "R2": "correct",
+          "R3": "correct",
+          "R4": "correct"
+        },
+        "A2": {
+          "R2": "correct",
+          "R3": "correct",
+          "R4": "correct"
+        }
+      },
+      "qualification": "Offline mechanical scoring with original mappings; no new adjudication or provider call."
+    }
+  },
+  "proposed_sentence": "For an exemption or exception, preserve the exact exempted case and exemption wording in the linked L leaf even when already stated in the unit assertion, using if when the unit asserts the exemption itself and unless when the clause carves out of the unit assertion; explanatory reasons alone do not preserve the exempted case.",
+  "uncertainties": [
+    "Prompt causal efficacy and model capability cannot be established from one offline output.",
+    "Mechanical rescoring uses original mappings; no new adjudicator call."
+  ],
+  "decision_needed": "Whether to preregister a prompt-only R19 test with generalization checks; retain original R18 outcome."
+}
