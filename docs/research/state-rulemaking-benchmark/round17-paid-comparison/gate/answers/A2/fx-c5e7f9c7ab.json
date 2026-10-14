@@ -1,0 +1,39 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A2",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "session": "r17-gate-A2-b6"
+  },
+  "call_id": "fx-c5e7f9c7ab",
+  "source_id": "fx-c5e7f9c7ab",
+  "output_sha256": "aff8f21a9c4ed3d18e46f509bcbc60cfe3286b4647232287ac5db27905048f19",
+  "reference_sha256": "1a9c44172f45209bb9a5208e43959f899010964d9585b8f3d755e4a2d44cd391",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 1 states that the office approves permits, the target assertion; its evidence covers [0,124], which contains the target quote and both relation clauses."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [],
+    "reference_defects": [
+      {
+        "rid": null,
+        "kind": "other",
+        "note": "The reference has a single target for the first sentence only; the source also contains apparent obligations/deadlines (e.g. 'Applicants must comply with section Delta', 'Applications must be received by 16:00 UTC on February 8, 2037') that carry no targets. This may be intentional fixture scope; flagged for sensitivity only."
+      }
+    ],
+    "other": [
+      "Unit evidence in this record is given as objects ({start, end, quote, span_id, occurrence}) rather than [start, end] pairs; I read start/end as the codepoint range. Unit 1 evidence [0,124] overlaps the target quote [0,27].",
+      "Units 2-7 have evidence outside [0,122] and assert different matters (section Delta compliance, deadlines, background), so none map to T1."
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r17-gate-A1-b3"
+  },
+  "call_id": "fx-4b0e83fd2f",
+  "source_id": "fx-4b0e83fd2f",
+  "output_sha256": "fe975877687d812a0a8c5790bef1ffd1fd9f139dc07f12d96c79833bd15de11b",
+  "reference_sha256": "3cfcd26c0a0b5a136ddf26babe0dddaeff5a023904e75e091cdf21825c6373d5",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [],
+      "basis": "The only unit asserts 'The Guild sets lamp fees', a different actor and action from 'Members pay half fees'; its evidence [0,24] does not overlap the target quote [26,47] or the clause. No unit asserts T1."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [],
+    "reference_defects": [
+      {
+        "rid": null,
+        "kind": "other",
+        "note": "The first sentence 'The Guild sets lamp fees' is an unconditioned assertion in the source that has no target in the reference. If it is meant to be in scope, unit 1 would map direct to it; as given, unit 1 maps to nothing."
+      }
+    ],
+    "other": []
+  }
+}

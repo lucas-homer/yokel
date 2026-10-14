@@ -1,0 +1,220 @@
+{
+  "spec_version": "r17.ref.v3",
+  "source_id": "26-19-106",
+  "source_text_sha256": "d105eb947913e37c609851d7346d5a1490f34ecb6f48541723464114ca3205c8",
+  "targets": [
+    {
+      "tid": "T3",
+      "quote": {
+        "text": "RCW  34.05.328",
+        "start": 2144,
+        "end": 2158,
+        "occurrence": 3
+      },
+      "gloss": "implied: RCW 34.05.328 applies to (must be complied with by) the college"
+    },
+    {
+      "tid": "T4",
+      "quote": {
+        "text": "requirements of the Regulatory Fairness Act",
+        "start": 2480,
+        "end": 2523,
+        "occurrence": 1
+      },
+      "gloss": "implied: the requirements of the Regulatory Fairness Act apply to this rule proposal"
+    },
+    {
+      "tid": "T5",
+      "quote": {
+        "text": "the rules relate",
+        "start": 2585,
+        "end": 2601,
+        "occurrence": 1
+      },
+      "gloss": "the rules relate to (concern) something"
+    }
+  ],
+  "relations": [
+    {
+      "rid": "R3",
+      "tid": "T3",
+      "class": "EXCEPT",
+      "introducer": [
+        {
+          "text": "is not mandated to comply with",
+          "start": 2113,
+          "end": 2143,
+          "occurrence": 1
+        }
+      ],
+      "clause": [
+        {
+          "text": "Pursuant to RCW  34.05.328 (5)(a)(i), the college is not mandated to comply with",
+          "start": 2063,
+          "end": 2143,
+          "occurrence": 1
+        }
+      ],
+      "excluded": [
+        {
+          "quote": {
+            "text": "Pursuant to RCW  34.05.328 (5)(a)(i)",
+            "start": 2063,
+            "end": 2099,
+            "occurrence": 1
+          },
+          "reason": "citation",
+          "note": "statutory authority for the exemption, not the exempted population"
+        }
+      ],
+      "logic": {
+        "nid": "N1",
+        "op": "PART",
+        "quotes": [
+          {
+            "text": "the college",
+            "start": 2101,
+            "end": 2112,
+            "occurrence": 2
+          }
+        ],
+        "markers": []
+      },
+      "rationale": "Rule 6.2: the sentence is phrased as the exemption; the governed assertion (the college must comply with RCW 34.05.328) is stated nowhere positively, so the named thing exempted from, 'RCW 34.05.328', is the implied target. 'is not mandated to comply with' is the exempting introducer and 'the college' is the exempted population. The leading 'Pursuant to RCW 34.05.328 (5)(a)(i)' is the cross-reference giving the authority and is excluded as citation. Internal agency procedural exemption, so not critical.",
+      "critical": false,
+      "critical_reason": "",
+      "contested": false,
+      "contested_reason": ""
+    },
+    {
+      "rid": "R4",
+      "tid": "T4",
+      "class": "EXCEPT",
+      "introducer": [
+        {
+          "text": "is exempt from",
+          "start": 2465,
+          "end": 2479,
+          "occurrence": 1
+        }
+      ],
+      "clause": [
+        {
+          "text": "This rule proposal, or portions of the proposal, is exempt from",
+          "start": 2416,
+          "end": 2479,
+          "occurrence": 1
+        }
+      ],
+      "excluded": [],
+      "logic": {
+        "nid": "N1",
+        "op": "OR",
+        "markers": [
+          {
+            "text": "or",
+            "start": 2436,
+            "end": 2438,
+            "occurrence": 21
+          }
+        ],
+        "children": [
+          {
+            "nid": "N2",
+            "op": "PART",
+            "quotes": [
+              {
+                "text": "This rule proposal",
+                "start": 2416,
+                "end": 2434,
+                "occurrence": 1
+              }
+            ],
+            "markers": []
+          },
+          {
+            "nid": "N3",
+            "op": "PART",
+            "quotes": [
+              {
+                "text": "portions of the proposal",
+                "start": 2439,
+                "end": 2463,
+                "occurrence": 1
+              }
+            ],
+            "markers": []
+          }
+        ]
+      },
+      "rationale": "Rule 6.2: the sentence is phrased as the exemption and names the thing exempted from (requirements of the Regulatory Fairness Act), which is the implied target; 'is exempt from' introduces. The exempted population is coordinated by an explicit 'or', so it is an OR node over 'This rule proposal' and 'portions of the proposal' (rule 4). The trailing 'because the proposal: Is exempt under RCW 19.85.025(3)... Is exempt under RCW 19.85.025(4)' states the statutory grounds for the same exemption, not conditions on it, and is left out of the clause. Agency procedural exemption (small-business impact analysis), so not critical.",
+      "critical": false,
+      "critical_reason": "",
+      "contested": false,
+      "contested_reason": ""
+    },
+    {
+      "rid": "R5",
+      "tid": "T5",
+      "class": "RESTRICT",
+      "introducer": [
+        {
+          "text": "only",
+          "start": 2602,
+          "end": 2606,
+          "occurrence": 1
+        }
+      ],
+      "clause": [
+        {
+          "text": "only to internal governmental operations that are not subject to violation by a nongovernment party",
+          "start": 2602,
+          "end": 2701,
+          "occurrence": 1
+        }
+      ],
+      "excluded": [],
+      "logic": {
+        "nid": "N1",
+        "op": "PART",
+        "quotes": [
+          {
+            "text": "to internal governmental operations that are",
+            "start": 2607,
+            "end": 2651,
+            "occurrence": 1
+          },
+          {
+            "text": "subject to violation by a nongovernment party",
+            "start": 2656,
+            "end": 2701,
+            "occurrence": 1
+          }
+        ],
+        "markers": [
+          {
+            "text": "not",
+            "start": 2652,
+            "end": 2655,
+            "occurrence": 7
+          }
+        ]
+      },
+      "rationale": "Exclusive wording 'only' restricts what the rules relate to, so RESTRICT with the whole restricted complement as the PART (rule 7), including the preposition 'to' that belongs to the restricted phrase. 'not' negates only this single component's own relative-clause predicate ('are not subject to violation'), so it is a PART marker with the quotes split around it (rule 4). This is a reason given for a procedural exemption, so not critical.",
+      "critical": false,
+      "critical_reason": "",
+      "contested": false,
+      "contested_reason": ""
+    }
+  ],
+  "out_of_scope_notes": [
+    "Comment window ('beginning October 7, 2026, at 8:00 a.m., by November 17, 2026, at 8:00 a.m.'), the hearing date/time and the disability-assistance deadline are plain temporal bounds with no conditional wording; no class in 4.1 covers them, so no relation is recorded.",
+    "'A school district fiscal impact statement is not required under RCW  28A.305.135.' (1918-1999) and 'A cost-benefit analysis is not required under RCW  34.05.328.' (2001-2062) are standalone negated requirements. Each names the requirement and the statute that would impose it, but no exempted population, thing or case, so rule 6's EXCEPT pattern (introducer + PART holding the exempted population) cannot be completed without inventing one; 'under RCW ...' is the statute framing the requirement, not a carve-out. Treated like 'Rule is not necessitated by federal law, federal or state court decision.' as a plain negative statement; no relation. The cost-benefit exemption for the college is recorded in R3, where 'the college' is the named exempted population.",
+    "'Is exempt under RCW 19.85.025(3)' and 'Is exempt under RCW 19.85.025(4)' (list items broken across paragraphs after 'because the proposal:') and 'Is fully exempt.' restate the Regulatory Fairness Act exemption (R4) with its statutory grounds and scope; they add no condition and are not recorded as separate relations.",
+    "'the college does not voluntarily make that section applicable to the adoption of this rule pursuant to subsection (5)(a)(ii), and to date the joint administrative rules committee has not made that section applicable' are factual statements of why RCW 34.05.328 does not apply (background to R3), not condition clauses; not recorded.",
+    "WAC 132M-110-060(2): 'Any person wishing to request access to public records ..., or seeking assistance in making such a request' is a participial qualifier of the subject (rule 7), not a condition; the 'or' inside it therefore has no node.",
+    "WAC 132M-110-060(3): 'but another college staff member may process requests' is a contrasting permission, not an exception carved out of 'will oversee compliance'; not recorded.",
+    "Extraction retains Washington Register strike/insert markup as double parentheses, e.g. '((Vice President of Administration))Public Records Officer' and '(((2)))(3)'; the old text is not annotated.",
+    "Statute citations contain doubled spaces ('RCW  34.05.328'), reproduced exactly in quotes."
+  ]
+}

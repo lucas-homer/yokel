@@ -1,0 +1,323 @@
+
+### repro_3call_plan.py
+==============================================================================
+A. happy path, three cells
+==============================================================================
+ok   S1-OPQ admitted and valid (R=3)
+ok   S2-OPQ admitted and valid (R=2)
+ok   S3-OPQ admitted and valid (R=1)
+ok   three POSTs
+ok   aggregate 3*FLOOR
+ok   no SKIP entries after a clean 3-call run
+ok   post-run admit(S1-OPQ) refused: call already completed or skipped (no retry)
+ok   post-run admit(S2-OPQ) refused: call already completed or skipped (no retry)
+ok   post-run admit(S3-OPQ) refused: call already completed or skipped (no retry)
+ok   post-run admit(S1-FULL) refused: not a required call
+ok   post-run admit(S2-FULL) refused: not a required call
+ok   post-run admit(S3-FULL) refused: not a required call
+ok   S1-FULL refused: release_call_set
+ok   S1-OPQ refused: wrong_cell_order
+ok   still three POSTs
+==============================================================================
+B. admission R values at the key limit boundary
+==============================================================================
+ok   key_limit_ok(3*FLOOR,3) true; (3*FLOOR-1,3) false; (3*FLOOR,6) false
+ok   S1-OPQ dispatched with L = 3*FLOOR
+ok   S2-OPQ dispatched with L = 3*FLOOR
+ok   S3-OPQ dispatched with L = 3*FLOOR
+ok   three POSTs at the exact key limit
+ok   L = 3*FLOOR-1 refused at release_gate: key_limit
+ok   recon.admit also refuses: key capacity
+ok   no POST
+==============================================================================
+C. semantic futility after S1 skips exactly the two remaining OPQ cells
+==============================================================================
+ok   refused: semantic_futility_stop
+ok   SKIPs: [('S2-OPQ', 'OPQ-semantic-futility'), ('S3-OPQ', 'OPQ-semantic-futility')]
+ok   one POST
+ok   S3-OPQ refused afterwards: call already completed or skipped (no retry)
+==============================================================================
+D. mechanical futility on S1 (finish=length) skips exactly S2-OPQ, S3-OPQ with D1
+==============================================================================
+ok   state 11, no halt
+ok   SKIPs: [('S2-OPQ', 'D1'), ('S3-OPQ', 'D1')]
+ok   S2 refused: wrong_cell_order
+ok   one POST
+==============================================================================
+E. plan/manifest consistency refusals
+==============================================================================
+ok   6-call plan with 4 compounds refused: manifest_slots
+ok   no POST
+ok   3-call plan with 5 compounds refused: P6_E8_counts
+ok   INIT/release call-set disagreement refused: required_calls
+
+problems: []
+exit=0
+
+### repro_hd_cli_misc.py
+R17 stopped: host_driver_failure. No retry.
+==============================================================================
+1. overrides refused
+==============================================================================
+ok   refused ['--cell', 'S1-OPQ', '--driver', 'x.py']
+ok   refused ['--driver-sha256=00']
+ok   refused ['--cell', 'S1-OPQ', '--driver=x.py']
+==============================================================================
+2. argv routing and derived pin
+==============================================================================
+ok   adapter.main called with recover_first=True
+ok   user argv forwarded verbatim
+ok   own path+hash appended
+ok   CLI routing reads no env, opens nothing
+==============================================================================
+3. renamed driver copy (SPEC example: reviewed-host-driver.py)
+==============================================================================
+FAIL renamed copy returned 17
+==============================================================================
+4. adapter import failure escapes host main() uncaught
+==============================================================================
+FAIL should raise
+==============================================================================
+5. driver import is inert
+==============================================================================
+ok   import reads no env, opens no connection
+ok   exports present
+
+problems: ['renamed copy returned 17', 'should raise']
+exit=1
+
+### repro_hd_key_fields.py
+==============================================================================
+1. numeric tokens survive verbatim and parse exactly
+==============================================================================
+     (note) parse_usd(1.0000000000000000000000000000001) = 1000000000 (exact ceiling would be 1000000001; >28 sig. digits never occur for USD)
+ok   token b'0.1' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'0.1') == 100000000
+ok   token b'0.10' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'0.10') == 100000000
+ok   token b'1.7300000000000000001' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'1.7300000000000000001') == 1730000001
+ok   token b'1e-9' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'1e-9') == 1
+ok   token b'1E-10' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'1E-10') == 1
+ok   token b'0' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'0') == 0
+ok   token b'-0' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'-0') == 0
+ok   token b'1.730e0' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'1.730e0') == 1730000000
+ok   token b'0.000000001' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'0.000000001') == 1
+ok   token b'1234567890123456789' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'1234567890123456789') == 1234567890123456789000000000
+ok   token b'0.3' emitted verbatim
+ok   adapter sees raw token
+ok   parse_usd(b'0.3') == 300000000
+==============================================================================
+2. adapter key_read on driver packets
+==============================================================================
+ok   usage rounded UP to nanoUSD: {'usage': 12345679, 'limit': 1730000000, 'limit_reset': None}
+ok   response_sha256 over original bytes
+==============================================================================
+3. envelope and shape refusals (no key echo, no chained context)
+==============================================================================
+ok   refused b'{"usage":0,"limit":1,"limit_remaining":1' -> key_response_invalid
+ok   refused b'[]' -> key_response_invalid
+ok   refused b'{"data":[]}' -> key_response_invalid
+ok   refused b'{"data":null}' -> key_response_invalid
+ok   refused b'{"data":{"usage":0}}' -> key_response_invalid
+ok   refused b'{"data":{"usage":"0.1","limit":1,"limit_' -> key_response_invalid
+ok   refused b'{"data":{"usage":NaN,"limit":1,"limit_re' -> key_response_invalid
+ok   refused b'{"data":{"usage":0,"limit":1,"limit_rema' -> key_response_invalid
+ok   refused b'{"data":{"usage":{"a":1},"limit":1,"limi' -> key_response_invalid
+ok   refused b'{"data":{"usage":0,"usage":1,"limit":1,"' -> key_response_invalid
+ok   refused b'\xef\xbb\xbf{"data":{"usage":0,"limit":1,"limit_r' -> key_response_invalid
+ok   refused b'{"data":{"usage":0,"limit":1,"limit_rema' -> key_response_invalid
+ok   refused b'{"data":{"usage":0,"limit":1,"limit_rema' -> transport_failed
+==============================================================================
+4. permitted shapes
+==============================================================================
+ok   string reset forwarded
+ok   null limit forwarded (adapter halts on it)
+ok   non-200 key status 201 refused
+ok   non-200 key status 204 refused
+ok   non-200 key status 301 refused
+ok   non-200 key status 401 refused
+ok   non-200 key status 429 refused
+ok   non-200 key status 500 refused
+
+problems: []
+exit=0
+
+### repro_hd_sigint_cli.py
+==============================================================================
+1. SIGINT arrives while the POST is being written
+==============================================================================
+ok   default traceback text carries no key
+ok   nothing on stderr carries the key (stderr='')
+     traceback frames: ['File "/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round17-paid-comparison/adapter-r1-2/r17_adapter.py", line 997, in execute_once', 'File "/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round17-paid-comparison/adapter-review-r3/r2-repros/.review-r2-ulcidgqf/drv/host_driver.py", line 128, in post_once', 'File "/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round17-paid-comparison/adapter-review-r3/r2-repros/.review-r2-ulcidgqf/drv/host_driver.py", line 110, in _request']
+ok   one (interrupted) POST attempt, no re-send
+ok   connection closed in finally
+ok   ledger.lock RETAINED (crash evidence; adapter never unlinks on BaseException)
+ok   ledger tail is DISPATCH_MARK, no RESOLVE: ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK']
+ok   no unexpected-halt sidecar (BaseException skips except-branch)
+ok   no response receipt
+==============================================================================
+2. next CLI invocation (recover-first) with the lock still present
+==============================================================================
+ok   exit 3, lock untouched: 'R17 lock/claim exists; no lock was broken. No retry.'
+ok   lock still present
+ok   no attempt dir claimed
+ok   still one POST ever
+==============================================================================
+3. operator records owner-death evidence, removes lock, runs library recover()
+==============================================================================
+FAIL CLI exposes no lock-evidence option (library call required)
+ok   recovered S1-OPQ
+ok   LOCK_RECOVERED is the next entry after the crash
+ok   RESOLVE dispatched=True debit=FLOOR
+ok   terminal HALT: ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'LOCK_RECOVERED', 'RESOLVE', 'HALT']
+ok   recovery made 4 GETs and no POST
+ok   recovered.json written
+==============================================================================
+4. CLI after recovery
+==============================================================================
+ok   exit 2 refusal (halted run): 'R17 refusal: admission:halted. No retry.'
+ok   no transport use
+ok   key absent from every receipt under run/
+
+problems: ['CLI exposes no lock-evidence option (library call required)']
+exit=1
+
+### repro_hd_timeout_row2.py
+==============================================================================
+silent server beyond TIMEOUT_S = 900 s
+==============================================================================
+POSTs on the wire: 1 | request fully written: True
+result state: 2 | halt: KEY_USAGE_UNRECONCILED | debit: 270000000 (FLOOR=270000000)
+ledger: ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'RESOLVE', 'HALT']
+next cell admission: False halted
+
+R14 evidence: round14 adapter.py used urlopen(timeout=180) for max_tokens 8192 and the one live call finished at 7,231 completion tokens; R14 job proposals set timeout_seconds 1800. R17 doubles the output cap to 16,384 with a 60 s socket timeout.
+exit=0
+
+### repro_hd_trust_store.py
+==============================================================================
+1. trust anchors on this host with the driver context
+==============================================================================
+verify_mode CERT_REQUIRED: True | check_hostname: True
+x509 trust anchors loaded: 128
+default verify paths: DefaultVerifyPaths(cafile=None, capath=None, openssl_cafile_env='SSL_CERT_FILE', openssl_cafile='/Library/Frameworks/Python.framework/Versions/3.13/etc/openssl/cert.pem', openssl_capath_env='SSL_CERT_DIR', openssl_capath='/Library/Frameworks/Python.framework/Versions/3.13/etc/openssl/certs')
+driver tls_unverified check would pass with an EMPTY store: True
+==============================================================================
+2. SSL_CERT_FILE redirects the trust store
+==============================================================================
+x509 trust anchors after SSL_CERT_FILE=<synthetic CA>: 128
+subjects: [((('countryName', 'FR'),), (('organizationName', 'Dhimyotis'),), (('commonName', 'Certigna'),)), ((('organizationName', 'TeliaSonera'),), (('commonName', 'TeliaSonera Root CA v1'),)), ((('countryName', 'ES'),), (('organizationName', 'IZENPE S.A.'),), (('commonName', 'Izenpe.com'),)), ((('countryName', 'FI'),), (('organizationName', 'Sonera'),), (('commonName', 'Sonera Class2 CA'),)), ((('countryName', 'US'),), (('organizationName', 'Amazon'),), (('commonName', 'Amazon Root CA 1'),)), ((('countryName', 'US'),), (('organizationName', 'Amazon'),), (('commonName', 'Amazon Root CA 2'),)), ((('countryName', 'US'),), (('organizationName', 'Amazon'),), (('commonName', 'Amazon Root CA 3'),)), ((('countryName', 'US'),), (('organizationName', 'Amazon'),), (('commonName', 'Amazon Root CA 4'),)), ((('countryName', 'ES'),), (('organizationName', 'FNMT-RCM'),), (('organizationalUnitName', 'AC RAIZ FNMT-RCM'),)), ((('countryName', 'RO'),), (('organizationName', 'certSIGN'),), (('organizationalUnitName', 'certSIGN ROOT CA'),)), ((('organizationName', 'Cybertrust, Inc'),), (('commonName', 'Cybertrust Global Root'),)), ((('commonName', 'Atos TrustedRoot 2011'),), (('organizationName', 'Atos'),), (('countryName', 'DE'),)), ((('countryName', 'CN'),), (('organizationName', 'UniTrust'),), (('commonName', 'UCA Global G2 Root'),)), ((('countryName', 'RO'),), (('organizationName', 'CERTSIGN SA'),), (('organizationalUnitName', 'certSIGN ROOT CA G2'),)), ((('countryName', 'US'),), (('organizationName', 'AffirmTrust'),), (('commonName', 'AffirmTrust Premium'),)), ((('countryName', 'US'),), (('organizationName', 'GeoTrust Inc.'),), (('commonName', 'GeoTrust Global CA'),)), ((('commonName', 'ACCVRAIZ1'),), (('organizationalUnitName', 'PKIACCV'),), (('organizationName', 'ACCV'),), (('countryName', 'ES'),)), ((('countryName', 'US'),), (('organizationName', 'AffirmTrust'),), (('commonName', 'AffirmTrust Commercial'),)), ((('countryName', 'US'),), (('organizationName', 'AffirmTrust'),), (('commonName', 'AffirmTrust Networking'),)), ((('countryName', 'BM'),), (('organizationName', 'QuoVadis Limited'),), (('commonName', 'QuoVadis Root CA 2'),)), ((('countryName', 'BM'),), (('organizationName', 'QuoVadis Limited'),), (('commonName', 'QuoVadis Root CA 3'),)), ((('countryName', 'CH'),), (('organizationName', 'SwissSign AG'),), (('commonName', 'SwissSign Gold CA - G2'),)), ((('countryName', 'GB'),), (('organizationName', 'Trustis Limited'),), (('organizationalUnitName', 'Trustis FPS Root CA'),)), ((('countryName', 'US'),), (('organizationName', 'AffirmTrust'),), (('commonName', 'AffirmTrust Premium ECC'),)), ((('countryName', 'CH'),), (('organizationName', 'SwissSign AG'),), (('commonName', 'SwissSign Silver CA - G2'),)), ((('countryName', 'CN'),), (('organizationName', 'UniTrust'),), (('commonName', 'UCA Extended Validation Root'),)), ((('countryName', 'HK'),), (('organizationName', 'Hongkong Post'),), (('commonName', 'Hongkong Post Root CA 1'),)), ((('countryName', 'US'),), (('organizationName', 'Google Trust Services LLC'),), (('commonName', 'GTS Root R1'),)), ((('countryName', 'US'),), (('organizationName', 'Google Trust Services LLC'),), (('commonName', 'GTS Root R2'),)), ((('countryName', 'US'),), (('organizationName', 'Google Trust Services LLC'),), (('commonName', 'GTS Root R3'),)), ((('countryName', 'US'),), (('organizationName', 'Google Trust Services LLC'),), (('commonName', 'GTS Root R4'),)), ((('countryName', 'BM'),), (('organizationName', 'QuoVadis Limited'),), (('commonName', 'QuoVadis Root CA 1 G3'),)), ((('countryName', 'BM'),), (('organizationName', 'QuoVadis Limited'),), (('commonName', 'QuoVadis Root CA 2 G3'),)), ((('countryName', 'BM'),), (('organizationName', 'QuoVadis Limited'),), (('commonName', 'QuoVadis Root CA 3 G3'),)), ((('countryName', 'US'),), (('organizationName', 'SecureTrust Corporation'),), (('commonName', 'SecureTrust CA'),)), ((('countryName', 'US'),), (('organizationName', 'IdenTrust'),), (('commonName', 'IdenTrust Commercial Root CA 1'),)), ((('countryName', 'US'),), (('organizationName', 'SecureTrust Corporation'),), (('commonName', 'Secure Global CA'),)), ((('organizationalUnitName', 'GlobalSign Root CA - R2'),), (('organizationName', 'GlobalSign'),), (('commonName', 'GlobalSign'),)), ((('organizationalUnitName', 'GlobalSign Root CA - R3'),), (('organizationName', 'GlobalSign'),), (('commonName', 'GlobalSign'),)), ((('organizationalUnitName', 'GlobalSign Root CA - R6'),), (('organizationName', 'GlobalSign'),), (('commonName', 'GlobalSign'),)), ((('countryName', 'DE'),), (('organizationName', 'D-Trust GmbH'),), (('commonName', 'D-TRUST Root Class 3 CA 2 2009'),)), ((('countryName', 'US'),), (('organizationName', 'IdenTrust'),), (('commonName', 'IdenTrust Public Sector Root CA 1'),)), ((('countryName', 'NO'),), (('organizationName', 'Buypass AS-983163327'),), (('commonName', 'Buypass Class 2 Root CA'),)), ((('countryName', 'NO'),), (('organizationName', 'Buypass AS-983163327'),), (('commonName', 'Buypass Class 3 Root CA'),)), ((('countryName', 'US'),), (('organizationName', 'Internet Security Research Group'),), (('commonName', 'ISRG Root X1'),)), ((('countryName', 'DE'),), (('organizationName', 'D-Trust GmbH'),), (('commonName', 'D-TRUST Root Class 3 CA 2 EV 2009'),)), ((('countryName', 'JP'),), (('organizationName', 'SECOM Trust.net'),), (('organizationalUnitName', 'Security Communication RootCA1'),)), ((('organizationalUnitName', 'GlobalSign ECC Root CA - R4'),), (('organizationName', 'GlobalSign'),), (('commonName', 'GlobalSign'),)), ((('organizationalUnitName', 'GlobalSign ECC Root CA - R5'),), (('organizationName', 'GlobalSign'),), (('commonName', 'GlobalSign'),)), ((('countryName', 'ES'),), (('commonName', 'Autoridad de Certificacion Firmaprofesional CIF A62634068'),)), ((('countryName', 'PL'),), (('organizationName', 'Krajowa Izba Rozliczeniowa S.A.'),), (('commonName', 'SZAFIR ROOT CA2'),)), ((('countryName', 'TW'),), (('organizationName', 'TAIWAN-CA'),), (('organizationalUnitName', 'Root CA'),), (('commonName', 'TWCA Global Root CA'),)), ((('countryName', 'SK'),), (('localityName', 'Bratislava'),), (('organizationName', 'Disig a.s.'),), (('commonName', 'CA Disig Root R2'),)), ((('countryName', 'CN'),), (('organizationName', 'China Financial Certification Authority'),), (('commonName', 'CFCA EV ROOT'),)), ((('countryName', 'US'),), (('organizationalUnitName', 'emSign PKI'),), (('organizationName', 'eMudhra Inc'),), (('commonName', 'emSign Root CA - C1'),)), ((('countryName', 'BE'),), (('organizationName', 'GlobalSign nv-sa'),), (('organizationalUnitName', 'Root CA'),), (('commonName', 'GlobalSign Root CA'),)), ((('countryName', 'JP'),), (('organizationName', 'Japan Certification Services, Inc.'),), (('commonName', 'SecureSign RootCA11'),)), ((('countryName', 'NL'),), (('organizationName', 'Staat der Nederlanden'),), (('commonName', 'Staat der Nederlanden EV Root CA'),)), ((('countryName', 'FR'),), (('organizationName', 'Dhimyotis'),), (('organizationalUnitName', '0002 48146308100036'),), (('commonName', 'Certigna Root CA'),)), ((('countryName', 'IE'),), (('organizationName', 'Baltimore'),), (('organizationalUnitName', 'CyberTrust'),), (('commonName', 'Baltimore CyberTrust Root'),)), ((('countryName', 'NL'),), (('organizationName', 'Staat der Nederlanden'),), (('commonName', 'Staat der Nederlanden Root CA - G3'),)), ((('countryName', 'US'),), (('organizationalUnitName', 'emSign PKI'),), (('organizationName', 'eMudhra Inc'),), (('commonName', 'emSign ECC Root CA - C3'),)), ((('countryName', 'JP'),), (('organizationName', 'SECOM Trust Systems CO.,LTD.'),), (('organizationalUnitName', 'Security Communication RootCA2'),)), ((('countryName', 'TW'),), (('organizationName', 'Chunghwa Telecom Co., Ltd.'),), (('organizationalUnitName', 'ePKI Root Certification Authority'),)), ((('countryName', 'TW'),), (('organizationName', 'TAIWAN-CA'),), (('organizationalUnitName', 'Root CA'),), (('commonName', 'TWCA Root Certification Authority'),)), ((('countryName', 'US'),), (('organizationName', 'DigiCert Inc'),), (('organizationalUnitName', 'www.digicert.com'),), (('commonName', 'DigiCert Global Root CA'),)), ((('countryName', 'US'),), (('organizationName', 'DigiCert Inc'),), (('organizationalUnitName', 'www.digicert.com'),), (('commonName', 'DigiCert Global Root G2'),)), ((('countryName', 'US'),), (('organizationName', 'DigiCert Inc'),), (('organizationalUnitName', 'www.digicert.com'),), (('commonName', 'DigiCert Global Root G3'),)), ((('countryName', 'CN'),), (('organizationName', 'GUANG DONG CERTIFICATE AUTHORITY CO.,LTD.'),), (('commonName', 'GDCA TrustAUTH R5 ROOT'),)), ((('countryName', 'US'),), (('organizationName', 'DigiCert Inc'),), (('organizationalUnitName', 'www.digicert.com'),), (('commonName', 'DigiCert Trusted Root G4'),)), ((('countryName', 'US'),), (('organizationName', 'Network Solutions L.L.C.'),), (('commonName', 'Network Solutions Certificate Authority'),)), ((('countryName', 'US'),), (('organizationName', 'The Go Daddy Group, Inc.'),), (('organizationalUnitName', 'Go Daddy Class 2 Certification Authority'),)), ((('countryName', 'US'),), (('organizationName', 'DigiCert Inc'),), (('organizationalUnitName', 'www.digicert.com'),), (('commonName', 'DigiCert Assured ID Root CA'),)), ((('countryName', 'US'),), (('organizationName', 'DigiCert Inc'),), (('organizationalUnitName', 'www.digicert.com'),), (('commonName', 'DigiCert Assured ID Root G2'),)), ((('countryName', 'US'),), (('organizationName', 'DigiCert Inc'),), (('organizationalUnitName', 'www.digicert.com'),), (('commonName', 'DigiCert Assured ID Root G3'),)), ((('countryName', 'US'),), (('organizationName', 'Microsoft Corporation'),), (('commonName', 'Microsoft ECC Root Certificate Authority 2017'),)), ((('countryName', 'US'),), (('organizationName', 'Microsoft Corporation'),), (('commonName', 'Microsoft RSA Root Certificate Authority 2017'),)), ((('countryName', 'IN'),), (('organizationalUnitName', 'emSign PKI'),), (('organizationName', 'eMudhra Technologies Limited'),), (('commonName', 'emSign Root CA - G1'),)), ((('countryName', 'US'),), (('organizationName', 'Starfield Technologies, Inc.'),), (('organizationalUnitName', 'Starfield Class 2 Certification Authority'),)), ((('countryName', 'KR'),), (('organizationName', 'NAVER BUSINESS PLATFORM Corp.'),), (('commonName', 'NAVER Global Root Certification Authority'),)), ((('countryName', 'IN'),), (('organizationalUnitName', 'emSign PKI'),), (('organizationName', 'eMudhra Technologies Limited'),), (('commonName', 'emSign ECC Root CA - G3'),)), ((('countryName', 'IT'),), (('localityName', 'Milan'),), (('organizationName', 'Actalis S.p.A./03358520967'),), (('commonName', 'Actalis Authentication Root CA'),)), ((('countryName', 'US'),), (('organizationName', 'DigiCert Inc'),), (('organizationalUnitName', 'www.digicert.com'),), (('commonName', 'DigiCert High Assurance EV Root CA'),)), ((('countryName', 'CH'),), (('organizationName', 'WISeKey'),), (('organizationalUnitName', 'OISTE Foundation Endorsed'),), (('commonName', 'OISTE WISeKey Global Root GB CA'),)), ((('countryName', 'CH'),), (('organizationName', 'WISeKey'),), (('organizationalUnitName', 'OISTE Foundation Endorsed'),), (('commonName', 'OISTE WISeKey Global Root GC CA'),)), ((('countryName', 'HK'),), (('stateOrProvinceName', 'Hong Kong'),), (('localityName', 'Hong Kong'),), (('organizationName', 'Hongkong Post'),), (('commonName', 'Hongkong Post Root CA 3'),)), ((('countryName', 'HU'),), (('localityName', 'Budapest'),), (('organizationName', 'Microsec Ltd.'),), (('organizationIdentifier', 'VATHU-23584497'),), (('commonName', 'e-Szigno Root CA 2017'),)), ((('countryName', 'GB'),), (('stateOrProvinceName', 'Greater Manchester'),), (('localityName', 'Salford'),), (('organizationName', 'Comodo CA Limited'),), (('commonName', 'AAA Certificate Services'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'Texas'),), (('localityName', 'Houston'),), (('organizationName', 'SSL Corporation'),), (('commonName', 'SSL.com Root Certification Authority ECC'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'Texas'),), (('localityName', 'Houston'),), (('organizationName', 'SSL Corporation'),), (('commonName', 'SSL.com Root Certification Authority RSA'),)), ((('countryName', 'PL'),), (('organizationName', 'Unizeto Technologies S.A.'),), (('organizationalUnitName', 'Certum Certification Authority'),), (('commonName', 'Certum Trusted Network CA'),)), ((('countryName', 'BM'),), (('organizationName', 'QuoVadis Limited'),), (('organizationalUnitName', 'Root Certification Authority'),), (('commonName', 'QuoVadis Root Certification Authority'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'Texas'),), (('localityName', 'Houston'),), (('organizationName', 'SSL Corporation'),), (('commonName', 'SSL.com EV Root Certification Authority ECC'),)), ((('countryName', 'GB'),), (('stateOrProvinceName', 'Greater Manchester'),), (('localityName', 'Salford'),), (('organizationName', 'COMODO CA Limited'),), (('commonName', 'COMODO Certification Authority'),)), ((('countryName', 'DE'),), (('organizationName', 'T-Systems Enterprise Services GmbH'),), (('organizationalUnitName', 'T-Systems Trust Center'),), (('commonName', 'T-TeleSec GlobalRoot Class 2'),)), ((('countryName', 'DE'),), (('organizationName', 'T-Systems Enterprise Services GmbH'),), (('organizationalUnitName', 'T-Systems Trust Center'),), (('commonName', 'T-TeleSec GlobalRoot Class 3'),)), ((('countryName', 'HU'),), (('localityName', 'Budapest'),), (('organizationName', 'Microsec Ltd.'),), (('commonName', 'Microsec e-Szigno Root CA 2009'),), (('emailAddress', 'info@e-szigno.hu'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'Texas'),), (('localityName', 'Houston'),), (('organizationName', 'SSL Corporation'),), (('commonName', 'SSL.com EV Root Certification Authority RSA R2'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'Arizona'),), (('localityName', 'Scottsdale'),), (('organizationName', 'GoDaddy.com, Inc.'),), (('commonName', 'Go Daddy Root Certificate Authority - G2'),)), ((('countryName', 'GB'),), (('stateOrProvinceName', 'Greater Manchester'),), (('localityName', 'Salford'),), (('organizationName', 'COMODO CA Limited'),), (('commonName', 'COMODO ECC Certification Authority'),)), ((('countryName', 'GB'),), (('stateOrProvinceName', 'Greater Manchester'),), (('localityName', 'Salford'),), (('organizationName', 'COMODO CA Limited'),), (('commonName', 'COMODO RSA Certification Authority'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'Illinois'),), (('localityName', 'Chicago'),), (('organizationName', 'Trustwave Holdings, Inc.'),), (('commonName', 'Trustwave Global Certification Authority'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'New Jersey'),), (('localityName', 'Jersey City'),), (('organizationName', 'The USERTRUST Network'),), (('commonName', 'USERTrust ECC Certification Authority'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'New Jersey'),), (('localityName', 'Jersey City'),), (('organizationName', 'The USERTRUST Network'),), (('commonName', 'USERTrust RSA Certification Authority'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'Arizona'),), (('localityName', 'Scottsdale'),), (('organizationName', 'Starfield Technologies, Inc.'),), (('commonName', 'Starfield Root Certificate Authority - G2'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'Illinois'),), (('localityName', 'Chicago'),), (('organizationName', 'Trustwave Holdings, Inc.'),), (('commonName', 'Trustwave Global ECC P256 Certification Authority'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'Illinois'),), (('localityName', 'Chicago'),), (('organizationName', 'Trustwave Holdings, Inc.'),), (('commonName', 'Trustwave Global ECC P384 Certification Authority'),)), ((('countryName', 'GR'),), (('organizationName', 'Hellenic Academic and Research Institutions Cert. Authority'),), (('commonName', 'Hellenic Academic and Research Institutions RootCA 2011'),)), ((('countryName', 'US'),), (('stateOrProvinceName', 'Arizona'),), (('localityName', 'Scottsdale'),), (('organizationName', 'Starfield Technologies, Inc.'),), (('commonName', 'Starfield Services Root Certificate Authority - G2'),)), ((('countryName', 'US'),), (('organizationName', 'GeoTrust Inc.'),), (('organizationalUnitName', '(c) 2007 GeoTrust Inc. - For authorized use only'),), (('commonName', 'GeoTrust Primary Certification Authority - G2'),)), ((('countryName', 'PA'),), (('stateOrProvinceName', 'Panama'),), (('localityName', 'Panama City'),), (('organizationName', 'TrustCor Systems S. de R.L.'),), (('organizationalUnitName', 'TrustCor Certificate Authority'),), (('commonName', 'TrustCor ECA-1'),)), ((('countryName', 'PA'),), (('stateOrProvinceName', 'Panama'),), (('localityName', 'Panama City'),), (('organizationName', 'TrustCor Systems S. de R.L.'),), (('organizationalUnitName', 'TrustCor Certificate Authority'),), (('commonName', 'TrustCor RootCert CA-1'),)), ((('countryName', 'PA'),), (('stateOrProvinceName', 'Panama'),), (('localityName', 'Panama City'),), (('organizationName', 'TrustCor Systems S. de R.L.'),), (('organizationalUnitName', 'TrustCor Certificate Authority'),), (('commonName', 'TrustCor RootCert CA-2'),)), ((('countryName', 'GR'),), (('localityName', 'Athens'),), (('organizationName', 'Hellenic Academic and Research Institutions Cert. Authority'),), (('commonName', 'Hellenic Academic and Research Institutions RootCA 2015'),)), ((('countryName', 'HU'),), (('localityName', 'Budapest'),), (('organizationName', 'NetLock Kft.'),), (('organizationalUnitName', 'Tanúsítványkiadók (Certification Services)'),), (('commonName', 'NetLock Arany (Class Gold) Főtanúsítvány'),)), ((('countryName', 'GR'),), (('localityName', 'Athens'),), (('organizationName', 'Hellenic Academic and Research Institutions Cert. Authority'),), (('commonName', 'Hellenic Academic and Research Institutions ECC RootCA 2015'),)), ((('countryName', 'EU'),), (('localityName', 'Madrid (see current address at www.camerfirma.com/address)'),), (('serialNumber', 'A82743287'),), (('organizationName', 'AC Camerfirma S.A.'),), (('commonName', 'Global Chambersign Root - 2008'),)), ((('countryName', 'EU'),), (('localityName', 'Madrid (see current address at www.camerfirma.com/address)'),), (('serialNumber', 'A82743287'),), (('organizationName', 'AC Camerfirma S.A.'),), (('commonName', 'Chambers of Commerce Root - 2008'),)), ((('countryName', 'US'),), (('organizationName', 'Entrust, Inc.'),), (('organizationalUnitName', 'www.entrust.net/CPS is incorporated by reference'),), (('organizationalUnitName', '(c) 2006 Entrust, Inc.'),), (('commonName', 'Entrust Root Certification Authority'),)), ((('countryName', 'TR'),), (('localityName', 'Ankara'),), (('organizationName', 'E-Tuğra EBG Bilişim Teknolojileri ve Hizmetleri A.Ş.'),), (('organizationalUnitName', 'E-Tugra Sertifikasyon Merkezi'),), (('commonName', 'E-Tugra Certification Authority'),)), ((('organizationName', 'Entrust.net'),), (('organizationalUnitName', 'www.entrust.net/CPS_2048 incorp. by ref. (limits liab.)'),), (('organizationalUnitName', '(c) 1999 Entrust.net Limited'),), (('commonName', 'Entrust.net Certification Authority (2048)'),)), ((('countryName', 'US'),), (('organizationName', 'VeriSign, Inc.'),), (('organizationalUnitName', 'VeriSign Trust Network'),), (('organizationalUnitName', '(c) 2008 VeriSign, Inc. - For authorized use only'),), (('commonName', 'VeriSign Universal Root Certification Authority'),)), ((('countryName', 'US'),), (('organizationName', 'Entrust, Inc.'),), (('organizationalUnitName', 'See www.entrust.net/legal-terms'),), (('organizationalUnitName', '(c) 2009 Entrust, Inc. - for authorized use only'),), (('commonName', 'Entrust Root Certification Authority - G2'),)), ((('countryName', 'US'),), (('organizationName', 'Entrust, Inc.'),), (('organizationalUnitName', 'See www.entrust.net/legal-terms'),), (('organizationalUnitName', '(c) 2015 Entrust, Inc. - for authorized use only'),), (('commonName', 'Entrust Root Certification Authority - G4'),)), ((('countryName', 'US'),), (('organizationName', 'Entrust, Inc.'),), (('organizationalUnitName', 'See www.entrust.net/legal-terms'),), (('organizationalUnitName', '(c) 2012 Entrust, Inc. - for authorized use only'),), (('commonName', 'Entrust Root Certification Authority - EC1'),)), ((('countryName', 'TR'),), (('localityName', 'Gebze - Kocaeli'),), (('organizationName', 'Turkiye Bilimsel ve Teknolojik Arastirma Kurumu - TUBITAK'),), (('organizationalUnitName', 'Kamu Sertifikasyon Merkezi - Kamu SM'),), (('commonName', 'TUBITAK Kamu SM SSL Kok Sertifikasi - Surum 1'),)), ((('countryName', 'ES'),), (('organizationName', 'Agencia Catalana de Certificacio (NIF Q-0801176-I)'),), (('organizationalUnitName', 'Serveis Publics de Certificacio'),), (('organizationalUnitName', 'Vegeu https://www.catcert.net/verarrel (c)03'),), (('organizationalUnitName', 'Jerarquia Entitats de Certificacio Catalanes'),), (('commonName', 'EC-ACC'),)), ((('countryName', 'US'),), (('organizationalUnitName', 'www.xrampsecurity.com'),), (('organizationName', 'XRamp Security Services Inc'),), (('commonName', 'XRamp Global Certification Authority'),))]
+env-supplied CA is now trusted by the driver context: False
+exit=1
+
+### repro_hd_wire.py
+==============================================================================
+1. exact bytes, one request, headers
+==============================================================================
+ok   exactly one connection used
+ok   body bytes on the wire identical to exact_bytes
+ok   request line
+ok   Host: openrouter.ai
+ok   Content-Length = len(exact_bytes)
+ok   Content-Type json
+ok   Connection: close
+ok   no Expect: 100-continue
+ok   request not chunked
+ok   Accept-Encoding identity (no compression)
+ok   one POST on the wire
+ok   exactly one Content-Length and one Host header (http.client did not add duplicates)
+ok   packet status/raw
+ok   headers reduced to allowlist: {'content-type': 'application/json', 'x-request-id': 'req-1'}
+ok   key absent from packet repr
+ok   host pinned, port 443, timeout=900
+ok   connection closed after use
+ok   env names read: ['OPENROUTER_API_KEY']
+==============================================================================
+2. server 100 Continue preamble: consumed, no second send
+==============================================================================
+ok   100-continue preamble skipped, final status 200
+ok   still exactly one POST
+==============================================================================
+3. redirect returned, not followed
+==============================================================================
+ok   307 returned as status; one connection
+ok   Location header not forwarded
+==============================================================================
+4. broken pipe mid-send: one attempt, generic error, no key anywhere
+==============================================================================
+ok   DriverError transport_failed
+ok   no chained exception
+ok   key absent from traceback text and repr
+ok   no second connection / re-send after broken pipe
+     (note) frame locals of the raised DriverError contain the key: True
+==============================================================================
+5. remote disconnect before status line: one attempt
+==============================================================================
+ok   RemoteDisconnected -> one attempt, no retry
+==============================================================================
+6. bounded body: chunked and content-length framing over MAX_RAW
+==============================================================================
+ok   chunked: oversize refused with generic error
+ok   chunked: one request, socket closed
+ok   chunked: largest single read request 65536
+ok   content-length: oversize refused with generic error
+ok   content-length: one request, socket closed
+ok   content-length: largest single read request 2000001
+ok   close-delimited: oversize refused with generic error
+ok   close-delimited: one request, socket closed
+ok   close-delimited: largest single read request 2000001
+ok   exactly MAX_RAW chunked body accepted
+==============================================================================
+7. key_info GET through real http.client
+==============================================================================
+ok   GET request line
+ok   GET has no body / content-length
+ok   fields exact
+ok   label dropped
+==============================================================================
+8. TLS context: verification on, hostname check, no keylog
+==============================================================================
+ok   CERT_REQUIRED + check_hostname
+ok   SSLKEYLOGFILE ignored (keylog_filename None)
+ok   minimum TLS >= 1.2 (771)
+     trust anchors loaded on THIS host by load_default_certs(): x509=128
+ok   only OPENROUTER_API_KEY ever read from env
+
+problems: []
+exit=0
+
+### original round-1 repros against r1.1 (exit 0 = finding still reproduces)
+### repro_double_post_lock_break.py
+exit=1
+### repro_gate_change_bricks_ledger.py
+exit=1
+### repro_headers_leak.py
+exit=1
+### repro_incomplete_cell_allows_next.py
+exit=1
+### repro_mark_fsync_failure.py
+exit=1
+### repro_negative_sleep.py
+exit=1
+### repro_partial_receipt_bricks_recover.py
+exit=1
+### repro_recover_rehalts_completed.py
+exit=1

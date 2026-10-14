@@ -1,0 +1,39 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r17-gate-A1-b4"
+  },
+  "call_id": "fx-76122431f0",
+  "source_id": "fx-76122431f0",
+  "output_sha256": "aad866a194ca08bbcf4661a326eed86984252af54a8b2531ee4e137a462e9611",
+  "reference_sha256": "b227aae9ae01ee32e9e1206ae8df7168c6ba94b635056a6f25cb616a542a28e4",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        },
+        {
+          "unit": 2,
+          "form": "opposite"
+        }
+      ],
+      "basis": "Unit 1 restates the target verbatim with evidence [0,33]. Unit 2 denies the same actor's permission to dock at the east pier without naming any circumstance in its assertion text, so it is listed as opposite under M4; its evidence [0,33] overlaps the target quote."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "Unit 2 likely encodes the 'unless the tide is low' branch, but its assertion names no case or circumstance, so by question 3 it is opposite rather than inverse. Condition handling is left to mechanical scoring per M8."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

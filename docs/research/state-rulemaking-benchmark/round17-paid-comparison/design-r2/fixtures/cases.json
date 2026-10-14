@@ -1,0 +1,6934 @@
+{
+ "cases": [
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "lost_connective"
+    }
+   },
+   "id": "F01a-lost-or",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        38,
+        44
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "unless",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        45,
+        71
+       ],
+       [
+        75,
+        104
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3: an inner connective is required evidence for OPQ. Two exact leaves for A and B under a correct unless link, with 'or' uncovered, must not count as complete.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 44,
+        "occurrence": 1,
+        "start": 38,
+        "text": "unless"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 71,
+           "occurrence": 1,
+           "start": 45,
+           "text": "the holder files a renewal"
+          }
+         ]
+        },
+        {
+         "markers": [],
+         "nid": "N3",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 104,
+           "occurrence": 1,
+           "start": 75,
+           "text": "the Board grants an extension"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 74,
+         "occurrence": 1,
+         "start": 72,
+         "text": "or"
+        }
+       ],
+       "nid": "N1",
+       "op": "OR"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F01a-lost-or",
+    "source_text_sha256": "c9218ead7409b72b584b7c0b8b17b4a4e498c927887c8f32cfa8aebd34d04a4a",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 37,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Lantern permits expire after one year"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Lantern permits expire after one year unless the holder files a renewal or the Board grants an extension."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F01b-whole-clause",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        38,
+        44
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "unless",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        45,
+        104
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "Control for F01a: the whole clause in one leaf plus the introducer on the link is complete and correct.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 44,
+        "occurrence": 1,
+        "start": 38,
+        "text": "unless"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 71,
+           "occurrence": 1,
+           "start": 45,
+           "text": "the holder files a renewal"
+          }
+         ]
+        },
+        {
+         "markers": [],
+         "nid": "N3",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 104,
+           "occurrence": 1,
+           "start": 75,
+           "text": "the Board grants an extension"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 74,
+         "occurrence": 1,
+         "start": 72,
+         "text": "or"
+        }
+       ],
+       "nid": "N1",
+       "op": "OR"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F01b-whole-clause",
+    "source_text_sha256": "c9218ead7409b72b584b7c0b8b17b4a4e498c927887c8f32cfa8aebd34d04a4a",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 37,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Lantern permits expire after one year"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Lantern permits expire after one year unless the holder files a renewal or the Board grants an extension."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "lost_connective"
+    }
+   },
+   "id": "F01c-lost-introducer",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "unless",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        45,
+        104
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3: the introducer is required evidence for both arms even when the role is correct; omitting it is a lost connective.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 44,
+        "occurrence": 1,
+        "start": 38,
+        "text": "unless"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 71,
+           "occurrence": 1,
+           "start": 45,
+           "text": "the holder files a renewal"
+          }
+         ]
+        },
+        {
+         "markers": [],
+         "nid": "N3",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 104,
+           "occurrence": 1,
+           "start": 75,
+           "text": "the Board grants an extension"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 74,
+         "occurrence": 1,
+         "start": 72,
+         "text": "or"
+        }
+       ],
+       "nid": "N1",
+       "op": "OR"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F01c-lost-introducer",
+    "source_text_sha256": "c9218ead7409b72b584b7c0b8b17b4a4e498c927887c8f32cfa8aebd34d04a4a",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 37,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Lantern permits expire after one year"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Lantern permits expire after one year unless the holder files a renewal or the Board grants an extension."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "shortened"
+    }
+   },
+   "id": "F02-no-borrowed-coverage",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     },
+     {
+      "evidence": [],
+      "node_id": "c2",
+      "q": 1,
+      "role": "qual",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        41,
+        73
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        74,
+        103
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 1
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3: coverage is never unioned across links. Each witness is partial, so the relation is shortened.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [
+       {
+        "end": 43,
+        "occurrence": 1,
+        "start": 41,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 69,
+           "occurrence": 1,
+           "start": 44,
+           "text": "they hold a stall license"
+          }
+         ]
+        },
+        {
+         "markers": [],
+         "nid": "N3",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 103,
+           "occurrence": 1,
+           "start": 74,
+           "text": "they complete safety training"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 73,
+         "occurrence": 1,
+         "start": 70,
+         "text": "and"
+        }
+       ],
+       "nid": "N1",
+       "op": "AND"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F02-no-borrowed-coverage",
+    "source_text_sha256": "0d9a1443cd88c1154af722d7a6b2f1b83e2a9e5fd27290c425024c387769f04e",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 40,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Vendors may sell glow-stones at the fair"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Vendors may sell glow-stones at the fair if they hold a stall license and they complete safety training."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "wrong_target"
+    }
+   },
+   "id": "F03a-wrong-target",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 2
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        48,
+        65
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     },
+     {
+      "id": 2
+     }
+    ]
+   },
+   "purpose": "B3: a complete clause linked only to a unit the adjudicator did not map to the target is a wrong target.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 50,
+        "occurrence": 1,
+        "start": 48,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 65,
+         "occurrence": 1,
+         "start": 51,
+         "text": "they volunteer"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F03a-wrong-target",
+    "source_text_sha256": "a2d7c7b973794d52ade33c5c424a0b16e8a52742ef2d564cfed1c43e09e3a09c",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 47,
+       "occurrence": 1,
+       "start": 26,
+       "text": "Members pay half fees"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "The Guild sets lamp fees. Members pay half fees if they volunteer."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "absent"
+    }
+   },
+   "id": "F03b-empty-mapping-absent",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": []
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "acts",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        0,
+        9
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3: an empty mapping is allowed; with no complete coverage anywhere the relation is absent (critical absence).",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 50,
+        "occurrence": 1,
+        "start": 48,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 65,
+         "occurrence": 1,
+         "start": 51,
+         "text": "they volunteer"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F03b-empty-mapping-absent",
+    "source_text_sha256": "a2d7c7b973794d52ade33c5c424a0b16e8a52742ef2d564cfed1c43e09e3a09c",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 47,
+       "occurrence": 1,
+       "start": 26,
+       "text": "Members pay half fees"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "The Guild sets lamp fees. Members pay half fees if they volunteer."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "shortened"
+    }
+   },
+   "id": "F04-duplicate-units-no-union",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      },
+      {
+       "form": "direct",
+       "unit": 2
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     },
+     {
+      "evidence": [],
+      "node_id": "c2",
+      "q": 0,
+      "role": "if",
+      "unit_id": 2
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        29,
+        59
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        60,
+        80
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     },
+     {
+      "id": 2
+     }
+    ]
+   },
+   "purpose": "B3: two units mapped to one target are separate witnesses; their partial coverages are not combined.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [
+       {
+        "end": 31,
+        "occurrence": 1,
+        "start": 29,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 56,
+           "occurrence": 1,
+           "start": 32,
+           "text": "the sailing is cancelled"
+          }
+         ]
+        },
+        {
+         "markers": [],
+         "nid": "N3",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 80,
+           "occurrence": 1,
+           "start": 60,
+           "text": "the passenger is ill"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 59,
+         "occurrence": 1,
+         "start": 57,
+         "text": "or"
+        }
+       ],
+       "nid": "N1",
+       "op": "OR"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F04-duplicate-units-no-union",
+    "source_text_sha256": "566e381b60c0d52594c098117ebf49d0e0d5f1c4e56e6a69eedebdd35b71972d",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 28,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Ferry tickets are refundable"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Ferry tickets are refundable if the sailing is cancelled or the passenger is ill."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F05a-inverse-form-unit",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      },
+      {
+       "form": "inverse",
+       "unit": 2
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 2
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        38,
+        87
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     },
+     {
+      "id": 2
+     }
+    ]
+   },
+   "purpose": "B3 unit matching: a unit asserting the exemption itself maps with form 'inverse'; its if-link then composes to an exception and is correct.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 69,
+        "occurrence": 1,
+        "start": 54,
+        "text": "are exempt from"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 53,
+         "occurrence": 1,
+         "start": 38,
+         "text": "Harvest markets"
+        },
+        {
+         "end": 87,
+         "occurrence": 1,
+         "start": 70,
+         "text": "this closing rule"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F05a-inverse-form-unit",
+    "source_text_sha256": "ff9cfa2dcd79204bdeff25047920870a3aea9482c74e76a99339d58ba60c2279",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 36,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Night markets must close by midnight"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Night markets must close by midnight. Harvest markets are exempt from this closing rule."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "inversion"
+    }
+   },
+   "id": "F05b-inverse-unit-mapped-direct",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      },
+      {
+       "form": "direct",
+       "unit": 2
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 2
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        38,
+        87
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     },
+     {
+      "id": 2
+     }
+    ]
+   },
+   "purpose": "Same output as F05a with the exemption unit mapped 'direct': the form judgment changes the verdict (inversion), so both adjudicators must agree on form.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 69,
+        "occurrence": 1,
+        "start": 54,
+        "text": "are exempt from"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 53,
+         "occurrence": 1,
+         "start": 38,
+         "text": "Harvest markets"
+        },
+        {
+         "end": 87,
+         "occurrence": 1,
+         "start": 70,
+         "text": "this closing rule"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F05b-inverse-unit-mapped-direct",
+    "source_text_sha256": "ff9cfa2dcd79204bdeff25047920870a3aea9482c74e76a99339d58ba60c2279",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 36,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Night markets must close by midnight"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Night markets must close by midnight. Harvest markets are exempt from this closing rule."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {
+     "R2:exc": "correct"
+    },
+    "invented": [],
+    "relations": {
+     "R1": "correct",
+     "R2": "correct"
+    }
+   },
+   "id": "F06-exc-composition-correct",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        38,
+        40
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [
+       "c2",
+       "c3"
+      ],
+      "evidence": [
+       [
+        57,
+        63
+       ]
+      ],
+      "id": "c1",
+      "op": "EXC",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        41,
+        55
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        64,
+        92
+       ]
+      ],
+      "id": "c3",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3 EXC composition: an EXC under an if link makes the base a condition and the carve-out an exception; the exception_to compound is correct.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 40,
+        "occurrence": 1,
+        "start": 38,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 55,
+         "occurrence": 1,
+         "start": 41,
+         "text": "it has a motor"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     },
+     {
+      "carves_out_of": "R1",
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 63,
+        "occurrence": 1,
+        "start": 57,
+        "text": "except"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 92,
+         "occurrence": 1,
+         "start": 64,
+         "text": "vessels used only for racing"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R2",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F06-exc-composition-correct",
+    "source_text_sha256": "4917628b297e511a40bb4239e9b9d41abc7a3436b665cd6658c6f82699827be4",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 37,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Boat owners must register each vessel"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Boat owners must register each vessel if it has a motor, except vessels used only for racing."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {
+     "R2:exc": "exc_reversed"
+    },
+    "invented": [],
+    "relations": {
+     "R1": "inversion",
+     "R2": "inversion"
+    }
+   },
+   "id": "F07-exc-reversed",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        38,
+        40
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [
+       "c3",
+       "c2"
+      ],
+      "evidence": [
+       [
+        57,
+        63
+       ]
+      ],
+      "id": "c1",
+      "op": "EXC",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        41,
+        55
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        64,
+        92
+       ]
+      ],
+      "id": "c3",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3/B4: base and carve-out swapped. The containing EXC node cannot lend R1 an uninverted path (minimal witness), so both relations invert and the compound is exc_reversed.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 40,
+        "occurrence": 1,
+        "start": 38,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 55,
+         "occurrence": 1,
+         "start": 41,
+         "text": "it has a motor"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     },
+     {
+      "carves_out_of": "R1",
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 63,
+        "occurrence": 1,
+        "start": 57,
+        "text": "except"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 92,
+         "occurrence": 1,
+         "start": 64,
+         "text": "vessels used only for racing"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R2",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F07-exc-reversed",
+    "source_text_sha256": "4917628b297e511a40bb4239e9b9d41abc7a3436b665cd6658c6f82699827be4",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 37,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Boat owners must register each vessel"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Boat owners must register each vessel if it has a motor, except vessels used only for racing."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {},
+    "invented": [],
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F08a-not-composition",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [
+       "c2"
+      ],
+      "evidence": [
+       [
+        34,
+        40
+       ]
+      ],
+      "id": "c1",
+      "op": "NOT",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        41,
+        56
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3 NOT composition: if -> NOT -> leaf composes to an exception; correct for EXCEPT.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 40,
+        "occurrence": 1,
+        "start": 34,
+        "text": "unless"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 56,
+         "occurrence": 1,
+         "start": 41,
+         "text": "the tide is low"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F08a-not-composition",
+    "source_text_sha256": "6bb9fdc694281438099285c1be0441b177e20b42b3d95b89dae88024e76ae2b7",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 33,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Ferries may dock at the east pier"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Ferries may dock at the east pier unless the tide is low."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {},
+    "invented": [],
+    "relations": {
+     "R1": "inversion"
+    }
+   },
+   "id": "F08b-double-negation",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "unless",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [
+       "c2"
+      ],
+      "evidence": [
+       [
+        34,
+        40
+       ]
+      ],
+      "id": "c1",
+      "op": "NOT",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        41,
+        56
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3 double negation: unless -> NOT -> leaf composes to a positive condition, which inverts an EXCEPT relation.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 40,
+        "occurrence": 1,
+        "start": 34,
+        "text": "unless"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 56,
+         "occurrence": 1,
+         "start": 41,
+         "text": "the tide is low"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F08b-double-negation",
+    "source_text_sha256": "6bb9fdc694281438099285c1be0441b177e20b42b3d95b89dae88024e76ae2b7",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 33,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Ferries may dock at the east pier"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Ferries may dock at the east pier unless the tide is low."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "lost_connective"
+    }
+   },
+   "id": "F09-lost-negator",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        19,
+        21
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        22,
+        33
+       ],
+       [
+        38,
+        46
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3: a negator inside the clause is a required marker; fragments that skip 'not' lose it.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 21,
+        "occurrence": 1,
+        "start": 19,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [
+        {
+         "end": 37,
+         "occurrence": 1,
+         "start": 34,
+         "text": "not"
+        }
+       ],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 33,
+         "occurrence": 1,
+         "start": 22,
+         "text": "the shop is"
+        },
+        {
+         "end": 46,
+         "occurrence": 1,
+         "start": 38,
+         "text": "licensed"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F09-lost-negator",
+    "source_text_sha256": "177a1c2503fbb0d04879de0ea670ce5fb0794d4e705df6ad1c724688f3ddc2e4",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 18,
+       "occurrence": 1,
+       "start": 0,
+       "text": "A lamp tax applies"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "A lamp tax applies if the shop is not licensed."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "scope_change"
+    }
+   },
+   "id": "F10a-scope-change",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        0,
+        14
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B4: a restriction rendered as an unhedged 'if' is an overconfident scope change (harmful).",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "RESTRICT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 4,
+        "occurrence": 1,
+        "start": 0,
+        "text": "Only"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 14,
+         "occurrence": 1,
+         "start": 5,
+         "text": "residents"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F10a-scope-change",
+    "source_text_sha256": "a8f62be76897186fc9cc1ced949fa4b5b2ddeda1c25477754e0bd1a0c34fb6bc",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 44,
+       "occurrence": 1,
+       "start": 15,
+       "text": "may enter the lantern lottery"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Only residents may enter the lantern lottery."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "hedged"
+    }
+   },
+   "id": "F10b-explicit-hedge",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 1,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        0,
+        14
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B4: the same substitution with explicit link uncertainty is a harmless hedge.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "RESTRICT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 4,
+        "occurrence": 1,
+        "start": 0,
+        "text": "Only"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 14,
+         "occurrence": 1,
+         "start": 5,
+         "text": "residents"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F10b-explicit-hedge",
+    "source_text_sha256": "a8f62be76897186fc9cc1ced949fa4b5b2ddeda1c25477754e0bd1a0c34fb6bc",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 44,
+       "occurrence": 1,
+       "start": 15,
+       "text": "may enter the lantern lottery"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Only residents may enter the lantern lottery."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "hedged"
+    }
+   },
+   "id": "F10c-qual",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 1,
+      "role": "qual",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        0,
+        14
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "qual (always uncertain by wire rule) is a hedge.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "RESTRICT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 4,
+        "occurrence": 1,
+        "start": 0,
+        "text": "Only"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 14,
+         "occurrence": 1,
+         "start": 5,
+         "text": "residents"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F10c-qual",
+    "source_text_sha256": "a8f62be76897186fc9cc1ced949fa4b5b2ddeda1c25477754e0bd1a0c34fb6bc",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 44,
+       "occurrence": 1,
+       "start": 15,
+       "text": "may enter the lantern lottery"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Only residents may enter the lantern lottery."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "role_loss"
+    }
+   },
+   "id": "F10d-role-loss",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "obj",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        0,
+        14
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B4: an unhedged obj link drops the applicability function (role_loss, harmful).",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "RESTRICT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 4,
+        "occurrence": 1,
+        "start": 0,
+        "text": "Only"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 14,
+         "occurrence": 1,
+         "start": 5,
+         "text": "residents"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F10d-role-loss",
+    "source_text_sha256": "a8f62be76897186fc9cc1ced949fa4b5b2ddeda1c25477754e0bd1a0c34fb6bc",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 44,
+       "occurrence": 1,
+       "start": 15,
+       "text": "may enter the lantern lottery"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Only residents may enter the lantern lottery."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F10e-onlyif-correct",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "onlyif",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        0,
+        14
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "Control: onlyif for a restriction is correct.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "RESTRICT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 4,
+        "occurrence": 1,
+        "start": 0,
+        "text": "Only"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 14,
+         "occurrence": 1,
+         "start": 5,
+         "text": "residents"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F10e-onlyif-correct",
+    "source_text_sha256": "a8f62be76897186fc9cc1ced949fa4b5b2ddeda1c25477754e0bd1a0c34fb6bc",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 44,
+       "occurrence": 1,
+       "start": 15,
+       "text": "may enter the lantern lottery"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Only residents may enter the lantern lottery."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "inversion"
+    }
+   },
+   "id": "F10f-inversion",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "unless",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        0,
+        14
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B4: unless for a restriction is a polarity inversion.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "RESTRICT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 4,
+        "occurrence": 1,
+        "start": 0,
+        "text": "Only"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 14,
+         "occurrence": 1,
+         "start": 5,
+         "text": "residents"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F10f-inversion",
+    "source_text_sha256": "a8f62be76897186fc9cc1ced949fa4b5b2ddeda1c25477754e0bd1a0c34fb6bc",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 44,
+       "occurrence": 1,
+       "start": 15,
+       "text": "may enter the lantern lottery"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Only residents may enter the lantern lottery."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "contradiction"
+    }
+   },
+   "id": "F11a-contradiction",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     },
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "unless",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        26,
+        49
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B4: a correct witness plus a second complete, unhedged, inverted witness is a contradictory extra applicability claim.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 28,
+        "occurrence": 1,
+        "start": 26,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 49,
+         "occurrence": 1,
+         "start": 29,
+         "text": "the council approves"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F11a-contradiction",
+    "source_text_sha256": "5258567fb85e51897ccdff86e6929196fa68ba97be5d344df0a5eed225391b12",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 25,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Stalls may open on Sunday"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Stalls may open on Sunday if the council approves."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F11b-hedged-alternative",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     },
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 2,
+      "role": "unless",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        26,
+        49
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "Control: the inverted second reading is explicitly uncertain, so it is not a contradiction.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 28,
+        "occurrence": 1,
+        "start": 26,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 49,
+         "occurrence": 1,
+         "start": 29,
+         "text": "the council approves"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F11b-hedged-alternative",
+    "source_text_sha256": "5258567fb85e51897ccdff86e6929196fa68ba97be5d344df0a5eed225391b12",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 25,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Stalls may open on Sunday"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Stalls may open on Sunday if the council approves."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "correct",
+     "R2": "embedded"
+    }
+   },
+   "id": "F12-embedded",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        24,
+        67
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3/B4: an exception kept verbatim inside the condition's leaf is 'embedded' (complete, not harmful, not correct). R2 is critical, so it fails the critical requirement.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [
+       {
+        "end": 26,
+        "occurrence": 1,
+        "start": 24,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 44,
+         "occurrence": 1,
+         "start": 27,
+         "text": "the beacon is lit"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     },
+     {
+      "carves_out_of": null,
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 51,
+        "occurrence": 1,
+        "start": 45,
+        "text": "unless"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 67,
+         "occurrence": 1,
+         "start": 52,
+         "text": "fog is reported"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R2",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F12-embedded",
+    "source_text_sha256": "f8a4dc011549430ee426195814d669c1f9fb74757bf438077698838bcef99256",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 23,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Pilots may land at dawn"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Pilots may land at dawn if the beacon is lit unless fog is reported."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "broad"
+    }
+   },
+   "id": "F13-broad",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        0,
+        182
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3 broad evidence: a leaf whose extraneous text exceeds twice the clause is complete but not correct.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [
+       {
+        "end": 91,
+        "occurrence": 1,
+        "start": 89,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 112,
+         "occurrence": 1,
+         "start": 92,
+         "text": "they use open flames"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F13-broad",
+    "source_text_sha256": "732064c2d6d399ad4f80557f2419f82693e2f57dbb4df09206f62eb4f80b1bd8",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 88,
+       "occurrence": 1,
+       "start": 42,
+       "text": "merchants who trade after dusk shall pay a fee"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Under the Lantern Act of the old charter, merchants who trade after dusk shall pay a fee if they use open flames, as the council long ago explained in its annual report to the guild."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "lost_connective"
+    }
+   },
+   "id": "F14-occurrence",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        15,
+        43
+       ],
+       [
+        51,
+        74
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "B3 occurrence resolution: 'or' and 'if' repeat. The output covers the first 'or' and 'if' but not the second pair, so the relation lost connectives.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 17,
+        "occurrence": 1,
+        "start": 15,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "children": [
+          {
+           "markers": [],
+           "nid": "N3",
+           "op": "PART",
+           "quotes": [
+            {
+             "end": 34,
+             "occurrence": 1,
+             "start": 18,
+             "text": "they carry water"
+            }
+           ]
+          },
+          {
+           "markers": [],
+           "nid": "N4",
+           "op": "PART",
+           "quotes": [
+            {
+             "end": 43,
+             "occurrence": 1,
+             "start": 38,
+             "text": "grain"
+            }
+           ]
+          }
+         ],
+         "markers": [
+          {
+           "end": 37,
+           "occurrence": 1,
+           "start": 35,
+           "text": "or"
+          }
+         ],
+         "nid": "N2",
+         "op": "OR"
+        },
+        {
+         "markers": [],
+         "nid": "N5",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 74,
+           "occurrence": 1,
+           "start": 51,
+           "text": "the gate warden permits"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 47,
+         "occurrence": 2,
+         "start": 45,
+         "text": "or"
+        },
+        {
+         "end": 50,
+         "occurrence": 2,
+         "start": 48,
+         "text": "if"
+        }
+       ],
+       "nid": "N1",
+       "op": "OR"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F14-occurrence",
+    "source_text_sha256": "403bea71b4a37d0234688c848482880f4fb005252f28d52287820ab27b1decd9",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 14,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Carts may pass"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Carts may pass if they carry water or grain, or if the gate warden permits."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {
+     "R1:N1": "swap"
+    },
+    "invented": [],
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F15a-swap",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        19,
+        21
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [
+       "c2",
+       "c3"
+      ],
+      "evidence": [
+       [
+        37,
+        40
+       ]
+      ],
+      "id": "c1",
+      "op": "OR",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        22,
+        36
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        41,
+        54
+       ]
+      ],
+      "id": "c3",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "Typed: an OR operator for a reference AND is a swap (typed harmful, critical here).",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 21,
+        "occurrence": 1,
+        "start": 19,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 36,
+           "occurrence": 1,
+           "start": 22,
+           "text": "a door is open"
+          }
+         ]
+        },
+        {
+         "markers": [],
+         "nid": "N3",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 54,
+           "occurrence": 1,
+           "start": 41,
+           "text": "a lamp is out"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 40,
+         "occurrence": 1,
+         "start": 37,
+         "text": "and"
+        }
+       ],
+       "nid": "N1",
+       "op": "AND"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F15a-swap",
+    "source_text_sha256": "b7b74a90835208eaf8e183e9722f750ab5d38e517dada89fa185c46df8aedffc",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 18,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Guards must report"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Guards must report if a door is open and a lamp is out."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {
+     "R1:N1": "correct"
+    },
+    "invented": [],
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F15b-and-correct",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        19,
+        21
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [
+       "c2",
+       "c3"
+      ],
+      "evidence": [
+       [
+        37,
+        40
+       ]
+      ],
+      "id": "c1",
+      "op": "AND",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        22,
+        36
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        41,
+        54
+       ]
+      ],
+      "id": "c3",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "Control for F15a: AND for AND is typed-correct.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 21,
+        "occurrence": 1,
+        "start": 19,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 36,
+           "occurrence": 1,
+           "start": 22,
+           "text": "a door is open"
+          }
+         ]
+        },
+        {
+         "markers": [],
+         "nid": "N3",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 54,
+           "occurrence": 1,
+           "start": 41,
+           "text": "a lamp is out"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 40,
+         "occurrence": 1,
+         "start": 37,
+         "text": "and"
+        }
+       ],
+       "nid": "N1",
+       "op": "AND"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F15b-and-correct",
+    "source_text_sha256": "b7b74a90835208eaf8e183e9722f750ab5d38e517dada89fa185c46df8aedffc",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 18,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Guards must report"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Guards must report if a door is open and a lamp is out."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {
+     "R1:N1": "hedged"
+    },
+    "invented": [],
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F15c-alt-hedged",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        19,
+        21
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [
+       "c2",
+       "c3"
+      ],
+      "evidence": [
+       [
+        37,
+        40
+       ]
+      ],
+      "id": "c1",
+      "op": "ALT",
+      "q": 1
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        22,
+        36
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        41,
+        54
+       ]
+      ],
+      "id": "c3",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "Typed: ALT (competing readings, q1) over the right members is a typed hedge, not correct.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 21,
+        "occurrence": 1,
+        "start": 19,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 36,
+           "occurrence": 1,
+           "start": 22,
+           "text": "a door is open"
+          }
+         ]
+        },
+        {
+         "markers": [],
+         "nid": "N3",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 54,
+           "occurrence": 1,
+           "start": 41,
+           "text": "a lamp is out"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 40,
+         "occurrence": 1,
+         "start": 37,
+         "text": "and"
+        }
+       ],
+       "nid": "N1",
+       "op": "AND"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F15c-alt-hedged",
+    "source_text_sha256": "b7b74a90835208eaf8e183e9722f750ab5d38e517dada89fa185c46df8aedffc",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 18,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Guards must report"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Guards must report if a door is open and a lamp is out."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {
+     "R1:N1": "flattened"
+    },
+    "invented": [],
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F15d-flattened",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        19,
+        21
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        22,
+        54
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "Typed: FULL keeping the compound in one leaf is flattened (not typed-correct, not harmful); the relation itself is correct.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 21,
+        "occurrence": 1,
+        "start": 19,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 36,
+           "occurrence": 1,
+           "start": 22,
+           "text": "a door is open"
+          }
+         ]
+        },
+        {
+         "markers": [],
+         "nid": "N3",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 54,
+           "occurrence": 1,
+           "start": 41,
+           "text": "a lamp is out"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 40,
+         "occurrence": 1,
+         "start": 37,
+         "text": "and"
+        }
+       ],
+       "nid": "N1",
+       "op": "AND"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F15d-flattened",
+    "source_text_sha256": "b7b74a90835208eaf8e183e9722f750ab5d38e517dada89fa185c46df8aedffc",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 18,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Guards must report"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Guards must report if a door is open and a lamp is out."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {},
+    "invented": [
+     "c1"
+    ],
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F16-invented",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        29,
+        31
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [
+       "c2",
+       "c3"
+      ],
+      "evidence": [],
+      "id": "c1",
+      "op": "AND",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        32,
+        42
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        43,
+        56
+       ]
+      ],
+      "id": "c3",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "Typed: an unhedged AND splitting a single-part clause is an invented connective.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [
+       {
+        "end": 31,
+        "occurrence": 1,
+        "start": 29,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 56,
+         "occurrence": 1,
+         "start": 32,
+         "text": "they carry a sealed writ"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F16-invented",
+    "source_text_sha256": "74801e98afedd6b6bb319a19521c37ae5ae2593346f6f751303b91120de69719",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 28,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Couriers may enter the vault"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Couriers may enter the vault if they carry a sealed writ."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {
+     "R1:N1": "mismatch"
+    },
+    "invented": [],
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F17-mismatch",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        29,
+        31
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [
+       "c2",
+       "c3",
+       "c4"
+      ],
+      "evidence": [
+       [
+        57,
+        59
+       ]
+      ],
+      "id": "c1",
+      "op": "OR",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        32,
+        56
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        60,
+        80
+       ]
+      ],
+      "id": "c3",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        82,
+        91
+       ]
+      ],
+      "id": "c4",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "Typed: an OR with an extra member covering text outside the clause is a mismatch, counted once (not also invented).",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [
+       {
+        "end": 31,
+        "occurrence": 1,
+        "start": 29,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 56,
+           "occurrence": 1,
+           "start": 32,
+           "text": "the sailing is cancelled"
+          }
+         ]
+        },
+        {
+         "markers": [],
+         "nid": "N3",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 80,
+           "occurrence": 1,
+           "start": 60,
+           "text": "the passenger is ill"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 59,
+         "occurrence": 1,
+         "start": 57,
+         "text": "or"
+        }
+       ],
+       "nid": "N1",
+       "op": "OR"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F17-mismatch",
+    "source_text_sha256": "7890c550b06939916468b318a3524b7caf3e213b8c85c2f77feb0e59ff442513",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 28,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Ferry tickets are refundable"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Ferry tickets are refundable if the sailing is cancelled or the passenger is ill, as posted."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {
+     "R2:exc": "wrong_base"
+    },
+    "invented": [],
+    "relations": {
+     "R1": "correct",
+     "R2": "correct",
+     "R3": "correct"
+    }
+   },
+   "id": "F18-wrong-base",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    },
+    {
+     "basis": "fixture expectation",
+     "tid": "T2",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 0,
+      "role": "if",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [
+       "c5",
+       "c2"
+      ],
+      "evidence": [],
+      "id": "c1",
+      "op": "AND",
+      "q": 0
+     },
+     {
+      "args": [
+       "c3",
+       "c4"
+      ],
+      "evidence": [
+       [
+        41,
+        47
+       ]
+      ],
+      "id": "c2",
+      "op": "EXC",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        95,
+        118
+       ]
+      ],
+      "id": "c3",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        48,
+        71
+       ]
+      ],
+      "id": "c4",
+      "op": "L",
+      "q": 0
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        22,
+        39
+       ]
+      ],
+      "id": "c5",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "Typed: the carve-out sits under an EXC whose base is a different relation (of another target), so exception_to is wrong_base. The joining AND carries whole separate relations and is not invented.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [
+       {
+        "end": 24,
+        "occurrence": 1,
+        "start": 22,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 39,
+         "occurrence": 1,
+         "start": 25,
+         "text": "they use traps"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     },
+     {
+      "carves_out_of": "R1",
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [
+       {
+        "end": 47,
+        "occurrence": 1,
+        "start": 41,
+        "text": "except"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 71,
+         "occurrence": 1,
+         "start": 48,
+         "text": "trappers on tribal land"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R2",
+      "tid": "T1"
+     },
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [
+       {
+        "end": 99,
+        "occurrence": 1,
+        "start": 95,
+        "text": "when"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 118,
+         "occurrence": 1,
+         "start": 100,
+         "text": "they hunt at night"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R3",
+      "tid": "T2"
+     }
+    ],
+    "source_id": "F18-wrong-base",
+    "source_text_sha256": "397192c15d5a417486508367716d2418ab00f94d0efe72f6cc25d05646e1957f",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 21,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Hunters need a permit"
+      },
+      "tid": "T1"
+     },
+     {
+      "gloss": "",
+      "quote": {
+       "end": 94,
+       "occurrence": 2,
+       "start": 73,
+       "text": "Hunters need a permit"
+      },
+      "tid": "T2"
+     }
+    ]
+   },
+   "source": "Hunters need a permit if they use traps, except trappers on tribal land. Hunters need a permit when they hunt at night."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "relations": {
+     "R1": "correct"
+    }
+   },
+   "id": "F19-irrespective",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [
+       [
+        27,
+        40
+       ]
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "role": "regardless",
+      "unit_id": 1
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        41,
+        57
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     }
+    ]
+   },
+   "purpose": "IRRESPECTIVE via regardless is correct.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "IRRESPECTIVE",
+      "contested": false,
+      "contested_reason": "",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [
+       {
+        "end": 40,
+        "occurrence": 1,
+        "start": 27,
+        "text": "regardless of"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 57,
+         "occurrence": 1,
+         "start": 41,
+         "text": "the driver's age"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F19-irrespective",
+    "source_text_sha256": "d8de019be937814333e3ced95c6238e6c546edf6e91504a63ef214ea02d3fd3b",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 26,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Tolls apply to every wagon"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Tolls apply to every wagon regardless of the driver's age."
+  },
+  {
+   "arm": "OPQ",
+   "expected": {
+    "calibration": {
+     "R1": "calibrated"
+    },
+    "relations": {
+     "R1": "excluded_unresolved",
+     "R2": "excluded_contested:correct"
+    }
+   },
+   "id": "F20-unresolved-and-contested",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    },
+    {
+     "basis": "fixture expectation",
+     "tid": "T2",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 2
+      }
+     ]
+    }
+   ],
+   "output": {
+    "links": [
+     {
+      "evidence": [],
+      "node_id": "c1",
+      "q": 1,
+      "role": "qual",
+      "unit_id": 1
+     },
+     {
+      "evidence": [],
+      "node_id": "c2",
+      "q": 0,
+      "role": "if",
+      "unit_id": 2
+     }
+    ],
+    "nodes": [
+     {
+      "args": [],
+      "evidence": [
+       [
+        19,
+        43
+       ]
+      ],
+      "id": "c1",
+      "op": "L",
+      "q": 1
+     },
+     {
+      "args": [],
+      "evidence": [
+       [
+        62,
+        84
+       ]
+      ],
+      "id": "c2",
+      "op": "L",
+      "q": 0
+     }
+    ],
+    "units": [
+     {
+      "id": 1
+     },
+     {
+      "id": 2
+     }
+    ]
+   },
+   "purpose": "UNRESOLVED relations leave the primary denominator (calibration only); contested relations are scored but marked excluded.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "UNRESOLVED",
+      "contested": false,
+      "contested_reason": "",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 43,
+         "occurrence": 1,
+         "start": 19,
+         "text": "as the director sees fit"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     },
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": true,
+      "contested_reason": "fixture: reviewer argued this is a deadline, not a condition",
+      "critical": false,
+      "critical_reason": "",
+      "introducer": [
+       {
+        "end": 64,
+        "occurrence": 1,
+        "start": 62,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 84,
+         "occurrence": 1,
+         "start": 65,
+         "text": "paid after the fair"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R2",
+      "tid": "T2"
+     }
+    ],
+    "source_id": "F20-unresolved-and-contested",
+    "source_text_sha256": "353590681576eb7aaeba4b71028bc5e482530c958e1bbfdf790afdf68480edb4",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 18,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Fees may be waived"
+      },
+      "tid": "T1"
+     },
+     {
+      "gloss": "",
+      "quote": {
+       "end": 61,
+       "occurrence": 1,
+       "start": 45,
+       "text": "Late fees double"
+      },
+      "tid": "T2"
+     }
+    ]
+   },
+   "source": "Fees may be waived as the director sees fit. Late fees double if paid after the fair."
+  },
+  {
+   "arm": "FULL",
+   "expected": {
+    "compounds": {
+     "R1:N1": "correct",
+     "R1:N3": "correct",
+     "R2:N1": "correct",
+     "R2:exc": "correct"
+    },
+    "invented": [],
+    "relations": {
+     "R1": "correct",
+     "R2": "correct"
+    }
+   },
+   "external": {
+    "output": "round15-condition-preservation/protocol-revised/fixtures/expanded.json",
+    "output_sha256": "99d95caefed656d116d9eca2dcb4c9983e7b1213f70e47edfd7d0d3943c887ff",
+    "source": "round15-condition-preservation/protocol-revised/fixtures/source.txt",
+    "source_sha256": "67f31a4bd0c271be7f2b101046215c88069a8699de6a7ebc4e1e1b84de18d440"
+   },
+   "id": "F21-r15-expanded-nested-exc",
+   "mappings": [
+    {
+     "basis": "fixture expectation",
+     "tid": "T1",
+     "units": [
+      {
+       "form": "direct",
+       "unit": 1
+      }
+     ]
+    }
+   ],
+   "output": {
+    "action_ready": false,
+    "completeness": "unverified",
+    "condition_coverage": "unverified",
+    "evaluation": "not_performed",
+    "evidence_match": "exact",
+    "links": [
+     {
+      "evidence": [
+       {
+        "a": "s1",
+        "end": 35,
+        "fragment": [
+         "s1",
+         "only if",
+         1,
+         "s1",
+         "only if",
+         1
+        ],
+        "start": 28,
+        "text": "only if",
+        "z": "s1"
+       }
+      ],
+      "node_id": "c1",
+      "q": 0,
+      "r": "",
+      "role": "onlyif",
+      "unit_id": 1
+     },
+     {
+      "evidence": [],
+      "node_id": "c10",
+      "q": 1,
+      "r": "Scope is unresolved; no applicability logic inferred.",
+      "role": "qual",
+      "unit_id": 1
+     },
+     {
+      "evidence": [],
+      "node_id": "c11",
+      "q": 0,
+      "r": "",
+      "role": "if",
+      "unit_id": 2
+     }
+    ],
+    "nodes": [
+     {
+      "args": [
+       "c2",
+       "c5"
+      ],
+      "evidence": [
+       {
+        "a": "s1",
+        "end": 82,
+        "fragment": [
+         "s1",
+         "except",
+         1,
+         "s1",
+         "except",
+         1
+        ],
+        "start": 76,
+        "text": "except",
+        "z": "s1"
+       }
+      ],
+      "id": "c1",
+      "model_gloss": "",
+      "op": "EXC",
+      "q": 0,
+      "r": "",
+      "unresolved_reference": false
+     },
+     {
+      "args": [
+       "c3",
+       "c4"
+      ],
+      "evidence": [
+       {
+        "a": "s1",
+        "end": 49,
+        "fragment": [
+         "s1",
+         "AND",
+         1,
+         "s1",
+         "AND",
+         1
+        ],
+        "start": 46,
+        "text": "AND",
+        "z": "s1"
+       }
+      ],
+      "id": "c2",
+      "model_gloss": "",
+      "op": "AND",
+      "q": 0,
+      "r": "",
+      "unresolved_reference": false
+     },
+     {
+      "args": [],
+      "evidence": [
+       {
+        "a": "s1",
+        "end": 45,
+        "fragment": [
+         "s1",
+         "residents",
+         1,
+         "s1",
+         "residents",
+         1
+        ],
+        "start": 36,
+        "text": "residents",
+        "z": "s1"
+       }
+      ],
+      "id": "c3",
+      "model_gloss": "",
+      "op": "L",
+      "q": 0,
+      "r": "",
+      "unresolved_reference": false
+     },
+     {
+      "args": [
+       "c6",
+       "c7"
+      ],
+      "evidence": [
+       {
+        "a": "s1",
+        "end": 56,
+        "fragment": [
+         "s1",
+         "either",
+         1,
+         "s1",
+         "either",
+         1
+        ],
+        "start": 50,
+        "text": "either",
+        "z": "s1"
+       },
+       {
+        "a": "s1",
+        "end": 66,
+        "fragment": [
+         "s1",
+         "OR",
+         1,
+         "s1",
+         "OR",
+         1
+        ],
+        "start": 64,
+        "text": "OR",
+        "z": "s1"
+       }
+      ],
+      "id": "c4",
+      "model_gloss": "",
+      "op": "OR",
+      "q": 0,
+      "r": "",
+      "unresolved_reference": false
+     },
+     {
+      "args": [
+       "c8",
+       "c9"
+      ],
+      "evidence": [
+       {
+        "a": "s1",
+        "end": 107,
+        "fragment": [
+         "s1",
+         "unless",
+         1,
+         "s1",
+         "unless",
+         1
+        ],
+        "start": 101,
+        "text": "unless",
+        "z": "s1"
+       }
+      ],
+      "id": "c5",
+      "model_gloss": "",
+      "op": "EXC",
+      "q": 0,
+      "r": "",
+      "unresolved_reference": false
+     },
+     {
+      "args": [],
+      "evidence": [
+       {
+        "a": "s1",
+        "end": 63,
+        "fragment": [
+         "s1",
+         "owners",
+         1,
+         "s1",
+         "owners",
+         1
+        ],
+        "start": 57,
+        "text": "owners",
+        "z": "s1"
+       }
+      ],
+      "id": "c6",
+      "model_gloss": "",
+      "op": "L",
+      "q": 0,
+      "r": "",
+      "unresolved_reference": false
+     },
+     {
+      "args": [],
+      "evidence": [
+       {
+        "a": "s1",
+        "end": 74,
+        "fragment": [
+         "s1",
+         "tenants",
+         1,
+         "s1",
+         "tenants",
+         1
+        ],
+        "start": 67,
+        "text": "tenants",
+        "z": "s1"
+       }
+      ],
+      "id": "c7",
+      "model_gloss": "",
+      "op": "L",
+      "q": 0,
+      "r": "",
+      "unresolved_reference": false
+     },
+     {
+      "args": [],
+      "evidence": [
+       {
+        "a": "s1",
+        "end": 100,
+        "fragment": [
+         "s1",
+         "banned applicants",
+         1,
+         "s1",
+         "banned applicants",
+         1
+        ],
+        "start": 83,
+        "text": "banned applicants",
+        "z": "s1"
+       }
+      ],
+      "id": "c8",
+      "model_gloss": "",
+      "op": "L",
+      "q": 0,
+      "r": "",
+      "unresolved_reference": false
+     },
+     {
+      "args": [],
+      "evidence": [
+       {
+        "a": "s1",
+        "end": 122,
+        "fragment": [
+         "s1",
+         "appeal granted",
+         1,
+         "s1",
+         "appeal granted",
+         1
+        ],
+        "start": 108,
+        "text": "appeal granted",
+        "z": "s1"
+       }
+      ],
+      "id": "c9",
+      "model_gloss": "",
+      "op": "L",
+      "q": 0,
+      "r": "",
+      "unresolved_reference": false
+     },
+     {
+      "args": [],
+      "evidence": [
+       {
+        "a": "s2",
+        "end": 857,
+        "fragment": [
+         "s2",
+         "Registered applicants whose independentl",
+         1,
+         "s2",
+         "d a written stay preserving eligibility.",
+         1
+        ],
+        "start": 160,
+        "text": "Registered applicants whose independently verified annual report includes every required attachment, whose signature is witnessed by an authorized officer, whose renewal remains pending during the announced review period, and whose nominated representative retains written authority for this application, with each separately identified annex retained in its original language and supplied with the approved explanatory statement, subject to continuing compliance with the published accessibility arrangements and prior written confirmation of the review location, except applicants whose license was suspended after notice unless the review panel has issued a written stay preserving eligibility.",
+        "z": "s2"
+       }
+      ],
+      "id": "c10",
+      "model_gloss": "",
+      "op": "L",
+      "q": 1,
+      "r": "The full qualification has no stated governed scope.",
+      "unresolved_reference": false
+     },
+     {
+      "args": [],
+      "evidence": [
+       {
+        "a": "s3",
+        "end": 900,
+        "fragment": [
+         "s3",
+         "section Delta",
+         1,
+         "s3",
+         "section Delta",
+         1
+        ],
+        "start": 887,
+        "text": "section Delta",
+        "z": "s3"
+       }
+      ],
+      "id": "c11",
+      "model_gloss": "",
+      "op": "R",
+      "q": 2,
+      "r": "Referenced governing content not supplied.",
+      "unresolved_reference": true
+     }
+    ],
+    "production_eligible": false,
+    "schema_version": "round15.expanded-inventory.v2",
+    "semantic_validity": "unverified",
+    "source_text_sha256": "67f31a4bd0c271be7f2b101046215c88069a8699de6a7ebc4e1e1b84de18d440",
+    "span_table_sha256": "0cfa52541e78a8b40a9d447a8c15fd373e45a6484ecadf6c548d06e1cd76f41f",
+    "terminal_marker": "END",
+    "units": [
+     {
+      "applicability": "unknown",
+      "assertion": "The office approves permits.",
+      "condition_links": [
+       {
+        "evidence": [
+         {
+          "a": "s1",
+          "end": 35,
+          "fragment": [
+           "s1",
+           "only if",
+           1,
+           "s1",
+           "only if",
+           1
+          ],
+          "start": 28,
+          "text": "only if",
+          "z": "s1"
+         }
+        ],
+        "node_id": "c1",
+        "q": 0,
+        "r": "",
+        "role": "onlyif",
+        "unit_id": 1
+       },
+       {
+        "evidence": [],
+        "node_id": "c10",
+        "q": 1,
+        "r": "Scope is unresolved; no applicability logic inferred.",
+        "role": "qual",
+        "unit_id": 1
+       }
+      ],
+      "deadline": null,
+      "evidence": [
+       {
+        "end": 124,
+        "occurrence": 1,
+        "quote": "The office approves permits only if residents AND either owners OR tenants, except banned applicants unless appeal granted.\n",
+        "span_id": "s1",
+        "start": 0
+       }
+      ],
+      "id": 1,
+      "kind": "instruction",
+      "modality": "informational",
+      "relationship_member_ids": [],
+      "required_unit_ids": [],
+      "uncertainty": "source_ambiguous",
+      "uncertainty_reason": "Full qualification scope is unresolved; explicit only-if condition retained."
+     },
+     {
+      "applicability": "unknown",
+      "assertion": "Applicants must comply with section Delta.",
+      "condition_links": [
+       {
+        "evidence": [],
+        "node_id": "c11",
+        "q": 0,
+        "r": "",
+        "role": "if",
+        "unit_id": 2
+       }
+      ],
+      "deadline": null,
+      "evidence": [
+       {
+        "end": 934,
+        "occurrence": 1,
+        "quote": "Applicants must comply with section Delta; governing content not supplied.\n",
+        "span_id": "s3",
+        "start": 859
+       }
+      ],
+      "id": 2,
+      "kind": "instruction",
+      "modality": "mandatory",
+      "relationship_member_ids": [],
+      "required_unit_ids": [],
+      "uncertainty": "reference_unresolved",
+      "uncertainty_reason": "Governing reference content not supplied."
+     },
+     {
+      "applicability": "none_reported",
+      "assertion": "Applications deadline date is February 8, 2037.",
+      "condition_links": [],
+      "deadline": {
+       "b": {
+        "evidence": [
+         {
+          "a": "s4",
+          "end": 963,
+          "fragment": [
+           "s4",
+           "received",
+           1,
+           "s4",
+           "received",
+           1
+          ],
+          "start": 955,
+          "text": "received",
+          "z": "s4"
+         }
+        ],
+        "reason": "",
+        "state": "stated"
+       },
+       "c": {
+        "evidence": [
+         {
+          "a": "s4",
+          "end": 972,
+          "fragment": [
+           "s4",
+           "16:00",
+           1,
+           "s4",
+           "16:00",
+           1
+          ],
+          "start": 967,
+          "text": "16:00",
+          "z": "s4"
+         }
+        ],
+        "reason": "",
+        "state": "stated"
+       },
+       "z": {
+        "evidence": [
+         {
+          "a": "s4",
+          "end": 976,
+          "fragment": [
+           "s4",
+           "UTC",
+           1,
+           "s4",
+           "UTC",
+           1
+          ],
+          "start": 973,
+          "text": "UTC",
+          "z": "s4"
+         }
+        ],
+        "reason": "",
+        "state": "stated"
+       }
+      },
+      "evidence": [
+       {
+        "end": 998,
+        "occurrence": 1,
+        "quote": "Applications must be received by 16:00 UTC on February 8, 2037.\n",
+        "span_id": "s4",
+        "start": 934
+       }
+      ],
+      "id": 3,
+      "kind": "timing",
+      "modality": "mandatory",
+      "relationship_member_ids": [],
+      "required_unit_ids": [],
+      "uncertainty": "none",
+      "uncertainty_reason": ""
+     },
+     {
+      "applicability": "none_reported",
+      "assertion": "Remarks deadline date is March 9, 2037.",
+      "condition_links": [],
+      "deadline": {
+       "b": {
+        "evidence": [],
+        "reason": "",
+        "state": "absent"
+       },
+       "c": {
+        "evidence": [],
+        "reason": "",
+        "state": "absent"
+       },
+       "z": {
+        "evidence": [],
+        "reason": "",
+        "state": "absent"
+       }
+      },
+      "evidence": [
+       {
+        "end": 1029,
+        "occurrence": 1,
+        "quote": "Send remarks by March 9, 2037.\n",
+        "span_id": "s5",
+        "start": 998
+       }
+      ],
+      "id": 4,
+      "kind": "timing",
+      "modality": "unknown",
+      "relationship_member_ids": [],
+      "required_unit_ids": [],
+      "uncertainty": "source_ambiguous",
+      "uncertainty_reason": "Clock, zone, timeliness basis and directive force not stated."
+     },
+     {
+      "applicability": "none_reported",
+      "assertion": "Arrival deadline date is May 1, 2037.",
+      "condition_links": [],
+      "deadline": {
+       "b": {
+        "evidence": [
+         {
+          "a": "s6",
+          "end": 1045,
+          "fragment": [
+           "s6",
+           "Arrive in person",
+           1,
+           "s6",
+           "Arrive in person",
+           1
+          ],
+          "start": 1029,
+          "text": "Arrive in person",
+          "z": "s6"
+         }
+        ],
+        "reason": "In-person arrival, not receipt or dispatch.",
+        "state": "na"
+       },
+       "c": {
+        "evidence": [
+         {
+          "a": "s6",
+          "end": 1054,
+          "fragment": [
+           "s6",
+           "09:00",
+           1,
+           "s6",
+           "09:00",
+           1
+          ],
+          "start": 1049,
+          "text": "09:00",
+          "z": "s6"
+         }
+        ],
+        "reason": "",
+        "state": "stated"
+       },
+       "z": {
+        "evidence": [
+         {
+          "a": "s6",
+          "end": 1058,
+          "fragment": [
+           "s6",
+           "UTC",
+           1,
+           "s6",
+           "UTC",
+           1
+          ],
+          "start": 1055,
+          "text": "UTC",
+          "z": "s6"
+         }
+        ],
+        "reason": "",
+        "state": "stated"
+       }
+      },
+      "evidence": [
+       {
+        "end": 1075,
+        "occurrence": 1,
+        "quote": "Arrive in person by 09:00 UTC on May 1, 2037.\n",
+        "span_id": "s6",
+        "start": 1029
+       }
+      ],
+      "id": 5,
+      "kind": "timing",
+      "modality": "informational",
+      "relationship_member_ids": [],
+      "required_unit_ids": [],
+      "uncertainty": "none",
+      "uncertainty_reason": ""
+     },
+     {
+      "applicability": "none_reported",
+      "assertion": "Requests deadline date is April 3, 2037.",
+      "condition_links": [],
+      "deadline": {
+       "b": {
+        "evidence": [
+         {
+          "a": "s7",
+          "end": 1149,
+          "fragment": [
+           "s7",
+           "dispatch",
+           1,
+           "s7",
+           "dispatch",
+           1
+          ],
+          "start": 1141,
+          "text": "dispatch",
+          "z": "s7"
+         }
+        ],
+        "reason": "",
+        "state": "stated"
+       },
+       "c": {
+        "evidence": [
+         {
+          "a": "s7",
+          "end": 1123,
+          "fragment": [
+           "s7",
+           "12:00 or 13:00",
+           1,
+           "s7",
+           "12:00 or 13:00",
+           1
+          ],
+          "start": 1109,
+          "text": "12:00 or 13:00",
+          "z": "s7"
+         }
+        ],
+        "reason": "Notice leaves alternative clocks unresolved.",
+        "state": "ambiguous"
+       },
+       "z": {
+        "evidence": [
+         {
+          "a": "s7",
+          "end": 1127,
+          "fragment": [
+           "s7",
+           "UTC",
+           1,
+           "s7",
+           "UTC",
+           1
+          ],
+          "start": 1124,
+          "text": "UTC",
+          "z": "s7"
+         }
+        ],
+        "reason": "",
+        "state": "stated"
+       }
+      },
+      "evidence": [
+       {
+        "end": 1171,
+        "occurrence": 1,
+        "quote": "Requests due April 3, 2037; clock 12:00 or 13:00 UTC, unresolved; dispatch controls timeliness.\n",
+        "span_id": "s7",
+        "start": 1075
+       }
+      ],
+      "id": 6,
+      "kind": "timing",
+      "modality": "informational",
+      "relationship_member_ids": [],
+      "required_unit_ids": [],
+      "uncertainty": "source_ambiguous",
+      "uncertainty_reason": "Cutoff clock has unresolved alternatives."
+     },
+     {
+      "applicability": "none_reported",
+      "assertion": "Unlabeled background function remains unknown.",
+      "condition_links": [],
+      "deadline": null,
+      "evidence": [
+       {
+        "end": 1229,
+        "occurrence": 1,
+        "quote": "Unlabeled Ω é 🫧 background.",
+        "span_id": "s9",
+        "start": 1201
+       }
+      ],
+      "id": 7,
+      "kind": "background",
+      "modality": "informational",
+      "relationship_member_ids": [],
+      "required_unit_ids": [],
+      "uncertainty": "function_unresolved",
+      "uncertainty_reason": "Function not stated."
+     }
+    ]
+   },
+   "purpose": "Format compatibility and nested exceptions: the frozen R15 fictional control's real expanded record (round15-condition-preservation/protocol-revised/fixtures/expanded.json) scored as a FULL output. The exception-to-an-exception inside R2 is an EXC logic node, so the model's nested EXC is typed-correct, not invented.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "RESTRICT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 35,
+        "occurrence": 1,
+        "start": 28,
+        "text": "only if"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 45,
+           "occurrence": 1,
+           "start": 36,
+           "text": "residents"
+          }
+         ]
+        },
+        {
+         "children": [
+          {
+           "markers": [],
+           "nid": "N4",
+           "op": "PART",
+           "quotes": [
+            {
+             "end": 63,
+             "occurrence": 1,
+             "start": 57,
+             "text": "owners"
+            }
+           ]
+          },
+          {
+           "markers": [],
+           "nid": "N5",
+           "op": "PART",
+           "quotes": [
+            {
+             "end": 74,
+             "occurrence": 1,
+             "start": 67,
+             "text": "tenants"
+            }
+           ]
+          }
+         ],
+         "markers": [
+          {
+           "end": 56,
+           "occurrence": 1,
+           "start": 50,
+           "text": "either"
+          },
+          {
+           "end": 66,
+           "occurrence": 1,
+           "start": 64,
+           "text": "OR"
+          }
+         ],
+         "nid": "N3",
+         "op": "OR"
+        }
+       ],
+       "markers": [
+        {
+         "end": 49,
+         "occurrence": 1,
+         "start": 46,
+         "text": "AND"
+        }
+       ],
+       "nid": "N1",
+       "op": "AND"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     },
+     {
+      "carves_out_of": "R1",
+      "class": "EXCEPT",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 82,
+        "occurrence": 1,
+        "start": 76,
+        "text": "except"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "markers": [],
+         "nid": "N2",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 100,
+           "occurrence": 1,
+           "start": 83,
+           "text": "banned applicants"
+          }
+         ]
+        },
+        {
+         "markers": [],
+         "nid": "N3",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 122,
+           "occurrence": 1,
+           "start": 108,
+           "text": "appeal granted"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 107,
+         "occurrence": 1,
+         "start": 101,
+         "text": "unless"
+        }
+       ],
+       "nid": "N1",
+       "op": "EXC"
+      },
+      "rationale": "fixture",
+      "rid": "R2",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F21-r15-expanded-nested-exc",
+    "source_text_sha256": "67f31a4bd0c271be7f2b101046215c88069a8699de6a7ebc4e1e1b84de18d440",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 27,
+       "occurrence": 1,
+       "start": 0,
+       "text": "The office approves permits"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "The office approves permits only if residents AND either owners OR tenants, except banned applicants unless appeal granted.\nQualification scope not identified: Registered applicants whose independently verified annual report includes every required attachment, whose signature is witnessed by an authorized officer, whose renewal remains pending during the announced review period, and whose nominated representative retains written authority for this application, with each separately identified annex retained in its original language and supplied with the approved explanatory statement, subject to continuing compliance with the published accessibility arrangements and prior written confirmation of the review location, except applicants whose license was suspended after notice unless the review panel has issued a written stay preserving eligibility.\r\nApplicants must comply with section Delta; governing content not supplied.\nApplications must be received by 16:00 UTC on February 8, 2037.\nSend remarks by March 9, 2037.\nArrive in person by 09:00 UTC on May 1, 2037.\nRequests due April 3, 2037; clock 12:00 or 13:00 UTC, unresolved; dispatch controls timeliness.\nhead tail head tail head tail\nUnlabeled Ω é 🫧 background."
+  }
+ ],
+ "decisions": [
+  {
+   "bar": "D",
+   "cells": {
+    "S1": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "hedged",
+       false
+      ],
+      [
+       "absent",
+       true
+      ]
+     ],
+     "status": "valid"
+    },
+    "S2": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       true
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "hedged",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S3": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       true
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "expected": {
+    "D1": true,
+    "D2": true,
+    "D3": true,
+    "D4": false,
+    "D5": true,
+    "pass": false
+   },
+   "id": "D01-critical-absence-blocks",
+   "purpose": "B4 counterexample from the review: 12 relations, 11 complete, 9 correct, 2 hedged, one CRITICAL absent. Rates pass; D4 must fail."
+  },
+  {
+   "bar": "D",
+   "cells": {
+    "S1": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "hedged",
+       false
+      ],
+      [
+       "absent",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S2": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       true
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "hedged",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S3": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       true
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "expected": {
+    "D1": true,
+    "D2": true,
+    "D3": true,
+    "D4": true,
+    "D5": true,
+    "pass": true
+   },
+   "id": "D02-noncritical-absence-allowed",
+   "purpose": "Same counts with the absence noncritical: the one-error allowance applies."
+  },
+  {
+   "bar": "D",
+   "cells": {
+    "S1": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "scope_change",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S2": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       true
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "scope_change",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S3": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       true
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "expected": {
+    "D1": true,
+    "D2": true,
+    "D3": false,
+    "D4": false,
+    "D5": true,
+    "pass": false
+   },
+   "id": "D03-two-noncritical-harmful",
+   "purpose": "Two noncritical harmful verdicts exceed the allowance (and drop acceptable below 0.90)."
+  },
+  {
+   "bar": "D",
+   "cells": {
+    "S1": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "embedded",
+       true
+      ]
+     ],
+     "status": "valid"
+    },
+    "S2": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S3": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "expected": {
+    "D1": true,
+    "D2": true,
+    "D3": true,
+    "D4": false,
+    "D5": true,
+    "pass": false
+   },
+   "id": "D04-critical-embedded",
+   "purpose": "B4: a critical relation kept only 'embedded' is not explicitly linked or hedged; D4 fails although nothing harmful occurred."
+  },
+  {
+   "bar": "D",
+   "cells": {
+    "S1": {
+     "completion_tokens": 13926,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S2": {
+     "completion_tokens": 16384,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "truncated"
+    },
+    "S3": {
+     "completion_tokens": 13927,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "expected": {
+    "D1": false,
+    "D2": true,
+    "D3": true,
+    "D4": true,
+    "D5": false,
+    "pass": false
+   },
+   "id": "D05-headroom-and-structure",
+   "purpose": "D5 headroom is 13,926 inclusive; a truncated cell fails D1."
+  },
+  {
+   "bar": "T",
+   "expected": {
+    "T1": true,
+    "T2": true,
+    "T3": false,
+    "T4": true,
+    "T5": true,
+    "T6": true,
+    "pass": false
+   },
+   "full": {
+    "S1": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       true
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "absent",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S2": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S3": {
+     "completion_tokens": 9000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "id": "T01-noncritical-loss-allowed",
+   "opq": {
+    "S1": {
+     "completion_tokens": 6000,
+     "relations": [
+      [
+       "correct",
+       true
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S2": {
+     "completion_tokens": 6000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S3": {
+     "completion_tokens": 6000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "purpose": "T2 allows FULL one fewer complete relation only when the lost one is noncritical; T6 exactly 1.5 passes.",
+   "typed": [
+    [
+     "correct",
+     false
+    ],
+    [
+     "correct",
+     false
+    ],
+    [
+     "correct",
+     false
+    ],
+    [
+     "correct",
+     false
+    ],
+    [
+     "correct",
+     false
+    ]
+   ]
+  },
+  {
+   "bar": "T",
+   "expected": {
+    "T1": false,
+    "T2": false,
+    "T3": true,
+    "T4": false,
+    "T5": false,
+    "T6": false,
+    "pass": false
+   },
+   "full": {
+    "S1": {
+     "completion_tokens": 13926,
+     "relations": [
+      [
+       "shortened",
+       true
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S2": {
+     "completion_tokens": 1075,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S3": {
+     "completion_tokens": 0,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "id": "T02-critical-loss-blocks",
+   "opq": {
+    "S1": {
+     "completion_tokens": 10000,
+     "relations": [
+      [
+       "correct",
+       true
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "absent",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S2": {
+     "completion_tokens": 0,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S3": {
+     "completion_tokens": 0,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "purpose": "T2: FULL loses completeness on a critical relation OPQ had complete; also T4 at 4/5 fails and a critical invented connective fails T5; ratio 1.5001 fails T6.",
+   "typed": [
+    [
+     "correct",
+     false
+    ],
+    [
+     "correct",
+     false
+    ],
+    [
+     "correct",
+     false
+    ],
+    [
+     "correct",
+     false
+    ],
+    [
+     "flattened",
+     false
+    ],
+    [
+     "invented",
+     true
+    ]
+   ]
+  },
+  {
+   "expected": true,
+   "futility": "OPQ",
+   "id": "U01-futility-opq",
+   "observed": {
+    "S1": {
+     "completion_tokens": 8000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "inversion",
+       true
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "purpose": "S1 futility: after OPQ1 has one critical harmful verdict, D is unreachable even if OPQ2/OPQ3 are perfect, so the run stops before OPQ2.",
+   "unrun": {
+    "S2": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "S3": [
+     false,
+     false,
+     false,
+     false
+    ]
+   }
+  },
+  {
+   "expected": false,
+   "futility": "OPQ",
+   "id": "U02-not-futile",
+   "observed": {
+    "S1": {
+     "completion_tokens": 8000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "shortened",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "purpose": "One noncritical harmful verdict after OPQ1 is still within the allowance; continue.",
+   "unrun": {
+    "S2": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "S3": [
+     false,
+     false,
+     false,
+     false
+    ]
+   }
+  },
+  {
+   "expected": true,
+   "futility": "FULL",
+   "id": "U03-futility-t6",
+   "observed": {
+    "S1": {
+     "completion_tokens": 13600,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "opq": {
+    "S1": {
+     "completion_tokens": 3000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S2": {
+     "completion_tokens": 3000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    },
+    "S3": {
+     "completion_tokens": 3000,
+     "relations": [
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ],
+      [
+       "correct",
+       false
+      ]
+     ],
+     "status": "valid"
+    }
+   },
+   "purpose": "S1 futility: FULL tokens so far already exceed 1.5x the OPQ total, so T6 cannot pass; stop FULL.",
+   "typed_observed": [
+    [
+     "correct",
+     false
+    ],
+    [
+     "correct",
+     false
+    ]
+   ],
+   "unrun": {
+    "S2": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "S3": [
+     false,
+     false,
+     false,
+     false
+    ]
+   },
+   "unrun_compounds": 4
+  },
+  {
+   "id": "O01-outcomes",
+   "outcomes": [
+    [
+     {
+      "full_pass": {
+       "A1": true,
+       "A2": true
+      },
+      "opq_mechanical_fail": false,
+      "opq_pass": {
+       "A1": true,
+       "A2": true
+      },
+      "typed_testable": true
+     },
+     "O2"
+    ],
+    [
+     {
+      "full_pass": {
+       "A1": null,
+       "A2": null
+      },
+      "opq_mechanical_fail": false,
+      "opq_pass": {
+       "A1": true,
+       "A2": false
+      },
+      "typed_testable": true
+     },
+     "O4"
+    ],
+    [
+     {
+      "full_pass": {
+       "A1": null,
+       "A2": null
+      },
+      "opq_mechanical_fail": false,
+      "opq_pass": {
+       "A1": false,
+       "A2": false
+      },
+      "typed_testable": true
+     },
+     "O3"
+    ],
+    [
+     {
+      "full_pass": {
+       "A1": null,
+       "A2": null
+      },
+      "opq_mechanical_fail": true,
+      "opq_pass": {
+       "A1": null,
+       "A2": null
+      },
+      "typed_testable": true
+     },
+     "O3"
+    ],
+    [
+     {
+      "full_pass": {
+       "A1": true,
+       "A2": false
+      },
+      "opq_mechanical_fail": false,
+      "opq_pass": {
+       "A1": true,
+       "A2": true
+      },
+      "typed_testable": true
+     },
+     "O1-disputed"
+    ],
+    [
+     {
+      "full_pass": {
+       "A1": false,
+       "A2": null
+      },
+      "opq_mechanical_fail": false,
+      "opq_pass": {
+       "A1": true,
+       "A2": true
+      },
+      "typed_testable": true
+     },
+     "O1"
+    ],
+    [
+     {
+      "full_pass": {
+       "A1": null,
+       "A2": null
+      },
+      "opq_mechanical_fail": false,
+      "opq_pass": {
+       "A1": true,
+       "A2": true
+      },
+      "typed_testable": false
+     },
+     "O1-untestable"
+    ],
+    [
+     {
+      "full_pass": {
+       "A1": null,
+       "A2": null
+      },
+      "halted_phase": "OPQ",
+      "opq_mechanical_fail": false,
+      "opq_pass": {
+       "A1": null,
+       "A2": null
+      },
+      "typed_testable": true
+     },
+     "P"
+    ],
+    [
+     {
+      "full_pass": {
+       "A1": null,
+       "A2": null
+      },
+      "halted_phase": "FULL",
+      "opq_mechanical_fail": false,
+      "opq_pass": {
+       "A1": true,
+       "A2": true
+      },
+      "typed_testable": true
+     },
+     "O1-incomplete"
+    ]
+   ],
+   "purpose": "B5 outcome rules: OPQ disagreement is O4; FULL disagreement is O1-disputed (typed layer needs both); halts are partial."
+  }
+ ],
+ "fixture_version": "r17.fixtures.v1",
+ "note": "All sources, references and outputs are FICTIONAL and authored by hand. Quotes are [text, occurrence] (occurrence counts overlapping exact substring matches, 1-based); check.py resolves them to explicit codepoint offsets in cases.json. Expected judgments were written by hand from ADJUDICATION-SPEC.md, not generated by the scorer.",
+ "reference_invalid": [
+  {
+   "expected_error": "occurrence",
+   "id": "V01-occurrence-mismatch",
+   "purpose": "B3 occurrence resolution: a quote whose occurrence disagrees with its offsets is rejected before freeze.",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 17,
+        "occurrence": 1,
+        "start": 15,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "children": [
+        {
+         "children": [
+          {
+           "markers": [],
+           "nid": "N3",
+           "op": "PART",
+           "quotes": [
+            {
+             "end": 34,
+             "occurrence": 1,
+             "start": 18,
+             "text": "they carry water"
+            }
+           ]
+          },
+          {
+           "markers": [],
+           "nid": "N4",
+           "op": "PART",
+           "quotes": [
+            {
+             "end": 43,
+             "occurrence": 1,
+             "start": 38,
+             "text": "grain"
+            }
+           ]
+          }
+         ],
+         "markers": [
+          {
+           "end": 37,
+           "occurrence": 1,
+           "start": 35,
+           "text": "or"
+          }
+         ],
+         "nid": "N2",
+         "op": "OR"
+        },
+        {
+         "markers": [],
+         "nid": "N5",
+         "op": "PART",
+         "quotes": [
+          {
+           "end": 74,
+           "occurrence": 1,
+           "start": 51,
+           "text": "the gate warden permits"
+          }
+         ]
+        }
+       ],
+       "markers": [
+        {
+         "end": 47,
+         "occurrence": 1,
+         "start": 45,
+         "text": "or"
+        },
+        {
+         "end": 50,
+         "occurrence": 2,
+         "start": 48,
+         "text": "if"
+        }
+       ],
+       "nid": "N1",
+       "op": "OR"
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F14-occurrence",
+    "source_text_sha256": "403bea71b4a37d0234688c848482880f4fb005252f28d52287820ab27b1decd9",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 14,
+       "occurrence": 1,
+       "start": 0,
+       "text": "Carts may pass"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "Carts may pass if they carry water or grain, or if the gate warden permits."
+  },
+  {
+   "expected_error": "overlapping",
+   "id": "V02-overlapping-quotes",
+   "purpose": "Quotes inside one relation may not overlap (each codepoint has one role).",
+   "reference": {
+    "out_of_scope_notes": [],
+    "relations": [
+     {
+      "carves_out_of": null,
+      "class": "COND",
+      "contested": false,
+      "contested_reason": "",
+      "critical": true,
+      "critical_reason": "fixture: changes who must act",
+      "introducer": [
+       {
+        "end": 21,
+        "occurrence": 1,
+        "start": 19,
+        "text": "if"
+       }
+      ],
+      "logic": {
+       "markers": [
+        {
+         "end": 37,
+         "occurrence": 1,
+         "start": 34,
+         "text": "not"
+        }
+       ],
+       "nid": "N1",
+       "op": "PART",
+       "quotes": [
+        {
+         "end": 33,
+         "occurrence": 1,
+         "start": 22,
+         "text": "the shop is"
+        },
+        {
+         "end": 46,
+         "occurrence": 1,
+         "start": 38,
+         "text": "licensed"
+        },
+        {
+         "end": 37,
+         "occurrence": 1,
+         "start": 31,
+         "text": "is not"
+        }
+       ]
+      },
+      "rationale": "fixture",
+      "rid": "R1",
+      "tid": "T1"
+     }
+    ],
+    "source_id": "F09-lost-negator",
+    "source_text_sha256": "177a1c2503fbb0d04879de0ea670ce5fb0794d4e705df6ad1c724688f3ddc2e4",
+    "spec_version": "r17.ref.v2",
+    "targets": [
+     {
+      "gloss": "",
+      "quote": {
+       "end": 18,
+       "occurrence": 1,
+       "start": 0,
+       "text": "A lamp tax applies"
+      },
+      "tid": "T1"
+     }
+    ]
+   },
+   "source": "A lamp tax applies if the shop is not licensed."
+  }
+ ]
+}

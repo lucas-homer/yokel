@@ -1,0 +1,39 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A2",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "session": "r17-gate-A2-b4"
+  },
+  "call_id": "fx-9cf3d80578",
+  "source_id": "fx-9cf3d80578",
+  "output_sha256": "991aba7902f7ca6652974673f710d1019e8c5bb77d6e41c8b210cfa1b557e306",
+  "reference_sha256": "6cba3c0590a89ca9a80ec7dde2b1da2bdc055807af5649c2073b5630cc915665",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        },
+        {
+          "unit": 2,
+          "form": "inverse"
+        }
+      ],
+      "basis": "Unit 1 states the target directly. Unit 2 states that the closing rule does not hold for a named population (harvest markets), with evidence on R1's clause, so it maps as inverse."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "Unit 2 maps inverse because it names an exempted population; whether harvest markets are a subset of night markets is left unstated by the source, but the reference treats the exemption as an EXCEPT on T1."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

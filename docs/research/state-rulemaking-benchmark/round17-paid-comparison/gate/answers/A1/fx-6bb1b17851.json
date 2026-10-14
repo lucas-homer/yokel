@@ -1,0 +1,49 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r17-gate-A1-b3"
+  },
+  "call_id": "fx-6bb1b17851",
+  "source_id": "fx-6bb1b17851",
+  "output_sha256": "7e847e4d3c215a329bb608423607ce008616e777d3d45f29ccbdec6974dc3398",
+  "reference_sha256": "9151fb7b32395c011d365021a0abf3210e3e9f75a31e7d069a20242896d6a281",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 1 states 'Hunters need a permit', the same assertion as T1, and its evidence includes [0,21], the first occurrence that is T1's quote."
+    },
+    {
+      "tid": "T2",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 1 states 'Hunters need a permit', the same assertion as T2, and its evidence includes [73,94], the second occurrence that is T2's quote."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "A single unit carries evidence for both occurrences, so one unit maps to both T1 and T2 (M7). The unit is broader than either target in that it merges two separately conditioned statements into one assertion."
+      },
+      {
+        "tid": "T2",
+        "note": "Same unit as T1; see T1 note."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r17-gate-A1-b6"
+  },
+  "call_id": "fx-c5e7f9c7ab",
+  "source_id": "fx-c5e7f9c7ab",
+  "output_sha256": "aff8f21a9c4ed3d18e46f509bcbc60cfe3286b4647232287ac5db27905048f19",
+  "reference_sha256": "1a9c44172f45209bb9a5208e43959f899010964d9585b8f3d755e4a2d44cd391",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 1 states 'The office approves permits', the same actor, action and object as the T1 quote; its evidence span s1 [0,124] overlaps the quote [0,27]. Units 2-7 assert different things (section Delta compliance, deadlines, background) and do not map to T1."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "Unit 1's evidence span covers the whole first sentence including the only-if and except clauses, so it is broader in evidence than the quote, but the assertion text itself states exactly the target assertion."
+      }
+    ],
+    "reference_defects": [],
+    "other": [
+      "This record's unit evidence uses objects with start/end/quote fields rather than [start,end] pairs; the start/end fields were used for the M2 overlap check. Unit 1's modality is labelled 'informational' although the target is a declarative statement; this was ignored per M8 and A1 (structure is not judged)."
+    ]
+  }
+}

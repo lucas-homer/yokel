@@ -1,0 +1,572 @@
+{
+  "H_mapping": {
+    "H1": "implemented_and_offline_tested",
+    "H10": "external_pre_run_NTP_evidence",
+    "H2": "implemented_and_offline_tested",
+    "H3": "implemented_and_offline_tested",
+    "H4": "implemented_and_offline_tested",
+    "H5": "implemented_and_offline_tested",
+    "H6": "implemented_and_offline_tested",
+    "H7": "implemented_and_offline_tested",
+    "H8": "implemented_and_offline_tested_with_operator_serialization_and_lock_evidence",
+    "H9": "implemented_and_offline_tested_with_external_signature_and_READY_pin"
+  },
+  "H_mapping_details": "SPEC.md Host driver H1-H10 mapping",
+  "P7_outstanding": [
+    "Independent primary re-review and pin of r1.2 + host driver",
+    "P0/P1/P5/P6/P8 evidence and gates; real policy remains UNSET",
+    "Live usage field/units confirmation and dedicated-key zero machine check",
+    "Signed INIT/C6 release/BIND_RELEASE and externally pinned READY hash",
+    "Mini NTP sync evidence and unverified hardware durability",
+    "N6 wall clock, N7 FULL reporting vocabulary, N10 library hook, N11 F_FULLFSYNC deferred",
+    "Per-call staged adjudication and frozen OPQ pass before FULL"
+  ],
+  "action_ready": false,
+  "committed": false,
+  "credential_boundary": "Only uninvoked production post_once/key_info read OPENROUTER_API_KEY. Tests replace environment and HTTPSConnection; no real credential access.",
+  "credentials_accessed": false,
+  "dependencies": {
+    "round14-semantic-contract/runtime/adapter.py": {
+      "bytes": 20251,
+      "sha256": "1aeadf4312b9ed8713403798255b9a66e83e709961792a5a0546938a87442803"
+    },
+    "round14-semantic-contract/runtime/common.py": {
+      "bytes": 5581,
+      "sha256": "a341e11b6b0d49b130c28d8881ef4b71748161bcfc0d15c41384bc150f35bdc5"
+    },
+    "round14-semantic-contract/runtime/contract.py": {
+      "bytes": 1764,
+      "sha256": "f85205edc8ab62b23dd3f88363d845d762b83c61e0ece1ecddf35e4970d3869c"
+    },
+    "round15-condition-preservation/protocol-revised/READY.json": {
+      "bytes": 4739,
+      "sha256": "dd2bb510254e198589ed50caa6f9a171194a0971c11ae92bde996006267f1f50"
+    },
+    "round15-condition-preservation/protocol-revised/compact.py": {
+      "bytes": 21113,
+      "sha256": "8e7faec0d3c3fd5d16cabf58977804a401ca904f441f535af2e59fda9163ff6a"
+    },
+    "round15-condition-preservation/protocol-revised/request-settings.json": {
+      "bytes": 342,
+      "sha256": "43d3b4f7886d84c528a07ff3ba0901a2be1ff42a6b503853ee87e1e6985b1ac2"
+    },
+    "round15-condition-preservation/protocol-revised/stage-a.system.txt": {
+      "bytes": 6869,
+      "sha256": "49edae001b41ac63f32a5a049484544b219b5f1bf68a0b7f3dbc3e5dc5196f70"
+    },
+    "round16-wire-compat/protocol-w2-1/READY.json": {
+      "bytes": 4254,
+      "sha256": "73f80427ba959cc403433beebc2b2f8d2539c9cfa760df0230035f002e8bd062"
+    },
+    "round16-wire-compat/protocol-w2-1/wire.py": {
+      "bytes": 15865,
+      "sha256": "662268ba0774d7ef5a121ec4af90003a3836c07e4ce5a5ae551a413fe8375ab1"
+    },
+    "round17-paid-comparison/PRIMARY-DECISIONS.md": {
+      "bytes": 1514,
+      "sha256": "64f1028bb7e458043a7b95cee1b972312ae97eec3bc7e12dd559e311970e5051"
+    },
+    "round17-paid-comparison/adapter-r1-1/READY.json": {
+      "bytes": 15818,
+      "sha256": "849498d0b0f8a3945f49d8940b7252aae31f30261aef1d26b12c6ed8aa3e5557"
+    },
+    "round17-paid-comparison/adapter-r1-1/SPEC.md": {
+      "bytes": 30686,
+      "sha256": "c9ec2292b65b43d83fb4195d6ede1f5ec5498260088be2332175164196f3ee87"
+    },
+    "round17-paid-comparison/adapter-r1-1/host_driver.py": {
+      "bytes": 7416,
+      "sha256": "26e179ec2adcc676d514ac35f257f562b079ab0e79409c5766fa5b9db4209366"
+    },
+    "round17-paid-comparison/adapter-r1-1/pin_ready.py": {
+      "bytes": 5377,
+      "sha256": "b06b971c6addf00f4b3252d95904439be8f406400adbf928667fd3e90ac5edc5"
+    },
+    "round17-paid-comparison/adapter-r1-1/r17_adapter.py": {
+      "bytes": 62645,
+      "sha256": "0f04829d9ca79cdebaf64498110c5a1f984e2304f035ef8d1823e4c5fc9b8f1e"
+    },
+    "round17-paid-comparison/adapter-r1-1/repro-baseline.txt": {
+      "bytes": 2486,
+      "sha256": "75cbb8e68179e266609a6e274a29a116e42466f12dd194acc8d3d9509b1618a8"
+    },
+    "round17-paid-comparison/adapter-r1-1/repro-r1-1.txt": {
+      "bytes": 4477,
+      "sha256": "f29cc8e4febce1fa2c86ecf0e56bc8ca673984215a2e6fc7f0499eb97f4a4d57"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/_load.py": {
+      "bytes": 1008,
+      "sha256": "c9c4cb98cebd92d650866565d1c1f2c3922e0bda8181fd929b69861d73e6d2f0"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_double_post_lock_break.py": {
+      "bytes": 3078,
+      "sha256": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_gate_change_bricks_ledger.py": {
+      "bytes": 2222,
+      "sha256": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_headers_leak.py": {
+      "bytes": 1402,
+      "sha256": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_incomplete_cell_allows_next.py": {
+      "bytes": 1463,
+      "sha256": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_mark_fsync_failure.py": {
+      "bytes": 2141,
+      "sha256": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_negative_sleep.py": {
+      "bytes": 1236,
+      "sha256": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_partial_receipt_bricks_recover.py": {
+      "bytes": 1394,
+      "sha256": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/repro_recover_rehalts_completed.py": {
+      "bytes": 1269,
+      "sha256": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140"
+    },
+    "round17-paid-comparison/adapter-r1-1/repros/run_all.sh": {
+      "bytes": 227,
+      "sha256": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3"
+    },
+    "round17-paid-comparison/adapter-r1-1/run_tests.sh": {
+      "bytes": 256,
+      "sha256": "7842a66bf145bb7b64664457f5ab4be1ce20656c8215ee7bea5d8f0abdcc4207"
+    },
+    "round17-paid-comparison/adapter-r1-1/test-output.txt": {
+      "bytes": 17421,
+      "sha256": "105ae9f26ec4f739db2888144a0350be2de23dadeae8d12fc4a0b8fad3ed981b"
+    },
+    "round17-paid-comparison/adapter-r1-1/test_adapter.py": {
+      "bytes": 42488,
+      "sha256": "eca2fc4dd7069f303f725d95470cdf5bc18d990486861ac9048129142b4f3808"
+    },
+    "round17-paid-comparison/adapter-r1-1/test_host_driver.py": {
+      "bytes": 18289,
+      "sha256": "7ac4a34f95a5da42685368daff26d26aa039c0c4d923a5aebd4a838a94ca19cb"
+    },
+    "round17-paid-comparison/adapter-r1-1/test_repros.py": {
+      "bytes": 3432,
+      "sha256": "252daddf686b3b1712969b7c6c975c5af503680d4e8beaa457886f023acf3f8f"
+    },
+    "round17-paid-comparison/adapter-r1-1/test_revision.py": {
+      "bytes": 17233,
+      "sha256": "3b9e7479e553cdf3d5282ff8915f88b5e29abc68c41f393d4f47c8db13b969d5"
+    },
+    "round17-paid-comparison/adapter-review-r2/REVIEW.md": {
+      "bytes": 20539,
+      "sha256": "9e5abc8da8f5dee228092686633290f48ed00664468fd00c5375d6007029c1af"
+    },
+    "round17-paid-comparison/adapter-review-r2/_load.py": {
+      "bytes": 5736,
+      "sha256": "a876f73568f5963a16c0174c8557a8eb669ae0b23b6452fb0476330ea70a301b"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/_load.py": {
+      "bytes": 1032,
+      "sha256": "3f97f55d1161f5d51442da4fde243e300b755e5c4ca8d3b3b1cc9b6466e46d4a"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_double_post_lock_break.py": {
+      "bytes": 3078,
+      "sha256": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_gate_change_bricks_ledger.py": {
+      "bytes": 2222,
+      "sha256": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_headers_leak.py": {
+      "bytes": 1402,
+      "sha256": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_incomplete_cell_allows_next.py": {
+      "bytes": 1463,
+      "sha256": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_mark_fsync_failure.py": {
+      "bytes": 2141,
+      "sha256": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_negative_sleep.py": {
+      "bytes": 1236,
+      "sha256": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_partial_receipt_bricks_recover.py": {
+      "bytes": 1394,
+      "sha256": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/repro_recover_rehalts_completed.py": {
+      "bytes": 1269,
+      "sha256": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140"
+    },
+    "round17-paid-comparison/adapter-review-r2/orig-repros/run_all.sh": {
+      "bytes": 227,
+      "sha256": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_3call_plan.py": {
+      "bytes": 8784,
+      "sha256": "833abad6db36c0c8f53a0877229b6bb4eb0350f7503c3732a2b799e3cda68c5d"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_cli_misc.py": {
+      "bytes": 4524,
+      "sha256": "f015e2f35a1ea97332a413ee9bdc32c9045e417d69bb5cc454e7561f810b1b92"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_key_fields.py": {
+      "bytes": 4647,
+      "sha256": "a28b261d26fe748d704519209f87c3b8bdcf9b55fc83fbe460d57e2ec18ff216"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_sigint_cli.py": {
+      "bytes": 7074,
+      "sha256": "be13c6432460040435242d20c323ef32faf6b9cb3f72517f7f297b9cfd9c9075"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_timeout_row2.py": {
+      "bytes": 2462,
+      "sha256": "5ca7455dbe12068e67a4b9ebaf74f8205c5d8bbc62108d6bfa9c7090a147c037"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_trust_store.py": {
+      "bytes": 2547,
+      "sha256": "18067bc0bf60a0ee79743bed6b4bb43465938ffed60782b5be1a5f54e7ff52e5"
+    },
+    "round17-paid-comparison/adapter-review-r2/repro_hd_wire.py": {
+      "bytes": 8143,
+      "sha256": "a645c1e6cd74ef092c10db94f654aeaba49d6a07d21eb99d9c66bc389e18e20c"
+    },
+    "round17-paid-comparison/adapter-review-r2/run_all.sh": {
+      "bytes": 537,
+      "sha256": "e53c696685f2b3df5f0f28d61b75f7bf7297d489aa76df86f12be146b07b6e9b"
+    },
+    "round17-paid-comparison/adapter-review/READY.json": {
+      "bytes": 1176,
+      "sha256": "a94e1d6370994bd0cdaa4c3f6b8923c6ad72f219bfac9bb957bf6e157fecdb71"
+    },
+    "round17-paid-comparison/adapter-review/REVIEW.md": {
+      "bytes": 18719,
+      "sha256": "c95b9cb8962fcb6320d1373c53052e2764eb16dd62f1757874ad56ceb1f50e73"
+    },
+    "round17-paid-comparison/adapter-review/_load.py": {
+      "bytes": 1020,
+      "sha256": "88b48a5b572dd26adb47d8decf87670210a61f4643833f5387ae21f2ebc0f45f"
+    },
+    "round17-paid-comparison/adapter-review/repro_double_post_lock_break.py": {
+      "bytes": 3078,
+      "sha256": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c"
+    },
+    "round17-paid-comparison/adapter-review/repro_gate_change_bricks_ledger.py": {
+      "bytes": 2222,
+      "sha256": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f"
+    },
+    "round17-paid-comparison/adapter-review/repro_headers_leak.py": {
+      "bytes": 1402,
+      "sha256": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903"
+    },
+    "round17-paid-comparison/adapter-review/repro_incomplete_cell_allows_next.py": {
+      "bytes": 1463,
+      "sha256": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf"
+    },
+    "round17-paid-comparison/adapter-review/repro_mark_fsync_failure.py": {
+      "bytes": 2141,
+      "sha256": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47"
+    },
+    "round17-paid-comparison/adapter-review/repro_negative_sleep.py": {
+      "bytes": 1236,
+      "sha256": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c"
+    },
+    "round17-paid-comparison/adapter-review/repro_partial_receipt_bricks_recover.py": {
+      "bytes": 1394,
+      "sha256": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043"
+    },
+    "round17-paid-comparison/adapter-review/repro_recover_rehalts_completed.py": {
+      "bytes": 1269,
+      "sha256": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140"
+    },
+    "round17-paid-comparison/adapter-review/run_all.sh": {
+      "bytes": 227,
+      "sha256": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3"
+    },
+    "round17-paid-comparison/adapter/READY.json": {
+      "bytes": 6584,
+      "sha256": "0db336ae791413c6ef98b53c4a2c153de4cace9b4ae2f820641907728f04a06e"
+    },
+    "round17-paid-comparison/adapter/SPEC.md": {
+      "bytes": 18307,
+      "sha256": "40a6e0f25ef8e61e0fa035c06b57e3ddd271930b4628d08232b37bd8af896603"
+    },
+    "round17-paid-comparison/adapter/r17_adapter.py": {
+      "bytes": 54413,
+      "sha256": "ef26fd3f7025a0ea2683a42f7604584fa41cc4bb6bbca087cea2a4579bbc85b3"
+    },
+    "round17-paid-comparison/adapter/test-output.txt": {
+      "bytes": 10278,
+      "sha256": "2e7b987fee69b7bc9ebcac2c99c0f59f8d3a2d1092896298e6bad8cee3d85b7d"
+    },
+    "round17-paid-comparison/adapter/test_adapter.py": {
+      "bytes": 42488,
+      "sha256": "eca2fc4dd7069f303f725d95470cdf5bc18d990486861ac9048129142b4f3808"
+    },
+    "round17-paid-comparison/design-r3-1/ADJUDICATION-SPEC.md": {
+      "bytes": 25177,
+      "sha256": "1eca88fc0c54e22a77eab0e8e729b09a52eb0086fa05c0fcaec9f146ac9234d0"
+    },
+    "round17-paid-comparison/design-r3-1/BUDGET.md": {
+      "bytes": 21395,
+      "sha256": "7cb99c52d2b6ce920ec7d6d0c83f9bc17f9142e8683ba81dafa803b574b097c8"
+    },
+    "round17-paid-comparison/design-r3-1/PROTOCOL.md": {
+      "bytes": 34775,
+      "sha256": "d75f858850a44e59c65346b4709b59dbce839d9fa3188f986a2021d632bde3f9"
+    },
+    "round17-paid-comparison/design-r3-1/READY.json": {
+      "bytes": 2809,
+      "sha256": "ef9734cebd4ddb4aad29512d81c0a0a296f853c8cbd19a4a86a8f0106cf582f0"
+    },
+    "round17-paid-comparison/design-r3-1/READY.primary.json": {
+      "bytes": 1554,
+      "sha256": "35b19756602aac89746f373313315a23c24d28b65d6318683a78ad1d4dceb9ed"
+    },
+    "round17-paid-comparison/design-r3-1/REFERENCE-SPEC.md": {
+      "bytes": 18987,
+      "sha256": "ef660c68af39c3c4a7e74dd8f7a1ab5eaf883cd15225d3f6b3f17692d1bb05a0"
+    },
+    "round17-paid-comparison/design-r3-1/fixtures/cases.json": {
+      "bytes": 331000,
+      "sha256": "53d501b69f3c8c8e98403c3f3c3111be84de0d1b39e95d6c53f8cdaec132da8b"
+    },
+    "round17-paid-comparison/design-r3-1/fixtures/cases.src.json": {
+      "bytes": 177114,
+      "sha256": "18e11a263dc19148b751a24275fc1ff57e5ce11edc1d76da0736fd183795e4ca"
+    },
+    "round17-paid-comparison/design-r3-1/fixtures/check.py": {
+      "bytes": 38435,
+      "sha256": "d7e04f113159f50f6ad3c7dedff63e22840f879c3e96a20e7e615fba4d3ee444"
+    },
+    "round17-paid-comparison/design-r3-1/fixtures/r17recon.py": {
+      "bytes": 6526,
+      "sha256": "5295a66700fee54b2e03344003e5638a5728b1949eedf0945062950cc40e33ff"
+    },
+    "round17-paid-comparison/design-r3-1/fixtures/r17score.py": {
+      "bytes": 52263,
+      "sha256": "4834cf66eb0019df73b8a5e81bb5b51c43111fe51204b0f01d36b60ed76c163b"
+    },
+    "round17-paid-comparison/dispatch-inventory/INVENTORY.md": {
+      "bytes": 14482,
+      "sha256": "77440531598249f54a1a0754429f3fbbbb0b94bea37fc3c182d35efcc25967a9"
+    },
+    "round17-paid-comparison/sources-r2/READY.json": {
+      "bytes": 9430,
+      "sha256": "55afccdfe98d705165a51fb7d965ebbe3876d414a76e91b5f0791b3b8eb92560"
+    }
+  },
+  "dispositions": {
+    "N1": "fixed",
+    "N10": "documented_deferred",
+    "N11": "documented_deferred",
+    "N12": "fixed",
+    "N13": "fixed",
+    "N14": "fixed",
+    "N15": "fixed",
+    "N16": "fixed",
+    "N17": "documented_deferred",
+    "N18": "fixed",
+    "N19": "fixed",
+    "N2": "fixed",
+    "N20": "fixed",
+    "N21": "fixed",
+    "N3": "fixed",
+    "N4": "fixed",
+    "N5": "fixed",
+    "N6": "documented_deferred",
+    "N7": "documented_deferred",
+    "N8": "fixed",
+    "N9": "fixed",
+    "S1": "fixed",
+    "S2": "fixed",
+    "S3": "fixed",
+    "S4": "fixed",
+    "S5": "fixed",
+    "S6": "fixed"
+  },
+  "excluded_paths": [
+    "_out/**"
+  ],
+  "files": {
+    "SPEC.md": {
+      "bytes": 38918,
+      "sha256": "d5444d8cfc670c118163bf6c80c128d77228dc508e9ce07a0bd8877a42b01193"
+    },
+    "fake_http.py": {
+      "bytes": 5718,
+      "sha256": "1d9d3a3b4dee2bd8758e3e589162eb3ae997aa8f2a4f1a74bd0a8cefbcf4da92"
+    },
+    "host_driver.py": {
+      "bytes": 9383,
+      "sha256": "96b50e215037acbcf3235cf01179dfe4b9454da8c9165c8d4795af3380970bc0"
+    },
+    "pin_ready.py": {
+      "bytes": 7061,
+      "sha256": "571c9433aa73ccfb71cb84e9174a14d09b66780c3ab3dd76b404eb4f3cec6fe5"
+    },
+    "r17_adapter.py": {
+      "bytes": 65502,
+      "sha256": "c9a0ca00badd45779e449fa5840cf3df0fecc3a9eb046182332e9bc835980af3"
+    },
+    "repro-baseline.txt": {
+      "bytes": 2486,
+      "sha256": "75cbb8e68179e266609a6e274a29a116e42466f12dd194acc8d3d9509b1618a8"
+    },
+    "repros/_load.py": {
+      "bytes": 1024,
+      "sha256": "fd3843deb51fedff91cad629c93d45fe89e5b1fd6a25b01a55652146a212746c"
+    },
+    "repros/repro_double_post_lock_break.py": {
+      "bytes": 3078,
+      "sha256": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c"
+    },
+    "repros/repro_gate_change_bricks_ledger.py": {
+      "bytes": 2222,
+      "sha256": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f"
+    },
+    "repros/repro_headers_leak.py": {
+      "bytes": 1402,
+      "sha256": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903"
+    },
+    "repros/repro_incomplete_cell_allows_next.py": {
+      "bytes": 1463,
+      "sha256": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf"
+    },
+    "repros/repro_mark_fsync_failure.py": {
+      "bytes": 2141,
+      "sha256": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47"
+    },
+    "repros/repro_negative_sleep.py": {
+      "bytes": 1236,
+      "sha256": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c"
+    },
+    "repros/repro_partial_receipt_bricks_recover.py": {
+      "bytes": 1394,
+      "sha256": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043"
+    },
+    "repros/repro_recover_rehalts_completed.py": {
+      "bytes": 1269,
+      "sha256": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140"
+    },
+    "repros/run_all.sh": {
+      "bytes": 227,
+      "sha256": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3"
+    },
+    "run_tests.sh": {
+      "bytes": 288,
+      "sha256": "3e80d8ae0efcd85ea25382f72bec062e432229b36b404600f6805eb8b4908585"
+    },
+    "test_adapter.py": {
+      "bytes": 42532,
+      "sha256": "ff68dd1ec0bb9c7e4b754169ca8637bc8242d681389aac8e2c1576f0884bdf4c"
+    },
+    "test_host_driver.py": {
+      "bytes": 18365,
+      "sha256": "72893c73cb249e1c433ee647d64b59d3b3fa8ebf052f2497f817f17f951b4278"
+    },
+    "test_repros.py": {
+      "bytes": 3591,
+      "sha256": "a2a38bcb4ed040ddffb6e65ff3f7dfba4ed317ca035b52d633c6ec333575c852"
+    },
+    "test_revision.py": {
+      "bytes": 17324,
+      "sha256": "d5b401e35c615847ddd93965164c06304c6a5d9fcbc11d103128b295227a6363"
+    },
+    "test_round2.py": {
+      "bytes": 19277,
+      "sha256": "a5b3e80c189d2bda93fbea7c3d06dc29ef2be53932ccf78e49f6670c903d15fe"
+    },
+    "verify_ready.py": {
+      "bytes": 1986,
+      "sha256": "6f188fc91335199998631861d11a2026b55e6df0cdb5a820dcb72be90d5d63aa"
+    }
+  },
+  "frozen_adapter_unchanged": true,
+  "invoice_verified": false,
+  "native_runner_or_jobs_run": false,
+  "network_calls": 0,
+  "output_policy": "All generated logs and temporary test artifacts under excluded _out; no CA bundle pin.",
+  "paid_release_authorized": false,
+  "production_eligible": false,
+  "provider_calls": 0,
+  "r17_reference_files_read": false,
+  "r17_source_texts_read": false,
+  "release_policy": "UNSET",
+  "repros": {
+    "baseline_reproduced": 8,
+    "behavioral_assertions": "test_repros.py",
+    "command": "sh adapter-r1-2/repros/run_all.sh",
+    "copies_changed_only": "round-1 _load.py adapter import and temporary output directory; round-2 _load.py import paths only",
+    "interpretation": "SPEC.md round-2 repro disposition; unchanged assertions sometimes expect old defects",
+    "original_exit_convention": "0 = finding reproduced; all 8 now exit 1",
+    "output": "_out/repro-r1-2.txt",
+    "r1_1_fixed_behavior": 8,
+    "round2_command": "sh adapter-r1-2/_out/round2-repros/run_all.sh",
+    "round2_output": "_out/round2-repro-output.txt",
+    "round2_results": {
+      "repro_3call_plan.py": 0,
+      "repro_hd_cli_misc.py": 1,
+      "repro_hd_key_fields.py": 0,
+      "repro_hd_sigint_cli.py": 1,
+      "repro_hd_timeout_row2.py": 0,
+      "repro_hd_trust_store.py": 1,
+      "repro_hd_wire.py": 0
+    }
+  },
+  "revision": "r1.2",
+  "schema_version": "r17.adapter-ready.v1",
+  "self_pin": "READY.json excludes itself; P7 must pin this exact file hash externally.",
+  "sha256": {
+    "SPEC.md": "d5444d8cfc670c118163bf6c80c128d77228dc508e9ce07a0bd8877a42b01193",
+    "fake_http.py": "1d9d3a3b4dee2bd8758e3e589162eb3ae997aa8f2a4f1a74bd0a8cefbcf4da92",
+    "host_driver.py": "96b50e215037acbcf3235cf01179dfe4b9454da8c9165c8d4795af3380970bc0",
+    "pin_ready.py": "571c9433aa73ccfb71cb84e9174a14d09b66780c3ab3dd76b404eb4f3cec6fe5",
+    "r17_adapter.py": "c9a0ca00badd45779e449fa5840cf3df0fecc3a9eb046182332e9bc835980af3",
+    "repro-baseline.txt": "75cbb8e68179e266609a6e274a29a116e42466f12dd194acc8d3d9509b1618a8",
+    "repros/_load.py": "fd3843deb51fedff91cad629c93d45fe89e5b1fd6a25b01a55652146a212746c",
+    "repros/repro_double_post_lock_break.py": "90c3944fc513f28797166ca8e707dfd725647b5030bdcfe17f4c56ee8033387c",
+    "repros/repro_gate_change_bricks_ledger.py": "727f1f5be80a96153e3f7766a2548dcf63aa69cf73831411f5f6f79451a9dc1f",
+    "repros/repro_headers_leak.py": "6318bf05a26b940b6f8d9fa2161929aeff88b560ea5e837317ed2fa2ce179903",
+    "repros/repro_incomplete_cell_allows_next.py": "89cfead40762fd5566ad69d9b0535a02963ab9ecc688a10b63023ce304a5aacf",
+    "repros/repro_mark_fsync_failure.py": "a8e3341bcdd96a208b28856c17ea802e139075516af831ff5a39daab22361e47",
+    "repros/repro_negative_sleep.py": "3bd79b03c61fee8926f1ae1cd3424a39f1858c966764f54bb397bda94bce782c",
+    "repros/repro_partial_receipt_bricks_recover.py": "5c21a980d74abad50606e42db7f082ce20148035aa40d7149e45bc2c5e51a043",
+    "repros/repro_recover_rehalts_completed.py": "71d206df17e4c432948f5b94c2add942eae5dca714f760a66d3311ff5ddd0140",
+    "repros/run_all.sh": "794ec08d807614ca976292089cd0cce3bbadaaa84028a42dd9ad9bee3c624cf3",
+    "run_tests.sh": "3e80d8ae0efcd85ea25382f72bec062e432229b36b404600f6805eb8b4908585",
+    "test_adapter.py": "ff68dd1ec0bb9c7e4b754169ca8637bc8242d681389aac8e2c1576f0884bdf4c",
+    "test_host_driver.py": "72893c73cb249e1c433ee647d64b59d3b3fa8ebf052f2497f817f17f951b4278",
+    "test_repros.py": "a2a38bcb4ed040ddffb6e65ff3f7dfba4ed317ca035b52d633c6ec333575c852",
+    "test_revision.py": "d5b401e35c615847ddd93965164c06304c6a5d9fcbc11d103128b295227a6363",
+    "test_round2.py": "a5b3e80c189d2bda93fbea7c3d06dc29ef2be53932ccf78e49f6670c903d15fe",
+    "verify_ready.py": "6f188fc91335199998631861d11a2026b55e6df0cdb5a820dcb72be90d5d63aa"
+  },
+  "status": "READY_OFFLINE_IMPLEMENTATION",
+  "tests": {
+    "adapter_integration_tests": 103,
+    "clock": "fake, plus patched production-clock boundary test",
+    "command": "sh adapter-r1-2/run_tests.sh",
+    "environment": "replacement synthetic mapping only",
+    "failed": 0,
+    "host_driver_tests": 23,
+    "ledger_fixture_ids": "L01-L25 (pin/engine only, not adapter coverage)",
+    "ledger_fixture_tests": 25,
+    "original_adapter_integration_tests": 77,
+    "output": "_out/test-output.txt",
+    "passed": 180,
+    "pin_stability_test": "python3 -I -S -B adapter-r1-2/verify_ready.py (1 additional test; reruns all 180)",
+    "python_flags": "python3 -I -S -B <script>",
+    "repro_behavior_checks": 8,
+    "repro_copy_integrity_tests": 1,
+    "result": "OK",
+    "revision_adapter_and_cli_tests": 26,
+    "round2_targeted_tests": 20,
+    "run": 180,
+    "temporary_writes": "adapter-r1-2/_out; removed except logs/repro copies",
+    "transport": "fake HTTPSConnection and real http.client over fake sockets only"
+  }
+}

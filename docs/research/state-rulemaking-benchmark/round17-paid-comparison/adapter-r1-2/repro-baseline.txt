@@ -1,0 +1,65 @@
+
+### repro_double_post_lock_break.py
+original invocation ended with Refused recovery_required
+POSTs for S1-OPQ: 2
+ledger entries:
+  INIT::
+  BIND_RELEASE::
+  RESERVE:S1-OPQ:job-first
+  LOCK_RECOVERED::
+  RESOLVE:S1-OPQ:job-first
+  RESERVE:S1-OPQ:job-second
+  DISPATCH_MARK:S1-OPQ:job-second
+  RESOLVE:S1-OPQ:job-second
+  RECONCILED:S1-OPQ:
+  DISPATCH_MARK:S1-OPQ:job-first
+  RESOLVE:S1-OPQ:job-first
+  RECONCILED:S1-OPQ:
+  HALT:S1-OPQ:
+ledger chain loads cleanly: False -> ledger_chain
+exit=0
+
+### repro_gate_change_bricks_ledger.py
+second invocation refused with: pre_dispatch_pause
+POSTs so far: 1
+ledger tail: [('RESERVE', 'S2-OPQ', None), ('SKIP', 'S2-OPQ', None), ('SKIP', 'S3-OPQ', None), ('SKIP', 'S1-FULL', None), ('SKIP', 'S2-FULL', None), ('SKIP', 'S3-FULL', None), ('RESOLVE', 'S2-OPQ', False)]
+execute_once S2-OPQ fresh job: Refused: ledger_impossible_skip
+recover(): Refused: ledger_impossible_skip
+ledger bricked (both paths refuse on ledger_impossible_skip): True
+exit=0
+
+### repro_headers_leak.py
+state 13 halt None
+status.json contains the synthetic bearer token: True
+status.json contains set-cookie: True
+exit=0
+
+### repro_incomplete_cell_allows_next.py
+job1 has completed.json: False | ledger: ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'RESOLVE', 'RECONCILED']
+S2-OPQ admitted and dispatched: state 13 | POSTs: 2
+exit=0
+
+### repro_mark_fsync_failure.py
+invocation ended with Refused: pre_dispatch_pause
+POSTs: 0
+ledger tail: [('RESERVE', None, None), ('DISPATCH_MARK', None, None), ('RESOLVE', False, 0)]
+next invocation refused with: ledger_chain
+exit=0
+
+### repro_negative_sleep.py
+Clock.wait_until raised: sleep length must be non-negative (got -0.5)
+exit=0
+
+### repro_partial_receipt_bricks_recover.py
+recover() aborted with JSONDecodeError - Expecting ',' delimiter: line 1 column 196 (char 195)
+ledger tail: ['RESERVE', 'DISPATCH_MARK', 'RESOLVE']
+lock left behind by recover(): False
+exit=0
+
+### repro_recover_rehalts_completed.py
+cell ended normally: halt = KEY_USAGE_UNRECONCILED ; stop.json exists = True
+recover() returned ['S1-OPQ']
+entries before: ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'RESOLVE', 'HALT']
+entries after : ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'RESOLVE', 'HALT', 'HALT']
+recovered.json: {"action_ready":false,"automatic_retry":false,"call":"S1-OPQ","debit":270000000,"dispatched":true,"invoice_verified":false,"production_eligible":false,"reconciliation":["HALT","KEY_USAGE_UNRECONCILED"]}
+exit=0

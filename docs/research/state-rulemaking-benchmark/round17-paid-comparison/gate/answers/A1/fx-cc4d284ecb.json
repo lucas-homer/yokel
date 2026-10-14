@@ -1,0 +1,35 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r17-gate-A1-b6"
+  },
+  "call_id": "fx-cc4d284ecb",
+  "source_id": "fx-cc4d284ecb",
+  "output_sha256": "82de252fec833859a675d305aec55bf0820cd10657b77d1527177e296b45e98a",
+  "reference_sha256": "70fc9d3518a4fb3a14f0a195314c8d2f2db24337359bf905dc5cea9d33942663",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 1 states 'Residents may enter the lantern lottery' with evidence [0,44], which overlaps the T1 quote [15,44] and the R1 clause [0,14]. It asserts the same action, object and permissive modality; the actor is the restricted class 'residents', so a reader would take it as making the target's assertion."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "The unit folds the RESTRICT actor into the assertion ('Residents may enter...') and drops the exclusivity of 'only', so it is narrower than the bare target 'may enter the lantern lottery'. Mapped direct under M3; whether the 'only' restriction is captured is a condition question left to mechanical scoring per M8."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

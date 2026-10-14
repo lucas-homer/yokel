@@ -1,0 +1,39 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r17-gate-A1-b4"
+  },
+  "call_id": "fx-9cf3d80578",
+  "source_id": "fx-9cf3d80578",
+  "output_sha256": "991aba7902f7ca6652974673f710d1019e8c5bb77d6e41c8b210cfa1b557e306",
+  "reference_sha256": "6cba3c0590a89ca9a80ec7dde2b1da2bdc055807af5649c2073b5630cc915665",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        },
+        {
+          "unit": 2,
+          "form": "inverse"
+        }
+      ],
+      "basis": "Unit 1 restates the target verbatim with evidence [0,36]. Unit 2 states that the closing rule does not hold for a named population (harvest markets), matching the 'exempt from the fee' pattern for inverse; its evidence [38,87] overlaps the clause of R1."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "Unit 2 names 'harvest markets', which may not be a subset of 'night markets'; mapped inverse because the assertion explicitly denies the target's rule for a named population rather than asserting a different rule."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

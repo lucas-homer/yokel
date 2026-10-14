@@ -1,0 +1,43 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r17-gate-A1-b5"
+  },
+  "call_id": "fx-9dcaee3fd9",
+  "source_id": "fx-9dcaee3fd9",
+  "output_sha256": "b024343fb867b0c907835e4cd232bf952c908ea3637289bc5104949f213d6e93",
+  "reference_sha256": "d2afcd2a434763b8df9c9078da05f717c25cb0334151cf6e7e615f09497fd8f3",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        },
+        {
+          "unit": 2,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 1 states that residents may enter the lantern lottery, the target's permission with the restricting population folded in. Unit 2 restates the same permission for the same actor and action, shortening 'lantern lottery' to 'lottery'; a reader takes it as the same assertion."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "Unit 1 is narrower than the target: the 'Only residents' restriction is folded into the assertion text as the actor. Mapped direct under M3."
+      },
+      {
+        "tid": "T1",
+        "note": "Unit 2 drops the modifier 'lantern' from the object; treated as the same object (the lottery in this source) rather than a different one. Close call but mapped direct."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

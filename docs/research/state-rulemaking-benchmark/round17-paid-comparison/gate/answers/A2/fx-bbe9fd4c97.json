@@ -1,0 +1,39 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A2",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "session": "r17-gate-A2-b6"
+  },
+  "call_id": "fx-bbe9fd4c97",
+  "source_id": "fx-bbe9fd4c97",
+  "output_sha256": "d1528074e58e1ed8e3ad639848af0f2eb84b584d39da7d0076cb227a73b9d593",
+  "reference_sha256": "44bc98f6bea53d33052f7a158e06f11529fae792913f5b4976586d9c4375b40e",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        },
+        {
+          "unit": 2,
+          "form": "opposite"
+        }
+      ],
+      "basis": "Unit 1 states that ferries may dock at the east pier (direct). Unit 2 denies that same permission for the same actor and place without naming any population, case or circumstance, so it is opposite; both cite the target quote."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "Unit 2 ('Ferries may not dock at the east pier') could be read as a garbled rendering of the 'unless the tide is low' exception, but its assertion names no case, so under question 3 it is opposite rather than inverse; its evidence also does not touch the exception clause."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

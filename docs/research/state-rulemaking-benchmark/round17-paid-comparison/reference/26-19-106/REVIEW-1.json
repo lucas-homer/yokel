@@ -1,0 +1,38 @@
+{
+  "source_id": "26-19-106",
+  "reviewed_draft_sha256": "5996ca4e5dd40527b7c9522020dd8da7c22340ec4c43b895da789bd6f0b194d5",
+  "objections": [
+    {
+      "oid": "O1",
+      "rid": "R1",
+      "kind": "wrong logic tree",
+      "claim": "The sole PART is a statutory frame, not an exempted population, thing, or case. Section 4.2 rule 6 requires the PART to hold the exempted population or thing. This sentence states that the named analysis or statement is not required under a statute; it does not identify the statutory authority itself as an exception to a requirement for that analysis or statement. The absence of other clause content does not justify assigning the citation this semantic role.",
+      "evidence": {
+        "text": "A school district fiscal impact statement is not required under RCW  28A.305.135.",
+        "start": 1918,
+        "end": 1999,
+        "occurrence": 1
+      },
+      "proposed_fix": "Remove R1 and its now-unrelated target T1 from the current encoding, and explain the standalone non-requirement in out_of_scope_notes. If retaining an exemption annotation, first supply a source-supported mapping of an exempted population or thing and the requirement it is exempted from under rule 6; do not use the statutory frame as a substitute for the missing exemption argument or invent an unstated population."
+    },
+    {
+      "oid": "O2",
+      "rid": "R2",
+      "kind": "wrong logic tree",
+      "claim": "The sole PART is a statutory frame, not an exempted population, thing, or case. Section 4.2 rule 6 requires the PART to hold the exempted population or thing. This sentence states that the named analysis or statement is not required under a statute; it does not identify the statutory authority itself as an exception to a requirement for that analysis or statement. The absence of other clause content does not justify assigning the citation this semantic role.",
+      "evidence": {
+        "text": "A cost-benefit analysis is not required under RCW  34.05.328.",
+        "start": 2001,
+        "end": 2062,
+        "occurrence": 1
+      },
+      "proposed_fix": "Remove R2 and its now-unrelated target T2 from the current encoding, and explain the standalone non-requirement in out_of_scope_notes. If retaining an exemption annotation, first supply a source-supported mapping of an exempted population or thing and the requirement it is exempted from under rule 6; do not use the statutory frame as a substitute for the missing exemption argument or invent an unstated population."
+    }
+  ],
+  "no_objection_rids": [
+    "R3",
+    "R4",
+    "R5"
+  ],
+  "summary": "Two objections concern the semantic content of the sole PART in R1 and R2: statutory authority is encoded as the exempted case. R3 is fine: the college is the exempted population, the named statute is the implied target, and the leading authority citation is reasonably excluded. R4 is fine: the explicit or coordinates the exempted proposal/portions, and the later grounds and full-exemption statement do not require another conditional relation. R5 is fine: only introduces the restriction, the full restricted complement is retained, and not negates its own predicate. All five critical:false flags are appropriate for these agency procedural matters. No additional supported missing relation, target, segmentation, exclusion, or critical-flag objection was found; the participation dates and plain subject qualifiers do not independently supply the condition-like or exclusive wording required by the spec."
+}

@@ -1,0 +1,3758 @@
+diff -ru --exclude=READY* docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/ADJUDICATION-SPEC.md docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/ADJUDICATION-SPEC.md
+--- docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/ADJUDICATION-SPEC.md	2026-10-13 16:15:42
++++ docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/ADJUDICATION-SPEC.md	2026-10-13 16:41:05
+@@ -4,7 +4,7 @@
+ 
+ Design choice (unchanged): the only meaning judgment an adjudicator makes is the **target mapping**: which output units assert each reference target, and in which form. Everything downstream is mechanical, so both adjudicators score every item through the same deterministic rules, and the adjudicators never compute totals (R14 F7).
+ 
+-r3 narrows what is scored rather than adding judgment: clause text counts only where a leaf carries it (B2), typed structure is scored only where the reference declares a compound (B7), and the reference's `carves_out_of` field and its compound are removed (REFERENCE-SPEC r17.ref.v3).
++r3 narrows what is scored rather than adding judgment: clause text counts only where a leaf carries it (B2), typed structure is scored only where the reference declares a compound (B7), and the reference's `carves_out_of` field and its compound are removed (REFERENCE-SPEC r17.ref.v3). r3.1 closes two round-3 escapes without new judgment: an inverse or opposite unit with `regardless` is an inversion (B4), and the typed audit covers every audited duplicate claim, not only the best witness (B7).
+ 
+ ---
+ 
+@@ -129,8 +129,11 @@
+ | `onlyif` (even) | hedged if uncertain, else **scope_change** | correct | **inversion** | **inversion** |
+ | `unless` (even); `if`/`onlyif` (odd) | **inversion** | **inversion** | correct | **inversion** |
+ | `unless` (odd: positive, strength indeterminate) | hedged if uncertain, else **scope_change** | same | **inversion** | **inversion** |
+-| `regardless` (any) | **inversion** | **inversion** | **inversion** | correct |
++| `regardless`, `direct` form (any path flips) | **inversion** | **inversion** | **inversion** | correct |
++| `regardless`, `inverse` or `opposite` form | **inversion** | **inversion** | **inversion** | **inversion** |
+ 
++For `regardless`, path flips and intact negators are ignored: negating the irrelevant factor ("regardless of whether X is not …") does not change the claim (F19e). A form flip is different. An `inverse` or `opposite` unit reverses the **target assertion itself** ("Tolls do not apply to any wagon, regardless of age"), so it can never be the positive IRRESPECTIVE claim (R3-B2; F19b, F19d). Inverse composition is unchanged for the other roles (F05a, F05d).
++
+ The wire prompt says `if` asserts neither sufficiency nor necessity. The table never derives a role from Boolean implication; any change of strength is a **scope_change** unless it is explicitly hedged.
+ 
+ **Embedded.** If the claim's best witness node is a single `L` leaf, its status is `complete`, its verdict is not correct or hedged, and the same leaf completely carries another live relation `h` of the same target whose verdict through the same link is `correct`, then the claim's verdict is `embedded` (F12).
+@@ -145,7 +148,7 @@
+ 4. Best verdict is `inversion`, `role_loss` or `scope_change` → that verdict.
+ 5. **Extra-claim audit** → **contradiction** if either holds:
+    - (a) another claim carries the complete clause parts (`complete` or `lost_marker`), uses an applicability role (`if`, `onlyif`, `unless`, `regardless`), is not explicitly uncertain, and has verdict `inversion` or `scope_change` (F10g, F10i, F11a). `obj`, `acts` and `qual` claims assert no applicability and are compatible (F10h). An `embedded` copy is compatible (F12b).
+-   - (b) a unit mapped `opposite` has no link, other than `obj`/`acts`, whose leaves carry the complete parts of a live relation of the target: an unqualified denial (F05c). A denial that links the clause is scored as a claim like any other (F05d).
++   - (b) a unit mapped `opposite` has no applicability link (`if`, `onlyif`, `unless`, `regardless`) whose leaves carry the complete parts of a live relation of the target: an unqualified denial (F05c). `qual`, `obj` and `acts` never qualify a denial, even when explicitly uncertain, because they assert no applicability (F05e). Unit-level uncertainty is never inferred from them. A denial that links the clause through an applicability role is scored as a claim like any other (F05d); with `regardless` that claim is an inversion (B4).
+ 6. Best is correct or hedged and extraneous > 2 × |K(r)| → **broad**.
+ 7. Otherwise the best verdict: **correct**, **hedged** or **embedded**.
+ 
+@@ -176,8 +179,9 @@
+   - otherwise, if `O` ∈ {AND, OR, ALT, EXC} and a one-to-one matching of children exists: same operator → **correct**; `ALT` → **hedged**; different operator → **swap**.
+   - Preference: correct > hedged > swap > exc_reversed.
+ - With no match: if some AND/OR/ALT/EXC operator in that subtree puts parts of two different children of `n` under different children → **mismatch**; otherwise **flattened** (kept in one leaf: not typed-correct, not harmful).
++- **Duplicate claims are audited too (R3-B1).** The best witness alone earns the credit above. Then the same search runs under the witness node of every **audited claim** of `r`: every other claim that carries the complete clause parts (`complete` or `lost_marker`), uses an applicability role and is not explicitly uncertain. These are the claims B5.5a audits. If an audited claim yields swap, mismatch or exc_reversed and the best witness's verdict is not already typed-harmful, that harmful verdict becomes the compound's verdict (`conflicting_link` names the link). It is charged once per compound, critical if `r` is critical (F15g). A compatible duplicate graph is matched, not charged (F15h). An explicitly uncertain duplicate is not audited (F15i). Operators outside every audited claim remain unscored (M6b).
+ 
+-**Invented operator.** For each live relation with an acceptable verdict, look at the operators on its best witness path above `v` and in `v`'s subtree. An `AND`, `OR`, `EXC` or `NOT` with `q=0` is **invented** unless:
++**Invented operator.** For each live relation with an acceptable verdict, look at the operators on its best witness path above `v` and in `v`'s subtree, and likewise for each of its audited claims. An `AND`, `OR`, `EXC` or `NOT` with `q=0` is **invented** unless:
+ 
+ - it was matched to a reference compound above (including swap, mismatch and exc_reversed, so no operator is penalized twice);
+ - it is an `AND` whose every child carries at least one whole live relation and which carries at least two (the format allows one `if`/`onlyif`/`unless` link per unit, so separate conditions must be conjoined);
+@@ -201,6 +205,7 @@
+ ### C1. Who scores what
+ 
+ - **A1**: Fable 5.1 (`claudeAgent` / `claude-fable-5-1`, high, claude.ai subscription), in a fresh session per output. It must not be any session that authored or reviewed a reference.
++- **Session freshness is checked, not assumed (R3-S2).** Every adjudication of a scored output carries a session id used by no other scored output or role. None is a reference author or reviewer session; the manifest lists those as `excluded_sessions`. `decide` rejects any violation, as the fixture gate does (A16–A18).
+ - **A2**: Opus 5.5 (`claudeAgent` / `claude-opus-5-5`, high, subscription), in a fresh session per output.
+ - **Both adjudicators independently map every target for every scored output.** There is no sampling, and neither sees the other's files.
+ 
+@@ -208,7 +213,7 @@
+ 
+ - **Relations:** all reference relations with `contested = false` and `class ≠ UNRESOLVED`, per source and pooled. Both arms use the same denominator. An item is never dropped because an output failed. A structurally failed cell (truncated, invalid or refused) fails D1 directly; its relations are entered as `cell_failed`, never scored as partial content.
+ - **Compounds:** all compounds as defined in B7.
+-- The release record (PROTOCOL C6) publishes the **scoring manifest** (C5): per source the live relation ids and critical flags, the compound ids and critical flags, `N`, `n_s`, `N_c` and the required integer counts (PROTOCOL §11 table), before the first transport attempt.
++- The release record (PROTOCOL C6) publishes the **scoring manifest** (C5, `r17.manifest.v2`): per source the live relation ids and critical flags, the compound ids and critical flags, `N`, `n_s`, `N_c` and the required integer counts (PROTOCOL §11 table), plus `excluded_sessions` (every reference author and reviewer session id), before the first transport attempt.
+ 
+ ### C3. Disagreement
+ 
+@@ -227,11 +232,11 @@
+ 
+ ### C5. Decision entry point
+ 
+-`r17score.py decide DECISION.json [--interim]` is the **only** decision gate; the per-output scorer is internal. Its inputs are the scoring manifest, one call record per planned cell, and the files by name. Before computing anything it checks, and rejects on any mismatch (fixtures A02–A08):
++`r17score.py decide DECISION.json [--interim]` is the **only** decision gate; the per-output scorer is internal. Its inputs are the scoring manifest, one call record per planned cell, and the files by name. Before computing anything it checks, and rejects on any mismatch (fixtures A02–A08, A14–A18, A23):
+ 
+-- manifest: version; adjudicators exactly A1/A2 with the pinned models and effort; exactly slots S1–S3; per slot the source and reference file SHA-256; the reference passes `validate-reference`; and its **live relation ids, critical flags and compound ids equal the manifest exactly**;
+-- call records: exactly S1–S3 × OPQ/FULL; each state is a final response state 2–13 or `skipped` (`pending` only with `--interim`); `completion_tokens` a nonnegative integer for states 10–13; for state 13 the output file's SHA-256 equals the record; no FULL call released unless OPQ passed under both and typed logic is testable; no call released after an unrun one;
+-- adjudications: for every state-13 cell, both `<call>.A1.json` and `<call>.A2.json`, with the pinned identity and the echoed `call_id`, `source_id`, `output_sha256` (of the actual file) and `reference_sha256` (from the manifest).
++- manifest: version; adjudicators exactly A1/A2 with the pinned models and effort; `excluded_sessions` a list of session ids; exactly slots S1–S3; per slot the source and reference file SHA-256; the reference passes `validate-reference`; and its **live relation ids, critical flags and compound ids equal the manifest exactly**;
++- call records: exactly S1–S3 × OPQ/FULL; each state is a final response state 2–13 or `skipped` (`pending` only with `--interim`); `completion_tokens` a nonnegative integer for states 10–13; for state 13 the output file's SHA-256 equals the record; no FULL call released unless OPQ passed under both and typed logic is testable; no call released after an unrun one, nor after a terminal halt (rows 2–9 or a RECON halt) in the same phase (A14, A15);
++- adjudications: for every state-13 cell, both `<call>.A1.json` and `<call>.A2.json`, with the pinned identity and the echoed `call_id`, `source_id`, `output_sha256` (of the actual file) and `reference_sha256` (from the manifest); every session id unique across all scored outputs and both roles, and not in `excluded_sessions` (C1).
+ 
+ It then scores each cell under each adjudicator, builds cells **from the manifest's ids** (never from the score's own lists), and computes per-adjudicator phase states, bars and the outcome (PROTOCOL §8, §11), plus κ. `--interim` is the staged futility test after each call: unreleased cells are `pending` and best-case, and the outcome is `null` while no stopping state has been reached (fixture A09).
+ 
+diff -ru --exclude=READY* docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/BUDGET.md docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/BUDGET.md
+--- docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/BUDGET.md	2026-10-13 16:16:54
++++ docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/BUDGET.md	2026-10-13 16:41:05
+@@ -1,6 +1,6 @@
+-# R17 budget, cap enforcement and ledger (design r3)
++# R17 budget, cap enforcement and ledger (design r3.1)
+ 
+-Status: **design proposal r3**. It authorizes nothing and supersedes `../design-r2/BUDGET.md` (frozen, unchanged). No provider call, network access or credential access was used to write it. Paths are relative to `docs/research/state-rulemaking-benchmark/` (BENCH). The executable reference semantics for §4–§5 are `fixtures/r17recon.py`, pinned by `fixtures/check.py` (ledger fixtures L01–L18).
++Status: **design proposal r3.1** (targeted revision of r3 after `../protocol-review-r3/REVIEW.md`; `../design-r3/` is frozen and unchanged). It authorizes nothing and supersedes `../design-r2/BUDGET.md` (frozen, unchanged). No provider call, network access or credential access was used to write it. Paths are relative to `docs/research/state-rulemaking-benchmark/` (BENCH). The executable reference semantics for §4–§5 are `fixtures/r17recon.py`, pinned by `fixtures/check.py` (ledger fixtures L01–L25).
+ 
+ Labels: **VERIFIED** (repo file or local offline command), **DERIVED** (arithmetic on verified numbers), **CONDITION** (an unverified premise that a conditional bound depends on), **ESTIMATE** (a forecast only).
+ 
+@@ -12,7 +12,7 @@
+ RELEASE_POLICY = UNSET        allowed values: P-HARD | P-ACCEPT
+ ```
+ 
+-The user replaces `UNSET` with exactly one value here and in `READY.json` (`release_policy`). Nothing else in this design changes with the choice: every mechanism in §1–§5 applies under both variants, and each variant below is complete as written. **While the value is `UNSET`, the paid phase stays unreleased.** An approval of a hard cap is not an acceptance of a conditional budget, and this design does not infer one.
++The user replaces `UNSET` with exactly one value here and in `READY.json` (`release_policy`). The same value is written into `INIT` and the release record, and admission refuses `UNSET`, a missing or unknown value, or any disagreement between `INIT` and `BIND_RELEASE` (§4 rule 4; L19–L23). That check is defense in depth. Whether the policy's evidence (E-1/E-2 acceptance, or the user's written acceptance) exists and is accepted is a recorded human decision that the release gate (PROTOCOL P7) verifies; selecting a value alone never satisfies it. Nothing else in this design changes with the choice: every mechanism in §1–§5 applies under both variants, and each variant below is complete as written. **While the value is `UNSET`, the paid phase stays unreleased.** An approval of a hard cap is not an acceptance of a conditional budget, and this design does not infer one.
+ 
+ **P-HARD.** Release only if documented charge-time enforcement, or a genuine pre-dispatch all-in upper bound, is established; otherwise the paid phase stays unreleased. "Established" means one of the following, recorded in `run/ENFORCEMENT-EVIDENCE.json` with the exact provider documentation captured (URL, retrieval time, SHA-256 of the captured bytes) and accepted by the cross-provider re-review before release:
+ 
+@@ -75,8 +75,8 @@
+ 
+ 1. **Storage.** An append-only JSONL file `round17-paid-comparison/run/ledger.jsonl`, namespace `r17.paid-comparison.v1`. Entry types: `INIT`, `BIND_RELEASE`, `RESERVE`, `DISPATCH_MARK`, `RESOLVE`, `RECONCILED`, `SKIP`, `RECONCILE_UP`, `RECOVER`, `LOCK_RECOVERED`, `HALT`.
+ 2. **Hashed bytes (defined exactly).** An entry's bytes are `json.dumps(entry, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")`; the file line is those bytes plus `\n`. An entry's hash is SHA-256 of its bytes (without the newline). Every entry after `INIT` carries `prev_sha256`, the hash of the previous entry. A file hash is SHA-256 of the file's exact bytes on disk. The aggregate is **recomputed from the log** every time; there is no cached total.
+-3. **No hash cycle (R2-S1).** `INIT` pins only static configuration: namespace, the constants above, key label, verified key limit `L` and reset policy, `required_calls` (the six or three call ids), `RELEASE_POLICY`, and the SHA-256 of `BUDGET.md` and `fixtures/r17recon.py`. The **release record** (PROTOCOL C6) pins the `INIT` entry hash. A `BIND_RELEASE` entry then pins the release record's file hash. No `RESERVE` may precede `BIND_RELEASE`.
+-4. **Admission (every release), under the exclusive lock, before writing `RESERVE`** (`r17recon.admit`). Refuse if: there is no `BIND_RELEASE`; a `HALT` exists; any `RESERVE` is unresolved; any dispatched attempt lacks `RECONCILED`; or the call already completed (a dispatched `RESOLVE`) or was skipped. Otherwise let `R` = the number of required calls neither completed nor skipped, including this one. Admit only if **both**:
++3. **No hash cycle (R2-S1).** `INIT` pins only static configuration: namespace, the constants above, key label, verified key limit `L` and reset policy, `required_calls` (the six or three call ids), `RELEASE_POLICY`, and the SHA-256 of `BUDGET.md` and `fixtures/r17recon.py`. The **release record** (PROTOCOL C6) pins the `INIT` entry hash. A `BIND_RELEASE` entry then pins the release record's file hash and repeats its `release_policy`. No `RESERVE` may precede `BIND_RELEASE`.
++4. **Admission (every release), under the exclusive lock, before writing `RESERVE`** (`r17recon.admit`). Refuse if: `INIT.release_policy` is not `P-HARD` or `P-ACCEPT` (including `UNSET` or absent); there is no `BIND_RELEASE`; a `BIND_RELEASE` names a different policy; a `HALT` exists; any `RESERVE` is unresolved; any dispatched attempt lacks `RECONCILED`; or the call already completed (a dispatched `RESOLVE`) or was skipped. Otherwise let `R` = the number of required calls neither completed nor skipped, including this one. Admit only if **both**:
+    - `Aggregate + R × FLOOR ≤ OPERATING`, where `Aggregate` = Σ `RESOLVE.debit` + Σ `RECONCILE_UP.debit` (with no pending reservation, by the refusal above); and
+    - `U + R × FLOOR ≤ L`, where `U` is the last `RECONCILED` key usage.
+ 
+@@ -134,12 +134,12 @@
+ 
+ A missing or malformed `usage`/`cost` on HTTP 200 is an AD failure, not a free pass: the debit is `FLOOR`, then HALT.
+ 
+-**RECON (ruling 4; `r17recon.reconcile`, fixtures L08–L15).**
++**RECON (ruling 4; `r17recon.reconcile`, fixtures L08–L15, L24–L25).**
+ 
+ 1. `INIT` pins zero initial usage, the limit `L` and its reset policy. Let `C` = Σ `ceil_nano(reported cost)` over all possibly-dispatched attempts so far, and `U` the provider's cumulative usage, parsed exactly. The comparison is always against `C` from the zero baseline, never a per-call delta from a possibly stale sample.
+ 2. After every possibly-dispatched attempt `i`, including the last one and halted ones, read the key **immediately, then at 60, 300 and 900 seconds** after the attempt resolved, stopping at the first reconciled read: at most four reads. **No paid dispatch happens during reconciliation**; admission refuses until `RECONCILED` is written (L03).
+-3. Attempt `i` is reconciled when the read is valid, the limit and reset policy are unchanged, `U` has not decreased, and `|U − C| ≤ i × 1,000` nanoUSD. Then write `RECONCILED {call, U}`. The tolerance is an explicit measurement policy; amend it before release if documented reporting granularity requires another value. It cannot prove invoice correctness or replace cap enforcement.
+-4. `U < C − tolerance` means lag: wait for the next scheduled read. A stale zero is therefore never accepted as proof (L10). A decreased `U`, a changed, reset or unlimited limit, or `U > C + tolerance` halts immediately. After the 900-second read, or when all four reads have failed, write `KEY_USAGE_UNRECONCILED` and **HALT**. A halt during OPQ makes the outcome **P**; a halt during FULL after a frozen OPQ pass makes it **O1-incomplete**.
++3. Attempt `i` is reconciled when the read is valid, the limit and reset policy are unchanged, `U` has not decreased (below the last reconciled value **or below any earlier read in this polling sequence**), and `|U − C| ≤ i × 1,000` nanoUSD. Then write `RECONCILED {call, U}`. The tolerance is an explicit measurement policy; amend it before release if documented reporting granularity requires another value. It cannot prove invoice correctness or replace cap enforcement.
++4. `U < C − tolerance` means lag: wait for the next scheduled read. A stale zero is therefore never accepted as proof (L10). A decreased `U` (relative to the largest valid usage seen so far, so `0.15 → 0.14 → 0.16` halts at the second read; L24), a changed, reset or unlimited limit, or `U > C + tolerance` halts immediately. After the 900-second read, or when all four reads have failed, write `KEY_USAGE_UNRECONCILED` and **HALT**. A halt during OPQ makes the outcome **P**; a halt during FULL after a frozen OPQ pass makes it **O1-incomplete**.
+ 5. On a halt, the attempt's debit is §4 rule 5 with every recoverable term, including any attributable key usage. The other debit terms may **record** the halted attempt; they never justify another admission.
+ 
+ ## 6. Alternatives (unchanged reasoning)
+diff -ru --exclude=READY* docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/DISPOSITION.md docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/DISPOSITION.md
+--- docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/DISPOSITION.md	2026-10-13 16:20:49
++++ docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/DISPOSITION.md	2026-10-13 16:42:33
+@@ -1,3 +1,101 @@
++# Disposition of the R17 protocol re-review, round 3 (design r3.1)
++
++Review: `../protocol-review-r3/REVIEW.md` with `probe.py` (GPT-6 Astra, high; verdict "freeze after edits"), against `../design-r3/`. `design-r3/` is frozen and unchanged. r3.1 is a **targeted** revision: only the two blockers, the three should-fix items and the one-line NOTES were changed. `RELEASE_POLICY` (still `UNSET`), the budget numbers and the call plan are untouched. No provider call, network access, credential access or R17 source-text read occurred. Every command ran as `python3 -I -S -B`, and nothing was written outside this folder.
++
++**Counts: 2 BLOCKER, 3 SHOULD-FIX, 4 NOTES.** All 5 findings were accepted and fixed. One sub-part of R3-S2 is deferred: binding the frozen OPQ adjudication hashes. Of the NOTES, 3 were fixed with one- or two-line changes and 1 needed no change.
++
++## Verification evidence
++
++- `fixtures/check.py`: **0 failures**. Scorer cases: 71 (70 gold, 1 mutation); reference fixtures: 9 invalid and 9 canonical examples; 15 decision fixtures; 25 ledger fixtures; 23 `decide` assembly runs; 10 gate self-tests. Adjudicator gate: **not run** (P5).
++- `verify/red_against_r3.py`: r3.1's fixtures run against the **frozen r3** `r17score.py`/`r17recon.py`. Every new attack or guard fixture fails there (17 red), and every new correct twin passes under both versions (F15h, F15i, F19c, F19e, L23, L25, A19, A21). Reds: F05e, F15g, F19b, F19d, L19–L22, L24, A14–A18, A20, A22 and A23. Two gate self-test lines also go red, as a consequence of those scorer cases.
++- `verify/probe_r3_1.py`: the review's `probe.py`, ported. Its attacks are unchanged; only the paths, the pins (`READY.json`), the manifest's new field, the ledger policy fields and the assertions changed. The assertions now require the r3.1 behaviour, and every one passes, including all six **frozen-r16.w2.1 wire-validated** outputs for both blockers:
++
++| Probe scenario | r3 | r3.1 |
++|---|---|---|
++| F15b + confident AND→OR duplicate unit | relation correct, compound **correct** | relation correct, compound **swap** (critical, `conflicting_link`) |
++| … at six-cell scale (12 relations, 9 compounds), plain and wire-validated | **O2** (T1–T6 true) | **O1** (T4, T5 fail under both) |
++| … without the masking copy | O1 | O1 (unchanged) |
++| F19 sole unit "Tolls do not apply to any wagon" (`opposite` + `regardless`) | **correct** | **inversion** |
++| … critical, six-cell record, plain and wire-validated | **O2** | **rejected**: FULL released without an OPQ pass. Stopping after OPQ1 gives **O3** |
++| same A1 / A2 session on every paid output | O2 | **rejected**: `session reused` |
++| `admit` with `release_policy='UNSET'` | (True, None) | **(False, release policy unset or unrecognised)**; P-HARD/P-ACCEPT admit identically |
++| F05c denial plus an uncertain `qual` link | correct | **contradiction** |
++| reads $0.15 → $0.14 → $0.16 | RECONCILED | **HALT** (usage regressed) |
++| S2-FULL halted, S3-FULL released | O1-incomplete | **rejected**: released after a terminal halt |
++
++- `verify/mutation_pass.py`: each of **249** expectations was flipped in turn: 79 relation, 37 compound, 32 invented, 1 calibration, 13 decision, 18 outcome, 28 ledger, 23 assembly, 9 reference-invalid and 9 reference-example flips. **Every flip was caught.**
++
++## Round-2 PARTIALs: accounted for
++
++| R2 item | Remaining gap named in round 3 | Closed by |
++|---|---|---|
++| B1 cap/reconciliation | executable P0 release predicate absent; intra-poll regression | R3-S1, R3-S3 |
++| B2 polarity/typed structure | a second confident wrong typed claim escapes the best-witness scope | R3-B1 |
++| B3 extra claims/wrong leaf | `opposite` + `regardless` scored correct | R3-B2 (and the `qual` NOTE) |
++| S3 binding/denominators | `decide` accepts reused adjudicator sessions | R3-S2 (frozen-OPQ hash binding deferred, below) |
++
++No other remainder is named in the review.
++
++## BLOCKER
++
++### R3-B1. A correct claim hid a confident AND→OR duplicate — ACCEPTED
++
++- **Scorer** (`Scorer.score_relation`, `Scorer.score_typed`): `score_relation` now retains the **audited claims**. These are the other claims with complete clause parts, an applicability role and no explicit uncertainty, the same population that B5.5a checks for polarity and role. `score_typed` factors the existing compound search into `typed_at(n, kparts, node)` and runs it under the best witness, which still earns the credit, and then under each audited claim. If an audited claim yields swap, mismatch or exc_reversed, that becomes the compound's verdict, once per compound, critical with its relation, and `conflicting_link` is recorded. The audited claims' matched operators are recorded as matched, and their scopes join the invented-operator audit. A compatible duplicate graph is therefore harmless, and an unsupported operator inside a duplicate is invented exactly as it would be in the best witness. Operators outside every audited claim remain M6b `unscored_operators`. Not every outside-witness operator is declared harmful.
++- **Spec:** ADJUDICATION-SPEC B7 adds the duplicate-claim rule and extends the invented-operator scope.
++- **Fixtures:** F15g (hidden AND→OR → swap), F15h (correct AND twin → correct), F15i (uncertain OR duplicate → not audited, correct). `decide` at probe scale: A19 control O2, A20 hidden swap **O1**, A21 compatible duplicate O2.
++
++### R3-B2. `opposite` plus `regardless` erased reversal of the target — ACCEPTED
++
++- **Scorer** (`role_verdict`, called from `Scorer.claim` with the form flip): for `regardless`, path flips and intact negators are still ignored, so negating the irrelevant factor changes nothing. An `inverse` or `opposite` form reverses the target assertion itself, so it is **inversion** for every class, including IRRESPECTIVE. Composition through `if`/`onlyif`/`unless` with inverse or opposite forms (F05a, F05d) is unchanged.
++- **Spec:** ADJUDICATION-SPEC B4: the `regardless` row is split by form, with a paragraph separating target reversal from factor negation.
++- **Fixtures:** F19b (critical, opposite + regardless → inversion), F19c (direct twin → correct), F19d (direct + confident denial → contradiction via B5.5a), F19e (direct with a negated factor → relation still correct; the NOT cites no reference negation word, so it is invented). `decide`: A22, an OPQ1 reversal, is unreachable under both, then O3. A23, the probe's six-cell record, is rejected because FULL was released without an OPQ pass.
++
++## SHOULD-FIX
++
++### R3-S1. UNSET was blocked only by specification — ACCEPTED
++
++- **`r17recon.admit`:** it refuses unless `INIT.release_policy` ∈ `RELEASE_POLICIES` = (`P-HARD`, `P-ACCEPT`), checked first, so a halted or unbound ledger with an `UNSET` policy also reports the policy. It also refuses if a `BIND_RELEASE` names a different policy. BUDGET §0 and §4 rules 3–4 and PROTOCOL P0/P3 say so.
++- **Fixtures:** L19 UNSET, L20 missing, L21 unknown (`P-SOFT`), L22 INIT/BIND_RELEASE disagreement, and L23 (the other allowed value admits, the twin). `check.py` gives ledger entries an allowed value (`FIXTURE_POLICY`) only to exercise the other rules; fixtures select no policy.
++- **Not done here, by design:** whether the policy's **evidence** exists and was accepted is a recorded human decision. The arithmetic helper cannot infer it, and the P7 dispatch gate verifies it. P3 adapter tests must reproduce L19–L22.
++
++### R3-S2. Paid adjudication freshness was weaker than the fixture gate — ACCEPTED, one part deferred
++
++- **`decide`:** it rejects any adjudication session id used for another scored output or by the other role, and any id listed in the manifest's new required `excluded_sessions` (the reference author and reviewer sessions). The manifest version is now `r17.manifest.v2`. ADJUDICATION-SPEC C1, C2 and C5 and PROTOCOL §10 say so.
++- **Fixtures:** A16 (reuse across calls), A17 (shared across roles), A18 (reference-author session).
++- **Deferred: frozen-OPQ adjudication hashes.** PROTOCOL §10 freezes the OPQ adjudication before FULL release, but those hashes come into existence mid-run. The final `decide` cannot check them without a run-level record pinned by the adapter and run record (P3/P7). This is recorded as an open item in PROTOCOL §14. It is not a scoring defect: every adjudication is still bound to its output and reference hashes.
++
++### R3-S3. Reconciliation ignored regression between polling reads — ACCEPTED
++
++- **`r17recon.reconcile`:** the comparison floor starts at the last reconciled usage and rises to each valid read. Any later lower read halts. BUDGET §5 RECON.3–4 says so.
++- **Fixtures:** L24 ($0.15 → $0.14 → $0.16 → HALT) and L25 ($0.15 → $0.155 → $0.16 → RECONCILED, the monotone-lag twin).
++
++## NOTES
++
++| Note | Disposition |
++|---|---|
++| Narrowed adoption scope | **Fixed (one paragraph).** PROTOCOL §11 "Scope of an adoption": O1/O2 speak only to declared live relations and AND/OR/EXC compounds, not to every scope qualifier (M3 does not test each), cross-relation attachments, UNRESOLVED or contested relations, or NOT as a compound. FINAL.json states this scope beside the outcome. |
++| `opposite` with `qual` | **Fixed (one line).** `unqualified_opposites` now accepts only applicability links. `qual`, `obj` and `acts` never discharge a denial, even when uncertain, and unit-level uncertainty is never inferred from them (B5.5b). Fixture F05e → contradiction; F05d (an `if` link) stays correct. |
++| Post-halt history | **Fixed (two lines).** `decide` rejects any call released after a terminal halt (rows 2–9 or a RECON halt) within the phase, in both final and interim decisions (A14, A15). A release after an OPQ halt was already rejected. |
++| Partition limits | No change needed; source-only review (E5) remains a prerequisite. |
++
++## Diff summary against `../design-r3/`
++
++- `fixtures/r17score.py`: `MANIFEST_VERSION` v2; `role_verdict` (form-aware `regardless`); `Scorer.claim` (passes the form flip); `Scorer.unqualified_opposites` (applicability links only); `Scorer.score_relation` (keeps the audited claims); `Scorer.score` (drops them from output); `Scorer.score_typed` (`typed_at` helper, duplicate audit, invented scope); `decide` (`excluded_sessions`, session uniqueness, release after a terminal halt).
++- `fixtures/r17recon.py`: `RELEASE_POLICIES`; `admit` (policy and agreement); `reconcile` (rising floor).
++- `fixtures/check.py`: `FIXTURE_POLICY`/`_policy`/`ledger_entries` and `run_ledger` (policy fields); `assembly_inputs` (`excluded_sessions`); `mutate` (6 new kinds) with `_set_session`; `combined_case`/`combined_inputs`, with `_shift`/`_requote` (the probe's 3 × 4-relation assembly, ported); `run_assembly` (combined runs).
++- `fixtures/cases.src.json` / `cases.json`: F05e, F15g–i, F19b–e; L19–L25; `assembly.excluded_sessions`, `assembly.combined`, A14–A23.
++- `ADJUDICATION-SPEC.md` B4, B5.5b, B7, C1, C2, C5. Part A is **unchanged**, so packets and the Part A hash are unaffected.
++- `BUDGET.md` §0, §4 rules 3–4, §5 RECON. `PROTOCOL.md` status, P0, P3, §10, §11 (scope), §14. `fixtures/README.md` coverage.
++- New, non-normative: `verify/red_against_r3.py`, `verify/probe_r3_1.py`, `verify/mutation_pass.py`. `READY.primary.json` was not carried over: it pinned r3's hashes, and the primary writes its own at freeze.
++
++## Open issues added by round 3
++
++1. Frozen-OPQ adjudication hash binding (R3-S2 remainder): run record, P3/P7.
++2. Policy-evidence verification stays a human/P7 check; admission enforces only the selected value and its agreement.
++3. Round-2 open issues 1–7 below are unchanged. `RELEASE_POLICY` remains `UNSET` (user decision).
++
++---
++
+ # Disposition of the R17 protocol re-review, round 2 (design r3)
+ 
+ Review: `../protocol-review-r2/REVIEW.md` (GPT-6 Astra, high; verdict "freeze after edits"), with `../protocol-review-r2/probe.py`, against `../design-r2/` (frozen, unchanged; its READY hashes still verify and the r2 probe still passes against it). Revised files are in this folder. No provider call, network access, credential access or R17 source-text read occurred.
+diff -ru --exclude=READY* docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/PROTOCOL.md docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/PROTOCOL.md
+--- docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/PROTOCOL.md	2026-10-13 16:18:37
++++ docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/PROTOCOL.md	2026-10-13 16:41:30
+@@ -1,6 +1,6 @@
+-# R17 paid comparison: clause-only (OPQ) vs full profile, protocol design r3
++# R17 paid comparison: clause-only (OPQ) vs full profile, protocol design r3.1
+ 
+-Status: **design draft r3 (r17.d3)**, revised after `protocol-review-r2/REVIEW.md` (GPT-6 Astra, high: "freeze after edits"). It **authorizes nothing**. It supersedes `../design-r2/` (r17.d2, frozen, unchanged). Every round-2 finding and its disposition is in [DISPOSITION.md](DISPOSITION.md). Arithmetic, the release-policy slot and enforcement are in [BUDGET.md](BUDGET.md); the reference author's brief is [REFERENCE-SPEC.md](REFERENCE-SPEC.md); scoring is [ADJUDICATION-SPEC.md](ADJUDICATION-SPEC.md), implemented by `fixtures/r17score.py` (with ledger semantics in `fixtures/r17recon.py`) and tested by `fixtures/check.py`. Paths are relative to `docs/research/state-rulemaking-benchmark/` (BENCH). No provider call, network access or credential access occurred while writing it, and no R17 source text was read.
++Status: **design draft r3.1 (r17.d3.1)**, a targeted revision of r3 after `protocol-review-r3/REVIEW.md` (GPT-6 Astra, high: "freeze after edits"); r3 was revised after `protocol-review-r2/REVIEW.md`. It **authorizes nothing**. It supersedes `../design-r3/` (r17.d3, frozen, unchanged) and `../design-r2/`. Every round-2 and round-3 finding and its disposition is in [DISPOSITION.md](DISPOSITION.md). Arithmetic, the release-policy slot and enforcement are in [BUDGET.md](BUDGET.md); the reference author's brief is [REFERENCE-SPEC.md](REFERENCE-SPEC.md); scoring is [ADJUDICATION-SPEC.md](ADJUDICATION-SPEC.md), implemented by `fixtures/r17score.py` (with ledger semantics in `fixtures/r17recon.py`) and tested by `fixtures/check.py`. Paths are relative to `docs/research/state-rulemaking-benchmark/` (BENCH). No provider call, network access or credential access occurred while writing it, and no R17 source text was read.
+ 
+ Labels: **VERIFIED** (file:line or a reproduced offline command), **PROPOSAL** (a design choice, normative once frozen), **ESTIMATE**, **CONDITION** (an unverified premise; see BUDGET §3).
+ 
+@@ -51,7 +51,7 @@
+ 
+ If any precondition is unmet, the paid phase **stays unreleased**. That outcome costs nothing and is not a result.
+ 
+-- **P0. Release policy selected by the user** (BUDGET §0): `RELEASE_POLICY` is `P-HARD` or `P-ACCEPT`, recorded in BUDGET §0 and `READY.json`. Under P-HARD, `run/ENFORCEMENT-EVIDENCE.json` establishes E-1 or E-2 and the re-review accepted it; under P-ACCEPT, `run/CAP-ACCEPTANCE.json` holds the user's verbatim written acceptance including the residual-risk statement. While `UNSET`, nothing is released.
++- **P0. Release policy selected by the user** (BUDGET §0): `RELEASE_POLICY` is `P-HARD` or `P-ACCEPT`, recorded in BUDGET §0 and `READY.json`. Under P-HARD, `run/ENFORCEMENT-EVIDENCE.json` establishes E-1 or E-2 and the re-review accepted it; under P-ACCEPT, `run/CAP-ACCEPTANCE.json` holds the user's verbatim written acceptance including the residual-risk statement. While `UNSET`, nothing is released, and ledger admission refuses it mechanically (BUDGET §4 rule 4; L19–L23). The dispatch gate (P7) separately verifies that the selected policy's evidence file exists and was accepted.
+ - **P1. Dedicated key** per BUDGET §1 K1–K3: a non-resetting credit limit `L` with `R0 × $0.27 ≤ L ≤ $1.73`, the user's attestation, the native runner's machine check, and fail-closed handling. **If the user cannot provide such a key, nothing is released, and no soft-budget substitution is allowed.**
+ - **P2. Ledger** initialized in the new namespace (BUDGET §4): `INIT` pins static configuration only; the release record pins the `INIT` hash; `BIND_RELEASE` pins the release record before any `RESERVE`.
+ - **P3. Adapter** pinned with its tests (PRIMARY-DECISIONS Q2). The tests must show:
+@@ -60,7 +60,7 @@
+   - both `plan.request_sha256` and `dispatched_body_sha256` are recorded;
+   - validation uses the unmodified plan;
+   - admission runs under the lock before `RESERVE`, and `DISPATCH_MARK` is fsynced before the socket send;
+-  - admission, reconciliation and close-debit decisions equal `fixtures/r17recon.py` on the L01–L18 fixtures;
++  - admission, reconciliation and close-debit decisions equal `fixtures/r17recon.py` on the L01–L25 fixtures, including refusal of an `UNSET`, missing or unknown release policy and of an `INIT`/`BIND_RELEASE` policy disagreement (L19–L22), and a halt on a regression between polling reads (L24);
+   - torn-tail recovery, stale-lock refusal and directory fsyncs behave per BUDGET §4 rules 8–11;
+   - the §7 response-state table, AD1–AD5, AD7 and RECON are implemented as specified;
+   - no automatic retry exists.
+@@ -182,7 +182,7 @@
+ 
+ ## 10. Adjudication procedure
+ 
+-- A1 (Fable 5.1, high) and A2 (Opus 5.5, high) **each map every target of every scored output**, independently, in fresh sessions, one session per output, choosing `direct`, `inverse` or `opposite` per Part A. Neither sees the other's files or any totals. No sampling.
++- A1 (Fable 5.1, high) and A2 (Opus 5.5, high) **each map every target of every scored output**, independently, in fresh sessions, one session per output and role, never a reference author or reviewer session (`decide` rejects reuse; ADJUDICATION-SPEC C1), choosing `direct`, `inverse` or `opposite` per Part A. Neither sees the other's files or any totals. No sampling.
+ - The OPQ adjudication is frozen (by hash) before any FULL release and is never revised afterwards.
+ - There is no arm masking. FULL is recognizable from its typed nodes, and the staged order reveals the phase. The mitigation is that the only judgment is the target mapping (ADJUDICATION-SPEC A2), whose rules ignore conditions, links and nodes (M8). Everything else is mechanical.
+ - Reference-defect notes and scorer objections are reported and feed the C6 sensitivity analysis only.
+@@ -238,6 +238,8 @@
+ 
+ `decide` rejects any other combination, including a stop with no `unreachable` bar and a mix of scored-complete and best-case states.
+ 
++**Scope of an adoption.** O1 and O2 speak only to the declared **live relations** (COND, RESTRICT, EXCEPT, IRRESPECTIVE) and the declared **AND/OR/EXC compounds**. They do not validate every scope qualifier (plain qualifiers belong to targets, REFERENCE-SPEC §4.2 rule 7, and the broad-target mapping rule M3 does not test each one), cross-relation attachments (`carves_out_of` is removed), UNRESOLVED or contested relations, or NOT as a compound. FINAL.json states this scope next to the outcome.
++
+ Every outcome rests on one sample per cell, three sources and an AI-authored reference. Two adjudicators agreeing does not remove generation noise or shared reference error, and relations within a notice are not independent. The thresholds are absolute research gates, not significance tests. FINAL.json reports, for each criterion, the **margin in items** (observed count minus required count). An adoption with margin 0 on any criterion is labelled **"at threshold — fragile"**. It also reports the C6 sensitivity result.
+ 
+ ## 12. Execution order (each step frozen before the next)
+@@ -271,4 +273,5 @@
+ - **K.** The user creates and attests the dedicated key; the key endpoint's usage field and units are confirmed from current documentation (BUDGET §1 K3).
+ - **RECON tolerance.** `i × 1,000` nanoUSD is a measurement policy; amend it before release if the documented reporting granularity needs another value.
+ - **P5.** Both adjudicators pass the gate on the repaired fixtures.
+-- **Re-review** of this r3 (cross-provider) before freeze.
++- **Freeze of r3.1.** Round 3 asked for "freeze after edits"; the primary decides whether r3.1's targeted edits need another cross-provider check before freezing.
++- **Frozen-OPQ adjudication binding** (R3-S2, deferred): the final `decide` cannot yet prove that the OPQ adjudication files equal the ones frozen before FULL release; the run record must pin their hashes (P3/P7).
+diff -ru --exclude=READY* docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/README.md docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/README.md
+--- docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/README.md	2026-10-13 16:19:10
++++ docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/README.md	2026-10-13 16:41:30
+@@ -1,4 +1,4 @@
+-# R17 scoring fixtures (design r3)
++# R17 scoring fixtures (design r3.1)
+ 
+ All sources, references and outputs here are **fictional**, except F21. F21 pins the frozen R15 fictional control (`round15-condition-preservation/protocol-revised/fixtures/{source.txt,expanded.json}`) by SHA-256 to prove that the scorer reads a real r16 expanded record. Expected judgments were written by hand from ADJUDICATION-SPEC.md, not generated by the scorer. No R17 source text was read to write them.
+ 
+@@ -31,14 +31,16 @@
+ | Clause parts only from leaves (link or operator evidence citing the clause) | F01d, F01e, F01f |
+ | Occurrences | F14, V01 |
+ | No borrowed coverage | F02, F04, F07 |
+-| Target mapping (wrong, empty, duplicate, inverse, opposite) | F03a/b, F04, F05a–d |
++| Target mapping (wrong, empty, duplicate, inverse, opposite, opposite with only `qual`) | F03a/b, F04, F05a–e |
+ | EXC composition | F06, F07, F18, F21 |
+ | Reference-relative polarity: explicit NOT vs intact negator, local vs whole-clause negation, double negation | F08a/b, F09b–d, F15e, F22a–c, F23a–d, F24a–c |
+ | Hedge vs scope change vs role loss vs inversion | F10a–f |
+ | Extra-claim audit (extra scope claim, compatible obj, harmful duplicate unit, embedded copy) | F10g–i, F11a/b, F12b |
+ | Embedded, broad | F12, F13 |
+ | Typed logic (swap, correct, ALT, flattened, invented incl. NOT, mismatch, reparenting, nested EXC) | F15a–d, F16, F16b, F17, F18, F21, F25a–c |
++| Typed audit of duplicate claims (hidden AND→OR swap; compatible AND twin; uncertain duplicate) | F15g, F15h, F15i |
+ | IRRESPECTIVE / UNRESOLVED / contested | F19, F20 |
++| IRRESPECTIVE with a reversed target (opposite + `regardless`), direct twin, plus denial, negated factor | F19b, F19c, F19d, F19e |
+ | Invalid references (occurrence, overlap, missing middle negator, missing final words, orphan target, field type, exclusion reason, target words in clause, operator marker) | V01–V09 |
+ | Canonical reference examples (REFERENCE-SPEC §9) | X01–X09 |
+ | Bars D and T, including the critical-absence and false-NOT counterexamples | D01–D05, T01–T03 |
+@@ -46,5 +48,8 @@
+ | Outcomes, scored-complete and early-stop states | O01, O02 |
+ | κ categories; reference-defect sensitivity | K01, E01 |
+ | Ledger admission, reconciliation, close debit, decimal parsing, key-limit bounds | L01–L18 |
++| Release policy at admission (UNSET, missing, unknown, INIT/BIND_RELEASE disagreement, other allowed value); regression between polling reads and its monotone twin | L19–L23, L24–L25 |
+ | `decide` bindings (swapped output, wrong reference hash, omitted relation, missing adjudicator, identity, tokens, pending), interim, early stops, RECON halts | A01–A13 |
++| `decide`: release after a terminal halt (final, interim); session reuse across calls or roles; reference-author session | A14–A18 |
++| `decide` at the R3 probe's scale (3 × 4 relations, 9 compounds; `assembly.combined`): faithful control O2; hidden AND→OR duplicate O1; compatible duplicate O2; OPQ1 IRRESPECTIVE reversal O3, and its six-cell record rejected | A19–A23 |
+ | Adjudicator gate (zero, one or three adjudicators; missing case; identity; reused session; hash; mapping; basis ignored) | gate self-test |
+diff -ru --exclude=READY* docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/cases.json docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/cases.json
+--- docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/cases.json	2026-10-13 16:18:53
++++ docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/cases.json	2026-10-13 16:38:25
+@@ -1,5 +1,23 @@
+ {
+  "assembly": {
++  "combined": {
++   "note": "Ported R3 probe scale: each source concatenates four single-relation parts (12 live critical relations, 9 compounds). OPQ cells carry each relation in one faithful leaf; FULL cells use the parts' own graphs.",
++   "parts": [
++    "F15b-and-correct",
++    "F25a-nested-correct",
++    "F10e-onlyif-correct",
++    "F19c-irrespective-critical-direct"
++   ],
++   "source_ids": {
++    "S1": "FX-C1",
++    "S2": "FX-C2",
++    "S3": "FX-C3"
++   }
++  },
++  "excluded_sessions": [
++   "fixture-reference-author",
++   "fixture-reference-reviewer"
++  ],
+   "runs": [
+    {
+     "expected_outcome": "O1",
+@@ -77,6 +95,91 @@
+     "id": "A13-recon-halt-full",
+     "mutate": "recon_halt_full2",
+     "purpose": "A RECON halt after a valid FULL2 response, OPQ having passed: outcome O1-incomplete."
++   },
++   {
++    "expected_error": "FULL: a call was released after a terminal halt",
++    "id": "A14-released-after-halt",
++    "mutate": "released_after_halt",
++    "purpose": "R3 NOTE: S2-FULL halted (RECON) yet S3-FULL was released: rejected, not O1-incomplete."
++   },
++   {
++    "expected_error": "FULL: a call was released after a terminal halt",
++    "id": "A15-released-after-halt-interim",
++    "mutate": "released_after_halt_interim",
++    "purpose": "R3 NOTE: the same history is rejected by the interim decision too."
++   },
++   {
++    "expected_error": "S2-OPQ A1: session reused",
++    "id": "A16-session-reused-across-calls",
++    "mutate": "session_reused_across_calls",
++    "purpose": "R3-S2: one A1 session for two scored outputs is rejected, as in the fixture gate."
++   },
++   {
++    "expected_error": "S3-FULL A2: session reused",
++    "id": "A17-session-shared-across-roles",
++    "mutate": "session_shared_across_roles",
++    "purpose": "R3-S2: A1 and A2 sharing a session for one output is rejected."
++   },
++   {
++    "expected_error": "S1-FULL A1: session belongs to reference authoring or review",
++    "id": "A18-reference-session",
++    "mutate": "reference_session",
++    "purpose": "R3-S2: an adjudication from a reference author/reviewer session (manifest excluded_sessions) is rejected."
++   },
++   {
++    "combined": {},
++    "expected_outcome": "O2",
++    "id": "A19-combined-control",
++    "purpose": "R3 control: the probe-scale run with every cell faithful reaches O2, so A20/A22 fail for the stated reason."
++   },
++   {
++    "combined": {
++     "replace": {
++      "S1-FULL": {
++       "F15b-and-correct": "F15g-duplicate-wrong-or"
++      }
++     }
++    },
++    "expected_outcome": "O1",
++    "id": "A20-combined-duplicate-wrong-or",
++    "purpose": "R3-B1: S1-FULL hides a confident AND->OR duplicate behind a correct copy (F15g). r3 returned O2; the critical swap now fails T5 under both: O1."
++   },
++   {
++    "combined": {
++     "replace": {
++      "S1-FULL": {
++       "F15b-and-correct": "F15h-duplicate-correct-and"
++      }
++     }
++    },
++    "expected_outcome": "O2",
++    "id": "A21-combined-duplicate-correct",
++    "purpose": "R3-B1 correct twin: a compatible AND duplicate (F15h) in S1-FULL keeps O2."
++   },
++   {
++    "combined": {
++     "replace": {
++      "S1-OPQ": {
++       "F19c-irrespective-critical-direct": "F19b-irrespective-opposite"
++      }
++     }
++    },
++    "expected_outcome": "O3",
++    "id": "A22-combined-irrespective-denial",
++    "mutate": "stop_after_opq1",
++    "purpose": "R3-B2: OPQ1 reverses a critical IRRESPECTIVE target (F19b); unreachable under both, the rest skipped: O3 (r3: O2 on the six-cell record)."
++   },
++   {
++    "combined": {
++     "replace": {
++      "S1-OPQ": {
++       "F19c-irrespective-critical-direct": "F19b-irrespective-opposite"
++      }
++     }
++    },
++    "expected_error": "FULL released without a complete OPQ pass",
++    "id": "A23-combined-irrespective-denial-six-cells",
++    "purpose": "R3-B2: the probe's six-cell record with the OPQ1 denial is rejected: OPQ fails, so FULL cannot have been released."
+    }
+   ],
+   "slots": {
+@@ -2352,6 +2455,164 @@
+    "source": "Ferries may dock at the east pier unless the tide is low."
+   },
+   {
++   "arm": "OPQ",
++   "expected": {
++    "relations": {
++     "R1": "contradiction"
++    }
++   },
++   "gold": true,
++   "id": "F05e-opposite-qual-only",
++   "mappings": [
++    {
++     "basis": "fixture expectation",
++     "tid": "T1",
++     "units": [
++      {
++       "form": "direct",
++       "unit": 1
++      },
++      {
++       "form": "opposite",
++       "unit": 2
++      }
++     ]
++    }
++   ],
++   "output": {
++    "links": [
++     {
++      "evidence": [
++       [
++        34,
++        40
++       ]
++      ],
++      "node_id": "c1",
++      "q": 0,
++      "role": "unless",
++      "unit_id": 1
++     },
++     {
++      "evidence": [
++       [
++        34,
++        40
++       ]
++      ],
++      "node_id": "c1",
++      "q": 1,
++      "role": "qual",
++      "unit_id": 2
++     }
++    ],
++    "nodes": [
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        56
++       ]
++      ],
++      "id": "c1",
++      "op": "L",
++      "q": 0
++     }
++    ],
++    "units": [
++     {
++      "assertion": "Ferries may dock at the east pier.",
++      "evidence": [
++       [
++        0,
++        33
++       ]
++      ],
++      "id": 1
++     },
++     {
++      "assertion": "Ferries may not dock at the east pier.",
++      "evidence": [
++       [
++        0,
++        33
++       ]
++      ],
++      "id": 2
++     }
++    ]
++   },
++   "packet": {
++    "output_sha256": "d1528074e58e1ed8e3ad639848af0f2eb84b584d39da7d0076cb227a73b9d593",
++    "packet_id": "fx-bbe9fd4c97",
++    "reference_sha256": "44bc98f6bea53d33052f7a158e06f11529fae792913f5b4976586d9c4375b40e",
++    "source_id": "fx-bbe9fd4c97"
++   },
++   "purpose": "R3 NOTE: a denying unit whose only link to the clause is a `qual` (even explicitly uncertain) is still an unqualified denial: qualification asserts no applicability, so only if/onlyif/unless/regardless discharge it (B5.5b). Control: F05d.",
++   "reference": {
++    "out_of_scope_notes": [],
++    "relations": [
++     {
++      "class": "EXCEPT",
++      "clause": [
++       {
++        "end": 56,
++        "occurrence": 1,
++        "start": 34,
++        "text": "unless the tide is low"
++       }
++      ],
++      "contested": false,
++      "contested_reason": "",
++      "critical": true,
++      "critical_reason": "fixture: changes who must act",
++      "excluded": [],
++      "introducer": [
++       {
++        "end": 40,
++        "occurrence": 1,
++        "start": 34,
++        "text": "unless"
++       }
++      ],
++      "logic": {
++       "markers": [],
++       "nid": "N1",
++       "op": "PART",
++       "quotes": [
++        {
++         "end": 56,
++         "occurrence": 1,
++         "start": 41,
++         "text": "the tide is low"
++        }
++       ]
++      },
++      "rationale": "fixture",
++      "rid": "R1",
++      "tid": "T1"
++     }
++    ],
++    "source_id": "fx-bbe9fd4c97",
++    "source_text_sha256": "6bb9fdc694281438099285c1be0441b177e20b42b3d95b89dae88024e76ae2b7",
++    "spec_version": "r17.ref.v3",
++    "targets": [
++     {
++      "gloss": "",
++      "quote": {
++       "end": 33,
++       "occurrence": 1,
++       "start": 0,
++       "text": "Ferries may dock at the east pier"
++      },
++      "tid": "T1"
++     }
++    ]
++   },
++   "source": "Ferries may dock at the east pier unless the tide is low."
++  },
++  {
+    "arm": "FULL",
+    "expected": {
+     "compounds": {},
+@@ -6891,6 +7152,771 @@
+   {
+    "arm": "FULL",
+    "expected": {
++    "compounds": {
++     "R1:N1": "swap"
++    },
++    "invented": [],
++    "relations": {
++     "R1": "correct"
++    }
++   },
++   "gold": true,
++   "id": "F15g-duplicate-wrong-or",
++   "mappings": [
++    {
++     "basis": "fixture expectation",
++     "tid": "T1",
++     "units": [
++      {
++       "form": "direct",
++       "unit": 1
++      },
++      {
++       "form": "direct",
++       "unit": 2
++      }
++     ]
++    }
++   ],
++   "output": {
++    "links": [
++     {
++      "evidence": [
++       [
++        19,
++        21
++       ]
++      ],
++      "node_id": "c1",
++      "q": 0,
++      "role": "if",
++      "unit_id": 1
++     },
++     {
++      "evidence": [
++       [
++        19,
++        21
++       ]
++      ],
++      "node_id": "d1",
++      "q": 0,
++      "role": "if",
++      "unit_id": 2
++     }
++    ],
++    "nodes": [
++     {
++      "args": [
++       "c2",
++       "c3"
++      ],
++      "evidence": [
++       [
++        37,
++        40
++       ]
++      ],
++      "id": "c1",
++      "op": "AND",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        22,
++        36
++       ]
++      ],
++      "id": "c2",
++      "op": "L",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        54
++       ]
++      ],
++      "id": "c3",
++      "op": "L",
++      "q": 0
++     },
++     {
++      "args": [
++       "d2",
++       "d3"
++      ],
++      "evidence": [
++       [
++        37,
++        40
++       ]
++      ],
++      "id": "d1",
++      "op": "OR",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        22,
++        36
++       ]
++      ],
++      "id": "d2",
++      "op": "L",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        54
++       ]
++      ],
++      "id": "d3",
++      "op": "L",
++      "q": 0
++     }
++    ],
++    "units": [
++     {
++      "assertion": "Guards must report.",
++      "evidence": [
++       [
++        0,
++        18
++       ]
++      ],
++      "id": 1
++     },
++     {
++      "assertion": "Guards must report.",
++      "evidence": [
++       [
++        0,
++        18
++       ]
++      ],
++      "id": 2
++     }
++    ]
++   },
++   "packet": {
++    "output_sha256": "7a004e91ee46b4345c0f21d0ff588325835bc4a0f811a9c2aa7cf07c4b1fbe00",
++    "packet_id": "fx-91361827a9",
++    "reference_sha256": "66463ecbe2a4728498cd90f2cd73a8eaf2912454241a654e018bd30bcae26938",
++    "source_id": "fx-91361827a9"
++   },
++   "purpose": "R3-B1: unit 1 keeps F15b's correct if -> AND; unit 2 restates the target with its own confident if -> OR. The best witness earns the credit, but the audited duplicate's swap is charged: compound swap (critical), relation still correct.",
++   "reference": {
++    "out_of_scope_notes": [],
++    "relations": [
++     {
++      "class": "COND",
++      "clause": [
++       {
++        "end": 54,
++        "occurrence": 1,
++        "start": 19,
++        "text": "if a door is open and a lamp is out"
++       }
++      ],
++      "contested": false,
++      "contested_reason": "",
++      "critical": true,
++      "critical_reason": "fixture: changes who must act",
++      "excluded": [],
++      "introducer": [
++       {
++        "end": 21,
++        "occurrence": 1,
++        "start": 19,
++        "text": "if"
++       }
++      ],
++      "logic": {
++       "children": [
++        {
++         "markers": [],
++         "nid": "N2",
++         "op": "PART",
++         "quotes": [
++          {
++           "end": 36,
++           "occurrence": 1,
++           "start": 22,
++           "text": "a door is open"
++          }
++         ]
++        },
++        {
++         "markers": [],
++         "nid": "N3",
++         "op": "PART",
++         "quotes": [
++          {
++           "end": 54,
++           "occurrence": 1,
++           "start": 41,
++           "text": "a lamp is out"
++          }
++         ]
++        }
++       ],
++       "markers": [
++        {
++         "end": 40,
++         "occurrence": 1,
++         "start": 37,
++         "text": "and"
++        }
++       ],
++       "nid": "N1",
++       "op": "AND"
++      },
++      "rationale": "fixture",
++      "rid": "R1",
++      "tid": "T1"
++     }
++    ],
++    "source_id": "fx-91361827a9",
++    "source_text_sha256": "b7b74a90835208eaf8e183e9722f750ab5d38e517dada89fa185c46df8aedffc",
++    "spec_version": "r17.ref.v3",
++    "targets": [
++     {
++      "gloss": "",
++      "quote": {
++       "end": 18,
++       "occurrence": 1,
++       "start": 0,
++       "text": "Guards must report"
++      },
++      "tid": "T1"
++     }
++    ]
++   },
++   "source": "Guards must report if a door is open and a lamp is out."
++  },
++  {
++   "arm": "FULL",
++   "expected": {
++    "compounds": {
++     "R1:N1": "correct"
++    },
++    "invented": [],
++    "relations": {
++     "R1": "correct"
++    }
++   },
++   "gold": true,
++   "id": "F15h-duplicate-correct-and",
++   "mappings": [
++    {
++     "basis": "fixture expectation",
++     "tid": "T1",
++     "units": [
++      {
++       "form": "direct",
++       "unit": 1
++      },
++      {
++       "form": "direct",
++       "unit": 2
++      }
++     ]
++    }
++   ],
++   "output": {
++    "links": [
++     {
++      "evidence": [
++       [
++        19,
++        21
++       ]
++      ],
++      "node_id": "c1",
++      "q": 0,
++      "role": "if",
++      "unit_id": 1
++     },
++     {
++      "evidence": [
++       [
++        19,
++        21
++       ]
++      ],
++      "node_id": "d1",
++      "q": 0,
++      "role": "if",
++      "unit_id": 2
++     }
++    ],
++    "nodes": [
++     {
++      "args": [
++       "c2",
++       "c3"
++      ],
++      "evidence": [
++       [
++        37,
++        40
++       ]
++      ],
++      "id": "c1",
++      "op": "AND",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        22,
++        36
++       ]
++      ],
++      "id": "c2",
++      "op": "L",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        54
++       ]
++      ],
++      "id": "c3",
++      "op": "L",
++      "q": 0
++     },
++     {
++      "args": [
++       "d2",
++       "d3"
++      ],
++      "evidence": [
++       [
++        37,
++        40
++       ]
++      ],
++      "id": "d1",
++      "op": "AND",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        22,
++        36
++       ]
++      ],
++      "id": "d2",
++      "op": "L",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        54
++       ]
++      ],
++      "id": "d3",
++      "op": "L",
++      "q": 0
++     }
++    ],
++    "units": [
++     {
++      "assertion": "Guards must report.",
++      "evidence": [
++       [
++        0,
++        18
++       ]
++      ],
++      "id": 1
++     },
++     {
++      "assertion": "Guards must report.",
++      "evidence": [
++       [
++        0,
++        18
++       ]
++      ],
++      "id": 2
++     }
++    ]
++   },
++   "packet": {
++    "output_sha256": "c7095411c1ef69b7d82ab5dca272be09e4c8d13112dd32446731cd72def6862f",
++    "packet_id": "fx-1e5e2461c8",
++    "reference_sha256": "7b8cd9df75f4b015a9cc75990730d4ced715f933f8fa6ea1c68344a9ee0530c7",
++    "source_id": "fx-1e5e2461c8"
++   },
++   "purpose": "R3-B1 correct twin of F15g: the duplicate's graph is a compatible AND, matched rather than invented: compound correct.",
++   "reference": {
++    "out_of_scope_notes": [],
++    "relations": [
++     {
++      "class": "COND",
++      "clause": [
++       {
++        "end": 54,
++        "occurrence": 1,
++        "start": 19,
++        "text": "if a door is open and a lamp is out"
++       }
++      ],
++      "contested": false,
++      "contested_reason": "",
++      "critical": true,
++      "critical_reason": "fixture: changes who must act",
++      "excluded": [],
++      "introducer": [
++       {
++        "end": 21,
++        "occurrence": 1,
++        "start": 19,
++        "text": "if"
++       }
++      ],
++      "logic": {
++       "children": [
++        {
++         "markers": [],
++         "nid": "N2",
++         "op": "PART",
++         "quotes": [
++          {
++           "end": 36,
++           "occurrence": 1,
++           "start": 22,
++           "text": "a door is open"
++          }
++         ]
++        },
++        {
++         "markers": [],
++         "nid": "N3",
++         "op": "PART",
++         "quotes": [
++          {
++           "end": 54,
++           "occurrence": 1,
++           "start": 41,
++           "text": "a lamp is out"
++          }
++         ]
++        }
++       ],
++       "markers": [
++        {
++         "end": 40,
++         "occurrence": 1,
++         "start": 37,
++         "text": "and"
++        }
++       ],
++       "nid": "N1",
++       "op": "AND"
++      },
++      "rationale": "fixture",
++      "rid": "R1",
++      "tid": "T1"
++     }
++    ],
++    "source_id": "fx-1e5e2461c8",
++    "source_text_sha256": "b7b74a90835208eaf8e183e9722f750ab5d38e517dada89fa185c46df8aedffc",
++    "spec_version": "r17.ref.v3",
++    "targets": [
++     {
++      "gloss": "",
++      "quote": {
++       "end": 18,
++       "occurrence": 1,
++       "start": 0,
++       "text": "Guards must report"
++      },
++      "tid": "T1"
++     }
++    ]
++   },
++   "source": "Guards must report if a door is open and a lamp is out."
++  },
++  {
++   "arm": "FULL",
++   "expected": {
++    "compounds": {
++     "R1:N1": "correct"
++    },
++    "invented": [],
++    "relations": {
++     "R1": "correct"
++    }
++   },
++   "gold": true,
++   "id": "F15i-duplicate-uncertain-or",
++   "mappings": [
++    {
++     "basis": "fixture expectation",
++     "tid": "T1",
++     "units": [
++      {
++       "form": "direct",
++       "unit": 1
++      },
++      {
++       "form": "direct",
++       "unit": 2
++      }
++     ]
++    }
++   ],
++   "output": {
++    "links": [
++     {
++      "evidence": [
++       [
++        19,
++        21
++       ]
++      ],
++      "node_id": "c1",
++      "q": 0,
++      "role": "if",
++      "unit_id": 1
++     },
++     {
++      "evidence": [
++       [
++        19,
++        21
++       ]
++      ],
++      "node_id": "d1",
++      "q": 0,
++      "role": "if",
++      "unit_id": 2
++     }
++    ],
++    "nodes": [
++     {
++      "args": [
++       "c2",
++       "c3"
++      ],
++      "evidence": [
++       [
++        37,
++        40
++       ]
++      ],
++      "id": "c1",
++      "op": "AND",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        22,
++        36
++       ]
++      ],
++      "id": "c2",
++      "op": "L",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        54
++       ]
++      ],
++      "id": "c3",
++      "op": "L",
++      "q": 0
++     },
++     {
++      "args": [
++       "d2",
++       "d3"
++      ],
++      "evidence": [
++       [
++        37,
++        40
++       ]
++      ],
++      "id": "d1",
++      "op": "OR",
++      "q": 1
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        22,
++        36
++       ]
++      ],
++      "id": "d2",
++      "op": "L",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        54
++       ]
++      ],
++      "id": "d3",
++      "op": "L",
++      "q": 0
++     }
++    ],
++    "units": [
++     {
++      "assertion": "Guards must report.",
++      "evidence": [
++       [
++        0,
++        18
++       ]
++      ],
++      "id": 1
++     },
++     {
++      "assertion": "Guards must report.",
++      "evidence": [
++       [
++        0,
++        18
++       ]
++      ],
++      "id": 2
++     }
++    ]
++   },
++   "packet": {
++    "output_sha256": "8b9a8cc6837ffe0d33ca9ce2c2fc2709458fa1862609513096a0fec6bf7a58ac",
++    "packet_id": "fx-c99b95ed58",
++    "reference_sha256": "0f7add85d96e677cd09edff5e750b95af3e220ffb6a385c36a3ec0e3725581dc",
++    "source_id": "fx-c99b95ed58"
++   },
++   "purpose": "R3-B1 compatibility: an explicitly uncertain duplicate (OR with q=1) is not audited, like an uncertain extra claim in B5.5a: compound correct, nothing invented.",
++   "reference": {
++    "out_of_scope_notes": [],
++    "relations": [
++     {
++      "class": "COND",
++      "clause": [
++       {
++        "end": 54,
++        "occurrence": 1,
++        "start": 19,
++        "text": "if a door is open and a lamp is out"
++       }
++      ],
++      "contested": false,
++      "contested_reason": "",
++      "critical": true,
++      "critical_reason": "fixture: changes who must act",
++      "excluded": [],
++      "introducer": [
++       {
++        "end": 21,
++        "occurrence": 1,
++        "start": 19,
++        "text": "if"
++       }
++      ],
++      "logic": {
++       "children": [
++        {
++         "markers": [],
++         "nid": "N2",
++         "op": "PART",
++         "quotes": [
++          {
++           "end": 36,
++           "occurrence": 1,
++           "start": 22,
++           "text": "a door is open"
++          }
++         ]
++        },
++        {
++         "markers": [],
++         "nid": "N3",
++         "op": "PART",
++         "quotes": [
++          {
++           "end": 54,
++           "occurrence": 1,
++           "start": 41,
++           "text": "a lamp is out"
++          }
++         ]
++        }
++       ],
++       "markers": [
++        {
++         "end": 40,
++         "occurrence": 1,
++         "start": 37,
++         "text": "and"
++        }
++       ],
++       "nid": "N1",
++       "op": "AND"
++      },
++      "rationale": "fixture",
++      "rid": "R1",
++      "tid": "T1"
++     }
++    ],
++    "source_id": "fx-c99b95ed58",
++    "source_text_sha256": "b7b74a90835208eaf8e183e9722f750ab5d38e517dada89fa185c46df8aedffc",
++    "spec_version": "r17.ref.v3",
++    "targets": [
++     {
++      "gloss": "",
++      "quote": {
++       "end": 18,
++       "occurrence": 1,
++       "start": 0,
++       "text": "Guards must report"
++      },
++      "tid": "T1"
++     }
++    ]
++   },
++   "source": "Guards must report if a door is open and a lamp is out."
++  },
++  {
++   "arm": "FULL",
++   "expected": {
+     "compounds": {},
+     "invented": [
+      "c1"
+@@ -7825,6 +8851,585 @@
+   {
+    "arm": "OPQ",
+    "expected": {
++    "relations": {
++     "R1": "inversion"
++    }
++   },
++   "gold": true,
++   "id": "F19b-irrespective-opposite",
++   "mappings": [
++    {
++     "basis": "fixture expectation",
++     "tid": "T1",
++     "units": [
++      {
++       "form": "opposite",
++       "unit": 1
++      }
++     ]
++    }
++   ],
++   "output": {
++    "links": [
++     {
++      "evidence": [
++       [
++        27,
++        40
++       ]
++      ],
++      "node_id": "c1",
++      "q": 0,
++      "role": "regardless",
++      "unit_id": 1
++     }
++    ],
++    "nodes": [
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        57
++       ]
++      ],
++      "id": "c1",
++      "op": "L",
++      "q": 0
++     }
++    ],
++    "units": [
++     {
++      "assertion": "Tolls do not apply to any wagon.",
++      "evidence": [
++       [
++        0,
++        26
++       ]
++      ],
++      "id": 1
++     }
++    ]
++   },
++   "packet": {
++    "output_sha256": "85368e30bd1f1b9de3156d5b00a192cfbc7a242c00b9ac181ee294402cb915d8",
++    "packet_id": "fx-b15eb1d57c",
++    "reference_sha256": "0c3e42d8a27f459c083aed95e63ed3529b02d3d3c2326dd6059359a5d31620cf",
++    "source_id": "fx-b15eb1d57c"
++   },
++   "purpose": "R3-B2: the sole unit reverses the target ('Tolls do not apply to any wagon', mapped opposite) and keeps the complete age clause on a confident regardless link. Reversing the target is not negating the irrelevant factor: inversion (critical), not correct.",
++   "reference": {
++    "out_of_scope_notes": [],
++    "relations": [
++     {
++      "class": "IRRESPECTIVE",
++      "clause": [
++       {
++        "end": 57,
++        "occurrence": 1,
++        "start": 27,
++        "text": "regardless of the driver's age"
++       }
++      ],
++      "contested": false,
++      "contested_reason": "",
++      "critical": true,
++      "critical_reason": "Changes whether wagon owners owe a toll.",
++      "excluded": [],
++      "introducer": [
++       {
++        "end": 40,
++        "occurrence": 1,
++        "start": 27,
++        "text": "regardless of"
++       }
++      ],
++      "logic": {
++       "markers": [],
++       "nid": "N1",
++       "op": "PART",
++       "quotes": [
++        {
++         "end": 57,
++         "occurrence": 1,
++         "start": 41,
++         "text": "the driver's age"
++        }
++       ]
++      },
++      "rationale": "fixture",
++      "rid": "R1",
++      "tid": "T1"
++     }
++    ],
++    "source_id": "fx-b15eb1d57c",
++    "source_text_sha256": "d8de019be937814333e3ced95c6238e6c546edf6e91504a63ef214ea02d3fd3b",
++    "spec_version": "r17.ref.v3",
++    "targets": [
++     {
++      "gloss": "",
++      "quote": {
++       "end": 26,
++       "occurrence": 1,
++       "start": 0,
++       "text": "Tolls apply to every wagon"
++      },
++      "tid": "T1"
++     }
++    ]
++   },
++   "source": "Tolls apply to every wagon regardless of the driver's age."
++  },
++  {
++   "arm": "OPQ",
++   "expected": {
++    "relations": {
++     "R1": "correct"
++    }
++   },
++   "gold": true,
++   "id": "F19c-irrespective-critical-direct",
++   "mappings": [
++    {
++     "basis": "fixture expectation",
++     "tid": "T1",
++     "units": [
++      {
++       "form": "direct",
++       "unit": 1
++      }
++     ]
++    }
++   ],
++   "output": {
++    "links": [
++     {
++      "evidence": [
++       [
++        27,
++        40
++       ]
++      ],
++      "node_id": "c1",
++      "q": 0,
++      "role": "regardless",
++      "unit_id": 1
++     }
++    ],
++    "nodes": [
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        57
++       ]
++      ],
++      "id": "c1",
++      "op": "L",
++      "q": 0
++     }
++    ],
++    "units": [
++     {
++      "assertion": "Tolls apply to every wagon.",
++      "evidence": [
++       [
++        0,
++        26
++       ]
++      ],
++      "id": 1
++     }
++    ]
++   },
++   "packet": {
++    "output_sha256": "8ffd81704438c89c75b7b9abdd5dcf03d2415269cc7b4ae5fd2eaebc114fba73",
++    "packet_id": "fx-1317268950",
++    "reference_sha256": "5d186a2daec4c0a236c899b435c60efa39f2f603b602b608713eb5f8ce8d28ed",
++    "source_id": "fx-1317268950"
++   },
++   "purpose": "R3-B2 correct twin of F19b: the same critical reference and link with the unit asserting the target directly: correct.",
++   "reference": {
++    "out_of_scope_notes": [],
++    "relations": [
++     {
++      "class": "IRRESPECTIVE",
++      "clause": [
++       {
++        "end": 57,
++        "occurrence": 1,
++        "start": 27,
++        "text": "regardless of the driver's age"
++       }
++      ],
++      "contested": false,
++      "contested_reason": "",
++      "critical": true,
++      "critical_reason": "Changes whether wagon owners owe a toll.",
++      "excluded": [],
++      "introducer": [
++       {
++        "end": 40,
++        "occurrence": 1,
++        "start": 27,
++        "text": "regardless of"
++       }
++      ],
++      "logic": {
++       "markers": [],
++       "nid": "N1",
++       "op": "PART",
++       "quotes": [
++        {
++         "end": 57,
++         "occurrence": 1,
++         "start": 41,
++         "text": "the driver's age"
++        }
++       ]
++      },
++      "rationale": "fixture",
++      "rid": "R1",
++      "tid": "T1"
++     }
++    ],
++    "source_id": "fx-1317268950",
++    "source_text_sha256": "d8de019be937814333e3ced95c6238e6c546edf6e91504a63ef214ea02d3fd3b",
++    "spec_version": "r17.ref.v3",
++    "targets": [
++     {
++      "gloss": "",
++      "quote": {
++       "end": 26,
++       "occurrence": 1,
++       "start": 0,
++       "text": "Tolls apply to every wagon"
++      },
++      "tid": "T1"
++     }
++    ]
++   },
++   "source": "Tolls apply to every wagon regardless of the driver's age."
++  },
++  {
++   "arm": "OPQ",
++   "expected": {
++    "relations": {
++     "R1": "contradiction"
++    }
++   },
++   "gold": true,
++   "id": "F19d-irrespective-direct-plus-denial",
++   "mappings": [
++    {
++     "basis": "fixture expectation",
++     "tid": "T1",
++     "units": [
++      {
++       "form": "direct",
++       "unit": 1
++      },
++      {
++       "form": "opposite",
++       "unit": 2
++      }
++     ]
++    }
++   ],
++   "output": {
++    "links": [
++     {
++      "evidence": [
++       [
++        27,
++        40
++       ]
++      ],
++      "node_id": "c1",
++      "q": 0,
++      "role": "regardless",
++      "unit_id": 1
++     },
++     {
++      "evidence": [
++       [
++        27,
++        40
++       ]
++      ],
++      "node_id": "c2",
++      "q": 0,
++      "role": "regardless",
++      "unit_id": 2
++     }
++    ],
++    "nodes": [
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        57
++       ]
++      ],
++      "id": "c1",
++      "op": "L",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        57
++       ]
++      ],
++      "id": "c2",
++      "op": "L",
++      "q": 0
++     }
++    ],
++    "units": [
++     {
++      "assertion": "Tolls apply to every wagon.",
++      "evidence": [
++       [
++        0,
++        26
++       ]
++      ],
++      "id": 1
++     },
++     {
++      "assertion": "Tolls do not apply to any wagon.",
++      "evidence": [
++       [
++        0,
++        26
++       ]
++      ],
++      "id": 2
++     }
++    ]
++   },
++   "packet": {
++    "output_sha256": "53f9e20af82bc2983a549b017cb4d6cb71206099675601b4651399698daa75c7",
++    "packet_id": "fx-051acfe8ef",
++    "reference_sha256": "53792a477af91cb84a2a7e55866b61d1307983c0ad1ed618f73d9f2991d3181f",
++    "source_id": "fx-051acfe8ef"
++   },
++   "purpose": "R3-B2: a correct direct unit plus a confident denying unit with its own regardless link. The denial is an inversion claim, so the extra-claim audit gives contradiction.",
++   "reference": {
++    "out_of_scope_notes": [],
++    "relations": [
++     {
++      "class": "IRRESPECTIVE",
++      "clause": [
++       {
++        "end": 57,
++        "occurrence": 1,
++        "start": 27,
++        "text": "regardless of the driver's age"
++       }
++      ],
++      "contested": false,
++      "contested_reason": "",
++      "critical": true,
++      "critical_reason": "Changes whether wagon owners owe a toll.",
++      "excluded": [],
++      "introducer": [
++       {
++        "end": 40,
++        "occurrence": 1,
++        "start": 27,
++        "text": "regardless of"
++       }
++      ],
++      "logic": {
++       "markers": [],
++       "nid": "N1",
++       "op": "PART",
++       "quotes": [
++        {
++         "end": 57,
++         "occurrence": 1,
++         "start": 41,
++         "text": "the driver's age"
++        }
++       ]
++      },
++      "rationale": "fixture",
++      "rid": "R1",
++      "tid": "T1"
++     }
++    ],
++    "source_id": "fx-051acfe8ef",
++    "source_text_sha256": "d8de019be937814333e3ced95c6238e6c546edf6e91504a63ef214ea02d3fd3b",
++    "spec_version": "r17.ref.v3",
++    "targets": [
++     {
++      "gloss": "",
++      "quote": {
++       "end": 26,
++       "occurrence": 1,
++       "start": 0,
++       "text": "Tolls apply to every wagon"
++      },
++      "tid": "T1"
++     }
++    ]
++   },
++   "source": "Tolls apply to every wagon regardless of the driver's age."
++  },
++  {
++   "arm": "FULL",
++   "expected": {
++    "compounds": {},
++    "invented": [
++     "c1"
++    ],
++    "relations": {
++     "R1": "correct"
++    }
++   },
++   "gold": true,
++   "id": "F19e-irrespective-negated-factor",
++   "mappings": [
++    {
++     "basis": "fixture expectation",
++     "tid": "T1",
++     "units": [
++      {
++       "form": "direct",
++       "unit": 1
++      }
++     ]
++    }
++   ],
++   "output": {
++    "links": [
++     {
++      "evidence": [
++       [
++        27,
++        40
++       ]
++      ],
++      "node_id": "c1",
++      "q": 0,
++      "role": "regardless",
++      "unit_id": 1
++     }
++    ],
++    "nodes": [
++     {
++      "args": [
++       "c2"
++      ],
++      "evidence": [],
++      "id": "c1",
++      "op": "NOT",
++      "q": 0
++     },
++     {
++      "args": [],
++      "evidence": [
++       [
++        41,
++        57
++       ]
++      ],
++      "id": "c2",
++      "op": "L",
++      "q": 0
++     }
++    ],
++    "units": [
++     {
++      "assertion": "Tolls apply to every wagon.",
++      "evidence": [
++       [
++        0,
++        26
++       ]
++      ],
++      "id": 1
++     }
++    ]
++   },
++   "packet": {
++    "output_sha256": "08c1e97b0c5ce9f7dc2d6df82fcd1e39746d50b8c66e67f66b9c0fc53d851246",
++    "packet_id": "fx-aaef032887",
++    "reference_sha256": "47cc67834dd66c1358243ba34ca96b4d09c9c2b82750ef6232c634aa572c64dd",
++    "source_id": "fx-aaef032887"
++   },
++   "purpose": "R3-B2 preserved behaviour: negating the irrelevant factor itself (regardless -> NOT -> age) under a direct unit leaves the relation correct; the NOT cites no reference negation word, so it is invented.",
++   "reference": {
++    "out_of_scope_notes": [],
++    "relations": [
++     {
++      "class": "IRRESPECTIVE",
++      "clause": [
++       {
++        "end": 57,
++        "occurrence": 1,
++        "start": 27,
++        "text": "regardless of the driver's age"
++       }
++      ],
++      "contested": false,
++      "contested_reason": "",
++      "critical": false,
++      "critical_reason": "",
++      "excluded": [],
++      "introducer": [
++       {
++        "end": 40,
++        "occurrence": 1,
++        "start": 27,
++        "text": "regardless of"
++       }
++      ],
++      "logic": {
++       "markers": [],
++       "nid": "N1",
++       "op": "PART",
++       "quotes": [
++        {
++         "end": 57,
++         "occurrence": 1,
++         "start": 41,
++         "text": "the driver's age"
++        }
++       ]
++      },
++      "rationale": "fixture",
++      "rid": "R1",
++      "tid": "T1"
++     }
++    ],
++    "source_id": "fx-aaef032887",
++    "source_text_sha256": "d8de019be937814333e3ced95c6238e6c546edf6e91504a63ef214ea02d3fd3b",
++    "spec_version": "r17.ref.v3",
++    "targets": [
++     {
++      "gloss": "",
++      "quote": {
++       "end": 26,
++       "occurrence": 1,
++       "start": 0,
++       "text": "Tolls apply to every wagon"
++      },
++      "tid": "T1"
++     }
++    ]
++   },
++   "source": "Tolls apply to every wagon regardless of the driver's age."
++  },
++  {
++   "arm": "OPQ",
++   "expected": {
+     "calibration": {
+      "R1": "calibrated"
+     },
+@@ -13643,6 +15248,139 @@
+     "id": "L18-key-limit-bounds",
+     "kind": "keylimit",
+     "purpose": "6 x FLOOR <= limit <= $1.73 (3 x FLOOR if FULL is omitted)."
++   },
++   {
++    "call": "S1-OPQ",
++    "entries": [
++     "INIT",
++     "BIND_RELEASE"
++    ],
++    "expected": [
++     false,
++     "release policy unset or unrecognised"
++    ],
++    "id": "L19-policy-unset",
++    "kind": "admit",
++    "policy": "UNSET",
++    "purpose": "R3-S1: RELEASE_POLICY UNSET never admits, even with a bound release record.",
++    "usage": 0
++   },
++   {
++    "call": "S1-OPQ",
++    "entries": [
++     "INIT",
++     "BIND_RELEASE"
++    ],
++    "expected": [
++     false,
++     "release policy unset or unrecognised"
++    ],
++    "id": "L20-policy-missing",
++    "kind": "admit",
++    "policy": null,
++    "purpose": "R3-S1: an INIT without release_policy never admits.",
++    "usage": 0
++   },
++   {
++    "call": "S1-OPQ",
++    "entries": [
++     "INIT",
++     "BIND_RELEASE"
++    ],
++    "expected": [
++     false,
++     "release policy unset or unrecognised"
++    ],
++    "id": "L21-policy-unknown",
++    "kind": "admit",
++    "policy": "P-SOFT",
++    "purpose": "R3-S1: a value outside P-HARD/P-ACCEPT never admits.",
++    "usage": 0
++   },
++   {
++    "bind_policy": "P-ACCEPT",
++    "call": "S1-OPQ",
++    "entries": [
++     "INIT",
++     "BIND_RELEASE"
++    ],
++    "expected": [
++     false,
++     "release policy differs between INIT and BIND_RELEASE"
++    ],
++    "id": "L22-policy-disagreement",
++    "kind": "admit",
++    "policy": "P-HARD",
++    "purpose": "R3-S1: INIT and the bound release record must name the same policy.",
++    "usage": 0
++   },
++   {
++    "call": "S1-OPQ",
++    "entries": [
++     "INIT",
++     "BIND_RELEASE"
++    ],
++    "expected": [
++     true,
++     null
++    ],
++    "id": "L23-policy-other-allowed",
++    "kind": "admit",
++    "policy": "P-ACCEPT",
++    "purpose": "R3-S1 twin: the other allowed value admits on the same ledger (fixtures select no policy; evidence acceptance is checked by the release gate, not here).",
++    "usage": 0
++   },
++   {
++    "C": 160000000,
++    "expected": [
++     "HALT",
++     "usage regressed or invalid"
++    ],
++    "i": 2,
++    "id": "L24-regression-between-reads",
++    "kind": "reconcile",
++    "prev": 100000000,
++    "purpose": "R3-S3: 0.15 -> 0.14 -> 0.16 regresses between reads although every read is above the previous call: halt.",
++    "reads": [
++     [
++      0,
++      150000000
++     ],
++     [
++      60,
++      140000000
++     ],
++     [
++      300,
++      160000000
++     ]
++    ]
++   },
++   {
++    "C": 160000000,
++    "expected": [
++     "RECONCILED",
++     160000000
++    ],
++    "i": 2,
++    "id": "L25-monotone-lag-reconciles",
++    "kind": "reconcile",
++    "prev": 100000000,
++    "purpose": "R3-S3 twin: 0.15 -> 0.155 -> 0.16 is lag, not regression: reconciled.",
++    "reads": [
++     [
++      0,
++      150000000
++     ],
++     [
++      60,
++      155000000
++     ],
++     [
++      300,
++      160000000
++     ]
++    ]
+    }
+   ]
+  },
+diff -ru --exclude=READY* docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/cases.src.json docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/cases.src.json
+--- docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/cases.src.json	2026-10-13 16:18:53
++++ docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/cases.src.json	2026-10-13 16:38:25
+@@ -1338,6 +1338,95 @@
+    }
+   },
+   {
++   "id": "F05e-opposite-qual-only",
++   "purpose": "R3 NOTE: a denying unit whose only link to the clause is a `qual` (even explicitly uncertain) is still an unqualified denial: qualification asserts no applicability, so only if/onlyif/unless/regardless discharge it (B5.5b). Control: F05d.",
++   "arm": "OPQ",
++   "gold": true,
++   "source": "Ferries may dock at the east pier unless the tide is low.",
++   "reference": "@F05c-opposite-unqualified",
++   "output": {
++    "units": [
++     {
++      "id": 1,
++      "assertion": "Ferries may dock at the east pier.",
++      "x": [
++       [
++        "Ferries may dock at the east pier",
++        1
++       ]
++      ]
++     },
++     {
++      "id": 2,
++      "assertion": "Ferries may not dock at the east pier.",
++      "x": [
++       [
++        "Ferries may dock at the east pier",
++        1
++       ]
++      ]
++     }
++    ],
++    "nodes": [
++     {
++      "id": "c1",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "the tide is low",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ],
++    "links": [
++     {
++      "u": 1,
++      "w": "unless",
++      "n": "c1",
++      "x": [
++       [
++        "unless",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "u": 2,
++      "w": "qual",
++      "n": "c1",
++      "x": [
++       [
++        "unless",
++        1
++       ]
++      ],
++      "q": 1
++     }
++    ]
++   },
++   "mapping": {
++    "T1": [
++     [
++      1,
++      "direct"
++     ],
++     [
++      2,
++      "opposite"
++     ]
++    ]
++   },
++   "expected": {
++    "relations": {
++     "R1": "contradiction"
++    }
++   }
++  },
++  {
+    "id": "F06-exc-composition-correct",
+    "purpose": "B4: an EXC under an if link makes the base a condition and the carve-out an exception. The EXC joins the target's condition and its exception, so it is not invented.",
+    "arm": "FULL",
+@@ -3969,6 +4058,483 @@
+    }
+   },
+   {
++   "id": "F15g-duplicate-wrong-or",
++   "purpose": "R3-B1: unit 1 keeps F15b's correct if -> AND; unit 2 restates the target with its own confident if -> OR. The best witness earns the credit, but the audited duplicate's swap is charged: compound swap (critical), relation still correct.",
++   "arm": "FULL",
++   "gold": true,
++   "source": "Guards must report if a door is open and a lamp is out.",
++   "reference": "@F15a-swap",
++   "output": {
++    "units": [
++     {
++      "id": 1,
++      "assertion": "Guards must report.",
++      "x": [
++       [
++        "Guards must report",
++        1
++       ]
++      ]
++     },
++     {
++      "id": 2,
++      "assertion": "Guards must report.",
++      "x": [
++       [
++        "Guards must report",
++        1
++       ]
++      ]
++     }
++    ],
++    "nodes": [
++     {
++      "id": "c1",
++      "op": "AND",
++      "args": [
++       "c2",
++       "c3"
++      ],
++      "x": [
++       [
++        "and",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "c2",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a door is open",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "c3",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a lamp is out",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "d1",
++      "op": "OR",
++      "args": [
++       "d2",
++       "d3"
++      ],
++      "x": [
++       [
++        "and",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "d2",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a door is open",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "d3",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a lamp is out",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ],
++    "links": [
++     {
++      "u": 1,
++      "w": "if",
++      "n": "c1",
++      "x": [
++       [
++        "if",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "u": 2,
++      "w": "if",
++      "n": "d1",
++      "x": [
++       [
++        "if",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ]
++   },
++   "mapping": {
++    "T1": [
++     [
++      1,
++      "direct"
++     ],
++     [
++      2,
++      "direct"
++     ]
++    ]
++   },
++   "expected": {
++    "relations": {
++     "R1": "correct"
++    },
++    "compounds": {
++     "R1:N1": "swap"
++    },
++    "invented": []
++   }
++  },
++  {
++   "id": "F15h-duplicate-correct-and",
++   "purpose": "R3-B1 correct twin of F15g: the duplicate's graph is a compatible AND, matched rather than invented: compound correct.",
++   "arm": "FULL",
++   "gold": true,
++   "source": "Guards must report if a door is open and a lamp is out.",
++   "reference": "@F15a-swap",
++   "output": {
++    "units": [
++     {
++      "id": 1,
++      "assertion": "Guards must report.",
++      "x": [
++       [
++        "Guards must report",
++        1
++       ]
++      ]
++     },
++     {
++      "id": 2,
++      "assertion": "Guards must report.",
++      "x": [
++       [
++        "Guards must report",
++        1
++       ]
++      ]
++     }
++    ],
++    "nodes": [
++     {
++      "id": "c1",
++      "op": "AND",
++      "args": [
++       "c2",
++       "c3"
++      ],
++      "x": [
++       [
++        "and",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "c2",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a door is open",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "c3",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a lamp is out",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "d1",
++      "op": "AND",
++      "args": [
++       "d2",
++       "d3"
++      ],
++      "x": [
++       [
++        "and",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "d2",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a door is open",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "d3",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a lamp is out",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ],
++    "links": [
++     {
++      "u": 1,
++      "w": "if",
++      "n": "c1",
++      "x": [
++       [
++        "if",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "u": 2,
++      "w": "if",
++      "n": "d1",
++      "x": [
++       [
++        "if",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ]
++   },
++   "mapping": {
++    "T1": [
++     [
++      1,
++      "direct"
++     ],
++     [
++      2,
++      "direct"
++     ]
++    ]
++   },
++   "expected": {
++    "relations": {
++     "R1": "correct"
++    },
++    "compounds": {
++     "R1:N1": "correct"
++    },
++    "invented": []
++   }
++  },
++  {
++   "id": "F15i-duplicate-uncertain-or",
++   "purpose": "R3-B1 compatibility: an explicitly uncertain duplicate (OR with q=1) is not audited, like an uncertain extra claim in B5.5a: compound correct, nothing invented.",
++   "arm": "FULL",
++   "gold": true,
++   "source": "Guards must report if a door is open and a lamp is out.",
++   "reference": "@F15a-swap",
++   "output": {
++    "units": [
++     {
++      "id": 1,
++      "assertion": "Guards must report.",
++      "x": [
++       [
++        "Guards must report",
++        1
++       ]
++      ]
++     },
++     {
++      "id": 2,
++      "assertion": "Guards must report.",
++      "x": [
++       [
++        "Guards must report",
++        1
++       ]
++      ]
++     }
++    ],
++    "nodes": [
++     {
++      "id": "c1",
++      "op": "AND",
++      "args": [
++       "c2",
++       "c3"
++      ],
++      "x": [
++       [
++        "and",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "c2",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a door is open",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "c3",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a lamp is out",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "d1",
++      "op": "OR",
++      "args": [
++       "d2",
++       "d3"
++      ],
++      "x": [
++       [
++        "and",
++        1
++       ]
++      ],
++      "q": 1
++     },
++     {
++      "id": "d2",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a door is open",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "d3",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "a lamp is out",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ],
++    "links": [
++     {
++      "u": 1,
++      "w": "if",
++      "n": "c1",
++      "x": [
++       [
++        "if",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "u": 2,
++      "w": "if",
++      "n": "d1",
++      "x": [
++       [
++        "if",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ]
++   },
++   "mapping": {
++    "T1": [
++     [
++      1,
++      "direct"
++     ],
++     [
++      2,
++      "direct"
++     ]
++    ]
++   },
++   "expected": {
++    "relations": {
++     "R1": "correct"
++    },
++    "compounds": {
++     "R1:N1": "correct"
++    },
++    "invented": []
++   }
++  },
++  {
+    "id": "F16-invented",
+    "purpose": "B7: an unhedged AND splitting a single-part clause is an invented connective.",
+    "arm": "FULL",
+@@ -4700,6 +5266,353 @@
+    }
+   },
+   {
++   "id": "F19b-irrespective-opposite",
++   "purpose": "R3-B2: the sole unit reverses the target ('Tolls do not apply to any wagon', mapped opposite) and keeps the complete age clause on a confident regardless link. Reversing the target is not negating the irrelevant factor: inversion (critical), not correct.",
++   "arm": "OPQ",
++   "gold": true,
++   "source": "Tolls apply to every wagon regardless of the driver's age.",
++   "reference": {
++    "targets": [
++     {
++      "tid": "T1",
++      "quote": [
++       "Tolls apply to every wagon",
++       1
++      ],
++      "gloss": ""
++     }
++    ],
++    "relations": [
++     {
++      "rid": "R1",
++      "tid": "T1",
++      "class": "IRRESPECTIVE",
++      "introducer": [
++       [
++        "regardless of",
++        1
++       ]
++      ],
++      "clause": [
++       [
++        "regardless of the driver's age",
++        1
++       ]
++      ],
++      "excluded": [],
++      "logic": {
++       "nid": "N1",
++       "op": "PART",
++       "quotes": [
++        [
++         "the driver's age",
++         1
++        ]
++       ],
++       "markers": []
++      },
++      "critical": true,
++      "critical_reason": "Changes whether wagon owners owe a toll."
++     }
++    ]
++   },
++   "output": {
++    "units": [
++     {
++      "id": 1,
++      "assertion": "Tolls do not apply to any wagon.",
++      "x": [
++       [
++        "Tolls apply to every wagon",
++        1
++       ]
++      ]
++     }
++    ],
++    "nodes": [
++     {
++      "id": "c1",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "the driver's age",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ],
++    "links": [
++     {
++      "u": 1,
++      "w": "regardless",
++      "n": "c1",
++      "x": [
++       [
++        "regardless of",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ]
++   },
++   "mapping": {
++    "T1": [
++     [
++      1,
++      "opposite"
++     ]
++    ]
++   },
++   "expected": {
++    "relations": {
++     "R1": "inversion"
++    }
++   }
++  },
++  {
++   "id": "F19c-irrespective-critical-direct",
++   "purpose": "R3-B2 correct twin of F19b: the same critical reference and link with the unit asserting the target directly: correct.",
++   "arm": "OPQ",
++   "gold": true,
++   "source": "Tolls apply to every wagon regardless of the driver's age.",
++   "reference": "@F19b-irrespective-opposite",
++   "output": {
++    "units": [
++     {
++      "id": 1,
++      "assertion": "Tolls apply to every wagon.",
++      "x": [
++       [
++        "Tolls apply to every wagon",
++        1
++       ]
++      ]
++     }
++    ],
++    "nodes": [
++     {
++      "id": "c1",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "the driver's age",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ],
++    "links": [
++     {
++      "u": 1,
++      "w": "regardless",
++      "n": "c1",
++      "x": [
++       [
++        "regardless of",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ]
++   },
++   "mapping": {
++    "T1": [
++     [
++      1,
++      "direct"
++     ]
++    ]
++   },
++   "expected": {
++    "relations": {
++     "R1": "correct"
++    }
++   }
++  },
++  {
++   "id": "F19d-irrespective-direct-plus-denial",
++   "purpose": "R3-B2: a correct direct unit plus a confident denying unit with its own regardless link. The denial is an inversion claim, so the extra-claim audit gives contradiction.",
++   "arm": "OPQ",
++   "gold": true,
++   "source": "Tolls apply to every wagon regardless of the driver's age.",
++   "reference": "@F19b-irrespective-opposite",
++   "output": {
++    "units": [
++     {
++      "id": 1,
++      "assertion": "Tolls apply to every wagon.",
++      "x": [
++       [
++        "Tolls apply to every wagon",
++        1
++       ]
++      ]
++     },
++     {
++      "id": 2,
++      "assertion": "Tolls do not apply to any wagon.",
++      "x": [
++       [
++        "Tolls apply to every wagon",
++        1
++       ]
++      ]
++     }
++    ],
++    "nodes": [
++     {
++      "id": "c1",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "the driver's age",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "id": "c2",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "the driver's age",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ],
++    "links": [
++     {
++      "u": 1,
++      "w": "regardless",
++      "n": "c1",
++      "x": [
++       [
++        "regardless of",
++        1
++       ]
++      ],
++      "q": 0
++     },
++     {
++      "u": 2,
++      "w": "regardless",
++      "n": "c2",
++      "x": [
++       [
++        "regardless of",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ]
++   },
++   "mapping": {
++    "T1": [
++     [
++      1,
++      "direct"
++     ],
++     [
++      2,
++      "opposite"
++     ]
++    ]
++   },
++   "expected": {
++    "relations": {
++     "R1": "contradiction"
++    }
++   }
++  },
++  {
++   "id": "F19e-irrespective-negated-factor",
++   "purpose": "R3-B2 preserved behaviour: negating the irrelevant factor itself (regardless -> NOT -> age) under a direct unit leaves the relation correct; the NOT cites no reference negation word, so it is invented.",
++   "arm": "FULL",
++   "gold": true,
++   "source": "Tolls apply to every wagon regardless of the driver's age.",
++   "reference": "@F19-irrespective",
++   "output": {
++    "units": [
++     {
++      "id": 1,
++      "assertion": "Tolls apply to every wagon.",
++      "x": [
++       [
++        "Tolls apply to every wagon",
++        1
++       ]
++      ]
++     }
++    ],
++    "nodes": [
++     {
++      "id": "c1",
++      "op": "NOT",
++      "args": [
++       "c2"
++      ],
++      "x": [],
++      "q": 0
++     },
++     {
++      "id": "c2",
++      "op": "L",
++      "args": [],
++      "x": [
++       [
++        "the driver's age",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ],
++    "links": [
++     {
++      "u": 1,
++      "w": "regardless",
++      "n": "c1",
++      "x": [
++       [
++        "regardless of",
++        1
++       ]
++      ],
++      "q": 0
++     }
++    ]
++   },
++   "mapping": {
++    "T1": [
++     [
++      1,
++      "direct"
++     ]
++    ]
++   },
++   "expected": {
++    "relations": {
++     "R1": "correct"
++    },
++    "compounds": {},
++    "invented": [
++     "c1"
++    ]
++   }
++  },
++  {
+    "id": "F20-unresolved-and-contested",
+    "purpose": "UNRESOLVED relations leave the primary denominator (calibration only); contested relations are scored but marked excluded.",
+    "arm": "OPQ",
+@@ -9425,6 +10338,139 @@
+       false
+      ]
+     ]
++   },
++   {
++    "id": "L19-policy-unset",
++    "kind": "admit",
++    "purpose": "R3-S1: RELEASE_POLICY UNSET never admits, even with a bound release record.",
++    "policy": "UNSET",
++    "entries": [
++     "INIT",
++     "BIND_RELEASE"
++    ],
++    "call": "S1-OPQ",
++    "usage": 0,
++    "expected": [
++     false,
++     "release policy unset or unrecognised"
++    ]
++   },
++   {
++    "id": "L20-policy-missing",
++    "kind": "admit",
++    "purpose": "R3-S1: an INIT without release_policy never admits.",
++    "policy": null,
++    "entries": [
++     "INIT",
++     "BIND_RELEASE"
++    ],
++    "call": "S1-OPQ",
++    "usage": 0,
++    "expected": [
++     false,
++     "release policy unset or unrecognised"
++    ]
++   },
++   {
++    "id": "L21-policy-unknown",
++    "kind": "admit",
++    "purpose": "R3-S1: a value outside P-HARD/P-ACCEPT never admits.",
++    "policy": "P-SOFT",
++    "entries": [
++     "INIT",
++     "BIND_RELEASE"
++    ],
++    "call": "S1-OPQ",
++    "usage": 0,
++    "expected": [
++     false,
++     "release policy unset or unrecognised"
++    ]
++   },
++   {
++    "id": "L22-policy-disagreement",
++    "kind": "admit",
++    "purpose": "R3-S1: INIT and the bound release record must name the same policy.",
++    "policy": "P-HARD",
++    "bind_policy": "P-ACCEPT",
++    "entries": [
++     "INIT",
++     "BIND_RELEASE"
++    ],
++    "call": "S1-OPQ",
++    "usage": 0,
++    "expected": [
++     false,
++     "release policy differs between INIT and BIND_RELEASE"
++    ]
++   },
++   {
++    "id": "L23-policy-other-allowed",
++    "kind": "admit",
++    "purpose": "R3-S1 twin: the other allowed value admits on the same ledger (fixtures select no policy; evidence acceptance is checked by the release gate, not here).",
++    "policy": "P-ACCEPT",
++    "entries": [
++     "INIT",
++     "BIND_RELEASE"
++    ],
++    "call": "S1-OPQ",
++    "usage": 0,
++    "expected": [
++     true,
++     null
++    ]
++   },
++   {
++    "id": "L24-regression-between-reads",
++    "kind": "reconcile",
++    "purpose": "R3-S3: 0.15 -> 0.14 -> 0.16 regresses between reads although every read is above the previous call: halt.",
++    "i": 2,
++    "C": 160000000,
++    "prev": 100000000,
++    "reads": [
++     [
++      0,
++      150000000
++     ],
++     [
++      60,
++      140000000
++     ],
++     [
++      300,
++      160000000
++     ]
++    ],
++    "expected": [
++     "HALT",
++     "usage regressed or invalid"
++    ]
++   },
++   {
++    "id": "L25-monotone-lag-reconciles",
++    "kind": "reconcile",
++    "purpose": "R3-S3 twin: 0.15 -> 0.155 -> 0.16 is lag, not regression: reconciled.",
++    "i": 2,
++    "C": 160000000,
++    "prev": 100000000,
++    "reads": [
++     [
++      0,
++      150000000
++     ],
++     [
++      60,
++      155000000
++     ],
++     [
++      300,
++      160000000
++     ]
++    ],
++    "expected": [
++     "RECONCILED",
++     160000000
++    ]
+    }
+   ]
+  },
+@@ -9450,6 +10496,24 @@
+    "OPQ": 1000,
+    "FULL": 1200
+   },
++  "excluded_sessions": [
++   "fixture-reference-author",
++   "fixture-reference-reviewer"
++  ],
++  "combined": {
++   "note": "Ported R3 probe scale: each source concatenates four single-relation parts (12 live critical relations, 9 compounds). OPQ cells carry each relation in one faithful leaf; FULL cells use the parts' own graphs.",
++   "source_ids": {
++    "S1": "FX-C1",
++    "S2": "FX-C2",
++    "S3": "FX-C3"
++   },
++   "parts": [
++    "F15b-and-correct",
++    "F25a-nested-correct",
++    "F10e-onlyif-correct",
++    "F19c-irrespective-critical-direct"
++   ]
++  },
+   "runs": [
+    {
+     "id": "A01-complete-run",
+@@ -9527,6 +10591,91 @@
+     "purpose": "A RECON halt after a valid FULL2 response, OPQ having passed: outcome O1-incomplete.",
+     "mutate": "recon_halt_full2",
+     "expected_outcome": "O1-incomplete"
++   },
++   {
++    "id": "A14-released-after-halt",
++    "purpose": "R3 NOTE: S2-FULL halted (RECON) yet S3-FULL was released: rejected, not O1-incomplete.",
++    "mutate": "released_after_halt",
++    "expected_error": "FULL: a call was released after a terminal halt"
++   },
++   {
++    "id": "A15-released-after-halt-interim",
++    "purpose": "R3 NOTE: the same history is rejected by the interim decision too.",
++    "mutate": "released_after_halt_interim",
++    "expected_error": "FULL: a call was released after a terminal halt"
++   },
++   {
++    "id": "A16-session-reused-across-calls",
++    "purpose": "R3-S2: one A1 session for two scored outputs is rejected, as in the fixture gate.",
++    "mutate": "session_reused_across_calls",
++    "expected_error": "S2-OPQ A1: session reused"
++   },
++   {
++    "id": "A17-session-shared-across-roles",
++    "purpose": "R3-S2: A1 and A2 sharing a session for one output is rejected.",
++    "mutate": "session_shared_across_roles",
++    "expected_error": "S3-FULL A2: session reused"
++   },
++   {
++    "id": "A18-reference-session",
++    "purpose": "R3-S2: an adjudication from a reference author/reviewer session (manifest excluded_sessions) is rejected.",
++    "mutate": "reference_session",
++    "expected_error": "S1-FULL A1: session belongs to reference authoring or review"
++   },
++   {
++    "id": "A19-combined-control",
++    "purpose": "R3 control: the probe-scale run with every cell faithful reaches O2, so A20/A22 fail for the stated reason.",
++    "combined": {},
++    "expected_outcome": "O2"
++   },
++   {
++    "id": "A20-combined-duplicate-wrong-or",
++    "purpose": "R3-B1: S1-FULL hides a confident AND->OR duplicate behind a correct copy (F15g). r3 returned O2; the critical swap now fails T5 under both: O1.",
++    "combined": {
++     "replace": {
++      "S1-FULL": {
++       "F15b-and-correct": "F15g-duplicate-wrong-or"
++      }
++     }
++    },
++    "expected_outcome": "O1"
++   },
++   {
++    "id": "A21-combined-duplicate-correct",
++    "purpose": "R3-B1 correct twin: a compatible AND duplicate (F15h) in S1-FULL keeps O2.",
++    "combined": {
++     "replace": {
++      "S1-FULL": {
++       "F15b-and-correct": "F15h-duplicate-correct-and"
++      }
++     }
++    },
++    "expected_outcome": "O2"
++   },
++   {
++    "id": "A22-combined-irrespective-denial",
++    "purpose": "R3-B2: OPQ1 reverses a critical IRRESPECTIVE target (F19b); unreachable under both, the rest skipped: O3 (r3: O2 on the six-cell record).",
++    "combined": {
++     "replace": {
++      "S1-OPQ": {
++       "F19c-irrespective-critical-direct": "F19b-irrespective-opposite"
++      }
++     }
++    },
++    "mutate": "stop_after_opq1",
++    "expected_outcome": "O3"
++   },
++   {
++    "id": "A23-combined-irrespective-denial-six-cells",
++    "purpose": "R3-B2: the probe's six-cell record with the OPQ1 denial is rejected: OPQ fails, so FULL cannot have been released.",
++    "combined": {
++     "replace": {
++      "S1-OPQ": {
++       "F19c-irrespective-critical-direct": "F19b-irrespective-opposite"
++      }
++     }
++    },
++    "expected_error": "FULL released without a complete OPQ pass"
+    }
+   ]
+  }
+diff -ru --exclude=READY* docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/check.py docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/check.py
+--- docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/check.py	2026-10-13 16:18:53
++++ docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/check.py	2026-10-13 16:37:10
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Offline checker for the R17 design-r3 scoring fixtures.
++"""Offline checker for the R17 design-r3.1 scoring fixtures.
+ 
+   python3 -I -S -B check.py                       # build from cases.src.json, verify cases.json, run all
+   python3 -I -S -B check.py --write               # (re)write cases.json from cases.src.json, then run
+@@ -285,15 +285,23 @@
+ # ---------------------------------------------------------------- ledger semantics (r17recon)
+ 
+ CALLS6 = [f'S{i}-OPQ' for i in (1, 2, 3)] + [f'S{i}-FULL' for i in (1, 2, 3)]
++# An allowed value, used only to exercise the other admission rules; fixtures select no policy.
++FIXTURE_POLICY = 'P-HARD'
+ 
+ 
+-def ledger_entries(spec, key_limit):
++def _policy(entry, value):
++    if value is not None:      # None: the field is absent
++        entry['release_policy'] = value
++    return entry
++
++
++def ledger_entries(spec, key_limit, policy=FIXTURE_POLICY, bind_policy=FIXTURE_POLICY):
+     out = []
+     for e in spec:
+         if e == 'INIT':
+-            out.append(dict(type='INIT', required_calls=CALLS6, key_limit=key_limit))
++            out.append(_policy(dict(type='INIT', required_calls=CALLS6, key_limit=key_limit), policy))
+         elif e == 'BIND_RELEASE':
+-            out.append(dict(type='BIND_RELEASE'))
++            out.append(_policy(dict(type='BIND_RELEASE'), bind_policy))
+         elif e[0] == 'RESOLVE':
+             out.append(dict(type='RESOLVE', call=e[1], debit=e[2], dispatched=e[3]))
+         else:
+@@ -321,7 +329,9 @@
+                 fails.append(f"{c['id']}: aggregate {L.aggregate(entries)}")
+         elif k == 'admit':
+             limit = c.get('key_limit', L.KEY_MAX)
+-            got = list(L.admit(ledger_entries(c['entries'], limit), c['call'], c['usage']))
++            policy = c.get('policy', FIXTURE_POLICY)
++            entries = ledger_entries(c['entries'], limit, policy, c.get('bind_policy', policy))
++            got = list(L.admit(entries, c['call'], c['usage']))
+             if 'key_limit' in c and L.key_limit_ok(limit, 6):
+                 fails.append(f"{c['id']}: key_limit_ok should be false")
+         elif k == 'reconcile':
+@@ -364,7 +374,7 @@
+     files, manifest, calls = {}, dict(spec_version=S.MANIFEST_VERSION, typed_testable=True,
+                                       adjudicators={r: dict(model=m, effort=S.ADJ_EFFORT)
+                                                     for r, m in S.ADJUDICATORS.items()},
+-                                      sources={}), {}
++                                      excluded_sessions=list(a['excluded_sessions']), sources={}), {}
+     for slot, spec in sorted(a['slots'].items()):
+         opq = by_id[spec['OPQ']]
+         ref = dict(copy.deepcopy(opq['reference']), source_id=spec['source_id'])
+@@ -452,14 +462,131 @@
+     elif kind == 'early_full_stop':
+         _set_output(data, files, calls, 'S1-FULL', 'F15e-false-not-under-and')
+         _skip(calls, files, 'S2-FULL', 'S3-FULL')
++    elif kind in ('released_after_halt', 'released_after_halt_interim'):
++        calls['S2-FULL']['halt'] = 'KEY_USAGE_UNRECONCILED'
++        interim = kind.endswith('interim')
++    elif kind == 'session_reused_across_calls':
++        _set_session(files, 'S2-OPQ.A1.json', 'fixture-A1-S1-OPQ')
++    elif kind == 'session_shared_across_roles':
++        _set_session(files, 'S3-FULL.A2.json', 'fixture-A1-S3-FULL')
++    elif kind == 'reference_session':
++        _set_session(files, 'S1-FULL.A1.json', data['assembly']['excluded_sessions'][0])
++    elif kind == 'stop_after_opq1':
++        _skip(calls, files, 'S2-OPQ', 'S3-OPQ', 'S1-FULL', 'S2-FULL', 'S3-FULL')
+     return interim
+ 
+ 
++def _set_session(files, name, session):
++    adj = json.loads(files[name])
++    adj['adjudicator']['session'] = session
++    files[name] = S.canonical_bytes(adj)
++
++
++def _shift(value, off):
++    if isinstance(value, dict):
++        return {k: (x + off if k in ('start', 'end') else _shift(x, off)) for k, x in value.items()}
++    if isinstance(value, list):
++        return [_shift(x, off) for x in value]
++    return value
++
++
++def _requote(value, source):
++    if isinstance(value, dict):
++        if set(value) == {'start', 'end', 'text', 'occurrence'}:
++            value['occurrence'] = S.match_starts(source, value['text']).index(value['start']) + 1
++        else:
++            for x in value.values():
++                _requote(x, source)
++    elif isinstance(value, list):
++        for x in value:
++            _requote(x, source)
++
++
++def combined_case(data, slot, part_ids, arm):
++    """R3 probe assembly, ported: one fictional source per slot made by concatenating
++    single-relation fixture cases (spans, ids and occurrences adjusted). OPQ outputs carry
++    each relation intact in one leaf with its faithful role; FULL outputs are the parts'
++    own graphs. Mappings are the parts' gold mappings."""
++    by_id = {c['id']: c for c in data['cases']}
++    source, refs, targets, mappings = f'Fictional notice {slot}.\n', [], [], []
++    out = dict(units=[], nodes=[], links=[])
++    for ix, pid in enumerate(part_ids, 1):
++        c = copy.deepcopy(by_id[pid])
++        assert len(c['reference']['targets']) == len(c['reference']['relations']) == len(c['mappings']) == 1, pid
++        off = len(source)
++        source += c['source'] + '\n'
++        ref = _shift(c['reference'], off)
++        ref['targets'][0]['tid'] = f'T{ix}'
++        ref['relations'][0].update(tid=f'T{ix}', rid=f'R{ix}')
++        targets += ref['targets']
++        refs += ref['relations']
++        for u in c['output']['units']:
++            out['units'].append(dict(u, id=u['id'] + ix * 10, evidence=[[a + off, b + off] for a, b in u['evidence']]))
++        for n in c['output']['nodes']:
++            out['nodes'].append(dict(n, id=f'{ix}_{n["id"]}', args=[f'{ix}_{a}' for a in n['args']],
++                                     evidence=[[a + off, b + off] for a, b in n['evidence']]))
++        for l in c['output']['links']:
++            out['links'].append(dict(l, unit_id=l['unit_id'] + ix * 10, node_id=f'{ix}_{l["node_id"]}',
++                                     evidence=[[a + off, b + off] for a, b in l['evidence']]))
++        m = c['mappings'][0]
++        mappings.append(dict(m, tid=f'T{ix}', units=[dict(u, unit=u['unit'] + ix * 10) for u in m['units']]))
++    ref = dict(spec_version=S.REF_VERSION, source_id=slot, source_text_sha256=S.sha_bytes(source.encode('utf-8')),
++               targets=targets, relations=refs, out_of_scope_notes=[])
++    _requote(ref, source)
++    if arm == 'OPQ':
++        roles = {'RESTRICT': 'onlyif', 'IRRESPECTIVE': 'regardless', 'EXCEPT': 'unless'}
++        out['nodes'], out['links'] = [], []
++        for ix, r in enumerate(refs, 1):
++            out['nodes'].append(dict(id=f'leaf{ix}', op='L', args=[], q=0,
++                                     evidence=[[q['start'], q['end']] for q in r['clause']]))
++            out['links'].append(dict(unit_id=ix * 10 + 1, node_id=f'leaf{ix}', role=roles.get(r['class'], 'if'),
++                                     q=0, evidence=[]))
++    return dict(source=source, reference=ref, output=out, mappings=mappings, arm=arm)
++
++
++def combined_inputs(data, spec):
++    """The probe-scale run: 3 sources x 4 relations, 9 compounds, every cell state 13.
++    spec['replace'] = {call_id: {part_id: replacement_part_id}}."""
++    a = data['assembly']
++    c = a['combined']
++    manifest = dict(spec_version=S.MANIFEST_VERSION, typed_testable=True,
++                    adjudicators={r: dict(model=m, effort=S.ADJ_EFFORT) for r, m in S.ADJUDICATORS.items()},
++                    excluded_sessions=list(a['excluded_sessions']), sources={})
++    calls, files = {}, {}
++    for slot in S.SLOTS:
++        sid = c['source_ids'][slot]
++        base = combined_case(data, sid, c['parts'], 'OPQ')
++        files[f'{slot}.src.txt'] = base['source'].encode('utf-8')
++        files[f'{slot}.ref.json'] = S.canonical_bytes(base['reference'])
++        ref_sha = S.sha_bytes(files[f'{slot}.ref.json'])
++        manifest['sources'][slot] = dict(
++            source_id=sid, source_file=f'{slot}.src.txt', source_sha256=S.sha_bytes(files[f'{slot}.src.txt']),
++            reference_file=f'{slot}.ref.json', reference_sha256=ref_sha,
++            relations={r['rid']: r['critical'] for r in base['reference']['relations'] if S.live(r)},
++            compounds={x['cid']: x['critical'] for x in S.compounds(base['reference'])})
++        for arm in S.ARMS:
++            cid = f'{slot}-{arm}'
++            swap = spec.get('replace', {}).get(cid, {})
++            case = combined_case(data, sid, [swap.get(p, p) for p in c['parts']], arm)
++            assert case['source'] == base['source'] and case['reference'] == base['reference'], cid
++            name = f'{cid}.out.json'
++            files[name] = S.canonical_bytes(case['output'])
++            calls[cid] = dict(call_id=cid, state=13, completion_tokens=a['tokens'][arm], output_file=name,
++                              output_sha256=S.sha_bytes(files[name]), halt=None)
++            for role in S.ADJUDICATORS:
++                files[f'{cid}.{role}.json'] = S.canonical_bytes(adjudication(
++                    case, cid, role, sid, S.sha_bytes(files[name]), ref_sha, f'fixture-{role}-{cid}'))
++    return manifest, calls, files
++
++
+ def run_assembly(data):
+     n, fails = 0, []
+     for run in data['assembly']['runs']:
+         n += 1
+-        manifest, calls, files = assembly_inputs(data)
++        if 'combined' in run:
++            manifest, calls, files = combined_inputs(data, run['combined'])
++        else:
++            manifest, calls, files = assembly_inputs(data)
+         interim = mutate(run.get('mutate'), data, manifest, calls, files)
+         try:
+             report = S.decide(manifest, calls, files, interim=interim)
+diff -ru --exclude=READY* docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/r17recon.py docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/r17recon.py
+--- docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/r17recon.py	2026-10-13 16:04:38
++++ docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/r17recon.py	2026-10-13 16:37:03
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""R17 design-r3 reference semantics for ledger admission and key-usage reconciliation
++"""R17 design-r3.1 reference semantics for ledger admission and key-usage reconciliation
+ (BUDGET §4-§5). Pure functions over already-parsed values: no I/O, no network, no credentials.
+ The adapter (PROTOCOL P3) must implement exactly these rules; check.py pins them with fixtures.
+ 
+@@ -14,6 +14,7 @@
+ KEY_MAX = 1_730_000_000
+ TOL_PER_CALL = 1_000                   # nanoUSD per possibly-dispatched attempt, cumulative
+ READ_SCHEDULE_S = (0, 60, 300, 900)    # elapsed seconds after the attempt resolved
++RELEASE_POLICIES = ('P-HARD', 'P-ACCEPT')  # BUDGET §0; UNSET or anything else never admits
+ 
+ 
+ class LedgerError(ValueError):
+@@ -59,16 +60,20 @@
+ def admit(entries, call, key_usage):
+     """Admission for `call`, evaluated under the exclusive lock BEFORE its RESERVE is written.
+     entries: ledger entries (dicts with 'type' and, where relevant, 'call', 'debit',
+-    'dispatched'). key_usage: the last RECONCILED provider usage (nanoUSD).
++    'dispatched'; INIT and BIND_RELEASE carry 'release_policy'). key_usage: the last RECONCILED provider usage (nanoUSD).
+     Returns (True, None) or (False, reason)."""
+     types = [e['type'] for e in entries]
+     if not types or types[0] != 'INIT':
+         return False, 'no INIT'
+     init = entries[0]
++    if init.get('release_policy') not in RELEASE_POLICIES:
++        return False, 'release policy unset or unrecognised'
+     if 'HALT' in types:
+         return False, 'halted'
+     if 'BIND_RELEASE' not in types:
+         return False, 'release record not bound'
++    if any(e.get('release_policy') != init['release_policy'] for e in entries if e['type'] == 'BIND_RELEASE'):
++        return False, 'release policy differs between INIT and BIND_RELEASE'
+     if call not in init['required_calls']:
+         return False, 'not a required call'
+     if pending(entries):
+@@ -111,15 +116,16 @@
+     for (elapsed, _), due in zip(reads, READ_SCHEDULE_S):
+         if elapsed < due:
+             return 'HALT', 'read before its scheduled time'
+-    tol = i * TOL_PER_CALL
++    tol, floor = i * TOL_PER_CALL, prev_usage
+     for _, read in reads:
+         if read is None:
+             continue
+         if read['limit'] is None or read['limit'] != pinned['limit'] or read['limit_reset'] != pinned['limit_reset']:
+             return 'HALT', 'limit changed, unlimited or resetting'
+         u = read['usage']
+-        if type(u) is not int or u < prev_usage:
++        if type(u) is not int or u < floor:
+             return 'HALT', 'usage regressed or invalid'
++        floor = u    # R3-S3: below any earlier read of this sequence is a regression too
+         if cumulative_reported is None:
+             continue
+         if u > cumulative_reported + tol:
+diff -ru --exclude=READY* docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/r17score.py docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/r17score.py
+--- docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3/fixtures/r17score.py	2026-10-13 16:18:53
++++ docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1/fixtures/r17score.py	2026-10-13 16:36:20
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""R17 design-r3 reference scorer: the mechanical half of ADJUDICATION-SPEC.md.
++"""R17 design-r3.1 reference scorer: the mechanical half of ADJUDICATION-SPEC.md.
+ 
+ Offline, stdlib only. Run as `python3 -I -S -B r17score.py ...`.
+ 
+@@ -19,7 +19,7 @@
+ 
+ REF_VERSION = 'r17.ref.v3'
+ ADJ_VERSION = 'r17.adj.v2'
+-MANIFEST_VERSION = 'r17.manifest.v1'
++MANIFEST_VERSION = 'r17.manifest.v2'
+ CLASSES = ('COND', 'RESTRICT', 'EXCEPT', 'IRRESPECTIVE', 'UNRESOLVED')
+ LOGIC_OPS = ('PART', 'AND', 'OR', 'NOT', 'EXC')
+ EXCLUSION_REASONS = ('target_reference', 'citation', 'aside')
+@@ -320,13 +320,16 @@
+     return out
+ 
+ 
+-def role_verdict(cls, role, flips, uncertain):
++def role_verdict(cls, role, flips, uncertain, form_flip=0):
+     if role == 'qual':
+         return 'hedged'
+     if role in ('obj', 'acts'):
+         return 'hedged' if uncertain else 'role_loss'
+-    pol, strength = {'if': ('+', 'if'), 'onlyif': ('+', 'onlyif'),
+-                     'unless': ('-', 'unless'), 'regardless': ('0', 'regardless')}[role]
++    if role == 'regardless':
++        # Negating the irrelevant factor (path flips) changes nothing, but an inverse or
++        # opposite unit reverses the target assertion itself (R3-B2).
++        return 'correct' if cls == 'IRRESPECTIVE' and not form_flip else 'inversion'
++    pol, strength = {'if': ('+', 'if'), 'onlyif': ('+', 'onlyif'), 'unless': ('-', 'unless')}[role]
+     if flips % 2:
+         if pol == '+':
+             pol, strength = '-', 'unless'
+@@ -426,7 +429,7 @@
+             role, polarity = 'inversion', 'mixed'
+         elif par:
+             polarity = next(iter(par))
+-            role = role_verdict(r['class'], link['role'], polarity, unc)
++            role = role_verdict(r['class'], link['role'], polarity, unc, flip0)
+         else:
+             role, polarity = None, None
+         best = None
+@@ -467,14 +470,14 @@
+ 
+     def unqualified_opposites(self, tid):
+         """B5.5: units mapped `opposite` that carry no complete clause of any live relation of
+-        the target through a non-obj/acts link."""
++        the target through an applicability link (`qual`, `obj` and `acts` never qualify a denial)."""
+         bad = []
+         for unit, form in sorted(self.U[tid].items()):
+             if form != 'opposite':
+                 continue
+             qualified = any(self.claim(li, h['rid'], form)['status'] in ('complete', 'lost_marker')
+                             for li, l in enumerate(self.links)
+-                            if l['unit_id'] == unit and l['role'] not in ('obj', 'acts')
++                            if l['unit_id'] == unit and l['role'] in APPLICABILITY_ROLES
+                             for h in self.by_tid[tid] if live(h))
+             if not qualified:
+                 bad.append(unit)
+@@ -489,6 +492,7 @@
+             typed, invented, unscored = self.score_typed(results)
+         for res in results.values():
+             res.pop('_best', None)
++            res.pop('_dups', None)
+         return dict(arm=self.arm, relations=results, compounds=typed, invented=invented,
+                     unscored_operators=unscored)
+ 
+@@ -516,9 +520,10 @@
+         res['witness'] = dict(link_index=best['li'], unit=best['unit'], form=best['form'], role=best['role'],
+                               path=list(best['path']), polarity=best['polarity'], uncertain=best['uncertain'])
+         res['text_status'], res['extraneous'] = best['status'], best['extraneous']
+-        audit = [c['li'] for c in cands[1:]
+-                 if c['status'] in ('complete', 'lost_marker') and c['role'] in APPLICABILITY_ROLES
+-                 and not c['uncertain'] and c['verdict'] in ('inversion', 'scope_change')]
++        dups = [c for c in cands[1:]
++                if c['status'] in ('complete', 'lost_marker') and c['role'] in APPLICABILITY_ROLES
++                and not c['uncertain']]
++        audit = [c['li'] for c in dups if c['verdict'] in ('inversion', 'scope_change')]
+         opposite = self.unqualified_opposites(tid)
+         res['conflicting_links'], res['unqualified_opposite_units'] = audit, opposite
+         if best['status'] == 'partial':
+@@ -534,7 +539,7 @@
+         else:
+             v = best['verdict']
+         res['verdict'] = ('excluded_contested:' + v) if r['contested'] else v
+-        res['_best'] = best
++        res['_best'], res['_dups'] = best, dups
+         return res
+ 
+     # -- B7 typed logic
+@@ -560,13 +565,8 @@
+                 return False
+             return go(0)
+ 
+-        for c in compounds(self.ref):
+-            rid, n = c['rid'], c['node']
+-            rres = results[rid]
+-            if rres['verdict'] not in ACCEPTABLE:
+-                typed[c['cid']] = dict(verdict='relation_failed', critical=c['critical'], rid=rid, operator=None)
+-                continue
+-            kparts, v_node = self.K[rid]['parts'], rres['_best']['path'][-1]
++        def typed_at(n, kparts, v_node):
++            """(verdict, operator) for reference compound n under one witness node."""
+             found = []
+             for o in subtree(nodes, v_node):
+                 on = nodes[o]
+@@ -585,29 +585,43 @@
+                     found.append((('correct', 'hedged', 'swap', 'exc_reversed').index(v), o, v))
+             if found:
+                 _, o, v = min(found)
+-                matched.add(o)
+-                typed[c['cid']] = dict(verdict=v, critical=c['critical'], rid=rid, operator=o)
+-                continue
++                return v, o
+             Ks = [node_parts(self.source, ch) for ch in n['children']]
+-            separator = None
+             for o in subtree(nodes, v_node):
+-                if nodes[o]['op'] not in ('AND', 'OR', 'ALT', 'EXC') or separator:
++                if nodes[o]['op'] not in ('AND', 'OR', 'ALT', 'EXC'):
+                     continue
+                 hits = [{i for i, kk in enumerate(Ks) if self.sub_leaf[a] & kk} for a in nodes[o]['args']]
+                 if any(i1 != i2 for x, h1 in enumerate(hits) for h2 in hits[x + 1:] for i1 in h1 for i2 in h2):
+-                    separator = o
+-            if separator:
+-                matched.add(separator)
+-            typed[c['cid']] = dict(verdict='mismatch' if separator else 'flattened',
+-                                   critical=c['critical'], rid=rid, operator=separator)
++                    return 'mismatch', o
++            return 'flattened', None
+ 
++        for c in compounds(self.ref):
++            rid, n = c['rid'], c['node']
++            rres = results[rid]
++            if rres['verdict'] not in ACCEPTABLE:
++                typed[c['cid']] = dict(verdict='relation_failed', critical=c['critical'], rid=rid, operator=None)
++                continue
++            kparts = self.K[rid]['parts']
++            v, o = typed_at(n, kparts, rres['_best']['path'][-1])
++            entry = dict(verdict=v, critical=c['critical'], rid=rid, operator=o)
++            # R3-B1: the best witness earns the credit, but every other complete, confident
++            # applicability claim of the relation is audited too. Its first typed-harmful
++            # structure (swap, mismatch, exc_reversed) becomes the compound's verdict.
++            for d in rres['_dups']:
++                dv, do = typed_at(n, kparts, d['path'][-1])
++                matched.add(do)
++                if dv in TYPED_HARMFUL and entry['verdict'] not in TYPED_HARMFUL:
++                    entry.update(verdict=dv, operator=do, conflicting_link=d['li'])
++            matched.add(o)
++            typed[c['cid']] = entry
++
+         inv, scoped = {}, set()
+         for r in self.ref['relations']:
+             rres = results[r['rid']]
+             best = rres.get('_best')
+             if best is None:
+                 continue
+-            scope = list(best['path'][:-1]) + subtree(nodes, best['path'][-1])
++            scope = [x for w in [best] + rres['_dups'] for x in list(w['path'][:-1]) + subtree(nodes, w['path'][-1])]
+             scoped.update(scope)
+             if not live(r) or rres['verdict'] not in ACCEPTABLE:
+                 continue
+@@ -845,6 +859,9 @@
+     need(manifest.get('adjudicators') == {a: dict(model=m, effort=ADJ_EFFORT) for a, m in ADJUDICATORS.items()},
+          'manifest adjudicators must be exactly A1/A2 with the pinned models')
+     need(type(manifest.get('typed_testable')) is bool, 'manifest typed_testable')
++    excluded = manifest.get('excluded_sessions')
++    need(isinstance(excluded, list) and all(isinstance(x, str) and x for x in excluded),
++         'manifest excluded_sessions must list the reference author/reviewer session ids')
+     need(set(manifest.get('sources', {})) == set(SLOTS), 'manifest must name exactly S1, S2, S3')
+     need(set(calls) == {f'{s}-{a}' for s in SLOTS for a in ARMS}, 'call records must be exactly S1..S3 x OPQ/FULL')
+     refs, sources = {}, {}
+@@ -885,7 +902,7 @@
+     if not manifest['typed_testable']:
+         need(all(recs[f'{s}-FULL']['state'] in UNRUN for s in SLOTS), 'FULL released although untestable')
+ 
+-    scores = {}
++    scores, sessions = {}, {}
+ 
+     def adjudicated(cid, s):
+         out_raw = files[recs[cid]['output_file']]
+@@ -896,6 +913,10 @@
+             who = adj.get('adjudicator', {})
+             need(who.get('role') == role and who.get('model') == model and who.get('effort') == ADJ_EFFORT
+                  and isinstance(who.get('session'), str) and who['session'], f'{cid} {role}: adjudicator identity')
++            # C1 freshness (R3-S2): one session per scored output and role, never a reference session.
++            need(who['session'] not in excluded, f'{cid} {role}: session belongs to reference authoring or review')
++            need(who['session'] not in sessions, f"{cid} {role}: session reused (also {sessions.get(who['session'])})")
++            sessions[who['session']] = f'{cid} {role}'
+             need(adj.get('call_id') == cid and adj.get('source_id') == manifest['sources'][s]['source_id'],
+                  f'{cid} {role}: call_id/source_id binding')
+             need(adj.get('output_sha256') == sha_bytes(out_raw), f'{cid} {role}: output_sha256 binding')
+@@ -948,8 +969,10 @@
+     report = dict(phases={})
+     for arm in ARMS:
+         states = order_ok(arm)
+-        halted = any(type(st) is int and st <= 9 or recs[f'{s}-{arm}'].get('halt')
+-                     for s, st in zip(SLOTS, states))
++        halts = [i for i, (s, st) in enumerate(zip(SLOTS, states))
++                 if type(st) is int and st <= 9 or recs[f'{s}-{arm}'].get('halt')]
++        halted = bool(halts)
++        need(not halts or all(st in UNRUN for st in states[halts[0] + 1:]), f'{arm}: a call was released after a terminal halt')
+         mech = any(type(st) is int and (10 <= st <= 12 or recs[f'{s}-{arm}']['completion_tokens'] > HEADROOM_TOKENS)
+                    for s, st in zip(SLOTS, states) if type(st) is int and st >= 10)
+         released = [s for s, st in zip(SLOTS, states) if st not in UNRUN]
+Only in docs/research/state-rulemaking-benchmark/round17-paid-comparison/design-r3-1: verify

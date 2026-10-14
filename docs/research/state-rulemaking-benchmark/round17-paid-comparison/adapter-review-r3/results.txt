@@ -1,0 +1,290 @@
+
+### repro_r3_key_hygiene.py
+==============================================================================
+1. driver failure phases: exception, traceback and frame locals are key-free
+==============================================================================
+ok   tls context raises                   post_once -> DriverError clean
+ok       no connection
+ok   tls context raises                   key_info  -> DriverError clean
+ok       no connection
+ok   send fails (OSError)                 post_once -> DriverError clean
+ok       one connection, closed
+ok   send fails (OSError)                 key_info  -> DriverError clean
+ok       one connection, closed
+ok   read times out                       post_once -> DriverError clean
+ok       one connection, closed
+ok   read times out                       key_info  -> DriverError clean
+ok       one connection, closed
+ok   peer closes before status line       post_once -> DriverError clean
+ok       one connection, closed
+ok   peer closes before status line       key_info  -> DriverError clean
+ok       one connection, closed
+ok   key echoed in body                   post_once -> DriverError clean
+ok       one connection, closed
+ok   key echoed in body                   key_info  -> DriverError clean
+ok       one connection, closed
+ok   sk-or- key echoed in permitted header post_once -> no exception clean
+ok       one connection, closed
+ok   sk-or- key echoed in permitted header key_info  -> DriverError clean
+ok       one connection, closed
+ok   prefixless key echoed in header      post_once -> DriverError clean
+ok       one connection, closed
+ok   prefixless key echoed in header      key_info  -> DriverError clean
+ok       one connection, closed
+ok   prefixless key echoed in body        post_once -> DriverError clean
+ok       one connection, closed
+ok   prefixless key echoed in body        key_info  -> DriverError clean
+ok       one connection, closed
+ok   oversize body                        post_once -> DriverError clean
+ok       one connection, closed
+ok   oversize body                        key_info  -> DriverError clean
+ok       one connection, closed
+ok   socket close raises                  post_once -> DriverError clean
+ok       one connection, closed
+ok   socket close raises                  key_info  -> DriverError clean
+ok       one connection, closed
+ok   KeyboardInterrupt on send            post_once -> KeyboardInterrupt clean
+ok       one connection, closed
+ok   KeyboardInterrupt on send            key_info  -> KeyboardInterrupt clean
+ok       one connection, closed
+ok   SystemExit on send                   post_once -> SystemExit clean
+ok       one connection, closed
+ok   SystemExit on send                   key_info  -> SystemExit clean
+ok       one connection, closed
+ok   BaseException on send                post_once -> BaseException clean
+ok       one connection, closed
+ok   BaseException on send                key_info  -> BaseException clean
+ok       one connection, closed
+ok   KeyboardInterrupt in close           post_once -> KeyboardInterrupt clean
+ok       one connection, closed
+ok   KeyboardInterrupt in close           key_info  -> KeyboardInterrupt clean
+ok       one connection, closed
+     note: an sk-or- prefixed value in a permitted header is dropped by filter_headers before the echo check; a prefixless echo trips response_sensitive
+==============================================================================
+2. key validation refuses before connecting; the error never carries the key
+==============================================================================
+ok   post_once refuses None as transport_failed
+ok   key_info  refuses None as transport_failed
+ok   post_once refuses '' as transport_failed
+ok   key_info  refuses '' as transport_failed
+ok   post_once refuses b'sk' as transport_failed
+ok   key_info  refuses b'sk' as transport_failed
+ok   post_once refuses 'sk-or-...' as transport_failed
+ok   key_info  refuses 'sk-or-...' as transport_failed
+ok   post_once refuses ' sk-or...' as transport_failed
+ok   key_info  refuses ' sk-or...' as transport_failed
+ok   post_once refuses 'sk-or-...' as transport_failed
+ok   key_info  refuses 'sk-or-...' as transport_failed
+ok   post_once refuses 'sk-or-...' as transport_failed
+ok   key_info  refuses 'sk-or-...' as transport_failed
+ok   post_once refuses 'sk\x00or-...' as transport_failed
+ok   key_info  refuses 'sk\x00or-...' as transport_failed
+ok   post_once refuses 12345 as transport_failed
+ok   key_info  refuses 12345 as transport_failed
+ok   no connection for any invalid key
+==============================================================================
+3. end-to-end receipts after a key echo / early TLS failure / invalid key GET
+==============================================================================
+ok   key echoed in POST body: row 2, FLOOR, status None
+ok       response.body empty (echoing body never stored)
+ok       bundle hash present in status.json
+ok       POST count 1
+ok       key absent from every receipt and from stdout/stderr
+ok       status.json has no unexpected fields: ['headers', 'http_status', 'resolved_at', 'response_sha256', 'tls_ca_sha256']
+ok   TLS context fails at the POST: row 2, FLOOR, status None
+ok       response.body empty (echoing body never stored)
+ok       bundle hash absent, context never built in status.json
+ok       POST count 0
+ok       key absent from every receipt and from stdout/stderr
+ok       status.json has no unexpected fields: ['headers', 'http_status', 'resolved_at', 'response_sha256']
+
+problems: []
+exit=0
+
+### repro_r3_lock_evidence.py
+==============================================================================
+1. unmarked crash after RESERVE (BaseException): lock retained
+==============================================================================
+ok   lock retained, tail RESERVE: ['INIT', 'BIND_RELEASE', 'RESERVE']
+==============================================================================
+2. --lock-evidence while the lock is PRESENT (live or not): refused, lock untouched
+==============================================================================
+ok   host route exit 2: 'R17 refusal: lock_recovery_lock_present. No retry.'
+ok   lock bytes unchanged
+ok   ledger unchanged, no transport use
+ok   dummy --attempt-dir never claimed
+==============================================================================
+3. operator removed the lock but the owner PID is ALIVE / EPERM / foreign host
+==============================================================================
+ok   {'pid': 12131} -> R17 refusal: lock_recovery_owner_alive. No retry.
+ok       ledger unchanged, no lock created, no transport
+ok   {'pid': 1} -> R17 refusal: lock_recovery_owner_alive. No retry.
+ok       ledger unchanged, no lock created, no transport
+ok   {'host': 'synthetic-foreign-host'} -> R17 refusal: lock_recovery_evidence. No retry.
+ok       ledger unchanged, no lock created, no transport
+ok   {'pid': 0} -> R17 refusal: lock_recovery_evidence. No retry.
+ok       ledger unchanged, no lock created, no transport
+ok   {'pid': -1} -> R17 refusal: lock_recovery_evidence. No retry.
+ok       ledger unchanged, no lock created, no transport
+ok   {'pid': True} -> R17 refusal: lock_recovery_evidence. No retry.
+ok       ledger unchanged, no lock created, no transport
+ok   {'owner_gone': 'true'} -> R17 refusal: lock_recovery_evidence. No retry.
+ok       ledger unchanged, no lock created, no transport
+ok   {'lock_sha256': 'BF1CC7499A4C13ADDF4259E7557D205A9E94AE72940B5FCC8980DBFF273898DE'} -> R17 refusal: lock_recovery_evidence. No retry.
+ok       ledger unchanged, no lock created, no transport
+==============================================================================
+4. race: another owner takes the lock between the existence check and recover()
+==============================================================================
+ok   exit 3: 'R17 lock/claim exists; no lock was broken. No retry.'
+ok   racer's lock intact, ledger unchanged
+==============================================================================
+5. valid evidence (reaped child PID): accounting-only recovery, no dispatch
+==============================================================================
+ok   host route exit 0: 'R17 accounting recovery complete; no dispatch performed.'
+ok   appended exactly LOCK_RECOVERED, RESOLVE: ['INIT', 'BIND_RELEASE', 'RESERVE', 'LOCK_RECOVERED', 'RESOLVE']
+ok   RESOLVE dispatched=False debit=0
+ok   evidence hash recorded
+ok   recovery lock released on clean exit
+ok   no POST and no GET for an unmarked recovery
+ok   dummy --attempt-dir/--job-id unused
+ok   recovered.json for the crashed attempt
+==============================================================================
+6. the same evidence again: nothing pending, yet another LOCK_RECOVERED is appended (note)
+==============================================================================
+ok   exit 0 again
+     appended: ['LOCK_RECOVERED'] | LOCK_RECOVERED count: 2
+==============================================================================
+7. normal host CLI afterwards: S1-OPQ dispatches once (unmarked recovery is not a completion)
+==============================================================================
+ok   exit 0 state 13: '{"call":"S1-OPQ","debit":270000000,"halt":null,"state":13}'
+ok   exactly one POST
+ok   status.json carries the bundle hash
+ok   key absent from every receipt under run/
+==============================================================================
+8. marked crash: SIGINT while the POST is written, through the host CLI
+==============================================================================
+ok   traceback carries no key
+ok   N16: no http.client frames (fresh re-raise): File "/Users/home/.t3/worktrees/yokel/research-state-rulemaking/docs/research/state-rulemaking-benchmark/round17-paid-comparison/adapter-review-r3/.review-r3-5fzln9g7/drv/host_driver.py", line 110, in _request
+ok   lock retained, tail DISPATCH_MARK
+ok   one interrupted POST
+==============================================================================
+9. --lock-evidence on the marked cell: 4 GETs, 0 POSTs, FLOOR, terminal HALT
+==============================================================================
+ok   exit 0: 'R17 accounting recovery complete; no dispatch performed.'
+ok   LOCK_RECOVERED, RESOLVE, HALT: ['INIT', 'BIND_RELEASE', 'RESERVE', 'DISPATCH_MARK', 'LOCK_RECOVERED', 'RESOLVE', 'HALT']
+ok   RESOLVE dispatched=True debit=FLOOR
+ok   4 GETs, no POST
+ok   every reconciliation receipt carries the bundle hash
+ok   lock released
+==============================================================================
+10. normal CLI after the halt: refused with the printable admission reason, no transport
+==============================================================================
+ok   exit 2: 'R17 refusal: admission:halted. No retry.'
+ok   no transport use
+ok   key absent from every receipt under run/
+
+problems: []
+exit=0
+
+### repro_r3_s6_pins.py
+ok   READY r1.2 excludes _out/**
+ok   no generated paths pinned
+ok   no reference/ or source-body dependency pins
+ok   before: payload membership matches READY (23 files)
+ok   before: every payload pin matches: all
+ok   before: every dependency pin matches (83): all
+     running sh adapter-r1-2/run_tests.sh (output -> suite-output-r3.txt) ...
+ok   suite exit 0; Ran [102, 26, 23, 9, 20]; OK x5
+ok   after: payload membership matches READY (23 files)
+ok   after: every payload pin matches: all
+ok   after: every dependency pin matches (83): all
+ok   no pinned-root file changed or appeared outside _out: none
+ok   READY.json bytes unchanged
+     _out files before/after: 32 32 | new: none | gone: none
+ok   no stray files outside _out after the run: none
+
+problems: []
+exit=0
+
+### repro_r3_timeout_recon.py
+==============================================================================
+A. POST blocks for the full 900 s envelope, then fails; provider charged meanwhile
+==============================================================================
+ok   resolved_at is AFTER the envelope (t0+900): 1900
+ok   status None (transport-uncertain)
+ok   four reads, each elapsed_s >= due, measured from resolved_at: [(0, 0), (60, 60), (300, 300), (900, 900)]
+ok   GET times = preflight, then resolved_at + schedule: [1000, 1900, 1960, 2200, 2800]
+ok   verdict ['HALT', 'KEY_USAGE_UNRECONCILED'] (no reported cost to match)
+ok   row 2; halt 'debit_exceeds_floor' (the floor-exceeding key delta outranks the reconciliation verdict in the HALT reason)
+ok   debit = key delta 500000000 (> FLOOR 270000000)
+ok   one POST
+ok   next cell refused: halted
+==============================================================================
+B. good POST; the FIRST reconciliation GET blocks for the envelope, then fails
+==============================================================================
+ok   slot 0 consumed as a failed read (elapsed recorded before the GET)
+ok   slot 60 runs immediately after the hang with elapsed 900 >= 60
+ok   reconciled at slot 60; no further reads
+ok   state 13, no halt
+ok   RECONCILED after 2 reads, no "read before its scheduled time"
+ok   one POST
+==============================================================================
+C. good POST; ALL four reconciliation GETs block and fail: bounded at four
+==============================================================================
+ok   four failed reads, five GETs in total (preflight + 4)
+ok   valid response (state 13) but halt KEY_USAGE_UNRECONCILED, debit FLOOR (reported 0.01 USD < FLOOR)
+ok   ledger ends RESOLVE, HALT
+ok   one POST
+     worst-case wall clock per cell with every operation at the envelope: POST 900 + schedule 900 + 4 x 900 GET = 5400 s (1.5 h); the lock is held throughout
+==============================================================================
+D. preflight GET blocks and fails: zero-debit pause, no POST
+==============================================================================
+ok   refused: pre_dispatch_pause
+ok   no POST, aggregate 0
+ok   no RESERVE written (preflight precedes the reservation); result.json state 1 debit 0
+
+problems: []
+exit=0
+
+### repro_r3_tls_context.py
+==============================================================================
+1. the driver context on this host
+==============================================================================
+     bundle: /etc/ssl/cert.pem | symlink: False | uid: 0 | mode: -rw-r--r-- | bytes: 333483
+     PEM blocks in file: 128 | cert_store_stats: {'x509': 128, 'crl': 0, 'x509_ca': 128}
+ok   every PEM block loaded as a CA anchor (128)
+ok   CERT_REQUIRED + check_hostname
+ok   minimum TLS TLSv1_2
+ok   no keylog
+     verify_flags: 32768 | options: 2186412112
+ok   r17_ca_sha256 = sha256(bundle)
+     for contrast, a bare PROTOCOL_TLS_CLIENT context has 0 anchors (round-2 N14)
+     default verify paths: DefaultVerifyPaths(cafile=None, capath=None, openssl_cafile_env='SSL_CERT_FILE', openssl_cafile='/Library/Frameworks/Python.framework/Versions/3.13/etc/openssl/cert.pem', openssl_capath_env='SSL_CERT_DIR', openssl_capath='/Library/Frameworks/Python.framework/Versions/3.13/etc/openssl/certs')
+==============================================================================
+2. default-store entry points are never called; SSL_CERT_FILE/SSL_CERT_DIR are ignored
+==============================================================================
+ok   context built without any default-store call; same anchors
+ok   HTTPSConnection received that context (verified, same anchors)
+ok   packet carries the bundle hash
+ok   only OPENROUTER_API_KEY read from the environment: ['OPENROUTER_API_KEY']
+ok   with SSL_CERT_FILE/SSL_CERT_DIR pointing at a synthetic CA: anchors unchanged, synthetic CA NOT trusted
+==============================================================================
+3. bundle content checks: a leaf-only bundle has zero CA anchors and is refused
+==============================================================================
+ok   leaf-only bundle -> tls_no_trust_anchors (store stats {'x509': 1, 'crl': 0, 'x509_ca': 0}: a plain x509 count would have passed)
+ok   post_once refuses before any connection
+ok   a one-CA bundle loads (the check is a count, so a replaced file is only detectable through the receipt hash)
+==============================================================================
+4. missing / empty / mid-load-changed bundle: refused before any connection
+==============================================================================
+ok   missing bundle: FileNotFoundError inside, transport_failed at the seam
+ok   empty bundle: SSLError inside, transport_failed at the seam
+ok   bundle bytes changing during load -> tls_bundle_changed
+ok   no connection was attempted in any refusal above
+==============================================================================
+5. verification cannot be relaxed by the transport seam
+==============================================================================
+ok   a CERT_NONE context is refused (tls_unverified) before connecting
+
+problems: []
+exit=0

@@ -1,0 +1,243 @@
+{
+  "spec_version": "r17.ref.v3",
+  "source_id": "26-19-039",
+  "source_text_sha256": "9fffbf50f8d1cd0015d6fc41bfe0dfd5e60e4976bd42eb2e4f396fdcc28b39b3",
+  "targets": [
+    {
+      "tid": "T1",
+      "quote": {
+        "text": "is exempt",
+        "start": 120,
+        "end": 129,
+        "occurrence": 1
+      },
+      "gloss": "The proposal is exempt from something the text does not name (rule 6.3)."
+    },
+    {
+      "tid": "T2",
+      "quote": {
+        "text": "the requirements of RCW  34.05.328, including a cost-benefit analysis",
+        "start": 3298,
+        "end": 3367,
+        "occurrence": 1
+      },
+      "gloss": "implied: the RCW 34.05.328 requirements, including a cost-benefit analysis, apply to this rule."
+    },
+    {
+      "tid": "T3",
+      "quote": {
+        "text": "requirements of the Regulatory Fairness Act",
+        "start": 3521,
+        "end": 3564,
+        "occurrence": 1
+      },
+      "gloss": "implied: the Regulatory Fairness Act requirements apply to this rule proposal."
+    }
+  ],
+  "relations": [
+    {
+      "rid": "R1",
+      "tid": "T1",
+      "class": "UNRESOLVED",
+      "introducer": [],
+      "clause": [
+        {
+          "text": "Proposal",
+          "start": 111,
+          "end": 119,
+          "occurrence": 1
+        },
+        {
+          "text": "under RCW  34.05.310(4) or  34.05.330(1)",
+          "start": 130,
+          "end": 170,
+          "occurrence": 1
+        }
+      ],
+      "excluded": [
+        {
+          "quote": {
+            "text": "under RCW  34.05.310(4) or  34.05.330(1)",
+            "start": 130,
+            "end": 170,
+            "occurrence": 1
+          },
+          "reason": "citation",
+          "note": "statutory authority for the exemption, not a condition; its \"or\" joins two citations"
+        }
+      ],
+      "logic": {
+        "nid": "N1",
+        "op": "PART",
+        "quotes": [
+          {
+            "text": "Proposal",
+            "start": 111,
+            "end": 119,
+            "occurrence": 1
+          }
+        ],
+        "markers": []
+      },
+      "rationale": "Rule 6.3: \"Proposal is exempt under RCW ...\" names no thing exempted from, so the exempting wording is the target and the class is UNRESOLVED with an empty introducer. The RCW cites are the exempting authority, excluded as a citation; what the proposal is exempt from cannot be determined from the text.",
+      "critical": false,
+      "critical_reason": "",
+      "contested": false,
+      "contested_reason": ""
+    },
+    {
+      "rid": "R2",
+      "tid": "T2",
+      "class": "EXCEPT",
+      "introducer": [
+        {
+          "text": "is exempt from",
+          "start": 3283,
+          "end": 3297,
+          "occurrence": 1
+        }
+      ],
+      "clause": [
+        {
+          "text": "This rule is exempt from",
+          "start": 3273,
+          "end": 3297,
+          "occurrence": 1
+        }
+      ],
+      "excluded": [],
+      "logic": {
+        "nid": "N1",
+        "op": "PART",
+        "quotes": [
+          {
+            "text": "This rule",
+            "start": 3273,
+            "end": 3282,
+            "occurrence": 1
+          }
+        ],
+        "markers": []
+      },
+      "rationale": "Rule 6.2: no sentence states that RCW 34.05.328 requirements apply, but the sentence names them as the thing exempted from, so that noun phrase is the implied target and \"This rule\" is the exempted thing. The trailing \"because ...\" clause gives the reason for the exemption, not a condition on it, and is left outside the clause. Agency procedural exemption (an analysis the agency need not prepare), so not critical.",
+      "critical": false,
+      "critical_reason": "",
+      "contested": false,
+      "contested_reason": ""
+    },
+    {
+      "rid": "R3",
+      "tid": "T3",
+      "class": "EXCEPT",
+      "introducer": [
+        {
+          "text": "is exempt from",
+          "start": 3506,
+          "end": 3520,
+          "occurrence": 2
+        }
+      ],
+      "clause": [
+        {
+          "text": "This rule proposal, or portions of the proposal, is exempt from",
+          "start": 3457,
+          "end": 3520,
+          "occurrence": 1
+        }
+      ],
+      "excluded": [],
+      "logic": {
+        "nid": "N1",
+        "op": "OR",
+        "markers": [
+          {
+            "text": "or",
+            "start": 3477,
+            "end": 3479,
+            "occurrence": 22
+          }
+        ],
+        "children": [
+          {
+            "nid": "N2",
+            "op": "PART",
+            "quotes": [
+              {
+                "text": "This rule proposal",
+                "start": 3457,
+                "end": 3475,
+                "occurrence": 1
+              }
+            ],
+            "markers": []
+          },
+          {
+            "nid": "N3",
+            "op": "PART",
+            "quotes": [
+              {
+                "text": "portions of the proposal",
+                "start": 3480,
+                "end": 3504,
+                "occurrence": 1
+              }
+            ],
+            "markers": []
+          }
+        ]
+      },
+      "rationale": "Rule 6.2: the Regulatory Fairness Act requirements are named as the thing exempted from, so that phrase is the implied target; the exempted population is \"This rule proposal, or portions of the proposal\", an explicit \"or\" coordination, so an OR node with two PARTs (rule 4). The following \"because the proposal: Is exempt under RCW 19.85.025(3) ...\" gives the reason and authority for the exemption, not a condition, so it stays outside the clause; the later \"Scope of exemption for rule proposal: Is fully exempt.\" is a separate sentence and is recorded as R4 (rule 3). Agency procedural exemption, not critical.",
+      "critical": false,
+      "critical_reason": "",
+      "contested": false,
+      "contested_reason": ""
+    },
+    {
+      "rid": "R4",
+      "tid": "T3",
+      "class": "EXCEPT",
+      "introducer": [
+        {
+          "text": "Is fully exempt",
+          "start": 4103,
+          "end": 4118,
+          "occurrence": 1
+        }
+      ],
+      "clause": [
+        {
+          "text": "rule proposal:\n\nIs fully exempt",
+          "start": 4087,
+          "end": 4118,
+          "occurrence": 1
+        }
+      ],
+      "excluded": [],
+      "logic": {
+        "nid": "N1",
+        "op": "PART",
+        "quotes": [
+          {
+            "text": "rule proposal",
+            "start": 4087,
+            "end": 4100,
+            "occurrence": 2
+          }
+        ],
+        "markers": []
+      },
+      "rationale": "Rule 6 exemption statement in its own sentence, so a separate relation from R3 (§4.2 rule 3). The sentence itself names nothing exempted from; the thing exempted from is supplied by the enclosing Regulatory Fairness Act block it is the scope field of (\"Scope of exemption for rule proposal\"), so it attaches to the existing implied target T3 rather than a new rule-6.3 target. The exempting wording \"Is fully exempt\" is the introducer and \"rule proposal\", supplied by the field label, is the exempted thing; the label words \"Scope of exemption for\" are a form heading outside the clause. It states the whole proposal is exempt, which resolves R3 whole-versus-portions alternative. Agency procedural exemption (Regulatory Fairness Act analysis), not critical.",
+      "critical": false,
+      "critical_reason": "",
+      "contested": false,
+      "contested_reason": ""
+    }
+  ],
+  "out_of_scope_notes": [
+    "Comment window \"beginning September 28, 2026, by 11:59 p.m., October 23, 2026\" is a deadline qualifier on the submission instruction, not a condition-like clause; no relation recorded.",
+    "WAC 246-203-015(1) \"This section applies to ... that do not provide or subcontract for food service ...\" is an applicability statement without exclusive wording; under rule 7 the qualified population is part of the assertion, so no RESTRICT relation is recorded.",
+    "WAC 246-203-015(2) permission for \"A domestic brewery or microbrewery that does not provide or subcontract for food service ...\" carries the limit as a subject qualifier (rule 7), not a separate relation.",
+    "\"A school district fiscal impact statement is not required under RCW 28A.305.135\" and \"A cost-benefit analysis is not required under RCW 34.05.328\" are plain negated obligations with no carved-out population; not treated as rule-6 exemption statements.",
+    "Hearing location \"...; or virtual meeting via Zoom webinar...\" lists alternative venues, not a condition."
+  ]
+}

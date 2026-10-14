@@ -1,0 +1,96 @@
+{
+  "schema_version": "r17.source-selection.v1",
+  "selection_rule": "Six candidates named in the frozen R17 protocol, ascending stable WSR ID; retrieve all six before applying any post-extraction screen.",
+  "protocol": "../design/PROTOCOL.md",
+  "frame": {
+    "path": "../../round12-automated-scope/source/FRAME.json",
+    "sha256": "dad692e3007018e27a2ad58284538859965dbcece6332a8a840320c586693662",
+    "issue": "WSR 26-19",
+    "official_index": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19.htm"
+  },
+  "ordered_candidates": [
+    {
+      "id": "26-19-039",
+      "url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-039.htm",
+      "frame_readable_text_chars": 4845,
+      "eligible_in_frame": true,
+      "excluded": false,
+      "disposition": "retrieve_then_screen"
+    },
+    {
+      "id": "26-19-041",
+      "url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-041.htm",
+      "frame_readable_text_chars": 5818,
+      "eligible_in_frame": true,
+      "excluded": false,
+      "disposition": "retrieve_then_screen"
+    },
+    {
+      "id": "26-19-106",
+      "url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-106.htm",
+      "frame_readable_text_chars": 4117,
+      "eligible_in_frame": true,
+      "excluded": false,
+      "disposition": "retrieve_then_screen"
+    },
+    {
+      "id": "26-19-116",
+      "url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-116.htm",
+      "frame_readable_text_chars": 3202,
+      "eligible_in_frame": true,
+      "excluded": false,
+      "disposition": "retrieve_then_screen"
+    },
+    {
+      "id": "26-19-123",
+      "url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-123.htm",
+      "frame_readable_text_chars": 6220,
+      "eligible_in_frame": true,
+      "excluded": false,
+      "disposition": "retrieve_then_screen"
+    },
+    {
+      "id": "26-19-135",
+      "url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-135.htm",
+      "frame_readable_text_chars": 6184,
+      "eligible_in_frame": true,
+      "excluded": false,
+      "disposition": "retrieve_then_screen"
+    }
+  ],
+  "prior_use_search": {
+    "scope": "docs/research/state-rulemaking-benchmark recursively, including artifacts, before retrieval; exact stable filing IDs and recorded official .htm URLs",
+    "method": "rg -l -F against all six stable IDs; inspected each hit, including frozen FRAME and SELECTION records. No source-text hits or prior candidate-use artifacts found.",
+    "matching_files": [
+      "docs/research/state-rulemaking-benchmark/round17-paid-comparison/design/PROTOCOL.md",
+      "docs/research/state-rulemaking-benchmark/round12-automated-scope/source/FRAME.json",
+      "docs/research/state-rulemaking-benchmark/round14-semantic-contract/source/SELECTION.json"
+    ],
+    "findings": {
+      "26-19-039": {
+        "prior_candidate_source_or_use_found": false,
+        "exact_url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-039.htm"
+      },
+      "26-19-041": {
+        "prior_candidate_source_or_use_found": false,
+        "exact_url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-041.htm"
+      },
+      "26-19-106": {
+        "prior_candidate_source_or_use_found": false,
+        "exact_url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-106.htm"
+      },
+      "26-19-116": {
+        "prior_candidate_source_or_use_found": false,
+        "exact_url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-116.htm"
+      },
+      "26-19-123": {
+        "prior_candidate_source_or_use_found": false,
+        "exact_url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-123.htm"
+      },
+      "26-19-135": {
+        "prior_candidate_source_or_use_found": false,
+        "exact_url": "https://lawfilesext.leg.wa.gov/law/wsr/2026/19/26-19-135.htm"
+      }
+    }
+  }
+}

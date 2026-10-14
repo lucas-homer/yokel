@@ -1,0 +1,39 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r17-gate-A1-b6"
+  },
+  "call_id": "fx-bbe9fd4c97",
+  "source_id": "fx-bbe9fd4c97",
+  "output_sha256": "d1528074e58e1ed8e3ad639848af0f2eb84b584d39da7d0076cb227a73b9d593",
+  "reference_sha256": "44bc98f6bea53d33052f7a158e06f11529fae792913f5b4976586d9c4375b40e",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        },
+        {
+          "unit": 2,
+          "form": "opposite"
+        }
+      ],
+      "basis": "Unit 1 states 'Ferries may dock at the east pier', identical to the T1 quote. Unit 2 states 'Ferries may not dock at the east pier' over the same evidence [0,33]; it denies the target for the same actor, action and object without naming any population, case or circumstance, so it is opposite per question 3 and M4."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "Unit 2 is probably an attempt to encode the consequence of the 'unless the tide is low' exception, but its assertion text names no circumstance, so it is 'opposite' rather than 'inverse'. Its evidence [0,33] overlaps the T1 quote, satisfying M2."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

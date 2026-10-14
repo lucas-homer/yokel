@@ -1,0 +1,35 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r17-gate-A1-b2"
+  },
+  "call_id": "fx-2315067994",
+  "source_id": "fx-2315067994",
+  "output_sha256": "d6496faa416cb04515fedaf1ebb919e2599112f8c5b137dcab73ea1fe45b8012",
+  "reference_sha256": "dde26d7a5a2e84a7502cf5d8b5603dacdda19d2e0fd424907a56ce021caccbf7",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 1 'Residents may enter the lantern lottery.' (evidence 0-44, overlapping the target quote 15-44) asserts that entry to the lottery is permitted, which is T1; naming residents as the actor folds the RESTRICT scope into the assertion but a reader still takes it as making the target's assertion (M3)."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "Narrower than the target: the unit folds the 'Only residents' restriction into the assertion as its subject. Mapped direct under M3; the 'only' exclusivity itself is not asserted by the unit text and is left to mechanical condition scoring."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

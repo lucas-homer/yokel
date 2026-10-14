@@ -1,0 +1,582 @@
+{
+ "spec_version": "r17.ref.v3",
+ "source_id": "26-19-041",
+ "source_text_sha256": "82868cf622ab60cba98f438eb0b443cf36a4745b45188e7a36f643bd155de4f5",
+ "targets": [
+  {
+   "tid": "T1",
+   "quote": {
+    "text": "you will receive a confirmation email containing information about joining the webinar",
+    "start": 624,
+    "end": 710,
+    "occurrence": 1
+   },
+   "gloss": "Registrants receive a confirmation email with webinar joining information."
+  },
+  {
+   "tid": "T2",
+   "quote": {
+    "text": "data submitted to the department may meet the current or historical CMS requirements",
+    "start": 2270,
+    "end": 2354,
+    "occurrence": 1
+   },
+   "gloss": "Submitted data may meet either current or historical CMS requirements."
+  },
+  {
+   "tid": "T3",
+   "quote": {
+    "text": "analysis",
+    "start": 3973,
+    "end": 3981,
+    "occurrence": 2
+   },
+   "gloss": "implied: the cost-benefit analysis requirement applies to the proposed rule"
+  },
+  {
+   "tid": "T4",
+   "quote": {
+    "text": "requirements of the Regulatory Fairness Act",
+    "start": 4547,
+    "end": 4590,
+    "occurrence": 1
+   },
+   "gloss": "implied: the requirements of the Regulatory Fairness Act apply to this rule proposal"
+  },
+  {
+   "tid": "T5",
+   "quote": {
+    "text": "applies to",
+    "start": 4748,
+    "end": 4758,
+    "occurrence": 1
+   },
+   "gloss": "The proposed rule applies to a population of hospitals."
+  },
+  {
+   "tid": "T6",
+   "quote": {
+    "text": "a hospital may submit to the department a machine-readable file that meets the requirements for rules related to hospital price transparency pursuant to Title 45 C.F.R. Part 180, subparts A and B",
+    "start": 5486,
+    "end": 5681,
+    "occurrence": 1
+   },
+   "gloss": "A hospital may satisfy subsection (1) by submitting a federal-format (45 CFR 180) machine-readable file."
+  }
+ ],
+ "relations": [
+  {
+   "rid": "R1",
+   "tid": "T1",
+   "class": "COND",
+   "introducer": [
+    {
+     "text": "After",
+     "start": 605,
+     "end": 610,
+     "occurrence": 1
+    }
+   ],
+   "clause": [
+    {
+     "text": "After registering",
+     "start": 605,
+     "end": 622,
+     "occurrence": 1
+    }
+   ],
+   "excluded": [],
+   "logic": {
+    "nid": "N1",
+    "op": "PART",
+    "quotes": [
+     {
+      "text": "registering",
+      "start": 611,
+      "end": 622,
+      "occurrence": 1
+     }
+    ],
+    "markers": []
+   },
+   "rationale": "'After' is a temporal trigger: the joining information arrives once the person has registered; nothing says it is the only route, so COND.",
+   "critical": true,
+   "critical_reason": "Decides how a member of the public obtains the information needed to join the hearing webinar.",
+   "contested": false,
+   "contested_reason": ""
+  },
+  {
+   "rid": "R2",
+   "tid": "T2",
+   "class": "COND",
+   "introducer": [
+    {
+     "text": "as long as",
+     "start": 2356,
+     "end": 2366,
+     "occurrence": 1
+    }
+   ],
+   "clause": [
+    {
+     "text": "as long as CMS has not removed reporting requirements",
+     "start": 2356,
+     "end": 2409,
+     "occurrence": 1
+    }
+   ],
+   "excluded": [],
+   "logic": {
+    "nid": "N1",
+    "op": "PART",
+    "quotes": [
+     {
+      "text": "CMS has",
+      "start": 2367,
+      "end": 2374,
+      "occurrence": 1
+     },
+     {
+      "text": "removed reporting requirements",
+      "start": 2379,
+      "end": 2409,
+      "occurrence": 1
+     }
+    ],
+    "markers": [
+     {
+      "text": "not",
+      "start": 2375,
+      "end": 2378,
+      "occurrence": 1
+     }
+    ]
+   },
+   "rationale": "'as long as' states the circumstance under which the permission holds; it is conditional wording without an explicit exclusive marker such as 'only', so COND rather than RESTRICT. 'not' negates only this component's predicate (CMS has removed), so it is a PART marker (rule 4).",
+   "critical": true,
+   "critical_reason": "Decides whether a hospital's submission meeting historical rather than current CMS requirements is acceptable.",
+   "contested": false,
+   "contested_reason": ""
+  },
+  {
+   "rid": "R3",
+   "tid": "T3",
+   "class": "EXCEPT",
+   "introducer": [
+    {
+     "text": "is exempt from",
+     "start": 3958,
+     "end": 3972,
+     "occurrence": 1
+    }
+   ],
+   "clause": [
+    {
+     "text": "The entire proposed rule is exempt from",
+     "start": 3933,
+     "end": 3972,
+     "occurrence": 1
+    }
+   ],
+   "excluded": [],
+   "logic": {
+    "nid": "N1",
+    "op": "PART",
+    "quotes": [
+     {
+      "text": "The entire proposed rule",
+      "start": 3933,
+      "end": 3957,
+      "occurrence": 1
+     }
+    ],
+    "markers": []
+   },
+   "rationale": "Assertion phrased as the exception itself (rule 6). No sentence states that the analysis is required, but the sentence names the thing exempted from ('analysis'), so that noun phrase is the implied target (rule 6.2); the PART is the exempted thing, the entire proposed rule.",
+   "critical": false,
+   "critical_reason": "",
+   "contested": false,
+   "contested_reason": ""
+  },
+  {
+   "rid": "R4",
+   "tid": "T3",
+   "class": "EXCEPT",
+   "introducer": [
+    {
+     "text": "is exempt",
+     "start": 3998,
+     "end": 4007,
+     "occurrence": 2
+    }
+   ],
+   "clause": [
+    {
+     "text": "Subsection (1) is exempt",
+     "start": 3983,
+     "end": 4007,
+     "occurrence": 1
+    },
+    {
+     "text": "subsection (2) is exempt",
+     "start": 4067,
+     "end": 4091,
+     "occurrence": 1
+    },
+    {
+     "text": "and subsection (3) is exempt",
+     "start": 4313,
+     "end": 4341,
+     "occurrence": 1
+    }
+   ],
+   "excluded": [],
+   "logic": {
+    "nid": "N1",
+    "op": "AND",
+    "markers": [
+     {
+      "text": "and",
+      "start": 4313,
+      "end": 4316,
+      "occurrence": 20
+     },
+     {
+      "text": "is exempt",
+      "start": 4082,
+      "end": 4091,
+      "occurrence": 3
+     },
+     {
+      "text": "is exempt",
+      "start": 4332,
+      "end": 4341,
+      "occurrence": 4
+     }
+    ],
+    "children": [
+     {
+      "nid": "N2",
+      "op": "PART",
+      "quotes": [
+       {
+        "text": "Subsection (1)",
+        "start": 3983,
+        "end": 3997,
+        "occurrence": 1
+       }
+      ],
+      "markers": []
+     },
+     {
+      "nid": "N3",
+      "op": "PART",
+      "quotes": [
+       {
+        "text": "subsection (2)",
+        "start": 4067,
+        "end": 4081,
+        "occurrence": 1
+       }
+      ],
+      "markers": []
+     },
+     {
+      "nid": "N4",
+      "op": "PART",
+      "quotes": [
+       {
+        "text": "subsection (3)",
+        "start": 4317,
+        "end": 4331,
+        "occurrence": 1
+       }
+      ],
+      "markers": []
+     }
+    ]
+   },
+   "rationale": "Assertion phrased as the exception (rule 6) on the implied analysis target, elaborating R3 subsection by subsection. The three subsection clauses are one semicolon-delimited list closed by an explicit 'and' with the exempting expression repeated, so under rule 2 (applied before rule 3) they are one relation: an AND node over the three subsection PARTs, with the final 'and' and the repeated 'is exempt' as markers of the joining node. The statutory citations and the 'as it ...' grounds (including the inner 'and' joining subsection (2)'s two grounds) are reasons for the exemption, not conditions, and are outside the clause.",
+   "critical": false,
+   "critical_reason": "",
+   "contested": false,
+   "contested_reason": ""
+  },
+  {
+   "rid": "R5",
+   "tid": "T4",
+   "class": "EXCEPT",
+   "introducer": [
+    {
+     "text": "is exempt from",
+     "start": 4532,
+     "end": 4546,
+     "occurrence": 2
+    }
+   ],
+   "clause": [
+    {
+     "text": "This rule proposal, or portions of the proposal, is exempt from",
+     "start": 4483,
+     "end": 4546,
+     "occurrence": 1
+    }
+   ],
+   "excluded": [],
+   "logic": {
+    "nid": "N1",
+    "op": "OR",
+    "markers": [
+     {
+      "text": "or",
+      "start": 4503,
+      "end": 4505,
+      "occurrence": 42
+     }
+    ],
+    "children": [
+     {
+      "nid": "N2",
+      "op": "PART",
+      "quotes": [
+       {
+        "text": "This rule proposal",
+        "start": 4483,
+        "end": 4501,
+        "occurrence": 1
+       }
+      ],
+      "markers": []
+     },
+     {
+      "nid": "N3",
+      "op": "PART",
+      "quotes": [
+       {
+        "text": "portions of the proposal",
+        "start": 4506,
+        "end": 4530,
+        "occurrence": 1
+       }
+      ],
+      "markers": []
+     }
+    ]
+   },
+   "rationale": "Assertion phrased as the exception (rule 6); the sentence names the thing exempted from, so that noun phrase is the implied target (rule 6.2). The exempted subject is coordinated by an explicit 'or', so it is an OR node over two PARTs (rule 4). 'because the proposal: Is exempt under RCW 19.85.025(4)' states the ground, not a condition, and is outside the clause.",
+   "critical": false,
+   "critical_reason": "",
+   "contested": false,
+   "contested_reason": ""
+  },
+  {
+   "rid": "R6",
+   "tid": "T4",
+   "class": "EXCEPT",
+   "introducer": [
+    {
+     "text": "is exempt",
+     "start": 4703,
+     "end": 4712,
+     "occurrence": 6
+    }
+   ],
+   "clause": [
+    {
+     "text": "The entire proposed rule is exempt",
+     "start": 4678,
+     "end": 4712,
+     "occurrence": 2
+    }
+   ],
+   "excluded": [],
+   "logic": {
+    "nid": "N1",
+    "op": "PART",
+    "quotes": [
+     {
+      "text": "The entire proposed rule",
+      "start": 4678,
+      "end": 4702,
+      "occurrence": 2
+     }
+    ],
+    "markers": []
+   },
+   "rationale": "Separately introduced restatement of the Regulatory Fairness Act exemption (rule 3) under the 'Explanation of exemptions' heading; this sentence does not itself name the thing exempted from, but the immediately preceding sentence does, so it attaches to T4 rather than being UNRESOLVED under rule 6.3. The citation and the 'as it only applies...' ground are outside the clause (the 'only' restriction is R7).",
+   "critical": false,
+   "critical_reason": "",
+   "contested": false,
+   "contested_reason": ""
+  },
+  {
+   "rid": "R7",
+   "tid": "T5",
+   "class": "RESTRICT",
+   "introducer": [
+    {
+     "text": "only",
+     "start": 4743,
+     "end": 4747,
+     "occurrence": 2
+    }
+   ],
+   "clause": [
+    {
+     "text": "only",
+     "start": 4743,
+     "end": 4747,
+     "occurrence": 2
+    },
+    {
+     "text": "licensed acute care hospitals which do not meet the definition of \"small business\" under RCW  19.85.020",
+     "start": 4759,
+     "end": 4862,
+     "occurrence": 1
+    }
+   ],
+   "excluded": [],
+   "logic": {
+    "nid": "N1",
+    "op": "PART",
+    "quotes": [
+     {
+      "text": "licensed acute care hospitals which do",
+      "start": 4759,
+      "end": 4797,
+      "occurrence": 1
+     },
+     {
+      "text": "meet the definition of \"small business\" under RCW  19.85.020",
+      "start": 4802,
+      "end": 4862,
+      "occurrence": 1
+     }
+    ],
+    "markers": [
+     {
+      "text": "not",
+      "start": 4798,
+      "end": 4801,
+      "occurrence": 7
+     }
+    ]
+   },
+   "rationale": "Exclusive wording 'only' limits the population the rule applies to, so RESTRICT with the whole restricted population as the PART, head noun included (rule 7); the clause is discontinuous around the target words 'applies to'. 'not' negates only the relative-clause predicate of this component (do meet the definition), so it is a PART marker rather than a NOT node.",
+   "critical": true,
+   "critical_reason": "Decides which hospitals the rule applies to at all (only licensed acute care hospitals).",
+   "contested": false,
+   "contested_reason": ""
+  },
+  {
+   "rid": "R8",
+   "tid": "T6",
+   "class": "COND",
+   "introducer": [
+    {
+     "text": "if",
+     "start": 5683,
+     "end": 5685,
+     "occurrence": 14
+    }
+   ],
+   "clause": [
+    {
+     "text": "if the information submitted is not less than what was required on January 1, 2025",
+     "start": 5683,
+     "end": 5765,
+     "occurrence": 1
+    }
+   ],
+   "excluded": [],
+   "logic": {
+    "nid": "N1",
+    "op": "PART",
+    "quotes": [
+     {
+      "text": "the information submitted is",
+      "start": 5686,
+      "end": 5714,
+      "occurrence": 1
+     },
+     {
+      "text": "less than what was required on January 1, 2025",
+      "start": 5719,
+      "end": 5765,
+      "occurrence": 1
+     }
+    ],
+    "markers": [
+     {
+      "text": "not",
+      "start": 5715,
+      "end": 5718,
+      "occurrence": 8
+     }
+    ]
+   },
+   "rationale": "'if' gives the circumstance under which the permission to submit the federal-format file holds; no exclusive wording, so COND. The object qualifier 'that meets the requirements ... subparts A and B' is part of the target (rule 7). 'not' negates only this component's predicate (is less than), so it is a PART marker split around the negator.",
+   "critical": true,
+   "critical_reason": "Decides whether a hospital's federal-format submission satisfies the state reporting requirement.",
+   "contested": false,
+   "contested_reason": ""
+  },
+  {
+   "rid": "R9",
+   "tid": "T4",
+   "class": "EXCEPT",
+   "introducer": [
+    {
+     "text": "Is exempt",
+     "start": 4615,
+     "end": 4624,
+     "occurrence": 1
+    }
+   ],
+   "clause": [
+    {
+     "text": "the proposal",
+     "start": 4599,
+     "end": 4611,
+     "occurrence": 2
+    },
+    {
+     "text": "Is exempt",
+     "start": 4615,
+     "end": 4624,
+     "occurrence": 1
+    }
+   ],
+   "excluded": [],
+   "logic": {
+    "nid": "N1",
+    "op": "PART",
+    "quotes": [
+     {
+      "text": "the proposal",
+      "start": 4599,
+      "end": 4611,
+      "occurrence": 2
+     }
+    ],
+    "markers": []
+   },
+   "rationale": "Assertion phrased as the exception (rule 6) inside the because-clause of the R5 sentence: its subject is 'the proposal' (the colon and line breaks are form-template punctuation, not a sentence boundary) and the same sentence names the thing exempted from, the requirements of the Regulatory Fairness Act, so it attaches to T4 (rule 6.2). It is a separately introduced exempting expression (rules 1 and 3), so it is its own relation rather than part of R5. 'because' links it to R5 as a reason and the citation 'under RCW 19.85.025(4)' is authority, so both stay outside the clause, as with the other exemption grounds.",
+   "critical": false,
+   "critical_reason": "",
+   "contested": false,
+   "contested_reason": ""
+  }
+ ],
+ "out_of_scope_notes": [
+  "'have only added data reporting elements' (Purpose paragraph): 'only' is a focus adverb on the verb describing CMS's past changes, not a restriction on the application of an assertion; not recorded.",
+  "'how the department will interpret if the hospitals have met them or not' (Reasons paragraph): 'if' is an embedded question (whether), not a condition; not recorded.",
+  "'A school district fiscal impact statement is not required under RCW 28A.305.135' and 'A cost-benefit analysis is not required under RCW 34.05.328': plain negated statements of agency procedure that name neither an exempted population nor a governing assertion; no condition clause to record under rules 3-6.",
+  "The 'as ...' grounds after each 'is exempt' (e.g. 'as it is a procedural rule') and the statutory citations are reasons/authority for the exemptions, not conditions, restrictions or exceptions; they are left outside the relation clauses (R4, R6, R9).",
+  "'Scope of exemption for rule proposal:' / 'Is fully exempt.' is a form-template heading and its selected option: 'Is fully exempt.' is a sentence with no subject and names nothing exempted from, and 'rule proposal' appears only as the object of 'for' inside the heading label, so there is no stated exempted population to quote as a PART (rule 6); it restates the scope of the Regulatory Fairness Act exemption already recorded in R5/R6/R9 and is not recorded as a relation.",
+  "'To meet the requirements of subsection (1) of this section' (WAC (2)): purpose clause, not a condition; left outside T6/R10.",
+  "WAC (3) 'against a hospital that fails to comply with this section': relative-clause qualifier of the object, part of the assertion under rule 7; no relation recorded.",
+  "Comment and assistance deadlines ('beginning the time and date of this filing, by October 27, 2026, at 11:59 p.m.'; 'by October 13, 2026') and 'beginning July 1, 2027' are temporal qualifiers with no condition introducer; not recorded.",
+  "Extraction artifacts: double spaces inside citations (e.g. 'RCW  70.41.560') and missing space in 'WAC 246-320-148Hospital'."
+ ]
+}

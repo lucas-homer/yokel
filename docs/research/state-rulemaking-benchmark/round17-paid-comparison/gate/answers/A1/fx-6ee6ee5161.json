@@ -1,0 +1,39 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r17-gate-A1-b3"
+  },
+  "call_id": "fx-6ee6ee5161",
+  "source_id": "fx-6ee6ee5161",
+  "output_sha256": "276c9105e30d713f10c35953831841430f5d849d75bf0c83f10f53f9c772649d",
+  "reference_sha256": "8ea8fe0264bd947f2eeae87e8018a4178aca2c32a1c8bd6652a477db5270bbae",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        },
+        {
+          "unit": 2,
+          "form": "direct"
+        }
+      ],
+      "basis": "Both units assert that ferry tickets are refundable, each with one disjunct of the condition folded into the assertion text; a reader would take each as making T1's assertion. Both have evidence [0,28], the target quote."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "Units 1 and 2 are each narrower than the target (condition folded into the assertion: 'if the sailing is cancelled' / 'if the passenger is ill'). Mapped direct under M3; listed both under M5 as independent restatements."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A2",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "session": "r17-gate-A2-b3"
+  },
+  "call_id": "fx-6bb1b17851",
+  "source_id": "fx-6bb1b17851",
+  "output_sha256": "7e847e4d3c215a329bb608423607ce008616e777d3d45f29ccbdec6974dc3398",
+  "reference_sha256": "9151fb7b32395c011d365021a0abf3210e3e9f75a31e7d069a20242896d6a281",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 1 states 'Hunters need a permit' with evidence covering the first sentence's quote [0,21]."
+    },
+    {
+      "tid": "T2",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 1's evidence also covers the second occurrence [73,94], and its assertion is the same permit requirement."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "Unit 1 merges both occurrences into one assertion; mapped to both targets under M7."
+      },
+      {
+        "tid": "T2",
+        "note": "Same merged unit as T1; mapped direct because its evidence covers this occurrence and the assertion is identical."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

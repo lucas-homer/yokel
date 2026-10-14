@@ -1,0 +1,55 @@
+{
+  "source_id": "26-19-041",
+  "reviewed_draft_sha256": "0ac3fc1e65ac87f9746b490c9810d32466a3e496f620ca89d5fac45621209993",
+  "objections": [
+    {
+      "oid": "O1",
+      "rid": "R4",
+      "kind": "wrong_segmentation",
+      "claim": "R4, R5 and R6 split one explicitly coordinated exemption into three relations. The subsection clauses form a semicolon-delimited list joined by 'and', repeat the same exempting expression, and govern the same analysis target. Section 4.2 rule 2 applies before rule 3: repeated introducers inside explicit coordination remain one relation.",
+      "evidence": {
+        "text": "Subsection (1) is exempt under RCW  34.05.328 (5)(c)(i) as it is a procedural rule; subsection (2) is exempt under RCW  34.05.328 (5)(b)(iii) as it incorporates Washington state statute without material change and RCW  34.05.328 (5)(b)(iv) as it clarifies that submission of additional information is not in violation of the law; and subsection (3) is exempt under RCW  34.05.328 (5)(b)(iv) as it provides clarity by connecting data reporting requirements to existing enforcement standards in rule.",
+        "start": 3983,
+        "end": 4481,
+        "occurrence": 1
+      },
+      "proposed_fix": "Merge R4-R6 into one EXCEPT relation on T3 with an AND node over the three subsection PARTs. Use the first 'is exempt' as the introducer and put the repeated exempting expressions and the list's final 'and' on the joining node, as rule 2 requires. Declare the corresponding spans, including that connective. The trailing statutory grounds can remain outside those spans; they explain the exemptions. Keep critical=false. R3 remains a separate general exemption."
+    },
+    {
+      "oid": "O2",
+      "missing": "EXCEPT restatement introduced by 'Is exempt' after 'because the proposal:'",
+      "kind": "missing_relation",
+      "claim": "The omitted form text expressly states another exemption and supplies its subject: 'the proposal'. The colon and line breaks do not erase that subject. The author's stated reason that there is no subject/PART text is contradicted by the source. Although the because-clause gives the reason for R7, it also contains an assertion phrased as an exemption under section 4.2 rule 6.",
+      "evidence": {
+        "text": "because the proposal: \n\nIs exempt under RCW  19.85.025(4).",
+        "start": 4591,
+        "end": 4649,
+        "occurrence": 1
+      },
+      "proposed_fix": "Add an EXCEPT relation on T4 with PART 'the proposal' and introducer 'Is exempt', using their exact source spans. The adjacent text identifies the Regulatory Fairness Act requirements as the thing exempted from, just as it does for R8. Leave the trailing citation outside the clause, and mark critical=false. Remove the corresponding no-subject justification from the out-of-scope notes."
+    },
+    {
+      "oid": "O3",
+      "missing": "EXCEPT scope restatement 'rule proposal: ... Is fully exempt'",
+      "kind": "missing_relation",
+      "claim": "The scope entry expressly names 'rule proposal' and states that it is fully exempt. This is textual content, not information available only in markup. The heading and its continuation together supply the exempted thing and exempting wording; excluding it merely because the continuation has no repeated subject misses the explicit exemption assertion.",
+      "evidence": {
+        "text": "Scope of exemption for rule proposal:\n\nIs fully exempt.",
+        "start": 4865,
+        "end": 4920,
+        "occurrence": 1
+      },
+      "proposed_fix": "Add an EXCEPT relation on T4 using PART 'rule proposal' from this scope entry and introducer 'Is fully exempt'. Declare those spans and retain the full-exemption wording. The preceding Regulatory Fairness Act discussion supplies the target. Mark critical=false and remove the corresponding no-PART justification from the out-of-scope notes."
+    }
+  ],
+  "no_objection_rids": [
+    "R1",
+    "R2",
+    "R3",
+    "R7",
+    "R8",
+    "R9",
+    "R10"
+  ],
+  "summary": "Three objections: one coordinated exemption is split across R4-R6, and two explicit Regulatory Fairness Act exemption restatements are omitted. R1, R2, R3, R7, R8, R9 and R10 are fine: their declared clauses, targets, classes, logic and critical flags are supported. In particular, COND for 'as long as', the contextual T4 attachment of R8, and the local-negation treatment in R2/R9/R10 are defensible under this spec. The agency exemptions are correctly noncritical. No objection is raised to leaving trailing explanatory grounds outside the existing clauses; no existing excluded entries require correction."
+}

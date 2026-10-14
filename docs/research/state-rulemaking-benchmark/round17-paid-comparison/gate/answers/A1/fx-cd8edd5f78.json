@@ -1,0 +1,35 @@
+{
+  "spec_version": "r17.adj.v2",
+  "adjudicator": {
+    "role": "A1",
+    "model": "claude-fable-5-1",
+    "effort": "high",
+    "session": "r17-gate-A1-b7"
+  },
+  "call_id": "fx-cd8edd5f78",
+  "source_id": "fx-cd8edd5f78",
+  "output_sha256": "549715195e934b537e5bf67bc8a958d9ef94f2ec7b366d2f968ba771f6b8ab35",
+  "reference_sha256": "9ec4e7fa9a53c00b98d79fc50e6dd714103a40fd5236cb05278cfdbaa8f01098",
+  "mappings": [
+    {
+      "tid": "T1",
+      "units": [
+        {
+          "unit": 1,
+          "form": "direct"
+        }
+      ],
+      "basis": "Unit 1 ('Residents may enter the lantern lottery.') states the same action and object as T1 ('may enter the lantern lottery') with the same permissive modality; its evidence [0,44] covers the target quote [15,44]."
+    }
+  ],
+  "notes": {
+    "mapping_doubts": [
+      {
+        "tid": "T1",
+        "note": "Unit 1 is narrower than the target: the 'Only residents' restriction is folded into the assertion text as the subject. A reader would still take it as making the target's assertion, so mapped direct per M3."
+      }
+    ],
+    "reference_defects": [],
+    "other": []
+  }
+}

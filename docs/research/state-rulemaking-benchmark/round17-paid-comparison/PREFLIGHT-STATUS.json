@@ -1,0 +1,54 @@
+{
+  "schema": "r17.preflight-status.v1",
+  "date": "2026-10-13",
+  "P0_release_policy": {
+    "state": "PENDING_USER",
+    "selected": "P-ACCEPT",
+    "evidence": "run/CAP-ACCEPTANCE.json (awaiting verbatim affirmation of residual-risk statement)"
+  },
+  "P1_dedicated_key": {
+    "state": "PENDING_USER",
+    "required": "R17-only OpenRouter key, non-resetting limit, 3x$0.27 <= L <= $1.73"
+  },
+  "P2_ledger": {
+    "state": "BLOCKED_ON_P0_P1"
+  },
+  "P3_adapter": {
+    "state": "PINNED",
+    "path": "adapter-r1-2",
+    "ready_sha256": "7bd3135ce3e4479de80873d961e78214cf2d264d7cd8d557b67eb52571cc058a",
+    "reviews": [
+      "adapter-review",
+      "adapter-review-r2",
+      "adapter-review-r3 (ready to pin)"
+    ]
+  },
+  "P4_sources": {
+    "state": "DONE",
+    "ready_sha256": "55afccdfe98d705165a51fb7d965ebbe3876d414a76e91b5f0791b3b8eb92560"
+  },
+  "P5_scoring_gate": {
+    "state": "PASSED",
+    "amendment": "A1-p5-batching",
+    "ready_sha256": "26212468e9a9e2d8a66a17c7bde179f4dcbe77f4bba775ebf01e96119e12c2a8"
+  },
+  "P6_references": {
+    "state": "FROZEN",
+    "ready_sha256": "e47520bacbd85f5b336a5dbcb8dc4e4a20559219693801460ebbd436cfe0aa23",
+    "amendment": "A2-packet-file-delivery"
+  },
+  "P7_release_record": {
+    "state": "BLOCKED_ON_P0_P1_P2"
+  },
+  "P8_auth": {
+    "state": "AT_RELEASE"
+  },
+  "P9_futility": {
+    "state": "DONE",
+    "result": "FULL omitted (pooled compounds 4 < 5); plan = S1-OPQ, S2-OPQ, S3-OPQ"
+  },
+  "pre_run_todo": [
+    "capture /etc/ssl/cert.pem sha256 on the Mini at release (N28)",
+    "optional: commit+push reference freeze before OPQ1 (E7) if user authorizes"
+  ]
+}

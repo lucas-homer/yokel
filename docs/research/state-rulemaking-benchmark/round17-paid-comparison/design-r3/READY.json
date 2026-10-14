@@ -1,0 +1,47 @@
+{
+  "design": "r17.d3",
+  "frozen": null,
+  "state": "unfrozen: review input for the round-3 re-review; not releasable",
+  "release_policy": "UNSET",
+  "release_policy_allowed": [
+    "P-HARD",
+    "P-ACCEPT"
+  ],
+  "release_policy_note": "Selected by the user only (BUDGET.md §0). While UNSET the paid phase stays unreleased.",
+  "supersedes": "../design-r2/ (frozen, unchanged)",
+  "responds_to": "../protocol-review-r2/REVIEW.md",
+  "spec_versions": {
+    "reference": "r17.ref.v3",
+    "adjudication": "r17.adj.v2",
+    "manifest": "r17.manifest.v1",
+    "fixtures": "r17.fixtures.v2"
+  },
+  "offline_check": {
+    "command": "python3 -I -S -B fixtures/check.py",
+    "failures": 0,
+    "scorer_checks": {
+      "assembly": 13,
+      "decisions": 15,
+      "gate_selftest": 10,
+      "gold_cases": 62,
+      "ledger": 18,
+      "reference_examples": 9,
+      "reference_invalid": 9,
+      "scorer_cases": 63
+    },
+    "adjudicator_gate": "not run (P5 requires --adjudications)"
+  },
+  "sha256": {
+    "ADJUDICATION-SPEC.md": "8d5b1b324bdfc906c3953828740fd93c73110d8a3874f2d6ac78a2a07c05616f",
+    "BUDGET.md": "0dd23dedf967a3b59d9fb6ddf3ed363d3b7b8b19c63fd12c84d3f5673766e425",
+    "DISPOSITION.md": "f647b222b19c83c10c9dffdf899520681c77117a1476dce66452c9144b10d72b",
+    "PROTOCOL.md": "42d3ff7760cd58eb72202f18fa585a733e2cb2bc0b54f4a565d9215a35db0bf6",
+    "REFERENCE-SPEC.md": "ef660c68af39c3c4a7e74dd8f7a1ab5eaf883cd15225d3f6b3f17692d1bb05a0",
+    "fixtures/README.md": "06810c215e4c83b9b57b991cbbae9f16502b24a730bd7934497bd5d9b3fc9619",
+    "fixtures/cases.json": "66f9bf01b71baa9dfe00d5142cc4628afd598769f328ed8354de3a8c89949ea9",
+    "fixtures/cases.src.json": "b1cbb162869d7551892f9071dd4e649fad414c463eb78b4f2916a26792ff0f22",
+    "fixtures/check.py": "101b0af79a719e565c391b13fcac91be0880e6628a5145030adab722bccfc917",
+    "fixtures/r17recon.py": "9ac019b4c65685b2aa6bb1fb0b27379ec9411762d87c9c8eedb406c5857ad6ec",
+    "fixtures/r17score.py": "7e5ff4405fbf380403255853e50cf76c0a92871e08b9a77104209cb18a1e99d5"
+  }
+}

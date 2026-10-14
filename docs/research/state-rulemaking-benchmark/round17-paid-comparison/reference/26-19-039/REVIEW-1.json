@@ -1,0 +1,25 @@
+{
+  "source_id": "26-19-039",
+  "reviewed_draft_sha256": "d2ffb4230ca8d8da3846cbd36de2af0dad060ddb5793ae385f999f3afa429997",
+  "objections": [
+    {
+      "oid": "O1",
+      "missing": "The separate full-scope Regulatory Fairness Act exemption statement following the explanation of exemptions.",
+      "kind": "missing_relation",
+      "claim": "The source separately asserts that the rule proposal is fully exempt. R3 faithfully records the earlier disjunction (the proposal or portions of it), but does not record this later, more definite statement of exemption scope. Treating the full-scope statement solely as a restatement loses its express resolution of whole versus partial exemption. Section 4.2 rules 3 and 6 call for a separate EXCEPT relation for this separately stated exemption.",
+      "evidence": {
+        "text": "Scope of exemption for rule proposal:\n\nIs fully exempt.",
+        "start": 4064,
+        "end": 4119,
+        "occurrence": 1
+      },
+      "proposed_fix": "Add an EXCEPT relation on T3 for the full exemption of the rule proposal, using the scope heading to establish the exempted population and the exact exempting wording from the following sentence. Preserve R3 as written; do not replace its explicit OR with an inferred conjunction or silently drop its alternative. Mark the added relation critical:false because this is the same agency procedural exemption."
+    }
+  ],
+  "no_objection_rids": [
+    "R1",
+    "R2",
+    "R3"
+  ],
+  "summary": "One missing-relation objection: record the separate statement that the rule proposal is fully exempt. R1 is fine as UNRESOLVED with its statutory-authority citation excluded; R2 is fine as an EXCEPT relation on the named procedural requirements; R3 is fine as an EXCEPT relation with the explicit OR population. Their declared clauses, exclusions, targets, logic and noncritical flags are supported. The brewery subject/object qualifiers require no separate relation under rule 7; the explanatory causal clauses, ordinary deadline wording, venue alternatives and plain negated analysis requirements do not establish additional condition-like relations under this spec."
+}

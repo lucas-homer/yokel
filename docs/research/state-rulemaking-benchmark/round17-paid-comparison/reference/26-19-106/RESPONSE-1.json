@@ -1,0 +1,18 @@
+{
+  "source_id": "26-19-106",
+  "review_sha256": "0f407e978650e01a8974f54c6df6e6aeaa20fe8c1d58804f1b8150a6ab7b5227",
+  "responses": [
+    {
+      "oid": "O1",
+      "decision": "accept",
+      "reason": "Rule 6 requires the PART to hold the exempted population or thing. 'under RCW  28A.305.135' names the statute that would impose the fiscal-impact-statement requirement; it is the frame of the requirement, not a case carved out of it, and the sentence names no exempted party. Reading the statute as the PART was also inconsistent with the draft's own treatment of statutory authority in R3 (excluded as citation) and R4 (grounds left outside the clause). The alternative of keeping an EXCEPT relation with an empty PART would assert an exemption with no exempted case, and inventing 'this rule'/'the college' as the population is barred by rule 6's 'do not invent'. The sentence is a bare negated requirement, the same shape as 'Rule is not necessitated by federal law, federal or state court decision.', which the draft already left unrecorded. Per §10 it is explained in out_of_scope_notes instead.",
+      "change": "Removed R1 and T1. Added an out_of_scope_notes entry explaining why the standalone non-requirement has no relation. Surviving ids (T3-T5, R3-R5) are kept unchanged for traceability across review rounds; the spec requires uniqueness, not contiguity."
+    },
+    {
+      "oid": "O2",
+      "decision": "accept",
+      "reason": "Same defect as O1: 'under RCW  34.05.328' identifies the statute imposing the cost-benefit-analysis requirement, not an exempted population, thing or case, and no exempted party is stated in the sentence. The spec's §5 expectation that 'an analysis the agency is excused from preparing' be recorded as a non-critical relation is already met by R3, where the next sentence names 'the college' as the party not mandated to comply with RCW 34.05.328 (the implied target). Keeping R2 alongside R3 would double-record the same exemption, once correctly and once with a statutory frame standing in for the missing population.",
+      "change": "Removed R2 and T2. The same new out_of_scope_notes entry covers this sentence and points to R3 as the record of the cost-benefit exemption."
+    }
+  ]
+}
