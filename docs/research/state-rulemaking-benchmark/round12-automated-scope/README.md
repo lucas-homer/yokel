@@ -1,0 +1,26 @@
+# Round 12: automated scope implementation and bounded pilot
+
+Implementation is complete and independently reviewed. The paid pilot is an operational failure with preserved evidence: both attempted responses exhausted the fixed 8,192-token output allowance. It does not establish semantic accuracy or a winner between direct verification and the staged pipeline.
+
+The single fresh case was Washington WSR 26-19-016, selected prospectively from the latest linked register issue under a fixed size rule. Both arms used the same complete 3,876-character source and frozen candidate where applicable. The candidate and independent AI source assessment were frozen before provider outputs. They are not human gold. This is one feasibility case, not a representative 50-state sample.
+
+| Stage | Outcome | Reported cost |
+| --- | --- | ---: |
+| D: source + candidate, direct discovery/scope/mapping | HTTP 200; `finish_reason: length`; 8,192 completion tokens; incomplete JSON | $0.095816 |
+| A: source-only inventory | HTTP 200; `finish_reason: length`; 8,192 completion tokens; incomplete JSON | $0.086531 |
+| C: source + frozen A scope classification | Not attempted because A failed | — |
+| B: source + frozen A/C + candidate mapping | Not attempted because A failed | — |
+
+Total provider-reported cost was **$0.182347**, not invoice-verified. Conservative new debit is $0.323840, cumulative debit $1.505990718, leaving $0.494009282 within the unchanged $2 ceiling. Reservations were retained for both failed attempts. There were no retries, repairs, fallback calls or changes to the model, limits, source or candidate after release.
+
+The fixed request guard was not the cause: D used 28,441 guarded bytes and A 10,205, both below 40,000. Their output contained 33,007 and 30,283 characters respectively, while reported reasoning usage was only 38 and 63 tokens. Repeated evidence quotations, prose and structural fields consumed output capacity. The runner rejected both results and stopped the dependent stages. Its generic final error reflects the adapter rejection; authenticated provider responses establish that service-account access worked in this session without another desktop approval. This does not establish availability after logout, reboot or a locked login Keychain.
+
+The pre-output candidate audit identified four conceptual loss clusters: amendment action and drafting, implementation and enforcement contact responsibilities. Those remain untested by a completed pipeline. Truncated prefixes cannot support recall, precision, completeness, scope accuracy, whole-record fidelity or a causal comparison. The original audit labels and all historical artifacts remain unchanged.
+
+The runtime passed 33 test methods; independent prerelease review passed 143 checks. The primary reproduced the suite and verified 6,829 historical files. The final 8,606-file signed closure passed the unchanged release validator and native executor check. Current bundled Python dependencies were explicitly pinned after the app update; the credential executor and its permissions were not changed. Synthetic tests establish guards and failure handling, not model performance.
+
+The usage receipts imply a cache-write input premium: reported input charges fit $2.50/M cache-write tokens plus $2/M for the remaining input, despite the nominal $2/M prompt routing cap. This is an arithmetic inference, not a verified pricing policy. Reservations exceeded the observed charges; the ledger remains valid. Future estimates should account for cache-write costs explicitly.
+
+The next useful step is an offline design for a compact generated representation: evidence selectors tied to the immutable source, compact field encoding, explicit uncertainty and relationships, deterministic reconstruction and exact validation. Measure actual token size with substantial headroom before another paid pilot. Preserve the complete source and audit trail; do not silently drop background, cap discovered facts or salvage response prefixes. If a compact representation still cannot fit, use predetermined sections with explicit cross-section relationships and a completeness reconciliation step. If offline sizing succeeds, start with one source-only inventory call under a newly reviewed protocol and budget. Reusing this now-exposed notice is an engineering diagnostic; semantic evaluation requires a fresh prospectively selected case. No additional call is released by this report.
+
+Artifacts: [runtime](runtime/README.md), [prerelease review](review/runtime/REVIEW.md), [execution freeze](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/round12-automated-scope/execution/READY.json), [ledger](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/round12-automated-scope/execution/run/ledger.json), [pre-output candidate audit](reference/candidate-audit/REPORT.md). Independent postrun reviews: [operational audit](review/postrun/REVIEW.md), [qualitative failure diagnosis](reference/postrun/REPORT.md). The operational audit passed 97 checks, including the published signature, all release pins, no-retry evidence and ledger reconciliation.

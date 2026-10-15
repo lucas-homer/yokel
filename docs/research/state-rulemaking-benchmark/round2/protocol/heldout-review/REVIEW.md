@@ -1,0 +1,15 @@
+# Independent held-out source review
+
+Approved for a common reference freeze using the adjudicated references in this directory. No held-out native content or new parser outputs were inspected. All 22 source input page images were visually inspected before adjudication; each was also matched by image hash to a fresh rendering of its original physical PDF page.
+
+The corpus has 8 notices, 8 states, 8 distinct original PDFs, 8 publication/template families, 74 reference fields, and 65 critical fields in 53 semantic groups. Seven notices are eligible for the strict reference gate. H06 remains insufficient-reference: the general instructions say a maximum of 20 calendar days, while the target notice says 20 working days. Preserve both passages and the uncertainty; do not infer legal precedence. All eight notices remain in the scheduled denominator. The adopted seven-pass promotion threshold requires all seven eligible notices to pass.
+
+Expected values, answerability and criticality are confirmed without change. Adjudications only consolidate related date-role facets into semantic groups and clarify the scope of the H06 conflict question. A timezone question spanning both comment and hearing roles conservatively groups those roles together; H08 also groups its hearing-extension condition. This avoids treating correlated precision/condition facets as separate semantic groups. Field metrics remain descriptive and retain their original denominator.
+
+Source identities, page mappings, complete-notice boundaries, positive/negative references and intended lifecycle distinctions are accepted. H02's explicit hearing “None” is an explicit negative, while missing times/effective dates are scoped absence claims. H07's anticipated effective date is not an actual effective date. H08's July 24 continuation must retain its attendance/opportunity condition. See per-notice reviewer notes for additional traps.
+
+The family audit includes all eight named old families and visual comparison of all five unnamed old notices. No original-PDF or publication/template-family overlap was found. Broad layout similarity is not excluded or represented as novelty.
+
+Limitations are frozen: allocation is 2 clean standalone, 2 filled form, 3 dense register, 1 lifecycle, rather than 2 each. Both filled forms are born-digital; there are zero image-only scans. Selection was purposive and not preregistered. The collector used native text for navigation/transcription before the collector freeze; this independent review used source images. These are agent-adjudicated references, not human gold labels or legal determinations.
+
+`review.json` gives counts and eligibility; `adjudications.json` records every amendment; each H*/adjudicated-reference.json is the scoring reference. `source-validation.json` and `family-audit.json` preserve validation evidence. Collector files remain unchanged. Primary must include these files and the protocol amendments in the experiment-wide freeze before held-out specialist execution.

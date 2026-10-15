@@ -1,0 +1,275 @@
+WSR 26-18-032
+
+PROPOSED RULES
+
+COUNTY ROAD
+
+ADMINISTRATION BOARD
+
+\[Filed August 26, 2026, 9:45 a.m.\]
+
+Original Notice.
+
+Proposal is exempt under RCW [34.05.310](http://app.leg.wa.gov/RCW/default.aspx?cite=34.05.310)(4) or [34.05.330](http://app.leg.wa.gov/RCW/default.aspx?cite=34.05.330)(1).
+
+Title of Rule and Other Identifying Information: Amending the standards of good practice for county road departments, lapsing requirements for the rural arterial program (RAP), and clarifying eligibility for the county road administration board's (CRAB) various grant programs.
+
+Hearing Location(s): On October 15, 2026, at 9:00 a.m., at Friday Harbor Suites, 680 Spring Street, Friday Harbor, WA. Virtual attendance is available.
+
+Date of Intended Adoption: October 15, 2026.
+
+Submit Written Comments to: Drew Woods, 2404 Chandler Court S.W., Suite 240, Olympia, WA 98504, email drew.woods@crab.wa.gov, by October 9, 2026.
+
+Assistance for Persons with Disabilities: Contact Drew Woods, phone 360-753-5989, TTY 800-883-6384, email drew.woods@crab.wa.gov, by October 9, 2026.
+
+Reasons Supporting Proposal: WAC 136-25-010 is being amended to incorporate requirements of chapter [36.170](http://app.leg.wa.gov/RCW/default.aspx?cite=36.170) RCW in the traffic law enforcement expenditures standard of good practice. WAC 136-40-030 is being amended to require that certain county road policies be reviewed, any updates made, and readopted a minimum of every five years. WAC 136-167-040 is being amended for changes to the project lapsing requirements for RAP. Chapters 136-300, 136-400, 136-500, and 136-700 WAC are being amended to clarify eligibility to participate in CRAB grant and loan programs should CRAB find that a county is out of compliance with Article II, section 40 of the state constitution, the standards of good practice, or any legislative directive.
+
+Statutory Authority for Adoption: RCW [36.78.050](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78.050), [36.78.070](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78.070), and [36.170.010](http://app.leg.wa.gov/RCW/default.aspx?cite=36.170.010).
+
+Statute Being Implemented: RCW [36.78.050](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78.050), [36.78.070](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78.070)(1), [36.78.070](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78.070)(6), [36.79.060](http://app.leg.wa.gov/RCW/default.aspx?cite=36.79.060)(1), [46.68.090](http://app.leg.wa.gov/RCW/default.aspx?cite=46.68.090) (2)(i), and [47.56.725](http://app.leg.wa.gov/RCW/default.aspx?cite=47.56.725)(4).
+
+Rule is not necessitated by federal law, federal or state court decision.
+
+Name of Proponent: CRAB, governmental.
+
+Name of Agency Personnel Responsible for Drafting and Enforcement: Drew Woods, 2402 Chandler Court S.W., Suite 240, Olympia, WA 98502, 360-753-5989; Implementation: Derek Pohle, Mike Clark, Steve Johnson, and Todd O'Brien, 2402 Chandler Court S.W., Suite 240, Olympia, WA 98502, 360-753-5989.
+
+A school district fiscal impact statement is not required under RCW [28A.305.135](http://app.leg.wa.gov/RCW/default.aspx?cite=28A.305.135).
+
+A cost-benefit analysis is not required under RCW [34.05.328](http://app.leg.wa.gov/RCW/default.aspx?cite=34.05.328). Proposed rule relates only to internal governmental operations that are not subject to violation by a nongovernment party.
+
+This rule proposal, or portions of the proposal, is exempt from requirements of the Regulatory Fairness Act because the proposal:
+
+Is exempt under RCW [19.85.025](http://app.leg.wa.gov/RCW/default.aspx?cite=19.85.025)(3) as the rules relate only to internal governmental operations that are not subject to violation by a nongovernment party.
+
+Is exempt under RCW [19.85.025](http://app.leg.wa.gov/RCW/default.aspx?cite=19.85.025)(4).
+
+Scope of exemption for rule proposal:
+
+Is fully exempt.
+
+August 26, 2026
+
+Jane Wall
+
+Executive Director
+
+RDS-7343.1
+
+AMENDATORY SECTION(Amending WSR 16-09-069, filed 4/18/16, effective 5/19/16)
+
+WAC 136-25-010Purpose and authority.
+
+RCW [36.79.140](http://app.leg.wa.gov/RCW/default.aspx?cite=36.79.140) sets forth the conditions under which counties are eligible to receive funds from the rural arterial trust account (RATA). Chapter 136-150 WAC describes how the RATA provisions will be implemented by the county road administration board. This chapter is specific to WAC 136-150-020, 136-150-021, 136-150-022, and 136-150-030 relating to road levy, road levy diversion, and traffic law enforcement.
+
+RCW [36.170.070](http://app.leg.wa.gov/RCW/default.aspx?cite=36.170.070) sets forth the conditions under which counties are eligible to receive funds from the county local road program (LRP). Chapter 136-700 WAC describes how the LRP provisions will be implemented by the county road administration board. This chapter is specific to WAC 136-700-030 relating to road levy, road levy diversion, and traffic law enforcement.
+
+AMENDATORY SECTION(Amending WSR 16-09-069, filed 4/18/16, effective 5/19/16)
+
+WAC 136-25-020Diversion of road levy funds may only be for traffic law enforcement within unincorporated areas of the county.
+
+To preserve RATA and LRP eligibility, road levy funds diverted pursuant to RCW [36.33.220](http://app.leg.wa.gov/RCW/default.aspx?cite=36.33.220) may only be used for traffic law enforcement within the unincorporated areas of counties, except those counties with a population of less than ((eight thousand))8,000, RCW [36.79.140](http://app.leg.wa.gov/RCW/default.aspx?cite=36.79.140) and WAC 136-150-030.
+
+RDS-7344.1
+
+AMENDATORY SECTION(Amending WSR 96-17-013, filed 8/12/96, effective 9/12/96)
+
+WAC 136-40-030Adoption and submittal.
+
+Each county legislative authority shall formally adopt a utility policy regarding accommodation of utilities on county road rights of way that includes all the requirements enumerated in WAC 136-40-020. A copy of such utility policy, including all updates, amendments and modifications as they may from time to time become necessary, shall be forwarded to the county road administration board within ((thirty))30 days of adoption.
+
+The policy adopted pursuant to this chapter is required to be reviewed, updated if applicable, and re-adopted every five years.
+
+RDS-7345.1
+
+AMENDATORY SECTION(Amending WSR 22-03-084, filed 1/18/22, effective 2/18/22)
+
+WAC 136-50-050Written policy.
+
+In order to implement the requirements of this chapter, the county legislative authority shall develop and by resolution or ordinance adopt written policies, within the limits of existing state law, that cover any matters relating to county road department administration, maintenance, and construction as they may see fit.
+
+At a minimum, the following written policies must be adopted by the legislative authority:
+
+(1) Organization: A policy designating the interrelationships of all positions involved in the administration, operation, maintenance, and construction of the county road system, including the legislative/executive authority. Said policy shall include a chart or pictorial representation of the interrelationships and must clearly show the chain of command throughout the entire organization. It is recommended, but not required, the positions be represented by title or position number rather than by employee name to reduce the frequency of revision, adoption, and required submission to CRAB.
+
+This policy is required to be reviewed, updated as applicable, and re-adopted at a maximum of every five years.
+
+(2) Complaint handling: A policy establishing the method by which complaints from the general public and others will be received, assigned for review, response and any corrective action, and follow-up communication deemed appropriate.
+
+This policy is required to be reviewed, updated as applicable, and re-adopted at a maximum of every five years.
+
+(3) Work for others: A policy regarding approval of work for other public agencies and county departments within the requirements of RCW [35.77.020](http://app.leg.wa.gov/RCW/default.aspx?cite=35.77.020), [36.75.205](http://app.leg.wa.gov/RCW/default.aspx?cite=36.75.205), and chapter [39.34](http://app.leg.wa.gov/RCW/default.aspx?cite=39.34) RCW. The policy shall include, but is not limited to, the following:
+
+(a) Statement of intent indicating whether the legislative authority will accept requests for work from other public agencies or other county departments;
+
+(b) Statement indicating procedures to be followed in processing such requests in accordance with applicable statutes; and
+
+(c) Statement indicating any delegation of authority in processing such requests.
+
+This policy is required to be reviewed, updated as applicable, and re-adopted at a maximum of every five years.
+
+(4) County road standards: The county engineer shall propose and, the legislative authority shall adopt, and amend as needed, standards for all county roads per chapter [36.86](http://app.leg.wa.gov/RCW/default.aspx?cite=36.86) RCW, and shall include:
+
+(a) Design standards, see WSDOT local agency guidelines chapter 42.
+
+(b) Construction specifications.
+
+(c) Permitting work within the county road right-of-way.
+
+(5) Survey monument preservation: A policy regarding preservation, maintenance, and restoration of survey monuments within the county road right-of-way.
+
+This policy is required to be reviewed, updated as applicable, and re-adopted at a maximum of every five years.
+
+RDS-7346.2
+
+AMENDATORY SECTION(Amending WSR 15-16-015, filed 7/24/15, effective 8/24/15)
+
+WAC 136-167-040Lapsing of RATA allocation for approved projects.
+
+To encourage timely development and construction of approved projects, all projects for which RATA funds have been allocated must meet certain project development milestones. Failure to meet the milestones will result in action by the county road administration board to withdraw RATA funds from the project.
+
+(1) For the purposes of this section, a project will be subject to lapsing and withdrawal of its RATA allocation if:
+
+(a) The project has not begun the preliminary engineering within one year of project approval by the county road administration board; or
+
+(b) ((The project has not begun construction within six years of the date of project approval by the county road administration board.
+
+(2) A project shall be considered in preliminary engineering if RATA funds have been expended or evidence that non-RATA funds have been expended for preliminary engineering as provided for in RCW [36.75.050](http://app.leg.wa.gov/RCW/default.aspx?cite=36.75.050).))During the preliminary engineering or right-of-way phase, if the county has not documented progress through the reimbursement process within a six-month period, the county will be notified that the project will lapse within six months from notification, unless the county can document progress through the reimbursement process within that six-month period;
+
+(c) The project has not begun construction within six years of the date of project approval by the county road administration board;
+
+(d) For construction only project awards, a project shall be considered lapsing if construction does not commence within two years from the date of project approval by the county road administration board.
+
+(2) A project shall be considered in preliminary engineering if a minimum of $5,000 of RATA funds have been expended or evidence that a minimum of post CRAB/county funds of $5,000 of non-RATA funds have been expended for preliminary engineering as provided for in RCW [36.75.050](http://app.leg.wa.gov/RCW/default.aspx?cite=36.75.050).
+
+(3) Documented progress shall be considered satisfied if a minimum of $5,000 of RATA funds have been expended in the previously six-month period.
+
+(4) A project shall be considered in construction if:
+
+(a) The construction contract for the work has been advertised for bids as provided for in RCW [36.77.020](http://app.leg.wa.gov/RCW/default.aspx?cite=36.77.020);
+
+(b) A contract has been awarded under the provisions of the small works roster contract award process; or
+
+(c) If done by county forces, the work has commenced.
+
+(((3)))(5) If an approved project does not meet a required project development milestone, the county road administration board will, at its next regular meeting, withdraw RATA funds from the project.
+
+(((4)))(6) At any time up to ((ten))10 days before such meeting, the county may, in writing, request an extension of the lapse date. The county road administration board may grant such an extension if it finds that the delay in project development was for reasons that were both unanticipated and beyond the control of the county, and subject to the following:
+
+(a) A project extension will be granted one time only and will be no more than two years in length; and
+
+(b) The county can demonstrate that the project was actively pursued for completion within the original CRAB/county contract terms and can be completed within a two-year extension; and
+
+(c) The request for an extension is based on unforeseeable circumstances that the county could not have anticipated at the time the project was submitted for RATA funding; and
+
+(d) An approved time extension will not be grounds for the county to request an increase in the RATA funding of the project; and
+
+(e) The executive director will determine a new lapse date, and all ((of)) the requirements listed above under subsections (1) and (2) of this section will apply except that further extensions will not be granted.
+
+(((5)))(7) The CRABoard may in its discretion determine that for the public safety, health or general welfare, an additional extension is necessary. If such a determination is made, the CRABoard may grant an additional extension and set the duration thereof.
+
+(((6)))(8) The CRABoard may at any time place a moratorium on lapsing of projects that are delayed due to CRAB initiated rescheduling and establish a new lapsing date to fit the CRABoard's programming needs. For those projects given a lapsing moratorium, section ((four))six shall be held in abeyance until the new lapsing date.
+
+RDS-7347.1
+
+AMENDATORY SECTION(Amending WSR 13-16-105, filed 8/7/13, effective 9/7/13)
+
+WAC 136-300-010Purpose and authority.
+
+RCW [46.68.090](http://app.leg.wa.gov/RCW/default.aspx?cite=46.68.090) (2)(i) and [36.78.070](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78.070) provides that the county road administration board shall administer the county arterial preservation program (CAPP) and the county arterial preservation account (CAPA) established by this statute. This chapter describes the manner in which the county road administration board will implement the several provisions of the statute.
+
+RCW [36.78.050](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78.050) authorizes the county road administration board to adopt rules and regulations as may be necessary to discharge its duties and exercise its powers under chapter [36.78](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78) RCW.
+
+AMENDATORY SECTION(Amending WSR 14-17-035, filed 8/13/14, effective 9/13/14)
+
+WAC 136-300-050Distribution of CAPA funds.
+
+(1) Certification of county arterial mileage.
+
+(a) Classification. The statute specifies that expenditure of CAPA funds is restricted to paved arterials in the unincorporated area of each county. Arterials are defined as being those county roads:
+
+(i) In urban areas, classified within the federal functional classification system as arterials or collectors;
+
+(ii) In rural areas, classified within the federal functional classification system as arterials, major collectors, or minor collectors.
+
+(b) Paved roads are defined as those roads which, at the time of CAPA allocation determination, are hard-surfaced through the application of a bituminous surface treatment (BST), asphaltic concrete pavement (ACP), or portland cement concrete (PCC). Brick or block surfaces shall also be considered as paved.
+
+(c) Source of information. The master county road log as maintained by the county road administration board in accordance with chapter 136-60 WAC shall be the source of official paved road mileage to be used for CAPA distribution.
+
+(2) Establishment of allocation percentages. At its first regular meeting after July 1st of each year, the county road administration board shall establish the next calendar year's allocation percentages for the individual counties based on information contained in the most recently certified master county road log. Each county's allocation percentage shall be computed by the county road administration board as its percentage of paved arterial lane miles of the total statewide paved county arterial lane miles.
+
+(3) Notice to counties. Upon their establishment, the county road administration board shall notify the county legislative authority and the county engineer of each county of the respective county's CAPA allocation percentage and the latest estimate of the amount of CAPA funds to be allocated during the next calendar year.
+
+(4) Distribution to counties. Distribution of allocated CAPA funds shall be done monthly by the state treasurer. The state treasurer shall use the allocation percentages provided by the county road administration board as computed under the provisions of subsection (2) of this section.
+
+(5) Eligibility. All arterial preservation work and related activities, and maintenance management done by each county shall be eligible for CAPA funding provided that:
+
+(a) The county is determined to be in compliance with the pavement management system requirements as set forth in chapter 136-70 WAC; and
+
+(b) The county engineer submits the annual county arterial preservation program (CAPP) to CRAB as required in WAC 136-300-060; and
+
+(c) The work is in conformance with the allowable activities as specified in WAC 136-300-070.
+
+(6) Should the CRABoard determine that a county is out of compliance with Article II, section 40 of the state Constitution, standards of good practice, or any legislative directive, the board may restrict or suspend a county's eligibility to participate in this program until such time as the board determines that the county is no longer out of compliance.
+
+RDS-7348.1
+
+AMENDATORY SECTION(Amending WSR 08-10-026, filed 4/28/08, effective 5/29/08)
+
+WAC 136-400-010Purpose and authority.
+
+RCW [47.56.725](http://app.leg.wa.gov/RCW/default.aspx?cite=47.56.725)(4) provides that the county road administration board may evaluate requests for county ferry capital improvement funds by Pierce, Skagit, Wahkiakum, and Whatcom counties, and, if approved by the board, submit said requests to the legislature for funding. This chapter describes the manner in which the county road administration board will implement the provisions of the act.
+
+RCW [36.78.050](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78.050) authorizes the county road administration board to adopt rules and regulations as may be necessary to discharge its duties and exercise its powers under chapter [36.78](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78) RCW.
+
+AMENDATORY SECTION(Amending WSR 22-22-074, filed 10/31/22, effective 12/1/22)
+
+WAC 136-400-020County and project eligibility.
+
+(1) Counties eligible to apply for county ferry capital improvement funds are Pierce, Skagit, Wahkiakum, and Whatcom.
+
+(2) For the project to be eligible it must be included in both the county's six-year transportation program and its ferry system 14-year long range capital improvement plan as described in WAC 136-400-040.
+
+(3) Any county holding an approved and executed county ferry capital improvement program contract is ineligible to submit a project funding application for additional ferry capital improvement funds until the existing contract is fully performed or has been mutually terminated.
+
+(4) Once a county has received funding for vessel replacement under this program, the county is no longer eligible for future replacement of that vessel as referenced in WAC 136-400-030(1). A county will remain eligible for project types referenced in WAC 136-400-030 (2), (3), (4) and (5).
+
+(5) Should the CRABoard determine that a county is out of compliance with Article II, section 40 of the state Constitution, standards of good practice, or any legislative directive, the board may restrict or suspend a county's eligibility to participate in this program until such time as the board determines that the county is no longer out of compliance.
+
+RDS-7349.1
+
+AMENDATORY SECTION(Amending WSR 20-04-076, filed 2/4/20, effective 3/6/20)
+
+WAC 136-500-010Purpose and authority.
+
+RCW [36.78.070](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78.070) provides that the county road administration board shall administer the emergency revolving loan program established by chapter [36.78](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78) RCW. This chapter describes the manner in which the county road administration board will administer the provisions of the emergency revolving loan program.
+
+RCW [36.78.050](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78.050) authorizes the county road administration board to adopt rules and regulations as may be necessary to discharge its duties and exercise its powers under chapter [36.78](http://app.leg.wa.gov/RCW/default.aspx?cite=36.78) RCW.
+
+AMENDATORY SECTION(Amending WSR 20-04-076, filed 2/4/20, effective 3/6/20)
+
+WAC 136-500-040County eligibility.
+
+Any county ((who is eligible to participate in the rural arterial program, has a current certificate of good practice and))having a total population under 800,000 as of April 1, 2019, is eligible to participate in this program.
+
+Should the CRABoard determine that a county is out of compliance with Article II, section 40 of the state Constitution, standards of good practice, or any legislative directive, the board may restrict or suspend a county's eligibility to participate in this program until such time as the board determines that the county is no longer out of compliance.
+
+RDS-7350.1
+
+AMENDATORY SECTION(Amending WSR 26-08-028, filed 3/23/26, effective 4/23/26)
+
+WAC 136-700-030Eligibility to receive funds.
+
+(1) Only those counties that, during the preceding 12 months, have spent all revenues collected for road purposes only, for such purposes, RCW [36.82.070](http://app.leg.wa.gov/RCW/default.aspx?cite=36.82.070), and including traffic law enforcement as allowed under Article II, section 40 of the state Constitution, are eligible to receive funds from the county local road program, except that:
+
+(a) Counties with a population of less than 8,000 are exempt from this eligibility restriction;
+
+(b) Counties expending revenues collected for road purposes only on other governmental services after authorization from the voters of that county under RCW [84.55.050](http://app.leg.wa.gov/RCW/default.aspx?cite=84.55.050) are exempt from this eligibility restriction; and
+
+(c) This restriction does not apply to any moneys diverted from the road district levy under chapter [39.89](http://app.leg.wa.gov/RCW/default.aspx?cite=39.89) RCW.
+
+(2) The board shall authorize county local road grant program funds for the construction project portion of a project previously authorized for a preliminary proposal in the sequence in which the preliminary proposal has been completed and the construction project is to be placed under contract. At such time the board may reserve funds for expenditure in future years as may be necessary for completion of preliminary proposals and construction projects to be commenced in the ensuing biennium.
+
+(3) Subject to the availability of amounts appropriated for this specific purpose, the board may consider additional projects for authorization under this chapter upon a clear and conclusive showing by the submitting county that the proposed project is of an emergent nature and that its need was unable to be anticipated at the time the six-year plan of the county was developed. The proposed projects must be evaluated on the basis of the priority rating factors specified in RCW [36.170.030](http://app.leg.wa.gov/RCW/default.aspx?cite=36.170.030).
+
+(4) Should the CRABoard determine that a county is out of compliance with Article II, section 40 of the state Constitution, standards of good practice, or any legislative directive, the board may restrict or suspend a county's eligibility to participate in this program until such time as the board determines that the county is no longer out of compliance.

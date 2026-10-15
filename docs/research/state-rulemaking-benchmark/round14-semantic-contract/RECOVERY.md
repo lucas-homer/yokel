@@ -1,0 +1,31 @@
+# R14 recovery and completed fresh-notice pilot
+
+Unattended identity and key injection recovered without token, permissions, ACL or executable changes. The original failure's cause remains unresolved. The fresh GPT inventory pilot subsequently completed; independent Fable assessment found semantic defects despite structural success.
+
+The original job and its consumed claim were preserved. Independent local review verified that it had stopped before the adapter created its run directory and before any provider POST. The primary released a distinct reviewed native job with the identical source, payload, limits and budget. Both jobs share the same exclusive adapter run-folder lock, so this was the previously authorized first provider call, with no model retry or output repair. Earlier stop receipts, audits, README and FINAL.json remain historical records; this report supersedes their then-pending execution outcome.
+
+| Result | Observation |
+| --- | ---: |
+| Fresh source | WSR 26-19-023, 7,208 characters |
+| Inventory | 110 units |
+| Finish | Complete stop; strict validation and exact evidence roundtrip |
+| Completion tokens | 7,231 of 8,192; 57 reported reasoning tokens |
+| Unused completion allowance | 961 tokens |
+| Guarded input | 29,331 bytes of 40,000 |
+| Provider-reported cost | $0.0891335, not invoice-verified |
+| Conservative new debit | $0.20 |
+| Conservative cumulative debit | $1.905990718 of $2 |
+
+GPT implementation and test execution remained separate from Claude advisory work. Fable reviewed the protocol, supplied test design, created the source-only reference before current-protocol/output exposure, and assessed the completed public-source inventory through **Claude.ai Max's isolated subscription bridge**. Actual model was claude-fable-5-1, firstParty. No OpenRouter Fable route was used. Model-picker names do not authorize a paid Claude API fallback; the global prohibition remains saved.
+
+The output explicitly carries missing deadline timezone/receipt-versus-dispatch details and identifies affected WAC rules separately from historical filings. These observed properties do not establish a causal improvement over earlier experiments: this is one new source without a paired old-protocol run.
+
+The clearest remaining defect is **incomplete applicability/qualification text in units 88, 95, 96, 98 and 99**. Several fields end at the 180-character limit with unfinished phrases. Unit95 additionally contains non-source mixed-script characters. Both the primary spot review and independent Fable review identified this issue. A valid JSON object and an exact compact-to-expanded roundtrip preserve these defects; they do not validate the underlying assertions. Some relevant facts may appear elsewhere, so a malformed field is not automatically a count of independently missing source facts.
+
+Field-cap pressure is a plausible mechanism, not a verified claim about provider decoding internals. Delivered overlong strings reject, but shorter strings missing essential qualifications can still pass structural checks. That distinction is now supported by an actual generated record, beyond the earlier synthetic negative controls. Contested force and markup interpretations must remain adjudicated as uncertain, rather than converted into settled legal-force errors.
+
+The next useful offline refinement is to avoid repeating complete qualifications in tightly capped prose fields: preserve complete condition units and explicit relationships, test long clauses and boundary behavior, and flag bound-hitting/incomplete fields for semantic review. Merely increasing a cap can consume the limited output headroom and cannot establish completeness. No additional paid call is authorized here; only $0.094009282 remains under the current conservative ceiling.
+
+Evidence: [frozen execution](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/round14-semantic-contract/execution/READY.json), [original stop](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/round14-semantic-contract/execution/STOP.json), [access recovery](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/round14-semantic-contract/recovery/ACCESS-RECOVERY.json), [replacement review](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/round14-semantic-contract/testing/recovery-review/READY.json), [primary receipt verification](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/round14-semantic-contract/recovery/PRIMARY-POSTRUN.json), [primary semantic observations](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/round14-semantic-contract/recovery/PRIMARY-SEMANTIC-OBSERVATIONS.json), [protocol review](claude-review/revised/REVIEW.md), and [earlier offline findings](README.md). Completed evidence: [Fable assessment](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/round14-semantic-contract/assessment/REPORT.json), [unit verdicts and findings](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/round14-semantic-contract/assessment/fable-assessment.json), and [postrun audit](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/round14-semantic-contract/testing/postrun/READY.json). The citation checks found no source/inventory quote or unit-ID mismatch; a crosswalk supplement explicitly maps the five initially grouped funding criteria. Fable’s summary status totals disagreed with individual entries, so those totals are preserved but unused. No accuracy score is inferred.
+
+Production eligibility, source completeness and action readiness remain unverified/false. The credential path's successful recovery does not prove the earlier fault is permanently fixed.

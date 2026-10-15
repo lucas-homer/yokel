@@ -1,0 +1,18 @@
+# R8 durable runner readiness
+
+The implementation uses immutable read-only R7 normalization, serializers, native parsers, probes and deterministic shadow guards. `lineage.json` binds their exact hashes. Local `operations.py` adapts the R6 fsynced append-only operation ledger; `provider_transport.py` performs a single bounded POST without redirect, retry or fallback. No simulation enters the live path.
+
+Offline preparation:
+
+```
+PYTHONDONTWRITEBYTECODE=1 /Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 docs/research/state-rulemaking-benchmark/round8/runtime/verify_offline.py
+PYTHONDONTWRITEBYTECODE=1 /Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 docs/research/state-rulemaking-benchmark/round8/runtime/run_pipeline.py --prepare-implementation docs/research/state-rulemaking-benchmark/round8/runtime/implementation.json
+```
+
+The first command runs only explicit mock native response transports, with network/process/credential-file audit guards. `offline-report.json` and `offline-test-output.txt` retain the actual outcomes. The second creates an immutable code-only receipt; sources, labels and credentials are not read. Recompute only before freeze if reviewed code changes; never overwrite a frozen receipt. Dry/live preparation imports and validates the protocol boundary before any intent. Code pins include transitive R7 pipeline/runtime and protocol-scoring dependencies, the local durable runner/transport/ledger, service code and R8 machine protocol. Model/provider/prices/caps stay fixed; nominal worst-case reservation is $1.960704 under a $2 total ceiling.
+
+Source manifest uses round8.sources.v1 and exact fields described in INTERFACE.md. Actual PDF page counts are verified with pypdf. Structural source/assembly and final request-size rejection are honest per-document outcomes; both verifier bodies admit and retain identical canonical full-source+record payloads before any verifier intent. No text/fact/schema clipping or repair. Source-first inventory requests contain no proposed record, prior output or label.
+
+Completed resume rebuilds every terminal through retained native provider parsing and byte/hash/identity checks, without another POST. A durable intent with an uncertain or invalid/HTTP operation latches stop; neither runner nor service entry retries it. Safe no-intent pause retains prior completed judgments and can resume at a deliberate new invocation. Failure/pause observations bind evidence hashes to receipts referencing durable intent/status/stop/result hashes. The runner audits those bindings before publishing a snapshot. Successfully parsed responses that report a charge above the ceiling retain their inventory/judgments in postresponse_budget_stop and stop all later calls; the observation never turns completed paid work into a provider failure. R8 protocol validates state, serial order, retained judgments and coverage schedule. HTTP errors alone set provider_service_error; transport uncertainty and invalid response remain separate causes. Global failure preserves later scheduled rows as not_started.
+
+Live execution requires primary-issued implementation/source/label freezes and a new round8.live-authorization.v1 bound to their hashes. The native service adapter later verifies an externally hash-pinned binding/dependency/job bundle before reading injected keys. Native policy/build, source collection, labels, binding generation and real dispatch remain primary-owned. Preparation here made no provider call or credential read. All records remain research-only, action_ready=false and production_eligible=false; mock success establishes durability/compatibility, not model accuracy or real provider acceptance.

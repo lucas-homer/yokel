@@ -1,0 +1,13 @@
+# Independent implementation review — approved offline scope
+
+Final runtime READY SHA: `ac2d64c61c054d4a4cdd47c34f780103d66bece4df3abdc133f8af7efa3c8451`.
+
+No unresolved findings. The one P2 finding was corrected: response preparation and input-container validation now occur inside the protected boundary, and malformed assemblies return structured invalid results. The initial 238-pass / 3-failure evidence and original finding remain in the `*-initial` review artifacts. The three failures were reproductions of that one issue.
+
+The corrected runtime passes all **244 independent checks**. The owner's **15 unit tests** also pass in an independent rerun whose output is confined to review. All ten runtime artifact hashes, all 21 protocol artifact hashes, the externally approved audit file, and all **4,995 historical artifacts** match their pins after testing. No owner report or runtime file was rewritten by this review.
+
+Verified boundaries include the exact 38,432-byte request / 39,456 guarded estimate; acceptance at 40,000 and rejection at 40,001 including UTF-8 multibyte growth; unchanged user payload and neutral-only system addition; private audit exclusion; escaped and nested duplicate rejection, nonfinite/overflow rejection; all 13 active raw response cases; lossless host validation via the owner's tests; nested IDs and schedule limits; bounded local reference expansion and rejection paths; all ten endorsed semantic outcomes and pending controls; exact source/field inventories, scoped review and approval bindings; validly rebound test-only mutations that reach semantic checks below hash integrity; unsupported compound additions, unknown-over-defect precedence, dependency cycles, null-only mappings with valid backlinks, and host unknown guards; malformed semantic/response input containers; nonoperative evidence/coverage pointer rejection; renamed audit independence from fixture IDs.
+
+The test-only rebound envelopes exist only in review memory. They are synthetic presumed approvals used to isolate validation behavior, not real adjudications; they never replace the primary's approved audit file or add an approval mechanism to runtime.
+
+Approval is limited to this pinned offline implementation. The three complete-supported development outcomes rely on manually reviewed source units and field judgments. This does not establish automated omission discovery, authenticated reviewer identity, model accuracy, provider schema compatibility, production eligibility, action readiness, or authorization for paid execution. Provider calls: zero. Credentials read: none. Production and action flags remain false.

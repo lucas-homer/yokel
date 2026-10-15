@@ -1,0 +1,65 @@
+{
+  "schema_version": "round7.independent_review.v1",
+  "disposition": "approved_bounded_offline_code",
+  "date": "2026-10-09",
+  "prior_findings_resolved": [
+    "consideration_policy_prompt_guidance",
+    "gate_state_consistency",
+    "retained_judgment_consistency",
+    "runtime_pdf_page_cap",
+    "json_integer_costs"
+  ],
+  "independently_run_tests": {
+    "pipeline": 5,
+    "runtime": 4,
+    "protocol": 4,
+    "failures": 0,
+    "errors": 0
+  },
+  "focused_reproduction": {
+    "negative_judgment_promoted_to_accepted": "rejected",
+    "accepted_judgment_removed": "rejected",
+    "completed_pair_has_failed_arm": "rejected",
+    "first_arm_failed_but_later_called": "rejected",
+    "size_gate_inventory_without_record": "rejected",
+    "cost_integer_zero": "accepted",
+    "cost_float_zero": "accepted",
+    "cost_integer_one": "accepted",
+    "pdf_pages_41": {
+      "gate": "source_review",
+      "dispatches": []
+    },
+    "jev_failure": {
+      "jev": "failed",
+      "stronger": "not_started"
+    },
+    "stronger_failure": {
+      "jev": "accepted_complete",
+      "stronger": "failed"
+    },
+    "jev_independent_bounds": "both_reject"
+  },
+  "baseline": {
+    "sha256": "d40c99475d1a1b4d6d1ae33a8f50d2b2da096663f4d583027a07c92deee2de62",
+    "files_checked": 967,
+    "mismatches": []
+  },
+  "reviewed_code_hashes": {
+    "pipeline/INTERFACE.md": "dd1e9c731e6b88955a391ee69c5806bcfd962a1cd8bfd3e47ac1d3043134106a",
+    "pipeline/development_fixtures.py": "35a2363b1791a741b530a51a3ca49bdce375c9c45174e3afefb9de674a59a45d",
+    "pipeline/inventory.schema.json": "45743e26e2e0404edcc1751450a557a036d6e590ce6431593e8a468b2ab8c83b",
+    "pipeline/pipeline.py": "cab605c3da02ebc5c2670ba0711e63c24c4b97bdf52420d825d5f1a9040d1098",
+    "pipeline/record.schema.json": "adb033e89f46f566ee1ddc11bf50ba1c91dcadafa2f7a94977ca296256be94e2",
+    "pipeline/test_pipeline.py": "9cb0b03cbbafe480ce2b2b7103c5032e25b45eb178a8bb0980c363e521285d87",
+    "pipeline/verdict.schema.json": "8f55dbf33853680d8c61477d5dd7a3cb2b70636eeb72f30d051b12d868007cab",
+    "runtime/offline_checks.py": "2e2d1a7e7905e47479ab30112b30f38cefa19f6620ee0a25b255a811de514b81",
+    "runtime/provider_adapters.py": "462302188e6e9c87f153e2f0c4bd73f9cce64bff0ca3e06c9b96029ff4dcb712",
+    "runtime/run_pipeline.py": "60f0557a0d46bb57ab4443c92489ef169536e27410ef85ecefd6e1f015ca2e3d",
+    "protocol/evaluate.py": "89b661f3bb7092972cc514aabd80f7cec56d24235b5d50768f6d4c803419836e",
+    "protocol/observed.schema.json": "ab49c0c0a1ba8dbc30f3e33ca6d8d81bdc76f142177fc14b19acd8203152cdfa",
+    "protocol/test_evaluate.py": "7a404a586deb652d016d13d6027d9461a147ef664591e4eeddf945bbaf4fe6e1"
+  },
+  "no_provider_calls": true,
+  "implementation_modified_by_reviewer": false,
+  "scope": "offline development correctness only; no accuracy or provider-admission claim"
+}

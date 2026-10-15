@@ -1,0 +1,3 @@
+# Evidence-table service preparation
+
+Fixed isolated -I -S -B --check/--live-initial adapter, same reviewed native credential-injection architecture; primary owns new v6 policy and native build. Verify new A/S, original opaque R8 B, code/retained-source/record/debit/auth/dependency bytes before reading injected provider environment keys. No op lookup/enrollment, Keychain access, caller override, retry or preexisting run. Check/preparation never read credentials. The preparer validates prior freeze confinement/hash/size and pins all three E artifacts plus original B, exact source/PDF and retained input targets. It creates metadata only after primary auth/freezes; no native execution.

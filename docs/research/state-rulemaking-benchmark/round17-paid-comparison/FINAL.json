@@ -1,0 +1,55 @@
+{
+  "schema": "r17.final.v1",
+  "date": "2026-10-14",
+  "outcome": "O3",
+  "outcome_meaning": "O3: clause-only (OPQ) bar failed (mechanical: invalid output on S1), so neither the clause-only default nor the typed layer is adopted. Typed logic was untestable on these sources (E8: 4 compounds < 5).",
+  "calls": {
+    "S1-OPQ": {
+      "state": 12,
+      "http_status": 200,
+      "finish_reason": "stop",
+      "completion_tokens": 4799,
+      "prompt_tokens": 4568,
+      "validated": false,
+      "failure": "role_cardinality: unit 51 carries two if-links; at most one if/onlyif/unless/obj link per unit is allowed, and the clause-only profile forbids the AND/OR nodes needed to combine them",
+      "output_shape": {
+        "units": 55,
+        "links": 15,
+        "nodes": {
+          "L": 10,
+          "R": 2
+        }
+      }
+    },
+    "S2-OPQ": "skipped (pre-registered futility)",
+    "S3-OPQ": "skipped (pre-registered futility)",
+    "FULL": "omitted (E8/P9)"
+  },
+  "spend": {
+    "provider_reported_usd": "0.0594085",
+    "key_usage_delta_nanousd": 59408500,
+    "reconciled": true,
+    "ledger_debit_nanousd": 270000000,
+    "ledger_basis": "conservative FLOOR (max of 270000000, reported, rate estimate, key delta)",
+    "invoice_verified": false,
+    "keycheck_jobs": "two zero-cost metadata GETs (v1 failed closed on masked-key label; v2 PASS)"
+  },
+  "key_after_run": {
+    "label": "DocketClock",
+    "expected_usage_usd": "0.0594085",
+    "post_run_action": "user disables DocketClock and restores the backed-up value to 1Password item 2yi6d5ymf5qoy55ixnju3r5ayu"
+  },
+  "finding": "Representational gap: the r16 clause-only profile plus r15.1 role cardinality cannot encode a unit governed by two separately-located conditions of the same role unless the model merges them into one multi-fragment leaf; the prompt does not say so. First source triggered it. This is a protocol/format defect, not evidence about extraction quality.",
+  "limitations": [
+    "n=1 completed call; result is mechanical, not semantic",
+    "reference consistency: 039 vs 041 authors differed on heading-style exemption statements (041 O3 contested)",
+    "label not machine-verifiable (masked-key label); user attestation covers it",
+    "ordering of references before outputs externally recorded in commit c5e6d1c"
+  ],
+  "records": {
+    "result_sha256": "3351818c5e97ac0f340e7300aa6195f73bc4f2b9676c8485f78885bea7cc596f",
+    "ledger_sha256": "918d540903c2080a4964f765f76c9b5d84a2d977f188c043902c024651922daa",
+    "release_sha256": "3641861e13e55cab131eb03b2193df633e8ff0096f55ae615b1347543ee69df4",
+    "decision": "run-live/decision/decide.out.json"
+  }
+}
