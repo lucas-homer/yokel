@@ -118,10 +118,10 @@
   {
     "surface_id": "ct-json",
     "state": "CT",
-    "url_pattern": "https://eregulations\\.ct\\.gov/eRegsPortal/.*/get[A-Za-z]+.*",
-    "version": "2026-10-15.2",
+    "url_pattern": "https://eregulations\\.ct\\.gov/eRegsPortal/.*/get(?!Document)[A-Za-z]+.*",
+    "version": "2026-10-15.4",
     "collection_rule": "allowed",
-    "retention": "not_authorized",
+    "retention": "internal_originals",
     "third_party_processing": "not_authorized",
     "public_evidence_rule": "Link only; no collected excerpt authorized",
     "rate": {
@@ -135,22 +135,22 @@
       "no_bot_workaround": true
     },
     "decision_ref": "rights/DECISIONS.md",
-    "decision_version": "owner-2026-10-15b",
+    "decision_version": "owner-2026-10-15d",
     "decision_date": "2026-10-15",
     "evidence_refs": [
       "rights/DECISIONS.md",
       "rights/CT.md"
     ],
     "open_outreach_ref": "rights/outreach/CT.md",
-    "notes": "JSON routes the portal's own pages call (open periods, RMR history/notes, hearing details). Read-only, 1 req/5 s; stop if CT objects in reply to outreach/CT.md."
+    "notes": "JSON routes the portal's own pages call (open periods, RMR history/notes, hearing details). Read-only, 1 req/5 s; stop if CT objects in reply to outreach/CT.md. getDocument (PDFs) belongs to ct-rendered."
   },
   {
     "surface_id": "ct-policy-reference",
     "state": "CT",
     "url_pattern": "https://portal\\.ct\\.gov/.*",
-    "version": "2026-10-15.2",
+    "version": "2026-10-15.4",
     "collection_rule": "allowed",
-    "retention": "not_authorized",
+    "retention": "internal_originals",
     "third_party_processing": "not_authorized",
     "public_evidence_rule": "Link only; no collected excerpt authorized",
     "rate": {
@@ -164,7 +164,7 @@
       "no_bot_workaround": true
     },
     "decision_ref": "rights/DECISIONS.md",
-    "decision_version": "owner-2026-10-15b",
+    "decision_version": "owner-2026-10-15d",
     "decision_date": "2026-10-15",
     "evidence_refs": [
       "rights/DECISIONS.md",
@@ -467,9 +467,9 @@
     "surface_id": "tn-agency",
     "state": "TN",
     "url_pattern": "https://(www\\.)?tn\\.gov/.*",
-    "version": "2026-10-15.2",
+    "version": "2026-10-15.4",
     "collection_rule": "allowed",
-    "retention": "not_authorized",
+    "retention": "internal_originals",
     "third_party_processing": "not_authorized",
     "public_evidence_rule": "Link only; no collected excerpt authorized",
     "rate": {
@@ -483,7 +483,7 @@
       "no_bot_workaround": true
     },
     "decision_ref": "rights/DECISIONS.md",
-    "decision_version": "owner-2026-10-15b",
+    "decision_version": "owner-2026-10-15d",
     "decision_date": "2026-10-15",
     "evidence_refs": [
       "rights/DECISIONS.md",
@@ -525,9 +525,9 @@
     "surface_id": "wa-agency-rulemaking",
     "state": "WA",
     "url_pattern": "https://(www\\.)?(doh|hca|dol|wdfw|dcyf|lni)\\.wa\\.gov/.*",
-    "version": "2026-10-15.2",
+    "version": "2026-10-15.4",
     "collection_rule": "allowed",
-    "retention": "not_authorized",
+    "retention": "internal_originals",
     "third_party_processing": "not_authorized",
     "public_evidence_rule": "Link only; no collected excerpt authorized",
     "rate": {
@@ -541,7 +541,7 @@
       "no_bot_workaround": true
     },
     "decision_ref": "rights/DECISIONS.md",
-    "decision_version": "owner-2026-10-15b",
+    "decision_version": "owner-2026-10-15d",
     "decision_date": "2026-10-15",
     "evidence_refs": [
       "rights/DECISIONS.md",
@@ -554,9 +554,9 @@
     "surface_id": "va-agency-rulemaking",
     "state": "VA",
     "url_pattern": "https://(www\\.)?[a-z0-9-]+\\.virginia\\.gov/.*",
-    "version": "2026-10-15.2",
+    "version": "2026-10-15.4",
     "collection_rule": "allowed",
-    "retention": "not_authorized",
+    "retention": "internal_originals",
     "third_party_processing": "not_authorized",
     "public_evidence_rule": "Link only; no collected excerpt authorized",
     "rate": {
@@ -570,7 +570,7 @@
       "no_bot_workaround": true
     },
     "decision_ref": "rights/DECISIONS.md",
-    "decision_version": "owner-2026-10-15b",
+    "decision_version": "owner-2026-10-15d",
     "decision_date": "2026-10-15",
     "evidence_refs": [
       "rights/DECISIONS.md",
@@ -643,7 +643,7 @@
     "surface_id": "ms-agency-rulemaking",
     "state": "MS",
     "url_pattern": "https://(www\\.)?[a-z0-9-]+\\.ms\\.gov/.*",
-    "version": "2026-10-15.3",
+    "version": "2026-10-15.4",
     "collection_rule": "allowed",
     "retention": "internal_originals",
     "third_party_processing": "public_notices_only",
@@ -659,7 +659,7 @@
       "no_bot_workaround": true
     },
     "decision_ref": "rights/DECISIONS.md",
-    "decision_version": "owner-2026-10-15c",
+    "decision_version": "owner-2026-10-15d",
     "decision_date": "2026-10-15",
     "evidence_refs": [
       "rights/DECISIONS.md",

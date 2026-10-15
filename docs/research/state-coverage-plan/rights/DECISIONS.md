@@ -67,6 +67,14 @@ that hold comes from its robots.txt, not from a default.
     reallocation: MS gets full parsing coverage (about 3,310 credits plus a 150-credit retry hold),
     funded from WA, VA and CT's unused allocations. The Phase 1 cap stays 12,000.
 
+## Correction (primary, 2026-10-15)
+
+`surfaces.json` version `2026-10-15.2` wrongly set retention to `not_authorized` on the newly allowed
+cross-check and CT JSON surfaces, a copying error. Items 5 and 7 intend internal retention of
+originals, with nothing republished. Version `2026-10-15.4` sets `internal_originals` on `ct-json`,
+`ct-policy-reference` and the WA, VA, MS and TN agency surfaces. It also narrows `ct-json` so that
+`getDocument` (PDFs) belongs only to `ct-rendered`.
+
 ## Primary defaults for the remaining questions (superseded in part by round 2)
 
 - **WA:** collect from the State Register only. Agency pages (for example Ecology, whose terms bar
