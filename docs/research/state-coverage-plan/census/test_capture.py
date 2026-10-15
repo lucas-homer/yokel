@@ -478,3 +478,22 @@ class CaptureTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class FailedResultShapeTest(unittest.TestCase):
+    def test_http_404_has_null_byte_length(self):
+        # Regression: a 404 kept the error page length, which the manifest schema rejects.
+        import capture as cap
+        orig = cap.Capture._capture
+        def fake(self, request):
+            return {'attempts': [{'url': 'u', 'http_status': 404}],
+                    'retrieval': {'result': 'missing', 'byte_length': 209, 'http_status': 404}}
+        cap.Capture._capture = fake
+        try:
+            obj = cap.Capture.__new__(cap.Capture)
+            result = cap.Capture.capture(obj, {})
+        finally:
+            cap.Capture._capture = orig
+        self.assertIsNone(result['retrieval']['byte_length'])
+        self.assertEqual(result['attempts'][-1]['byte_length'], 209)
+

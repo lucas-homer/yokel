@@ -422,6 +422,17 @@ class Capture:
             return None
 
     def capture(self, request):
+        result = self._capture(request)
+        ret = result['retrieval']
+        if ret['result'] != 'retrieved' and ret.get('byte_length') is not None:
+            # Error bodies are diagnostics, not originals: the manifest schema requires a null
+            # byte_length unless retrieved. Keep the length on the attempt record instead.
+            if result.get('attempts'):
+                result['attempts'][-1].setdefault('byte_length', ret['byte_length'])
+            ret['byte_length'] = None
+        return result
+
+    def _capture(self, request):
         surface, refusal = self.gate(request)
         request = request if isinstance(request, dict) else {}
         result = {
