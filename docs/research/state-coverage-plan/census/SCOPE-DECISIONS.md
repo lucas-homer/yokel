@@ -74,3 +74,24 @@ The questions as originally raised:
 | 3 | Yes, a separate written-comment opportunity with a relative close. |
 | 4 | Yes, the volume-based month-extension rule, capped at 12 months. |
 | 6 | No for v1 (TPUC and other agency dockets are a labelled exclusion). |
+
+## MS (signed by the owner as proposed, 2026-10-15)
+
+Questions refer to `MS/UNIVERSE.md`.
+
+| Q | Proposed answer |
+| --- | --- |
+| 1 | Option A: `[2026-05-18, 2026-08-17)` America/Chicago, 13 weeks, about 246–285 projected. The interval rule was set after the weekly volumes had been seen, as the file discloses. |
+| 2 | Relative closes anchored to the FILED stamp. The stamp + N days date is kept as a non-asserted annotation only. |
+| 3 | Yes: agency-stated closes are separate-lineage evidence; the role is `conflicting` until human precedence review. |
+| 4 | Yes: count a comment window only where some source states one. |
+| 5 | Yes: the hearing-request window is its own opportunity, conditional on "not scheduled". Forms ticking neither box are mandatory review cases. |
+| 6 | Yes, and yes: separate hearing notices count, linked to their proposal; temporary rules are a labelled, inspected exclusion. |
+| 7 | Yes: finals are closure evidence only; "Withdrawn" forms are withdrawal updates. |
+| 8a, 8b | Yes; no for Phase 1. |
+| 9 | **Primary override: full coverage**, about 3,310 credits plus a 150-credit hold for retries. This is funded from WA, VA and CT, whose scoping estimates (0–300, 0–200, 220–540) leave most of their 2,000 each unused. The Phase 1 cap stays 12,000 credits in total. |
+| 10a, 10b | Yes, yes. |
+| 11 | Yes. |
+| 12 | **Owner:** MS gets 6 hours, and every decisive visual mark (hearing checkbox, filing stamp) is human-reviewed, as the protocol requires. |
+| 13 | **Owner:** yes, read-only non-retained statute lookups (see `../rights/DECISIONS.md` item 15). |
+| 14 | Yes: the FILED stamp is the publication-time proxy, and posting lag is recorded as unmeasured. |

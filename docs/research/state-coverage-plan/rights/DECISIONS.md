@@ -57,6 +57,16 @@ that hold comes from its robots.txt, not from a default.
 
 `surfaces.json` version `2026-10-15.3` adds the MS records.
 
+## Decided, round 4 (owner, 2026-10-15)
+
+14. **MS review budget:** 6 hours, with every decisive visual mark human-reviewed. Total review across
+    WA, VA, CT, MS and TN is about 26 hours.
+15. **MS statute lookups allowed:** read-only, non-retained lookups of the Mississippi Code (e.g.
+    § 25-43-3.104) on the official free-access host. Check that host's terms first.
+16. **MS scope signed** as proposed in `census/SCOPE-DECISIONS.md`, including the primary's credit
+    reallocation: MS gets full parsing coverage (about 3,310 credits plus a 150-credit retry hold),
+    funded from WA, VA and CT's unused allocations. The Phase 1 cap stays 12,000.
+
 ## Primary defaults for the remaining questions (superseded in part by round 2)
 
 - **WA:** collect from the State Register only. Agency pages (for example Ecology, whose terms bar
