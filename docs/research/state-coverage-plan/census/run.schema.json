@@ -55,6 +55,143 @@
               "string",
               "null"
             ]
+          },
+          "coverage": {
+            "type": "object",
+            "properties": {
+              "mode": {
+                "enum": [
+                  "independent_full",
+                  "independent_partial",
+                  "single_lineage"
+                ]
+              },
+              "unit_kind": {
+                "enum": [
+                  "agency_process",
+                  "proceeding"
+                ]
+              },
+              "universe_basis": {
+                "type": "string",
+                "minLength": 1
+              },
+              "universe": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "unit_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "agency_id": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "unit_id",
+                    "agency_id"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "checks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "entry_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "against_entry_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "scope": {
+                      "enum": [
+                        "full",
+                        "partial"
+                      ]
+                    },
+                    "scope_basis": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "expected_unit_ids": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "matched_unit_ids": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "mismatched_unit_ids": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "unresolved_unit_ids": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  },
+                  "required": [
+                    "entry_id",
+                    "against_entry_id",
+                    "scope",
+                    "scope_basis",
+                    "expected_unit_ids",
+                    "matched_unit_ids",
+                    "mismatched_unit_ids",
+                    "unresolved_unit_ids"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "claim_agency_ids": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "completeness": {
+                "enum": [
+                  "established",
+                  "not_established"
+                ]
+              }
+            },
+            "required": [
+              "mode",
+              "unit_kind",
+              "universe_basis",
+              "universe",
+              "checks",
+              "claim_agency_ids",
+              "completeness"
+            ],
+            "additionalProperties": false
           }
         },
         "required": [
@@ -71,11 +208,17 @@
       "minLength": 1
     },
     "brief_sha256": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "pattern": "^[a-f0-9]{64}$"
     },
     "brief_frozen_at": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date-time"
     },
     "passes": {
@@ -226,11 +369,17 @@
       "type": "object",
       "properties": {
         "seed": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
           "pattern": "^[a-f0-9]{64}$"
         },
         "frame_hash": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
           "pattern": "^[a-f0-9]{64}$"
         },
         "coarsening_level": {
@@ -242,7 +391,7 @@
           ]
         },
         "frozen_before_seed": {
-          "const": true
+          "type": "boolean"
         },
         "mandatory_minutes_estimate": {
           "type": "number",

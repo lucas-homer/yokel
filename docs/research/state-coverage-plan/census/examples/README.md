@@ -5,7 +5,9 @@ No originals or parser output are included. The external hash paths are illustra
 `rights.json` is fixture-only; real runs reference the versioned `rights/surfaces.json` registry.
 
 - `m1` has a carry-in comment opportunity and extension; A/B disagree on the notice title.
-- `m2` is a different-lineage cross-check with both passes finding no candidates.
+- `m2` corroborates only synthetic proceeding `sx-1` of the two-proceeding
+  `agency-x/rulemaking` universe. `sx-2` is uncovered: `independent_partial`,
+  completeness `not_established`. Both enumeration passes find no candidates in `m2`.
 - `m3` is a no-text-layer, single-lineage hearing-request process; both passes reject a duplicate.
 - `m4` is an expected source held on rights, never attempted, retained as a reviewed gap.
 - The human-shaped review records are synthetic. The completeness decision is `not_established`.
@@ -51,3 +53,16 @@ PY
 
 Expected failure: `FAIL C09: established forbidden: rights/source/scope/lineage/review gap`.
 Temporary paths vary. Fixture originals and source access are never needed for this check.
+
+
+R2 coverage and freeze regression fixtures (temporary copies only):
+
+```sh
+python3 docs/research/state-coverage-plan/census/examples/check_r2.py
+```
+
+The script prints each command/output and asserts exit codes and intended C03/C05/C08 messages.
+It breaks partial-as-full, partial-established, agency claim scope, outcome partition,
+full-source scope, missing coverage and lineage linkage independently. It also proves a
+whole-universe source passes, null freeze fields pass at manifest stage, null audit fields
+pass at passes stage, and missing freezes fail at their required stages.

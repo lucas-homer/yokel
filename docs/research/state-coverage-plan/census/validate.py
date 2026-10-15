@@ -155,16 +155,64 @@ def validate(directory, verify_bytes=False, stage="final"):
                 seen.add(current); current = entries[current][link]
     for proc in run['processes']:
         units = [e for e in manifest if (e['agency_id'], e['process_id']) == (proc['agency_id'], proc['process_id'])]
-        independent = any(c['result'] != 'unresolved' and c['against_entry_id'] in entries and
-                          entries[c['against_entry_id']]['retrieval']['result'] == 'retrieved' and
-                          (entries[c['against_entry_id']]['agency_id'], entries[c['against_entry_id']]['process_id']) == (e['agency_id'], e['process_id']) and
-                          c['lineage_id'] != e['lineage_id']
-                          for e in units if e['retrieval']['result'] == 'retrieved' for c in e['accounting']['cross_checks'])
+        name = f"{proc['agency_id']}/{proc['process_id']}"
         check(bool(units), 'C03', f"{proc['process_id']} missing manifest units")
-        check(independent or (proc['single_lineage'] and human(proc['human_review_ref'])), 'C03',
-              f"{proc['process_id']} needs independent lineage or reviewed single_lineage")
-        if proc['single_lineage']:
+        coverage = proc.get('coverage')
+        if coverage is None:
+            # Legacy single-lineage rows remain explicit limitations. Never infer full
+            # coverage from the mere existence of a different-lineage edge.
+            check(proc['single_lineage'], 'C03', f'{name} independent claim requires explicit coverage (partial cross-check cannot establish whole process)')
+            check(not proc['single_lineage'] or human(proc['human_review_ref']), 'C03',
+                  f"{proc['process_id']} needs independent lineage or reviewed single_lineage")
             incomplete = True
+            continue
+        mode = coverage['mode']
+        universe_rows = coverage['universe']
+        universe = {r['unit_id'] for r in universe_rows}
+        check(bool(universe) and len(universe) == len(universe_rows), 'C03', f'{name} coverage universe empty/duplicate')
+        agencies = {r['unit_id']: r['agency_id'] for r in universe_rows}
+        matched = set(); mismatched = set(); unresolved = set(); expected = set(); full = False
+        for cross in coverage['checks']:
+            left = entries.get(cross['entry_id']); right = entries.get(cross['against_entry_id'])
+            valid = (left is not None and right is not None and
+                     left['retrieval']['result'] == right['retrieval']['result'] == 'retrieved' and
+                     left['lineage_id'] != right['lineage_id'] and
+                     any((e['agency_id'], e['process_id']) == (proc['agency_id'], proc['process_id']) for e in [left, right]) and
+                     any(c['against_entry_id'] == right['entry_id'] and c['lineage_id'] == right['lineage_id']
+                         for c in left['accounting']['cross_checks']))
+            check(valid, 'C03', f'{name} coverage check lacks retrieved different-lineage manifest edge')
+            exp, mat, mis, unr = [set(cross[k]) for k in
+                ['expected_unit_ids','matched_unit_ids','mismatched_unit_ids','unresolved_unit_ids']]
+            check(all(len(cross[k]) == len(set(cross[k])) for k in
+                      ['expected_unit_ids','matched_unit_ids','mismatched_unit_ids','unresolved_unit_ids']),
+                  'C03', f'{name} duplicate coverage unit')
+            partition = not (mat & mis or mat & unr or mis & unr) and mat | mis | unr == exp
+            if valid and mat:
+                matches = any(c['against_entry_id'] == right['entry_id'] and c['result'] == 'matches'
+                              for c in left['accounting']['cross_checks'])
+                check(matches, 'C03', f'{name} matched units require a resolved matching manifest edge')
+                valid = valid and matches
+            check(bool(exp) and exp <= universe and partition, 'C03', f'{name} coverage outcomes must partition expected subset of universe')
+            check(cross['scope'] != 'full' or exp == universe, 'C03', f'{name} full source scope must cover whole universe')
+            if valid and partition and exp <= universe:
+                expected |= exp; matched |= mat; mismatched |= mis; unresolved |= unr
+                full |= cross['scope'] == 'full' and exp == universe
+        # Conflicting checks cannot cancel a discrepancy or an unresolved comparison.
+        corroborated = matched - mismatched - unresolved
+        uncovered = universe - expected
+        print(f'C03 coverage {name}: {mode}; universe={len(universe)} expected={len(expected)} matched={len(matched)} mismatched={len(mismatched)} unresolved={len(unresolved)} uncovered={len(uncovered)}')
+        check(proc['single_lineage'] == (mode == 'single_lineage'), 'C03', f'{name} single_lineage flag/coverage mode mismatch')
+        check(mode != 'independent_full' or full, 'C03', f'{name} independent_full requires a whole-universe independent source; partial coverage is insufficient')
+        check(mode != 'independent_partial' or bool(expected), 'C03', f'{name} independent_partial needs a covered subset')
+        claim = set(coverage['claim_agency_ids'])
+        eligible_agencies = {agencies[u] for u in corroborated}
+        check(claim <= eligible_agencies, 'C03', f'{name} claim agencies exceed corroborated subset')
+        fully_checked = mode == 'independent_full' and full and corroborated == universe
+        check(coverage['completeness'] != 'established' or fully_checked, 'C03', f'{name} partial/uncovered or discrepant coverage requires completeness not_established')
+        if not fully_checked or coverage['completeness'] != 'established':
+            incomplete = True
+        if mode == 'single_lineage':
+            check(not coverage['checks'] and not claim and human(proc['human_review_ref']), 'C03', f'{name} single_lineage needs human review and no independent claim')
     if stage == 'manifest':
         return errors
     retrieved = {e['entry_id'] for e in manifest if e['retrieval']['result'] == 'retrieved'}
@@ -181,11 +229,13 @@ def validate(directory, verify_bytes=False, stage="final"):
     passes = index(run['passes'], 'pass', 'C05')
     check(set(passes) == {'pass_A','pass_B'}, 'C05', 'two pass attestations required')
     check(len({p['provider'] for p in passes.values()}) == 2, 'C05', 'providers must differ')
-    check(digest((directory / run['brief_file']).read_bytes()) == run['brief_sha256'], 'C05', 'brief hash mismatch')
+    brief_ready = bool(run['brief_sha256'] and run['brief_frozen_at'])
+    check(brief_ready, 'C05', 'brief hash/frozen time required at passes/final stage')
+    check((directory / run['brief_file']).is_file() and digest((directory / run['brief_file']).read_bytes()) == run['brief_sha256'], 'C05', 'brief hash mismatch')
     for phase, p in passes.items():
         name = 'pass-A.jsonl' if phase == 'pass_A' else 'pass-B.jsonl'
         check(p['brief_sha256'] == run['brief_sha256'] and p['isolated'] and
-              stamp(run['brief_frozen_at']) <= stamp(p['dispatched_at']) < stamp(p['sealed_at']), 'C05', f'{phase} brief/isolation/times')
+              brief_ready and stamp(run['brief_frozen_at']) <= stamp(p['dispatched_at']) < stamp(p['sealed_at']), 'C05', f'{phase} brief/isolation/times')
         check(digest((directory / name).read_bytes()) == p['output_sha256'], 'C05', f'{phase} sealed output hash mismatch')
     if stage == 'passes':
         return errors
@@ -299,6 +349,8 @@ def validate(directory, verify_bytes=False, stage="final"):
     for t in run['temporal_log']:
         check(t['record_id'] in records and (t['human_review_ref'] is None or human(t['human_review_ref'])), 'C06', 'temporal log reference')
     audit = run['audit']; frame = []; covered = []
+    check(bool(audit['seed'] and audit['frame_hash']) and audit['frozen_before_seed'],
+          'C08', 'audit seed/frame hash/freeze required at final stage')
     coverage = audit['unit_coverage']
     flattened = [eid for members in coverage.values() for eid in members]
     check(set(flattened) == retrieved and len(flattened) == len(set(flattened)) and
@@ -327,12 +379,12 @@ def validate(directory, verify_bytes=False, stage="final"):
         high = stratum['high_risk']; level = audit['coarsening_level']
         required = min(n, (min(20,max(5,math.ceil(.2*n))) if level == 3 else 20)) if high else min(n,max(2 if level >= 2 else 5, math.ceil((.1 if level >= 2 else .2)*n)))
         check(stratum['sample_size'] == required, 'C08', 'audit sample size/coarsening floor')
-        sid = stratum['stratum_id']; ranked = sorted(ids, key=lambda uid:(digest((audit['seed']+'\n'+sid+'\n'+uid).encode()), uid))
+        sid = stratum['stratum_id']; ranked = sorted(ids, key=lambda uid:(digest(((audit['seed'] or '')+'\n'+sid+'\n'+uid).encode()), uid))
         check(stratum['selected_ids'] == ranked[:required], 'C08', f'{sid} seeded selection mismatch')
         check(set(stratum['selected_ids']) == set(stratum['completed_ids']), 'C08', f'{sid} drawn samples incomplete')
         estimate += required * stratum['minutes_per_unit']
         frame.append({'stratum_id':sid,'unit_ids':sorted(ids),'disposition':stratum['disposition'],'high_risk':high, 'unit_coverage':{uid:coverage[uid] for uid in sorted(ids)}})
-    check(re.fullmatch('[a-f0-9]{64}', audit['seed']) is not None and audit['frozen_before_seed'], 'C08', 'invalid seed or unfrozen audit plan')
+    check(re.fullmatch('[a-f0-9]{64}', audit['seed'] or '') is not None and audit['frozen_before_seed'], 'C08', 'invalid seed or unfrozen audit plan')
     audited_targets = {t for a in adjudications.values() if a['payload']['trigger'] == 'random_audit' for t in a['payload']['target_record_ids']}
     check({eid for st in audit['strata'] for eid in st['completed_ids']} <= audited_targets, 'C08', 'completed samples lack human audit log')
     check(set(covered) == set(coverage) and len(covered) == len(set(covered)), 'C08', 'audit frame must cover every retrieved unit exactly once')

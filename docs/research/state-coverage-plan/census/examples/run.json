@@ -12,7 +12,42 @@
       "agency_id": "agency-x",
       "process_id": "rulemaking",
       "single_lineage": false,
-      "human_review_ref": null
+      "human_review_ref": null,
+      "coverage": {
+        "mode": "independent_partial",
+        "unit_kind": "proceeding",
+        "universe_basis": "Synthetic roster contains two agency-x proceedings, sx-1 and sx-2.",
+        "universe": [
+          {
+            "unit_id": "sx-1",
+            "agency_id": "agency-x"
+          },
+          {
+            "unit_id": "sx-2",
+            "agency_id": "agency-x"
+          }
+        ],
+        "checks": [
+          {
+            "entry_id": "m1",
+            "against_entry_id": "m2",
+            "scope": "partial",
+            "scope_basis": "Publisher-b covers sx-1 only; no evidence for sx-2.",
+            "expected_unit_ids": [
+              "sx-1"
+            ],
+            "matched_unit_ids": [
+              "sx-1"
+            ],
+            "mismatched_unit_ids": [],
+            "unresolved_unit_ids": []
+          }
+        ],
+        "claim_agency_ids": [
+          "agency-x"
+        ],
+        "completeness": "not_established"
+      }
     },
     {
       "agency_id": "agency-x",

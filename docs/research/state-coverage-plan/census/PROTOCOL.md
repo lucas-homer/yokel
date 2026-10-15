@@ -1,4 +1,4 @@
-# State census protocol v1.1
+# State census protocol v1.2
 
 Research reference design for Phase 1 step 2; not a production contract or approval.
 Active census states: **WA, CT, VA, TN**. MA is deferred pending permission; retain its
@@ -114,15 +114,45 @@ publication cycle and `text_layer: native | none | partial`. Test extraction dur
 and log failed page/region locators in expected evidence refs before either pass starts. Two views of one backend share lineage;
 they can expose omissions but do not provide independent legal corroboration.
 
-For every included (agency, process) universe row, require a resolved cross-check against an
-entry with a different `lineage_id`. The cross-check carries the target lineage for verification.
-Register RSS and its HTML view share lineage. If no lawful independent source exists, set
-`single_lineage: true` on that process with a human review reference. This is an explicit
-limitation, never corroboration. Any unresolved or gap cross-check remains a completeness gap.
+For every included (agency, process) universe row, record `processes[].coverage` in
+`run.json`. Declare `unit_kind: agency_process | proceeding`, a complete dated `universe`
+(list of stable `unit_id` + actual `agency_id`), and `universe_basis` citing the roster,
+interval and evidence locators. A grouped statewide agency ID is not an actual agency roster.
+Agency/process IDs denote one agency × this process; proceeding IDs enumerate every proceeding,
+including carry-ins, mapped to its agency. Never derive the denominator from successful matches.
+
+Each coverage check links an existing directed manifest cross-check (`entry_id` →
+`against_entry_id`) between retrieved different-lineage sources. Record `scope_basis` with
+locators explaining what the source is expected to cover, `scope: full | partial`, and
+`expected_unit_ids`. Partition those IDs into `matched_unit_ids`, `mismatched_unit_ids`, and
+`unresolved_unit_ids`; uninspected expected units are unresolved. IDs are sets, not document
+counts. The validator unions these sets across checks and reports expected, matched, mismatched,
+unresolved and uncovered counts. Conflicting outcomes remain gaps. RSS/HTML views of the same
+publisher/backend never qualify as independent.
+
+Set the process coverage mode explicitly:
+
+- `independent_full`: at least one independent source is itself expected to cover the whole
+  declared process universe. Its expected IDs must equal that universe. A union of agency pages
+  does not make any one source statewide. Full scope alone does not resolve discrepancies.
+- `independent_partial`: independent evidence covers a subset (for example DEEP alone). Five
+  matches out of 68 proceedings corroborate five, with 63 uncovered; keep process
+  `completeness: not_established`.
+- `single_lineage`: no independent coverage; keep `single_lineage: true`, no independent checks
+  or claims, and a resolving human review reference. Otherwise `single_lineage` is false.
+
+`claim_agency_ids` may contain only agencies of matched units without discrepancies; claims
+must also name the exact covered unit IDs and counts, never imply all agency proceedings were
+checked. Only whole-source coverage with every universe unit matched and no unresolved or
+mismatched units permits process `completeness: established`. Partial/uncovered remainders stay
+not established. A human decision to narrow requires a versioned scope review, new denominator,
+enumeration and rescore; a review reference alone cannot promote partial evidence to statewide
+coverage. Legacy reviewed `single_lineage` rows may omit coverage during migration; legacy
+`single_lineage: false` rows must supply it.
 
 **Exit:** `python3 census/validate.py <run-dir> --stage manifest --verify-bytes` passes with zero errors (path relative to this
 plan directory); every expected unit/link is accounted for or a named gap has a human review.
-Every process has a different-lineage check or reviewed single-lineage flag.
+Every process has explicit scoped independent coverage or a reviewed single-lineage limitation.
 A manifest can proceed to diagnostic enumeration with gaps, but cannot establish recall.
 
 ## 4. Run two blind enumerations
@@ -130,7 +160,9 @@ A manifest can proceed to diagnostic enumeration with gaps, but cannot establish
 **Owner:** primary; enumerators A and B. **Entry:** frozen common manifest/originals and scope. Write the complete common brief and
 hash its UTF-8 bytes **before either dispatch**. Both tasks receive that identical text/hash;
 prefer concurrent dispatch. Do not write B's brief using A's results. Record frozen time,
-dispatch times and brief hash in both attestations.
+dispatch times and brief hash in both attestations. Before freeze, set `brief_sha256` and
+`brief_frozen_at` to null, never zero hashes or epoch dates. Manifest validation permits nulls;
+`--stage passes` and `final` require the actual brief hash and frozen time.
 Use separate agent tasks and distinct providers (`provider_A != provider_B`), with recorded
 provider/model, task IDs, exact brief/version and access boundaries. Neither may enumerate from
 adapter output, transformed Markdown alone, the other's list or shared parser candidates.
@@ -275,8 +307,11 @@ notice/opportunity/update IDs found and missed. Score each surface and a justifi
 set union of canonical IDs, not summed row counts. Include unique contribution, duplicates,
 false positives, inaccessible items and residual gaps; justify coverage of every agency/process.
 A census and adapter sharing the same incomplete page cannot establish recall.
+Publish each process's coverage mode, denominator, covered unit IDs/agencies and computed
+matched/mismatched/unresolved/uncovered counts alongside diagnostic ratios. Partial evidence
+corroborates only its matched subset; the uncovered remainder is `not_established`.
 
-If any process is single-lineage, any rights/missing/scope gap remains, or completeness is unresolved, report notice/opportunity recall as **not established**, even
+If any process is single-lineage or partially corroborated, any rights/missing/scope gap remains, or completeness is unresolved, report notice/opportunity recall as **not established**, even
 when a diagnostic ratio against observed items is supplied; stop statewide claims or explicitly
 narrow the declared universe and re-enumerate/rescore it. Otherwise report separate notice and
 opportunity found/eligible denominators, by cohort and opportunity type, deduped overall. Updates
@@ -296,6 +331,12 @@ A narrowed decision requires a new universe, enumeration and rescore; it does no
 ## 7. Size, seal and decide
 
 **Owner:** primary with human owner decision. **Entry:** reviewed scores and cost ledger.
+Carry coverage limitations into the decision; never summarize `independent_partial` as statewide
+independence. Narrowed claims name the reviewed agency/process universe and covered proceedings;
+the old statewide completeness stays not established.
+Until the audit frame is frozen and a seed drawn, `audit.frame_hash` and `audit.seed` may be
+null and `frozen_before_seed` false. Manifest and passes stages allow this planning state;
+`--stage final` requires actual hashes/seed, a frozen plan and completed audit checks.
 Count distinct opportunities/week over the exact interval, carry-ins separately, plus update
 rate. Record page/document format mix and template counts with classification rules, not merely
 file extensions. Re-fetch representative indexes, histories, attachments and templates one week
@@ -364,7 +405,7 @@ exits §3/§4/§6. Synthetic fixtures contain metadata only and cannot prove sto
 |---|---|
 | C01 | Unique manifest/label IDs, matching state/universe/schema versions; all parent/child/prior, alias source, target and supersession references; monotonic acyclic versions |
 | C02 | Rights ID/version and URL match, decision mapping/retention; blocked/held = not_attempted + gap; watched-only attestation |
-| C03 | Expected child accounting, terminal proof, gap review links; process independent-lineage check or human-reviewed single-lineage flag |
+| C03 | Expected child accounting, terminal proof, gap review links; explicit full/partial process coverage, set-derived counts/claim scope, or human-reviewed single-lineage flag |
 | C04 | Completion exactly equals retrieved entries per pass; image inspection for none/partial text; count/reason consistency |
 | C05 | Different providers, matching brief frozen before dispatch, sealed hashes and isolation attestations; crosswalk covers every pass label and identity merges/splits have review |
 | C06 | Phase/author/status, nonempty cohorts, temporal role, evidence hash/location and reviewed UTC policy; duplicate_of resolves |
