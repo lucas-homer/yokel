@@ -1,0 +1,86 @@
+[
+  {
+    "surface_id": "synthetic-register",
+    "state": "WA",
+    "url_pattern": "https://example\\.invalid/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "allowed",
+    "retention": "internal_originals",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "synthetic-owner-decision",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "synthetic-notice"
+    ],
+    "open_outreach_ref": null,
+    "notes": "SYNTHETIC ONLY; no source access authorized by this fixture."
+  },
+  {
+    "surface_id": "synthetic-independent",
+    "state": "WA",
+    "url_pattern": "https://example\\.invalid/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "allowed",
+    "retention": "internal_originals",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "synthetic-owner-decision",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "synthetic-notice"
+    ],
+    "open_outreach_ref": null,
+    "notes": "SYNTHETIC ONLY; no source access authorized by this fixture."
+  },
+  {
+    "surface_id": "synthetic-blocked",
+    "state": "WA",
+    "url_pattern": "https://example\\.invalid/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "on_hold",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "synthetic-owner-decision",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "synthetic-notice"
+    ],
+    "open_outreach_ref": null,
+    "notes": "SYNTHETIC ONLY; no source access authorized by this fixture."
+  }
+]

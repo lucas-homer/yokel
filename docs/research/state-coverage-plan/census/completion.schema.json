@@ -1,0 +1,74 @@
+{
+  "type": "object",
+  "properties": {
+    "manifest_entry_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pass": {
+      "enum": [
+        "pass_A",
+        "pass_B"
+      ]
+    },
+    "inspection_mode": {
+      "enum": [
+        "native_text",
+        "rendered_image",
+        "both",
+        "json"
+      ]
+    },
+    "candidate_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rejected_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "zero_candidate_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "minutes": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "required": [
+    "manifest_entry_id",
+    "pass",
+    "inspection_mode",
+    "candidate_count",
+    "rejected_count",
+    "zero_candidate_reason",
+    "minutes"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "candidate_count": {
+            "const": 0
+          }
+        },
+        "required": [
+          "candidate_count"
+        ]
+      },
+      "then": {
+        "properties": {
+          "zero_candidate_reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

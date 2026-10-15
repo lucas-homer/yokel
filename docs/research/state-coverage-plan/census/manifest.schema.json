@@ -1,0 +1,599 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "entry_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "enum": [
+        "WA",
+        "CT",
+        "VA",
+        "MA",
+        "TN"
+      ]
+    },
+    "universe_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lineage_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parent_entry_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "issue",
+        "page",
+        "attachment",
+        "portal_slice",
+        "history_slice",
+        "index",
+        "agency_roster"
+      ]
+    },
+    "expected": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "publication_interval": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selector": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "basis",
+        "evidence_refs",
+        "publication_interval",
+        "selector"
+      ],
+      "additionalProperties": false
+    },
+    "rights": {
+      "type": "object",
+      "properties": {
+        "record_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collection_rule": {
+          "enum": [
+            "allowed",
+            "denied",
+            "unresolved"
+          ]
+        },
+        "retention_allowed": {
+          "type": "boolean"
+        },
+        "third_party_processing": {
+          "enum": [
+            "allowed",
+            "denied",
+            "unresolved"
+          ]
+        },
+        "public_evidence_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "surface_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "record_ref",
+        "version",
+        "collection_rule",
+        "retention_allowed",
+        "third_party_processing",
+        "public_evidence_rule",
+        "surface_id"
+      ],
+      "additionalProperties": false
+    },
+    "retrieval": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "enum": [
+            "retrieved",
+            "missing",
+            "inaccessible",
+            "invalid_response",
+            "not_attempted"
+          ]
+        },
+        "requested_url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "final_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attempted_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "http_status": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 100,
+          "maximum": 599
+        },
+        "content_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "byte_length": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "storage_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sidecar_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "result",
+        "requested_url",
+        "final_url",
+        "attempted_at",
+        "http_status",
+        "content_type",
+        "sha256",
+        "byte_length",
+        "storage_path",
+        "sidecar_path",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "accounting": {
+      "type": "object",
+      "properties": {
+        "expected_children": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "observed_children": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "child_entry_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "pagination_or_page_range": {
+          "type": "string",
+          "minLength": 1
+        },
+        "terminal_evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "cross_checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "against_entry_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "result": {
+                "enum": [
+                  "matches",
+                  "gap",
+                  "unresolved"
+                ]
+              },
+              "detail": {
+                "type": "string",
+                "minLength": 1
+              },
+              "lineage_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "against_entry_id",
+              "result",
+              "detail",
+              "lineage_id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "expected_children",
+        "observed_children",
+        "child_entry_ids",
+        "pagination_or_page_range",
+        "terminal_evidence_refs",
+        "cross_checks"
+      ],
+      "additionalProperties": false
+    },
+    "prior_capture_entry_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "completeness": {
+      "enum": [
+        "pending",
+        "accounted",
+        "gap"
+      ]
+    },
+    "human_review_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "agency_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "process_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "format": {
+      "enum": [
+        "html",
+        "json",
+        "text_pdf",
+        "scan_pdf",
+        "mixed"
+      ]
+    },
+    "publication_cycle": {
+      "type": "string",
+      "minLength": 1
+    },
+    "text_layer": {
+      "enum": [
+        "native",
+        "none",
+        "partial"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "entry_id",
+    "state",
+    "universe_version",
+    "source_id",
+    "lineage_id",
+    "parent_entry_id",
+    "kind",
+    "expected",
+    "rights",
+    "retrieval",
+    "accounting",
+    "prior_capture_entry_id",
+    "completeness",
+    "human_review_ref",
+    "agency_id",
+    "process_id",
+    "format",
+    "publication_cycle",
+    "text_layer"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "State census expected-publication entry v1 (research only)",
+  "description": "One JSONL entry per expected unit and capture attempt. Synthetic example; no source was fetched. Cross-record and storage invariants are checked under PROTOCOL.md.",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "retrieval": {
+            "properties": {
+              "result": {
+                "const": "retrieved"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "retrieval": {
+            "properties": {
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "byte_length": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "storage_path": {
+                "type": "string",
+                "pattern": "^~/yokel-captures/state-coverage/[a-f0-9]{2}/[a-f0-9]{64}$"
+              },
+              "sidecar_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "attempted_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "reason": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "retrieval": {
+            "properties": {
+              "sha256": {
+                "type": "null"
+              },
+              "byte_length": {
+                "type": "null"
+              },
+              "storage_path": {
+                "type": "null"
+              },
+              "sidecar_path": {
+                "type": "null"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "retrieval": {
+            "properties": {
+              "result": {
+                "const": "retrieved"
+              }
+            }
+          }
+        },
+        "required": [
+          "retrieval"
+        ]
+      },
+      "then": {
+        "properties": {
+          "rights": {
+            "properties": {
+              "collection_rule": {
+                "const": "allowed"
+              },
+              "retention_allowed": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "rights": {
+            "anyOf": [
+              {
+                "properties": {
+                  "collection_rule": {
+                    "enum": [
+                      "denied",
+                      "unresolved"
+                    ]
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "retention_allowed": {
+                    "const": false
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "required": [
+          "rights"
+        ]
+      },
+      "then": {
+        "properties": {
+          "retrieval": {
+            "properties": {
+              "result": {
+                "const": "not_attempted"
+              }
+            }
+          },
+          "completeness": {
+            "const": "gap"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "completeness": {
+            "const": "gap"
+          }
+        },
+        "required": [
+          "completeness"
+        ]
+      },
+      "then": {
+        "properties": {
+          "human_review_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "schema_version": "1.0.0",
+      "entry_id": "wa-example-missing-page",
+      "state": "WA",
+      "universe_version": "example-v1",
+      "source_id": "synthetic-register",
+      "lineage_id": "synthetic-publisher",
+      "parent_entry_id": "wa-example-issue",
+      "kind": "page",
+      "expected": {
+        "basis": "Synthetic page-count discrepancy",
+        "evidence_refs": [
+          "wa-example-issue#page-count"
+        ],
+        "publication_interval": "[2026-09-01,2026-10-01)",
+        "selector": "page 2"
+      },
+      "rights": {
+        "record_ref": "rights/example-only",
+        "version": "example-v1",
+        "collection_rule": "allowed",
+        "retention_allowed": true,
+        "third_party_processing": "denied",
+        "public_evidence_rule": "Example only; no public use authorized",
+        "surface_id": "synthetic-register"
+      },
+      "retrieval": {
+        "result": "missing",
+        "requested_url": "https://example.invalid/page2",
+        "final_url": null,
+        "attempted_at": "2026-10-01T12:00:00Z",
+        "http_status": 404,
+        "content_type": null,
+        "sha256": null,
+        "byte_length": null,
+        "storage_path": null,
+        "sidecar_path": null,
+        "reason": "Synthetic missing-page example"
+      },
+      "accounting": {
+        "expected_children": 0,
+        "observed_children": 0,
+        "child_entry_ids": [],
+        "pagination_or_page_range": "2 of 3",
+        "terminal_evidence_refs": [],
+        "cross_checks": []
+      },
+      "prior_capture_entry_id": null,
+      "completeness": "gap",
+      "human_review_ref": "review-gap",
+      "agency_id": "example-agency",
+      "process_id": "rulemaking",
+      "format": "text_pdf",
+      "publication_cycle": "2026-09",
+      "text_layer": "native"
+    }
+  ]
+}

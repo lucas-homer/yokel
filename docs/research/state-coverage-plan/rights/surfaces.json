@@ -1,0 +1,582 @@
+[
+  {
+    "surface_id": "wa-register",
+    "state": "WA",
+    "url_pattern": "https://(leg\\.wa\\.gov/(state-laws-and-rules/washington-state-register/.*|media/.*)|lawfilesext\\.leg\\.wa\\.gov/.*)",
+    "version": "2026-10-15.1",
+    "collection_rule": "allowed",
+    "retention": "internal_originals",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/WA.md"
+    ],
+    "open_outreach_ref": null,
+    "notes": "Register landing, issue indexes, HTML and certified filings only; not a general host permission."
+  },
+  {
+    "surface_id": "wa-ecology-pointers",
+    "state": "WA",
+    "url_pattern": "https://ecology\\.wa\\.gov/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "on_hold",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/WA.md"
+    ],
+    "open_outreach_ref": null,
+    "notes": "Owner allows link discovery back to Register only; no source-byte retention or notice collection. Other agencies need separate review."
+  },
+  {
+    "surface_id": "wa-code-lookup",
+    "state": "WA",
+    "url_pattern": "https://app\\.leg\\.wa\\.gov/.*",
+    "version": "2026-10-15.2",
+    "collection_rule": "allowed",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15b",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/WA.md"
+    ],
+    "open_outreach_ref": null,
+    "notes": "Read-only, non-retained statute lookups to verify cited sections. Not a notice source."
+  },
+  {
+    "surface_id": "ct-rendered",
+    "state": "CT",
+    "url_pattern": "https://eregulations\\.ct\\.gov/eRegsPortal/(?!.*(getOpenCommentPeriods|[Jj][Ss][Oo][Nn])).*",
+    "version": "2026-10-15.1",
+    "collection_rule": "allowed",
+    "retention": "internal_originals",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/CT.md"
+    ],
+    "open_outreach_ref": "rights/outreach/CT.md",
+    "notes": "Rendered public pages and linked public notices only; undocumented JSON endpoints require separate authorization."
+  },
+  {
+    "surface_id": "ct-json",
+    "state": "CT",
+    "url_pattern": "https://eregulations\\.ct\\.gov/eRegsPortal/.*/get[A-Za-z]+.*",
+    "version": "2026-10-15.2",
+    "collection_rule": "allowed",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15b",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/CT.md"
+    ],
+    "open_outreach_ref": "rights/outreach/CT.md",
+    "notes": "JSON routes the portal's own pages call (open periods, RMR history/notes, hearing details). Read-only, 1 req/5 s; stop if CT objects in reply to outreach/CT.md."
+  },
+  {
+    "surface_id": "ct-policy-reference",
+    "state": "CT",
+    "url_pattern": "https://portal\\.ct\\.gov/.*",
+    "version": "2026-10-15.2",
+    "collection_rule": "allowed",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15b",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/CT.md"
+    ],
+    "open_outreach_ref": "rights/outreach/CT.md",
+    "notes": "Read-only independent-lineage cross-check, 1 req/5 s. Check this agency's own terms first; skip any agency whose terms restrict reuse (record the skip). Originals internal only."
+  },
+  {
+    "surface_id": "ct-law-journal",
+    "state": "CT",
+    "url_pattern": "https://(www\\.)?jud\\.ct\\.gov/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "blocked",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/CT.md"
+    ],
+    "open_outreach_ref": "rights/outreach/CT.md",
+    "notes": "AI crawler exclusion; not an approved secondary collection surface."
+  },
+  {
+    "surface_id": "va-register",
+    "state": "VA",
+    "url_pattern": "https://register\\.dls\\.virginia\\.gov/(?!rss\\.aspx).*",
+    "version": "2026-10-15.1",
+    "collection_rule": "allowed",
+    "retention": "internal_originals",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/VA.md"
+    ],
+    "open_outreach_ref": "rights/outreach/VA.md",
+    "notes": "Register pages and linked public originals."
+  },
+  {
+    "surface_id": "va-register-rss",
+    "state": "VA",
+    "url_pattern": "https://register\\.dls\\.virginia\\.gov/rss\\.aspx.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "allowed",
+    "retention": "internal_originals",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/VA.md"
+    ],
+    "open_outreach_ref": "rights/outreach/VA.md",
+    "notes": "RSS shares Register lineage; does not satisfy independent-lineage requirement."
+  },
+  {
+    "surface_id": "va-townhall-listings",
+    "state": "VA",
+    "url_pattern": "https://townhall\\.virginia\\.gov/[Ll]/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "on_hold",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/VA.md"
+    ],
+    "open_outreach_ref": "rights/outreach/VA.md",
+    "notes": "Treat Disallow /L./ as covering /L/; no collection pending reply. Other routes require a new record."
+  },
+  {
+    "surface_id": "ma-public-notices",
+    "state": "MA",
+    "url_pattern": "https://(www\\.)?sec\\.state\\.ma\\.us/divisions/pubs-regs/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "blocked",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/MA.md"
+    ],
+    "open_outreach_ref": "rights/outreach/MA.md",
+    "notes": "MA deferred; scraping ban and bot protection. No manual or automated workaround."
+  },
+  {
+    "surface_id": "ma-paid-register",
+    "state": "MA",
+    "url_pattern": "https://(www\\.)?sec\\.state\\.ma\\.us/reg_pub/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "on_hold",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/MA.md"
+    ],
+    "open_outreach_ref": "rights/outreach/MA.md",
+    "notes": "Paid Register login route observed in MA.md; subscriber terms and permission unresolved; no collection."
+  },
+  {
+    "surface_id": "ma-agency",
+    "state": "MA",
+    "url_pattern": "https://(www\\.)?mass\\.gov/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "on_hold",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/MA.md"
+    ],
+    "open_outreach_ref": "rights/outreach/MA.md",
+    "notes": "MA deferred; agency access/retention unresolved."
+  },
+  {
+    "surface_id": "tn-register-tables",
+    "state": "TN",
+    "url_pattern": "https://tnsos\\.org/rules/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "allowed_watched_only",
+    "retention": "internal_originals",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only; link out, never frame state pages",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/TN.md"
+    ],
+    "open_outreach_ref": "rights/outreach/TN.md",
+    "notes": "Attended, sequential runs only; no scheduled polling; stop/report refused requests."
+  },
+  {
+    "surface_id": "tn-filing-pdfs",
+    "state": "TN",
+    "url_pattern": "https://publications\\.tnsosfiles\\.com/rules_filings/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "allowed_watched_only",
+    "retention": "internal_originals",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only; link out, never frame state pages",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/TN.md"
+    ],
+    "open_outreach_ref": "rights/outreach/TN.md",
+    "notes": "Public filing originals, attended only."
+  },
+  {
+    "surface_id": "tn-register-landing",
+    "state": "TN",
+    "url_pattern": "https://sos\\.tn\\.gov/publications/.*",
+    "version": "2026-10-15.1",
+    "collection_rule": "allowed_watched_only",
+    "retention": "internal_originals",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only; link out, never frame state pages",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/TN.md"
+    ],
+    "open_outreach_ref": "rights/outreach/TN.md",
+    "notes": "Administrative Register landing/reference links, attended only."
+  },
+  {
+    "surface_id": "tn-agency",
+    "state": "TN",
+    "url_pattern": "https://(www\\.)?tn\\.gov/.*",
+    "version": "2026-10-15.2",
+    "collection_rule": "allowed",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15b",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/TN.md"
+    ],
+    "open_outreach_ref": "rights/outreach/TN.md",
+    "notes": "Read-only independent-lineage cross-check, 1 req/5 s. Check this agency's own terms first; skip any agency whose terms restrict reuse (record the skip). Originals internal only. TN register hosts currently 403; this does not authorize any workaround."
+  },
+  {
+    "surface_id": "va-code-reference",
+    "state": "VA",
+    "url_pattern": "https://law\\.lis\\.virginia\\.gov/.*",
+    "version": "2026-10-15.2",
+    "collection_rule": "allowed",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15b",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/VA.md"
+    ],
+    "open_outreach_ref": null,
+    "notes": "Read-only, non-retained statute lookups and VAC agency index for the roster. Not a notice source."
+  },
+  {
+    "surface_id": "wa-agency-rulemaking",
+    "state": "WA",
+    "url_pattern": "https://(www\\.)?(doh|hca|dol|wdfw|dcyf|lni)\\.wa\\.gov/.*",
+    "version": "2026-10-15.2",
+    "collection_rule": "allowed",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15b",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/WA.md"
+    ],
+    "open_outreach_ref": null,
+    "notes": "Read-only independent-lineage cross-check, 1 req/5 s. Check this agency's own terms first; skip any agency whose terms restrict reuse (record the skip). Originals internal only."
+  },
+  {
+    "surface_id": "va-agency-rulemaking",
+    "state": "VA",
+    "url_pattern": "https://(www\\.)?[a-z0-9-]+\\.virginia\\.gov/.*",
+    "version": "2026-10-15.2",
+    "collection_rule": "allowed",
+    "retention": "not_authorized",
+    "third_party_processing": "not_authorized",
+    "public_evidence_rule": "Link only; no collected excerpt authorized",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15b",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/VA.md"
+    ],
+    "open_outreach_ref": null,
+    "notes": "Read-only independent-lineage cross-check, 1 req/5 s. Check this agency's own terms first; skip any agency whose terms restrict reuse (record the skip). Originals internal only. Excludes townhall.virginia.gov /L/ (see va-townhall-listings) and law.lis (see va-code-reference)."
+  }
+]

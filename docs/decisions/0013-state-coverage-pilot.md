@@ -54,3 +54,18 @@ contract. It never assumes Eastern time.
 - On acceptance, update `AGENTS.md` and the canonical architecture through its generator, or an
   explicit override note, so builders don't get contradictory federal-only instructions.
 - Expanding beyond the pilot needs a new ADR, informed by the Phase 5 scale memo.
+
+## Amendment 1 (2026-10-15): one backup hard candidate
+
+Phase 1 scoping left the pilot without a reachable hard candidate. MA is deferred because its terms
+ban scraping, and TN's register hosts refuse our identified client with a 403. Both are waiting on
+outreach.
+
+- **Research** may also cover **one backup hard candidate**, chosen from the 19 states inspected in
+  the July audit (`docs/research/state-rulemaking-audit/`). It must meet the hard-state bar in
+  `docs/research/state-coverage-plan/scorecards/TEMPLATE.md`: measured acquisition or semantic
+  difficulty, not a state-name label. It also needs a lawful collection route. The primary names it in
+  `docs/research/state-coverage-plan/census/` before any census work on it, and it gets the same
+  rights check first.
+- **Production eligibility is unchanged.** There are still at most 4 states and one replacement. If
+  the backup is selected in place of TN or MA, that is the one replacement.

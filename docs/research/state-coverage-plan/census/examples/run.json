@@ -1,0 +1,235 @@
+{
+  "schema_version": "1.0.0",
+  "synthetic": true,
+  "state": "WA",
+  "universe_version": "synthetic-v1",
+  "scope_resolved": true,
+  "history_bounded": true,
+  "attended": true,
+  "rights_file": "rights.json",
+  "processes": [
+    {
+      "agency_id": "agency-x",
+      "process_id": "rulemaking",
+      "single_lineage": false,
+      "human_review_ref": null
+    },
+    {
+      "agency_id": "agency-x",
+      "process_id": "hearing-request",
+      "single_lineage": true,
+      "human_review_ref": "review-lineage"
+    }
+  ],
+  "brief_file": "brief.txt",
+  "brief_sha256": "3f060b628184fc65a12573fe24a6df248ba0694767a62aaabda66e55468c126e",
+  "brief_frozen_at": "2026-10-01T10:00:00Z",
+  "passes": [
+    {
+      "pass": "pass_A",
+      "provider": "provider-a",
+      "model": "synthetic",
+      "task_id": "pass_A",
+      "brief_sha256": "3f060b628184fc65a12573fe24a6df248ba0694767a62aaabda66e55468c126e",
+      "dispatched_at": "2026-10-01T10:01:00Z",
+      "sealed_at": "2026-10-01T11:00:00Z",
+      "output_sha256": "c14be2d34a2e6bb883538ea7db9405bbf94b8b2c669cc1bd73dad8e5c282272d",
+      "isolated": true
+    },
+    {
+      "pass": "pass_B",
+      "provider": "provider-b",
+      "model": "synthetic",
+      "task_id": "pass_B",
+      "brief_sha256": "3f060b628184fc65a12573fe24a6df248ba0694767a62aaabda66e55468c126e",
+      "dispatched_at": "2026-10-01T10:01:00Z",
+      "sealed_at": "2026-10-01T11:00:00Z",
+      "output_sha256": "cc4270ffa6fd28fb4a2e4a9664f9811ee970ea5225c1de51d0843b372347ac37",
+      "isolated": true
+    }
+  ],
+  "crosswalk": [
+    {
+      "record_id": "pass_A-p",
+      "canonical_entity_id": "ocd-proceeding/state-wa/synthetic-1",
+      "identity_action": "same",
+      "adjudication_ref": null
+    },
+    {
+      "record_id": "pass_A-n",
+      "canonical_entity_id": "ocd-notice/state-wa/synthetic-1",
+      "identity_action": "same",
+      "adjudication_ref": null
+    },
+    {
+      "record_id": "pass_A-o",
+      "canonical_entity_id": "ocd-participation-window/state-wa/synthetic-1",
+      "identity_action": "same",
+      "adjudication_ref": null
+    },
+    {
+      "record_id": "pass_A-u",
+      "canonical_entity_id": "ocd-update/state-wa/synthetic-1",
+      "identity_action": "same",
+      "adjudication_ref": null
+    },
+    {
+      "record_id": "pass_A-r",
+      "canonical_entity_id": "census-candidate/state-wa/synthetic-1",
+      "identity_action": "same",
+      "adjudication_ref": null
+    },
+    {
+      "record_id": "pass_B-p",
+      "canonical_entity_id": "ocd-proceeding/state-wa/synthetic-1",
+      "identity_action": "same",
+      "adjudication_ref": null
+    },
+    {
+      "record_id": "pass_B-n",
+      "canonical_entity_id": "ocd-notice/state-wa/synthetic-1",
+      "identity_action": "same",
+      "adjudication_ref": null
+    },
+    {
+      "record_id": "pass_B-o",
+      "canonical_entity_id": "ocd-participation-window/state-wa/synthetic-1",
+      "identity_action": "same",
+      "adjudication_ref": null
+    },
+    {
+      "record_id": "pass_B-u",
+      "canonical_entity_id": "ocd-update/state-wa/synthetic-1",
+      "identity_action": "same",
+      "adjudication_ref": null
+    },
+    {
+      "record_id": "pass_B-r",
+      "canonical_entity_id": "census-candidate/state-wa/synthetic-1",
+      "identity_action": "same",
+      "adjudication_ref": null
+    }
+  ],
+  "completeness_review_ref": "review-completeness",
+  "mandatory_review_refs": [
+    "review-gap",
+    "review-lineage",
+    "review-disagreement",
+    "review-dates"
+  ],
+  "temporal_log": [
+    {
+      "record_id": "adjudicated-o",
+      "field": "payload.temporal[0]",
+      "ambiguity": "Literal zone absent; date precision retained",
+      "human_review_ref": "review-dates",
+      "policy_question": "No UTC interpretation authorized"
+    }
+  ],
+  "audit": {
+    "seed": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "frame_hash": "de44fc86d94f87646c5e994494090ca7155e857c8684c3dc9e38da2a05ca5394",
+    "coarsening_level": 0,
+    "frozen_before_seed": true,
+    "mandatory_minutes_estimate": 20,
+    "overlap_minutes": 0,
+    "estimate_minutes": 26,
+    "actual_minutes": 30,
+    "strata": [
+      {
+        "stratum_id": "m1-stratum",
+        "unit_ids": [
+          "m1"
+        ],
+        "disposition": "inclusion",
+        "high_risk": false,
+        "minutes_per_unit": 2,
+        "sample_size": 1,
+        "selected_ids": [
+          "m1"
+        ],
+        "completed_ids": [
+          "m1"
+        ]
+      },
+      {
+        "stratum_id": "m2-stratum",
+        "unit_ids": [
+          "m2"
+        ],
+        "disposition": "no_candidates",
+        "high_risk": true,
+        "minutes_per_unit": 2,
+        "sample_size": 1,
+        "selected_ids": [
+          "m2"
+        ],
+        "completed_ids": [
+          "m2"
+        ]
+      },
+      {
+        "stratum_id": "m3-stratum",
+        "unit_ids": [
+          "m3"
+        ],
+        "disposition": "exclusions_only",
+        "high_risk": true,
+        "minutes_per_unit": 2,
+        "sample_size": 1,
+        "selected_ids": [
+          "m3"
+        ],
+        "completed_ids": [
+          "m3"
+        ]
+      }
+    ],
+    "unit_coverage": {
+      "m1": [
+        "m1"
+      ],
+      "m2": [
+        "m2"
+      ],
+      "m3": [
+        "m3"
+      ]
+    },
+    "coarsening_history": []
+  },
+  "credits": [
+    {
+      "state": "WA",
+      "actual": 0,
+      "outstanding": 0,
+      "reserve_released": 0,
+      "primary_release_ref": null,
+      "reviewer_minutes": 30
+    },
+    {
+      "state": "CT",
+      "actual": 0,
+      "outstanding": 0,
+      "reserve_released": 0,
+      "primary_release_ref": null,
+      "reviewer_minutes": 0
+    },
+    {
+      "state": "VA",
+      "actual": 0,
+      "outstanding": 0,
+      "reserve_released": 0,
+      "primary_release_ref": null,
+      "reviewer_minutes": 0
+    },
+    {
+      "state": "TN",
+      "actual": 0,
+      "outstanding": 0,
+      "reserve_released": 0,
+      "primary_release_ref": null,
+      "reviewer_minutes": 0
+    }
+  ]
+}

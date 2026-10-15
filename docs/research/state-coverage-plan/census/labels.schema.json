@@ -1,0 +1,1219 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "record_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entity_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "enum": [
+        "WA",
+        "CT",
+        "VA",
+        "MA",
+        "TN"
+      ]
+    },
+    "universe_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "label_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "supersedes_record_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "record_type": {
+      "enum": [
+        "notice",
+        "proceeding",
+        "opportunity",
+        "update",
+        "rejected_candidate",
+        "adjudication"
+      ]
+    },
+    "phase": {
+      "enum": [
+        "pass_A",
+        "pass_B",
+        "adjudicated"
+      ]
+    },
+    "author": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "enum": [
+            "pass_A_child",
+            "pass_B_child",
+            "human_reviewer",
+            "primary"
+          ]
+        },
+        "task_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "role",
+        "task_id",
+        "provider",
+        "model"
+      ],
+      "additionalProperties": false
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cohorts": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "new_notice",
+          "carry_in",
+          "older_proceeding_update",
+          "interval_update"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "native_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "source_id",
+          "native_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      },
+      "minItems": 0
+    },
+    "review_status": {
+      "enum": [
+        "candidate",
+        "needs_review",
+        "reviewed_for_research"
+      ]
+    },
+    "unresolved": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "record_id",
+    "entity_id",
+    "state",
+    "universe_version",
+    "label_version",
+    "supersedes_record_id",
+    "record_type",
+    "phase",
+    "author",
+    "created_at",
+    "cohorts",
+    "aliases",
+    "evidence",
+    "review_status",
+    "unresolved",
+    "payload"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "State census labels and adjudication log v1 (research only)",
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "manifest_entry_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "enum": [
+            "text_exact",
+            "visual_review"
+          ]
+        },
+        "quote_or_mark_description": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "manifest_entry_id",
+        "sha256",
+        "locator",
+        "mode",
+        "quote_or_mark_description"
+      ],
+      "additionalProperties": false
+    },
+    "temporal": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "channel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "literal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "precision": {
+          "enum": [
+            "date",
+            "local_datetime",
+            "instant",
+            "relative",
+            "unknown"
+          ]
+        },
+        "local_value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "zone_wording": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "iana_zone": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "utc_value": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "relative_anchor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "counting_rule": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "cutoff": {
+          "enum": [
+            "inclusive",
+            "exclusive",
+            "unknown",
+            "not_applicable"
+          ]
+        },
+        "receipt_or_postmark": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "authority_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "precedence": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "policy_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "supported",
+            "unknown",
+            "conflicting"
+          ]
+        },
+        "ambiguity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "human_review_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        }
+      },
+      "required": [
+        "role",
+        "purpose",
+        "channel",
+        "literal",
+        "precision",
+        "local_value",
+        "zone_wording",
+        "iana_zone",
+        "utc_value",
+        "relative_anchor",
+        "counting_rule",
+        "cutoff",
+        "receipt_or_postmark",
+        "authority_ref",
+        "precedence",
+        "policy_version",
+        "status",
+        "ambiguity",
+        "human_review_ref",
+        "evidence"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "record_type": {
+          "const": "notice"
+        },
+        "entity_id": {
+          "type": "string",
+          "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "proceeding_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+              }
+            },
+            "opportunity_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^ocd-participation-window/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+              }
+            },
+            "update_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^ocd-update/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+              }
+            },
+            "publication_wording": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "proceeding_ids",
+            "opportunity_ids",
+            "update_ids",
+            "publication_wording",
+            "title"
+          ],
+          "additionalProperties": false
+        },
+        "cohorts": {
+          "minItems": 1
+        }
+      }
+    },
+    {
+      "properties": {
+        "record_type": {
+          "const": "proceeding"
+        },
+        "entity_id": {
+          "type": "string",
+          "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "agency": {
+              "type": "string",
+              "minLength": 1
+            },
+            "process": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "notice_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+              }
+            }
+          },
+          "required": [
+            "agency",
+            "process",
+            "title",
+            "notice_ids"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "record_type": {
+          "const": "opportunity"
+        },
+        "entity_id": {
+          "type": "string",
+          "pattern": "^ocd-participation-window/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "proceeding_id": {
+              "type": "string",
+              "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+            },
+            "notice_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+              }
+            },
+            "opportunity_type": {
+              "enum": [
+                "written_comment",
+                "hearing",
+                "hearing_request"
+              ]
+            },
+            "hearing_status": {
+              "enum": [
+                "scheduled",
+                "not_scheduled",
+                "cancelled",
+                "unknown",
+                "not_applicable"
+              ]
+            },
+            "target_scope": {
+              "type": "string",
+              "minLength": 1
+            },
+            "temporal": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/temporal"
+              },
+              "minItems": 1,
+              "contains": {
+                "properties": {
+                  "role": {
+                    "enum": [
+                      "close",
+                      "hearing_start"
+                    ]
+                  }
+                },
+                "required": [
+                  "role"
+                ]
+              }
+            }
+          },
+          "required": [
+            "proceeding_id",
+            "notice_ids",
+            "opportunity_type",
+            "hearing_status",
+            "target_scope",
+            "temporal"
+          ],
+          "additionalProperties": false
+        },
+        "cohorts": {
+          "minItems": 1
+        }
+      }
+    },
+    {
+      "properties": {
+        "record_type": {
+          "const": "update"
+        },
+        "entity_id": {
+          "type": "string",
+          "pattern": "^ocd-update/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "notice_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+              }
+            },
+            "proceeding_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+              }
+            },
+            "target_opportunity_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^ocd-participation-window/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+              }
+            },
+            "event_type": {
+              "enum": [
+                "extension",
+                "shortening",
+                "correction",
+                "reopening",
+                "hearing_reschedule",
+                "hearing_cancellation",
+                "full_withdrawal",
+                "partial_withdrawal",
+                "replacement",
+                "reversion",
+                "unknown"
+              ]
+            },
+            "target_scope": {
+              "type": "string",
+              "minLength": 1
+            },
+            "before_evidence": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/evidence"
+              }
+            },
+            "after_evidence": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/evidence"
+              },
+              "minItems": 1
+            },
+            "before_missing_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "posting_time": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "first_seen_lower": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "first_seen_upper": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "observed_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "visible_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "review_latency_minutes": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "temporal": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/temporal"
+              }
+            },
+            "target_unresolved_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "human_review_ref": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "notice_ids",
+            "proceeding_ids",
+            "target_opportunity_ids",
+            "event_type",
+            "target_scope",
+            "before_evidence",
+            "after_evidence",
+            "before_missing_reason",
+            "posting_time",
+            "first_seen_lower",
+            "first_seen_upper",
+            "observed_at",
+            "visible_at",
+            "review_latency_minutes",
+            "temporal",
+            "target_unresolved_reason",
+            "human_review_ref"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "target_opportunity_ids": {
+                    "maxItems": 0
+                  }
+                },
+                "required": [
+                  "target_opportunity_ids"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "target_unresolved_reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "before_evidence": {
+                    "maxItems": 0
+                  }
+                },
+                "required": [
+                  "before_evidence"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "before_missing_reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "cohorts": {
+          "minItems": 1
+        }
+      }
+    },
+    {
+      "properties": {
+        "record_type": {
+          "const": "rejected_candidate"
+        },
+        "entity_id": {
+          "type": "string",
+          "pattern": "^census-candidate/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "reason_code": {
+              "enum": [
+                "out_of_scope",
+                "outside_interval",
+                "duplicate",
+                "no_participation",
+                "non_notice",
+                "unresolved"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "duplicate_of": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "reason_code",
+            "rationale",
+            "duplicate_of"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "reason_code": {
+                    "const": "duplicate"
+                  }
+                },
+                "required": [
+                  "reason_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "duplicate_of": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "properties": {
+        "record_type": {
+          "const": "adjudication"
+        },
+        "entity_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "trigger": {
+              "enum": [
+                "disagreement",
+                "lifecycle_ambiguity",
+                "date_ambiguity",
+                "visual_mark",
+                "missing_source",
+                "random_audit",
+                "correction",
+                "identity",
+                "completeness_verdict",
+                "scope"
+              ]
+            },
+            "target_record_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            },
+            "input_versions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "finding": {
+              "type": "string",
+              "minLength": 1
+            },
+            "decision": {
+              "enum": [
+                "affirm",
+                "revise",
+                "reject",
+                "unresolved",
+                "established",
+                "not_established",
+                "narrowed"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reviewer_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "started_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "ended_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "minutes": {
+              "type": "number",
+              "minimum": 0
+            },
+            "result_versions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "rescore_required": {
+              "type": "boolean"
+            },
+            "rescore_refs": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "audit": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "seed": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "frame_hash": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "stratum": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "selection_rank": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "sample_size": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "required": [
+                    "seed",
+                    "frame_hash",
+                    "stratum",
+                    "selection_rank",
+                    "sample_size"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "trigger",
+            "target_record_ids",
+            "input_versions",
+            "finding",
+            "decision",
+            "rationale",
+            "reviewer_id",
+            "started_at",
+            "ended_at",
+            "minutes",
+            "result_versions",
+            "rescore_required",
+            "rescore_refs",
+            "audit"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "trigger": {
+                    "enum": [
+                      "completeness_verdict",
+                      "scope"
+                    ]
+                  }
+                },
+                "required": [
+                  "trigger"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "decision": {
+                    "enum": [
+                      "established",
+                      "not_established",
+                      "narrowed"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "record_type": {
+            "const": "adjudication"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "phase": {
+            "const": "adjudicated"
+          },
+          "author": {
+            "properties": {
+              "role": {
+                "const": "human_reviewer"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "record_type": {
+            "not": {
+              "const": "adjudication"
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "evidence": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "phase": {
+            "const": "pass_A"
+          }
+        },
+        "required": [
+          "phase"
+        ]
+      },
+      "then": {
+        "properties": {
+          "author": {
+            "properties": {
+              "role": {
+                "const": "pass_A_child"
+              },
+              "provider": {
+                "type": "string",
+                "minLength": 1
+              },
+              "task_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "phase": {
+            "const": "pass_B"
+          }
+        },
+        "required": [
+          "phase"
+        ]
+      },
+      "then": {
+        "properties": {
+          "author": {
+            "properties": {
+              "role": {
+                "const": "pass_B_child"
+              },
+              "provider": {
+                "type": "string",
+                "minLength": 1
+              },
+              "task_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "phase": {
+            "const": "adjudicated"
+          }
+        },
+        "required": [
+          "phase"
+        ]
+      },
+      "then": {
+        "properties": {
+          "author": {
+            "properties": {
+              "role": {
+                "enum": [
+                  "primary",
+                  "human_reviewer"
+                ]
+              }
+            }
+          },
+          "review_status": {
+            "not": {
+              "const": "candidate"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "record_type": {
+            "const": "update"
+          },
+          "payload": {
+            "anyOf": [
+              {
+                "properties": {
+                  "before_evidence": {
+                    "maxItems": 0
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "target_opportunity_ids": {
+                    "maxItems": 0
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "required": [
+          "record_type",
+          "payload"
+        ]
+      },
+      "then": {
+        "anyOf": [
+          {
+            "properties": {
+              "unresolved": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "payload": {
+                "properties": {
+                  "human_review_ref": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "human_review_ref"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "examples": [
+    {
+      "schema_version": "1.0.0",
+      "record_id": "example-A-candidate-1-v1",
+      "entity_id": "census-candidate/state-wa/example:1",
+      "state": "WA",
+      "universe_version": "example-v1",
+      "label_version": 1,
+      "supersedes_record_id": null,
+      "record_type": "rejected_candidate",
+      "phase": "pass_A",
+      "author": {
+        "role": "pass_A_child",
+        "task_id": "example-A",
+        "provider": "example-provider",
+        "model": null
+      },
+      "created_at": "2026-10-01T12:00:00Z",
+      "cohorts": [
+        "new_notice"
+      ],
+      "aliases": [],
+      "evidence": [
+        {
+          "manifest_entry_id": "example-only-page",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "locator": "page 1, heading",
+          "mode": "text_exact",
+          "quote_or_mark_description": "Synthetic example, not captured evidence"
+        }
+      ],
+      "review_status": "candidate",
+      "unresolved": [],
+      "payload": {
+        "reason_code": "out_of_scope",
+        "rationale": "Synthetic local-government notice, excluded by scope",
+        "duplicate_of": null
+      }
+    }
+  ],
+  "description": "Research-only labels; no model confidence score or production approval. Adjudication of wholly missing evidence may have an empty evidence array; target IDs and rationale must identify the manifest gap. Cross-record checks are specified in PROTOCOL.md."
+}
