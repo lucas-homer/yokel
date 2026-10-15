@@ -39,6 +39,7 @@ Make an exception to the federal-only rule for a **bounded pilot**, run under
   default keeps it off every public surface.
 
 All of ADR 0003's other rules stand unchanged:
+
 - the append-only observation log;
 - federal conflict comparison in **America/New_York**;
 - alert suppression that always fires a notification.

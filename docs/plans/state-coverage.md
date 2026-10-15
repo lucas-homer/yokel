@@ -34,6 +34,7 @@ Revision r2 addresses the cross-provider review in
 
    For federal data, ADR 0003 could say discovery is not the value. For states, discovery **is**
    most of the value.
+
 3. **State support is a cross-pipeline feature, not a schema tweak.** The federal assumptions run
    through the contracts, the database constraints, ingest, reconcile, review, verify and the API
    (B2).
@@ -60,20 +61,21 @@ Revision r2 addresses the cross-provider review in
 
 Scored against the state's census for a declared acceptance interval:
 
-| Promise | Release criterion |
-| --- | --- |
-| **Discovery:** notice recall and opportunity recall, reported separately | ≥ 98% on the finite census |
-| **Correctness:** wrong dates among everything exposed at high or medium confidence during shadow, including assertions later corrected | 0 observed |
-| **Honesty:** unresolved dates | `unknown` or `conflicting`, with evidence and a review task; never a guess |
-| **Updates:** live updates reflected, from the update ledger | ≥ 95%. Zero live events means "unmeasured", not a pass; rare transitions also need passing replay tests. |
-| **Timeliness:** lag from the earliest evidenced authoritative posting to a correctly typed opportunity, including review delay | Median ≤ 1 business day and max ≤ 3, where posting time is evidenced. Also report the lead time left before the close or hearing. |
-| **Evidence:** facts linked to the retained original bytes and an exact location | 100%, within what each source's terms allow |
-| **Operating load:** hours per state per week, split by activity | Within the per-state budget set at the end of Phase 1 |
+| Promise                                                                                                                                | Release criterion                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Discovery:** notice recall and opportunity recall, reported separately                                                               | ≥ 98% on the finite census                                                                                                        |
+| **Correctness:** wrong dates among everything exposed at high or medium confidence during shadow, including assertions later corrected | 0 observed                                                                                                                        |
+| **Honesty:** unresolved dates                                                                                                          | `unknown` or `conflicting`, with evidence and a review task; never a guess                                                        |
+| **Updates:** live updates reflected, from the update ledger                                                                            | ≥ 95%. Zero live events means "unmeasured", not a pass; rare transitions also need passing replay tests.                          |
+| **Timeliness:** lag from the earliest evidenced authoritative posting to a correctly typed opportunity, including review delay         | Median ≤ 1 business day and max ≤ 3, where posting time is evidenced. Also report the lead time left before the close or hearing. |
+| **Evidence:** facts linked to the retained original bytes and an exact location                                                        | 100%, within what each source's terms allow                                                                                       |
+| **Operating load:** hours per state per week, split by activity                                                                        | Within the per-state budget set at the end of Phase 1                                                                             |
 
 **How to read these numbers (S1).**
+
 - They are finite-census results and operational release criteria, not statistical guarantees
   about future weeks.
-- For scale: with zero errors in *n* independent cases, the 95% upper bound on the error rate is
+- For scale: with zero errors in _n_ independent cases, the 95% upper bound on the error rate is
   13.9% at n = 20, 2.95% at n = 100 and 1% at n = 299.
 - Showing that recall is above 98% with 95% confidence needs about 149 independent opportunities
   with zero misses.
@@ -145,7 +147,7 @@ For each candidate:
    - **Completeness rule:** if the completeness of the source universe can't be established,
      recall is "not established". The statewide claim then stops, or the service is explicitly
      narrowed.
-3. **Surface map.** For each discovery surface, and for the best justified *combination* of
+3. **Surface map.** For each discovery surface, and for the best justified _combination_ of
    surfaces, record which census items it would have found. Note retention windows, pagination and
    cadence.
 4. **Temporal ambiguity log.** Record zone wording, relative anchors, counting rules, cutoffs and
@@ -162,6 +164,7 @@ adjudication log) and `scorecards/<state>.md`. Bulk raw captures go to hash-keye
 git.
 
 **Decision:** select up to 4 pilot states.
+
 - Each selected state needs a documented route to 98%.
 - At least one selected state must meet the hard-state bar. If no hard candidate has a credible
   route, allow one bounded substitution or make an explicit scope decision; never quietly ship an
@@ -175,6 +178,7 @@ git.
   semantics, API defaults and ADR 0003's America/New_York rule (B2, S9).
 
 Deliverables:
+
 - **Compatibility matrix** of the old and new wire shapes. State and generalized schemas live in
   the same shared package, versioned alongside the federal ones, and are exposed through an
   explicitly versioned or opt-in API surface.
@@ -236,6 +240,7 @@ tests, plus fixtures from the Phase 1 census for every pilot state.
    prioritizes by deadline even when the UTC close is null, and has named reviewer capacity and
    escalation. Evidence changes invalidate affected verdicts conservatively, and ADR 0010's
    Regs-only exception doesn't generalize.
+
 3. **Health and staleness (S5).** Track expected cadence, the last full enumeration,
    page/row/attachment accounting, layout checks, cursor progress and dead letters. Persist
    successful checks even when the hash is unchanged. Thresholds are cadence-aware and there is a
@@ -250,12 +255,14 @@ tests, plus fixtures from the Phase 1 census for every pilot state.
 
    The ledger also monitors known histories and older proceedings. The post-close follow-up
    horizon is set per publication process, not inherited from the federal seven days.
+
 5. **The state adapter or adapters, extraction, and reconciliation.** Deterministic parsing comes
    first. An LLM handles only candidate fields, with exact locations. Anything doubtful becomes a
    review task.
 
 **Acceptance (S2):** builders see development fixtures, which are kept separate from two
 acceptance sets:
+
 - **(a) Sealed historical set:** a Phase 1 census slice that builders never see, frozen before
   the build. Replay proves extraction and identity.
 - **(b) Live acceptance interval of 4 weeks:** declared in advance, with the adapter and rulebook
@@ -281,6 +288,7 @@ If the repair fails too, stop the state or narrow it, and write down why.
 ### Phase 5: release checklist and scale memo
 
 Each passing state goes through a checkable release checklist:
+
 - the eligibility flip, using the release boundary;
 - evidence exposure within the source's terms;
 - the production parser and provider configuration, with cost ceilings;
@@ -289,16 +297,16 @@ Each passing state goes through a checkable release checklist:
 - the named owner.
 
 **Audit after launch (S7):**
+
 - reconcile against the publication manifest every expected cycle;
 - sample enumeration and labels independently;
 - run a fuller census periodically;
 - investigate any miss in full, immediately.
 
-If exhaustive censuses stop, rolling recall is described as *estimated*, not certified.
+If exhaustive censuses stop, rolling recall is described as _estimated_, not certified.
 
 **Scale memo:** cost ranges by observed source archetype, such as register issues, JSON portals or
-PDF-only sources, with unmeasured archetypes named explicitly. It is not one figure multiplied by
-50. It feeds the next ADR.
+PDF-only sources, with unmeasured archetypes named explicitly. It is not one figure multiplied by 50. It feeds the next ADR.
 
 ## How we run it
 
@@ -314,12 +322,12 @@ PDF-only sources, with unmeasured archetypes named explicitly. It is not one fig
 
 ## Main risks
 
-| Risk | Early signal | Response |
-| --- | --- | --- |
-| The source universe can't be shown to be complete | Phase 1 manifest gaps | Narrow the declared scope, or stop the state; never drop gaps from the denominator |
-| Review load doesn't scale | Hours over budget in the live interval | More deterministic parsing per template; raise abstention only with evidence |
-| Sources break, move or go quiet | Stability re-fetch; health slice | Cadence-aware silence alerts, stale transitions, census canaries |
-| Legal date semantics | Temporal ambiguity log | Per-process temporal policy; `unknown` until reviewed |
-| Terms of use, access or retention limits | Phase 1 rights check | Allowed alternative source, or limit the evidence exposed |
-| Low volume makes the evidence thin | Phase 1 sizing | Ship with stated limits and ongoing audit; never claim a guarantee |
-| The plan drifts into research | A phase over its timebox | The gate decides; no extra rounds without a new decision |
+| Risk                                              | Early signal                           | Response                                                                           |
+| ------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------- |
+| The source universe can't be shown to be complete | Phase 1 manifest gaps                  | Narrow the declared scope, or stop the state; never drop gaps from the denominator |
+| Review load doesn't scale                         | Hours over budget in the live interval | More deterministic parsing per template; raise abstention only with evidence       |
+| Sources break, move or go quiet                   | Stability re-fetch; health slice       | Cadence-aware silence alerts, stale transitions, census canaries                   |
+| Legal date semantics                              | Temporal ambiguity log                 | Per-process temporal policy; `unknown` until reviewed                              |
+| Terms of use, access or retention limits          | Phase 1 rights check                   | Allowed alternative source, or limit the evidence exposed                          |
+| Low volume makes the evidence thin                | Phase 1 sizing                         | Ship with stated limits and ongoing audit; never claim a guarantee                 |
+| The plan drifts into research                     | A phase over its timebox               | The gate decides; no extra rounds without a new decision                           |
