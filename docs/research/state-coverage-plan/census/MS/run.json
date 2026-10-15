@@ -1,0 +1,310 @@
+{
+ "schema_version": "1.0.0",
+ "synthetic": false,
+ "state": "MS",
+ "universe_version": "ms-v0.1-signed-2026-10-15",
+ "scope_resolved": true,
+ "history_bounded": false,
+ "attended": true,
+ "rights_file": "../../rights/surfaces.json",
+ "processes": [
+  {
+   "agency_id": "ms-fire-personnel-board",
+   "process_id": "proposal",
+   "single_lineage": false,
+   "human_review_ref": null,
+   "coverage": {
+    "mode": "independent_partial",
+    "unit_kind": "proceeding",
+    "universe_basis": "Every bulletin row of this agency whose provisional record class is \"proposal\" (date fields only: proposed date present, no final/withdrawal/effective date, no hearing/withdrawal wording) within ID backbone [28374,28965], from the 19 BulletinSearch slices captured 2026-10-15 (manifest ms-slice-*). Unit = one proposal filing (system number). Covers backward, carry-in, interval and follow-up windows; class is provisional until enumeration.",
+    "universe": [
+     {
+      "unit_id": "ms-sos-28934",
+      "agency_id": "ms-fire-personnel-board"
+     }
+    ],
+    "checks": [
+     {
+      "entry_id": "ms-form-28934",
+      "against_entry_id": "ms-xchk-mid-notice-202610-1",
+      "scope": "partial",
+      "scope_basis": "MID-hosted list entry 2026/10 -1 (Part 101 Ch. 1) covers 28934 only; MID hosts the Board's notices but is not shown to list all Board proposals, so scope is partial even though it matches the single-unit universe.",
+      "expected_unit_ids": [
+       "ms-sos-28934"
+      ],
+      "matched_unit_ids": [
+       "ms-sos-28934"
+      ],
+      "mismatched_unit_ids": [],
+      "unresolved_unit_ids": []
+     }
+    ],
+    "claim_agency_ids": [],
+    "completeness": "not_established"
+   }
+  },
+  {
+   "agency_id": "ms-mdeq",
+   "process_id": "final",
+   "single_lineage": true,
+   "human_review_ref": "owner-review-pending/ms-acq-2026-10-15/single-lineage-ms-mdeq-final"
+  },
+  {
+   "agency_id": "ms-mdeq",
+   "process_id": "proposal",
+   "single_lineage": false,
+   "human_review_ref": null,
+   "coverage": {
+    "mode": "independent_partial",
+    "unit_kind": "proceeding",
+    "universe_basis": "Every bulletin row of this agency whose provisional record class is \"proposal\" (date fields only: proposed date present, no final/withdrawal/effective date, no hearing/withdrawal wording) within ID backbone [28374,28965], from the 19 BulletinSearch slices captured 2026-10-15 (manifest ms-slice-*). Unit = one proposal filing (system number). Covers backward, carry-in, interval and follow-up windows; class is provisional until enumeration.",
+    "universe": [
+     {
+      "unit_id": "ms-sos-28473",
+      "agency_id": "ms-mdeq"
+     },
+     {
+      "unit_id": "ms-sos-28524",
+      "agency_id": "ms-mdeq"
+     },
+     {
+      "unit_id": "ms-sos-28576",
+      "agency_id": "ms-mdeq"
+     },
+     {
+      "unit_id": "ms-sos-28720",
+      "agency_id": "ms-mdeq"
+     },
+     {
+      "unit_id": "ms-sos-28873",
+      "agency_id": "ms-mdeq"
+     },
+     {
+      "unit_id": "ms-sos-28939",
+      "agency_id": "ms-mdeq"
+     }
+    ],
+    "checks": [
+     {
+      "entry_id": "ms-form-28720",
+      "against_entry_id": "ms-xchk-mdeq-notice-28720",
+      "scope": "partial",
+      "scope_basis": "MDEQ Regulations page \"Proposed Regulation Changes\" is rolling and shows only the current proposal (ms-xchk-mdeq-regulations-page#section); its linked notice covers 28720 only.",
+      "expected_unit_ids": [
+       "ms-sos-28720"
+      ],
+      "matched_unit_ids": [
+       "ms-sos-28720"
+      ],
+      "mismatched_unit_ids": [],
+      "unresolved_unit_ids": []
+     }
+    ],
+    "claim_agency_ids": [],
+    "completeness": "not_established"
+   }
+  },
+  {
+   "agency_id": "ms-mdeq",
+   "process_id": "withdrawal",
+   "single_lineage": true,
+   "human_review_ref": "owner-review-pending/ms-acq-2026-10-15/single-lineage-ms-mdeq-withdrawal"
+  },
+  {
+   "agency_id": "ms-mid",
+   "process_id": "final",
+   "single_lineage": true,
+   "human_review_ref": "owner-review-pending/ms-acq-2026-10-15/single-lineage-ms-mid-final"
+  },
+  {
+   "agency_id": "ms-mid",
+   "process_id": "other",
+   "single_lineage": true,
+   "human_review_ref": "owner-review-pending/ms-acq-2026-10-15/single-lineage-ms-mid-other"
+  },
+  {
+   "agency_id": "ms-mid",
+   "process_id": "proposal",
+   "single_lineage": false,
+   "human_review_ref": null,
+   "coverage": {
+    "mode": "independent_partial",
+    "unit_kind": "proceeding",
+    "universe_basis": "Every bulletin row of this agency whose provisional record class is \"proposal\" (date fields only: proposed date present, no final/withdrawal/effective date, no hearing/withdrawal wording) within ID backbone [28374,28965], from the 19 BulletinSearch slices captured 2026-10-15 (manifest ms-slice-*). Unit = one proposal filing (system number). Covers backward, carry-in, interval and follow-up windows; class is provisional until enumeration.",
+    "universe": [
+     {
+      "unit_id": "ms-sos-28491",
+      "agency_id": "ms-mid"
+     },
+     {
+      "unit_id": "ms-sos-28567",
+      "agency_id": "ms-mid"
+     },
+     {
+      "unit_id": "ms-sos-28585",
+      "agency_id": "ms-mid"
+     },
+     {
+      "unit_id": "ms-sos-28587",
+      "agency_id": "ms-mid"
+     },
+     {
+      "unit_id": "ms-sos-28588",
+      "agency_id": "ms-mid"
+     },
+     {
+      "unit_id": "ms-sos-28597",
+      "agency_id": "ms-mid"
+     },
+     {
+      "unit_id": "ms-sos-28711",
+      "agency_id": "ms-mid"
+     },
+     {
+      "unit_id": "ms-sos-28862",
+      "agency_id": "ms-mid"
+     },
+     {
+      "unit_id": "ms-sos-28868",
+      "agency_id": "ms-mid"
+     },
+     {
+      "unit_id": "ms-sos-28937",
+      "agency_id": "ms-mid"
+     }
+    ],
+    "checks": [
+     {
+      "entry_id": "ms-form-28491",
+      "against_entry_id": "ms-xchk-mid-notice-202602",
+      "scope": "partial",
+      "scope_basis": "MID \"Proposed Regulations\" list (ms-xchk-mid-proposed-regulations-page#section) holds 4 entries; the 2026/02 entry and PDF cover 28491 only.",
+      "expected_unit_ids": [
+       "ms-sos-28491"
+      ],
+      "matched_unit_ids": [
+       "ms-sos-28491"
+      ],
+      "mismatched_unit_ids": [],
+      "unresolved_unit_ids": []
+     },
+     {
+      "entry_id": "ms-form-28937",
+      "against_entry_id": "ms-xchk-mid-notice-202610",
+      "scope": "partial",
+      "scope_basis": "MID list 2026/10 entry and PDF (Part 5 Ch. 7) cover 28937 only.",
+      "expected_unit_ids": [
+       "ms-sos-28937"
+      ],
+      "matched_unit_ids": [
+       "ms-sos-28937"
+      ],
+      "mismatched_unit_ids": [],
+      "unresolved_unit_ids": []
+     }
+    ],
+    "claim_agency_ids": [],
+    "completeness": "not_established"
+   }
+  },
+  {
+   "agency_id": "ms-sos-bulletin",
+   "process_id": "bulletin-index",
+   "single_lineage": true,
+   "human_review_ref": "owner-review-pending/ms-acq-2026-10-15/single-lineage-ms-sos-bulletin-bulletin-index"
+  },
+  {
+   "agency_id": "ms-sos-filers-other",
+   "process_id": "final",
+   "single_lineage": true,
+   "human_review_ref": "owner-review-pending/ms-acq-2026-10-15/single-lineage-ms-sos-filers-other-final"
+  },
+  {
+   "agency_id": "ms-sos-filers-other",
+   "process_id": "other",
+   "single_lineage": true,
+   "human_review_ref": "owner-review-pending/ms-acq-2026-10-15/single-lineage-ms-sos-filers-other-other"
+  },
+  {
+   "agency_id": "ms-sos-filers-other",
+   "process_id": "proposal",
+   "single_lineage": true,
+   "human_review_ref": "owner-review-pending/ms-acq-2026-10-15/single-lineage-ms-sos-filers-other-proposal"
+  },
+  {
+   "agency_id": "ms-sos-filers-other",
+   "process_id": "unresolved-id",
+   "single_lineage": true,
+   "human_review_ref": "owner-review-pending/ms-acq-2026-10-15/single-lineage-ms-sos-filers-other-unresolved-id"
+  },
+  {
+   "agency_id": "ms-sos-filers-other",
+   "process_id": "withdrawal",
+   "single_lineage": true,
+   "human_review_ref": "owner-review-pending/ms-acq-2026-10-15/single-lineage-ms-sos-filers-other-withdrawal"
+  }
+ ],
+ "brief_file": "brief.txt",
+ "brief_sha256": null,
+ "brief_frozen_at": null,
+ "passes": [],
+ "crosswalk": [],
+ "completeness_review_ref": "owner-review-pending/ms-acq-2026-10-15/completeness-verdict",
+ "mandatory_review_refs": [],
+ "temporal_log": [],
+ "audit": {
+  "seed": null,
+  "frame_hash": null,
+  "coarsening_level": 0,
+  "frozen_before_seed": true,
+  "mandatory_minutes_estimate": 0,
+  "overlap_minutes": 0,
+  "estimate_minutes": 0,
+  "actual_minutes": 0,
+  "strata": [],
+  "unit_coverage": {},
+  "coarsening_history": []
+ },
+ "credits": [
+  {
+   "state": "WA",
+   "actual": 0,
+   "outstanding": 0,
+   "reserve_released": 0,
+   "primary_release_ref": null,
+   "reviewer_minutes": 0
+  },
+  {
+   "state": "CT",
+   "actual": 0,
+   "outstanding": 0,
+   "reserve_released": 0,
+   "primary_release_ref": null,
+   "reviewer_minutes": 0
+  },
+  {
+   "state": "VA",
+   "actual": 0,
+   "outstanding": 0,
+   "reserve_released": 0,
+   "primary_release_ref": null,
+   "reviewer_minutes": 0
+  },
+  {
+   "state": "TN",
+   "actual": 0,
+   "outstanding": 0,
+   "reserve_released": 0,
+   "primary_release_ref": null,
+   "reviewer_minutes": 0
+  },
+  {
+   "state": "MS",
+   "actual": 0,
+   "outstanding": 0,
+   "reserve_released": 0,
+   "primary_release_ref": null,
+   "reviewer_minutes": 0
+  }
+ ]
+}

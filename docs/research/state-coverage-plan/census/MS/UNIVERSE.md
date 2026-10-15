@@ -412,3 +412,26 @@ robots.txt (404) and homepage come from the scout's same-day log (r13–r14), no
 Image-only status was checked from PDF object structure (one image XObject, no `/Font`). All nine
 forms here were read visually from rendered pages. MDEQ notice text came from macOS PDFKit (native
 text, 2 pages).
+
+## Acquisition notes (step 3, 2026-10-15; appended, sections above unchanged)
+
+Full record: `ACQUISITION.md`. These points correct or qualify statements above:
+- **ID backbone:** 28374–28965 (592 integers; 591 have records). **28935** is the only number with no
+  record; its form and full-text paths return 404, and it is a reviewed gap.
+- **MID's Part 101 proposal has a record.** It is **28934** (Fire Personnel Minimum Standards and
+  Certification Board, FILED 2026-09-30), so the agency-roster row above calling it "never filed with SOS"
+  and a possible 28935 is wrong.
+- **FILED stamp vs record date:**
+  - 462 of 534 OCR-read stamps match.
+  - 69 run 1–4 days later (next business day), so the record date looks like a receipt date.
+  - 3 are likely misreads.
+  - Boundary review cases: 28573 and 28905.
+- **Forms aren't all one page.** 29 of 621 have 2–4 pages, 673 pages in all, which changes the credit
+  sizing.
+- **Backward hearing search** stopped at step 1 on an operator OCR screen, pending pass confirmation.
+  - Carry-in hearings: 28576 (May 20), 28608 (May 28), 28618 (June 17).
+  - Step 2 was captured as a precaution.
+- **Full-text `b.pdf`** (608 links) was not collected. Every form says the entire text "is attached", so
+  "where the form refers to them" needs an owner decision.
+- **Statute lookup:** the official host (LexisNexis advance) is JavaScript-only behind terms acceptance.
+  Not performed; citations remain "per form text".
