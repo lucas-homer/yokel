@@ -4,30 +4,30 @@ Every source link opens the exact retained parser-input PDF. “Evidence gap” 
 
 | Unit/source | State | Pages | Native text | Firecrawl | Llama Agentic | Llama Plus |
 | --- | --- | ---: | --- | --- | --- | --- |
-| [A01](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-a/A01/input.pdf) | MS | 1 | Empty scan text | Evidence gap | Pass, recovered | Evidence gap, recovered |
-| [A02](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-a/A02/input.pdf) | MS | 1 | Empty scan text | Evidence gap | Pass, recovered* | Pass, recovered |
-| [A03](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-a/A03/input.pdf) | MS | 1 | Empty scan text | Evidence gap | Title transcription error | Title error + omissions |
-| [A04](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-a/A04/input.pdf) | WA | 1 | Evidence gap | Evidence gap | Pass | Pass |
-| [A05](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-a/A05/input.pdf) | WA | 1 | Pass | Pass | Pass | Pass |
-| [A06](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-a/A06/input.pdf) | CA | 2 | Pass | Pass | Pass | Pass |
-| [A07](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-a/A07/input.pdf) | CA | 2 | Source conflict | Source conflict | Source conflict | Source conflict |
-| [A08](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-a/A08/input.pdf) | CA | 4 | Pass | Pass | Pass | Altered temporal condition |
-| [A09](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-a/A09/input.pdf) | NY | 1 | Pass | Evidence gap | Pass | Pass |
-| [A10](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-a/A10/input.pdf) | NY | 1 | Pass | Pass | Pass | Pass |
-| [B01](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-b/B01/input.pdf) | MA | 2 | Pass | Pass | Pass | Pass |
-| [B02](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-b/B02/input.pdf) | MA | 3 | Pass | Pass | Pass | Pass |
-| [B03](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-b/B03/input.pdf) | NC | 2 | Pass | Pass | Pass | Pass |
-| [B04](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-b/B04/input.pdf) | NC | 2 | Evidence gap | Evidence gap | Pass | Pass |
-| [B05](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-b/B05/input.pdf) | TX | 3 | Pass | Pass | Pass | Pass |
-| [B06](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-b/B06/input.pdf) | TX | 2 | Pass | Evidence gap | Pass | Pass |
-| [B07](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-b/B07/input.pdf) | TX | 2 | Pass | Evidence gap | Pass | Pass |
-| [B08](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-b/B08/input.pdf) | CO | 1 | Pass | Pass | Pass | Pass |
-| [B09](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-b/B09/input.pdf) | CO | 1 | Pass | Pass | Pass | Pass |
-| [B10](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/source-b/B10/input.pdf) | CO | 1 | Pass | Evidence gap | Pass | Pass |
+| [A01](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-a/A01) | MS | 1 | Empty scan text | Evidence gap | Pass, recovered | Evidence gap, recovered |
+| [A02](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-a/A02) | MS | 1 | Empty scan text | Evidence gap | Pass, recovered* | Pass, recovered |
+| [A03](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-a/A03) | MS | 1 | Empty scan text | Evidence gap | Title transcription error | Title error + omissions |
+| [A04](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-a/A04) | WA | 1 | Evidence gap | Evidence gap | Pass | Pass |
+| [A05](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-a/A05) | WA | 1 | Pass | Pass | Pass | Pass |
+| [A06](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-a/A06) | CA | 2 | Pass | Pass | Pass | Pass |
+| [A07](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-a/A07) | CA | 2 | Source conflict | Source conflict | Source conflict | Source conflict |
+| [A08](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-a/A08) | CA | 4 | Pass | Pass | Pass | Altered temporal condition |
+| [A09](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-a/A09) | NY | 1 | Pass | Evidence gap | Pass | Pass |
+| [A10](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-a/A10) | NY | 1 | Pass | Pass | Pass | Pass |
+| [B01](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-b/B01) | MA | 2 | Pass | Pass | Pass | Pass |
+| [B02](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-b/B02) | MA | 3 | Pass | Pass | Pass | Pass |
+| [B03](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-b/B03) | NC | 2 | Pass | Pass | Pass | Pass |
+| [B04](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-b/B04) | NC | 2 | Evidence gap | Evidence gap | Pass | Pass |
+| [B05](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-b/B05) | TX | 3 | Pass | Pass | Pass | Pass |
+| [B06](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-b/B06) | TX | 2 | Pass | Evidence gap | Pass | Pass |
+| [B07](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-b/B07) | TX | 2 | Pass | Evidence gap | Pass | Pass |
+| [B08](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-b/B08) | CO | 1 | Pass | Pass | Pass | Pass |
+| [B09](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-b/B09) | CO | 1 | Pass | Pass | Pass | Pass |
+| [B10](https://github.com/lucas-homer/yokel/tree/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/source-b/B10) | CO | 1 | Pass | Evidence gap | Pass | Pass |
 
-*A02 Agentic preserves the scored critical fields but misreads a handwritten number, `28576` as `28574`; its semantic role is not established by the frozen reference. See the [recovery findings](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/llama-recovery-2026-10-05/review/findings.json).
+*A02 Agentic preserves the scored critical fields but misreads a handwritten number, `28576` as `28574`; its semantic role is not established by the frozen reference. See the [recovery findings](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/llama-recovery-2026-10-05/review/findings.json).
 
-The 20 units come from 16 original PDFs. Full original documents, unchanged-page maps and allocation/template metadata are retained in the [frozen corpus manifest](/Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/artifacts/corpus-freeze.json).
+The 20 units come from 16 original PDFs. Full original documents, unchanged-page maps and allocation/template metadata are retained in the [frozen corpus manifest](https://github.com/lucas-homer/yokel/blob/research/state-rulemaking-evidence-2026-10/docs/research/state-rulemaking-benchmark/artifacts/corpus-freeze.json).
 
 ## Selected notice titles
 
