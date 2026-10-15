@@ -43,6 +43,20 @@ Prompted by the universe scoping, which found every process single-lineage under
 `surfaces.json` version `2026-10-15.2` carries these changes. VA Town Hall `/L/` stays held, since
 that hold comes from its robots.txt, not from a default.
 
+## Decided, round 3 (owner, 2026-10-15)
+
+10. **Mississippi is the backup hard candidate** (ADR 0013 Amendment 1). Collection may use the SOS
+    administrative search page and the search-service calls its own script makes, at 1 request / 5 s.
+    Stop on any Cloudflare challenge, 403 or 429. A short note on our rate and user agent goes to
+    SOS (`outreach/MS.md`).
+11. **MS cross-check:** sample about 5 MS agencies during scoping for an independent source; if none
+    qualifies, MS processes are single-lineage and completeness is "not established".
+12. **MS credits:** up to about 1,430 LlamaParse credits from the 2,000 reserve, covering proposal,
+    final and withdrawal forms.
+13. **Scope:** the owner signed `census/SCOPE-DECISIONS.md` as proposed.
+
+`surfaces.json` version `2026-10-15.3` adds the MS records.
+
 ## Primary defaults for the remaining questions (superseded in part by round 2)
 
 - **WA:** collect from the State Register only. Agency pages (for example Ecology, whose terms bar

@@ -578,5 +578,95 @@
     ],
     "open_outreach_ref": null,
     "notes": "Read-only independent-lineage cross-check, 1 req/5 s. Check this agency's own terms first; skip any agency whose terms restrict reuse (record the skip). Originals internal only. Excludes townhall.virginia.gov /L/ (see va-townhall-listings) and law.lis (see va-code-reference)."
+  },
+  {
+    "surface_id": "ms-sos-admin-search",
+    "state": "MS",
+    "url_pattern": "https://www\\.sos\\.ms\\.gov/adminsearch/.*",
+    "version": "2026-10-15.3",
+    "collection_rule": "allowed",
+    "retention": "internal_originals",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15c",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/MS.md",
+      "census/BACKUP-HARD-CANDIDATE.md"
+    ],
+    "open_outreach_ref": "rights/outreach/MS.md",
+    "notes": "SOS administrative-code search page and the search-service calls its own script makes (listing of filings). 1 req/5 s; stop on any Cloudflare challenge, 403 or 429."
+  },
+  {
+    "surface_id": "ms-sos-reference",
+    "state": "MS",
+    "url_pattern": "https://www\\.sos\\.ms\\.gov/(robots\\.txt|disclaimer|regulation-enforcement/.*)",
+    "version": "2026-10-15.3",
+    "collection_rule": "allowed",
+    "retention": "not_authorized",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15c",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/MS.md",
+      "census/BACKUP-HARD-CANDIDATE.md"
+    ],
+    "open_outreach_ref": "rights/outreach/MS.md",
+    "notes": "Reference pages (robots, disclaimer, admin-code landing)."
+  },
+  {
+    "surface_id": "ms-agency-rulemaking",
+    "state": "MS",
+    "url_pattern": "https://(www\\.)?[a-z0-9-]+\\.ms\\.gov/.*",
+    "version": "2026-10-15.3",
+    "collection_rule": "allowed",
+    "retention": "internal_originals",
+    "third_party_processing": "public_notices_only",
+    "public_evidence_rule": "Link + short factual deadline/hearing excerpt; originals and hashes internal only",
+    "rate": {
+      "min_interval_seconds": 5,
+      "concurrency": 1,
+      "stop_on_status": [
+        403,
+        429
+      ],
+      "identifying_user_agent": true,
+      "no_bot_workaround": true
+    },
+    "decision_ref": "rights/DECISIONS.md",
+    "decision_version": "owner-2026-10-15c",
+    "decision_date": "2026-10-15",
+    "evidence_refs": [
+      "rights/DECISIONS.md",
+      "rights/MS.md",
+      "census/BACKUP-HARD-CANDIDATE.md"
+    ],
+    "open_outreach_ref": "rights/outreach/MS.md",
+    "notes": "Read-only independent-lineage cross-check candidates (owner asked for ~5 agencies sampled). Check each agency's own terms first; skip restrictive ones. Excludes sos.ms.gov (see other records)."
   }
 ]

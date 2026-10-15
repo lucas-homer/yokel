@@ -1,4 +1,4 @@
-# Census scope decisions (primary proposals, for owner sign-off)
+# Census scope decisions (signed by the owner as proposed, 2026-10-15)
 
 The four `UNIVERSE.md` files raise 38 reviewer questions. Five are strategic and go to the owner
 directly (marked **owner**). For the rest, the primary proposes the answers below. Unless the owner
