@@ -1,0 +1,27 @@
+# R9 offline exact-ID and reviewed completeness implementation
+
+Status: implementation complete, edits stopped for adversarial review. No provider transport, paid runner, credential, signing, production/shared-schema change, install or build is included. The primary release and all 21 protocol artifacts are hash-verified; approval inputs remain externally authored and unchanged.
+
+API:
+
+- request.wi() / request.build(source, assembled): bounded retained-WI request projection, explicit provider-field allowlist, unchanged full user/source/record/evidence table, neutral keyed instruction and compact schema. Over-guard requests reject without clipping or fallback.
+- response.schedule(record, payload_sha256) / schema_for(schedule): enumerate all top-level/nested record IDs, reject collisions, empty/reserved/over-limit schedules, require exactly each keyed assessment and disallow extras/embedded item_id. Coverage stays global.
+- response.expand(schema): only exact approved a/e definitions and singleton local refs; reject unsupported/external/missing/sibling/cyclic/deep refs and unknown schema keywords. Property-name maps are distinct from schema keywords. The frozen validator never sees unresolved refs. This is not a general schema loader.
+- response.validate_response(raw_json, source, assembled): duplicate-rejecting strict raw parsing, wire validation, sorted-key lossless legacy-array normalization, then unchanged R7 binding/all-ID/evidence/consistency validation. Structural validity always leaves semantics unverified; uncertain positives remain review-required.
+- semantic.aggregate_json(source_json, record_json, audit_json, review_json): strict raw entry for externally reviewed audit aggregation. semantic.aggregate accepts already strictly parsed objects for internal/test use. semantic.fields computes the exhaustive approved field inventory. No provider verdict or fixture expected label is an aggregation input; there is no approve/trust/assert-complete option.
+
+The semantic gate validates unchanged R7 record shape/relationships/evidence, all source/record/reference/value/audit hashes and external distinct reviewer identities, complete source and claim scopes, exact source/field row sets, whole-field pointers, reverse links and acyclic required-endpoint closure. Evidence/source text/coverage prose never discharge missing operative assertions. Unknowns/host guards dominate defects; known defects remain in diagnostics. Complete-supported means all reviewed obligations/fields pass this offline gate only; production/action flags stay false and response/other host rejection cannot be overridden. It cannot discover omissions, verify reviewer authentication or disprove a falsely approved manual adjudication.
+
+Fifteen guarded test methods cover all 13 active raw response cases, exact schedule/schema/expansion/request equality, raw duplicates at every depth, nonfinite constants and exponent overflow, legacy-array nonfallback, collision/reserved/empty/over-limit IDs, local-ref failures, provider-input separation, no-clipping guard rejection, all ten externally endorsed semantic cases and their pending controls, minimal pairs and source-only added obligations, missing/stale/malformed approvals, scopes/row sets/value pointers/evidence/reverse links/dependency cycles, unknown-over-defect precedence and retained host guards. Unsupported-added-field mutations remain defects but unverified because they require new external review; no mutated audit is granted manufactured approval. The malformed coverage-container path also returns unverified safely. Source totals: 44 reviewed rows and 214 semantic fields; outcomes 3 complete_supported, 5 not_complete, 2 unverified. These are manually reviewed development inputs, not model observations or accuracy.
+
+Actual compact schema is 7,506 bytes. Full request is 38,432 UTF-8 bytes + existing 1,024 allowance = 39,456 under unchanged 40,000 guard (544 headroom). REPORT.json records exact baseline/schema/instruction overhead and canonical hashes; request equals the approved offline fixture. Reference expansion matches full-schema hash 7e1d307af2f397b8fea7b9388239091537b91c638cdcf69c74508b31e23d28f4. Provider support for wide keyed objects/local refs remains unverified. Reject any future unsupported provider/schema rather than changing shape silently.
+
+Reproduce without writing old pycache/artifacts:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 /Users/home/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 -I -B /Users/home/.codex/worktrees/e8f4/yokel/docs/research/state-rulemaking-benchmark/round9-exact-id-completeness/runtime/verify_offline.py
+```
+
+The verifier blocks network/subprocess/credential-file access and writes only this runtime directory. REPORT.json and test-output.txt retain reproducible evidence. READY.json binds current owned hashes and immutable prior-baseline verification. Primary/reviewer may rerun this new verifier and supersede only generated report/log hashes. No other task was messaged or delegated.
+
+Reviewer input-boundary fix: malformed source/assembly inputs now enter the protected response-validation boundary before payload/schedule construction and return a structured invalid/unverified result. Regressions cover None, lists, missing/empty record objects and malformed sources; no unchecked assembly exception escapes. This does not repair caller data or change the protocol.

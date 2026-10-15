@@ -1,0 +1,13 @@
+# Contract-probe independent review
+
+**Approved for primary freeze and native preflight. No open code blockers.** Approval binds the exact code pins and authorization scope in `FINAL-REVIEW.json`. Primary still owns concrete implementation/A/S/authorization/native dependency/job/policy bindings, native/security checks and the authorized live execution.
+
+The inventory body exactly matches the frozen reviewed offline candidate: body SHA-256 `6d54b497757db64d003a5bcb75f7ce9b1f302e78f2babcec301b7757f6aaeca0`, conservative input estimate 22,141, output allowance 12,288. It uses the exact original two-page Wisconsin source, unchanged model/provider/reasoning/schema/assembly/acceptance behavior, and source-only user content. Stronger input guard is 40,000 with 4,096 output; Jev remains 64,000 total and 32,000 state-plus-longest. Both final verifier bodies must admit before either call.
+
+Both previous immutable freezes/intents/responses are bound and checked. Their per-operation max(reservation,reported) costs produce the required $0.261774 conservative debit. New maximum nominal reservation $0.316528 yields aggregate $0.578302 inside the shared $2 guard. One operation per stage and at most three new calls remain enforced. Prior failure latches, no retries/repair/clipping and result-preserving postresponse stops remain intact.
+
+Validation: **27 guarded tests pass** (16 owner, 11 independent). Controls cover the exact request delta, completed three-stage/no-call resume, prior-debit omission/duplication/refund/hash tampering, authorization limits, one-per-stage caps, cumulative pre-call denial and postresponse retention/stop, failures at each stage, HTTP/invalid/truncated responses with no retry, original paid assembly rejection, exact stronger 40,000 boundary, asymmetric paired denial and retained full bodies, source changes, and fixed isolated native manifest preparation. The adapter checks bindings before reading injected credentials and refuses an existing run/intent. No real providers, credentials, network calls or native builds were used.
+
+All **1,184 independent baseline files**, **1,172 primary baseline files**, offline-freeze entries and final code pins verify unchanged. Current generated owner report/log hashes bind the primary's successful rerun; final code equals the stopped owner handoff. Elapsed-time log regeneration does not require another test run.
+
+This is one reused-source development probe. No new prompt-output quality, verifier judgment or semantic success is inferred from mocked tests. Actual output still needs frozen provenance and independent semantic/operational audit.

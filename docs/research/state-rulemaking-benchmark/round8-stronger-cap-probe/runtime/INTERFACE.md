@@ -1,0 +1,33 @@
+# Stronger-only preparation interface
+
+Bundled Python CLI: runtime/run_pipeline.py --prepare-implementation runtime/implementation.json. Operational runtime path arguments remain --manifest --source-root --freeze --output --authorization --source-labels-freeze-sha256 --live --max-new 1. This phase creates no native adapter/policy/build. Primary owns auth/freezes/credential architecture/live. Only the stronger injected key is needed by a later authorized live entry; no Jev key/call is requested.
+
+Exact authorization shape (code hash after review):
+
+```json
+{
+  "decoding_instructions_sha256": "93f5c0f00bf794a61a6f224f17a95120f296c646c54a0cd4f2c0fbbb22b9b3df",
+  "implementation_sha256": "PRIMARY_FINAL_CODE_HASH",
+  "input_pin_sha256": "93d8b511a921ae45e02ad5f7b39398571bae26e83786edbbd82b0acd9dcc1bc0",
+  "inventory_calls": 0,
+  "jev_calls": 0,
+  "jev_state_longest_guard": 32000,
+  "jev_total_input_guard": 64000,
+  "manifest_sha256": "647d35ea8c09396f6782951cf493925a210a6cf9c49d238e71a137e3cf675dae",
+  "max_new_operations": 1,
+  "nominal_budget_usd": 2.0,
+  "original_payload_sha256": "873f91381e94fc5778cc694d0cb39cc50f13f61f537fd45566b36bf8ae9d188c",
+  "original_record_sha256": "315ddda2dd8012856463df1f31122dc8952dfcc050e152fcd6055bb3e2d0368a",
+  "prior_budget_debit_usd": 0.542976718,
+  "prior_debit_sha256": "8c4bad6558fdd4282c4982b5425dc43baf008f468570161b8ec8bc8fde43f38b",
+  "schema_version": "round8-stronger-cap-probe.live-authorization.v1",
+  "source_labels_freeze_sha256": "60b1e0f8c6321cee6407cfa04ad02af92a7546b059dd5235868746115cc5b792",
+  "source_labels_frozen_before_outputs": true,
+  "stronger_calls": 1,
+  "stronger_completion": 8192,
+  "stronger_input_guard": 40000,
+  "wire_version": "round8-evidence-table.wire.v1"
+}
+```
+
+Original image-reference B stays opaque at its original R8 location. All-five-attempt prior debit and input pins must be included in primary dependency closure; existing requests and wire version are unchanged except max_tokens. New observed schema is round8-stronger-cap-probe.observed.v1 with stronger-only operational states; original verdict/acceptance contracts remain frozen.

@@ -1,0 +1,15 @@
+# R14 local runtime verification
+
+Local deterministic verification passed for the final r14.2 runtime candidate. Codex executed these checks and inspected the runtime code locally. This is GPT-hosted execution/integrity verification; Fable did not review or vouch for runtime code, and no runtime payload was exported to Claude.
+
+The pinned Python 3.12 executable ran the existing 21-method runtime suite with `-I -S -B`, followed by `adapter.py --check`, in an environment containing only PATH and PYTHONDONTWRITEBYTECODE. Both exited 0. Exact commands and complete outputs are in `checks.json`, `test-output.txt` and `preflight-output.txt`. The suite uses synthetic credentials, supplied synthetic structural outputs and fake transports. The proposal test captures late-binding writes in memory and invokes only exact-pinned pure validator functions; no signed proposal or native executor operation was created.
+
+Independent hash checks matched all 46 runtime READY entries, 7 runtime code pins, 70 input pins, 8,831 dependency pins, 7 source artifacts, 26 revised protocol artifacts, 10 implementation-release inputs, the protocol review capsule and 7,063 historical baseline entries. Runtime READY and its frozen files remained unchanged after execution; source-reference hashes also remain unchanged. The read-only preflight reconstructs the actual source request and independently reconciles the historical prior debit.
+
+`execute_once` has one transport call and no loop; `post_once` has one opener call and no loop, and its redirect handler refuses redirects. Offline success, HTTP/transport uncertainty and receipt-failure cases exercise a maximum of one fake transport call; a durable exclusive claim blocks resume. This verifies the single-POST/no-retry implementation path without making an HTTP request.
+
+Prior debit is 1,705,990,718 nanousd; reservation is 200,000,000; ceiling is 2,000,000,000. The reserved aggregate is 1,905,990,718, leaving 94,009,282 under the ceiling. Budget-refusal tests confirm zero transport calls when the reservation does not fit. Ledger tests preserve the maximum of reservation and observed/recoverable cost, retain overruns and failures, and distinguish `charge_recorded` from separate completed/stop outcome attestations. This is budget bookkeeping; invoice verification remains false.
+
+The source request is 28,307 bytes, or 29,331 including the 1,024-byte guard, below 40,000. The exact settings retain GPT-6.1 Sol/OpenAI, low reasoning, 8,192 output tokens and disabled provider fallback. User and schema inputs contain only source text/hashes and the exact host span table; no candidate or reference labels are supplied.
+
+No research provider call, credential read, signer or native executor invocation occurred. Native executor preflight and paid dispatch authorization remain with the primary. Provider compatibility, semantic completeness and output headroom remain unverified. No Fable semantic approval follows from these local checks; fresh-output assessment remains pending.

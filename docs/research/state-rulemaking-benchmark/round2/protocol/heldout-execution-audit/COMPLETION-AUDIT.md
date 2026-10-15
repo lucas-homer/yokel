@@ -1,0 +1,13 @@
+# Held-out operational completion audit
+
+All 32 scheduled observations completed with nonempty retained output: native, Docling, Llama cost-effective and OpenRouter annotations across 8 notices/22 input pages. All 127 common-freeze files remain unchanged. No provider calls, content scoring or frozen-file edits were performed by this audit.
+
+Input hashes match in every capture. Native page-offset maps cover the expected pages and copied native bytes match. Docling structured page inventories match all input page counts; its active pipeline settings, Markdown layers and complete 42-entry model-cache manifest match the diagnostic run. The only serialized option difference is ordering of the supported_engines list for disabled chart extraction; both runs have chart extraction disabled, and all other options match. Llama's verified upload hashes, successful page ordinals, retained HTTP result objects and exact markdown_full bytes all match. H05's supplementary HTTP/JSON result is explicitly sanitized for transient URLs; its Markdown remains exact. The other seven terminal HTTP responses are retained unmodified. OpenRouter request-body hashes reconstruct from the frozen inputs; retained annotations, output text and every serialization offset match the raw responses exactly.
+
+OpenRouter has one nonempty interior text chunk per expected page, surrounded by two file wrapper parts. Those counts do not prove full content recovery or explicit page identity. Semantic evidence quality still requires content review. Llama's reported version is absent; latest is an unresolved alias. Mistral exposes no OCR version. Do not identify the downstream chat model as the OCR model.
+
+Returned usage: OpenRouter held-out $0.045245792, diagnostic $0.070601774, combined $0.115847566. The rejected diagnostic rate-limit attempt remains unknown billing. Llama returned 66 held-out credits plus 102 diagnostic credits, 168 total; no actual dollar invoice is asserted. OpenRouter's upstream inference cost is already included in usage.cost and must not be added again.
+
+The observed OpenRouter start interval is at least 22.001 seconds; Llama had at most 2 concurrent locally recorded submission intervals. No held-out retries or operational failures were observed. Docling capture confidence values contain NaN in some places, which requires a tolerant reader or a separately documented sanitized derived view; preserve the original captures. These confidence values are not benchmark quality scores.
+
+See completion-audit.json for all 32 per-unit records and completion-evidence-manifest.json for retained artifact hashes. Native timing describes the fresh held-out extraction, separately from the untimed historical diagnostic baseline.

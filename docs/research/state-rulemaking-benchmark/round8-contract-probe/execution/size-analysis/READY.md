@@ -1,0 +1,5 @@
+# Ready for final reconciliation
+
+Diagnosis and offline specification are complete; edits stop here. Eleven controls pass. Exact-quote evidence pooling restores both frozen requests byte-for-byte and gives estimates stronger 35,755, Jev total 37,787, Jev state-plus-longest 28,708 with decoding instructions included. Full source, all claims/associations/evidence and uncertainties remain preserved. No model comprehension, provider compatibility or semantic equivalence is established. The two span variants save more but are not preferred for first measurement because model offset retrieval is unverified.
+
+See README.md, REPORT.json and NEXT-EXPERIMENT-CANDIDATE.md. A future separately reviewed two-verifier development experiment would retain all three conservative charges .428936, unchanged guards and maximum new reserve .123648 / aggregate .552584. No live path, authorization, keys or calls were created. All 25 Freeze E entries remain unchanged. HANDOFF.json contains final artifact hashes; primary/reviewer may reconcile without rerunning or editing frozen files.

@@ -1,0 +1,7 @@
+# R7 offline evaluator compatibility
+
+`evaluate(schedule, truth, audit, observed)` retains R6 independent source-unit/claim mapping and safety calculations under distinct round7 versions. `validate_observed` enforces observed.schema.json plus runtime gate, serial dispatch, judgment, artifact and coverage consistency. Missing observation rows are unserved and counted explicitly, never evidence of a reached gate. Gate counts and called/uncalled counts are separate from model outcomes. Actual cohort size appears in limitations; the unchanged eight-notice adequacy policy remains separate.
+
+Strong judgments and extractor claimed_complete assertions are not independent source truth. Complete useful acceptance requires a complete independent mapping of every source unit with correct claims, source scope completeness, no source blocker and full verifier assessment schedule. Misclassified disclosures, absent ancillary offices/helper links and endpoint relationship failures veto useful acceptance even with mock favorable verdicts. Unknown costs stay null; known integer zero is valid JSON number; booleans are rejected. Zero accepted records leave unsafe-acceptance fraction and cost per correct record null.
+
+The checked-in development gate fixture uses an explicitly empty authored universe only to test schema/gate denominators; it is not the semantic truth of any real notice. No R6 labels/reports are changed or used in request builders.

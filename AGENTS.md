@@ -11,8 +11,11 @@ hearings and take meaningful action. Architecture is a layered "house":
 
 - **DocketClock** (`apps/docketclock`) — the federal comment-deadline **substrate**. Built FIRST.
   Net-new value = reconciliation + confidence + provenance, NOT discovery. Append-only Observation
-  log is primary; `ParticipationWindow` is a derived, versioned projection. Federal-only is a hard
-  rule until a paying customer funds a jurisdiction tranche.
+  log is primary; `ParticipationWindow` is a derived, versioned projection. Federal-only is the rule,
+  with one exception: the bounded state-coverage pilot (ADR 0013, `docs/plans/state-coverage.md`).
+  It allows up to 4 pilot states, adds state support to contracts as versioned additions without
+  changing federal behaviour, and keeps state data off public surfaces until each state passes its
+  release gate. Where `docs/architecture/docketclock.md` says "federal-only", ADR 0013 overrides it.
 - **Watershed Watch** (`apps/watershed-watch`) — the first **vertical wedge**. Rents DocketClock
   (partial build-on); OWNS EPA EIS ingestion, HUC geo-recall, and the action/receipt loop.
   **Shelved** at the W3 value-density gate (stub only) — revival paths in the go/no-go memo.

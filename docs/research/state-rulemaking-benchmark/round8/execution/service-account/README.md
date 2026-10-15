@@ -1,0 +1,9 @@
+# Fixed Round 8 service entry
+
+Code only is prepared here. Primary later runs prepare_manifest.py after implementation/source/label freezes and new live authorization are finalized. The generator creates dependencies.json, binding.json and native-job.json with exclusive writes; it does not resolve credentials, build a native runner or call providers. Those files must be included in the reviewed native job's file hashes. Binding is operational input, not an authorization shortcut: a caller cannot override adapter paths or CLI arguments.
+
+Adapter accepts only --check and --live-initial in isolated bundled Python (`-I -S -B`). Check verifies dependency/file/source/code/freeze bindings and invokes runtime live=false without reading environment credentials. Live-initial refuses any existing run/live intent before keys, repeats checks, then reads only the two approved injected API-key environment values. No op invocation, Keychain lookup, enrollment, token file or caller overrides are implemented. Native v3 policy and any necessary human Keychain authorization belong to primary.
+
+It emits only nonsecret fixed receipt metadata and suppresses provider stdout/stderr. Arbitrary exception text is never retained or returned. API secrets are checked against every retained operation artifact/response by the durable ledger. Failed/uncertain provider operations remain latched and are never automatically restarted by this initial-only service entry.
+
+Final paths are fixed to this round: sources/source-inputs.READY.json, runtime/implementation.json, execution/live-authorization.json, execution/freeze-A.json, freeze-S.json, freeze-B.json and execution/run. Labels are hash-checked as opaque freeze entries; never decoded as truth. Complete stdlib/extensions and imported pypdf-related dependencies are hashed by preparation; OS libraries and network trust remain external limitations.
