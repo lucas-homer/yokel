@@ -7,6 +7,9 @@ option A `[2024-10-14, 2026-10-12)` America/New_York), `../../rights/DECISIONS.m
 `ct-policy-reference@2026-10-15.2`, `ct-law-journal@2026-10-15.1`).
 Manifest `universe_version`: `ct-v0.1-signed-2026-10-15`. Enumeration (step 4) has **not** started.
 
+> **Round 2 (same day) supersedes the gap, cross-check, validator and owner-item sections below.**
+> Round 1 is kept as written. Current state: see "Round 2" at the end and "Owner sign-offs needed".
+
 Every capture went through `census/capture.py` (rights gate, robots, ≥5 s per host, stop on
 403/429/challenge). Originals and sidecars are only in `~/yokel-captures/state-coverage/`. Git holds
 the manifest, requests (`requests/`), capture results (`capture-results/`, metadata only) and this file.
@@ -219,3 +222,152 @@ can't sign as the owner).
    `ct-v0.1-signed-2026-10-15`.
 6. **Run-schema pre-freeze state.** Accept the zero-hash placeholders, or add a nullable/pre-freeze
    state to run.schema.
+
+---
+
+# Round 2: gated surfaces after the rights correction (2026-10-15)
+
+Operator: research child (Claude), attended run. Rights: `surfaces.json` 2026-10-15.4 (`ct-json` and
+`ct-policy-reference` now `internal_originals`; `getDocument` belongs only to `ct-rendered`; see
+`../../rights/DECISIONS.md` "Correction"). Every request went through `census/capture.py`. No CT
+objection to the JSON routes is on record (`outreach/CT.md` is still unsent). No LlamaParse, 0 credits.
+
+## What changed in the manifest (331 → 352 entries)
+
+- **Gaps replaced (142):** 138 `getRMRHistory`/`getRMRNotes` entries, `ct-json-open-comment-periods`,
+  and the agency pages `ct-xchk-portal-{deep,deepfishing,seec}`. Each keeps its entry ID and now has
+  the round-2 retrieval and current rights version. Its `expected.evidence_refs` cites the round-1
+  refusal (`capture-results/b05-gated-surfaces.jsonl`, refused under `@2026-10-15.2`) and the new
+  capture result. Every JSON response parsed as a complete array; the routes take no paging
+  parameters (terminal proof on each entry).
+- **Added (21):**
+  - 4 hearing-detail records (`ct-json-hearing-*`, from DetailType-0 history rows).
+  - 10 lifecycle PDFs that only the history lists, not the notice search:
+    - 3 extension notices (`ct-doc-*-ext-*`; PR2023-056's two history rows point to byte-identical files)
+    - 1 revised NOI
+    - 1 corrected NOD
+    - 5 "Other Document – Notice of Decision" PDFs
+  - 7 agency entries (terms, 3 DEEP discovery pages, DEEP pending regulations × 2 processes, 1 missing page).
+- **History entries** now have `expected_children` set. The children are the hearing records plus
+  participation-lifecycle documents posted in `[2024-01-15, 2026-10-12)`. Excluded by rule: comment
+  files, summaries of comments, transcripts, hearing-officer reports, AG/LRRC paperwork. 14 children
+  in total. All 138 notice-search documents of these 69 proceedings appear in their histories (138/138
+  same-lineage matches).
+- **Excluded by the no-commenter-data rule:** PR2024-016's "Notice of Decision & Summary of Comments"
+  (recorded on its history entry, not requested). The "View Comments" route was never called.
+  `CommentsDocumentList` is null in all 76 comment-period details.
+  - **Caveat:** the retained history JSON (external store only) does list comment-document *file
+    names* in its rows.
+- **Documents' agency cross-checks:** the 17 `gap` checks against agency homepages are now
+  `unresolved`. The homepages were fetched but carry no notice content.
+
+## Requests
+
+171 network attempts, 19:33:33Z–19:53:25Z. There was no 403, 429 or challenge, and no host was stopped.
+- `eregulations.ct.gov`: 153 requests plus 2 robots fetches (404).
+  - b06: 139 JSON routes, all 200
+  - b08: 14 lifecycle and hearing requests, all 200
+- `portal.ct.gov`: 11 requests plus 5 robots fetches (200; allows `/`).
+  - b07: terms
+  - b09: 4 agency pages; the RBCR page answered 302 to the 404 page
+  - b10–b12: 5 DEEP pages
+- **Not retried:** `ct-law-journal` (still `blocked`) and `seec.ct.gov` (no rights record; skipped).
+
+## Lifecycle events found in the histories (posted 2024-01-15 … 2026-10-11)
+
+| Kind | Proceedings (posted) | Note |
+|---|---|---|
+| Extension | PR2023-056 (2024-08-02) | Comment period +14 days to 2024-08-26 17:00, plus an extra hearing 2024-08-19 10:30 (Zoom). Closed before the interval start, so not a carry-in. Notice not in search. |
+| Extension | **PR2026-021** (2026-09-23) | Close moved 2026-09-25 → **2026-10-12**, which is the interval end date. History stores the end as `2026-10-12 00:00` while the notice says "to October 12, 2026" (precision conflict for the passes). Notice not in search; the PDF is complete (`%%EOF`) followed by null padding. |
+| Revised NOI | **PR2024-053** (2024-11-26) | Close moved 2024-12-27 → 2025-01-10 5:00 pm. **Not in the notice search**: a search omission exposed by the history. |
+| Hearing only in history | **PR2025-020** (2025-08-28) | Hearing 2025-09-17 12:30 (55 Farmington Ave). The NOI never mentions a hearing; it was scheduled 7 minutes after the NOI. |
+| Hearing records | PR2025-016 (2025-09-03 11:31), PR2025-021 (2025-09-11 and 2025-10-02 17:00) | Both are stated in the NOIs. PR2025-016's NOI says 11:30 a.m., so the 1-minute difference is a same-lineage discrepancy, not resolved here. |
+| Early close by withdrawal | PR2023-031 (2024-09-04, pre-interval), PR2025-014 (2025-10-08), PR2025-036 (2026-05-15; re-noticed 2026-05-19, which explains its two NOIs) | Comment period closed the day of withdrawal. |
+| Correction / other NOD | PR2024-037 corrected NOD (2024-12-02); PR2024-017 revised NOD (in search); Other-Document NODs for PR2024-003 (2024-12-03), PR2024-016 (2025-08-07), PR2024-056 (2025-06-24), PR2025-008 (2025-12-05) | |
+| Withdrawn permanently | PR2024-031, PR2024-050, PR2024-053, PR2025-016, PR2025-020, PR2025-027 | After the comment period (NOD lifecycle). |
+| Reopened rounds | PR2022-002, PR2024-003 (3 rounds), PR2024-023 (3), PR2024-059, PR2025-036 | Every round has its own NOI in the search. |
+| Second NOI, no new period | PR2024-033, -035, -036, -037, -038 (each 2024-12-26) | The history has no "Comment Period Opened" row for them. Review case for enumeration. |
+| After interval end | PR2026-014 NOD (2026-10-15) | Follow-up, no unit. |
+
+- **No later hearings or requests:** no hearing was scheduled more than one day after its NOI, so no
+  "hearing scheduled after a request" case appears in these 69 histories. Another 35 hearings are
+  stated inside "Contains Hearing Information" NOIs, which are already in the manifest.
+- **Open-periods list** (7 rows at 2026-10-15) agrees with the slices: 6 have their NOI in the
+  manifest, and PR2024-008 (NOI 2026-10-13) is post-interval as round 1 found. None is flagged
+  `Extended`.
+
+## Round-1 open items
+
+- **PR2024-003 carry-in: resolved at acquisition level.** I inspected a local PDFKit render (no
+  LlamaParse).
+  - The 2024-02-09 NOI's comment period "shall end on March 11, 2024". It adds that the comment
+    period "shall be extended upon posting a copy of the proposed regulation".
+  - The history shows that round closed 2024-03-11, a NOD followed on 2024-04-05, and a re-notice
+    on 2024-05-22 closed 2024-06-23. The next round opened 2025-07-29.
+  - So no round was active at 2024-10-14, and the backward search can stop at 2024-01-15. This rests
+    on a decisive visual mark, so it is listed for owner confirmation.
+- **Same-day duplicate NOIs:**
+  - **PR2024-025:** the 11:56 posting says written comments are due "October 4, 2024", while the
+    same notice says the period ends October 24. The 14:31 posting corrects this to October 24. The
+    history has a single period ending 2024-10-24 17:00. This is a candidate correction re-post.
+  - **PR2025-016:** the 14:41 born-digital file and the 15:14 signed scan ("Final2") have the same
+    text apart from OCR noise. This is a candidate duplicate re-post.
+  - Both annotations are recorded on the document entries. The passes decide.
+- **Rights and pattern overlap (round-1 owner items 1–2):** fixed by the owner in v2026-10-15.4.
+- **UNIVERSE header (item 5):** status line set to "signed 2026-10-15 (see SCOPE-DECISIONS.md)".
+- **Run-schema placeholders (item 6):** still open.
+
+## Cross-checks per process (round 2)
+
+| Process | Same lineage | Different lineage (agency-published) | run.json |
+|---|---|---|---|
+| `noi` | Slices, NOI body ↔ row, history lists every search document, open-periods ↔ slices | **DEEP pending-regulations page** (`ct-xchk-portal-deep-pending-regs`). Close dates match for PR2025-028 (8/3/26 5 pm), PR2025-034 (7/31/26 5 pm) and PR2024-054 (3/27/25). Closed status is consistent for PR2025-035 and PR2025-036. 5 of 68 proceedings, DEEP only. Homepages (DEEP, DEEPFishing, SEEC) carry no notice content, so those checks are `unresolved`. DEEP's RBCR page is gone (gap). | `single_lineage: false`, partial-coverage review ref |
+| `nod` | NOD body ↔ row | Same DEEP page, captured separately for this process. Step-9 "Final Approved" is consistent with the NODs of PR2025-008, PR2025-026 and PR2023-056 (status only). 3 proceedings. | `single_lineage: false`, partial-coverage review ref |
+| `rmr-lifecycle` | Hearing record ↔ history detail (4/4); lifecycle PDF stamp ↔ history row (10/10); notes ↔ history close (6/6) | None. Agency pages show current status, not extensions, hearings or corrections. | `single_lineage: true` (unchanged) |
+
+- **Lineage note:** the JSON routes are the same eRegulations backend as the search slices, so these
+  are consistency checks that exposed omissions (PR2024-053, PR2025-020). They are not
+  corroboration.
+- **Independence:** the DEEP page is agency-authored with its own stated dates, but it links to
+  eRegulations.
+- **Coverage gap:** whether other agencies publish comparable lists was not tested. Sampling about
+  10 more agency pages would take roughly 20 requests and 5 minutes, each checked against its terms.
+
+## Validator (round 2)
+
+`python3 census/validate.py census/CT --stage manifest --verify-bytes` exits with **3 errors**.
+jsonschema is not installed, so schema checks were skipped. A stdlib subset check (required, enum,
+pattern, if/then) of the manifest and run.json found 0 issues. All 350 retrieved entries
+byte-verified (C10 clean).
+
+```
+FAIL C03: ct-gap-law-journal gap/pending needs human review
+FAIL C03: ct-xchk-portal-deep-rbcr gap/pending needs human review
+FAIL C03: rmr-lifecycle needs independent lineage or reviewed single_lineage
+```
+
+## Owner sign-offs needed
+
+**Validator-blocking (3).** Each needs a human-reviewer adjudication record at the ref shown.
+
+| # | Reason | Entry / process | Review ref |
+|---|---|---|---|
+| 1 | Blocked surface (AI-crawler exclusion; `ct-law-journal` blocked) | `ct-gap-law-journal` | `owner-review-pending/ct-acq-2026-10-15/law-journal-blocked` |
+| 2 | Agency page removed (302 → 404); cited only by PR2024-025's NOIs, whose dates the history confirms | `ct-xchk-portal-deep-rbcr` | `owner-review-pending/ct-acq-r2-2026-10-15/agency-page-missing` |
+| 3 | No independent lineage for lifecycle events (extensions, hearing records, corrections) | process `rmr-lifecycle` | `owner-review-pending/ct-acq-2026-10-15/single-lineage-rmr-lifecycle` |
+
+**Decisions that don't block the validator but affect completeness (4):**
+
+4. **Partial independent lineage.** `noi` and `nod` pass only through the DEEP page (5 NOI and 3 NOD
+   proceedings out of 68). Accept this, or order the agency sampling above. Refs:
+   `…/ct-acq-r2-2026-10-15/partial-independent-lineage-{noi,nod}`.
+5. **Decisive visual mark.** Confirm that PR2024-003's 2024-02-09 NOI closes on March 11, 2024
+   (rendered page 1). This decides the 2024-01-15 backward-search stop.
+6. **`history_bounded: false`.** Updates on proceedings with no NOI since 2024-01-15 remain
+   undiscoverable without per-proceeding history calls.
+   - **Evidence for bounding:** in these 69 histories, every comment period opened since 2024-01-15
+     has a search-visible NOI, and extensions only occur on open periods.
+   - **Gap:** an older proceeding with a conditional extension could still be missed.
+   - **Options:** accept the bound, or sweep PR2023-001…~060 histories (about 55 requests, about
+     10 minutes).
+7. **Run-schema placeholders** (round-1 item 6), unchanged.

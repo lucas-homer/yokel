@@ -1,6 +1,6 @@
 # State universe: CT / v0.1-proposed (2026-10-15)
 
-Status: **draft: proposal for owner signature. Not frozen.** Completeness: not established (no
+Status: **signed 2026-10-15 (see SCOPE-DECISIONS.md).** Completeness: not established (no
 independent lineage yet; see "Source map").
 Owner: primary (research child draft). Human reviewer: owner. Decision date: _pending owner signature_.
 Protocol/schema versions: PROTOCOL v1.1; rights `ct-rendered` / `ct-json` / `ct-policy-reference` /
