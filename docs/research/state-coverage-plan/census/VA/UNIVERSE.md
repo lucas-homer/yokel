@@ -1,7 +1,12 @@
 # State universe: VA / v0.1-proposed (2026-10-15)
 
-Status: **draft: proposal for owner signature. Not frozen.** Completeness: not established. Every
-included process is single-lineage while Town Hall is on hold; see "Source map" and Q8.
+Status: **scope signed by the owner as proposed, 2026-10-15** (`../SCOPE-DECISIONS.md`, VA Q1–Q11;
+Q7 option (a) with the predeclared backward extension). The extension rule was applied at
+acquisition: the interval is **`[2025-12-01, 2026-07-27)` America/New_York, Vol. 42 Iss. 08–24,
+34 weeks** (`universe_version` `va-v0.1-signed-2026-10-15/interval-ext-42:08`; owner to confirm,
+see `ACQUISITION.md`). The body below is the v0.1 proposal text as signed and is not otherwise
+edited. Completeness: not established. Most included processes are single-lineage while Town Hall
+is on hold; see "Source map", Q8 and `ACQUISITION.md`.
 Owner: primary (research child draft). Human reviewer: owner. Decision date: _pending owner signature_.
 Protocol/schema versions: PROTOCOL v1.1. Rights: `va-register` and `va-register-rss` (allowed);
 `va-townhall-listings` and `va-code-reference` (on hold), all at version `2026-10-15.1`, owner
