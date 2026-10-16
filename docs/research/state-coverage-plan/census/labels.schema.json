@@ -367,7 +367,7 @@
         },
         "entity_id": {
           "type": "string",
-          "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+          "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
         },
         "payload": {
           "type": "object",
@@ -376,21 +376,21 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+                "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
               }
             },
             "opportunity_ids": {
               "type": "array",
               "items": {
                 "type": "string",
-                "pattern": "^ocd-participation-window/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+                "pattern": "^ocd-participation-window/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
               }
             },
             "update_ids": {
               "type": "array",
               "items": {
                 "type": "string",
-                "pattern": "^ocd-update/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+                "pattern": "^ocd-update/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
               }
             },
             "publication_wording": {
@@ -425,7 +425,7 @@
         },
         "entity_id": {
           "type": "string",
-          "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+          "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
         },
         "payload": {
           "type": "object",
@@ -446,7 +446,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+                "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
               }
             }
           },
@@ -467,20 +467,20 @@
         },
         "entity_id": {
           "type": "string",
-          "pattern": "^ocd-participation-window/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+          "pattern": "^ocd-participation-window/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
         },
         "payload": {
           "type": "object",
           "properties": {
             "proceeding_id": {
               "type": "string",
-              "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+              "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
             },
             "notice_ids": {
               "type": "array",
               "items": {
                 "type": "string",
-                "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+                "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
               }
             },
             "opportunity_type": {
@@ -546,7 +546,7 @@
         },
         "entity_id": {
           "type": "string",
-          "pattern": "^ocd-update/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+          "pattern": "^ocd-update/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
         },
         "payload": {
           "type": "object",
@@ -555,21 +555,21 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+                "pattern": "^ocd-notice/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
               }
             },
             "proceeding_ids": {
               "type": "array",
               "items": {
                 "type": "string",
-                "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+                "pattern": "^ocd-proceeding/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
               }
             },
             "target_opportunity_ids": {
               "type": "array",
               "items": {
                 "type": "string",
-                "pattern": "^ocd-participation-window/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+                "pattern": "^ocd-participation-window/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
               }
             },
             "event_type": {
@@ -743,7 +743,7 @@
         },
         "entity_id": {
           "type": "string",
-          "pattern": "^census-candidate/state-(wa|ct|va|ma|tn)/[a-z0-9][a-z0-9:._~-]*$"
+          "pattern": "^census-candidate/state-(wa|ct|va|ma|tn|ms)/[a-z0-9][a-z0-9:._~-]*$"
         },
         "payload": {
           "type": "object",

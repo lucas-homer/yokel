@@ -83,6 +83,15 @@ originals, with nothing republished. Version `2026-10-15.4` sets `internal_origi
 `ct-policy-reference` and the WA, VA, MS and TN agency surfaces. It also narrows `ct-json` so that
 `getDocument` (PDFs) belongs only to `ct-rendered`.
 
+## Correction (primary, 2026-10-16): the census uses no LlamaParse credits
+
+The credit allocations in items 12 and 16, and the re-tiering question in `census/MS/ACQUISITION.md`
+(open question 8), assumed the census would parse forms through LlamaParse. It doesn't. Both blind
+passes read the originals directly and must view rendered pages for every scan (PROTOCOL step 4), so
+parser output can't stand in for that inspection. Phase 1 census spend is 0 credits in every state.
+The allocations stay unspent under the 12,000 cap. Any later parsing benchmark needs its own
+decision.
+
 ## Primary defaults for the remaining questions (superseded in part by round 2)
 
 - **WA:** collect from the State Register only. Agency pages (for example Ecology, whose terms bar

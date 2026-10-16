@@ -7,6 +7,8 @@ findings: expected bases and evidence refs, cross-checks, terminal evidence, com
 refs, operator agency/process classification, retrieval reasons and, for MS, the publication cycle
 (derived from operator-read FILED stamps). A leak scan then rejects any kept string that still
 mentions stamps, OCR, cross-checks or review refs (URLs are exempt).
+Text-failure locators are kept as bare page/image references so both passes know which pages need
+rendered viewing (PROTOCOL step 3).
 
     python3 census/pass_inputs.py <census-state-dir> <out-dir>
 
@@ -16,9 +18,44 @@ from the content store and verified by hash; nothing is downloaded. <out-dir> mu
 """
 import hashlib, json, os, pathlib, re, sys
 
-PROJECTION_VERSION = 'pass-input-1'
+PROJECTION_VERSION = 'pass-input-2'
 LEAK = re.compile(r'stamp|ocr|cross.?check|adjudicat|signoff|owner-|review|operator|human', re.I)
 DROP_CYCLE = {'MS'}  # MS cycles are keyed to operator-read FILED stamps
+
+
+def text_failure_locators(entry):
+    """Pages/regions known to lack a text layer (PROTOCOL step 3), reduced to bare locators.
+
+    Only page numbers and image references for this entry are kept; any commentary attached to the
+    original ref (what a region contains, whether it was already inspected) is dropped.
+    """
+    me, out = entry['entry_id'], []
+    for ref in entry['expected']['evidence_refs']:
+        m = re.match(r'(?:text-extract-fail:|FAILED REGION \(no text layer\): )([\w.-]+)#page=(\d+)', ref)
+        if m and m.group(1) == me:
+            out.append(f'page {m.group(2)}: embedded image without text layer')
+            continue
+        m = re.match(r'text-extract-fail:([\w.-]+)#(img\[\d+\])', ref)
+        if m and m.group(1) == me:
+            out.append(f'{m.group(2)}: embedded image without text layer')
+            continue
+        m = re.match(r'FAILED REGION \(no text; external image not retained\): (?:[\w.-]+ img src=)?(\S+)', ref)
+        if m:
+            out.append(f'external image not retained: {m.group(1)}')
+            continue
+        m = re.match(r'text-layer-fail: page (\d+)', ref)
+        if m:
+            out.append(f'page {m.group(1)}: native text below threshold')
+            continue
+        m = re.search(r'text-layer-test: .*pages? (\d+(?:-\d+)?) need rendered-image inspection', ref)
+        if m:
+            out.append(f'pages {m.group(1)}: no native text')
+            continue
+        m = re.match(r'(zero-text|short-text) pages[^:]*: (.+)', ref)
+        if m:
+            kind = 'no native text' if m.group(1) == 'zero-text' else 'native text below 200 chars'
+            out += [f'page {n}: {kind}' for n in re.findall(r'p(\d+)', m.group(2))]
+    return sorted(set(out), key=lambda x: (len(x), x))
 
 
 def project(entry, state):
@@ -35,7 +72,8 @@ def project(entry, state):
         'format': entry['format'],
         'text_layer': entry['text_layer'],
         'selector': entry['expected']['selector'],
-        'page_range': entry['accounting']['pagination_or_page_range'],
+        'page_range': page_range(entry['accounting']['pagination_or_page_range']),
+        'text_failure_locators': text_failure_locators(entry),
         'retrieval': {k: r[k] for k in ('result', 'requested_url', 'final_url', 'http_status',
                                         'content_type', 'attempted_at', 'sha256', 'byte_length')},
         'original_path': f"originals/{r['sha256']}" if r['result'] == 'retrieved' else None,
@@ -43,6 +81,11 @@ def project(entry, state):
     if state not in DROP_CYCLE:
         out['publication_cycle'] = entry['publication_cycle']
     return out
+
+
+def page_range(value):
+    # 'single page; no result rows' style suffixes describe content, not structure
+    return value.split(';')[0] if value.startswith('single') else value
 
 
 def strings(value):
