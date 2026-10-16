@@ -1,0 +1,59 @@
+{
+ "pass": "pass_A",
+ "state": "CT",
+ "universe_version": "ct-v0.1-signed-2026-10-15",
+ "provider": "claudeAgent",
+ "model": "claude-opus-5-5",
+ "task_id": "census-pass-A-CT-r1",
+ "brief_sha256": "5a495b0fa030310ee9f7dc915258b19f89fb0bdea7dca8f4fdabdf260c74f5b0",
+ "brief_version": "census-step4-common-2026-10-16.r2",
+ "brief_frozen_at": "2026-10-16T19:15:02Z",
+ "dispatched_at": "2026-10-16T19:16:00Z",
+ "started_at": "2026-10-16T19:16:11Z",
+ "sealed_at": "2026-10-16T19:55:25Z",
+ "output_sha256": "71d26bc0c41183362e0a50aa1a8cffe603a22e170acf9d4c24352096c8dbf0ef",
+ "isolated": true,
+ "access_statement": "Allowed paths: read .census-passes/CT/brief.txt (hashed before inspection; exact match to supplied 5a495b0f...74f5b0) and .census-passes/CT/inputs/ (INPUTS.json, manifest.pass.jsonl, originals/*, schemas/labels.schema.json, schemas/completion.schema.json, schemas/examples/completion.jsonl, schemas/examples/pass-A.jsonl); wrote only inside .census-passes/CT/pass-A/ (brief.received.txt, scripts/, bin/, cache/, tmp/, work/, renders/, notes/, pass-A.jsonl, completion.jsonl, progress.jsonl, started_at.txt, attestation.json). Listed (ls) the .census-passes/CT directory once, which showed an empty pass-B/ directory name; pass-B was never opened. No docs/, git commands, ~/yokel-captures, other states/passes, other agents' files, adapter output or shared parser candidates were opened. No network, installs or sub-agents; local tools only (python3 stdlib, swiftc/PDFKit/CoreGraphics/AppKit, shasum). Disclosures: (1) the harness injected session context before the task (repo AGENTS.md, user global instruction files, the user's memory index, and a git-status snapshot whose recent commit subjects mention CT step-3 acquisition/sign-off) - not opened by me and containing no other-pass findings, counts, candidate IDs or corrections; (2) the harness auto-saved two of my own command outputs (manifest/slice listings of inputs) to ~/.claude/projects/.../tool-results/ and one stopped background command's output to /private/tmp/...; I did not open those files; (3) swiftc read system SDK/toolchain files to compile pass-A/bin/pdftool.",
+ "inputs": {
+  "projection_version": "pass-input-2",
+  "state": "CT",
+  "source_manifest_sha256": "dad484c003f199cbeb07ee174921e86b9a418b822a95b075126690965f55f590",
+  "pass_manifest_sha256": "755424b4b215cc13e8815d8abaefbdb58e644ee06810f4fa0b6f9d1241fa9791",
+  "entries": 352,
+  "retrieved": 350,
+  "distinct_originals": 286
+ },
+ "inputs_json_sha256": "45e1d46f79e07ace47c626dd2714a6d3743aeb630a2122b6623fb872c9da5b25",
+ "verified_pass_manifest_sha256": "755424b4b215cc13e8815d8abaefbdb58e644ee06810f4fa0b6f9d1241fa9791",
+ "tools_used": [
+  "shasum -a 256 (brief, INPUTS.json, manifest, output hashes)",
+  "python3 3.13 stdlib only, run with -I: manifest/original hash verification (all 286 originals / 350 retrieved entries matched sha256 and byte_length), slice JSON extraction, history/notes JSON rendering, HTML text extraction (html.parser), record generation, local schema-shape/link validator (jsonschema not installed; checks hand-coded from labels/completion schemas)",
+  "swiftc + macOS PDFKit/CoreGraphics/AppKit: pass-A/bin/pdftool for native text extraction, per-page image-object counts and PNG rendering (scale 1.2-1.6) into pass-A/renders/<entry_id>/",
+  "Image viewing: rendered PNGs viewed with the Read image viewer for every page of all 13 text_layer=none PDFs and the rule-selected pages of all 15 text_layer=partial PDFs",
+  "Deterministic partial-page rule: for text_layer=partial entries, render and view every page named in text_failure_locators plus any page whose native text is <200 characters or which holds >=1 embedded image XObject (counted via CGPDF resources, incl. one Form-XObject level); remaining pages read as native text; per-entry notes in pass-A/notes/",
+  "zoneinfo America/New_York for PublishDate/PostedDate conversion (accounting dates only)"
+ ],
+ "active_minutes": 38.69,
+ "completion_row_count": 350,
+ "retrieved_entry_count": 350,
+ "counts_by_record_type": {
+  "rejected_candidate": 67,
+  "notice": 142,
+  "opportunity": 108,
+  "update": 79,
+  "proceeding": 69
+ },
+ "anomalies": [
+  "Non-retrieved manifest entries reported as gaps (no completion rows): ct-gap-law-journal (not_attempted; CT Law Journal not inspected) and ct-xchk-portal-deep-rbcr (invalid_response; DEEP RBCR adoption page).",
+  "Timing: per-batch active_minutes in progress.jsonl rows 1-15 and per-row completion minutes were effort allocations estimated during writing and overstate measured time; an append-only correction row in progress.jsonl gives measured wall-clock minutes; attestation.active_minutes uses the measured sum.",
+  "Carry-in: 3 carry-in proceedings found (PR2024-025 written comment to 2024-10-24 with same-day corrected NOI; PR2024-017 comment/conditional hearing/hearing request; PR2023-031 stated close 2024-10-15 but history shows withdrawal 2024-09-04 - review). Backward band 2024-01-15..2024-04-15 yielded no still-active NOI, so backward extension stop is evidenced within supplied bands.",
+  "Identity/posting anomalies: PR2024-037 NOD (12/2/2024) body names PR2024-035/Sec. 7-471-59 (corrected same day); PR2024-056 NOD (5/29/2025) body is PR2024-057's NOD (re-posted 6/24/2025); PR2026-011 NOI body identical to PR2026-012's; PR2024-017 NOD cites PR2023-017 (revised 12/19/2024); Board of Labor Relations re-posted 5 NOIs on 12/26/2024 (treated as duplicates); PR2025-016 NOI posted twice same day (duplicate); PR2024-016 and PR2025-008 duplicate NOD re-postings.",
+  "Temporal conflicts flagged for human precedence review (on proceeding records): history/notes comment-end dates differ from NOI text for PR2025-020 (9/27 vs 9/26/2025), PR2026-009 (9/4 vs 9/2/2026), PR2026-011 and PR2026-020 (11/10 vs 11/8/2026), PR2026-012 (11/11 vs 11/8/2026), PR2026-023 (8/17 13:00 vs 8/18/2026); PR2024-025 first NOI internal Oct 4 vs Oct 24 conflict; PR2025-016 hearing 11:30 vs 11:31; PR2025-028 'EDT' zone wording left unresolved (iana_zone null).",
+  "History-only events: permanent withdrawals (PR2024-031, PR2024-050, PR2024-053, PR2025-016, PR2025-020, PR2025-027), withdrawals with comment-period closure (PR2023-031, PR2025-014, PR2025-036 round 1) recorded as full_withdrawal updates under fallback notice keys; PR2025-020 hearing evidenced only by history/hearing JSON; unsupplied 'Other Document' NOD-like postings preserved as rejected_candidate/unresolved.",
+  "Follow-up/horizons: PR2026-014 NOD (2026-10-15) recorded as follow_up_only; NOIs published late in the interval (PR2024-032, PR2026-011/012/018/020/024) have windows closing after interval end - follow-up horizons unfinished at capture (2026-10-15); proceedings PR2024-054, PR2026-001, PR2026-009, PR2025-034, PR2026-003 show no NOD in supplied inputs.",
+  "PR2024-008 NOI listed with PublishDate 2026-10-13 (after interval end) has no supplied document; rejected outside_interval from listing/snapshot metadata only.",
+  "The CT state-specific period-alias rule referenced by the brief was not supplied in the brief or inputs; period keys use the opening NOI GUID; reopened rounds (new NOIs on an existing tracking number) get new period keys plus a reopening update - human identity review.",
+  "Unstated CGS 4-168(b) hearing-request rights recorded only as unscored annotations in opportunity unresolved fields."
+ ],
+ "blocked": []
+}
