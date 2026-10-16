@@ -285,6 +285,19 @@ tasks:
     cmds:
       - bash scripts/vault-transit-unseal.sh
 
+  images-minio:
+    desc: Rebuild the pinned MinIO server + mc images from source and push them to yokel-registry (upstream images are gone)
+    vars:
+      MINIO_TAG: RELEASE.2025-09-07T16-13-09Z
+      MC_TAG: RELEASE.2025-08-13T08-35-41Z
+    cmds:
+      - docker build --build-arg REPO=minio --build-arg TAG={{.MINIO_TAG}} -t localhost:5050/minio/minio:{{.MINIO_TAG}} images/minio
+      - docker build --build-arg REPO=mc --build-arg TAG={{.MC_TAG}} -t localhost:5050/minio/mc:{{.MC_TAG}} images/minio
+      - docker push localhost:5050/minio/minio:{{.MINIO_TAG}}
+      - docker push localhost:5050/minio/mc:{{.MC_TAG}}
+      # Builds land in the SAME colima Docker whose build cache filled the VM disk on 2026-10-15 — don't leave it behind.
+      - docker builder prune -af
+
   wait-platform:
     desc: Wait for the platform Argo Applications to be Healthy, then their CRDs to be established
     cmds:
