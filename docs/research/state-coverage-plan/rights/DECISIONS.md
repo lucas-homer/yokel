@@ -67,6 +67,14 @@ that hold comes from its robots.txt, not from a default.
     reallocation: MS gets full parsing coverage (about 3,310 credits plus a 150-credit retry hold),
     funded from WA, VA and CT's unused allocations. The Phase 1 cap stays 12,000.
 
+## Decided, round 5 (owner, 2026-10-15)
+
+17. **Step-3 sign-off:** every named gap and single-lineage process row is signed as a class. The
+    MS calls and the WA holdover rule are decided explicitly. See
+    [`../census/SIGNOFF-2026-10-15.md`](../census/SIGNOFF-2026-10-15.md).
+18. **WA outreach:** the owner sends [`outreach/WA.md`](outreach/WA.md) to the Code Reviser about
+    the 16 unlisted filing numbers.
+
 ## Correction (primary, 2026-10-15)
 
 `surfaces.json` version `2026-10-15.2` wrongly set retention to `not_authorized` on the newly allowed
