@@ -18,6 +18,7 @@ import json
 from pathlib import Path
 import re
 import xml.etree.ElementTree as ET
+from urllib.parse import urljoin, urldefrag, urlsplit
 
 HOME = Path(__file__).resolve().parent
 ROOT = HOME.parents[3]
@@ -86,6 +87,9 @@ def va_rows(directory, inputs, pdf_text_dir):
   its=ci.section_items(parser.root,mid[-2:]);assert len(its)==c['item_count']
   for it,old in zip(its,c['items']):
    assert (it['word_count'],it['heading_fingerprint'])==(old['word_count'],old['heading_fingerprint'])
+  for ordinal, it in enumerate(its, 1):
+   it['_source_entry_id']=mid
+   it['_source_locator']=f'Complete original HTML item {ordinal}, through its closing identifier or next item heading'
   sources[mid]=its;html[issue(mid)].extend(its)
  for mid,c in inv.items():
   if c['container_kind']!='issue_pdf':continue
@@ -100,17 +104,23 @@ def va_rows(directory, inputs, pdf_text_dir):
    matches=[x for x in html[issue(mid)] if doc in x['doc_numbers']]
    if matches:
     it=min(matches,key=lambda x:(abs(x['word_count']-old['word_count']),x['heading_fingerprint'],x['word_count']))
-    raw.append({**old,'_source_text':it['_source_text']})
+    raw.append({**old,'_source_text':it['_source_text'], '_source_entry_id':it['_source_entry_id'], '_source_locator':it['_source_locator']})
    else:
     start=closings[i-1].end() if i else max(text.find('PETITIONS FOR RULEMAKING',100),text.find('NOTICES OF INTENDED REGULATORY ACTION',100),0)
     if start>closings[i].start():start=0
-    raw.append({**old,'_source_text':text[start:closings[i].end()]})
+    page_starts=[];offset=0
+    for page in pages:page_starts.append(offset);offset+=len(page)+1
+    first=bisect.bisect_right(page_starts,start);last=bisect.bisect_right(page_starts,closings[i].end()-1)
+    raw.append({**old,'_source_text':text[start:closings[i].end()], '_source_entry_id':mid,
+                '_source_locator':f'PDF pages {first}–{last}; Doc. No. {doc}. Read the complete page span (including boundary context), not the approximate extracted segment'})
   guidance=ci.guidance_items(pages)
   end=len(c['items'])-len(guidance)
   for old in c['items'][len(closings):end]:
    matches=[x for x in html[issue(mid)] if x['heading_fingerprint']==old['heading_fingerprint'] and x['word_count']==old['word_count']]
    assert matches,(mid,old['item_ordinal'],'no retained HTML source')
-   raw.append({**old,'_source_text':matches[0]['_source_text']})
+   it=matches[0]
+   raw.append({**old,'_source_text':it['_source_text'], '_source_entry_id':it['_source_entry_id'],
+               '_source_locator':it['_source_locator']+('; expanded issue inventory: PDF counterpart not located; compare the retained HTML original and PDF, do not infer PDF presence' if 'not located' in old['method'] else '')})
   cursor=0
   for it,old in zip(guidance,c['items'][end:]):
    assert (it['word_count'],it['heading_fingerprint'])==(old['word_count'],old['heading_fingerprint'])
@@ -170,6 +180,9 @@ def va_rows(directory, inputs, pdf_text_dir):
    rows.append({'container_id':mid,'item_ordinal':k+1,'item_kind':it['kind'],
     'heading_fingerprint':it['heading_fingerprint'],'doc_numbers':it['doc_numbers'],
     'native_text_fingerprint':bodykey[k],
+    'item_frame_status':'resolved', 'complete_item':not catalogue,
+    'source_entry_id':it.get('_source_entry_id', pdf),
+    'source_locator':it.get('_source_locator') or (f'PDF pages {bisect.bisect_right(native[pdf][1],span[0])}–{bisect.bisect_right(native[pdf][1],span[1]-1)}; '+('catalogue pointer row, linked body unsupplied' if catalogue else 'complete guidance publication notice') if span else None),
     'native_pdf_pages':([bisect.bisect_right(native[pdf][1],span[0]),bisect.bisect_right(native[pdf][1],span[1]-1)] if span else None),
     'accounting_status':status,'union_record_id':refs[0] if refs else None,
     'union_label_matches':[{'record_id':rid,'disposition':'rejected' if labelmap[rid]['record_type']=='rejected_candidate' else 'accepted',
@@ -184,6 +197,14 @@ def generic_rows(directory, inputs, manifest, skip=()):
     compare = module('generic_union', HOME/'VA/reconcile/reconcile.py')
     labels = [r for side in 'AB' for r in compare.latest(read(directory/f'pass-{side}.jsonl'))
               if r['record_type'] in ('notice', 'rejected_candidate')]
+    def url_key(url):
+        value = urlsplit(urldefrag(url)[0])
+        return (value.netloc.casefold(), value.path, value.query)
+    urls = {}
+    for eid, e in manifest.items():
+        for field in ('requested_url', 'final_url'):
+            if e['retrieval'].get(field):
+                urls.setdefault(url_key(e['retrieval'][field]), eid)
     rows = []
     for mid, entry in sorted(manifest.items()):
         if mid in skip or entry['kind'] not in ('issue', 'index', 'portal_slice', 'history_slice'):
@@ -192,6 +213,7 @@ def generic_rows(directory, inputs, manifest, skip=()):
         content_type = entry['retrieval'].get('content_type', '') or ''
         if entry['format'] in ('text_pdf', 'scan_pdf'):
             raise ValueError(f'{mid}: PDF listing needs a verified source-item adapter/native derivative')
+        links = []
         if entry['format'] == 'json':
             payload = json.loads(data)
             if isinstance(payload, dict):
@@ -208,6 +230,7 @@ def generic_rows(directory, inputs, manifest, skip=()):
             if not nodes:
                 raise ValueError(f'{mid}: XML listing has no identifiable rows')
             items = [' '.join(n.itertext()) for n in nodes]
+            links = [[(x.text or x.attrib.get('href', '')) for x in n.iter() if x.tag.split('}')[-1] == 'link'] for n in nodes]
         else:
             parser = ci.DOM()
             parser.feed(data.decode(errors='replace'))
@@ -219,6 +242,7 @@ def generic_rows(directory, inputs, manifest, skip=()):
             if not candidates:
                 candidates = [n for n in nodes if n.tag == 'a' and ci.norm(n.text())]
             items = [n.text() for n in candidates]
+            links = [[x.attrs['href'] for x in [n, *n.descend()] if x.tag == 'a' and x.attrs.get('href')] for n in candidates]
             if not items:
                 raise ValueError(f'{mid}: listing has no identifiable rows; source adapter required')
         local = [r for r in labels if any(e['manifest_entry_id'] == mid for e in compare.evidence(r))]
@@ -237,8 +261,19 @@ def generic_rows(directory, inputs, manifest, skip=()):
                     matches.append(label)
             matches.sort(key=lambda r: (r['record_type'] != 'notice', r['record_id']))
             fingerprint = hashlib.sha256(text.encode()).hexdigest()
+            base = entry['retrieval'].get('final_url', '')
+            retained = sorted({urls[url] for link in (links[ordinal-1] if links else [])
+                               if (url := url_key(urljoin(base, link.strip()))) in urls and urls[url] != mid})
+            source = retained[0] if retained else mid
+            parent = manifest[source].get('parent_entry_id')
+            if retained and manifest[source]['kind'] == 'index' and parent in manifest and manifest[parent]['kind'] == 'issue':
+                source = parent  # retained issue PDF supplies the complete body behind its TOC
+
             rows.append({'container_id': mid, 'item_ordinal': ordinal,
                          'item_kind': 'generic_listing_row', 'heading_fingerprint': fingerprint,
+                         'item_frame_status': 'resolved', 'complete_item': bool(retained),
+                         'source_entry_id': source,
+                         'source_locator': ('Read complete retained linked document (all participation-bearing sections; full read if boundaries uncertain)' if retained else f'Original listing row {ordinal}; pointer only, no complete retained linked body'),
                          'native_text_fingerprint': fingerprint, 'doc_numbers': [], 'native_pdf_pages': None,
                          'accounting_status': 'accounted' if matches else 'unaccounted',
                          'union_record_id': matches[0]['record_id'] if matches else None,
@@ -250,6 +285,20 @@ def generic_rows(directory, inputs, manifest, skip=()):
     return rows
 
 
+def build_rows(directory, inputs=None, pdf_text_dir=None):
+    run = json.loads((directory/'run.json').read_text())
+    inputs = inputs or ROOT/'.census-passes'/run['state']/'inputs'
+    manifest = original_manifest(directory, inputs)
+    if run['state'] == 'VA':
+        pdf_dir = pdf_text_dir or inputs/'native-text'
+        if not pdf_dir.is_dir() and pdf_text_dir is None:
+            pdf_dir = Path('/private/tmp/va-reconcile-tools/issue-text')
+        rows = va_rows(directory, inputs, pdf_dir)
+        rows.extend(generic_rows(directory, inputs, manifest, skip={r['container_id'] for r in rows}))
+        return rows
+    return generic_rows(directory, inputs, manifest)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('state_dir', type=Path, help='State code or directory containing manifest/pass files')
@@ -259,17 +308,7 @@ def main():
     args = parser.parse_args()
     directory = args.state_dir if args.state_dir.is_dir() else HOME/args.state_dir
     run = json.loads((directory/'run.json').read_text())
-    inputs = args.inputs or ROOT/'.census-passes'/run['state']/'inputs'
-    manifest = original_manifest(directory, inputs)
-    if run['state'] == 'VA':
-        pdf_dir = args.pdf_text_dir or inputs/'native-text'
-        if not pdf_dir.is_dir():
-            pdf_dir = Path('/private/tmp/va-reconcile-tools/issue-text') if args.pdf_text_dir is None else pdf_dir
-        rows = va_rows(directory, inputs, pdf_dir)
-        retained = {r['container_id'] for r in rows}
-        rows.extend(generic_rows(directory, inputs, manifest, skip=retained))
-    else:
-        rows = generic_rows(directory, inputs, manifest)
+    rows = build_rows(directory, args.inputs, args.pdf_text_dir)
     target = args.output or directory/'reconcile/container-crosswalk.jsonl'
     target.parent.mkdir(parents=True, exist_ok=True)
     # Complete all extraction and matching before replacing the output.

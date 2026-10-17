@@ -9,6 +9,9 @@ import math
 from pathlib import Path
 import re
 import secrets
+import fcntl
+
+from container_audit import build_frames, nested_selections
 
 
 def canonical(value):
@@ -150,7 +153,7 @@ def build_strata(manifest, completion, level, minutes_native, minutes_scan, cove
 
 
 def plan(manifest, completion, level, minutes_native, minutes_scan, mandatory, budget,
-         method="stratified_floor", sample_total=30):
+         method="stratified_floor", sample_total=30, unit_minutes=None):
     history = []
     reasons = {1: 'Whole-document anchors retained; merge publication cycles only.',
                2: 'Reduce ordinary inclusion floor to max(2, ceil(10% N)), bounded by N.',
@@ -167,6 +170,12 @@ def plan(manifest, completion, level, minutes_native, minutes_scan, mandatory, b
             allocation = fixed_allocation(strata, sample_total)
             for s in strata:
                 s['sample_size'] = allocation[s['stratum_id']]
+        if unit_minutes is not None:
+            for s in strata:
+                values = [unit_minutes[uid] for uid in s['unit_ids']]
+                if any(not math.isfinite(v) or v < 0 for v in values):
+                    raise ValueError('unit cost must be finite and nonnegative')
+                s['minutes_per_unit'] = math.ceil(sum(values)/len(values))
         cost = sum(s['sample_size']*s['minutes_per_unit'] for s in strata)
         estimate = mandatory + cost
         scenarios.append({'level': step, 'strata': len(strata),
@@ -203,7 +212,7 @@ def replace_audit(path, audit):
     path.write_text(source[:start]+rendered+source[start+length:])
 
 
-def sample_note(state, audit, manifest, frozen_at, scenarios):
+def sample_note(state, audit, manifest, frozen_at, scenarios, container_frames=None):
     entries = {e['entry_id']: e for e in manifest}
     fixed = audit.get('method', 'stratified_floor') == 'fixed_sample_v1'
     instructions = ('A1: every unaccounted container row plus min(5, accounted) seeded verifications; '
@@ -220,6 +229,10 @@ def sample_note(state, audit, manifest, frozen_at, scenarios):
            'Check **boundaries, accepted labels, exclusions and overlooked candidates in originals** '
            f'for every selected unit. {instructions} Selection is not a completeness verdict.', '',
            'Level | Strata | Sample | Audit minutes | Total minutes', '---|---:|---:|---:|---:']
+    if fixed:
+        out[6:6] = [f'Container-frame SHA-256: `{audit["container_frame_hash"]}`',
+                     'Frames: `reconcile/container-frames.json` (canonical JSON hash); frozen before the state seed.',
+                     'Signed A1: rights/DECISIONS.md item 20; VA budget: item 21.', '']
     for row in scenarios:
         out.append(' | '.join(str(row[k]) for k in
                               ('level', 'strata', 'sample', 'audit_minutes', 'estimate_minutes')))
@@ -235,7 +248,49 @@ def sample_note(state, audit, manifest, frozen_at, scenarios):
             locator = e['accounting']['pagination_or_page_range'] or e['expected']['selector']
             original = f'.census-passes/{state}/inputs/originals/{e["retrieval"]["sha256"]}'
             out.append(f'- [ ] `{uid}` — {locator}; `{original}`.')
+            for member in audit['unit_coverage'][uid]:
+                if member != uid:
+                    out.append(f'Covered view `{member}`: `.census-passes/{state}/inputs/originals/{entries[member]["retrieval"]["sha256"]}`.')
+            if fixed and uid in audit['container_selections']:
+                chosen = audit['container_selections'][uid]
+                container = container_frames['containers'][uid]
+                by_id = {row['row_id']: row for row in container['rows']}
+                out += ['', f'Container: {len(container["rows"])} rows; '
+                        f'{len(chosen["unaccounted_row_ids"])} unaccounted (review ALL); '
+                        f'{len(chosen["accounted_row_ids"])} seeded accounted verifications.']
+                for kind, ids in [('Unaccounted', chosen['unaccounted_row_ids']),
+                                  ('Seeded accounted', chosen['accounted_row_ids']),
+                                  ('Seeded participation item (b)', [chosen['item_id']])]:
+                    if not ids and kind == 'Unaccounted':
+                        out.append('Unaccounted: none in this container.')
+                    for rid in ids:
+                        row = by_id[rid]
+                        source = row['source_entry_id']
+                        path = f'.census-passes/{state}/inputs/originals/{row["source_sha256"]}'
+                        docs = ', '.join(row['doc_numbers']) or 'unnumbered; use ordinal/fingerprint'
+                        pointer = row['union_record_id'] or 'unaccounted'
+                        out += ['', f'- [ ] **{kind}** `{rid}` — {row["item_kind"]}; {docs}.',
+                                f'  Source `{source}`: `{path}`; {row["source_locator"]}.',
+                                f'  Union pointer: `{pointer}`. Native-text fingerprint: `{row["native_text_fingerprint"]}`.']
+                        if kind == 'Seeded participation item (b)':
+                            out.append('  Read heading, preamble/summary and EVERY public comment, hearing, hearing-request, '
+                                       'objection and petition section in full. Search the remaining body for dates and '
+                                       'comment/hearing/objection terms; read every hit in context. Use complete source '
+                                       'boundaries, including all boundary-page context; no truncation to an extracted snippet.')
+                        else:
+                            out.append('  Check the original row, identity/boundaries, accepted/rejected union pointer, '
+                                       'exclusions and overlooked participation candidates. Unaccounted is unresolved mapping, '
+                                       'not a pre-decided omission verdict.')
+            elif fixed:
+                out.append('Read this non-container source IN FULL; check boundaries, labels, exclusions, '
+                           'all dates/roles and overlooked participation candidates.')
         out.append('')
+    if fixed:
+        total = sum(len(v['unaccounted_row_ids']) for v in audit['container_selections'].values())
+        out += ['', f'**Total unaccounted rows to review: {total}.**',
+                'Log reviewer identity, start/end UTC, active minutes, target/trigger, evidence, input/output versions, finding, rationale and unresolved questions.',
+                'An omission expands review to the whole affected template/process/cycle and requires a new label version. Never skip a drawn sample. Stop final claims if expansion exceeds budget.',
+                'A1 has weaker sensitivity than stratified floors, no per-stratum inspection claim and no confidence claim. No human reviews or verdicts are recorded by this checklist.']
     return '\n'.join(out)
 
 
@@ -249,47 +304,85 @@ def main():
     parser.add_argument('--review-budget', type=float)
     parser.add_argument('--dry-run', action='store_true', help='calculate only; never generate a seed')
     parser.add_argument('--method', choices=('stratified_floor', 'fixed_sample_v1'), default='stratified_floor',
-                        help='A1 fixed_sample_v1 is PROPOSED; owner signature required before use')
+                        help='A1 fixed_sample_v1 signed by the owner 2026-10-17 (rights/DECISIONS.md item 20)')
     parser.add_argument('--sample-total', type=int, default=30)
     parser.add_argument('--high-risk-share', type=float, default=.4)
+    parser.add_argument('--costing-file', type=Path, help='Frozen local audit-estimate.json per-unit cost allowances')
     args = parser.parse_args()
     directory = args.state_dir
     run_path = directory/'run.json'
-    run = json.loads(run_path.read_text())
-    if not args.dry_run and (run['audit']['seed'] is not None or run['audit'].get('frozen_before_seed') or
-                             any(s['selected_ids'] for s in run['audit'].get('strata', []))):
-        parser.error('existing seed, frozen frame or drawn selection; refusing to replace/redraw')
-    if args.method == 'fixed_sample_v1':
-        if run['state'] not in ('VA', 'WA', 'MS'):
-            parser.error('A1 scope is VA, WA and MS; CT retains stratified_floor')
-        if args.sample_total != 30 or args.high_risk_share != .4:
-            parser.error('fixed_sample_v1 requires --sample-total 30 --high-risk-share 0.4')
-    budget = args.review_budget if args.review_budget is not None else run['audit'].get('review_budget_minutes', 240)
-    if any(not math.isfinite(x) or x < 0 for x in
-           (budget, args.minutes_native, args.minutes_scan, args.mandatory)):
-        parser.error('minutes and budget must be finite and nonnegative')
-    manifest = lines(directory/'manifest.jsonl')
-    completion = lines(directory/'completion.jsonl')
-    audit, scenarios = plan(manifest, completion, args.level, args.minutes_native,
-                            args.minutes_scan, args.mandatory, budget, args.method, args.sample_total)
-    print(json.dumps(scenarios, indent=2))
-    if args.dry_run:
-        return
-    frozen_at = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
-    if audit['coarsening_history']:
-        audit['coarsening_history'][-1]['reason'] += f' Frame frozen at {frozen_at} before seed.'
-    audit['frame_hash'] = digest(canonical(frame(audit)))
-    audit['frozen_before_seed'] = True
-    # Persist all frame inputs, costs and hash BEFORE invoking the entropy source.
-    replace_audit(run_path, audit)
-    audit['seed'] = secrets.token_hex(32)
-    select(audit)
-    replace_audit(run_path, audit)
-    note = directory/'reconcile'/'AUDIT-SAMPLE.md'
-    note.parent.mkdir(parents=True, exist_ok=True)
-    note.write_text(sample_note(run['state'], audit, manifest, frozen_at, scenarios))
-    print(json.dumps({'seed': audit['seed'], 'frame_hash': audit['frame_hash'],
-                      'frozen_at': frozen_at, 'N': len(audit['unit_coverage'])}))
+    with run_path.open() as guard:
+        if not args.dry_run:
+            fcntl.flock(guard.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        run = json.loads(run_path.read_text())
+        if not args.dry_run and (run['audit']['seed'] is not None or run['audit'].get('frozen_before_seed') or
+                                 any(s['selected_ids'] for s in run['audit'].get('strata', []))):
+            parser.error('existing seed, frozen frame or drawn selection; refusing to replace/redraw')
+        if args.method == 'fixed_sample_v1':
+            if run['state'] not in ('VA', 'WA', 'MS'):
+                parser.error('A1 scope is VA, WA and MS; CT retains stratified_floor')
+            if args.sample_total != 30 or args.high_risk_share != .4:
+                parser.error('fixed_sample_v1 requires --sample-total 30 --high-risk-share 0.4')
+        budget = args.review_budget if args.review_budget is not None else run['audit'].get('review_budget_minutes', 240)
+        if any(not math.isfinite(x) or x < 0 for x in
+               (budget, args.minutes_native, args.minutes_scan, args.mandatory)):
+            parser.error('minutes and budget must be finite and nonnegative')
+        manifest = lines(directory/'manifest.jsonl')
+        completion = lines(directory/'completion.jsonl')
+        unit_minutes = None
+        if args.costing_file:
+            costing = json.loads(args.costing_file.read_text())
+            source = costing['costings']['scripted_accounting_sampled_verification']
+            unit_minutes = {u['unit_id']: u['minutes'] for u in source['initial_units']}
+            if args.method != 'fixed_sample_v1':
+                parser.error('--costing-file currently supports fixed_sample_v1 only')
+        audit, scenarios = plan(manifest, completion, args.level, args.minutes_native,
+                                args.minutes_scan, args.mandatory, budget, args.method, args.sample_total, unit_minutes)
+        container_frames = None
+        crosswalk_rows = None
+        if args.method == 'fixed_sample_v1':
+            crosswalk_path = directory/'reconcile/container-crosswalk.jsonl'
+            crosswalk_rows = lines(crosswalk_path) if crosswalk_path.exists() else []
+            needed = {e['entry_id'] for e in manifest if e['retrieval']['result'] == 'retrieved'
+                      and e['kind'] in ('issue', 'index', 'portal_slice', 'history_slice')}
+            legacy = crosswalk_rows and all('item_frame_status' not in row for row in crosswalk_rows)
+            if legacy or needed - {row['container_id'] for row in crosswalk_rows}:
+                from container_crosswalk import build_rows
+                crosswalk_rows = build_rows(directory)
+            container_frames = build_frames(crosswalk_rows, manifest)
+            audit['container_frame_hash'] = digest(canonical(container_frames))
+            audit['container_selections'] = {}
+            if args.costing_file:
+                audit['costing_file'] = str(args.costing_file.resolve().relative_to(directory.resolve()))
+                audit['costing_sha256'] = digest(args.costing_file.read_bytes())
+        print(json.dumps(scenarios, indent=2))
+        if args.dry_run:
+            return
+        frozen_at = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
+        if container_frames is not None:
+            audit['frozen_at'] = frozen_at
+            target = directory/'reconcile/container-frames.json'
+            target.parent.mkdir(parents=True, exist_ok=True)
+            (directory/'reconcile/container-crosswalk.jsonl').write_text(''.join(
+                json.dumps(row, sort_keys=True, separators=(',', ':'))+'\n' for row in crosswalk_rows))
+            target.write_text(json.dumps(container_frames, sort_keys=True, indent=2, ensure_ascii=False)+'\n')
+        if audit['coarsening_history']:
+            audit['coarsening_history'][-1]['reason'] += f' Frame frozen at {frozen_at} before seed.'
+        audit['frame_hash'] = digest(canonical(frame(audit)))
+        audit['frozen_before_seed'] = True
+        # Persist all frame inputs, costs and hash BEFORE invoking the entropy source.
+        replace_audit(run_path, audit)
+        audit['seed'] = secrets.token_hex(32)
+        select(audit)
+        if container_frames is not None:
+            audit['container_selections'] = nested_selections(audit, container_frames)
+        replace_audit(run_path, audit)
+        note = directory/'reconcile'/'AUDIT-SAMPLE.md'
+        note.parent.mkdir(parents=True, exist_ok=True)
+        note.write_text(sample_note(run['state'], audit, manifest, frozen_at, scenarios, container_frames))
+        print(json.dumps({'seed': audit['seed'], 'frame_hash': audit['frame_hash'],
+                          'container_frame_hash': audit.get('container_frame_hash'),
+                          'frozen_at': frozen_at, 'N': len(audit['unit_coverage'])}))
 
 
 if __name__ == '__main__':

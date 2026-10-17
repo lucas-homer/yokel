@@ -376,6 +376,55 @@
           "type": "integer",
           "minimum": 0
         },
+        "container_frame_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "frozen_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "costing_file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "costing_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "container_selections": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "unaccounted_row_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "accounted_row_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true,
+                "maxItems": 5
+              },
+              "item_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "unaccounted_row_ids",
+              "accounted_row_ids",
+              "item_id"
+            ],
+            "additionalProperties": false
+          }
+        },
         "review_budget_minutes": {
           "type": "number",
           "minimum": 0

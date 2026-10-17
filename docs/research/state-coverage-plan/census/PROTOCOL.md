@@ -268,9 +268,9 @@ rather than charging elapsed idle time. Record additional research/agent time se
 remaining ambiguities explicitly listed. Completeness verdict signed by human reviewer.
 
 
-### Amendment A1 — fixed audit sample (PROPOSED, pending owner signature)
+### Amendment A1 — fixed audit sample (SIGNED by the owner 2026-10-17 (rights/DECISIONS.md item 20))
 
-**Status: PROPOSED. Owner signature: pending.** Method `fixed_sample_v1` applies only
+**Status: SIGNED by the owner 2026-10-17 (rights/DECISIONS.md item 20).** Method `fixed_sample_v1` applies only
 to VA, WA and MS after the owner signs this exact amendment. CT retains
 `stratified_floor`, including its already frozen frame and drawn sample. An absent
 `audit.method` means `stratified_floor`. Mandatory §5 reviews of disagreements,

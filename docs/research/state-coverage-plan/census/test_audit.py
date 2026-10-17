@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import sys
 import tempfile
+import shutil
 import unittest
 from unittest.mock import patch
 
@@ -151,8 +152,9 @@ class AuditTests(unittest.TestCase):
         path = HOME/'examples/run.json'
         original_load = validator.load
         run = copy.deepcopy(original_load(path))
-        run['audit'].update(method='fixed_sample_v1', sample_total=30)
-        with patch.object(validator, 'load', side_effect=lambda p: run if p == path else original_load(p)):
+        run['audit'].update(method='fixed_sample_v1', sample_total=30, frozen_at='2026-10-17T00:00:00Z')
+        with patch.object(validator, 'load', side_effect=lambda p: run if p == path else original_load(p)), \
+             patch.object(validator, 'validate_containers', return_value=[]):
             with contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(validator.validate(HOME/'examples'), [])
             run['audit']['strata'][0]['sample_size'] = 0
@@ -182,17 +184,20 @@ class AuditTests(unittest.TestCase):
             s.update(sample_size=allocation[s['stratum_id']], minutes_per_unit=costs[s['stratum_id']])
         # Fixed literal is a synthetic test seed, never a real entropy draw or persisted plan.
         audit = run['audit']
+        for key in ('costing_file', 'costing_sha256'):
+            audit.pop(key, None)
         audit.update(method='fixed_sample_v1', sample_total=30, strata=strata, unit_coverage=coverage,
                      coarsening_level=1, coarsening_history=[{'level': 1, 'estimate_minutes': costing['total_minutes'],
                      'reason': 'Synthetic C08 regression only'}], seed='d'*64, frozen_before_seed=True,
-                     mandatory_minutes_estimate=costing['mandatory_minutes'],
+                     frozen_at='2026-10-17T00:00:00Z', mandatory_minutes_estimate=costing['mandatory_minutes'],
                      estimate_minutes=costing['total_minutes'], review_budget_minutes=360)
         audit['frame_hash'] = freeze.digest(freeze.canonical(freeze.frame(audit)))
         freeze.select(audit)
         for s in strata:
             s['completed_ids'] = list(s['selected_ids'])
         original_load = validator.load
-        with patch.object(validator, 'load', side_effect=lambda p: run if p == path else original_load(p)):
+        with patch.object(validator, 'load', side_effect=lambda p: run if p == path else original_load(p)), \
+             patch.object(validator, 'validate_containers', return_value=[]):
             with contextlib.redirect_stdout(io.StringIO()):
                 errors = validator.validate(directory)
             c08 = [e for e in errors if e.startswith('C08:')]
@@ -260,6 +265,141 @@ class AuditTests(unittest.TestCase):
                 with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                     freeze.main()
                 entropy.assert_not_called()
+
+    def test_container_frames_freeze_before_entropy_nested_draws_and_c08_tampering(self):
+        manifest, completion = fixture()
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            reconcile = directory/'reconcile'
+            reconcile.mkdir()
+            run_path = directory/'run.json'
+            run_path.write_text(json.dumps({'state': 'VA', 'audit': {'seed': None}}, indent=2))
+            for name, rows in [('manifest', manifest), ('completion', completion)]:
+                (directory/(name+'.jsonl')).write_text(''.join(json.dumps(r)+'\n' for r in rows))
+            rows = []
+            for entry in manifest:
+                for n in range(1, 11):
+                    rows.append({'container_id': entry['entry_id'], 'item_ordinal': n,
+                                 'item_kind': 'guidance_catalogue_row' if n == 10 else 'notice',
+                                 'accounting_status': 'accounted' if n <= 7 else 'unaccounted',
+                                 'union_record_id': f'label-{n}' if n <= 7 else None,
+                                 'item_frame_status': 'resolved', 'complete_item': n != 10,
+                                 'source_entry_id': entry['entry_id'], 'source_locator': f'Full original item {n}',
+                                 'native_text_fingerprint': 'e'*64, 'doc_numbers': []})
+            crosswalk_path = reconcile/'container-crosswalk.jsonl'
+            crosswalk_path.write_text(''.join(json.dumps(r)+'\n' for r in rows))
+            argv = ['audit_freeze.py', str(directory), '--level', '1', '--method', 'fixed_sample_v1',
+                    '--sample-total', '30', '--high-risk-share', '0.4', '--minutes-native', '2',
+                    '--minutes-scan', '3', '--mandatory', '10']
+            def entropy(n):
+                frozen = json.loads(run_path.read_text())['audit']
+                frames = json.loads((reconcile/'container-frames.json').read_text())
+                self.assertIsNone(frozen['seed'])
+                self.assertTrue(frozen['frozen_before_seed'])
+                self.assertEqual(frozen['container_selections'], {})
+                self.assertEqual(frozen['container_frame_hash'], freeze.digest(freeze.canonical(frames)))
+                self.assertEqual(len(frames['containers']), 50)
+                self.assertTrue(frozen['frozen_at'])
+                return 'b'*64
+            with patch.object(sys, 'argv', argv), patch.object(freeze.secrets, 'token_hex', side_effect=entropy) as random:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    freeze.main()
+                random.assert_called_once_with(32)
+            run = json.loads(run_path.read_text())
+            self.assertEqual(validator.validate_a1_plan(directory, run, manifest), [])
+            selected = run['audit']['container_selections']
+            self.assertEqual(len(selected), 30)
+            for cid, choice in selected.items():
+                self.assertEqual(choice['unaccounted_row_ids'], [f'{cid}:{i}' for i in (8, 9, 10)])
+                expected = sorted([f'{cid}:{i}' for i in range(1, 8)], key=lambda rid: (
+                    hashlib.sha256(('b'*64+'\ncontainer-accounted\n'+cid+'\n'+rid).encode()).hexdigest(), rid))[:5]
+                self.assertEqual(choice['accounted_row_ids'], expected)
+                expected_item = min([f'{cid}:{i}' for i in range(1, 10)], key=lambda rid: (
+                    hashlib.sha256(('b'*64+'\ncontainer-item\n'+cid+'\n'+rid).encode()).hexdigest(), rid))
+                self.assertEqual(choice['item_id'], expected_item)
+            original = copy.deepcopy(run)
+            cid = next(iter(selected))
+            for field, value in [('unaccounted_row_ids', []), ('accounted_row_ids', []), ('item_id', f'{cid}:10')]:
+                bad = copy.deepcopy(original)
+                bad['audit']['container_selections'][cid][field] = value
+                self.assertTrue(any('nested selections mismatch' in e for e in
+                                    validator.validate_a1_plan(directory, bad, manifest)))
+            artifact = reconcile/'container-frames.json'
+            frames = json.loads(artifact.read_text())
+            frames['containers'][cid]['rows'].reverse()
+            artifact.write_text(json.dumps(frames))
+            errors = validator.validate_a1_plan(directory, original, manifest)
+            self.assertTrue(any('frame hash mismatch' in e for e in errors), errors)
+            self.assertTrue(any('do not reproduce' in e for e in errors), errors)
+            # A redraw remains impossible even with nested artifacts present.
+            before = run_path.read_bytes()
+            with patch.object(sys, 'argv', argv), patch.object(freeze.secrets, 'token_hex') as random:
+                with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+                    freeze.main()
+                random.assert_not_called()
+            self.assertEqual(run_path.read_bytes(), before)
+            note = (reconcile/'AUDIT-SAMPLE.md').read_text()
+            self.assertIn('Total unaccounted rows to review: 90', note)
+            self.assertIn('hearing-request', note)
+
+    def test_c08_final_and_passes_validate_nested_artifacts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)/'state'
+            shutil.copytree(HOME/'examples', directory)
+            run = json.loads((directory/'run.json').read_text())
+            manifest = freeze.lines(directory/'manifest.jsonl')
+            rows = [{'container_id': e['entry_id'], 'item_ordinal': 1, 'item_kind': 'notice',
+                     'accounting_status': 'unaccounted', 'union_record_id': None,
+                     'item_frame_status': 'resolved', 'complete_item': True,
+                     'source_entry_id': e['entry_id'], 'source_locator': 'complete original item',
+                     'native_text_fingerprint': 'f'*64, 'doc_numbers': []}
+                    for e in manifest if e['retrieval']['result'] == 'retrieved']
+            frames = freeze.build_frames(rows, manifest)
+            reconcile = directory/'reconcile'
+            reconcile.mkdir(exist_ok=True)
+            (reconcile/'container-crosswalk.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in rows))
+            (reconcile/'container-frames.json').write_text(json.dumps(frames))
+            run['audit'].update(method='fixed_sample_v1', sample_total=30,
+                frozen_at='2026-10-17T00:00:00Z', container_frame_hash=freeze.digest(freeze.canonical(frames)))
+            run['audit']['container_selections'] = freeze.nested_selections(run['audit'], frames)
+            (directory/'run.json').write_text(json.dumps(run))
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(validator.validate(directory), [])
+                self.assertEqual(validator.validate(directory, stage='passes'), [])
+            first = next(iter(run['audit']['container_selections'].values()))
+            first['unaccounted_row_ids'] = []
+            (directory/'run.json').write_text(json.dumps(run))
+            for stage in ('passes', 'final'):
+                with contextlib.redirect_stdout(io.StringIO()):
+                    errors = validator.validate(directory, stage=stage)
+                self.assertTrue(any(e.startswith('C08:') and 'nested selections' in e for e in errors), errors)
+
+    def test_unresolved_duplicate_and_empty_container_frames_refuse_before_seed(self):
+        manifest, completion = fixture()
+        base = {'container_id': 'u00', 'item_ordinal': 1, 'item_kind': 'notice',
+                'accounting_status': 'unaccounted', 'union_record_id': None,
+                'item_frame_status': 'resolved', 'complete_item': True,
+                'source_entry_id': 'u00', 'source_locator': 'complete original item',
+                'native_text_fingerprint': 'f'*64, 'doc_numbers': []}
+        for changes in ({'item_frame_status': 'unresolved'}, {'complete_item': False},
+                        {'source_locator': None}, {'item_ordinal': 2}):
+            with tempfile.TemporaryDirectory() as tmp:
+                directory = Path(tmp)
+                (directory/'reconcile').mkdir()
+                run_path = directory/'run.json'
+                run_path.write_text(json.dumps({'state': 'VA', 'audit': {'seed': None}}))
+                (directory/'manifest.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in manifest))
+                (directory/'completion.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in completion))
+                (directory/'reconcile/container-crosswalk.jsonl').write_text(json.dumps({**base, **changes})+'\n')
+                before = run_path.read_bytes()
+                argv = ['audit_freeze.py', str(directory), '--level', '1', '--method', 'fixed_sample_v1',
+                        '--minutes-native', '2', '--minutes-scan', '3', '--mandatory', '10']
+                with patch.object(sys, 'argv', argv), patch.object(freeze.secrets, 'token_hex') as random:
+                    with self.assertRaises(ValueError):
+                        freeze.main()
+                    random.assert_not_called()
+                self.assertEqual(run_path.read_bytes(), before)
+                self.assertFalse((directory/'reconcile/container-frames.json').exists())
 
     def test_validator_default_budget_and_explicit_override(self):
         # Use only the synthetic example, with real C08 validation of estimate AND actual.

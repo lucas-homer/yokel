@@ -7,7 +7,8 @@ import math
 import re
 import sys
 
-from audit_freeze import fixed_allocation
+from audit_freeze import fixed_allocation, frame as audit_frame
+from container_audit import validate_containers
 from datetime import datetime
 from pathlib import Path
 
@@ -27,6 +28,41 @@ def lines(path):
 
 def stamp(value):
     return datetime.fromisoformat(value.replace('Z', '+00:00'))
+
+def validate_a1_plan(directory, run, manifest):
+    """Frozen A1 integrity also runs at passes stage; reviews are still pending there."""
+    audit = run['audit']
+    errors = validate_containers(directory, audit, manifest)
+    if run['state'] not in ('VA', 'WA', 'MS'):
+        errors.append('fixed_sample_v1 outside A1 state scope')
+    try:
+        if re.fullmatch('[a-f0-9]{64}', audit.get('seed') or '') is None:
+            errors.append('invalid A1 seed')
+        frozen = stamp(audit['frozen_at'])
+        if frozen.utcoffset() is None:
+            errors.append('A1 freeze time must have UTC offset')
+        allocation = fixed_allocation(audit['strata'], audit.get('sample_total', 30))
+        for st in audit['strata']:
+            sid = st['stratum_id']
+            ranked = sorted(st['unit_ids'], key=lambda uid: (
+                digest(((audit['seed'] or '')+'\n'+sid+'\n'+uid).encode()), uid))
+            if st['sample_size'] != allocation[sid]:
+                errors.append('audit sample size/coarsening floor')
+            if st['selected_ids'] != ranked[:allocation[sid]]:
+                errors.append(sid+' seeded selection mismatch')
+        if digest(canonical(audit_frame(audit))) != audit['frame_hash']:
+            errors.append('audit frame hash mismatch')
+        estimate = audit['mandatory_minutes_estimate']-audit['overlap_minutes']+sum(
+            allocation[st['stratum_id']]*st['minutes_per_unit'] for st in audit['strata'])
+        if abs(estimate-audit['estimate_minutes']) >= .001 or estimate > audit.get('review_budget_minutes', 240):
+            errors.append('review estimate/actual budget mismatch or budget exceeded')
+        if audit.get('costing_file'):
+            path = (directory/audit['costing_file']).resolve()
+            if not path.is_relative_to(directory.resolve()) or digest(path.read_bytes()) != audit.get('costing_sha256'):
+                errors.append('frozen costing file/hash mismatch')
+    except (OSError, KeyError, ValueError, TypeError) as exc:
+        errors.append('invalid A1 plan: '+str(exc))
+    return errors
 
 def validate(directory, verify_bytes=False, stage="final"):
     errors = []
@@ -240,6 +276,9 @@ def validate(directory, verify_bytes=False, stage="final"):
               brief_ready and stamp(run['brief_frozen_at']) <= stamp(p['dispatched_at']) < stamp(p['sealed_at']), 'C05', f'{phase} brief/isolation/times')
         check(digest((directory / name).read_bytes()) == p['output_sha256'], 'C05', f'{phase} sealed output hash mismatch')
     if stage == 'passes':
+        if run['audit'].get('method') == 'fixed_sample_v1' and (run['audit'].get('seed') or run['audit'].get('frozen_before_seed')):
+            for detail in validate_a1_plan(directory, run, manifest):
+                check(False, 'C08', detail)
         return errors
     pass_records = {r['record_id'] for r in labels if r['phase'] in passes}
     crosswalk = index(run['crosswalk'], 'record_id', 'C05')
@@ -363,6 +402,8 @@ def validate(directory, verify_bytes=False, stage="final"):
     fixed = audit.get('method', 'stratified_floor') == 'fixed_sample_v1'
     allocation = {}
     if fixed:
+        for detail in validate_a1_plan(directory, run, manifest):
+            check(False, 'C08', detail)
         check(run['state'] in ('VA', 'WA', 'MS'), 'C08', 'fixed_sample_v1 outside A1 state scope')
         try:
             allocation = fixed_allocation(audit['strata'], audit.get('sample_total', 30))
