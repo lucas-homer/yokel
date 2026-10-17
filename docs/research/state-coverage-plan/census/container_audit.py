@@ -2,6 +2,7 @@
 from collections import defaultdict
 import hashlib
 import json
+import re
 
 
 def canonical(value):
@@ -13,6 +14,7 @@ def digest(value):
 
 
 def build_frames(rows, manifest):
+    manifest_ids = {e['entry_id'] for e in manifest}
     entries = {e['entry_id']: e for e in manifest if e['retrieval']['result'] == 'retrieved'}
     grouped = defaultdict(list)
     for row in rows:
@@ -24,10 +26,25 @@ def build_frames(rows, manifest):
             raise ValueError(f'{cid}: invalid row ordinal')
         if row.get('item_frame_status') != 'resolved' or type(row.get('complete_item')) is not bool:
             raise ValueError(f'{cid}:{ordinal}: unresolved item frame')
-        if row['accounting_status'] not in ('accounted', 'unaccounted'):
-            raise ValueError(f'{cid}:{ordinal}: invalid accounting status')
-        if (row['accounting_status'] == 'accounted') != bool(row.get('union_record_id')):
-            raise ValueError(f'{cid}:{ordinal}: accounting pointer/status mismatch')
+        if row.get('accounting_role') == 'pointer':
+            # WA primary ruling: other-issue references are retained source-gap
+            # signals, outside owner accounting and the complete-item read pool.
+            issue = re.fullmatch(r'wa-(?:issue|idx|sec)-(\d\d-\d\d)(?:-[A-Za-z]+)?', cid)
+            docs = row.get('doc_numbers', [])
+            resolution = row.get('pointer_resolution') or {}
+            targets = resolution.get('manifest_entry_ids', []) or resolution.get('union_record_ids', [])
+            status = 'pointer' if targets else 'pointer_unresolved'
+            if (not issue or len(docs) != 1 or docs[0][:5] == issue[1]
+                    or row['accounting_status'] != status or row.get('pointer_status') != status
+                    or row.get('owner_accounting_eligible') is not False or row['complete_item']):
+                raise ValueError(f'{cid}:{ordinal}: invalid WA other-issue pointer')
+            if any(mid not in manifest_ids for mid in resolution.get('manifest_entry_ids', [])):
+                raise ValueError(f'{cid}:{ordinal}: pointer target outside manifest')
+        else:
+            if row['accounting_status'] not in ('accounted', 'unaccounted'):
+                raise ValueError(f'{cid}:{ordinal}: invalid accounting status')
+            if (row['accounting_status'] == 'accounted') != bool(row.get('union_record_id')):
+                raise ValueError(f'{cid}:{ordinal}: accounting pointer/status mismatch')
         source = row.get('source_entry_id')
         if source not in entries or not row.get('source_locator') or not row.get('native_text_fingerprint'):
             raise ValueError(f'{cid}:{ordinal}: unresolved source locator/body')
