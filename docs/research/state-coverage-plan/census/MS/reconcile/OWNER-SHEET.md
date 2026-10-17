@@ -81,5 +81,49 @@ high-confidence cases without LOOK | 8 | 1 | 8
 
 The union has 294 opportunities, above PROTOCOL §5’s 150, so the every-date check does not apply. Every decisive visual mark on an included filing is still mandatory (decision 14), so each has its own case. Recount after the class decisions: C04 alone would remove 21 windows from the scored carry-in count.
 
-**Audit: not estimated here.** It will be estimated under proposed Amendment A1 (a fixed sample of 30 units per state, with a container crosswalk). A1 is not yet signed. No frame, seed, sample or audit minutes are drawn or claimed. Nothing here establishes completeness: MS remains single-lineage, with the 28935 gap.
+**Audit A1 dry-run: over budget at every declared level.** Amendment A1 is signed (rights/DECISIONS.md item 20). Method `fixed_sample_v1`, requested sample total 30, 270 mandatory minutes and zero overlap credit. No frame was frozen, no seed was drawn, no units/items/verification rows were selected, and `run.json` is unchanged.
 
+Level | Strata | Audit units | Audit minutes | With mandatory 270 | Against 360
+---|---:|---:|---:|---:|---:
+0 | 152 | 30 | 101 | **371** | **+11**
+1 | 23 | 30 | 258 | **528** | **+168**
+2 | 23 | 30 | 258 | **528** | **+168**
+3 | 23 | 30 | 258 | **528** | **+168**
+
+Level 0 is the least expensive scenario: **101 + 270 = 371 minutes, 11 over**. Level 1 merges publication cycles (there are no MS PDF/TOC pairs): **258 + 270 = 528 minutes, 168 over**. Levels 2–3 retain the same A1 allocation and cost. Coarsening is not necessarily cheaper under A1: level 1 gives the singleton 56-page MDEQ rule-text stratum one unit (88 full-read minutes), while level 0 allocates it zero. A zero allocation supports no per-stratum inspection claim.
+
+**Crosswalk:** 22 source containers, 1,192 bulletin filing rows covering 621 distinct SOS system numbers; **zero bulletin filing rows unaccounted**. There are **2 unaccounted whole-agency-page fallback spans** (`ms-xchk-mdeq-regulations-page` and `ms-xchk-mid-proposed-regulations-page`), each requiring a full read of the entire original including every listed item and hidden section. They are conservative source spans, not a claim that each page has one listed item. Four empty slices and the verified empty sitemap retain five whole-document verification spans, not filing rows, so the existing A1 frame builder has a nonempty complete-source pool for every manifest index/slice. Thus the crosswalk has 1,199 frame rows and **2 unaccounted spans in total**. No blanket agency-page rejection accounts for an unread item.
+
+**Costs:** a 1–4-page scan form is read in full at 3 minutes/page. Container (a) costs 3 base + 1 per unaccounted row + 1 per each of min(5, accounted rows) future seeded verifications. Container (b) uses the median complete linked-form full-read allowance at 3 minutes/page; this is an unseeded planning allowance. Whole-original fallback pools require full-original reads, including the empty-response verification. Native PDFs and HTML use VA’s max(2, ceil(words/250)+1) full-read rule; native PDF words were counted locally with PDFKit and HTML includes hidden sections. Costs round up the mean per stratum, then multiply by allocated units. No scripting owner minutes or assumed overlap credits are added; actual draws or expansion may cost more.
+
+**Level-1 allocation (strata → allocated units):** 649 retrieved units partition into 23 strata; the allocation is **28 high-risk + 2 ordinary = 30 units**, comprising **23 scan forms, 3 native PDF documents and 4 container/source views**. All strata below have `all_cycles` and `both_empty=false`; scan forms have `text_layer=none`, all others `native`. Source names are shortened only in this table: forms = `ms-sos-acproposed`, bulletin = `ms-sos-bulletin-service`, MDEQ = `ms-mdeq-site`, MID = `ms-mid-site`. Exact stratum IDs and complete eligible unit lists for every level are in `audit-estimate.json`; these allocations do not select individual unit IDs.
+
+Source / agency / process / format / disposition | N | Allocated units | Min/unit | Audit minutes
+---|---:|---:|---:|---:
+MDEQ / ms-mdeq / proposal / html / exclusions_only | 1 | **1** | 6 | 6
+MDEQ / ms-mdeq / proposal / html / inclusion | 1 | **1** | 7 | 7
+MDEQ / ms-mdeq / proposal / text_pdf / exclusions_only | 1 | **1** | 88 | 88
+MDEQ / ms-mdeq / proposal / text_pdf / inclusion | 1 | **1** | 3 | 3
+MID / ms-mid / proposal / html / exclusions_only | 1 | **1** | 24 | 24
+MID / ms-mid / proposal / text_pdf / exclusions_only | 4 | **1** | 25 | 25
+forms / ms-fire-personnel-board / proposal / scan_pdf / exclusions_only | 1 | **1** | 12 | 12
+forms / ms-mdeq / final / scan_pdf / exclusions_only | 5 | **1** | 3 | 3
+forms / ms-mdeq / proposal / scan_pdf / exclusions_only | 4 | **1** | 3 | 3
+forms / ms-mdeq / proposal / scan_pdf / inclusion | 2 | **1** | 3 | 3
+forms / ms-mdeq / withdrawal / scan_pdf / exclusions_only | 1 | **1** | 3 | 3
+forms / ms-mid / final / scan_pdf / exclusions_only | 9 | **1** | 3 | 3
+forms / ms-mid / other / scan_pdf / exclusions_only | 1 | **1** | 3 | 3
+forms / ms-mid / proposal / scan_pdf / exclusions_only | 3 | **1** | 3 | 3
+forms / ms-mid / proposal / scan_pdf / inclusion | 7 | **1** | 10 | 10
+forms / ms-sos-filers-other / final / scan_pdf / exclusions_only | 298 | **5** | 4 | 20
+forms / ms-sos-filers-other / final / scan_pdf / inclusion | 1 | **1** | 3 | 3
+forms / ms-sos-filers-other / other / scan_pdf / exclusions_only | 3 | **1** | 3 | 3
+forms / ms-sos-filers-other / proposal / scan_pdf / exclusions_only | 138 | **3** | 4 | 12
+forms / ms-sos-filers-other / proposal / scan_pdf / inclusion | 137 | **2** | 4 | 8
+forms / ms-sos-filers-other / withdrawal / scan_pdf / exclusions_only | 7 | **1** | 3 | 3
+forms / ms-sos-filers-other / withdrawal / scan_pdf / inclusion | 4 | **1** | 3 | 3
+bulletin / ms-sos-bulletin / bulletin-index / json / exclusions_only | 19 | **1** | 10 | 10
+
+`python3 audit_freeze.py MS --dry-run --method fixed_sample_v1 --sample-total 30 --mandatory 270 --review-budget 360 --level 1 --minutes-native 2 --minutes-scan 3 --costing-file MS/reconcile/audit-estimate.json` stops with `level 1 estimate 528 exceeds budget 360; stop/narrow` (paths are relative to the census directory). A diagnostic-only `--review-budget 10000 --level 3 --dry-run` prints all four scenarios and validates the container frames in memory; this ceiling is not an authorized budget increase. The full command and results are recorded in `audit-estimate.json`.
+
+**Stop/narrow before any freeze or draw.** Nothing here establishes completeness: MS remains single-lineage, with the 28935 gap. A1 has weaker sensitivity than stratified floors and supports no confidence claim.
