@@ -267,6 +267,78 @@ rather than charging elapsed idle time. Record additional research/agent time se
 **Exit:** mandatory reviews done, audit reproduced and completed, adjudicated label snapshot;
 remaining ambiguities explicitly listed. Completeness verdict signed by human reviewer.
 
+
+### Amendment A1 — fixed audit sample (PROPOSED, pending owner signature)
+
+**Status: PROPOSED. Owner signature: pending.** Method `fixed_sample_v1` applies only
+to VA, WA and MS after the owner signs this exact amendment. CT retains
+`stratified_floor`, including its already frozen frame and drawn sample. An absent
+`audit.method` means `stratified_floor`. Mandatory §5 reviews of disagreements,
+ambiguities, visual marks and missing sources, and the ≤150 every-date rule, are
+unchanged and additional to the random audit.
+
+Use the same §5 strata construction (including agency, explicit both-empty and
+text-layer flags) and exact `unit_coverage` partition. Retain complete original
+anchors and level-1 pairing of overlapping PDF/TOC views where applicable, and
+record every coarsening recalculation. Freeze the method, allocation, costs and
+canonical frame hash before generating the seed, in the existing freeze-then-seed
+order. Do not reinterpret or redraw a previously drawn sample.
+
+The state sample is **K = min(30, N_total)**, where N_total is the number of audit
+units after any declared pairing, not the number of covered manifest entries.
+`audit.sample_total`, when present, is 30 (the requested cap, not K). High-risk
+strata are scan, none/partial text layer, exclusions_only and no_candidates/both-empty.
+The deterministic allocation is:
+
+1. Let H and O be the high-risk and ordinary unit totals. Allocate
+   h = max(min(H, ceil(0.4 K)), K − O) seats to high-risk, and K − h to ordinary.
+   Thus the 40% risk reserve is a minimum; insufficient ordinary capacity spills
+   back to risk. If H is below the reserve, take all H.
+2. Independently in each group, use stratum N as the proportional weight, ignoring
+   empty strata (allocation zero). If group seats are fewer than non-empty strata,
+   apply largest remainder directly; some strata receive zero.
+3. Otherwise enforce a minimum of one: repeatedly compute quotas
+   seats × N / sum(active N), assign one to every active stratum with quota <1,
+   remove those strata and seats, and recompute until no quota is below one.
+4. For the remaining active strata, assign floor(quota), then distribute the
+   remaining seats by descending fractional remainder, ties by ascending
+   `stratum_id` using Unicode code-point order. Use exact integer quotient and
+   remainder arithmetic. This is bounded by each stratum N and sums to K.
+5. Within each stratum rank by the existing
+   `sha256(seed + "\n" + stratum_id + "\n" + stable_unit_id)`, tie by unit ID,
+   and take the first allocated units. The validator reproduces both allocation
+   and ranked selections. Zero allocations do not authorize skipping drawn units.
+
+Before owner review, the primary produces a scripted container crosswalk from each
+listed row to a union label record or **unaccounted**, preserving unresolved rows.
+A container is an issue, section, PDF, TOC, index or search-slice unit listing items.
+For each sampled container the human (a) reviews **every unaccounted row** plus a
+seeded sample of min(5, accounted rows) accounted rows; and (b) reads one seeded
+item's participation-bearing parts in full: heading, preamble/summary and every
+public comment, hearing, hearing-request, objection and petition section. Search
+that item's remaining body for dates and comment, hearing and objection terms,
+reading every hit in context. Non-container units are read in full as before.
+
+Freeze each container's ordered row frame and complete-item read pool before the
+state seed. Pointer/catalogue rows remain in accounting; they are not complete
+items for (b), and unsupplied linked bodies remain explicit source gaps. Stable row
+IDs are `container_id + ":" + decimal item_ordinal`; complete items retain those IDs.
+For (a), rank accounted row IDs by
+`sha256(seed + "\ncontainer-accounted\n" + container_id + "\n" + row_id)`,
+and for (b) rank complete-item IDs by
+`sha256(seed + "\ncontainer-item\n" + container_id + "\n" + item_id)`;
+tie by ID and take the first min(5, accounted) or one respectively. An unresolved
+item frame or empty read pool must be resolved before drawing, not silently waived.
+
+An omission still triggers review of the **whole affected template, process and
+cycle**, plus a new label version; retain and complete the original sample.
+**Never skip a drawn sample.** The per-state budget remains
+`audit.review_budget_minutes`; mandatory work, overlap accounting, actual time logs
+and overrun/expansion stops are unchanged. A1 has **weaker sensitivity than the
+stratified floors**, supports **no per-stratum inspection claim**, and is **not a
+confidence claim**. No signature, freeze, seed or completed review is implied by
+this proposed text or by a planning estimate.
+
 ## 6. Freeze labels and score surfaces
 
 **Owner:** primary. **Entry:** adjudicated snapshot and completeness verdict.

@@ -79,7 +79,7 @@ Visual files are in `.census-passes/VA/review-renders/` (outside git), named by 
 
 Case confidence: 75 high / 6 medium / 2 low; **81 LOOK items** among 83 cases. The C04 cover additionally needs owner LOOK. Part 3 records budget overlap explicitly.
 
-## Part 3 — Owner minutes: four labelled costings
+## Part 3 — Owner minutes: five labelled costings
 
 **Mandatory 271**, no overlap: 7×2 +2×1 +73×3 +6×4 +2×6 (classes/cases). 203 opportunities >150: no every-date check; recount after decisions. Mandatory cases remain.
 
@@ -137,3 +137,58 @@ S unit | Items/unaccounted | Minutes
 
 S level 3 total **1,361 versus 360 (1,001 over)**. No freeze, seed, amendment or verdict. Unmeasured/provisional; validation/expansion adds work.
 
+
+### A1 — fixed audit sample (PROPOSED, pending owner signature)
+
+Dry-run costing **A1** uses the same scripted accounting and participation-read
+allowances as S: (a) 3 + unaccounted + min(accounted,5); (b) each container's median
+participation-read item minutes. Other source views retain S's full-read allowances.
+The level-1 frame pairs PDF/TOC once: **231 units covering 263 retrieved entries**.
+Canonical freeze-helper strata retain agency and explicit text-layer flags; the
+four prior costings keep their original planning strata. No seed, freeze or sample.
+
+The risk reserve assigns **12 high-risk + 18 ordinary = 30 units**. Within each
+group use proportional largest remainder, fixing quota<1 strata at one only when
+the group allocation permits one for every non-empty stratum; ties by stratum ID.
+Allocations below are units, including zeroes; no per-stratum inspection claim.
+All have agency `va-register-agencies`, merged cycles and `both_empty=false`.
+`E` = exclusions_only; `I` = inclusion; `n` = native; `p` = partial text layer.
+
+Source / process / format / disposition / text | N | A1 units
+---|---:|---:
+va-agency-rulemaking / general-notices / html / E / n | 3 | 0
+va-agency-rulemaking / general-notices / html / I / n | 1 | 1
+va-agency-rulemaking / governor / html / E / n | 2 | 0
+va-agency-rulemaking / noira / html / E / n | 9 | 1
+va-agency-rulemaking / periodic-review / html / E / n | 3 | 0
+va-agency-rulemaking / petitions / html / E / n | 2 | 0
+va-agency-rulemaking / regulations / html / E / n | 9 | 1
+va-register / errata / html / E / n | 11 | 1
+va-register / errata / html / I / n | 3 | 1
+va-register / general-notices / html / E / n | 27 | 2
+va-register / general-notices / html / I / n | 5 | 1
+va-register / governor / html / E / n | 14 | 1
+va-register / noira / html / E / n | 5 | 1
+va-register / noira / html / I / n | 18 | 3
+va-register / periodic-review / html / E / n | 15 | 1
+va-register / periodic-review / html / I / n | 14 | 3
+va-register / petitions / html / E / n | 7 | 1
+va-register / petitions / html / I / n | 15 | 3
+va-register / register-issue / html / E / n | 3 | 0
+va-register / register-issue / text_pdf / E / n | 5 | 0
+va-register / register-issue / text_pdf / E / p | 3 | 0
+va-register / register-issue / text_pdf / I / n | 18 | 3
+va-register / register-issue / text_pdf / I / p | 6 | 1
+va-register / regulations / html / E / n | 7 | 1
+va-register / regulations / html / E / p | 3 | 0
+va-register / regulations / html / I / n | 16 | 3
+va-register / regulations / html / I / p | 6 | 1
+va-register-rss / register-issue / html / E / n | 1 | 0
+
+**Audit 372 + mandatory 271 = 643 minutes versus 360
+(283 over)**, no overlap credit. Stratum mean allowances are rounded up;
+actual unit/item draws can cost more. A1 is weaker than stratified floors and makes
+no confidence claim. Mandatory reviews, omission expansion and never skipping a
+drawn sample remain unchanged. This estimate does not authorize a draw or waive
+the budget stop. Full machine-readable allocation: `audit-estimate.json`,
+`costings.fixed_sample_v1`.

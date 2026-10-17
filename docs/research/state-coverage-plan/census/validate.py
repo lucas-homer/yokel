@@ -6,6 +6,8 @@ import json
 import math
 import re
 import sys
+
+from audit_freeze import fixed_allocation
 from datetime import datetime
 from pathlib import Path
 
@@ -358,6 +360,14 @@ def validate(directory, verify_bytes=False, stage="final"):
           'C08', 'audit unit coverage must partition retrieved entries with original anchors')
     check([r['level'] for r in audit['coarsening_history']] == list(range(1,audit['coarsening_level']+1)),
           'C08', 'coarsening steps/recalculations missing or out of order')
+    fixed = audit.get('method', 'stratified_floor') == 'fixed_sample_v1'
+    allocation = {}
+    if fixed:
+        check(run['state'] in ('VA', 'WA', 'MS'), 'C08', 'fixed_sample_v1 outside A1 state scope')
+        try:
+            allocation = fixed_allocation(audit['strata'], audit.get('sample_total', 30))
+        except (ValueError, TypeError) as exc:
+            check(False, 'C08', str(exc))
     estimate = audit['mandatory_minutes_estimate'] - audit['overlap_minutes']
     for stratum in audit['strata']:
         ids = stratum['unit_ids']; n = len(ids); covered += ids
@@ -378,6 +388,8 @@ def validate(directory, verify_bytes=False, stage="final"):
             check(len({e[field] for e in unit_entries}) <= 1, 'C08', f'{stratum["stratum_id"]} mixed {field} stratum')
         high = stratum['high_risk']; level = audit['coarsening_level']
         required = min(n, (min(20,max(5,math.ceil(.2*n))) if level == 3 else 20)) if high else min(n,max(2 if level >= 2 else 5, math.ceil((.1 if level >= 2 else .2)*n)))
+        if fixed:
+            required = allocation.get(stratum['stratum_id'], 0)
         check(stratum['sample_size'] == required, 'C08', 'audit sample size/coarsening floor')
         sid = stratum['stratum_id']; ranked = sorted(ids, key=lambda uid:(digest(((audit['seed'] or '')+'\n'+sid+'\n'+uid).encode()), uid))
         check(stratum['selected_ids'] == ranked[:required], 'C08', f'{sid} seeded selection mismatch')

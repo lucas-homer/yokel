@@ -12,6 +12,7 @@ import unittest
 from unittest.mock import patch
 
 HOME = Path(__file__).resolve().parent
+sys.path.insert(0, str(HOME))
 
 
 def module(name):
@@ -31,7 +32,7 @@ def fixture():
         for i in range(n):
             uid = f'{prefix}{i:02}'
             manifest.append({'entry_id': uid, 'source_id': 'source', 'agency_id': 'agency',
-                             'process_id': 'process', 'format': 'text_pdf',
+                             'process_id': 'process', 'kind': 'page', 'format': 'text_pdf',
                              'text_layer': 'native', 'publication_cycle': f'cycle-{i%2}',
                              'retrieval': {'result': 'retrieved', 'sha256': 'a'*64},
                              'accounting': {'pagination_or_page_range': 'pages 1–2'},
@@ -106,6 +107,159 @@ class AuditTests(unittest.TestCase):
         self.assertTrue(scan['high_risk'])
         self.assertEqual(scan['minutes_per_unit'], 3)
         self.assertEqual(scan['sample_size'], 1)
+
+    def test_fixed_allocation_risk_reserve_lower_bounds_and_ties(self):
+        def strata(spec):
+            return [{'stratum_id': sid, 'unit_ids': [f'{sid}-{i}' for i in range(n)],
+                     'high_risk': high} for sid, n, high in spec]
+        rows = strata([('h-a', 90, True), ('h-b', 10, True),
+                       ('o-a', 90, False), ('o-b', 9, False), ('o-c', 1, False)])
+        expected = {'h-a': 11, 'h-b': 1, 'o-a': 15, 'o-b': 2, 'o-c': 1}
+        self.assertEqual(freeze.fixed_allocation(rows), expected)
+        self.assertEqual(freeze.fixed_allocation(list(reversed(rows))), expected)
+        ties = strata([(f'h-{i:02}', 1, True) for i in range(20)] + [('ordinary', 100, False)])
+        result = freeze.fixed_allocation(ties)
+        self.assertEqual([result[f'h-{i:02}'] for i in range(20)], [1]*12+[0]*8)
+        self.assertEqual(result['ordinary'], 18)
+        for spec in ([('h', 2, True), ('o', 100, False)],
+                     [('h', 100, True), ('o', 2, False)],
+                     [('h', 2, True), ('o', 1, False)], [], [('only', 50, True)]):
+            rows = strata(spec)
+            result = freeze.fixed_allocation(rows)
+            self.assertEqual(sum(result.values()), min(30, sum(n for _, n, _ in spec)))
+            self.assertTrue(all(0 <= result[sid] <= n for sid, n, _ in spec))
+        with self.assertRaises(ValueError):
+            freeze.fixed_allocation(rows, 29)
+
+    def test_fixed_plan_and_validator_reproduction_reject_bad_size_and_ranking(self):
+        manifest, completion = fixture()
+        audit, scenarios = freeze.plan(manifest, completion, 1, 2, 3, 10, 240,
+                                       method='fixed_sample_v1')
+        self.assertEqual(audit['method'], 'fixed_sample_v1')
+        self.assertEqual(audit['sample_total'], 30)
+        self.assertEqual(sum(s['sample_size'] for s in audit['strata']), 30)
+        self.assertEqual({s['high_risk']: s['sample_size'] for s in audit['strata']},
+                         {True: 12, False: 18})
+        audit['seed'] = 'c'*64
+        freeze.select(audit)
+        for s in audit['strata']:
+            ranked = sorted(s['unit_ids'], key=lambda uid: (
+                hashlib.sha256(('c'*64+'\n'+s['stratum_id']+'\n'+uid).encode()).hexdigest(), uid))
+            self.assertEqual(s['selected_ids'], ranked[:s['sample_size']])
+
+        # Exercise C08 in a complete final fixture, not just the allocator helper.
+        path = HOME/'examples/run.json'
+        original_load = validator.load
+        run = copy.deepcopy(original_load(path))
+        run['audit'].update(method='fixed_sample_v1', sample_total=30)
+        with patch.object(validator, 'load', side_effect=lambda p: run if p == path else original_load(p)):
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(validator.validate(HOME/'examples'), [])
+            run['audit']['strata'][0]['sample_size'] = 0
+            with contextlib.redirect_stdout(io.StringIO()):
+                errors = validator.validate(HOME/'examples')
+            self.assertTrue(any('C08: audit sample size' in e for e in errors), errors)
+            run['audit']['strata'][0]['sample_size'] = 1
+            run['audit']['strata'][0]['selected_ids'] = []
+            with contextlib.redirect_stdout(io.StringIO()):
+                errors = validator.validate(HOME/'examples')
+            self.assertTrue(any('seeded selection mismatch' in e for e in errors), errors)
+
+    def test_va_proposed_allocation_reproduces_in_c08_without_mutating_run(self):
+        directory = HOME/'VA'
+        path = directory/'run.json'
+        before = path.read_bytes()
+        run = json.loads(before)
+        costing = json.loads((directory/'reconcile/audit-estimate.json').read_text())['costings']['fixed_sample_v1']
+        manifest = freeze.lines(directory/'manifest.jsonl')
+        coverage = freeze.paired_coverage(manifest, 1)
+        strata = freeze.build_strata(manifest, freeze.lines(directory/'completion.jsonl'), 1, 1, 1, coverage)
+        allocation = freeze.fixed_allocation(strata)
+        self.assertEqual(allocation, {s['stratum_id']: s['sample_size'] for s in costing['strata']})
+        self.assertEqual(coverage, costing['unit_coverage'])
+        costs = {s['stratum_id']: s['minutes_per_unit'] for s in costing['strata']}
+        for s in strata:
+            s.update(sample_size=allocation[s['stratum_id']], minutes_per_unit=costs[s['stratum_id']])
+        # Fixed literal is a synthetic test seed, never a real entropy draw or persisted plan.
+        audit = run['audit']
+        audit.update(method='fixed_sample_v1', sample_total=30, strata=strata, unit_coverage=coverage,
+                     coarsening_level=1, coarsening_history=[{'level': 1, 'estimate_minutes': costing['total_minutes'],
+                     'reason': 'Synthetic C08 regression only'}], seed='d'*64, frozen_before_seed=True,
+                     mandatory_minutes_estimate=costing['mandatory_minutes'],
+                     estimate_minutes=costing['total_minutes'], review_budget_minutes=360)
+        audit['frame_hash'] = freeze.digest(freeze.canonical(freeze.frame(audit)))
+        freeze.select(audit)
+        for s in strata:
+            s['completed_ids'] = list(s['selected_ids'])
+        original_load = validator.load
+        with patch.object(validator, 'load', side_effect=lambda p: run if p == path else original_load(p)):
+            with contextlib.redirect_stdout(io.StringIO()):
+                errors = validator.validate(directory)
+            c08 = [e for e in errors if e.startswith('C08:')]
+            # Completion logs and budget remain required: A1 must not weaken either.
+            self.assertEqual(set(c08), {
+                'C08: completed samples lack human audit log',
+                'C08: review estimate/actual budget mismatch or budget exceeded'})
+            sampled = next(s for s in strata if s['sample_size'] > 1)
+            sampled['sample_size'] -= 1
+            with contextlib.redirect_stdout(io.StringIO()):
+                errors = validator.validate(directory)
+            self.assertTrue(any('C08: audit sample size' in e for e in errors), errors)
+            sampled['sample_size'] += 1
+            sampled['selected_ids'].reverse()
+            with contextlib.redirect_stdout(io.StringIO()):
+                errors = validator.validate(directory)
+            self.assertTrue(any('seeded selection mismatch' in e for e in errors), errors)
+        self.assertEqual(path.read_bytes(), before)
+
+    def test_stratified_floor_default_and_ct_frozen_sample_unchanged(self):
+        manifest, completion = fixture()
+        default, _ = freeze.plan(manifest, completion, 3, 2, 3, 10, 240)
+        explicit, _ = freeze.plan(manifest, completion, 3, 2, 3, 10, 240,
+                                  method='stratified_floor')
+        self.assertEqual(default, explicit)
+        self.assertNotIn('method', default)
+        schema = json.loads((HOME/'run.schema.json').read_text())['properties']['audit']
+        self.assertEqual(schema['properties']['method']['default'], 'stratified_floor')
+        self.assertFalse(schema['additionalProperties'])
+        ct = HOME/'CT'
+        before = (ct/'run.json').read_bytes()
+        audit = json.loads(before)['audit']
+        self.assertEqual(audit.get('method', 'stratified_floor'), 'stratified_floor')
+        for s in audit['strata']:
+            self.assertEqual(s['sample_size'], freeze.required(len(s['unit_ids']), s['high_risk'],
+                                                               audit['coarsening_level']))
+        reproduced = copy.deepcopy(audit)
+        freeze.select(reproduced)
+        self.assertEqual(reproduced, audit)
+        self.assertEqual(freeze.digest(freeze.canonical(freeze.frame(audit))), audit['frame_hash'])
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(validator.validate(ct, stage='passes', verify_bytes=True), [])
+        self.assertEqual((ct/'run.json').read_bytes(), before)
+
+    def test_fixed_cli_dry_run_never_uses_entropy_or_writes(self):
+        manifest, completion = fixture()
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            (directory/'run.json').write_text(json.dumps({'state': 'VA', 'audit': {'seed': None}}))
+            for name, rows in [('manifest', manifest), ('completion', completion)]:
+                (directory/(name+'.jsonl')).write_text(''.join(json.dumps(r)+'\n' for r in rows))
+            before = {p.name: p.read_bytes() for p in directory.iterdir()}
+            argv = ['audit_freeze.py', str(directory), '--level', '1', '--method', 'fixed_sample_v1',
+                    '--sample-total', '30', '--high-risk-share', '0.4', '--minutes-native', '2',
+                    '--minutes-scan', '3', '--mandatory', '10', '--dry-run']
+            with patch.object(sys, 'argv', argv), patch.object(freeze.secrets, 'token_hex') as entropy:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    freeze.main()
+                entropy.assert_not_called()
+            self.assertEqual({p.name: p.read_bytes() for p in directory.iterdir()}, before)
+            # Even a null-seed, already-frozen frame must not be replaced.
+            (directory/'run.json').write_text(json.dumps({'state': 'VA', 'audit': {
+                'seed': None, 'frozen_before_seed': True}}))
+            with patch.object(sys, 'argv', argv[:-1]), patch.object(freeze.secrets, 'token_hex') as entropy:
+                with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+                    freeze.main()
+                entropy.assert_not_called()
 
     def test_validator_default_budget_and_explicit_override(self):
         # Use only the synthetic example, with real C08 validation of estimate AND actual.

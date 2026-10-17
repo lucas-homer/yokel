@@ -368,6 +368,14 @@
     "audit": {
       "type": "object",
       "properties": {
+        "method": {
+          "enum": ["stratified_floor", "fixed_sample_v1"],
+          "default": "stratified_floor"
+        },
+        "sample_total": {
+          "type": "integer",
+          "minimum": 0
+        },
         "review_budget_minutes": {
           "type": "number",
           "minimum": 0
