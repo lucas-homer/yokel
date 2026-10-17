@@ -75,6 +75,13 @@ that hold comes from its robots.txt, not from a default.
 18. **WA outreach:** the owner sends [`outreach/WA.md`](outreach/WA.md) to the Code Reviser about
     the 16 unlisted filing numbers.
 
+## Decided, round 6 (owner, 2026-10-16)
+
+19. **CT review budget raised to about 9 hours (540–600 minutes)**, keeping CT's full signed scope.
+    The mandatory step-5 work is 355 minutes, including 110 date and role checks, and the reduced
+    audit adds 184 (`census/CT/reconcile/OWNER-SHEET.md`, Part 3). The total across states is
+    reset once WA, VA and MS have their estimates; it is expected to exceed item 14's 26 hours.
+
 ## Correction (primary, 2026-10-15)
 
 `surfaces.json` version `2026-10-15.2` wrongly set retention to `not_authorized` on the newly allowed
