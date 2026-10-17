@@ -82,6 +82,16 @@ that hold comes from its robots.txt, not from a default.
     audit adds 184 (`census/CT/reconcile/OWNER-SHEET.md`, Part 3). The total across states is
     reset once WA, VA and MS have their estimates; it is expected to exceed item 14's 26 hours.
 
+## Decided, round 7 (owner, 2026-10-17)
+
+20. **PROTOCOL Amendment A1 signed as written**: a fixed audit sample (`fixed_sample_v1`, K = min(30, N)
+    units per state, at least 40% high-risk, a scripted container crosswalk and sampled verification).
+    It applies to VA, WA and MS. CT keeps its frame and sample, frozen and drawn on 2026-10-17. Every
+    mandatory review is unchanged. A1 has weaker sensitivity than the stratified floors, and that is
+    disclosed.
+21. **VA review budget raised to 660 minutes** (about 11 hours), keeping VA's full signed scope. The
+    A1 estimate is 271 mandatory minutes plus 372 audit minutes.
+
 ## Correction (primary, 2026-10-15)
 
 `surfaces.json` version `2026-10-15.2` wrongly set retention to `not_authorized` on the newly allowed
