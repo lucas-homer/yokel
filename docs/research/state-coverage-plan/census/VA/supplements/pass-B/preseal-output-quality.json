@@ -1,0 +1,584 @@
+{
+  "schema_blockers": [
+    {
+      "line": 543,
+      "record_id": "pass_B:ocd-participation-window/state-va/e7781761cf41010888ef96da867c9921698d144d01b90262f9f4a405461edbcf:v1",
+      "field": "payload.temporal[1].cutoff",
+      "actual": "inclusive date; time unstated",
+      "schema_permitted_repair": "inclusive",
+      "preserve": "Literal, date precision, unstated time and timezone, nullUTC and ambiguity remain unchanged.",
+      "status": "Not applied: frozen append-only/version1 contract forbids rewriting earlier rows."
+    },
+    {
+      "line": 544,
+      "record_id": "pass_B:ocd-participation-window/state-va/2af51207525e631383301885fcc17eb325433c3772f54f9c50595bd71cf1545f:v1",
+      "field": "payload.temporal[1].cutoff",
+      "actual": "inclusive date; time unstated",
+      "schema_permitted_repair": "inclusive",
+      "preserve": "Literal, date precision, unstated time and timezone, nullUTC and ambiguity remain unchanged.",
+      "status": "Not applied: frozen append-only/version1 contract forbids rewriting earlier rows."
+    },
+    {
+      "line": 545,
+      "record_id": "pass_B:ocd-update/state-va/e9266b715847c55e234903b0be2415ab0c87a98bdab7a5573ace2388d2a5c744:v1",
+      "field": "payload.temporal[0].cutoff",
+      "actual": "inclusive date; time unstated",
+      "schema_permitted_repair": "inclusive",
+      "preserve": "Literal, date precision, unstated time and timezone, nullUTC and ambiguity remain unchanged.",
+      "status": "Not applied: frozen append-only/version1 contract forbids rewriting earlier rows."
+    }
+  ],
+  "publication_wording_correction": {
+    "status": "requires human correction consistent with frozen append-only/version-1 contract",
+    "issue": "Writer copy error in notice.payload.publication_wording for 42:07 fast-track notices: issue number says 6; correct issue is 7. Date November 17, 2025, source evidence, deterministic IDs and temporal deadlines are correct. Existing immutable rows not rewritten.",
+    "affected_notice_ids": [
+      "ocd-notice/state-va/2d540170c2b7146ddedd71546531c05af82aa4dadda02752586efa501d794903",
+      "ocd-notice/state-va/b574fcb11d7cddfdcf2293289dee9683d83edd7433e48c3ea0faabd99cb7b3dc",
+      "ocd-notice/state-va/e8cbe8ded41a819c081d04a884a94b278cc2b19addb517376382d899934141c8",
+      "ocd-notice/state-va/c62abf92b28b21116b91d920947a0374fccacbbb9919be681ef9258bc02de27d",
+      "ocd-notice/state-va/067365bab94edcc9daf974d3380417fc95c7756d28082784e586df75378cf467",
+      "ocd-notice/state-va/43c37a547f39fbb6361b48f84494544410c43f96eae53cd34934039b00efd44d",
+      "ocd-notice/state-va/ab1eb4a7c70fec8ead65c70f5384c544651972bf1f94d42689d92210bd8f8b59",
+      "ocd-notice/state-va/fdba5c57d41bff578e90bd0e725c88cc48d1e6ff26f62233417645eec516d66c",
+      "ocd-notice/state-va/71bf96dd3beeb208c9c1cdf275cb54574630f3d74dd15a03630da26bf9e85e22",
+      "ocd-notice/state-va/cf4a63db21bf77d733c9f7ce412cc58df165a9554775c61b7d30907a7161fb32",
+      "ocd-notice/state-va/ebe4eea06c271cb3976d8184f1d5687154452e349159e5003ccd03203cd90b54",
+      "ocd-notice/state-va/4b21caff557fc1fa9488358af211b463a741ad0d41114c04542b4ec97c2785ed",
+      "ocd-notice/state-va/3d3be871e3b79e92e5806096683fdad42147b0051e2326cb5f4cc83d76bec55e",
+      "ocd-notice/state-va/8556e8ea4b40aef4bc04500a753d2cf7b04cfef45706e491be4e8f04b6d004ca",
+      "ocd-notice/state-va/9e727d68983831d2900b17bcbb1302aec461e7e933d5c3ef89ff286fe9624272"
+    ],
+    "correct_publication_wording": "November 17, 2025; Volume 42, Issue 7"
+  },
+  "rejection_locator_hash_mismatch": {
+    "record_id": "pass_B:census-candidate/state-va/1d8143fc66603e2a3e9a3445b5357588ab5699075b5da23c6ef8ff5394cc1490:v1",
+    "issue": "Writer refined first evidence locator after hashing rejected_candidate ID. Same PDF page9/bodybegin8, exactDocNo and original hash unchanged. Hashpreimage uses earlier precise locator; current evidence text differs. Rejection IDs are not compared across passes but strict current-locator reproducibility needs human repair.",
+    "hashed_locator": "PDF page 9 DMASNOIRA closing identifier, entire body starts8",
+    "current_locator": "PDF page 9, DMASNOIRA closingidentifier; body begins8"
+  },
+  "legacy_issue_spelling_review": [
+    {
+      "notice_id": "ocd-notice/state-va/8688bcded722b7cad2cc2ba91ae75c1d33e3cb1494ff18c3e2be667a9b3c0811",
+      "native_tuple": [
+        "r26-8400",
+        "42:1",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/8417db0193d9c37405b3513d4987724004e74394903e8f59bd8b1bc3905eeca2",
+      "native_tuple": [
+        "r26-8401",
+        "42:1",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/4ded4607e75fe2e9a9c1642a9227fdca2a90c70e47fd45aed73701b1ce7abc28",
+      "native_tuple": [
+        "r22-6819",
+        "42:4",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/d0278168ca29a084598bff5da51874dad400619cd009856e4c310644ecb0d2e1",
+      "native_tuple": [
+        "r24-8010",
+        "42:4",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/c178c3fb3ee2f05ccd9d0b76fd6a188d7d03af9fdcf601f8d322da68a0b4ddc7",
+      "native_tuple": [
+        "r24-7851",
+        "42:4",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/a95047c236d9369d14ecccb38a6f21ee9593142177e44c9546b134ef5f414346",
+      "native_tuple": [
+        "r24-7832",
+        "42:6",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/94a08192580a86ce1f0d63d6a993c8bc499d34de68be167ef6ee53f5992ec74c",
+      "native_tuple": [
+        "r26-8309",
+        "42:6",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/d1b3fa580b23e216fcfbaf277ad95fd9faeb76a9138197fc99810e9aec617933",
+      "native_tuple": [
+        "r26-8176",
+        "42:6",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/d208174f82b389150cb698b75ab3b3f9aa6457ce92801705774b663d753b41dc",
+      "native_tuple": [
+        "pfr26-12",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/3249552362051d6e8bf5cf51183bad885ba0859c297933396b1859ec76144244",
+      "native_tuple": [
+        "r26-8470",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/31ebc830a26aa68d3a5907171e71b6c72a0e61e10bbe7c237382c8452d488cfe",
+      "native_tuple": [
+        "r26-05",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/2d540170c2b7146ddedd71546531c05af82aa4dadda02752586efa501d794903",
+      "native_tuple": [
+        "r26-8337",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/b574fcb11d7cddfdcf2293289dee9683d83edd7433e48c3ea0faabd99cb7b3dc",
+      "native_tuple": [
+        "r25-8231",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/e8cbe8ded41a819c081d04a884a94b278cc2b19addb517376382d899934141c8",
+      "native_tuple": [
+        "r26-8328",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/c62abf92b28b21116b91d920947a0374fccacbbb9919be681ef9258bc02de27d",
+      "native_tuple": [
+        "r25-8099",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/067365bab94edcc9daf974d3380417fc95c7756d28082784e586df75378cf467",
+      "native_tuple": [
+        "r25-8229",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/43c37a547f39fbb6361b48f84494544410c43f96eae53cd34934039b00efd44d",
+      "native_tuple": [
+        "r25-8133",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/ab1eb4a7c70fec8ead65c70f5384c544651972bf1f94d42689d92210bd8f8b59",
+      "native_tuple": [
+        "r25-8230",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/fdba5c57d41bff578e90bd0e725c88cc48d1e6ff26f62233417645eec516d66c",
+      "native_tuple": [
+        "r26-8149",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/71bf96dd3beeb208c9c1cdf275cb54574630f3d74dd15a03630da26bf9e85e22",
+      "native_tuple": [
+        "r25-8134",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/cf4a63db21bf77d733c9f7ce412cc58df165a9554775c61b7d30907a7161fb32",
+      "native_tuple": [
+        "r26-7599",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/ebe4eea06c271cb3976d8184f1d5687154452e349159e5003ccd03203cd90b54",
+      "native_tuple": [
+        "r26-7611",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/4b21caff557fc1fa9488358af211b463a741ad0d41114c04542b4ec97c2785ed",
+      "native_tuple": [
+        "r26-7612",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/3d3be871e3b79e92e5806096683fdad42147b0051e2326cb5f4cc83d76bec55e",
+      "native_tuple": [
+        "r26-7613",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/8556e8ea4b40aef4bc04500a753d2cf7b04cfef45706e491be4e8f04b6d004ca",
+      "native_tuple": [
+        "r26-8352",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/9e727d68983831d2900b17bcbb1302aec461e7e933d5c3ef89ff286fe9624272",
+      "native_tuple": [
+        "r26-8474",
+        "42:7",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/2d3648a5d93376b76cc79e4d51f71f071f5926540cc31bb3086966c26cee1641",
+      "native_tuple": [
+        "r26-8523",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/6423feb725b1654c9373e49318d3ea876c30baf5fd50099482e5b60f09aeeb5d",
+      "native_tuple": [
+        "pfr26-13",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/e6f5a7a133230e3a9ddd2487f764351ca0fa165c1d7e87247e40a395c56ce5ba",
+      "native_tuple": [
+        "r26-8396",
+        "42:3",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/f56ee7b6f9e053b720e49509bafbdc8e933c80ba6bfa240d2e2a96b50ac99dc9",
+      "native_tuple": [
+        "r26-8396",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/451d4854191e9707609c9d1277fb17e5fb2dbab25294d199a606fa316dc3341b",
+      "native_tuple": [
+        "r26-8504",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/e2a913868ff6c38cdb0e7f954fecee9f9d22e9c346562842d4206b9f6f5e00c5",
+      "native_tuple": [
+        "r26-8411",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/cd2bd1d5ce03b80270b38f3e4f21c6beaf24dbe1749e5a5dc98b9c4a75c7c7e7",
+      "native_tuple": [
+        "r26-8342",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/b94cdc5bb6bf1fdd20bd94bdae24bbb6a81bc3c38314579db6a58b87ce2dfc15",
+      "native_tuple": [
+        "r26-8393",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/a0c2cd64727ae1d461c38a1e18ca764da39aa7f034e76732289315ebfe1b37ed",
+      "native_tuple": [
+        "r25-8341",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/d2e5fbe0a503f942c8dee13b08a19a6d5f9494f63cddc813361f87221dc08b8a",
+      "native_tuple": [
+        "r24-7610",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/e9394169025062221a026a19e35d518244809b83ee4920c2494f152f07692374",
+      "native_tuple": [
+        "r26-8395",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/3699d9747e3269447107dddeb2d3d4d99704e2bfbad7958aea7150358fc7c315",
+      "native_tuple": [
+        "r25-8036",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/4c8426bcd88356d0c35f5a1cddc770b64a2f9534586103325dc8b276f4b7e80a",
+      "native_tuple": [
+        "r24-7854",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/ea00784b1520eb60419e6b9d8e82da16723813c15592f4a8fb65426284c5a60d",
+      "native_tuple": [
+        "r22-6627",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/d65531b29ca987bf504c5d3a47866b4c5d825e6ec77cb737788f909fcb02fc5d",
+      "native_tuple": [
+        "r22-6628",
+        "42:8",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/8c57cffbf70e7f9a0dcfbb25ba0dcb8748bdaad4a09b9e50e5bdd8897135132b",
+      "native_tuple": [
+        "r26-8535",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/90ef45ecff32adbfecb53be3de61323c49e96f6def51d50aa3258676974dae3d",
+      "native_tuple": [
+        "r26-8526",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/fc1a2b67695b9cec588b5cdf0cad90ba99fc8b6bd43f770e8a3b0e9a4c4e29bc",
+      "native_tuple": [
+        "r23-7345",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/1af37c32875b45c4082f10727dabb5452c69cc101b2c4f10fd6c7e324d8c63c3",
+      "native_tuple": [
+        "r26-8484",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/693cf3c3afe6437bd2569e614bdcd70530120e75b2475a090e96933e4b822000",
+      "native_tuple": [
+        "r26-8103",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/4a0a915abf64a5276190d205f3709ee9222bb7ddd7aebfb09d2c2260bef84950",
+      "native_tuple": [
+        "r24-7851",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/573e26592b53ba3cba1dd01b637815f1bd36791358612f116a1d99c13d1a7379",
+      "native_tuple": [
+        "r26-7963",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/957d3aed6cb84d0a0a208923942eef5b2fbc4b3debd7692802ca6cfd97651b97",
+      "native_tuple": [
+        "r26-7964",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/35c261093b16e8697715b25e3d3ee018714bccaa2d617e21f6b9fd20e24d610d",
+      "native_tuple": [
+        "r26-8539",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/3899429aba76714089de244887cb6c69db70e731c99ce3bbbc7770c93b75b260",
+      "native_tuple": [
+        "r25-8340",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/1bbfe400f3ed9b409d824acb3c5b4e4bc79fe7949de2675ba30d0d9d1b1361f8",
+      "native_tuple": [
+        "r24-7025",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/f86473affd046de2678788a672bfe105b300f26ea346a93b35d8004aaa027d43",
+      "native_tuple": [
+        "r23-7424",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/fcaa34a99c36710e0e3c219d5cec1f7f9573165bb3d749fd86d480ba9196d2df",
+      "native_tuple": [
+        "r25-8183",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/066582c42a003eeb5884f719ab824281582b1afc8a6ba4a614c44175c954eee3",
+      "native_tuple": [
+        "r24-7739",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/a24bd10d49d360ea0ce1ec3b74d5dab800ca6e43dee0022236ad4be96efaebe2",
+      "native_tuple": [
+        "r26-8314",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/32e265d4eb4e52d59cbf2bf9740a81b9dd5a42e99e7ae4b3b95a7a341cd949c8",
+      "native_tuple": [
+        "r25-7763",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    },
+    {
+      "notice_id": "ocd-notice/state-va/488de0ad8fccb71df886e1000c51b02538c4102994f78fc1842998f39158e5c4",
+      "native_tuple": [
+        "r25-8047",
+        "42:9",
+        1
+      ],
+      "question": "Early notice tuples use unpadded official volume:issue spelling (42:1 etc.) while supplied manifest uses padded42:01. Frozen brief does not separately state padding normalization; preserve current bytes and flag cross-pass canonicalization review."
+    }
+  ],
+  "not_applied": "No earlier label or completion row rewritten."
+}

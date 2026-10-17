@@ -1,0 +1,114 @@
+{
+ "pass": "pass_A",
+ "state": "VA",
+ "universe_version": "va-v0.1-signed-2026-10-15/interval-ext-42:08",
+ "provider": "claudeAgent",
+ "model": "claude-opus-5-5",
+ "task_id": "census-pass-A-VA-r1",
+ "brief_sha256": "9332233d7adc667f0009b5fc05367dc0b665dc4f4b05e001620ca7b3f4ff54dc",
+ "brief_version": "census-step4-common-2026-10-16.r2",
+ "brief_frozen_at": "2026-10-16T19:15:02Z",
+ "dispatched_at": "2026-10-16T19:16:00Z",
+ "started_at": "2026-10-16T19:16:00Z",
+ "sealed_at": "2026-10-16T20:07:33Z",
+ "output_sha256": "1721b7116e537b34f1129e5428f00c910261f59a37166d868e35997f9c21443a",
+ "isolated": true,
+ "access_statement": "Allowed paths: read .census-passes/VA/brief.txt (hashed, sha256 9332233d7adc667f0009b5fc05367dc0b665dc4f4b05e001620ca7b3f4ff54dc, matches supplied expected hash) and .census-passes/VA/inputs/ (INPUTS.json, manifest.pass.jsonl, schemas/labels.schema.json, schemas/completion.schema.json, schemas/examples/completion.jsonl, schemas/examples/pass-A.jsonl, and originals/<sha256> for all 263 retrieved entries); wrote only inside .census-passes/VA/pass-A/ (outputs, tools/, work/, renders/, viewing/, progress.jsonl, brief.received.txt copied from the brief file). Directory listing of .census-passes/VA/ showed sibling names pass-A and pass-B (names only; pass-B was empty at listing time and was never opened). No docs/, git commands/history, ~/yokel-captures, other states/passes, /tmp files of other agents, adapter output, shared parser candidates, network, installs or sub-agents were used. Disclosure (not an access by this pass): before the task message the harness auto-injected session context — the user's global instruction files, the repo AGENTS.md project notes (general project description, no census data), the user's auto-memory index, and a git status snapshot listing recent commit subjects (e.g. 'freeze step-4 blind-pass briefs (WA/VA/CT/MS)'); none contained VA candidates, counts, IDs or other-pass findings. A harness-persisted copy of one of this pass's own tool outputs (manifest listing) was written by the harness outside the output directory; it was not opened (the listing was regenerated into pass-A/work/). swiftc compilation used module caches redirected into pass-A/tools; the compiler may additionally have used system caches outside the output directory (not verified).",
+ "inputs": {
+  "projection_version": "pass-input-2",
+  "state": "VA",
+  "source_manifest_sha256": "da52a6f53b25a969810785da7fa44ac23ed13f0f16282a9ee0a42be89a9aa100",
+  "pass_manifest_sha256": "877a66577cacaa999b68cf63b23f645ec8a8b9511b0906b229a58e4a70ee0dd8",
+  "entries": 267,
+  "retrieved": 263,
+  "distinct_originals": 263
+ },
+ "inputs_json_sha256": "ea160e33d489cf7388bfc32e4c3e9fb92c4f88d99d3f0619d43d424cbbe1e7e3",
+ "verified_pass_manifest_sha256": "877a66577cacaa999b68cf63b23f645ec8a8b9511b0906b229a58e4a70ee0dd8",
+ "tools_used": [
+  "python3 3.13.7 run with -I (stdlib only: json, hashlib, re, html.parser, datetime) — manifest/original hash verification, HTML-to-text, PDF text segmentation, record building, local schema/link validation (jsonschema not installed; hand-written validator tools/validate.py)",
+  "swiftc/swift 6.2.4 + macOS PDFKit/CoreGraphics (tools/pdftool.swift): per-page native text extraction, per-page image-XObject detection, PNG rendering of pages (scale 1.3; 0.45 for near-blank pages)",
+  "Claude Read tool image viewing of rendered PNGs (actual visual inspection)",
+  "shasum, grep, sed, awk, od, date (macOS system executables)",
+  "Deterministic view rule (recorded): for every issue PDF, render and view every page named in text_failure_locators plus every page whose PDFKit native text is under 200 characters or whose page resources contain an image XObject; remaining pages read as native text; per-entry viewing notes in pass-A/viewing/",
+  "Partial HTML entries: no retained/embedded images exist in the saved bytes (all external images not retained = gaps); the equivalent figures were viewed in the same issue's PDF renders"
+ ],
+ "active_minutes": 48.01,
+ "completion_row_count": 263,
+ "retrieved_entry_count": 263,
+ "counts_by_record_type": {
+  "proceeding": 197,
+  "notice": 228,
+  "opportunity": 201,
+  "update": 34,
+  "rejected_candidate": 823
+ },
+ "anomalies": [
+  "ISSUE-DATE BOUNDARY: issue 42:25 PDF cover prints 'July 25, 2026' (inside the interval) while all 104 page footers, the HTML TOC, the archive index, the RSS feed and the publication schedule give July 27, 2026 (interval end, exclusive). Per the uncertain-boundary rule all 42:25 participation notices/updates were retained as candidates (new_notice / interval_update) with a boundary review question (25 records carry the flag); if July 27 controls they are outside the scored interval or follow-up-only.",
+  "PDF vs HTML Doc. No. conflicts (PDF used as key, PDF controls): 41:25 18VAC110-20 final PDF PFR21-33 vs HTML R22-7055; 42:07 12VAC5-660 NOIRA PDF 'VA.R. Doc. No R26-05' (absent from HTML NOIRA page; 43:1 withdrawal uses R26-8488); 42:13 SWCB NOIRAs PDF R26-8565/R26-8564 with 'Filed January 1, 0001, 12:00 a.m.' vs HTML R26-8690/R26-8691; 42:15 18VAC85-50 proposal PDF R24-04 vs HTML R25-7655; 42:21 2VAC5-685 NOIRA PDF R26-18 vs HTML R26-8657; 42:22 Registrar final PDF R26-8695 vs HTML R0-8695; 43:04 18VAC125-20 proposal PDF R24-12 vs HTML R25-8045.",
+  "Notices present in PDF but missing from the HTML section views: 42:07 12VAC5-660 NOIRA; 42:09 R25-8047 Action Withdrawn; 42:16 R24-7958 Action Withdrawn; 42:23 R26-8668 NOIRA. HTML NOIRA pages duplicate some NOIRAs once per chapter (42:07 R26-8470, 42:09 R26-8526/R23-7345, 42:13 R26-8575).",
+  "Petition Doc. No. mismatches between initial notice and agency decision (linked by identical petitioner, regulation, request and 'Filed' timestamp): PFR26-03->PFR26-13, PFR26-06->PFR26-18, PFR26-09->PFR26-16, PFR26-10->PFR26-09 (collides with a different petition's number; decision linked to proceeding PFR26-10), PFR26-28->PFR26-36, PFR26-29->PFR26-35, PFR26-26->PFR26-38, PFR26-27->PFR26-39. Human crosswalk required.",
+  "Batch b03 recorded the 42:01 PFR26-03 initial notice as an outside-interval reject before its interval decision (42:08 PFR26-13) was linked; that decision update has an empty target with a specific target_unresolved_reason and before_evidence from 42:01 (append-only rule prevented revising the earlier reject).",
+  "42:09 fast-track 18VAC85-80 (R26-8314) prints 'Public Comment Deadline: January 14, 2025' (precedes issue date and effective date January 29, 2026); literal preserved, status=conflicting.",
+  "42:25 erratum correcting the 42:24 VWMB NOIRA (9VAC20-70/-81, R26-8690) prints 'VA.R. Doc. No. R26-8725' (the VHDA action); notice key uses printed number with ordinal 2; proceeding linked to R26-8690 by the explicit 42:24 VA.R 2157 citation.",
+  "42:25 VHDA erratum moved the 13VAC10-180/-181 hearing and comment deadline from October 12 to August 31 (recorded as correction; effect is shortening + hearing date change; human event mapping).",
+  "PDF native-text column interleaving in many issues (e.g. 42:02 R26-8416/R25-8304, 42:07 PFR26-12/PFR25-49, 42:12 objection notices, 42:13 R22-6862/R26-8574, 42:19 R26-8628/R26-8472 emergency, 42:22 R24-7833, 42:25 DWR 4VAC15-380/-390); titles/agencies taken from the HTML view of the same item, evidence quotes from both views; one 42:25 DWR deadline located on the item's page via the HTML literal.",
+  "Fast-track objection notices (42:12) and their later withdrawals (42:20) for 8VAC20-780/-790/-800/-850: objections recorded as event_type=unknown (conversion of fast-track to standard process with the fast-track notice serving as NOIRA), human mapping requested.",
+  "42:08 SCC 14VAC5-405 Notice of Extension of Public Comment Period was ordered (November 6, 2025) after the original October 31, 2025 deadline; recorded as extension (not reopening) of both comment and hearing-request windows; the 42:03 opening notice was kept as historical_support_only. Similarly 42:05 petition initial notices PFR26-06/-09/-10 kept as historical support for interval decisions.",
+  "Text-only errata recorded as correction updates (42:09 R24-7851 13VAC6-20; 42:24 R26-6021 12VAC5-371; 42:25 VWMB NOIRA contact address) — human review whether such updates are scored.",
+  "42:23 Board of Pharmacy Schedule I hearing notice (June 16, 2026 hearing; comments prior to June 16) was published June 29, 2026 — recorded as no_participation reject.",
+  "Scope judgments flagged for review: APA-exempt general permit regulation proposal 9VAC25-820 (R24-8010) included; DMAS VAC-chapter fast-tracks (R22-6862 12VAC30-50/-80; R26-7690 12VAC30-10) included as APA fast-tracks while DMAS State Plan general notices excluded; Board of Pharmacy § 54.1-3443 D Schedule I hearings (42:06 carry-in, 42:20) included with fallback keys; DCLS 1VAC30-41-270 fee-revision comment (42:13) included; BPOR radon petition-for-regulation evaluation (42:21) included as subtype=early_stage with two hearings; DEQ SIP/air-permit, TMDL, enforcement, permit-by-rule, DMAS program/manual/State Plan, ABC pricing, funding and report notices excluded.",
+  "Cross-check conflict: DWR aquatic/boating timeline lists the board-proposal comment period as July 7-August 5, 2026 vs Register 42:25 deadline August 17, 2026 (recorded as unresolved reject). DPOR radon page corroborates 42:21 BPOR dates (comments June 1-July 16, 2026; both hearings 10 a.m.). DWR website-only scoping period January 15-February 14, 2026 (inside interval) excluded as non-Register (declared coverage limitation).",
+  "Carry-in lag-based stop: maximum publication-to-close/hearing lag among all scanned participation notices = 99 days (42:01 NOIRAs R26-8400/R26-8401, published 2025-08-25, close December 2, 2025); threshold = 2025-12-01 - 99 days - 14-day cycle = 2025-08-10; oldest inspected issue 41:25 (2025-07-28) is older, so termination is established under the rule (issues before 41:25 were not supplied and could not be checked for longer-lag notices). Carry-ins found: 29 opportunities from issues 42:01, 42:04, 42:06, 42:07.",
+  "Follow-up horizons: no in-horizon follow-up-only events found in 42:26-43:04 (petition decisions 42:26 PFR26-38/-39, 43:01 R26-8488 withdrawal and R26-8628 erratum are linked but beyond horizon: recorded as outside_interval rejects). Unfinished horizons: VHDA 13VAC10-180/-181 if the original October 12, 2026 deadline governs (second issue after close not supplied); SCC 20VAC5-315 hearing-request window with no stated close (R26-8584).",
+  "Missing histories (targets not in supplied inputs): PFR25-15 initial notice; NOIRAs/proposals of withdrawn actions R22-6627, R22-6628, R25-8047 (cited '31:19 VA.R. 2040 May 5, 2025', internally inconsistent), R21-6661, R24-7958, R22-6261, R20-5957.",
+  "Inspection depth: every retrieved entry was processed; issue PDFs were read as native text by segmenting every page into notice units — all notice headers/participation fields, petitions, NOIRAs, periodic reviews, general notices, errata, Governor and guidance listings were read; full regulatory body text of finals/proposals was scanned by structural/keyword parsing rather than read line by line; the 88-page 42:14 guidance section was treated as one excluded unit. A navigation pre-scan of all issues' item lists was done before batch-by-batch decisions (used to plan historical-support records); batches were then decided and appended one issue at a time in issue order (41:25 ... 43:04), then indexes/RSS, then agency cross-checks, then a final proceedings batch.",
+  "Proceeding records were deferred to a final batch (b99) so their notice_ids are complete; all other records were appended per batch. created_at reflects the actual batch run time.",
+  "Completion counts are attributions computed at batch time (PDF + HTML section + TOC views that carry the item; cross-check view for the BPOR radon records); TOC attribution for update-type notices was added after batch b10, so earlier rows may under-attribute TOC views. Counts overlap across views by design.",
+  "Minutes: b00/b01/b02 were over-logged and corrected by negative correction rows in progress.jsonl (append-only); completion minutes for 41:25 and 41:26 entries remain overstated (completion minutes sum 50.61 vs progress sum 48.01).",
+  "notice_native_key 'vv:ii' uses the zero-padded manifest form (e.g. '42:08'); the Register prints '42:8'. Fallback keys (no Doc. No.) used for periodic-review notices, Board of Pharmacy Schedule I notices, the DCLS fee notice and the BPOR radon notice; each flagged for human identity review.",
+  "Partial-HTML viewing: external images not retained in 41:26-s06, 42:02-s06, 42:04-s06, 42:09-s06, 42:12-s06, 42:13-s06, 42:18-s06 (file:// local path), 42:24-s06, 43:01-s06 — gaps; inspection_mode 'both' logged because the equivalent figures were viewed in the same issue's PDF renders; LEGJDC/LEGTLE gifs and the local clip image themselves are unviewed gaps."
+ ],
+ "blocked": {
+  "blocked_inspections": [],
+  "non_retrieved_entries_gaps_no_completion_rows": [
+   {
+    "entry_id": "va-xa-deq-home",
+    "result": "inaccessible",
+    "requested_url": "https://www.deq.virginia.gov/",
+    "http_status": null
+   },
+   {
+    "entry_id": "va-xa-mrc-home",
+    "result": "inaccessible",
+    "requested_url": "https://mrc.virginia.gov/",
+    "http_status": null
+   },
+   {
+    "entry_id": "va-xa-doe-home",
+    "result": "inaccessible",
+    "requested_url": "https://www.doe.virginia.gov/",
+    "http_status": null
+   },
+   {
+    "entry_id": "va-xa-gov-webpolicy",
+    "result": "missing",
+    "requested_url": "https://www.governor.virginia.gov/web-policy/",
+    "http_status": 404
+   }
+  ],
+  "viewing_gaps": "external images referenced by partial HTML entries were not retained in the inputs and could not be viewed (listed in anomalies)",
+  "c05_freeze_dispatch_metadata": "supplied by primary and copied (brief_frozen_at 2026-10-16T19:15:02Z, dispatched_at 2026-10-16T19:16:00Z); no C05 integration blocker from this pass"
+ },
+ "cohort_counts": {
+  "notice:carry_in": 29,
+  "opportunity:carry_in": 29,
+  "notice:older_proceeding_update": 27,
+  "opportunity:older_proceeding_update": 5,
+  "update:older_proceeding_update": 23,
+  "notice:new_notice": 161,
+  "opportunity:new_notice": 167,
+  "notice:interval_update": 11,
+  "update:interval_update": 11
+ }
+}
