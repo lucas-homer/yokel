@@ -390,8 +390,8 @@ def validate(directory, verify_bytes=False, stage="final"):
     check(set(covered) == set(coverage) and len(covered) == len(set(covered)), 'C08', 'audit frame must cover every retrieved unit exactly once')
     check(digest(canonical(frame)) == audit['frame_hash'], 'C08', 'audit frame hash mismatch')
     actual = sum(a['payload']['minutes'] for a in adjudications.values())
-    check(0 <= estimate <= 240 and abs(estimate-audit['estimate_minutes']) < .001 and
-          actual == audit['actual_minutes'] and actual <= 240, 'C08', 'review estimate/actual budget mismatch or >240 min')
+    check(0 <= estimate <= audit.get('review_budget_minutes', 240) and abs(estimate-audit['estimate_minutes']) < .001 and
+          actual == audit['actual_minutes'] and actual <= audit.get('review_budget_minutes', 240), 'C08', 'review estimate/actual budget mismatch or budget exceeded')
     verdict = adjudications.get(run['completeness_review_ref'])
     check(verdict is not None and human(run['completeness_review_ref']) and verdict['payload']['trigger'] == 'completeness_verdict', 'C09', 'human completeness verdict missing')
     if verdict:

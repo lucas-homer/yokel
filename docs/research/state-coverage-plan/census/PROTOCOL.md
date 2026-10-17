@@ -216,8 +216,8 @@ A plain agreement between agents is never a human production verdict.
 
 ### Review budget and random audit
 
-The owner has **240 active minutes per state**, at most **960 minutes for WA/CT/VA/TN**,
-for adjudication plus audit. Estimate before drawing the seed: mandatory cases × minutes/case
+The per-state adjudication plus audit budget is recorded in run.json `audit.review_budget_minutes`,
+defaulting to **240 active minutes**, with owner decisions in rights/DECISIONS.md. Estimate before drawing the seed: mandatory cases × minutes/case
 (including date/role checks for ≤150 opportunities) + Σ(sample units × minutes/unit), minus
 explicit overlap only. An issue audit checks contents/page/attachment accounting; it does not
 read the issue cover to cover. Pages, filings and history slices selected for content are read
