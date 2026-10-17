@@ -92,6 +92,13 @@ that hold comes from its robots.txt, not from a default.
 21. **VA review budget raised to 660 minutes** (about 11 hours), keeping VA's full signed scope. The
     A1 estimate is 271 mandatory minutes plus 372 audit minutes.
 
+22. **MS review budget 400 minutes and WA review budget 720 minutes** (about 6.7 h and 12 h),
+    keeping each state's full signed scope. The A1 estimates are MS 270 + 101 = 371 minutes and WA
+    298 + 385 = 683 minutes. Both audits use the uncoarsened frame (level 0), because coarsening
+    raises cost there. If a costly draw overruns, PROTOCOL §5's overrun rule pauses claims until
+    the owner decides. Budgets across the four states now total about 40 h: CT 600, VA 660, MS 400
+    and WA 720 minutes.
+
 ## Correction (primary, 2026-10-15)
 
 `surfaces.json` version `2026-10-15.2` wrongly set retention to `not_authorized` on the newly allowed
