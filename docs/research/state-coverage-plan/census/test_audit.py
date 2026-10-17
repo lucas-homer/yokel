@@ -401,6 +401,111 @@ class AuditTests(unittest.TestCase):
                 self.assertEqual(run_path.read_bytes(), before)
                 self.assertFalse((directory/'reconcile/container-frames.json').exists())
 
+    def test_ms_bulletin_wire_format_and_fail_closed(self):
+        crosswalk = module('container_crosswalk')
+        row = 'Agency~False~1/1/2026~~~~Rule~Purpose~12345~00012345a.pdf~Not Found~00012345b.pdf'
+        self.assertEqual(crosswalk.ms_bulletin_rows({'d': row+'|1|0'}), [('12345', row)])
+        self.assertEqual(crosswalk.ms_bulletin_rows({'d': '|0|0'}), [])
+        for payload in ({'rows': []}, {'d': []}, {'d': row+'|2|0'},
+                        {'d': row+'|1|1'}, {'d': row+'^'+row+'|2|0'},
+                        {'d': row.replace('~12345~', '~bad~')+'|1|0'},
+                        {'d': row.replace('00012345a', '00054321a')+'|1|0'},
+                        {'d': row.replace('~Purpose', '')+'|1|0'}):
+            with self.subTest(payload=payload), self.assertRaises(ValueError):
+                crosswalk.ms_bulletin_rows(payload)
+
+    def test_ms_crosswalk_union_identity_gaps_and_full_original_fallbacks(self):
+        crosswalk = module('container_crosswalk')
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            inputs = directory/'inputs'
+            inputs.mkdir()
+            manifest = {}
+            def entry(uid, kind, fmt, data, **extra):
+                (inputs/uid).write_bytes(data)
+                manifest[uid] = {'entry_id': uid, 'kind': kind, 'format': fmt,
+                    'original_path': uid, 'source_id': 'ms-sos-bulletin-service',
+                    'retrieval': {'result': 'retrieved', 'sha256': hashlib.sha256(data).hexdigest()}, **extra}
+            def wire(number):
+                return f'Agency~False~1/1/2026~~~~Rule mentions 99999~Purpose~{number}~{int(number):08}a.pdf~Not Found~Not Found'
+            entry('ms-slice-test', 'portal_slice', 'json',
+                  json.dumps({'d': '^'.join(wire(n) for n in ('12345', '12346', '12347', '12348', '99999'))+'|5|0'}).encode())
+            entry('ms-slice-empty', 'portal_slice', 'json', b'{"d":"|0|0"}')
+            entry('ms-xchk-mdeq-regulations-page', 'index', 'html', b'<h2>Rules</h2><a>Two notices</a>')
+            for number in ('12345', '12346', '12347'):
+                entry('ms-form-'+number, 'attachment', 'scan_pdf', b'%PDF fixture')
+            def label(rid, kind, number=None, evidence=None, source='ms-sos-acproposed'):
+                return {'record_id': rid, 'entity_id': rid, 'record_type': kind, 'payload': {},
+                    'aliases': [{'source_id': source, 'native_id': number}] if number else [],
+                    'evidence': [{'manifest_entry_id': evidence}] if evidence else []}
+            a = [label('accepted', 'notice', '99999', evidence='ms-form-12345'), label('rejected', 'rejected_candidate', '12346'),
+                 label('wrong-source', 'notice', '12347', source='unrelated'),
+                 label('whole-page', 'rejected_candidate', evidence='ms-xchk-mdeq-regulations-page')]
+            b = [label('conflict', 'rejected_candidate', evidence='ms-form-12345'),
+                 label('empty', 'rejected_candidate', evidence='ms-slice-empty')]
+            for side, records in (('A', a), ('B', b)):
+                (directory/f'pass-{side}.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in records))
+            rows = crosswalk.ms_rows(directory, inputs, manifest)
+            listing = [r for r in rows if r['container_id'] == 'ms-slice-test']
+            self.assertEqual([r['accounting_status'] for r in listing],
+                             ['accounted', 'accounted', 'unaccounted', 'unaccounted', 'unaccounted'])
+            self.assertTrue(listing[0]['accept_reject_conflict'])
+            self.assertEqual(listing[0]['union_record_id'], 'accepted')
+            self.assertEqual(listing[1]['union_label_matches'][0]['disposition'], 'rejected')
+            self.assertEqual(listing[0]['source_entry_id'], 'ms-form-12345')
+            self.assertTrue(listing[2]['complete_item'])
+            self.assertFalse(listing[3]['complete_item'])
+            agency = next(r for r in rows if r['container_id'] == 'ms-xchk-mdeq-regulations-page')
+            self.assertEqual(agency['accounting_status'], 'unaccounted')
+            self.assertTrue(agency['complete_item'])
+            self.assertIn('full original', agency['source_locator'])
+            empty = next(r for r in rows if r['container_id'] == 'ms-slice-empty')
+            self.assertEqual(empty['item_kind'], 'empty_listing_verification')
+            self.assertEqual(empty['union_record_id'], 'empty')
+            self.assertTrue(empty['complete_item'])
+            self.assertNotIn('Purpose', json.dumps(rows))
+            frames = freeze.build_frames(rows, list(manifest.values()))
+            self.assertEqual(len(frames['containers']), 3)
+            (directory/'run.json').write_text(json.dumps({'state': 'MS'}))
+            (directory/'manifest.jsonl').write_text(''.join(json.dumps(e)+'\n' for e in manifest.values()))
+            (inputs/'manifest.pass.jsonl').write_text(''.join(json.dumps(e)+'\n' for e in manifest.values()))
+            self.assertEqual(crosswalk.build_rows(directory, inputs), rows)
+            entry('unknown', 'index', 'html', b'<p>Unknown format</p>')
+            with self.assertRaisesRegex(ValueError, 'unsupported MS container'):
+                crosswalk.ms_rows(directory, inputs, manifest)
+
+    def test_ms_costed_dry_run_budget_stop_without_entropy_or_writes(self):
+        directory = HOME/'MS'
+        cost_path = directory/'reconcile/audit-estimate.json'
+        cost = json.loads(cost_path.read_text())
+        paths = [directory/'run.json', directory/'reconcile/container-crosswalk.jsonl', cost_path]
+        before = {p: p.read_bytes() for p in paths}
+        frozen_outputs = {p: p.exists() for p in (directory/'reconcile/container-frames.json',
+                                                  directory/'reconcile/AUDIT-SAMPLE.md')}
+        argv = ['audit_freeze.py', str(directory), '--level', '3', '--method', 'fixed_sample_v1',
+                '--sample-total', '30', '--high-risk-share', '0.4', '--minutes-native', '2',
+                '--minutes-scan', '3', '--mandatory', '270', '--costing-file', str(cost_path),
+                '--review-budget', '10000', '--dry-run']
+        output = io.StringIO()
+        with patch.object(sys, 'argv', argv), patch.object(freeze.secrets, 'token_hex') as entropy:
+            with contextlib.redirect_stdout(output):
+                freeze.main()
+            entropy.assert_not_called()
+        scenarios = json.loads(output.getvalue())
+        for actual, expected in zip(scenarios, cost['coarsening_history']):
+            self.assertEqual(actual['audit_minutes'], expected['audit_minutes'])
+            self.assertEqual(actual['estimate_minutes'], expected['total_minutes'])
+            self.assertEqual(actual['sample'], 30)
+        argv[argv.index('--review-budget')+1] = '360'
+        with patch.object(sys, 'argv', argv), patch.object(freeze.secrets, 'token_hex') as entropy:
+            with self.assertRaisesRegex(ValueError, 'exceeds budget 360; stop/narrow'):
+                freeze.main()
+            entropy.assert_not_called()
+        self.assertEqual({p: p.read_bytes() for p in paths}, before)
+        self.assertEqual({p: p.exists() for p in frozen_outputs}, frozen_outputs)
+        self.assertFalse(json.loads(before[directory/'run.json'])['audit']['frozen_before_seed'])
+        self.assertIsNone(json.loads(before[directory/'run.json'])['audit']['seed'])
+
     def test_validator_default_budget_and_explicit_override(self):
         # Use only the synthetic example, with real C08 validation of estimate AND actual.
         original_load = validator.load

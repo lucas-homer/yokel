@@ -285,6 +285,133 @@ def generic_rows(directory, inputs, manifest, skip=()):
     return rows
 
 
+def ms_bulletin_rows(payload):
+    """SOS BulletinSearch $.d wire rows: 12 tilde fields, caret rows, |count|page.
+
+    Field 8 is the system number, fields 9–11 are attachment filenames. Never
+    search free text for numbers (titles can mention other filings). Only the
+    retained, unpaginated page-0 shape is supported; counts/caps fail closed.
+    """
+    if not isinstance(payload, dict) or set(payload) != {'d'} or not isinstance(payload['d'], str):
+        raise ValueError('unsupported MS BulletinSearch JSON envelope')
+    parts = payload['d'].rsplit('|', 2)
+    if len(parts) != 3 or not re.fullmatch(r'0|[1-9][0-9]*', parts[1]) or parts[2] != '0':
+        raise ValueError('invalid MS BulletinSearch count/page trailer')
+    body, count, _ = parts
+    raw = body.split('^') if body else []
+    if len(raw) != int(count) or int(count) >= 1000:
+        raise ValueError('MS BulletinSearch count mismatch or pagination cap reached')
+    rows, seen = [], set()
+    for text in raw:
+        fields = text.split('~')
+        if len(fields) != 12 or fields[1] not in ('True', 'False') or not fields[0].strip():
+            raise ValueError('unsupported MS BulletinSearch row fields')
+        if not re.fullmatch(r'[1-9][0-9]*', fields[8]):
+            raise ValueError('invalid MS BulletinSearch system number')
+        number = fields[8]
+        if number in seen:
+            raise ValueError('duplicate MS BulletinSearch system number')
+        seen.add(number)
+        for filename in fields[9:]:
+            if filename == 'Not Found':
+                continue
+            match = re.fullmatch(r'([0-9]{8})[a-z]\.pdf', filename)
+            if not match or int(match[1]) != int(number):
+                raise ValueError('MS BulletinSearch attachment/system number mismatch')
+        rows.append((number, text))
+    return rows
+
+
+def ms_rows(directory, inputs, manifest):
+    """MS identity crosswalk; scan forms remain independent full-read units.
+
+    For agency pages whose row/body boundaries have no verified adapter, use
+    ONE conservative whole-original span, unaccounted, requiring a full read.
+    This is not an assertion that the page has only one listing. Empty responses
+    similarly retain a document-verification span, not a fictitious filing row:
+    build_frames requires a nonempty complete-source pool for every index/slice.
+    Neither fallback licenses an abbreviated participation-only read.
+    """
+    compare = module('ms_union', HOME/'VA/reconcile/reconcile.py')
+    labels = [r for side in 'AB' for r in compare.latest(read(directory/f'pass-{side}.jsonl'))
+              if r['record_type'] in ('notice', 'rejected_candidate')]
+    by_number = collections.defaultdict(dict)
+    for label in labels:
+        numbers = {str(int(a['native_id'])) for a in label.get('aliases', [])
+                   if a['source_id'] in ('ms-sos-acproposed', 'ms-sos-bulletin-service')
+                   and re.fullmatch(r'[0-9]+', a['native_id'])}
+        anchors = {match[1] for e in label['evidence']
+                   if (match := re.fullmatch(r'ms-form-([1-9][0-9]*)', e['manifest_entry_id']))}
+        # Form anchors identify the retained source even when a handwritten
+        # accession alias is disputed. Never let such an alias cover another row.
+        # Multiple-source evidence needs one corroborated alias; otherwise leave
+        # the identity unresolved instead of fanning a label out across filings.
+        numbers = (anchors if len(anchors) == 1 else numbers & anchors) if anchors else numbers
+        if len(numbers) != 1:
+            continue
+        for number in numbers:
+            by_number[number][label['record_id']] = label
+    agency_pages = {'ms-xchk-mdeq-regulations-page', 'ms-xchk-mid-proposed-regulations-page',
+                    'ms-xchk-mdeq-wp-sitemap'}
+    rows = []
+    for mid, entry in sorted(manifest.items()):
+        if entry['kind'] not in ('issue', 'index', 'portal_slice', 'history_slice'):
+            continue
+        data = (inputs/entry['original_path']).read_bytes()
+        if entry['kind'] == 'portal_slice' and entry['format'] == 'json' and entry['source_id'] == 'ms-sos-bulletin-service':
+            try:
+                items = ms_bulletin_rows(json.loads(data))
+            except ValueError as exc:
+                raise ValueError(f'{mid}: {exc}') from exc
+        elif mid in agency_pages and entry['kind'] == 'index' and entry['format'] == 'html':
+            items = None
+            if mid.endswith('wp-sitemap'):
+                root = ET.fromstring(data)
+                if root.tag.split('}')[-1] != 'urlset' or list(root):
+                    raise ValueError(f'{mid}: unsupported nonempty MS sitemap')
+        else:
+            raise ValueError(f'{mid}: unsupported MS container; source adapter required')
+        fallback = not items
+        if fallback:
+            # Keep the whole original, including hidden HTML, in the source span.
+            items = [(None, data.decode('utf-8'))]
+        for ordinal, (number, text) in enumerate(items, 1):
+            empty = fallback and (mid not in agency_pages or mid.endswith('wp-sitemap'))
+            matches = list(by_number[number].values()) if number else []
+            if empty:
+                matches = [r for r in labels if r['record_type'] == 'rejected_candidate'
+                           and any(e['manifest_entry_id'] == mid for e in compare.evidence(r))]
+            matches.sort(key=lambda r: (r['record_type'] != 'notice', r['record_id']))
+            source = 'ms-form-'+number if number and 'ms-form-'+number in manifest else mid
+            complete = fallback or source != mid
+            fingerprint = hashlib.sha256(text.encode()).hexdigest()
+            rows.append({'container_id': mid, 'item_ordinal': ordinal,
+                'item_kind': 'empty_listing_verification' if empty else 'full_original_fallback' if fallback else 'ms_bulletin_filing_row',
+                'heading_fingerprint': fingerprint, 'native_text_fingerprint': fingerprint,
+                'item_frame_status': 'resolved', 'complete_item': complete,
+                'source_entry_id': source,
+                'source_locator': ('Read full original; verified empty listing, no filing items; document verification only'
+                    if empty else 'Read full original agency page, including every listed item, hidden section and participation passage; no verified row/body splitter'
+                    if fallback else f'Read full original linked filing form (all pages), SOS system number {number}'
+                    if complete else f'Original $.d row {ordinal}, SOS system number {number}; linked form not retained, explicit source gap'),
+                'doc_numbers': [number] if number else [], 'native_pdf_pages': None,
+                'accounting_status': 'accounted' if matches else 'unaccounted',
+                'union_record_id': matches[0]['record_id'] if matches else None,
+                'union_label_matches': [{'record_id': r['record_id'],
+                    'disposition': 'accepted' if r['record_type'] == 'notice' else 'rejected',
+                    'method': 'exact SOS system number alias or original form evidence anchor' if number else 'verified empty original and direct document rejection'} for r in matches],
+                'accept_reject_conflict': len({r['record_type'] for r in matches}) > 1,
+                'unaccounted_reason': None if matches else 'Whole original agency page requires full read; no inferred row boundaries or blanket page rejection'
+                    if fallback else 'No exact SOS system number in latest union notice/rejection aliases or form evidence.'})
+    return rows
+
+
+def wa_rows(directory, inputs, manifest, pdf_text_dir):
+    """WA has its own splitter; VA/MS code and serialized output stay unchanged."""
+    adapter = module('wa_container_rows', HOME/'WA/reconcile/container_rows.py')
+    return adapter.build(directory, inputs, manifest, pdf_text_dir or Path('/private/tmp/wa-reconcile-tools/native-text'))
+
+
 def build_rows(directory, inputs=None, pdf_text_dir=None):
     run = json.loads((directory/'run.json').read_text())
     inputs = inputs or ROOT/'.census-passes'/run['state']/'inputs'
@@ -296,6 +423,10 @@ def build_rows(directory, inputs=None, pdf_text_dir=None):
         rows = va_rows(directory, inputs, pdf_dir)
         rows.extend(generic_rows(directory, inputs, manifest, skip={r['container_id'] for r in rows}))
         return rows
+    if run['state'] == 'MS':
+        return ms_rows(directory, inputs, manifest)
+    if run['state'] == 'WA':
+        return wa_rows(directory, inputs, manifest, pdf_text_dir)
     return generic_rows(directory, inputs, manifest)
 
 
