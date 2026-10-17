@@ -1,0 +1,157 @@
+{
+  "seed": "2132cd702981767466ac79250f6890d5e8f7817fa4c3b15dc94bad222f513c1a",
+  "frame_hash": "357c8d47baa600433d108be4804bedb7cecb2cde20b8ee61e45e48347665a6ea",
+  "container_frame_hash": "5609926590be6fb150871128e0c3998b6aa1b7f6731f9ef21637ed5e9ff36fbd",
+  "frozen_at": "2026-10-17T17:50:50.410876Z",
+  "coarsening_level": 0,
+  "method": "fixed_sample_v1",
+  "review_budget_minutes": 400.0,
+  "mandatory_minutes_estimate": 270.0,
+  "estimate_minutes": 371.0,
+  "costing_sha256": "7da7aab53518a42b505efa8ed201f3e7754a382f51d538218d751736803447ac",
+  "entropy_calls_observed": 1,
+  "pre_entropy_checks_passed": true,
+  "allocation": {
+    "high_risk": 28,
+    "ordinary": 2
+  },
+  "sampled_units": 30,
+  "sampled_containers": 1,
+  "unaccounted_rows_to_review": 1,
+  "seeded_accounted_row_checks": 0,
+  "noncontainer_full_reads": 29,
+  "seeded_container_item_reads": 1,
+  "items_to_read": 30,
+  "selected_unit_ids": [
+    "ms-xchk-mdeq-regulations-page",
+    "ms-xchk-mdeq-notice-28720",
+    "ms-form-28357",
+    "ms-form-28375",
+    "ms-form-28410",
+    "ms-form-28458",
+    "ms-form-28487",
+    "ms-form-28537",
+    "ms-form-28593",
+    "ms-form-28666",
+    "ms-form-28747",
+    "ms-form-28776",
+    "ms-form-28802",
+    "ms-form-28816",
+    "ms-form-28829",
+    "ms-form-28852",
+    "ms-form-28946",
+    "ms-form-28960",
+    "ms-form-28388",
+    "ms-form-28471",
+    "ms-form-28553",
+    "ms-form-28616",
+    "ms-form-28657",
+    "ms-form-28676",
+    "ms-form-28713",
+    "ms-form-28730",
+    "ms-form-28751",
+    "ms-form-28875",
+    "ms-form-28909",
+    "ms-form-28941"
+  ],
+  "container_selections": {
+    "ms-xchk-mdeq-regulations-page": {
+      "unaccounted_row_ids": [
+        "ms-xchk-mdeq-regulations-page:1"
+      ],
+      "accounted_row_ids": [],
+      "item_id": "ms-xchk-mdeq-regulations-page:1"
+    }
+  },
+  "container_frame_file_sha256": "55da663ad988d513fe3c4424fdb4af01d770e1ff36816ea3522a6dff4925d420",
+  "input_bytes_preserved": true,
+  "no_reviews_or_adjudications_recorded": true,
+  "validation": {
+    "checks": [
+      {
+        "name": "tests",
+        "command": [
+          "python3",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "docs/research/state-coverage-plan/census",
+          "-p",
+          "test_*.py"
+        ],
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": "...........................................\n----------------------------------------------------------------------\nRan 43 tests in 0.687s\n\nOK\n"
+      },
+      {
+        "name": "CT",
+        "command": [
+          "python3",
+          "docs/research/state-coverage-plan/census/validate.py",
+          "docs/research/state-coverage-plan/census/CT",
+          "--stage",
+          "passes",
+          "--verify-bytes"
+        ],
+        "exit_code": 0,
+        "stdout": "SKIP schema validation: jsonschema not importable; cross-record checks still run.\nC03 coverage ct-uapa-agencies/noi: independent_partial; universe=83 expected=5 matched=5 mismatched=0 unresolved=0 uncovered=78\nC03 coverage ct-uapa-agencies/nod: independent_partial; universe=73 expected=3 matched=3 mismatched=0 unresolved=0 uncovered=70\nPASS cross-record checks C01\u2013C05/C10 storage; consistency only, not a completeness claim.\n",
+        "stderr": ""
+      },
+      {
+        "name": "VA",
+        "command": [
+          "python3",
+          "docs/research/state-coverage-plan/census/validate.py",
+          "docs/research/state-coverage-plan/census/VA",
+          "--stage",
+          "passes",
+          "--verify-bytes"
+        ],
+        "exit_code": 0,
+        "stdout": "SKIP schema validation: jsonschema not importable; cross-record checks still run.\nC03 coverage va-register-agencies/regulations: independent_partial; universe=58 expected=1 matched=0 mismatched=0 unresolved=1 uncovered=57\nC03 coverage va-register-agencies/general-notices: independent_partial; universe=11 expected=1 matched=1 mismatched=0 unresolved=0 uncovered=10\nPASS cross-record checks C01\u2013C05/C10 storage; consistency only, not a completeness claim.\n",
+        "stderr": ""
+      },
+      {
+        "name": "MS",
+        "command": [
+          "python3",
+          "docs/research/state-coverage-plan/census/validate.py",
+          "docs/research/state-coverage-plan/census/MS",
+          "--stage",
+          "passes",
+          "--verify-bytes"
+        ],
+        "exit_code": 0,
+        "stdout": "SKIP schema validation: jsonschema not importable; cross-record checks still run.\nC03 coverage ms-fire-personnel-board/proposal: independent_partial; universe=1 expected=1 matched=1 mismatched=0 unresolved=0 uncovered=0\nC03 coverage ms-mdeq/proposal: independent_partial; universe=6 expected=1 matched=1 mismatched=0 unresolved=0 uncovered=5\nC03 coverage ms-mid/proposal: independent_partial; universe=10 expected=2 matched=2 mismatched=0 unresolved=0 uncovered=8\nPASS cross-record checks C01\u2013C05/C10 storage; consistency only, not a completeness claim.\n",
+        "stderr": ""
+      },
+      {
+        "name": "WA",
+        "command": [
+          "python3",
+          "docs/research/state-coverage-plan/census/validate.py",
+          "docs/research/state-coverage-plan/census/WA",
+          "--stage",
+          "passes",
+          "--verify-bytes"
+        ],
+        "exit_code": 0,
+        "stdout": "SKIP schema validation: jsonschema not importable; cross-record checks still run.\nC03 coverage wa-state-agencies/cr101-preproposal: independent_partial; universe=116 expected=21 matched=11 mismatched=0 unresolved=10 uncovered=95\nC03 coverage wa-state-agencies/cr102-proposal-family: independent_partial; universe=106 expected=15 matched=4 mismatched=0 unresolved=11 uncovered=91\nC03 coverage wa-state-agencies/cr105-expedited: independent_partial; universe=13 expected=3 matched=0 mismatched=0 unresolved=3 uncovered=10\nPASS cross-record checks C01\u2013C05/C10 storage; consistency only, not a completeness claim.\n",
+        "stderr": ""
+      },
+      {
+        "name": "default examples",
+        "command": [
+          "python3",
+          "docs/research/state-coverage-plan/census/validate.py"
+        ],
+        "exit_code": 0,
+        "stdout": "SKIP schema validation: jsonschema not importable; cross-record checks still run.\nC03 coverage agency-x/rulemaking: independent_partial; universe=2 expected=1 matched=1 mismatched=0 unresolved=0 uncovered=1\nPASS cross-record checks C01\u2013C10; consistency only, not a completeness claim.\nStorage bytes not checked; real run gates require --verify-bytes.\n",
+        "stderr": ""
+      }
+    ],
+    "json_schema_validation": "skipped: jsonschema not importable; no installs authorized",
+    "frozen_plan_and_nested_selection_integrity": true
+  }
+}

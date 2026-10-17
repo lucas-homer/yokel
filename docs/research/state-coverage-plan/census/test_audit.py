@@ -503,8 +503,11 @@ class AuditTests(unittest.TestCase):
             entropy.assert_not_called()
         self.assertEqual({p: p.read_bytes() for p in paths}, before)
         self.assertEqual({p: p.exists() for p in frozen_outputs}, frozen_outputs)
-        self.assertFalse(json.loads(before[directory/'run.json'])['audit']['frozen_before_seed'])
-        self.assertIsNone(json.loads(before[directory/'run.json'])['audit']['seed'])
+        # Diagnostic dry runs also remain read-only after the owner freezes MS.
+        audit_before = json.loads(before[directory/'run.json'])['audit']
+        audit_after = json.loads((directory/'run.json').read_text())['audit']
+        self.assertEqual(audit_after['frozen_before_seed'], audit_before['frozen_before_seed'])
+        self.assertEqual(audit_after['seed'], audit_before['seed'])
 
     def test_validator_default_budget_and_explicit_override(self):
         # Use only the synthetic example, with real C08 validation of estimate AND actual.
