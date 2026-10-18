@@ -108,7 +108,11 @@ Historical type flags such as `fr_regs_date_mismatch` may remain alongside `huma
 their presence alone is not failure. Concurrent arrivals can change the overall queue count.
 
 Newer source evidence supersedes the human verdict. Since `reconcile-v2.1`, proven Regs-only
-`modifyDate` / `links.self` changes preserve it under ADR 0010; other changes still invalidate it.
+`modifyDate` / `links.self` changes preserve it (ADR 0010); since `reconcile-v2.2`, a `pin_close`
+whose date equals the portal's own Eastern close date also survives the portal flipping
+`openForComment` / `withinCommentPeriod` true->false strictly after the pinned instant (ADR 0014).
+Any other change, a flip before that instant, a flip-then-revert, or a newer FR/GovInfo observation
+still invalidates it.
 If the CLI warns that the verdict was not honored, re-read the evidence; do not repeatedly pin just to suppress resurfacing conflicts.
 Report the race or changed evidence and reassess within the user's authorized scope.
 

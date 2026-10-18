@@ -11,9 +11,12 @@
  *
  * reconcile-v2 (Slice R): the chain may also carry `human_review` observations — typed operator
  * verdicts (HumanReviewVerdict). Newer source observations invalidate the latest verdict, except for
- * proven metadata-only Regs refreshes (reconcile-v2.1, ADR 0010). The human is an INPUT to this versioned
- * rulebook, never an override around it — same chain in, same window out, exactly as deterministic as
- * every other rule.
+ * proven metadata-only Regs refreshes (reconcile-v2.1, ADR 0010) and — for an honored pin_close whose
+ * date equals the portal's own Eastern close date — the portal recording that announced close by
+ * flipping openForComment / withinCommentPeriod true->false after the pinned instant (reconcile-v2.2,
+ * ADR 0014: "the portal recording its own announced close is not new evidence"). The human is an INPUT
+ * to this versioned rulebook, never an override around it — same chain in, same window out, exactly as
+ * deterministic as every other rule.
  *
  * Determinism: `now` is injectable so tests pin every timestamp; it is used only for the engine's own
  * stamps (detected_at / change-tracking), never read off a wall clock implicitly.
@@ -33,7 +36,10 @@ import {
   type WindowStatus,
 } from "@yokel/contracts";
 import { extractFr, extractRegs } from "./extract.js";
-import { sameReviewedRegsEvidence } from "./review-evidence.js";
+import {
+  portalCloseEchoPreservesPin,
+  sameReviewedRegsEvidence,
+} from "./review-evidence.js";
 import {
   easternCalendarDate,
   frCloseDateToUtcInstant,
@@ -41,7 +47,7 @@ import {
 } from "./eastern-date.js";
 
 /** Pins the rulebook version — bump on any rule change (mirrors PARSER_VERSION in the adapters). */
-export const RECONCILER_VERSION = "reconcile-v2.1";
+export const RECONCILER_VERSION = "reconcile-v2.2";
 
 export interface ReconcileResult {
   window: ParticipationWindow;
@@ -357,12 +363,22 @@ export function reconcile(
     status = "unknown";
   }
 
-  // ── Honor-the-verdict rule (reconcile-v2.1; ADR 0010) ───────────────────────────────────────────
+  // ── Honor-the-verdict rule (reconcile-v2.1; ADR 0010 — amended by reconcile-v2.2; ADR 0014) ─────
   // Newer source evidence invalidates the latest human verdict, except Regulations.gov refreshes
   // that differ from the reviewed baseline only in modifyDate / links.self. The baseline must be
   // present in reviewed_payload_hashes; all intervening observations must qualify. Unknown changes,
   // missing evidence, parser/notice-flag changes, and newer FR/GovInfo observations invalidate it.
   // Equal fetched_at keeps the original v2 tie policy. Raw observations and audit hashes never change.
+  //
+  // v2.2 adds ONE further exception, for pin_close only (ADR 0014): when the pinned date EQUALS the
+  // Eastern calendar date of the reviewed baseline's commentEndDate, the portal flipping
+  // openForComment / withinCommentPeriod true->false strictly AFTER the pinned instant is the portal
+  // recording the close the operator already asserted — not new evidence. Seven live windows bounced
+  // back into the review queue as CLOSED conflicting items the morning after their own deadline for
+  // exactly this; the five clauses live on portalCloseEchoPreservesPin (review-evidence.ts). Clauses
+  // 1-2 (pin kind, reviewed baseline, date equality) are decided HERE because this file owns verdict
+  // parsing, the baseline search and regsCloseToUtc; clauses 3-5 (flip-only diff, after-the-instant,
+  // monotonic in deterministic order) are the pure function's.
   //
   // The overlay runs AFTER the machine rulebook so dual-fire stays computed from real machine state:
   // an honored verdict CHANGES WHAT WE ASSERT (the window fields), not what we watch. The machine's
@@ -390,13 +406,39 @@ export function reconcile(
       );
       // Every intervening observation must match, not just the latest: a material change
       // followed by a reversion must never silently revive an outdated verdict.
+      const baselineReviewed =
+        baseline !== null &&
+        v.data.reviewed_payload_hashes.includes(baseline.payload_hash);
       const stillReviewed = newerSources.every(
-        (o) =>
-          baseline !== null &&
-          v.data.reviewed_payload_hashes.includes(baseline.payload_hash) &&
-          sameReviewedRegsEvidence(baseline, o),
+        (o) => baselineReviewed && sameReviewedRegsEvidence(baseline!, o),
       );
-      if (stillReviewed) honoredVerdict = v.data;
+      if (stillReviewed) {
+        honoredVerdict = v.data;
+      } else if (
+        baselineReviewed &&
+        v.data.kind === "pin_close" &&
+        v.data.pinned_close_date !== undefined
+      ) {
+        // v2.2 clause 2: the pin must equal the PORTAL'S OWN Eastern close date — the UTC-day
+        // artifact matters here (commentEndDate 2026-10-07T03:59:59Z is Eastern 10-06, so a pin of
+        // 10-07 is NOT equal). A null/rolled-over commentEndDate predicts nothing -> no exception.
+        const baselineClose = regsCloseToUtc(
+          extractRegs(baseline!.raw).commentEndDate,
+        );
+        const portalEastern = baselineClose
+          ? easternCalendarDate(new Date(baselineClose))
+          : null;
+        if (
+          portalEastern !== null &&
+          portalEastern === v.data.pinned_close_date &&
+          portalCloseEchoPreservesPin(
+            baseline!,
+            newerSources,
+            frCloseDateToUtcInstant(v.data.pinned_close_date),
+          )
+        )
+          honoredVerdict = v.data;
+      }
     }
   }
 

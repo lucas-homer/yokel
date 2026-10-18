@@ -99,3 +99,13 @@ with the previous rule version (see that script for the command). Re-derivation 
 append-only observation log and retires resolved conflicts through the normal persistence path.
 Verify affected items with `review show` and `review queue`; do not add duplicate verdicts just
 to force a refresh. A code deployment alone does not refresh windows without new observations.
+
+Since `reconcile-v2.2` ([ADR 0014](../decisions/0014-portal-close-echo-preserves-pin.md)) a Regs
+refresh that only records the portal's own announced close (`openForComment` /
+`withinCommentPeriod` `true → false` after the pinned date, same `commentEndDate`) no longer
+resurfaces a window whose pin equals the portal's own Eastern close date. If such a window does
+resurface after its close, something other than those two flags changed and `review show` will
+show it. A pin that differs from the portal's date still resurfaces when the portal closes, by
+design: the portal closed on a date the pin did not assert. The v2.2 sweep re-derives every window
+stamped with an older version and is expected to retire the 7 echo conflicts with no version
+bumps, because the pinned instant equals the `resolved_close_utc` already stored.
