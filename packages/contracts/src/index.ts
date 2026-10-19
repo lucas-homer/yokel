@@ -254,7 +254,7 @@ export const ConflictFlag = z.enum([
   "multi_target_notice",
   "keyword_false_positive", // e.g. the BLM "land-withdrawal extension" trap
   "llm_corroborated", // PROVENANCE/honesty marker (NOT a confidence score — confidence is NEVER LLM-scored): a cross_window (chain) link the LLM adjudicator AFFIRMED for a pair that passed the structural rules (shared docket + amendment-after-original ordering + recency) but had NO deterministic identity corroboration (no shared RIN AND no explicit doc-number reference). Signals LOWER certainty than a deterministically-corroborated link; rides ALONGSIDE the link's type flag(s) (extension_chain_unresolved / correction_pending / withdrawn_vs_open / reopening), as multi_target_notice does.
-  "human_resolved", // PROVENANCE/honesty marker (the llm_corroborated pattern; NOT a confidence score): the current window derivation HONORS a human_review verdict (Slice R) — a human read the evidence and resolved it, and every consumer can see so. Rides ALONGSIDE the type flag(s) it resolves; composes with ANY confidence — in particular HIGH, since an honored pin_close derives HIGH — with NO confidence-pairing constraint (tz_normalization_only is the only flag carrying one). Newer source evidence invalidates it except proven Regs metadata refreshes (reconcile-v2.1, ADR 0010) — never sticky, never a silence path.
+  "human_resolved", // PROVENANCE/honesty marker (the llm_corroborated pattern; NOT a confidence score): the current window derivation HONORS a human_review verdict (Slice R) — a human read the evidence and resolved it, and every consumer can see so. Rides ALONGSIDE the type flag(s) it resolves; composes with ANY confidence — in particular HIGH, since an honored pin_close derives HIGH — with NO confidence-pairing constraint (tz_normalization_only is the only flag carrying one). Newer source evidence invalidates it except proven Regs metadata refreshes (reconcile-v2.1, ADR 0010) and, for a pin_close equal to the portal's own Eastern close date, the portal recording that close by flipping openForComment / withinCommentPeriod true→false after the pinned instant (reconcile-v2.2, ADR 0014) — never sticky, never a silence path.
 ]);
 export type ConflictFlag = z.infer<typeof ConflictFlag>;
 
@@ -363,8 +363,10 @@ export type HumanReviewVerdictKind = z.infer<typeof HumanReviewVerdictKind>;
  * SUPERSEDENCE INTENT — this schema is ONLY the payload shape; the rule is app-side. Newer source
  * evidence returns the window to pure derivation and disagreement RESURFACES the conflict. In
  * reconcile-v2.1, Regs refreshes differing only in modifyDate / links.self may preserve the verdict
- * when every intervening observation matches its reviewed baseline (ADR 0010). Raw audit hashes
- * remain exact; missing evidence and unknown changes invalidate review.
+ * when every intervening observation matches its reviewed baseline (ADR 0010); in reconcile-v2.2 a
+ * pin_close equal to the portal's own Eastern close date also survives the portal flipping
+ * openForComment / withinCommentPeriod true→false strictly after the pinned instant (ADR 0014).
+ * Raw audit hashes remain exact; missing evidence and unknown changes invalidate review.
  *
  * Refinements (illegal states unrepresentable):
  *   (1) kind "pin_close" REQUIRES pinned_close_date; every OTHER kind FORBIDS it — superRefine in
