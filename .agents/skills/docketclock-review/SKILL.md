@@ -94,7 +94,9 @@ extension's evidence is not automatically included: cite that notice explicitly 
 Pass every latest-per-source hash printed by `show` as `--expect <hash>` so the write refuses if
 the evidence moved between your review and the write. Leave `--reviewer` at its default (`human`):
 in this guided skill a person authorizes each verdict; `--reviewer agent` is reserved for the
-unsupervised autopilot (ADR 0015). For an `escalate`, the note must say what was searched.
+unsupervised autopilot (ADR 0015; its own skill is `docketclock-review-autopilot`). For an
+`escalate`, the note must say what was searched. `review log` lists past verdicts with their
+standing; `review log --reviewer agent --since 7d` is the autopilot's week.
 
 ```sh
 kubectl --context k3d-yokel -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts resolve <ocd-id> \

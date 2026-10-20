@@ -224,6 +224,27 @@ export interface SourceSummary {
   is_reopening: boolean;
 }
 
+/**
+ * Who this window IS, from the latest source payloads — the identifiers an investigation needs to
+ * check identity (document number, citation, dockets, RINs) and to search for extensions, without
+ * a round-trip to the FR API. Source raw only, so it is safe in blind mode. (PR-A3 smoke finding:
+ * `show --blind` used to omit everything the evidence card asks for.)
+ */
+export interface WindowIdentity {
+  fr_document_number: string | null;
+  title: string | null;
+  /** e.g. "91 FR 54096" — the FR citation an extension notice uses to name this document. */
+  citation: string | null;
+  publication_date: string | null;
+  docket_ids: string[];
+  rins: string[];
+  regs_document_id: string | null;
+  regs_docket_id: string | null;
+  regs_title: string | null;
+  /** The FR document number Regulations.gov attaches to its document — the cross-source identity check. */
+  regs_fr_doc_num: string | null;
+}
+
 export interface PriorVerdict {
   observation_id: string;
   fetched_at: string;
@@ -243,6 +264,7 @@ export interface HonoredSummary {
 
 export interface ShowResult {
   window: Record<string, unknown> | null;
+  identity: WindowIdentity;
   sources: SourceSummary[];
   priorVerdicts: PriorVerdict[];
   /** null when no verdict exists or the latest one is superseded by evidence. Always null when blind. */
@@ -302,18 +324,46 @@ export async function reviewShow(
   `;
 
   const sources: SourceSummary[] = [];
+  const identity: WindowIdentity = {
+    fr_document_number: null,
+    title: null,
+    citation: null,
+    publication_date: null,
+    docket_ids: [],
+    rins: [],
+    regs_document_id: null,
+    regs_docket_id: null,
+    regs_title: null,
+    regs_fr_doc_num: null,
+  };
+  const str = (v: unknown): string | null =>
+    typeof v === "string" && v.trim().length > 0 ? v.trim() : null;
   for (const o of latest) {
     if (o.source === "human_review") continue; // verdicts listed separately, ALL of them, below
     let close: string | null = null;
     let withdrawn: boolean | null = null;
     let open: boolean | null = null;
     if (o.source === "federal_register") {
-      close = extractFr(o.raw).commentsCloseOn;
+      const f = extractFr(o.raw);
+      close = f.commentsCloseOn;
+      const doc = (o.raw ?? {}) as Record<string, unknown>;
+      identity.fr_document_number = f.documentNumber;
+      identity.title = f.title;
+      identity.citation = str(doc.citation);
+      identity.publication_date = f.publicationDate;
+      identity.docket_ids = f.docketIds;
+      identity.rins = f.rins;
     } else if (o.source === "regulations_gov") {
       const f = extractRegs(o.raw);
       close = f.commentEndDate;
       withdrawn = f.withdrawn ?? null;
       open = f.openForComment ?? null;
+      const data = ((o.raw ?? {}) as { data?: Record<string, unknown> }).data;
+      const attrs = (data?.attributes ?? {}) as Record<string, unknown>;
+      identity.regs_document_id = str(data?.id);
+      identity.regs_docket_id = f.docketId;
+      identity.regs_title = str(attrs.title);
+      identity.regs_fr_doc_num = str(attrs.frDocNum);
     }
     sources.push({
       source: o.source,
@@ -340,6 +390,7 @@ export async function reviewShow(
     if (chain.length === 0)
       return {
         window: null,
+        identity,
         sources,
         priorVerdicts: [],
         honored: null,
@@ -351,6 +402,7 @@ export async function reviewShow(
     const derived = reconcile(chain, opts.now ?? new Date());
     return {
       window: stored ? { ...derived.window } : null,
+      identity,
       sources,
       priorVerdicts: [],
       honored: null,
@@ -411,6 +463,7 @@ export async function reviewShow(
 
   return {
     window: stored ?? null,
+    identity,
     sources,
     priorVerdicts,
     honored,
@@ -620,6 +673,294 @@ export async function resolveWindow(
     result,
     honored,
   };
+}
+
+// ── review log + shadow corpus (review autopilot PR-A3) ────────────────────────────────────────────
+
+/**
+ * Where a verdict stands TODAY against the engine's honoring rule (selectHonoredVerdict). One
+ * definition, shared with `show`/`queue`/the gauge — never a SQL approximation of freshness:
+ *   honored     — it is the window's honored verdict and derives (pin / withdrawn / reopened / dismiss)
+ *   parked      — it is the honored verdict and is an `escalate` (derives nothing; the item is parked)
+ *   superseded  — a later verdict exists on the window (latest wins), whatever that one's standing
+ *   invalidated — it is the latest verdict, but newer source evidence returned the window to machine
+ *                 derivation (the ADR 0010 / 0014 freshness rule) — for an agent verdict this is the
+ *                 signal the weekly audit reads
+ *   unparseable — the raw fails the contract (never honored; listed so nothing is hidden)
+ */
+export type VerdictStanding =
+  | "honored"
+  | "parked"
+  | "superseded"
+  | "invalidated"
+  | "unparseable";
+
+export interface LogEntry {
+  observation_id: string;
+  ocd_id: string;
+  fetched_at: string;
+  verdict: HumanReviewVerdict | { unparseable: true };
+  standing: VerdictStanding;
+}
+
+export interface LogFilter {
+  /**
+   * Decision authority. Rows without the key are `human` (the contract default) and match `human`.
+   * Every filter matches the raw's fields AS STORED (SQL-side, so `limit` means "the newest N
+   * matching"): an unparseable raw whose fields happen to match is listed, with standing
+   * `unparseable` — a malformed agent row belongs in the agent's log, never hidden from it.
+   */
+  reviewer?: HumanReviewVerdictReviewer;
+  operator?: string;
+  kind?: HumanReviewVerdictKind;
+  /** Only verdicts stamped (fetched_at) at or after this instant. */
+  since?: Date;
+  /** Newest-first cap; default 50. */
+  limit?: number;
+}
+
+export interface LogResult {
+  entries: LogEntry[];
+  /** Counts over the RETURNED entries (after filters and the limit), so a report line is honest. */
+  byKind: Record<string, number>;
+  byStanding: Record<VerdictStanding, number>;
+  /**
+   * True when more rows matched than `limit` returned. A sample drawn from `entries` is then NOT a
+   * sample of the population (the Monday audit must raise the limit, never sample a truncated list).
+   */
+  truncated: boolean;
+}
+
+/**
+ * The verdict log — every human_review observation, newest first, with its standing. This is how an
+ * operator reads what the autopilot did (`--reviewer agent --since 7d`) without opening the thread
+ * the runs post into: the DB is the ledger, the thread is the narrative. Filters are applied in SQL
+ * (so the limit means "the newest N matching"); the standing is the engine's over the full chain.
+ */
+/** `--since`: a relative window (`12h`, `7d`, `2w`) or an ISO calendar date (UTC midnight); null if invalid. */
+export function parseSince(raw: string, now: Date): Date | null {
+  const rel = /^(\d+)([hdw])$/.exec(raw);
+  if (rel) {
+    const n = Number(rel[1]);
+    const unitMs = { h: 3_600_000, d: 86_400_000, w: 7 * 86_400_000 }[
+      rel[2] as "h" | "d" | "w"
+    ];
+    // Bounded so the arithmetic can never produce an Invalid Date that reaches the query.
+    if (Number.isSafeInteger(n) && n <= 100_000) {
+      const d = new Date(now.getTime() - n * unitMs);
+      if (!Number.isNaN(d.getTime())) return d;
+    }
+    return null;
+  }
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+    const d = new Date(`${raw}T00:00:00Z`);
+    if (!Number.isNaN(d.getTime()) && d.toISOString().startsWith(raw)) return d;
+  }
+  return null;
+}
+
+export const LOG_LIMIT_MAX = 10_000;
+
+export async function reviewLog(
+  sql: Sql,
+  filter: LogFilter = {},
+): Promise<LogResult> {
+  const limit = filter.limit ?? 50;
+  if (!Number.isSafeInteger(limit) || limit <= 0 || limit > LOG_LIMIT_MAX)
+    throw new Error(
+      `reviewLog: limit must be an integer from 1 to ${LOG_LIMIT_MAX} (got ${String(filter.limit)})`,
+    );
+  for (const [k, v] of [
+    ["operator", filter.operator],
+    ["kind", filter.kind],
+    ["reviewer", filter.reviewer],
+  ] as const)
+    if (v !== undefined && v.trim().length === 0)
+      throw new Error(`reviewLog: ${k} filter must not be empty`);
+  // Fetch one more than asked: the only honest way to say "there were more".
+  const fetched = await sql<
+    { observation_id: string; ocd_id: string; fetched_at: Date; raw: unknown }[]
+  >`
+    select observation_id, ocd_id, fetched_at, raw from observations
+    where source = 'human_review'
+      ${filter.reviewer !== undefined ? sql`and coalesce(raw->>'reviewer', 'human') = ${filter.reviewer}` : sql``}
+      ${filter.operator !== undefined ? sql`and raw->>'operator' = ${filter.operator}` : sql``}
+      ${filter.kind !== undefined ? sql`and raw->>'kind' = ${filter.kind}` : sql``}
+      ${filter.since !== undefined ? sql`and fetched_at >= ${filter.since}` : sql``}
+    order by fetched_at desc, observation_id desc
+    limit ${limit + 1}
+  `;
+  const truncated = fetched.length > limit;
+  const rows = fetched.slice(0, limit);
+  // One chain read per DISTINCT window among the returned rows: the honored verdict (engine rule)
+  // and the id of the window's latest verdict row (to tell "superseded" from "invalidated").
+  const chains = new Map<
+    string,
+    { honored: HonoredVerdict | null; latestVerdictId: string | null }
+  >();
+  for (const r of rows) {
+    if (chains.has(r.ocd_id)) continue;
+    const observations = await loadObservations(sql, r.ocd_id);
+    const verdicts = observations.filter((o) => o.source === "human_review");
+    chains.set(r.ocd_id, {
+      honored: selectHonoredVerdict(observations),
+      latestVerdictId: verdicts.at(-1)?.observation_id ?? null,
+    });
+  }
+  const entries: LogEntry[] = rows.map((r) => {
+    const parsed = HumanReviewVerdict.safeParse(r.raw);
+    const chain = chains.get(r.ocd_id)!;
+    let standing: VerdictStanding;
+    if (!parsed.success) standing = "unparseable";
+    else if (chain.honored?.observation.observation_id === r.observation_id)
+      standing = parsed.data.kind === "escalate" ? "parked" : "honored";
+    else if (chain.latestVerdictId !== r.observation_id)
+      standing = "superseded";
+    else standing = "invalidated";
+    return {
+      observation_id: r.observation_id,
+      ocd_id: r.ocd_id,
+      fetched_at: r.fetched_at.toISOString(),
+      verdict: parsed.success ? parsed.data : { unparseable: true },
+      standing,
+    };
+  });
+  const byKind: Record<string, number> = {};
+  const byStanding: Record<VerdictStanding, number> = {
+    honored: 0,
+    parked: 0,
+    superseded: 0,
+    invalidated: 0,
+    unparseable: 0,
+  };
+  for (const e of entries) {
+    const k = "unparseable" in e.verdict ? "unparseable" : e.verdict.kind;
+    byKind[k] = (byKind[k] ?? 0) + 1;
+    byStanding[e.standing]++;
+  }
+  return { entries, byKind, byStanding, truncated };
+}
+
+/** One window of the shadow-gate corpus: what a blinded proposal is compared against. */
+export interface CorpusItem {
+  ocd_id: string;
+  kind: HumanReviewVerdictKind;
+  /** pin_close only — the pinned date the blinded proposal must reproduce. */
+  expected_close: string | null;
+  reviewer: HumanReviewVerdictReviewer;
+  operator: string;
+  fetched_at: string;
+}
+
+/**
+ * The shadow-gate corpus (plan "Reliability", ADR 0015 §6), computed live so it never goes stale:
+ * every window whose LATEST verdict is honored right now, grouped by what the gate expects of a
+ * blinded proposal. The harness feeds these ocd-ids to `show --blind` (honored cases are outside the
+ * live queue, so the queue cannot supply them). Part 2 (the held-out set) is the operator's sealed
+ * list of CURRENT queue items and is deliberately not derivable from the DB.
+ */
+export interface Corpus {
+  generated_at: string;
+  /** Part 1 — blinded historical agreement: proposed date must equal expected_close. */
+  pins: CorpusItem[];
+  /** Part 3 — escalation discipline: parked items must be proposed `escalate` … */
+  escalations: CorpusItem[];
+  /** … and honored withdrawals `confirm_withdrawn`. */
+  withdrawals: CorpusItem[];
+  /** Honored dismiss / reopened verdicts: outside the v1 write policy, listed so nothing is hidden; not gated. */
+  other: CorpusItem[];
+  /**
+   * Windows whose latest verdict is NOT honored: outside the gate. `invalidated` carries the verdict
+   * as written (evidence moved since); `unparseable` carries no verdict fields at all — inventing a
+   * kind or an authority for a raw the contract rejects would misdescribe the observation.
+   */
+  not_honored: (
+    | (CorpusItem & { standing: "invalidated" })
+    | { ocd_id: string; fetched_at: string; standing: "unparseable" }
+  )[];
+}
+
+export async function reviewCorpus(
+  sql: Sql,
+  now: Date = new Date(),
+): Promise<Corpus> {
+  const latest = await sql<
+    { ocd_id: string; observation_id: string; fetched_at: Date; raw: unknown }[]
+  >`
+    select distinct on (ocd_id) ocd_id, observation_id, fetched_at, raw
+    from observations
+    where source = 'human_review'
+    order by ocd_id, fetched_at desc, observation_id desc
+  `;
+  const corpus: Corpus = {
+    generated_at: now.toISOString(),
+    pins: [],
+    escalations: [],
+    withdrawals: [],
+    other: [],
+    not_honored: [],
+  };
+  for (const row of latest) {
+    const parsed = HumanReviewVerdict.safeParse(row.raw);
+    const base = (v: HumanReviewVerdict): CorpusItem => ({
+      ocd_id: row.ocd_id,
+      kind: v.kind,
+      expected_close: v.pinned_close_date ?? null,
+      reviewer: v.reviewer,
+      operator: v.operator,
+      fetched_at: row.fetched_at.toISOString(),
+    });
+    if (!parsed.success) {
+      corpus.not_honored.push({
+        ocd_id: row.ocd_id,
+        fetched_at: row.fetched_at.toISOString(),
+        standing: "unparseable",
+      });
+      continue;
+    }
+    // The honoring rule only ever honors the LATEST verdict, so "honored" here means this row.
+    const honored = selectHonoredVerdict(
+      await loadObservations(sql, row.ocd_id),
+    );
+    const item = base(parsed.data);
+    if (!honored || honored.observation.observation_id !== row.observation_id) {
+      corpus.not_honored.push({ ...item, standing: "invalidated" });
+      continue;
+    }
+    switch (parsed.data.kind) {
+      case "pin_close":
+        corpus.pins.push(item);
+        break;
+      case "escalate":
+        corpus.escalations.push(item);
+        break;
+      case "confirm_withdrawn":
+        corpus.withdrawals.push(item);
+        break;
+      default:
+        corpus.other.push(item);
+    }
+  }
+  return corpus;
+}
+
+/**
+ * The PROPOSER's view of the corpus: a flat list of the gated ids, ordered by the sha256 of each id —
+ * deterministic across runs, but carrying no grouping, no expectation and no verdict kind. A proposer
+ * that saw `pins` / `escalations` / `expected_close` could not be blinded afterwards by `show --blind`
+ * (review round 1, P1). Not-honored windows are excluded: they are not gated. The SCORER reads the
+ * full corpus only after the proposals are sealed in the ledger.
+ */
+export function corpusBlindIds(corpus: Corpus): string[] {
+  const key = (id: string) => createHash("sha256").update(id).digest("hex");
+  return [
+    ...corpus.pins,
+    ...corpus.escalations,
+    ...corpus.withdrawals,
+    ...corpus.other,
+  ]
+    .map((i) => i.ocd_id)
+    .sort((a, b) => (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0)); // code-point order, locale-free
 }
 
 /** Re-exported for callers that reason about honoring without the DB (tests, the autopilot). */

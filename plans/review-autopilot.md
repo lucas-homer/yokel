@@ -1,7 +1,8 @@
 # Review Autopilot — an agent works the human review queue; humans get only the irreducible tail
 
-> Status: **PROPOSED** (2026-10-16; revised the same day after a cross-provider review by Codex
-> GPT-6 Astra, whose ten findings are folded in below). Nothing here is built or scheduled.
+> Status: **IN PROGRESS** (proposed 2026-10-16; revised the same day after a cross-provider review
+> by Codex GPT-6 Astra, whose ten findings are folded in below). PR-A1 and PR-A2 are merged and
+> deployed; PR-A3 is in review; nothing is scheduled and no agent verdict has been written.
 > Follows Slice R (`plans/review-resolve.md`, shipped) and ADR 0010. Every number below is a
 > measurement from a live read of the k3d cluster on 2026-10-16 19:10Z, not an estimate.
 > Target: local k3d, no new platform services, no new RAM. The agent runs **outside** the cluster
@@ -128,13 +129,13 @@ stops calling the first "ground truth".
 
 The autopilot may write, per run, at most **10** verdicts and only these, evaluated in this order:
 
-| kind                | allowed when                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | never when                                                                                                                                         |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `escalate`          | **first**: a full search (FR notice, GovInfo edition, Regs document and docket list, extension/correction/reopening search by document number, docket, RIN, title) leaves any material discrepancy unexplained; the verifier disagrees with the primary; the deadline the evidence establishes carries a time that is not 11:59 p.m. ET (the pin convention cannot represent it); or the correct verdict is one this policy forbids. The note must say what was searched.                                                                                              | as a way to clear an alert or skip work                                                                                                            |
-| `pin_close`         | **only if escalation does not apply**: a primary document (FR notice/extension/correction, GovInfo edition, or the Regs document's own published text) **explicitly states** the operative comment deadline for **this exact notice** (identity checked by document number/RIN, not by cluster membership), the evidence **explains** the competing value (e.g. the other date is a petition/reply/meeting date, or an extension notice moved it), the note cites URL + verbatim DATES text, and the independent verifier returns the same date from the evidence card | the only support is portal metadata (`commentEndDate`, `openForComment`), a search snippet, a sibling notice's result, or inference from a pattern |
-| `confirm_withdrawn` | live Regulations.gov shows **this** document withdrawn (identity checked; the #112 identity-split class), cited in the note                                                                                                                                                                                                                                                                                                                                                                                                                                            | —                                                                                                                                                  |
-| `confirm_reopened`  | **not permitted** in v1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | —                                                                                                                                                  |
-| `dismiss_conflict`  | **not permitted** in v1 (dismissal can conceal a real disagreement and never establishes a close)                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | —                                                                                                                                                  |
+| kind                | allowed when                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | never when                                                                                                                                         |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `escalate`          | **first**: a full search (FR notice, GovInfo edition, Regs document and docket list, extension/correction/reopening search by document number, docket, RIN, title) leaves any material discrepancy unexplained; the verifier disagrees with the primary; the deadline the evidence establishes carries a time that is not 11:59 p.m. ET (the pin convention cannot represent it); or the correct verdict is one this policy forbids. The note must say what was searched.                                                                                                                                                                                                                                                                                                                                                                                                                                                            | as a way to clear an alert or skip work                                                                                                            |
+| `pin_close`         | **only if escalation does not apply**: a primary document (FR notice/extension/correction, GovInfo edition, or the Regs document's own published text) **explicitly states** the operative comment deadline for **this exact notice** (identity checked by document number, by an FR citation verified against the FR API record, or by docket id together with title and publication date — a RIN alone is insufficient, siblings share them; never by cluster membership). Since v1.1 (2026-10-20) a primary document also includes an agency-authored document in the notice's own Regulations.gov docket that explicitly extends the period, with the note saying so, the evidence **explains** the competing value (e.g. the other date is a petition/reply/meeting date, or an extension notice moved it), the note cites URL + verbatim DATES text, and the independent verifier returns the same date from the evidence card | the only support is portal metadata (`commentEndDate`, `openForComment`), a search snippet, a sibling notice's result, or inference from a pattern |
+| `confirm_withdrawn` | live Regulations.gov shows **this** document withdrawn (identity checked; the #112 identity-split class), cited in the note                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | —                                                                                                                                                  |
+| `confirm_reopened`  | **not permitted** in v1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | —                                                                                                                                                  |
+| `dismiss_conflict`  | **not permitted** in v1 (dismissal can conceal a real disagreement and never establishes a close)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | —                                                                                                                                                  |
 
 Order of work: open windows closing soonest first, then closed windows oldest-conflict first (the
 rot alert is anchored on the oldest live conflict). Before every write: refresh `show` and pass
@@ -144,8 +145,9 @@ queue membership, and record the verification in the run report.
 ## Scheduling and trigger
 
 - **Trigger: T3 Code scheduler, `fixed_time` 07:00 local, every day**, bound to a dedicated
-  "Review autopilot" thread (not an interactive one), provider `claudeAgent`. The run reads the
-  queue first and exits in one message when it is empty. Arrivals run ~2–6/day with bursts;
+  "Review autopilot" thread (not an interactive one), provider `claudeAgent`. The run does the
+  Monday audit first (where applicable), then reads the queue and exits in one message when it is
+  empty. Arrivals run ~2–6/day with bursts;
   closing-soonest items get a day of latency at worst, well inside the 7-day rot threshold. An
   event trigger (poller → webhook → T3) is possible later via `{type:'webhook'}` but needs T3
   Connect; daily is enough to validate the loop.
@@ -248,11 +250,12 @@ deploy + sweep, `review queue` shows the 7 gone and `review show` shows `human_r
 
 ### PR-A2 — ADR 0015 + contract 0.11.0 + reconciler + CLI: `escalate`, `reviewer`, `agent_resolved`, `--expect`
 
-Status 2026-10-19: implemented on branch `t3/review-escalate-provenance` (ADR 0015, contract
-0.11.0, `reconcile-v2.3`, CLI flags, `escalated` gauge series + `review-queue-escalated` rule);
-deploy, sweep and the live #127 round-trip pending merge. One deliberate reading recorded in the
-ADR: the 0014 echo exception is not extended to `escalate`, so the portal's own close flip un-parks
-an open escalated item once.
+Status 2026-10-19: merged (#133) and deployed the same evening; the v2.3 sweep re-stamped 7,896
+windows with 0 derivation changes, as predicted; the live round-trip escalated CDC `2026-15983`
+(reviewer human, `--expect` both hashes) — parked, queue 35 with 1 parked, gauge `escalated=1`,
+rule `review-queue-escalated` fired through ntfy after exactly the 1h hold. One deliberate reading
+recorded in the ADR: the 0014 echo exception is not extended to `escalate`, so the portal's own
+close flip un-parks an open escalated item once. The other two #127 items are not escalated yet.
 
 ADR 0015 (agent authority) first. Contract-keeper: `HumanReviewVerdictKind += escalate` (date
 forbidden — the existing pin⇔date refinement already covers it; note + hashes required),
@@ -275,6 +278,41 @@ item; the gauge visible in Prometheus and the alert fires/resolves through the d
 
 ### PR-A3 — the autopilot skill, the scheduled task, shadow mode
 
+Status 2026-10-20: implemented on branch `t3/review-autopilot-shadow`: the skill (policy, run
+procedure, evidence card, verifier hand-off, note and report formats, weekly audit, mode switch,
+harness), the scheduled task's prompt kept verbatim in the skill directory, the runbook's
+"Autopilot" section with the gate record table, and two read-only CLI additions this slice needs:
+`review log` (the verdict ledger with each verdict's standing: honored / parked / superseded /
+invalidated / unparseable — how an operator reads the agent's work) and `review corpus` (the
+shadow-gate corpus computed live from honored verdicts, so the harness never goes stale). The CLI
+additions mean the poller image is redeployed through the app's usual path; no cluster or chart
+change. The scheduled task is created after merge, from a dedicated "Review autopilot" thread.
+Cross-provider review round 1 (Codex GPT-6 Astra, high, 2026-10-20): 10 findings, all folded in —
+the harness is now blind by construction (`corpus --blind` ids-only for fresh proposer children; the
+scorer reads expectations only after proposals are sealed); part 3 names a required set (the three
+#127 cases and the two withdrawals; an empty live category never passes by vacancy); the Monday
+audit runs before the empty-queue exit and is done by a fresh networked Claude child that sees only
+ids; `log` reports truncation and the audit must never sample a truncated list; shadow `escalate`
+proposals are re-investigated weekly and skip-reuse is scoped by policy version; the runtime
+examples are full commands (zsh does not word-split `$R`); the scheduled prompt pages a failed
+checkout update inline and continues; `--since`/`--limit` are bounded argument-side; an unparseable
+corpus row carries no invented kind or authority; plus a spawned CLI argument-validation test.
+Shadow smoke run (Claude Opus 5.5, high, 2026-10-20, three items, outcomes withheld, no writes,
+no pages): one `pin_close` agreeing with the human precedent via an FR extension found only by
+full-text search, two `escalate`; 18 skill findings folded in (full commands; a fictitious ledger
+example; identity rule widened to verified citations and docket+title+date, RIN alone
+insufficient; "material", "primary document", time-of-day and extension-vs-reopening defined;
+search mechanics and keyless source access prescribed, Regulations.gov via the Playwright browser,
+`.playwright-mcp/` gitignored; `show` prints an identity line and labels each close field; the
+ledger gains `note`, `section` and a defined `verifier` for non-pins; child dispatch via
+`orchestrator_capabilities` with a timeout rule; a hash refresh before every ledger line; a report
+variant for harness runs). **Policy v1.1 (operator-ratified 2026-10-20):** an agency-authored
+document posted in the notice's own Regulations.gov docket that explicitly extends the comment
+period (an "FDMS posting memo — no FR request") is a primary document; a pin on it must say the
+extension is not published in the FR and cite the docket document. The smoke run had escalated the
+EPA construction-general-permit extension to 2026-09-17 — which a person pinned in September —
+under the stricter v1 reading; the precedent and the policy now agree.
+
 `.agents/skills/docketclock-review-autopilot/SKILL.md` (the existing guided skill stays for
 interactive use and is referenced, not duplicated): the write policy above, the run procedure,
 the evidence-card format, the verifier hand-off, the report format, the parked-item weekly
@@ -285,7 +323,8 @@ section (how to pause, how to read a report, how to supersede an agent verdict).
 chart changes.
 
 **Verify:** shadow gate parts 1–3 met and recorded in the runbook; only then flip the prompt to
-`write`.
+`write`. The gate record lives in the runbook ("Shadow gate — what must be true before write
+mode"); the held-out set is sealed host-side before any proposal is read.
 
 ### PR-A4 — attributable post-close monitoring
 
@@ -339,6 +378,13 @@ to that verdict and fires the new rule in the drill folder; `validate-argocd-app
   evidence gates, freshness rule and verification attribution) was not yet strong enough to let
   the agent write verdicts unsupervised. This was a judgment about the design, not about tooling
   or permissions. Round 2 pending the direction decision.
+- **2026-10-20 (operator):** policy v1.1 ratified — docket-only agency extension documents are
+  primary evidence for a pin, with a note requirement. Policy version string `v1.1@2026-10-20`.
+- **2026-10-20 (PR-A3 reviews):** the pin row's identity clause above was amended to match the
+  executed policy (a RIN alone is insufficient — the SBA size-standards pair shares one); the
+  harness was made blind by construction (orchestrator / proposer / scorer in separate contexts;
+  held-out set excludes the required-set ids); the write-mode flip carries an explicit
+  `AUTOPILOT_GATE` token because the agent cannot read the runbook during a run.
 - **2026-10-17 (operator):** go-ahead for PR-A1. Two policy recommendations ratified: CMS
   desk-officer rule-resolved windows derive MEDIUM, HIGH only when a human or the agent read the
   notice; multi-stage comment periods use the initial deadline as the operative close in v1, with
