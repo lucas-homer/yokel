@@ -737,11 +737,46 @@ export interface LogResult {
  * the runs post into: the DB is the ledger, the thread is the narrative. Filters are applied in SQL
  * (so the limit means "the newest N matching"); the standing is the engine's over the full chain.
  */
+/** `--since`: a relative window (`12h`, `7d`, `2w`) or an ISO calendar date (UTC midnight); null if invalid. */
+export function parseSince(raw: string, now: Date): Date | null {
+  const rel = /^(\d+)([hdw])$/.exec(raw);
+  if (rel) {
+    const n = Number(rel[1]);
+    const unitMs = { h: 3_600_000, d: 86_400_000, w: 7 * 86_400_000 }[
+      rel[2] as "h" | "d" | "w"
+    ];
+    // Bounded so the arithmetic can never produce an Invalid Date that reaches the query.
+    if (Number.isSafeInteger(n) && n <= 100_000) {
+      const d = new Date(now.getTime() - n * unitMs);
+      if (!Number.isNaN(d.getTime())) return d;
+    }
+    return null;
+  }
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+    const d = new Date(`${raw}T00:00:00Z`);
+    if (!Number.isNaN(d.getTime()) && d.toISOString().startsWith(raw)) return d;
+  }
+  return null;
+}
+
+export const LOG_LIMIT_MAX = 10_000;
+
 export async function reviewLog(
   sql: Sql,
   filter: LogFilter = {},
 ): Promise<LogResult> {
   const limit = filter.limit ?? 50;
+  if (!Number.isSafeInteger(limit) || limit <= 0 || limit > LOG_LIMIT_MAX)
+    throw new Error(
+      `reviewLog: limit must be an integer from 1 to ${LOG_LIMIT_MAX} (got ${String(filter.limit)})`,
+    );
+  for (const [k, v] of [
+    ["operator", filter.operator],
+    ["kind", filter.kind],
+    ["reviewer", filter.reviewer],
+  ] as const)
+    if (v !== undefined && v.trim().length === 0)
+      throw new Error(`reviewLog: ${k} filter must not be empty`);
   // Fetch one more than asked: the only honest way to say "there were more".
   const fetched = await sql<
     { observation_id: string; ocd_id: string; fetched_at: Date; raw: unknown }[]
@@ -925,7 +960,7 @@ export function corpusBlindIds(corpus: Corpus): string[] {
     ...corpus.other,
   ]
     .map((i) => i.ocd_id)
-    .sort((a, b) => key(a).localeCompare(key(b)));
+    .sort((a, b) => (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0)); // code-point order, locale-free
 }
 
 /** Re-exported for callers that reason about honoring without the DB (tests, the autopilot). */

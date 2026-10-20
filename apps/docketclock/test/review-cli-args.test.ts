@@ -88,6 +88,11 @@ const cases: {
     expect: /--limit must be an integer from 1 to 10000/,
   },
   {
+    name: "log --operator '' → specific message",
+    args: ["log", "--operator", ""],
+    expect: /--operator must not be empty/,
+  },
+  {
     name: "log --reviewer bot → specific message",
     args: ["log", "--reviewer", "bot"],
     expect: /--reviewer must be one of human \| agent/,

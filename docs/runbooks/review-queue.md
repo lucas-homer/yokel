@@ -34,7 +34,9 @@ honoring rule: `honored`, `parked` (an honored `escalate`), `superseded` (a late
 `invalidated` (the latest verdict, but newer evidence returned the window to machine derivation) or
 `unparseable`; `--limit` caps the newest N and the output says so when more matched. `corpus` is the
 shadow-gate harness input (below): `--blind` prints only the ids, flat and sha256-ordered — the
-proposer's view; everything else (`expected_close`, the grouping) is the scorer's.
+proposer's view; everything else (`expected_close`, the grouping) is the scorer's. `log`, `corpus`
+and the `show` identity line exist in-cluster only once the poller image built from PR-A3 is
+rolled; until then the pod's CLI prints usage for them.
 
 `--reviewer` says who **decided** (default `human`; `agent` only for an unsupervised autopilot write,
 [ADR 0015](../decisions/0015-agent-review-authority.md)); `--operator` says who executed the write.
@@ -119,8 +121,9 @@ The review autopilot (`plans/review-autopilot.md`, [ADR 0015](../decisions/0015-
 is a T3 Code scheduled task that runs the
 [`docketclock-review-autopilot`](../../.agents/skills/docketclock-review-autopilot/SKILL.md) skill
 daily at 07:00 local in a dedicated "Review autopilot" thread (provider `claudeAgent`, model
-`claude-opus-5-5`, effort `high`; the thread lives in its own worktree on `main`, which each run
-fast-forwards first). It is an operator like any other: it uses only this CLI through
+`claude-opus-5-5`, effort `high`; the thread lives in its own worktree on branch
+`t3/review-autopilot`, created from `main`, never committed to, and fast-forwarded to `origin/main`
+by each run). It is an operator like any other: it uses only this CLI through
 `kubectl exec`, writes nothing the CLI would refuse, and has a phone-pageable owner. Its decisions
 are bound by the plan's **write policy v1**: `escalate` first; `pin_close` only on a primary
 document that states the deadline for that exact notice, explains the competing value, and that an
@@ -133,7 +136,9 @@ check; never `dismiss_conflict` or `confirm_reopened`; at most 10 decisions per 
 carries `AUTOPILOT_MODE=shadow|write`. In **shadow** it investigates and decides exactly as write
 mode would but writes nothing and pages nobody except for tooling failures; its decisions are
 _proposals_ in the host-side ledger `~/.config/yokel/review-autopilot/ledger.jsonl` and in the
-run report. **Write** mode may be set only after the gate record below is complete.
+run report. **Write** mode may be set only after the gate record below is complete, and the prompt
+must then also carry `AUTOPILOT_GATE=met:<date>` — the agent cannot read this runbook during a run,
+so that token is how it knows the gate was recorded; `write` without it runs as shadow and pages.
 
 **Pause / resume / kill.** From any T3 thread in this project: `list_scheduled_tasks` →
 `update_scheduled_task enabled=false` (instant; resume with `enabled=true`), or
@@ -149,12 +154,13 @@ kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/revie
 ```
 
 `honored` means the verdict still governs the window; `invalidated` means newer evidence overrode
-it — the signal the Monday audit and PR-A4's attributable monitoring read. Shadow proposals are only
-in `ledger.jsonl` (one JSON line per decision: run, mode, policy version, harness id, hashes,
-proposal, verifier, evidence, reason). The Monday audit is done by a fresh networked Claude child
-that sees only ids (never the verdicts), so the agent never grades its own homework; it covers a
-random 5 of the week's honored agent verdicts, every parked item, and in shadow mode every shadow
-escalation of the week.
+it — the Monday audit reports those as is, and PR-A4's attributable monitoring grades them. Shadow
+proposals are only in `ledger.jsonl` (one JSON line per decision: run, mode, policy version,
+harness id, ocd_id, hashes, proposal, verifier, evidence, note, written, observation_id, reason).
+The Monday audit's re-reads are done by a fresh networked Claude child that sees only ids (never
+the verdicts), so the agent never grades its own homework; it covers 5 of the week's honored agent
+verdicts (chosen by hash order, not by the agent), every parked item (a human-parked item is only
+reported, never re-decided), and in shadow mode every shadow escalation of the week.
 
 **Superseding an agent verdict.** Write a human verdict; the latest wins and the window stamps
 `human_resolved` instead of `agent_resolved`:
@@ -174,18 +180,24 @@ Three parts, measured on `show --blind` (prior verdicts hidden), each recorded h
 the run id and the tally. Write mode may be enabled only when all three are recorded as met.
 
 **Blind by construction.** Parts 1 and 3 are run on request (ask the "Review autopilot" thread to
-"run the shadow harness"), never by the daily schedule, and in two roles that are never the same
-context: fresh _proposer_ children get only the ids from `review corpus --blind` (flat,
-sha256-ordered, no grouping, no expectation) and seal one ledger line per id; the thread then
-_scores_ from `review corpus --json` and the required set below. A proposer that had seen
-`expected_close` or the `pins` / `escalations` grouping could not be blinded afterwards.
+"run the shadow harness"), never by the daily schedule, and in three separate contexts: the thread
+only orchestrates and never reads an expectation (it is also the daily part 2 proposer); fresh
+_proposer_ children get only the ids from `review corpus --blind` (flat, sha256-ordered, no
+grouping, no expectation) and seal one line per id in their own `harness-<run id>/` files; a fresh
+_scorer_ child then reads `review corpus --json`, the required set below and those files, and
+returns the tallies. Anything that had seen `expected_close`, the `pins` / `escalations` grouping
+or this table could not be blinded afterwards.
 
 1. **Blinded historical agreement** — `review corpus` part 1: every honored `pin_close`. The
-   proposer's blind proposal must equal the pinned date on ≥ 95 % of them, with every disagreement
+   proposer's blind proposal must equal the pinned date on ≥ 95 % of them (the denominator is every
+   human-reviewer pin; a missing or skipped proposal counts against), with every disagreement
    explained. Measures agreement with human-authorized precedent, not truth: a floor, not the gate.
-   Run without the verifier (it measures the proposer, not the pipeline).
+   Run without the verifier (it measures the proposer, not the pipeline). Agent-reviewer pins, once
+   write mode has produced some, are excluded: they are the autopilot's own output.
 2. **Held-out independent set** — 10 current queue items the operator reviews **before** seeing
-   any proposal. Protocol: pick the ids from `review queue`; write your verdict for each (`kind`,
+   any proposal. Protocol: pick the ids from `review queue`, excluding the five ids of the required
+   set below (the thread never sees their expectations, but they are gate items, not independent
+   ones); write your verdict for each (`kind`,
    `close` for a pin, one line of reasoning) to `~/.config/yokel/review-autopilot/held-out-<date>.json`
    _before_ reading the thread or the ledger; let the daily shadow runs propose (full pipeline,
    verifier included); compare. Agreement on kind ≥ 9/10; **any false pin** (the agent pins where
@@ -206,8 +218,9 @@ _scores_ from `review corpus --json` and the required set below. A proposer that
    | `ocd-participation-window/federal/2026-15740` | `confirm_withdrawn` | #112 shadow-withdrawn, confirmed 2026-09-03  |
 
    The two un-parked #127 items are in the live queue, so `corpus --blind` does not list them: the
-   scorer adds them to the proposer batches explicitly. Escalating them by hand (so the gauge and
-   the alert see all three) is a separate, worthwhile step; it does not change this set.
+   scorer reports them as "not proposed" and the operator asks for a second harness pass with those
+   ids supplied explicitly to a fresh proposer. Escalating them by hand (so the gauge and the alert
+   see all three) is a separate, worthwhile step; it does not change this set.
 
 | part                             | date | run id | result | met? |
 | -------------------------------- | ---- | ------ | ------ | ---- |
@@ -215,8 +228,11 @@ _scores_ from `review corpus --json` and the required set below. A proposer that
 | 2 — held-out independent set     |      |        |        |      |
 | 3 — escalation discipline        |      |        |        |      |
 
-Flipping to write: update `scheduled-prompt.md` and the task's prompt (`update_scheduled_task`)
-to `AUTOPILOT_MODE=write` in the same change, and note the date in this table's caption.
+Flipping to write: fill the table, then update `scheduled-prompt.md` and the task's prompt
+(`update_scheduled_task`) to `AUTOPILOT_MODE=write` plus `AUTOPILOT_GATE=met:<date>` in the same
+change, and note that date below this table.
+
+Gate flipped to write on: _not yet_.
 
 ## Supersedence — what "honored" means
 

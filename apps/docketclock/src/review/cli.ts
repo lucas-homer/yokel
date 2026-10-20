@@ -62,6 +62,7 @@ const {
   reviewLog,
   reviewCorpus,
   corpusBlindIds,
+  parseSince,
 } = await import("./core.js");
 
 const KINDS = [
@@ -131,23 +132,9 @@ let logArgs: {
 } | null = null;
 let corpusArgs: { blind: boolean; json: boolean } | null = null;
 
-/** `--since`: a relative window (`12h`, `7d`, `2w`) or an ISO calendar date (UTC midnight). */
-function parseSince(raw: string, now: Date): Date {
-  const rel = /^(\d+)([hdw])$/.exec(raw);
-  if (rel) {
-    const n = Number(rel[1]);
-    const unitMs = { h: 3_600_000, d: 86_400_000, w: 7 * 86_400_000 }[
-      rel[2] as "h" | "d" | "w"
-    ];
-    // Bounded so the arithmetic can never produce an Invalid Date that reaches the query.
-    if (Number.isSafeInteger(n) && n <= 100_000) {
-      const d = new Date(now.getTime() - n * unitMs);
-      if (!Number.isNaN(d.getTime())) return d;
-    }
-  } else if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
-    const d = new Date(`${raw}T00:00:00Z`);
-    if (!Number.isNaN(d.getTime()) && d.toISOString().startsWith(raw)) return d;
-  }
+function sinceOrExit(raw: string): Date {
+  const d = parseSince(raw, new Date());
+  if (d) return d;
   console.error(
     `review log: --since takes <N>h | <N>d | <N>w (N ≤ 100000) or a valid YYYY-MM-DD (got "${raw}")`,
   );
@@ -242,6 +229,10 @@ try {
       );
       process.exit(2);
     }
+    if (values.operator !== undefined && values.operator.trim().length === 0) {
+      console.error("review log: --operator must not be empty");
+      process.exit(2);
+    }
     let limit: number | undefined;
     if (values.limit !== undefined) {
       limit = /^\d+$/.test(values.limit) ? Number(values.limit) : NaN;
@@ -257,7 +248,7 @@ try {
       ...(values.operator !== undefined ? { operator: values.operator } : {}),
       ...(kind !== undefined ? { kind } : {}),
       ...(values.since !== undefined
-        ? { since: parseSince(values.since, new Date()) }
+        ? { since: sinceOrExit(values.since) }
         : {}),
       ...(limit !== undefined ? { limit } : {}),
       json: values.json === true,
@@ -330,7 +321,7 @@ try {
       `  close: ${String(w.resolved_close_display ?? "(none)")} (utc: ${String(w.resolved_close_utc ?? "null")})`,
     );
     console.log(
-      `  conflicts: ${s.liveConflicts} live / ${s.retiredConflicts} retired; chain links: ${s.blind ? "(hidden in blind mode)" : String(s.chainLinks.length)}`,
+      `  conflicts: ${s.liveConflicts} live / ${s.blind ? "(retired: hidden in blind mode)" : `${s.retiredConflicts} retired`}; chain links: ${s.blind ? "(hidden in blind mode)" : String(s.chainLinks.length)}`,
     );
     const id = s.identity;
     console.log(
@@ -402,7 +393,7 @@ try {
         const note =
           "unparseable" in e.verdict
             ? ""
-            : `\n    note: ${e.verdict.note.length > 160 ? `${e.verdict.note.slice(0, 157)}…` : e.verdict.note}`;
+            : `\n    note: ${(e.verdict.note.length > 160 ? `${e.verdict.note.slice(0, 157)}…` : e.verdict.note).replace(/\r?\n/g, "\n          ")}`;
         console.log(
           `  ${e.fetched_at}  ${e.ocd_id}\n    ${body} — ${e.standing.toUpperCase()}${note}`,
         );
@@ -470,7 +461,7 @@ try {
         console.log(
           i.standing === "unparseable"
             ? `    ${i.ocd_id}  (latest verdict ${i.fetched_at.slice(0, 10)})  unparseable raw`
-            : `${line(i)}  ${i.kind} ${i.standing}`,
+            : `    ${i.ocd_id}  ${i.kind}${i.expected_close ? ` ${i.expected_close}` : ""} by ${i.operator} (${i.reviewer}, ${i.fetched_at.slice(0, 10)})  ${i.standing} — nothing expected`,
         );
     }
   } else {

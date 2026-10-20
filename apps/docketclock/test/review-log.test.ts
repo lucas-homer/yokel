@@ -29,6 +29,7 @@ import { ingestObservation } from "../src/ingest/observe.js";
 import { reconcileOcdId } from "../src/reconcile/persist.js";
 import {
   corpusBlindIds,
+  parseSince,
   resolveWindow,
   reviewCorpus,
   reviewLog,
@@ -42,6 +43,15 @@ function assert(name: string, cond: boolean, detail = "") {
     `  ${cond ? "PASS" : "FAIL"}  ${name}${detail ? ` — ${detail}` : ""}`,
   );
   if (!cond) failures++;
+}
+async function rejects(name: string, op: () => unknown, re: RegExp) {
+  try {
+    await op();
+    assert(name, false, "did not throw");
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    assert(name, re.test(msg), msg);
+  }
 }
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -62,6 +72,8 @@ const OCD_C = OCD("2025-77777"); // escalated by a human — parked
 const OCD_D = OCD("2025-88888"); // human pin, then a newer FR observation — invalidated
 const OCD_E = OCD("2025-66666"); // confirmed withdrawn by a human — honored, LOW
 const OCD_F = OCD("2025-44444"); // latest verdict row is an UNPARSEABLE raw (inserted below the typed gate)
+const OCD_G = OCD("2025-33333"); // human dismiss_conflict — honored, the corpus's `other` group
+const OCD_H = OCD("2025-22222"); // a human pin, then an unparseable AGENT-keyed row on top (superseded by garbage)
 
 const T0 = new Date("2026-09-02T00:00:00Z");
 const T1 = new Date("2026-09-03T00:00:00Z"); // legacy pin on A
@@ -71,6 +83,8 @@ const T3b = new Date("2026-09-06T01:00:00Z"); // pin on D
 const T4 = new Date("2026-09-07T00:00:00Z"); // newer FR on D
 const T5 = new Date("2026-09-08T00:00:00Z"); // withdrawal on E
 const T6 = new Date("2026-09-09T00:00:00Z"); // unparseable row on F
+const T7 = new Date("2026-09-10T00:00:00Z"); // dismiss on G
+const T8 = new Date("2026-09-11T00:00:00Z"); // pin on H, then its unparseable agent row at T8 + 1h
 
 /** Seed one window: FR says `frClose`, Regs says `regsEnd` (UTC instant). */
 async function seed(docNum: string, frClose: string, regsEnd: string) {
@@ -112,6 +126,8 @@ try {
   await seed("2025-88888", "2026-09-10", "2026-09-13T03:59:59Z"); // conflicting
   await seed("2025-66666", "2026-09-10", "2026-09-13T03:59:59Z"); // conflicting, then withdrawn
   await seed("2025-44444", "2026-09-10", "2026-09-13T03:59:59Z"); // conflicting, then an unparseable row
+  await seed("2025-33333", "2026-09-10", "2026-09-13T03:59:59Z"); // conflicting, then dismissed
+  await seed("2025-22222", "2026-09-10", "2026-09-13T03:59:59Z"); // conflicting, pin, then garbage
 
   // A legacy-shaped verdict (pre-0.11.0: no `reviewer` key) written straight through ingest, the way
   // the 2026-09 Codex pins exist in the real log. The contract default makes it `human`.
@@ -221,9 +237,81 @@ try {
        ${sql.json({ kind: "pin_close", note: "no date, no operator" })})
   `;
   await reconcileOcdId(sql, OCD_F, T6);
+  // A human dismiss on G — honored, outside the v1 policy, the corpus's `other` group.
+  const dis = await resolveWindow(
+    sql,
+    {
+      ocdId: OCD_G,
+      kind: "dismiss_conflict",
+      note: "noise: the portal date is a known sentinel",
+      operator: "lucas",
+      expect: await latestHashes(OCD_G),
+    },
+    T7,
+  );
+  assert("setup: dismiss honored", dis.honored);
+  // A human pin on H, then an unparseable row that CLAIMS reviewer=agent: the pin is superseded
+  // (latest wins, whatever the latest one's standing) and the garbage belongs in the agent's log.
+  const pinH = await resolveWindow(
+    sql,
+    {
+      ocdId: OCD_H,
+      kind: "pin_close",
+      close: "2026-09-12",
+      note: "pin that garbage will supersede",
+      operator: "lucas",
+      expect: await latestHashes(OCD_H),
+    },
+    T8,
+  );
+  assert("setup: pin on H honored at write", pinH.honored);
+  const T8b = new Date(T8.getTime() + 3_600_000);
+  await sql`
+    insert into observations
+      (ocd_id, source, fr_document_number, regs_document_id, regs_object_id, payload_hash,
+       fetched_at, parser_version, raw_dates_text, is_extension, is_correction, is_withdrawal,
+       is_reopening, raw)
+    values
+      (${OCD_H}, 'human_review', null, null, null,
+       ${"e".repeat(64)}, ${T8b.toISOString()}, 'human-review-v1', null, false, false, false, false,
+       ${sql.json({ kind: "pin_close", reviewer: "agent", operator: "autopilot", note: "no date" })})
+  `;
+  await reconcileOcdId(sql, OCD_H, T8b);
 
   // ── SHOW identity (smoke finding 8): what the evidence card needs, from source raw, blind-safe ────
   {
+    // An enriched FR raw: citation, publication_date and RINs present (the fixture lacks them).
+    const OCD_I = OCD("2025-11111");
+    await ingestObservation(sql, {
+      ...parseFrObservation({
+        ...frFixture,
+        document_number: "2025-11111",
+        comments_close_on: "2026-09-15",
+        citation: "91 FR 54096",
+        publication_date: "2026-08-20",
+        regulation_id_numbers: ["3245-AI67", " "],
+      }),
+      fetched_at: "2026-09-01T00:00:00.000Z",
+    });
+    await reconcileOcdId(sql, OCD_I, T0);
+    const rich = await reviewShow(sql, OCD_I, { blind: true });
+    assert(
+      "SHOW identity: citation, publication date and RINs come through when present (blank RIN dropped); no Regs → nulls",
+      rich.identity.citation === "91 FR 54096" &&
+        rich.identity.publication_date === "2026-08-20" &&
+        rich.identity.rins.join(",") === "3245-AI67" &&
+        rich.identity.regs_document_id === null &&
+        rich.identity.regs_title === null,
+      JSON.stringify(rich.identity),
+    );
+    const plainA = await reviewShow(sql, OCD_A);
+    assert(
+      "SHOW identity: regs_title comes from the Regs attributes",
+      (plainA.identity.regs_title ?? "").startsWith(
+        "Intent to Designate as Abandoned",
+      ),
+      String(plainA.identity.regs_title),
+    );
     const plain = await reviewShow(sql, OCD_A);
     const blind = await reviewShow(sql, OCD_A, { blind: true });
     const idOk = (i: typeof plain.identity) =>
@@ -250,23 +338,28 @@ try {
   // ── LOG: everything, newest first, with standing ──────────────────────────────────────────────────
   const all = await reviewLog(sql);
   assert(
-    "LOG: six verdicts, newest first, not truncated",
-    all.entries.length === 6 &&
+    "LOG: nine verdicts, newest first, not truncated",
+    all.entries.length === 9 &&
       !all.truncated &&
       all.entries.map((e) => e.ocd_id).join(",") ===
-        [OCD_F, OCD_E, OCD_D, OCD_C, OCD_A, OCD_A].join(","),
+        [OCD_H, OCD_H, OCD_G, OCD_F, OCD_E, OCD_D, OCD_C, OCD_A, OCD_A].join(
+          ",",
+        ),
     all.entries.map((e) => `${e.ocd_id}@${e.fetched_at}`).join(" "),
   );
   assert(
-    "LOG: the unparseable row is listed as UNPARSEABLE with no verdict fields",
-    all.entries[0]!.ocd_id === OCD_F &&
-      all.entries[0]!.standing === "unparseable" &&
-      "unparseable" in all.entries[0]!.verdict,
-    JSON.stringify(all.entries[0]),
+    "LOG: an unparseable latest row is UNPARSEABLE with no verdict fields; the parseable pin under it is SUPERSEDED (latest wins, whatever its standing)",
+    all.entries[0]!.standing === "unparseable" &&
+      "unparseable" in all.entries[0]!.verdict &&
+      all.entries[1]!.ocd_id === OCD_H &&
+      all.entries[1]!.standing === "superseded",
+    JSON.stringify(all.entries.slice(0, 2)),
   );
   assert(
-    "LOG: the withdrawal on E is HONORED",
-    all.entries[1]!.ocd_id === OCD_E && all.entries[1]!.standing === "honored",
+    "LOG: the dismiss on G is HONORED; the withdrawal on E is HONORED",
+    all.entries[2]!.standing === "honored" &&
+      all.entries[4]!.ocd_id === OCD_E &&
+      all.entries[4]!.standing === "honored",
   );
   const standing = (ocdId: string, operator: string) =>
     all.entries.find(
@@ -306,33 +399,36 @@ try {
   );
   assert(
     "LOG: counts by kind and standing cover the returned entries",
-    all.byKind["pin_close"] === 3 &&
+    all.byKind["pin_close"] === 4 &&
       all.byKind["escalate"] === 1 &&
       all.byKind["confirm_withdrawn"] === 1 &&
-      all.byKind["unparseable"] === 1 &&
-      all.byStanding.honored === 2 &&
-      all.byStanding.superseded === 1 &&
+      all.byKind["dismiss_conflict"] === 1 &&
+      all.byKind["unparseable"] === 2 &&
+      all.byStanding.honored === 3 &&
+      all.byStanding.superseded === 2 &&
       all.byStanding.parked === 1 &&
       all.byStanding.invalidated === 1 &&
-      all.byStanding.unparseable === 1,
+      all.byStanding.unparseable === 2,
     JSON.stringify({ k: all.byKind, s: all.byStanding }),
   );
 
   // ── LOG: filters (applied in SQL — the limit means "the newest N matching") ───────────────────────
   const agent = await reviewLog(sql, { reviewer: "agent" });
   assert(
-    "LOG --reviewer agent: exactly the agent pin",
-    agent.entries.length === 1 &&
-      agent.entries[0]!.ocd_id === OCD_A &&
-      agent.entries[0]!.standing === "honored",
-    JSON.stringify(agent.entries.map((e) => e.ocd_id)),
+    "LOG --reviewer agent: the agent pin AND the unparseable agent-keyed row (a malformed agent row is never hidden from the agent's log)",
+    agent.entries.length === 2 &&
+      agent.entries[0]!.ocd_id === OCD_H &&
+      agent.entries[0]!.standing === "unparseable" &&
+      agent.entries[1]!.ocd_id === OCD_A &&
+      agent.entries[1]!.standing === "honored",
+    JSON.stringify(agent.entries.map((e) => [e.ocd_id, e.standing])),
   );
   // Filters match the raw's fields AS STORED: the unparseable row on F has no reviewer key, so it
   // reads as `human` like any legacy row, and is listed with standing UNPARSEABLE — nothing hidden.
   const human = await reviewLog(sql, { reviewer: "human" });
   assert(
-    "LOG --reviewer human: the four human verdicts PLUS the unparseable key-less row, INCLUDING the legacy row without a reviewer key",
-    human.entries.length === 5 &&
+    "LOG --reviewer human: the six human verdicts PLUS the unparseable key-less row, INCLUDING the legacy row without a reviewer key",
+    human.entries.length === 7 &&
       human.entries.some(
         (e) => e.ocd_id === OCD_F && e.standing === "unparseable",
       ) &&
@@ -354,7 +450,7 @@ try {
   const since = await reviewLog(sql, { since: T2 });
   assert(
     "LOG --since T2: excludes the T1 legacy pin, keeps the rest (inclusive at T2)",
-    since.entries.length === 5 &&
+    since.entries.length === 8 &&
       !since.entries.some(
         (e) => !("unparseable" in e.verdict) && e.verdict.operator === "codex",
       ),
@@ -362,9 +458,9 @@ try {
   );
   const one = await reviewLog(sql, { limit: 1 });
   assert(
-    "LOG --limit 1: the single newest verdict (the row on F), flagged TRUNCATED",
+    "LOG --limit 1: the single newest row (the garbage on H), flagged TRUNCATED",
     one.entries.length === 1 &&
-      one.entries[0]!.ocd_id === OCD_F &&
+      one.entries[0]!.ocd_id === OCD_H &&
       one.truncated,
   );
   const combo = await reviewLog(sql, {
@@ -373,17 +469,39 @@ try {
     limit: 1,
   });
   assert(
-    "LOG combined filters: newest human-keyed row since T2 is the unparseable one on F; truncated (4 more match)",
+    "LOG combined filters: newest human-keyed row since T2 is the pin on H; truncated",
     combo.entries.length === 1 &&
-      combo.entries[0]!.ocd_id === OCD_F &&
-      combo.byStanding.unparseable === 1 &&
+      combo.entries[0]!.ocd_id === OCD_H &&
+      combo.byStanding.superseded === 1 &&
       combo.truncated,
     JSON.stringify(combo.entries.map((e) => e.ocd_id)),
   );
-  const exact = await reviewLog(sql, { reviewer: "human", limit: 5 });
+  const exact = await reviewLog(sql, { reviewer: "human", limit: 7 });
   assert(
     "LOG limit equal to the matching population is NOT truncated",
-    exact.entries.length === 5 && !exact.truncated,
+    exact.entries.length === 7 && !exact.truncated,
+  );
+  await rejects(
+    "LOG: a programmatic limit outside 1..10000 is refused by the core, not just the CLI",
+    () => reviewLog(sql, { limit: 0 }),
+    /limit must be an integer from 1 to 10000/,
+  );
+  await rejects(
+    "LOG: an empty operator filter is refused (it could never match and would read as 'no filter')",
+    () => reviewLog(sql, { operator: "  " }),
+    /operator filter must not be empty/,
+  );
+  const NOW = new Date("2026-10-20T12:00:00Z");
+  assert(
+    "parseSince: 7d / 2w / 12h are relative to now; YYYY-MM-DD is UTC midnight; junk and rollovers are null",
+    parseSince("7d", NOW)?.toISOString() === "2026-10-13T12:00:00.000Z" &&
+      parseSince("2w", NOW)?.toISOString() === "2026-10-06T12:00:00.000Z" &&
+      parseSince("12h", NOW)?.toISOString() === "2026-10-20T00:00:00.000Z" &&
+      parseSince("2026-10-01", NOW)?.toISOString() ===
+        "2026-10-01T00:00:00.000Z" &&
+      parseSince("2026-02-30", NOW) === null &&
+      parseSince("yesterday", NOW) === null &&
+      parseSince("999999999999999999h", NOW) === null,
   );
   const none = await reviewLog(sql, { operator: "nobody" });
   assert(
@@ -414,14 +532,18 @@ try {
       corpus.withdrawals.length === 1 &&
       corpus.withdrawals[0]!.ocd_id === OCD_E &&
       corpus.withdrawals[0]!.kind === "confirm_withdrawn" &&
-      corpus.other.length === 0,
+      corpus.other.length === 1 &&
+      corpus.other[0]!.ocd_id === OCD_G &&
+      corpus.other[0]!.kind === "dismiss_conflict",
     JSON.stringify({ e: corpus.escalations, w: corpus.withdrawals }),
   );
   const invalidated = corpus.not_honored.find((i) => i.ocd_id === OCD_D);
   const unparseable = corpus.not_honored.find((i) => i.ocd_id === OCD_F);
   assert(
-    "CORPUS: the invalidated pin on D is listed as NOT gated, with its standing and verdict",
-    corpus.not_honored.length === 2 &&
+    "CORPUS: the invalidated pin on D is listed as NOT gated, with its standing and verdict; H (garbage latest) is unparseable too",
+    corpus.not_honored.length === 3 &&
+      corpus.not_honored.find((i) => i.ocd_id === OCD_H)?.standing ===
+        "unparseable" &&
       invalidated?.standing === "invalidated" &&
       invalidated.kind === "pin_close" &&
       invalidated.expected_close === "2026-09-12",
@@ -445,8 +567,8 @@ try {
   assert(
     "CORPUS: a never-reviewed window appears nowhere; each reviewed window appears exactly once",
     !everywhere.includes(OCD_B) &&
-      everywhere.length === 5 &&
-      new Set(everywhere).size === 5,
+      everywhere.length === 7 &&
+      new Set(everywhere).size === 7,
     JSON.stringify(everywhere),
   );
 
@@ -454,16 +576,16 @@ try {
   const blind = corpusBlindIds(corpus);
   const sha = (id: string) => createHash("sha256").update(id).digest("hex");
   assert(
-    "BLIND IDS: exactly the gated windows (A, C, E) — not-honored D and F excluded, never-reviewed B absent",
-    blind.length === 3 &&
-      new Set(blind).size === 3 &&
-      [OCD_A, OCD_C, OCD_E].every((id) => blind.includes(id)),
+    "BLIND IDS: exactly the gated windows (A, C, E, and G from `other`) — not-honored D, F, H excluded, never-reviewed B absent",
+    blind.length === 4 &&
+      new Set(blind).size === 4 &&
+      [OCD_A, OCD_C, OCD_E, OCD_G].every((id) => blind.includes(id)),
     JSON.stringify(blind),
   );
   assert(
     "BLIND IDS: ordered by sha256(id) — deterministic, and unrelated to the grouping",
     blind.join(",") ===
-      [...blind].sort((a, b) => sha(a).localeCompare(sha(b))).join(","),
+      [...blind].sort((a, b) => (sha(a) < sha(b) ? -1 : 1)).join(","),
     JSON.stringify(blind),
   );
   assert(
