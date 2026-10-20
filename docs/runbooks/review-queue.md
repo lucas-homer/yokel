@@ -20,10 +20,15 @@ In-cluster, zero setup (the poller image ships `src/` and `DATABASE_URL`):
 
 ```sh
 kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts queue
-kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts show <ocd-id>
+kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts show <ocd-id> [--blind]
 kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts resolve <ocd-id> \
-  --kind pin_close --close 2026-09-20 --note "why, in one honest sentence" --operator lucas
+  --kind pin_close --close 2026-09-20 --note "why, in one honest sentence" --operator lucas \
+  [--reviewer human|agent] [--expect <sha256> --expect <sha256> …]
 ```
+
+`--reviewer` says who **decided** (default `human`; `agent` only for an unsupervised autopilot write,
+[ADR 0015](../decisions/0015-agent-review-authority.md)); `--operator` says who executed the write.
+`--expect` binds the write to the evidence you assessed (below). `--blind` is the shadow-gate view.
 
 Host-side (port-forward the pg primary pod-direct, `docketclock-pg-app` creds):
 
@@ -51,6 +56,46 @@ DATABASE_URL=… pnpm --filter @yokel/docketclock review queue
 | `confirm_withdrawn` | the notice is withdrawn (machine can't see it — e.g. the #112 identity split) | status `withdrawn`, LOW with the historical close (never push-eligible)                                                                 |
 | `confirm_reopened`  | the window is open again                                                      | status `open`; close/confidence stay machine-derived (conflicting degrades LOW)                                                         |
 | `dismiss_conflict`  | the detected disagreement is noise                                            | **LOW** with the machine's carried close — dismissal adds no corroboration and never picks a winner; if you know the close, `pin_close` |
+| `escalate`          | primary sources examined; the discrepancy cannot be resolved from documents   | **nothing** — the window keeps its machine derivation and its live conflict; the item is _parked_ (see below) until a human decides     |
+
+## Escalation — parking the irreducible cases
+
+Some items (issue #127: an explicit published date, an explicit different portal cutoff, and no
+document that explains the difference) should be neither pinned (that publishes HIGH on a disputed
+date) nor dismissed (a real disagreement is not noise). `--kind escalate` records exactly that, with
+a `--note` saying **what was searched** (FR notice, GovInfo edition, Regs document and docket list,
+extension/correction/reopening search by document number, docket, RIN and title).
+
+An escalation asserts nothing: the reconciler derives byte-for-byte what it would without it, the
+window stays `conflicting`, the ConflictRecord stays live and the rot alert keeps ageing it — by
+design, that is the standing reminder. What changes is visibility: `review queue` marks the row
+`[escalated by <operator> (<reviewer>) <date>]` and counts parked items in its header, `review show`
+reports `honored verdict: escalate … PARKED`, the autopilot skips parked items, the
+`docketclock_review_queue_depth{reason="escalated"}` gauge counts them, and the
+`review-queue-escalated` alert nags daily until none are left.
+
+A parked item is honored for freshness like any verdict: a metadata-only Regs refresh keeps it
+parked; a newer FR/GovInfo observation, a substantive Regs change, or the portal flipping to closed
+after its own date un-parks it (the ADR 0014 echo exception is `pin_close`-only), after which it is
+an ordinary queue member again. To resolve a parked item, write a real verdict with `review resolve`
+— the latest verdict wins; a second `escalate` re-parks it.
+
+## Provenance — who decided
+
+Every verdict carries `reviewer` (`human` | `agent`, default `human`) and `operator`. The 2026-09
+Codex pins are `reviewer=human, operator=codex`: a person authorized each one. While honored, a
+verdict stamps exactly one provenance flag on the window — `human_resolved` or `agent_resolved` —
+alongside the machine's type flags, so every consumer can see which authority resolved it. An
+`escalate` stamps neither.
+
+## Evidence binding — `--expect`
+
+`review show` prints the latest-per-source payload hashes. Passing each of them as `--expect` makes
+the write refuse — in one transaction, writing nothing — unless the live set is exactly that set,
+both before and after the insert. The refusal names which assessed hashes are no longer latest and
+which latest hashes were never assessed; re-run `show` and reassess. Automation always passes
+`--expect`; a human may omit it and binds to whatever is live at write time (`reviewed_payload_hashes`
+is filled either way).
 
 ## Supersedence — what "honored" means
 
@@ -72,6 +117,8 @@ retain the original tie policy. Practical consequences:
 - A second verdict supersedes the first (latest wins); corrections accrete, nothing is edited.
 - `resolve` prints the re-derived window — if it warns "verdict NOT honored", a source observation
   may have invalidated it, or the verdict could not be parsed; inspect the evidence before re-issuing.
+  The check is the engine's own honoring rule (`selectHonoredVerdict`), not the presence of a flag,
+  so it is right for `escalate` too; `show` prints the same decision as `honored verdict:`.
 - Evidence is recorded automatically: `reviewed_payload_hashes` is filled from the latest per-source
   observations at write time.
 
@@ -109,3 +156,8 @@ show it. A pin that differs from the portal's date still resurfaces when the por
 design: the portal closed on a date the pin did not assert. The v2.2 sweep re-derives every window
 stamped with an older version and is expected to retire the 7 echo conflicts with no version
 bumps, because the pinned instant equals the `resolved_close_utc` already stored.
+
+`reconcile-v2.3` ([ADR 0015](../decisions/0015-agent-review-authority.md)) adds the `escalate`
+kind and the `reviewer`-driven provenance flag. No existing row derives differently (no escalate or
+agent verdicts exist before it ships), so its sweep is expected to re-stamp every window and change
+nothing; run it anyway so the stamps are honest.

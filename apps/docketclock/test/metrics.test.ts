@@ -368,7 +368,7 @@ function agg(
 // that mapped null to 0 would still satisfy the DB test while silently arming the alert on nothing.
 {
   recordReviewQueue({
-    byReason: { conflicting: 55, stale: 0 },
+    byReason: { conflicting: 55, stale: 0, escalated: 3 },
     oldestAgeSeconds: 1234.5,
   });
   const s = await snap();
@@ -378,14 +378,22 @@ function agg(
       55 && val(s, "docketclock_review_queue_depth", { reason: "stale" }) === 0,
   );
   assert(
+    "recordReviewQueue: the escalated (parked) subset is its own series — the review-queue-escalated alert's input (PR-A2)",
+    val(s, "docketclock_review_queue_depth", { reason: "escalated" }) === 3,
+  );
+  assert(
     "recordReviewQueue: rot age published as the real number",
     val(s, "docketclock_review_queue_oldest_age_seconds") === 1234.5,
   );
   recordReviewQueue({
-    byReason: { conflicting: 0, stale: 0 },
+    byReason: { conflicting: 0, stale: 0, escalated: 0 },
     oldestAgeSeconds: null,
   });
   const s2 = await snap();
+  assert(
+    "recordReviewQueue(empty): escalated publishes an explicit 0 (the alert resolves; the series never goes stale)",
+    val(s2, "docketclock_review_queue_depth", { reason: "escalated" }) === 0,
+  );
   const emptyAge = val(s2, "docketclock_review_queue_oldest_age_seconds");
   assert(
     "recordReviewQueue(empty): rot age exports NaN, NEVER 0 (0 would defeat the anti-misfire guarantee)",

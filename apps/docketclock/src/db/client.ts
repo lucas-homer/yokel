@@ -6,6 +6,13 @@
 import postgres from "postgres";
 
 export type Sql = postgres.Sql;
+/**
+ * A query handle that is EITHER the pool client or a transaction-scoped `tx` from `sql.begin`.
+ * postgres.js types the two as siblings (both extend its ISql), so a function that must run inside a
+ * caller's transaction takes this instead of `Sql`. It can run tagged queries, `.json()` and the
+ * identifier helper; it cannot `.begin()` or `.end()` — exactly the point.
+ */
+export type SqlHandle = postgres.Sql | postgres.TransactionSql;
 
 /** Resolve the connection string or fail loudly — a silent default would mask a misconfig in-cluster. */
 export function databaseUrl(): string {

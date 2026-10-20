@@ -8,7 +8,7 @@
  * (observations_regs_doc_idx). The insert and its observation_targets fan-out (M:N: one notice -> many
  * windows) happen in ONE transaction.
  */
-import type { Sql } from "../db/client.js";
+import type { Sql, SqlHandle } from "../db/client.js";
 import {
   ObservationCandidateSchema,
   type ObservationCandidate,
@@ -26,9 +26,25 @@ export interface IngestResult {
  *
  * The dedupe lookup keys on (source, <document-key>) ordered by fetched_at desc, exactly the shape the
  * per-source latest-first index serves (observations_fr_doc_idx / observations_regs_doc_idx).
+ *
+ * Runs the whole unit (dedupe read + insert + target) in ONE transaction of its own. A caller that
+ * already holds a transaction (the review CLI's evidence-bound write, PR-A2) uses
+ * ingestObservationWithin on its `tx` instead — postgres.js's `begin` on a transaction-scoped handle
+ * would open a SECOND transaction on another pooled connection, not a nested one.
  */
 export async function ingestObservation(
   sql: Sql,
+  candidate: ObservationCandidate,
+): Promise<IngestResult> {
+  return sql.begin((tx) => ingestObservationWithin(tx, candidate));
+}
+
+/**
+ * The ingest unit on a caller-supplied transaction handle. Same statements, same dedupe rule, same
+ * typed-raw gate; atomicity is the caller's transaction (which ingestObservation supplies by default).
+ */
+export async function ingestObservationWithin(
+  tx: SqlHandle,
   candidate: ObservationCandidate,
 ): Promise<IngestResult> {
   const ocdId = candidate.ocd_id;
@@ -70,11 +86,11 @@ export async function ingestObservation(
         ? candidate.ocd_id
         : candidate.fr_document_number;
   if (dedupeValue) {
-    const [latest] = await sql<{ payload_hash: string }[]>`
+    const [latest] = await tx<{ payload_hash: string }[]>`
       select payload_hash
       from observations
       where source = ${candidate.source}
-        and ${sql(dedupeColumn)} = ${dedupeValue}
+        and ${tx(dedupeColumn)} = ${dedupeValue}
       order by fetched_at desc
       limit 1
     `;
@@ -83,33 +99,30 @@ export async function ingestObservation(
     }
   }
 
-  // Insert the row and its primary target atomically — a row without its target would be a
-  // half-written observation the M:N fan-out can't see.
-  const observationId = await sql.begin(async (tx) => {
-    const [row] = await tx<{ observation_id: string }[]>`
-      insert into observations
-        (ocd_id, source, fr_document_number, regs_document_id, regs_object_id,
-         payload_hash, fetched_at, parser_version, raw_dates_text,
-         is_extension, is_correction, is_withdrawal, is_reopening, raw)
-      values
-        (${candidate.ocd_id}, ${candidate.source}, ${candidate.fr_document_number},
-         ${candidate.regs_document_id}, ${candidate.regs_object_id},
-         ${candidate.payload_hash}, ${candidate.fetched_at}, ${candidate.parser_version},
-         ${candidate.raw_dates_text}, ${candidate.is_extension}, ${candidate.is_correction},
-         ${candidate.is_withdrawal}, ${candidate.is_reopening}, ${tx.json(candidate.raw as never)})
-      returning observation_id
-    `;
-    const id = row!.observation_id;
+  // Insert the row and its primary target atomically (the caller's transaction) — a row without its
+  // target would be a half-written observation the M:N fan-out can't see.
+  const [row] = await tx<{ observation_id: string }[]>`
+    insert into observations
+      (ocd_id, source, fr_document_number, regs_document_id, regs_object_id,
+       payload_hash, fetched_at, parser_version, raw_dates_text,
+       is_extension, is_correction, is_withdrawal, is_reopening, raw)
+    values
+      (${candidate.ocd_id}, ${candidate.source}, ${candidate.fr_document_number},
+       ${candidate.regs_document_id}, ${candidate.regs_object_id},
+       ${candidate.payload_hash}, ${candidate.fetched_at}, ${candidate.parser_version},
+       ${candidate.raw_dates_text}, ${candidate.is_extension}, ${candidate.is_correction},
+       ${candidate.is_withdrawal}, ${candidate.is_reopening}, ${tx.json(candidate.raw as never)})
+    returning observation_id
+  `;
+  const observationId = row!.observation_id;
 
-    // Primary target: the derived window this observation feeds. (Multi-target fan-out for an
-    // extension that touches N dockets — EPA 2025-02910 — is the reconciler's job to add later.)
-    await tx`
-      insert into observation_targets (observation_id, ocd_id)
-      values (${id}, ${candidate.ocd_id})
-      on conflict do nothing
-    `;
-    return id;
-  });
+  // Primary target: the derived window this observation feeds. (Multi-target fan-out for an
+  // extension that touches N dockets — EPA 2025-02910 — is the reconciler's job to add later.)
+  await tx`
+    insert into observation_targets (observation_id, ocd_id)
+    values (${observationId}, ${candidate.ocd_id})
+    on conflict do nothing
+  `;
 
   return { inserted: true, observationId, ocdId };
 }

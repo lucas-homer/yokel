@@ -3,7 +3,7 @@
  * (Watershed Watch). Verticals join on stable OCD-IDs, never internal UUIDs.
  *
  * ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
- * │ FROZEN @ 0.10.0 (2026-09-02)                                                                   │
+ * │ FROZEN @ 0.11.0 (2026-10-19)                                                                   │
  * │                                                                                               │
  * │ LOCKED (builders may propose changes; the contract-keeper adjudicates — nobody else edits):   │
  * │   • Confidence / ConflictFlag / WindowType / WindowStatus enums.                              │
@@ -32,6 +32,13 @@
  * │       zod-3 omit/pick cannot inherit a superRefine; derived schemas re-apply it. The              │
  * │       supersedence rule (including the metadata exception, ADR 0010) is app-side in             │
  * │       reconcile-v2.1 — the contract carries only the payload shape. [2026-09-23]                  │
+ * │   • agent provenance + escalation (ADR 0015; plans/review-autopilot.md PR-A2):                    │
+ * │       HumanReviewVerdictKind += "escalate" (the one kind that asserts NOTHING — derivation is     │
+ * │       byte-for-byte unchanged, the conflict stays live; it parks the item visibly for a human);   │
+ * │       HumanReviewVerdict.reviewer "human" | "agent" (the DECISION authority, default "human" so   │
+ * │       every pre-0.11.0 row parses unchanged; `operator` stays the executor); ConflictFlag +=      │
+ * │       "agent_resolved" (the human_resolved pattern, stamped when the honored verdict's reviewer   │
+ * │       is "agent"). Honoring/supersedence stays app-side (reconcile-v2.3). [2026-10-19]            │
  * │   • REST response envelope: DISCLAIMER + API_VERSION constants, EnvelopeMeta, Pagination, and  │
  * │       the apiItemEnvelope / apiListEnvelope factories (the single source for response shape so  │
  * │       the published OpenAPI and actual responses can never diverge).                            │
@@ -70,6 +77,27 @@
  * └─────────────────────────────────────────────────────────────────────────────────────────────┘
  *
  * REVISIONS
+ *   • 0.11.0 (2026-10-19) — agent authority over review verdicts (ADR 0015; plans/review-autopilot.md,
+ *       PR-A2). Three ADDITIVE changes; nothing reordered, renamed or removed; every pre-0.11.0 row
+ *       parses to the same output plus `reviewer: "human"`. (1) HumanReviewVerdictKind += "escalate"
+ *       (5th member): "primary sources examined (hashes recorded); the discrepancy cannot be resolved
+ *       from documents; a human decision or agency clarification is needed". It is the ONE kind that
+ *       asserts nothing about the window: the reconciler derives byte-for-byte what it would derive
+ *       without the verdict (the window stays conflicting, the ConflictRecord stays live — suppression
+ *       is never silence), stamps NO provenance flag and does not list the verdict in
+ *       current_observation_ids. It is honored only for FRESHNESS — parked until invalidating evidence
+ *       arrives under the same v2.1 rule as every non-pin kind — and surfaced by the review CLI
+ *       (`queue` / `show`) and the escalations-pending alert. pinned_close_date is forbidden exactly as
+ *       for every other non-pin kind (the existing superRefine covers it); note and
+ *       reviewed_payload_hashes stay required. (2) HumanReviewVerdict.reviewer —
+ *       HumanReviewVerdictReviewer "human" | "agent", .default("human"): the DECISION AUTHORITY, as
+ *       distinct from `operator` (the executor). The 49 legacy codex pins (2026-09) were each
+ *       authorized by a person and executed by an agent: reviewer=human, operator=codex — and they
+ *       parse unchanged. An unsupervised autopilot verdict is reviewer=agent. (3) ConflictFlag +=
+ *       "agent_resolved" — the human_resolved pattern, stamped INSTEAD of human_resolved when the
+ *       honored verdict's reviewer is "agent", so every consumer can see WHICH authority resolved the
+ *       window; same composition rules (rides alongside the type flags, any confidence, no pairing
+ *       constraint). No migration: raw is JSONB and the 0011 source CHECK is unaffected.
  *   • 0.10.0 (2026-09-02) — the human-review write path (Slice R, PR-R1; plans/review-resolve.md).
  *       Three ADDITIVE changes; no existing field/enum member reordered, renamed, or removed. (1)
  *       ObservationSource += "human_review" (4th member): an operator resolution is an OBSERVATION,
@@ -255,6 +283,7 @@ export const ConflictFlag = z.enum([
   "keyword_false_positive", // e.g. the BLM "land-withdrawal extension" trap
   "llm_corroborated", // PROVENANCE/honesty marker (NOT a confidence score — confidence is NEVER LLM-scored): a cross_window (chain) link the LLM adjudicator AFFIRMED for a pair that passed the structural rules (shared docket + amendment-after-original ordering + recency) but had NO deterministic identity corroboration (no shared RIN AND no explicit doc-number reference). Signals LOWER certainty than a deterministically-corroborated link; rides ALONGSIDE the link's type flag(s) (extension_chain_unresolved / correction_pending / withdrawn_vs_open / reopening), as multi_target_notice does.
   "human_resolved", // PROVENANCE/honesty marker (the llm_corroborated pattern; NOT a confidence score): the current window derivation HONORS a human_review verdict (Slice R) — a human read the evidence and resolved it, and every consumer can see so. Rides ALONGSIDE the type flag(s) it resolves; composes with ANY confidence — in particular HIGH, since an honored pin_close derives HIGH — with NO confidence-pairing constraint (tz_normalization_only is the only flag carrying one). Newer source evidence invalidates it except proven Regs metadata refreshes (reconcile-v2.1, ADR 0010) and, for a pin_close equal to the portal's own Eastern close date, the portal recording that close by flipping openForComment / withinCommentPeriod true→false after the pinned instant (reconcile-v2.2, ADR 0014) — never sticky, never a silence path.
+  "agent_resolved", // PROVENANCE/honesty marker, the human_resolved pattern (@0.11.0, ADR 0015): the current window derivation HONORS a human_review verdict whose `reviewer` is "agent" — an autopilot chose it unsupervised under the written policy, no person authorized this specific verdict, and every consumer can see so. Stamped INSTEAD of human_resolved (exactly one of the two rides on an honored non-escalate verdict); identical composition rules and identical freshness rules (ADR 0010 / 0014). An `escalate` verdict stamps NEITHER flag — it asserts nothing.
 ]);
 export type ConflictFlag = z.infer<typeof ConflictFlag>;
 
@@ -335,21 +364,40 @@ export const PayloadHash = z
 export type PayloadHash = z.infer<typeof PayloadHash>;
 
 /**
- * HumanReviewVerdictKind — the four operator resolutions a human_review observation can record
- * (Slice R; plans/review-resolve.md):
+ * HumanReviewVerdictKind — the operator resolutions a human_review observation can record
+ * (Slice R; plans/review-resolve.md — "escalate" added @0.11.0, ADR 0015):
  *   • "pin_close"         — a human read the disagreeing sources; the operative close is
  *     pinned_close_date (the one kind that asserts a date; derives HIGH when honored).
  *   • "confirm_withdrawn" — the withdrawal signal is real; the window is genuinely withdrawn.
  *   • "confirm_reopened"  — the reopening signal is real; a fresh reliance window exists.
  *   • "dismiss_conflict"  — the flagged conflict is a false positive; no date is asserted.
+ *   • "escalate"          — primary sources were examined (hashes recorded) and the discrepancy
+ *     cannot be resolved from documents; a human decision or agency clarification is needed. The
+ *     one kind that asserts NOTHING about the window: derivation is unchanged and the conflict
+ *     stays live. It PARKS the item (honored for freshness only, un-parked by invalidating
+ *     evidence) so the review autopilot skips it and the escalations-pending alert pages a human.
  */
 export const HumanReviewVerdictKind = z.enum([
   "pin_close",
   "confirm_withdrawn",
   "confirm_reopened",
   "dismiss_conflict",
+  "escalate",
 ]);
 export type HumanReviewVerdictKind = z.infer<typeof HumanReviewVerdictKind>;
+
+/**
+ * HumanReviewVerdictReviewer — WHO DECIDED (the authority), as distinct from `operator` (who
+ * executed the write). "human": a person read the evidence and authorized this specific verdict,
+ * even when an agent typed the command (the 2026-09 codex pins: reviewer=human, operator=codex).
+ * "agent": an autopilot chose it unsupervised under the written policy (ADR 0015); the reconciler
+ * then stamps agent_resolved instead of human_resolved, so the authority is visible on every consumer
+ * surface. Defaults to "human" on parse so every pre-0.11.0 row keeps its meaning.
+ */
+export const HumanReviewVerdictReviewer = z.enum(["human", "agent"]);
+export type HumanReviewVerdictReviewer = z.infer<
+  typeof HumanReviewVerdictReviewer
+>;
 
 /**
  * HumanReviewVerdict — the typed `raw` payload for a source:"human_review" Observation (Slice R,
@@ -371,11 +419,15 @@ export type HumanReviewVerdictKind = z.infer<typeof HumanReviewVerdictKind>;
  * Refinements (illegal states unrepresentable):
  *   (1) kind "pin_close" REQUIRES pinned_close_date; every OTHER kind FORBIDS it — superRefine in
  *       BOTH directions (a pin naming no date asserts nothing; a date on a non-pin kind is a smuggled
- *       assertion its semantics don't carry).
+ *       assertion its semantics don't carry). "escalate" is a non-pin kind: a date on it is rejected.
  *   (2) note is REQUIRED and non-empty AFTER TRIM — the "why" is the point of a human verdict; a
- *       blank/whitespace note must not parse.
- *   (3) reviewed_payload_hashes names ≥1 PayloadHash — the source observations the human actually
- *       looked at; the audit evidence the verdict rests on.
+ *       blank/whitespace note must not parse. For "escalate" the note is expected to say what was
+ *       searched (policy, not schema — a schema cannot judge a search).
+ *   (3) reviewed_payload_hashes names ≥1 PayloadHash — the source observations the reviewer actually
+ *       looked at; the audit evidence the verdict rests on. For "escalate" they are the evidence the
+ *       parking rests on: the item is un-parked when that evidence is superseded.
+ *   (4) reviewer (@0.11.0) is "human" | "agent" and DEFAULTS to "human" — absent on every pre-0.11.0
+ *       row, which therefore keeps meaning "a person authorized this".
  *
  * Observation-row conventions for human_review rows (app-side, not enforceable here): notice flags
  * all false, raw_dates_text and the document-id fields null, parser_version "human-review-v1".
@@ -392,8 +444,12 @@ export const HumanReviewVerdict = z
       message:
         'note must be non-empty after trim — the "why" is the point of a human verdict; a blank or whitespace-only note is no note.',
     }),
-    operator: z.string().min(1), // who resolved it — required provenance, like every audit field here
-    reviewed_payload_hashes: z.array(PayloadHash).min(1), // ≥1: a verdict must name what the human actually reviewed
+    operator: z.string().min(1), // who EXECUTED the write — required provenance, like every audit field here
+    // Who DECIDED (@0.11.0, ADR 0015). Defaults to "human": every pre-0.11.0 verdict was authorized by
+    // a person (the codex pins were executed by an agent on a person's per-item say-so), so absent
+    // reviewer === human. Only an unsupervised autopilot write says "agent".
+    reviewer: HumanReviewVerdictReviewer.default("human"),
+    reviewed_payload_hashes: z.array(PayloadHash).min(1), // ≥1: a verdict must name what the reviewer actually reviewed
   })
   .superRefine((v, ctx) => {
     // (1) pin ⇔ date, both directions.

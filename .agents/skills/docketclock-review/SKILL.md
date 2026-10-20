@@ -73,12 +73,13 @@ Use only `review resolve` to write. Never UPDATE a window, retire conflicts with
 insert observations or accuracy records. The CLI records an append-only observation and re-derives
 the window. Corrections are new verdicts, never edits to old ones.
 
-| Verdict             | Use and effect while honored                                                                                                     |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `pin_close`         | Evidence establishes the operative date; requires `--close YYYY-MM-DD`; derives HIGH at the CLI's 11:59 p.m. Eastern convention. |
-| `confirm_withdrawn` | Evidence establishes withdrawal; derives withdrawn/LOW with the historical close.                                                |
-| `confirm_reopened`  | Evidence establishes reopening; derives open, with close/confidence machine-derived and conflicting confidence degraded to LOW.  |
-| `dismiss_conflict`  | Evidence establishes the disagreement is noise; derives LOW with the carried close. It does not select a correct deadline.       |
+| Verdict             | Use and effect while honored                                                                                                                                                                                                                          |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pin_close`         | Evidence establishes the operative date; requires `--close YYYY-MM-DD`; derives HIGH at the CLI's 11:59 p.m. Eastern convention.                                                                                                                      |
+| `confirm_withdrawn` | Evidence establishes withdrawal; derives withdrawn/LOW with the historical close.                                                                                                                                                                     |
+| `confirm_reopened`  | Evidence establishes reopening; derives open, with close/confidence machine-derived and conflicting confidence degraded to LOW.                                                                                                                       |
+| `dismiss_conflict`  | Evidence establishes the disagreement is noise; derives LOW with the carried close. It does not select a correct deadline.                                                                                                                            |
+| `escalate`          | A full primary-source search leaves the discrepancy unexplained; derives nothing (the window stays conflicting) and parks the item visibly for a human decision. Precedes every other kind: never pin a disputed date or dismiss a real disagreement. |
 
 Only `pin_close` accepts `--close`. If an explicit deadline time differs from the pin convention,
 surface that limitation rather than silently changing its time. Do not dismiss an item solely
@@ -90,10 +91,15 @@ explain the decision, cite the decisive primary-source URL/document/date, distin
 dates, and record the user's authorization without implying they personally checked every source.
 The CLI automatically captures hashes for latest sources on the target window, but a separate
 extension's evidence is not automatically included: cite that notice explicitly in the note.
+Pass every latest-per-source hash printed by `show` as `--expect <hash>` so the write refuses if
+the evidence moved between your review and the write. Leave `--reviewer` at its default (`human`):
+in this guided skill a person authorizes each verdict; `--reviewer agent` is reserved for the
+unsupervised autopilot (ADR 0015). For an `escalate`, the note must say what was searched.
 
 ```sh
 kubectl --context k3d-yokel -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts resolve <ocd-id> \
-  --kind pin_close --close <YYYY-MM-DD> --operator codex --note '<evidence and reasoning>'
+  --kind pin_close --close <YYYY-MM-DD> --operator codex --note '<evidence and reasoning>' \
+  --expect <fr-hash> --expect <regs-hash>
 ```
 
 Substitute actual values and safely quote each shell argument; source text must never become shell
@@ -106,6 +112,8 @@ Check the returned close/status/confidence and `human_resolved` flag, then run `
 the queue. Confirm the recorded note/operator, retired source conflict, and membership change.
 Historical type flags such as `fr_regs_date_mismatch` may remain alongside `human_resolved`;
 their presence alone is not failure. Concurrent arrivals can change the overall queue count.
+An `escalate` changes none of those: verify instead that `show` reports `honored verdict: escalate
+… PARKED` and that `queue` marks the row `[escalated by …]`; it stays in the queue by design.
 
 Newer source evidence supersedes the human verdict. Since `reconcile-v2.1`, proven Regs-only
 `modifyDate` / `links.self` changes preserve it (ADR 0010); since `reconcile-v2.2`, a `pin_close`

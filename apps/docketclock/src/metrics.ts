@@ -240,7 +240,7 @@ export function recordStatusRefresh(s: StatusRefreshSummary): void {
 // ── Review queue observability (Slice R, PR-R4) ───────────────────────────────────────────────────────
 const reviewQueueDepth = new Gauge({
   name: "docketclock_review_queue_depth",
-  help: "Windows in the operator review queue, by reason (conflicting | stale). The queue is enforced like the drills: it pages (see the review-queue-stale alert), it does not rot.",
+  help: "Windows in the operator review queue, by reason. conflicting | stale partition the queue; escalated is the PARKED subset of it (queue windows whose latest honored verdict is `escalate` — a human decision is owed; see the review-queue-escalated alert) and OVERLAPS the other two, so read each series on its own, never summed across reasons. The queue is enforced like the drills: it pages (see the review-queue-stale alert), it does not rot.",
   labelNames: ["reason"],
   registers: [registry],
 });
@@ -252,6 +252,7 @@ const reviewQueueOldest = new Gauge({
 export function recordReviewQueue(s: QueueStats): void {
   reviewQueueDepth.set({ reason: "conflicting" }, s.byReason.conflicting);
   reviewQueueDepth.set({ reason: "stale" }, s.byReason.stale);
+  reviewQueueDepth.set({ reason: "escalated" }, s.byReason.escalated);
   reviewQueueOldest.set(s.oldestAgeSeconds ?? NaN);
 }
 

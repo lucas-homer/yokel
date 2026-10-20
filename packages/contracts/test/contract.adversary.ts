@@ -1097,6 +1097,158 @@ function baseWindow(over: Record<string, unknown> = {}) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────
+// EDGE 11 — agent authority (@0.11.0, ADR 0015; review autopilot PR-A2). Three additive members:
+// HumanReviewVerdictKind "escalate", HumanReviewVerdict.reviewer ("human" | "agent", default human),
+// ConflictFlag "agent_resolved". The attacks: an escalate that smuggles a date; a reviewer that is
+// neither human nor agent; and the compatibility claim itself — a pre-0.11.0 row (no reviewer) MUST
+// parse to reviewer "human", because the 49 legacy codex pins were each authorized by a person.
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+{
+  const base = (over: Record<string, unknown> = {}) => ({
+    kind: "escalate",
+    note: "FR notice, GovInfo edition, Regs document + docket list, extension search by docket/RIN/title: nothing explains the 2-day gap.",
+    operator: "autopilot",
+    reviewed_payload_hashes: ["a".repeat(64), "b".repeat(64)],
+    ...over,
+  });
+
+  // 11a — escalate parses WITHOUT a date, for both reviewers; reviewer defaults to human.
+  {
+    const r = HumanReviewVerdict.safeParse(base());
+    assert(
+      "EDGE 11: escalate (no date, no reviewer) parses with reviewer defaulted to 'human'",
+      r.success && r.data.reviewer === "human" && r.data.kind === "escalate",
+      r.success
+        ? JSON.stringify(r.data.reviewer)
+        : JSON.stringify(r.error.issues),
+    );
+    const ra = HumanReviewVerdict.safeParse(base({ reviewer: "agent" }));
+    assert(
+      "EDGE 11: escalate with reviewer 'agent' parses",
+      ra.success && ra.data.reviewer === "agent",
+    );
+  }
+
+  // 11b — ATTACK: escalate WITH a date. MUST FAIL — an escalation asserts nothing; a date on it is
+  // the smuggled-assertion class the pin⇔date refinement exists for.
+  {
+    const r = HumanReviewVerdict.safeParse(
+      base({ pinned_close_date: "2026-05-01" }),
+    );
+    assert(
+      "EDGE 11 ATTACK: escalate WITH pinned_close_date is REJECTED",
+      !r.success,
+      r.success
+        ? "schema accepted a date on an escalation!"
+        : "date-forbidden superRefine caught it",
+    );
+  }
+
+  // 11c — ATTACK: a reviewer that is neither human nor agent (a third authority cannot be invented
+  // by a caller), and a non-string reviewer.
+  {
+    for (const reviewer of ["robot", "", "Agent", 1, null]) {
+      const r = HumanReviewVerdict.safeParse(base({ reviewer }));
+      assert(
+        `EDGE 11 ATTACK: reviewer ${JSON.stringify(reviewer)} is REJECTED`,
+        !r.success,
+      );
+    }
+  }
+
+  // 11d — COMPATIBILITY: a legacy pin_close row shaped exactly as PR-R1 wrote it (no reviewer key)
+  // parses unchanged and reads as reviewer 'human'; the output has no other difference.
+  {
+    const legacy = {
+      kind: "pin_close",
+      pinned_close_date: "2026-05-01",
+      note: "Regs document states the deadline; FR DATES carries the petition date.",
+      operator: "codex",
+      reviewed_payload_hashes: ["a".repeat(64), "b".repeat(64)],
+    };
+    const r = HumanReviewVerdict.safeParse(legacy);
+    assert(
+      "EDGE 11: a legacy codex pin (no reviewer field) parses and is reviewer 'human' (operator stays 'codex')",
+      r.success &&
+        r.data.reviewer === "human" &&
+        r.data.operator === "codex" &&
+        r.data.kind === "pin_close",
+      r.success ? "" : JSON.stringify(r.error.issues),
+    );
+    if (r.success) {
+      const { reviewer: _r, ...rest } = r.data;
+      assert(
+        "EDGE 11: apart from the defaulted reviewer, the legacy pin's parsed output is byte-identical to its input",
+        JSON.stringify(rest) === JSON.stringify(legacy),
+      );
+    }
+  }
+
+  // 11e — the Observation-row seam enforces the same thing: a human_review row whose raw is an
+  // escalate-with-date fails at ["raw", "pinned_close_date"]; a plain escalate row parses.
+  {
+    const row = (raw: unknown) => ({
+      observation_id: "obs-hr-esc",
+      ocd_id: makeOcdId({ frDocNum: "2026-15983" }),
+      source: "human_review",
+      fr_document_number: null,
+      regs_document_id: null,
+      regs_object_id: null,
+      payload_hash: "c".repeat(64),
+      fetched_at: "2026-10-19T12:00:00.000Z",
+      parser_version: "human-review-v1",
+      raw_dates_text: null,
+      is_extension: false,
+      is_correction: false,
+      is_withdrawal: false,
+      is_reopening: false,
+      raw,
+    });
+    const ok = Observation.safeParse(row(base({ reviewer: "agent" })));
+    const bad = Observation.safeParse(
+      row(base({ pinned_close_date: "2026-05-01" })),
+    );
+    assert(
+      "EDGE 11: an Observation carrying an agent escalate parses",
+      ok.success,
+      ok.success ? "" : JSON.stringify(ok.error.issues),
+    );
+    assert(
+      "EDGE 11 ATTACK: an Observation carrying an escalate-with-date fails at raw.pinned_close_date",
+      !bad.success &&
+        bad.error.issues.some(
+          (i) => i.path.join(".") === "raw.pinned_close_date",
+        ),
+      bad.success
+        ? "accepted!"
+        : JSON.stringify(bad.error.issues.map((i) => i.path)),
+    );
+  }
+
+  // 11f — ConflictFlag accepts agent_resolved; a HIGH window may carry it alongside the type flag
+  // exactly as human_resolved does, and a window carrying BOTH provenance flags is representable
+  // (the contract carries no pairing constraint — exclusivity is the reconciler's rule, tested there).
+  {
+    assert(
+      "EDGE 11: ConflictFlag accepts 'agent_resolved'",
+      ConflictFlag.safeParse("agent_resolved").success,
+    );
+    const r = ParticipationWindow.safeParse(
+      baseWindow({
+        confidence: "high",
+        resolved_close_utc: "2026-05-02T03:59:59.000Z",
+        conflict_flags: ["fr_regs_date_mismatch", "agent_resolved"],
+      }),
+    );
+    assert(
+      "EDGE 11: HIGH + ['fr_regs_date_mismatch','agent_resolved'] parses (provenance marker composes with HIGH)",
+      r.success,
+      r.success ? "" : JSON.stringify(r.error.issues),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────────────────────
 console.log("\n=== contract.adversary results ===");
 console.log(log.join("\n"));
 console.log(
