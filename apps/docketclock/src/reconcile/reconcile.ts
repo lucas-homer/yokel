@@ -495,9 +495,12 @@ export function reconcile(
         // applies exactly as it does to an FR date-only value; the display carries the calendar date
         // (the reconcile-v1.1 lesson). Confidence HIGH per the locked decision; status derives from
         // the pinned close alone — while honored, the pin outranks a stale openForComment flag.
+        // The attribution names the DECIDING authority (ADR 0015): the legacy wording for a human
+        // (every pre-0.11.0 row keeps its exact display), "agent review" when reviewer=agent — a
+        // consumer-facing field must not claim a person authorized what an autopilot chose.
         const pinned = honoredVerdict.pinned_close_date!;
         resolvedCloseUtc = frCloseDateToUtcInstant(pinned);
-        resolvedCloseDisplay = `closes ${pinned} at 11:59 p.m. ET (pinned by human review)`;
+        resolvedCloseDisplay = `closes ${pinned} at 11:59 p.m. ET (pinned by ${honoredVerdict.reviewer === "agent" ? "agent" : "human"} review)`;
         confidence = "high";
         status = new Date(resolvedCloseUtc) > now ? "open" : "closed";
         break;

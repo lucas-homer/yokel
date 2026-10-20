@@ -258,8 +258,9 @@ export interface ShowResult {
    * BLIND (PR-A2, the shadow-gate harness): prior verdicts are hidden and `window` is the machine's
    * OWN derivation of the source chain (human_review rows excluded, computed in memory, nothing
    * persisted), so an agent being measured cannot read the answer off the projection. liveConflicts
-   * is then whether that derivation conflicts; retiredConflicts is 0 (the retirement history would
-   * leak that a verdict exists).
+   * is then whether that derivation conflicts; retiredConflicts is 0 and chainLinks is [] — the
+   * retirement history and the cross-window links (the chain pass links on the STORED status/close,
+   * which an honored pin changes) would both leak that a verdict exists.
    */
   blind: boolean;
 }
@@ -328,20 +329,11 @@ export async function reviewShow(
     });
   }
 
-  const chainLinks = await sql<
-    { ocd_id: string; ocd_id_b: string; resolved_at: Date | null }[]
-  >`
-    select ocd_id, ocd_id_b, resolved_at from conflict_records
-    where conflict_scope = 'cross_window' and (ocd_id = ${ocdId} or ocd_id_b = ${ocdId})
-  `;
-  const links = chainLinks.map((c) => ({
-    ...c,
-    resolved_at: c.resolved_at?.toISOString() ?? null,
-  }));
-
   if (blind) {
     // The machine's own view: re-derive from the source chain alone, in memory. Nothing persisted,
-    // no verdict visible, no verdict-derived state (flags, retired conflicts) leaked.
+    // no verdict visible, no verdict-derived state leaked — not the flags, not the retired-conflict
+    // history, and not the cross-window links (computed by the chain pass from the STORED window's
+    // status/close, which an honored pin changes, so a link's presence could reveal a verdict).
     const chain = (await loadObservations(sql, ocdId)).filter(
       (o) => o.source !== "human_review",
     );
@@ -353,7 +345,7 @@ export async function reviewShow(
         honored: null,
         liveConflicts: 0,
         retiredConflicts: 0,
-        chainLinks: links,
+        chainLinks: [],
         blind: true,
       };
     const derived = reconcile(chain, opts.now ?? new Date());
@@ -364,10 +356,21 @@ export async function reviewShow(
       honored: null,
       liveConflicts: derived.conflict ? 1 : 0,
       retiredConflicts: 0,
-      chainLinks: links,
+      chainLinks: [],
       blind: true,
     };
   }
+
+  const chainLinks = await sql<
+    { ocd_id: string; ocd_id_b: string; resolved_at: Date | null }[]
+  >`
+    select ocd_id, ocd_id_b, resolved_at from conflict_records
+    where conflict_scope = 'cross_window' and (ocd_id = ${ocdId} or ocd_id_b = ${ocdId})
+  `;
+  const links = chainLinks.map((c) => ({
+    ...c,
+    resolved_at: c.resolved_at?.toISOString() ?? null,
+  }));
 
   const verdictRows = await sql<
     { observation_id: string; fetched_at: Date; raw: unknown }[]
@@ -447,6 +450,23 @@ export interface ResolveOutcome {
    * chain) — keyed on the rule itself, not on a window flag: an honored `escalate` leaves no flag.
    */
   honored: boolean;
+}
+
+/**
+ * Whether the engine's honored verdict IS the one this write asserted. Inserted: by observation id.
+ * Deduped (an identical verdict was already latest, nothing inserted): by payload hash — if another
+ * writer committed a superseding verdict between the dedupe and the fresh-chain read, the honored
+ * verdict is theirs and this write must not report itself honored (an escalate retry would otherwise
+ * print PARKED over a window a concurrent pin just took to HIGH).
+ */
+export function honoredIsThisWrite(
+  honored: HonoredVerdict | null,
+  write: { observationId: string | null; payloadHash: string },
+): boolean {
+  if (!honored) return false;
+  return write.observationId !== null
+    ? honored.observation.observation_id === write.observationId
+    : honored.observation.payload_hash === write.payloadHash;
 }
 
 /** Order-insensitive exact equality of two hash sets. */
@@ -533,15 +553,16 @@ export async function resolveWindow(
     });
 
     const raw = { ...verdict };
+    const payloadHash = createHash("sha256")
+      .update(JSON.stringify(raw))
+      .digest("hex");
     const ingest = await ingestObservationWithin(tx, {
       ocd_id: input.ocdId,
       source: "human_review",
       fr_document_number: null,
       regs_document_id: null,
       regs_object_id: null,
-      payload_hash: createHash("sha256")
-        .update(JSON.stringify(raw))
-        .digest("hex"),
+      payload_hash: payloadHash,
       fetched_at: now.toISOString(),
       parser_version: "human-review-v1",
       raw_dates_text: null,
@@ -566,19 +587,32 @@ export async function resolveWindow(
         `review resolve: source evidence for "${input.ocdId}" changed while the verdict was being written — nothing written. Re-run \`review show\` and reassess.`,
       );
 
-    return { ingest, reviewedHashes };
+    // An ESCALATION that parks nothing is silence. With this verdict as the latest, the window must
+    // derive as a queue member (confidence conflicting or stale); otherwise it would be unmarked by
+    // `queue`, uncounted by the gauge and unpaged — an accepted write nobody can see. Decided on the
+    // in-memory derivation of the post-write chain, inside the transaction, so a refusal rolls the
+    // insert back. Superseding an honored pin with an escalate (the weekly audit's disagreement)
+    // passes: the window returns to its machine derivation, which was conflicting.
+    if (input.kind === "escalate") {
+      const derived = reconcile(await loadObservations(tx, input.ocdId), now);
+      const c = derived.window.confidence;
+      if (c !== "conflicting" && c !== "stale")
+        throw new Error(
+          `review resolve: escalate parks nothing here — with this verdict as latest the window derives ${c}, outside the queue, so it would be unmarked, uncounted and unpaged. Nothing written. If the machine is wrong, say how (pin_close / confirm_withdrawn / confirm_reopened); if an earlier verdict is wrong, supersede it with the right one.`,
+        );
+    }
+
+    return { ingest, reviewedHashes, payloadHash };
   });
 
   const result = await reconcileOcdId(sql, input.ocdId, now);
   const honoredNow = selectHonoredVerdict(
     await loadObservations(sql, input.ocdId),
   );
-  // Honored iff the engine honors the latest verdict AND that verdict is this write (or, when the
-  // write deduped, the identical verdict already latest — same payload, same meaning).
-  const honored =
-    honoredNow !== null &&
-    (written.ingest.observationId === null ||
-      honoredNow.observation.observation_id === written.ingest.observationId);
+  const honored = honoredIsThisWrite(honoredNow, {
+    observationId: written.ingest.observationId,
+    payloadHash: written.payloadHash,
+  });
   return {
     inserted: written.ingest.inserted,
     observationId: written.ingest.observationId,

@@ -278,6 +278,12 @@ for (const reviewer of ["human", "agent"] as const) {
     w.current_observation_ids.includes(agentPin.observation_id) &&
       reconcile([...chain, agentPin], NOW).conflict === null,
   );
+  assert(
+    "AGENT PIN: the consumer-facing display names the deciding authority (review finding: never 'human review' for an agent pin)",
+    w.resolved_close_display ===
+      "closes 2026-07-20 at 11:59 p.m. ET (pinned by agent review)",
+    String(w.resolved_close_display),
+  );
   parses("AGENT PIN", w);
 
   // Legacy row: NO reviewer field at all (every pre-0.11.0 verdict, incl. the 49 codex pins).
@@ -293,6 +299,12 @@ for (const reviewer of ["human", "agent"] as const) {
     wl.conflict_flags.includes("human_resolved") &&
       !wl.conflict_flags.includes("agent_resolved"),
     wl.conflict_flags.join(","),
+  );
+  assert(
+    "LEGACY PIN: the display keeps its exact pre-0.11.0 wording",
+    wl.resolved_close_display ===
+      "closes 2026-07-20 at 11:59 p.m. ET (pinned by human review)",
+    String(wl.resolved_close_display),
   );
   const explicitHuman = hrObs(
     { kind: "pin_close", pinned_close_date: "2026-07-20", reviewer: "human" },

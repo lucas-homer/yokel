@@ -11,8 +11,11 @@
  *   • BLIND: no verdicts, no honored line, the machine's own derivation, retired count hidden.
  *   • UN-PARK: a newer, still-disagreeing FR observation drops the mark (still in the queue), the
  *     stats escalated count goes to 0, `show` reports the verdict superseded.
- *   • AGENT PIN with `expect`: HIGH + agent_resolved (never human_resolved); the queue empties; a
- *     later human pin supersedes it with human_resolved.
+ *   • AGENT PIN with `expect`: HIGH + agent_resolved (never human_resolved), display attributed to
+ *     agent review; the queue empties; a later human pin supersedes it with human_resolved.
+ *   • REVIEW ROUND 1 FIXES: an escalate that would park nothing (a non-queue window) is REFUSED;
+ *     superseding an honored agent pin with an escalate (the audit's disagreement) is accepted and
+ *     parks; blind hides chain links; honoredIsThisWrite keys a deduped write on its payload hash.
  *
  * Requires a throwaway Postgres:  DATABASE_URL=postgres://... pnpm --filter @yokel/docketclock test
  */
@@ -26,11 +29,13 @@ import { parseRegsObservation } from "../src/sources/regulations-gov.js";
 import { ingestObservation } from "../src/ingest/observe.js";
 import { reconcileOcdId } from "../src/reconcile/persist.js";
 import {
+  honoredIsThisWrite,
   resolveWindow,
   reviewQueue,
   reviewQueueStats,
   reviewShow,
 } from "../src/review/core.js";
+import type { HonoredVerdict } from "../src/reconcile/reconcile.js";
 
 let failures = 0;
 const out: string[] = [];
@@ -62,7 +67,40 @@ const regsFixture = JSON.parse(
 ) as { data: { id: string; attributes: Record<string, unknown> } };
 
 const OCD = "ocd-participation-window/federal/2025-02910";
+const OCD_CLEAN = "ocd-participation-window/federal/2025-55555";
 const T0 = new Date("2026-09-02T00:00:00Z");
+
+// ── honoredIsThisWrite (pure) — the dedupe-path identity rule from review round 1 ───────────────────
+{
+  const h = (observation_id: string, payload_hash: string) =>
+    ({ observation: { observation_id, payload_hash } }) as HonoredVerdict;
+  assert(
+    "honoredIsThisWrite: inserted write matches by observation id",
+    honoredIsThisWrite(h("o1", "h1"), {
+      observationId: "o1",
+      payloadHash: "h1",
+    }) &&
+      !honoredIsThisWrite(h("o2", "h1"), {
+        observationId: "o1",
+        payloadHash: "h1",
+      }),
+  );
+  assert(
+    "honoredIsThisWrite: deduped write matches by payload hash only — a concurrent superseding verdict (different hash) is NOT this write",
+    honoredIsThisWrite(h("o9", "h1"), {
+      observationId: null,
+      payloadHash: "h1",
+    }) &&
+      !honoredIsThisWrite(h("o9", "h2"), {
+        observationId: null,
+        payloadHash: "h1",
+      }),
+  );
+  assert(
+    "honoredIsThisWrite: nothing honored → false",
+    !honoredIsThisWrite(null, { observationId: null, payloadHash: "h1" }),
+  );
+}
 
 const sql = createClient();
 try {
@@ -88,6 +126,31 @@ try {
     fetched_at: "2026-09-01T01:00:00.000Z",
   });
   await reconcileOcdId(sql, OCD, T0);
+
+  // A clean HIGH window (sources agree) — never a queue member.
+  await ingestObservation(sql, {
+    ...parseFrObservation({
+      ...frFixture,
+      document_number: "2025-55555",
+      comments_close_on: "2026-10-01",
+    }),
+    fetched_at: "2026-09-01T00:00:00.000Z",
+  });
+  const regsRawClean = JSON.parse(
+    JSON.stringify(regsFixture),
+  ) as typeof regsFixture;
+  Object.assign(regsRawClean.data.attributes, {
+    frDocNum: "2025-55555",
+    commentEndDate: "2026-10-02T03:59:59Z", // Eastern 2026-10-01 — agrees
+    withdrawn: false,
+    openForComment: true,
+  });
+  await ingestObservation(sql, {
+    ...parseRegsObservation(regsRawClean),
+    fetched_at: "2026-09-01T01:00:00.000Z",
+  });
+  await reconcileOcdId(sql, OCD_CLEAN, T0);
+
   const machine = await reviewShow(sql, OCD);
   const liveHashes = machine.sources.map((s) => s.payload_hash);
   assert(
@@ -147,6 +210,25 @@ try {
   assert(
     "EXPECT: zero human_review rows written by any refusal",
     (await humanRows()) === 0,
+  );
+
+  // ── ESCALATE on a NON-queue window is refused (review round 1, P3: an unseen parking is silence) ──
+  await rejects(
+    "ESCALATE on a clean HIGH window REFUSES — it would park nothing (unmarked, uncounted, unpaged)",
+    () =>
+      resolveWindow(sql, {
+        ocdId: OCD_CLEAN,
+        kind: "escalate",
+        note: "n",
+        operator: "autopilot",
+        reviewer: "agent",
+      }),
+    /escalate parks nothing here — .*derives high/,
+  );
+  assert(
+    "ESCALATE on a non-queue window: nothing written, window untouched",
+    (await humanRows()) === 0 &&
+      (await reviewShow(sql, OCD_CLEAN)).window?.confidence === "high",
   );
 
   // ── ESCALATE by the agent with the exact live set ───────────────────────────────────────────────────
@@ -238,13 +320,14 @@ try {
   // ── BLIND ───────────────────────────────────────────────────────────────────────────────────────────
   const blind = await reviewShow(sql, OCD, { blind: true, now: T1 });
   assert(
-    "BLIND: verdicts hidden, no honored line, machine derivation, retired hidden, sources intact",
+    "BLIND: verdicts hidden, no honored line, machine derivation, retired + chain links hidden, sources intact",
     blind.blind &&
       blind.priorVerdicts.length === 0 &&
       blind.honored === null &&
       blind.window?.confidence === "conflicting" &&
       blind.liveConflicts === 1 &&
       blind.retiredConflicts === 0 &&
+      blind.chainLinks.length === 0 &&
       blind.sources.length === 2,
     JSON.stringify({ conf: blind.window?.confidence, pv: blind.priorVerdicts }),
   );
@@ -310,7 +393,7 @@ try {
       pin.honored &&
       w3.confidence === "high" &&
       w3.resolved_close_display ===
-        "closes 2026-09-20 at 11:59 p.m. ET (pinned by human review)" &&
+        "closes 2026-09-20 at 11:59 p.m. ET (pinned by agent review)" &&
       w3.conflict_flags.includes("agent_resolved") &&
       !w3.conflict_flags.includes("human_resolved"),
     `${w3.confidence} [${w3.conflict_flags.join(",")}]`,
@@ -348,10 +431,44 @@ try {
   );
   const blind2 = await reviewShow(sql, OCD, { blind: true, now: T3 });
   assert(
-    "BLIND on a pinned window: the machine's view (conflicting), no verdicts",
+    "BLIND on a pinned window: the machine's view (conflicting), no verdicts, no chain links",
     blind2.window?.confidence === "conflicting" &&
       blind2.priorVerdicts.length === 0 &&
-      blind2.honored === null,
+      blind2.honored === null &&
+      blind2.chainLinks.length === 0,
+  );
+
+  // ── The audit's disagreement: a human escalate SUPERSEDING the honored agent pin is accepted ──────
+  // Pre-write the window is HIGH (not a queue member); with the escalate as latest it returns to the
+  // machine's conflicting derivation, so the escalate parks something and passes the refusal check.
+  const audit = await resolveWindow(
+    sql,
+    {
+      ocdId: OCD,
+      kind: "escalate",
+      note: "Weekly audit: re-read the live notice; the agent's cited extension names a different docket. Needs a human decision.",
+      operator: "lucas",
+      expect: live2,
+    },
+    new Date("2026-09-03T03:30:00Z"),
+  );
+  const wa = audit.result.window;
+  assert(
+    "AUDIT ESCALATE over an honored agent pin: accepted, parked, window back to the machine's conflicting derivation with NO provenance flag",
+    audit.inserted &&
+      audit.honored &&
+      wa.confidence === "conflicting" &&
+      !wa.conflict_flags.includes("agent_resolved") &&
+      !wa.conflict_flags.includes("human_resolved"),
+    `${wa.confidence} [${wa.conflict_flags.join(",")}]`,
+  );
+  assert(
+    "AUDIT ESCALATE: queue marks it (reviewer human), stats escalated 1",
+    (await reviewQueue(sql)).some(
+      (r) => r.ocd_id === OCD && r.escalated?.reviewer === "human",
+    ) &&
+      (await reviewQueueStats(sql, new Date("2026-09-04T00:00:00Z"))).byReason
+        .escalated === 1,
   );
 
   // ── A later HUMAN pin supersedes with human_resolved (no expect: the pre-A2 path still works) ──────

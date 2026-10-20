@@ -28,7 +28,9 @@ kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/revie
 
 `--reviewer` says who **decided** (default `human`; `agent` only for an unsupervised autopilot write,
 [ADR 0015](../decisions/0015-agent-review-authority.md)); `--operator` says who executed the write.
-`--expect` binds the write to the evidence you assessed (below). `--blind` is the shadow-gate view.
+`--expect` binds the write to the evidence you assessed (below). `--blind` is the shadow-gate view:
+verdicts, the retired-conflict history and chain links are hidden and the window shown is the
+machine's own derivation of the sources, so an agent under measurement cannot read the answer.
 
 Host-side (port-forward the pg primary pod-direct, `docketclock-pg-app` creds):
 
@@ -78,7 +80,11 @@ A parked item is honored for freshness like any verdict: a metadata-only Regs re
 parked; a newer FR/GovInfo observation, a substantive Regs change, or the portal flipping to closed
 after its own date un-parks it (the ADR 0014 echo exception is `pin_close`-only), after which it is
 an ordinary queue member again. To resolve a parked item, write a real verdict with `review resolve`
-— the latest verdict wins; a second `escalate` re-parks it.
+— the latest verdict wins; a second `escalate` re-parks it. An escalate that would park nothing is
+refused: if the window would not be a queue member with it (the sources agree, or the machine is
+not conflicting), `resolve` rolls it back and says so — pin or confirm instead, or supersede the
+wrong earlier verdict. Escalating over an honored pin you disagree with is fine: the window returns
+to its conflicting machine derivation and parks.
 
 ## Provenance — who decided
 

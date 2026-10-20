@@ -20,7 +20,9 @@
  *   escalate         — "primary sources examined; cannot be resolved from documents; a human decision
  *                      or agency clarification is needed". Derives NOTHING (the window stays in the
  *                      queue, flagged [escalated]); parks the item until a human supersedes it or new
- *                      evidence un-parks it; pages via the review-queue-escalated alert.
+ *                      evidence un-parks it; pages via the review-queue-escalated alert. REFUSED when
+ *                      the window would not be a queue member with it (an escalation nobody can see
+ *                      is silence) — pin or confirm instead, or supersede the wrong earlier verdict.
  *
  * Provenance (ADR 0015): --operator is who EXECUTES the write; --reviewer is who DECIDED — "human"
  * (default: a person authorized this verdict, even if an agent typed it) or "agent" (an unsupervised
@@ -195,7 +197,7 @@ try {
       `  close: ${String(w.resolved_close_display ?? "(none)")} (utc: ${String(w.resolved_close_utc ?? "null")})`,
     );
     console.log(
-      `  conflicts: ${s.liveConflicts} live / ${s.retiredConflicts} retired; chain links: ${s.chainLinks.length}`,
+      `  conflicts: ${s.liveConflicts} live / ${s.retiredConflicts} retired; chain links: ${s.blind ? "(hidden in blind mode)" : String(s.chainLinks.length)}`,
     );
     if (!s.blind) {
       console.log(

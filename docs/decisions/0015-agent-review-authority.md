@@ -41,7 +41,9 @@ projection shows an agent under measurement the answer it is supposed to find.
    field defaults to `"human"`, so every pre-0.11.0 row, including the 49 Codex pins, parses to the
    meaning it always had. The reconciler stamps `agent_resolved` instead of `human_resolved` when
    the honored verdict's reviewer is `"agent"`; exactly one of the two rides on an honored
-   non-escalate verdict, with the same composition and freshness rules as before.
+   non-escalate verdict, with the same composition and freshness rules as before. The pinned-close
+   display names the deciding authority too ("pinned by agent review"); the legacy wording for a
+   human pin is byte-identical to before.
 
 3. **Escalation is an observation that asserts nothing.** New kind `escalate`: "primary sources
    examined (hashes recorded); the discrepancy cannot be resolved from documents; a human decision
@@ -54,7 +56,12 @@ projection shows an agent under measurement the answer it is supposed to find.
    every kind), the item is **parked** — `review queue` marks it `[escalated by … ]`, `review show`
    reports it honored and parked, the autopilot skips it, and the `escalated` series of the
    queue-depth gauge counts it. Invalidating evidence un-parks it (the item is then an ordinary
-   queue member again); a later verdict of any kind supersedes it. The ADR 0014 echo exception is
+   queue member again); a later verdict of any kind supersedes it. An escalation that would park
+   nothing is **refused**: if, with the escalate as the latest verdict, the window would not derive
+   as a queue member (`conflicting` or `stale`), the write is rolled back with a message saying so —
+   an accepted escalation that no queue, gauge or alert can see would be silence. Superseding an
+   honored agent pin with an escalate (the weekly audit's disagreement) passes, because the window
+   then returns to its machine derivation, which was conflicting. The ADR 0014 echo exception is
    **not** extended to `escalate` (its clause 1 is `pin_close`-only): the portal flipping to closed
    after its own announced date un-parks an open escalated item once. That is a deliberate
    re-inspection, not a defect; if shadow runs show it causing churn, extending the exception is a
@@ -73,8 +80,10 @@ projection shows an agent under measurement the answer it is supposed to find.
    rule, not on the presence of a flag — an honored `escalate` leaves no flag.
 
 6. **An agent under measurement cannot read the answer.** `review show --blind` hides every prior
-   verdict and shows the machine's own in-memory derivation of the source chain (nothing persisted,
-   no retirement history leaked). The shadow gate (plan, "Reliability") runs on it.
+   verdict and shows the machine's own in-memory derivation of the source chain (nothing persisted;
+   the retirement history and the cross-window chain links are hidden too, since both are computed
+   from the stored projection an honored pin changes). The shadow gate (plan, "Reliability") runs
+   on it.
 
 7. **Humans are paged through the existing alert path.** `docketclock_review_queue_depth{reason=
 "escalated"}` is the parked subset of the queue; it overlaps `conflicting`/`stale` and is read
@@ -88,6 +97,12 @@ projection shows an agent under measurement the answer it is supposed to find.
    change nothing — the stamp records which code last derived each row, as 0014 did.
 
 ## Consequences
+
+- Cross-provider review (Codex GPT-6 Astra, 2026-10-19) found four defects in the first cut, all
+  fixed before merge: blind mode leaked verdict-dependent chain links; an agent pin's display still
+  said "human review"; a deduped write could report itself honored after a concurrent supersede
+  (now keyed on the payload hash); and an escalate on a non-queue window was accepted silently (now
+  refused, with the audit supersede case kept working).
 
 - No verdict is written by an agent until the shadow gate in the plan is met and the operator flips
   the autopilot prompt to write mode (PR-A3). This ADR grants the authority and makes it visible; the

@@ -21,7 +21,7 @@
  * live (resolved_at=NULL) and any OTHER still-open (superseded) pair for the ocd_id is retired. The
  * proof feed publishes only live conflicts (resolved_at IS NULL).
  */
-import type { Sql } from "../db/client.js";
+import type { Sql, SqlHandle } from "../db/client.js";
 import type {
   ChangeHistoryEntry,
   Observation,
@@ -237,10 +237,11 @@ export interface ReconcileOcdIdResult extends ReconcileResult {
  * order (fetched_at asc, observation_id asc), shaped as the contract carries it (fetched_at ISO).
  * Shared by reconcileOcdId and the review CLI (honoring, the blind derivation, escalation marks —
  * PR-A2) so every caller asks the engine about the SAME chain the projection was derived from.
- * Returns [] for an unknown ocd_id; the caller decides whether that is an error.
+ * Returns [] for an unknown ocd_id; the caller decides whether that is an error. Takes any handle,
+ * so a caller can read the chain inside its own transaction (the review write's escalate check).
  */
 export async function loadObservations(
-  sql: Sql,
+  sql: SqlHandle,
   ocdId: string,
 ): Promise<Observation[]> {
   const rows = await sql<
