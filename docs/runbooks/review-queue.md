@@ -26,13 +26,15 @@ kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/revie
   [--reviewer human|agent] [--expect <sha256> --expect <sha256> …]
 kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts log \
   [--reviewer human|agent] [--operator <name>] [--kind <kind>] [--since 7d|2026-10-01] [--limit 50] [--json]
-kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts corpus [--json]
+kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts corpus [--blind] [--json]
 ```
 
 `log` is the verdict ledger, newest first, each verdict with its **standing** under the engine's
 honoring rule: `honored`, `parked` (an honored `escalate`), `superseded` (a later verdict exists),
 `invalidated` (the latest verdict, but newer evidence returned the window to machine derivation) or
-`unparseable`. `corpus` is the shadow-gate harness input (below).
+`unparseable`; `--limit` caps the newest N and the output says so when more matched. `corpus` is the
+shadow-gate harness input (below): `--blind` prints only the ids, flat and sha256-ordered — the
+proposer's view; everything else (`expected_close`, the grouping) is the scorer's.
 
 `--reviewer` says who **decided** (default `human`; `agent` only for an unsupervised autopilot write,
 [ADR 0015](../decisions/0015-agent-review-authority.md)); `--operator` says who executed the write.
@@ -148,7 +150,11 @@ kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/revie
 
 `honored` means the verdict still governs the window; `invalidated` means newer evidence overrode
 it — the signal the Monday audit and PR-A4's attributable monitoring read. Shadow proposals are only
-in `ledger.jsonl` (one JSON line per decision: run, hashes, proposal, verifier, evidence, reason).
+in `ledger.jsonl` (one JSON line per decision: run, mode, policy version, harness id, hashes,
+proposal, verifier, evidence, reason). The Monday audit is done by a fresh networked Claude child
+that sees only ids (never the verdicts), so the agent never grades its own homework; it covers a
+random 5 of the week's honored agent verdicts, every parked item, and in shadow mode every shadow
+escalation of the week.
 
 **Superseding an agent verdict.** Write a human verdict; the latest wins and the window stamps
 `human_resolved` instead of `agent_resolved`:
@@ -167,18 +173,41 @@ policy in the plan (and this skill) before re-enabling write mode.
 Three parts, measured on `show --blind` (prior verdicts hidden), each recorded here with the date,
 the run id and the tally. Write mode may be enabled only when all three are recorded as met.
 
+**Blind by construction.** Parts 1 and 3 are run on request (ask the "Review autopilot" thread to
+"run the shadow harness"), never by the daily schedule, and in two roles that are never the same
+context: fresh _proposer_ children get only the ids from `review corpus --blind` (flat,
+sha256-ordered, no grouping, no expectation) and seal one ledger line per id; the thread then
+_scores_ from `review corpus --json` and the required set below. A proposer that had seen
+`expected_close` or the `pins` / `escalations` grouping could not be blinded afterwards.
+
 1. **Blinded historical agreement** — `review corpus` part 1: every honored `pin_close`. The
-   agent's blind proposal must equal the pinned date on ≥ 95 % of them, with every disagreement
+   proposer's blind proposal must equal the pinned date on ≥ 95 % of them, with every disagreement
    explained. Measures agreement with human-authorized precedent, not truth: a floor, not the gate.
+   Run without the verifier (it measures the proposer, not the pipeline).
 2. **Held-out independent set** — 10 current queue items the operator reviews **before** seeing
    any proposal. Protocol: pick the ids from `review queue`; write your verdict for each (`kind`,
    `close` for a pin, one line of reasoning) to `~/.config/yokel/review-autopilot/held-out-<date>.json`
-   _before_ reading the thread or the ledger; let the daily shadow runs propose; compare. Agreement
-   on kind ≥ 9/10; **any false pin** (the agent pins where you escalated or chose another date) is
-   blocking until explained and the policy amended. Refresh the set whenever the policy changes.
-3. **Escalation discipline** — `review corpus` part 3: every parked item → `escalate`, every
-   honored withdrawal → `confirm_withdrawn`, and zero proposed `dismiss_conflict` /
-   `confirm_reopened` anywhere in the runs.
+   _before_ reading the thread or the ledger; let the daily shadow runs propose (full pipeline,
+   verifier included); compare. Agreement on kind ≥ 9/10; **any false pin** (the agent pins where
+   you escalated or chose another date) is blocking until explained and the policy amended.
+   Refresh the set whenever the policy changes. The agent is forbidden to read these files.
+3. **Escalation discipline** — the **required set** below, plus whatever `review corpus` part 3
+   lists at run time: every one of these must be proposed `escalate` (the #127 cases) or
+   `confirm_withdrawn` (the withdrawals), and zero `dismiss_conflict` / `confirm_reopened` may
+   appear anywhere in the harness run. An empty live category never passes by vacancy: a missing
+   proposal is a disagreement.
+
+   | required set (part 3)                         | expected            | why                                          |
+   | --------------------------------------------- | ------------------- | -------------------------------------------- |
+   | `ocd-participation-window/federal/2026-15983` | `escalate`          | #127 CDC — parked live 2026-10-19            |
+   | `ocd-participation-window/federal/2026-18052` | `escalate`          | #127 FAA — still an ordinary queue member    |
+   | `ocd-participation-window/federal/2026-16791` | `escalate`          | #127 Census — still an ordinary queue member |
+   | `ocd-participation-window/federal/2026-14942` | `confirm_withdrawn` | #112 shadow-withdrawn, confirmed 2026-09-03  |
+   | `ocd-participation-window/federal/2026-15740` | `confirm_withdrawn` | #112 shadow-withdrawn, confirmed 2026-09-03  |
+
+   The two un-parked #127 items are in the live queue, so `corpus --blind` does not list them: the
+   scorer adds them to the proposer batches explicitly. Escalating them by hand (so the gauge and
+   the alert see all three) is a separate, worthwhile step; it does not change this set.
 
 | part                             | date | run id | result | met? |
 | -------------------------------- | ---- | ------ | ------ | ---- |

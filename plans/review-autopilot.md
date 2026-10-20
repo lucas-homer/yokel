@@ -285,6 +285,16 @@ invalidated / unparseable — how an operator reads the agent's work) and `revie
 shadow-gate corpus computed live from honored verdicts, so the harness never goes stale). The CLI
 additions mean the poller image is redeployed through the app's usual path; no cluster or chart
 change. The scheduled task is created after merge, from a dedicated "Review autopilot" thread.
+Cross-provider review round 1 (Codex GPT-6 Astra, high, 2026-10-20): 10 findings, all folded in —
+the harness is now blind by construction (`corpus --blind` ids-only for fresh proposer children; the
+scorer reads expectations only after proposals are sealed); part 3 names a required set (the three
+#127 cases and the two withdrawals; an empty live category never passes by vacancy); the Monday
+audit runs before the empty-queue exit and is done by a fresh networked Claude child that sees only
+ids; `log` reports truncation and the audit must never sample a truncated list; shadow `escalate`
+proposals are re-investigated weekly and skip-reuse is scoped by policy version; the runtime
+examples are full commands (zsh does not word-split `$R`); the scheduled prompt pages a failed
+checkout update inline and continues; `--since`/`--limit` are bounded argument-side; an unparseable
+corpus row carries no invented kind or authority; plus a spawned CLI argument-validation test.
 
 `.agents/skills/docketclock-review-autopilot/SKILL.md` (the existing guided skill stays for
 interactive use and is referenced, not duplicated): the write policy above, the run procedure,

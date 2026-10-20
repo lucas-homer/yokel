@@ -55,8 +55,14 @@ const envPath = fileURLToPath(new URL("../../../../.env", import.meta.url));
 if (existsSync(envPath)) process.loadEnvFile(envPath);
 
 const { createClient } = await import("../db/client.js");
-const { reviewQueue, reviewShow, resolveWindow, reviewLog, reviewCorpus } =
-  await import("./core.js");
+const {
+  reviewQueue,
+  reviewShow,
+  resolveWindow,
+  reviewLog,
+  reviewCorpus,
+  corpusBlindIds,
+} = await import("./core.js");
 
 const KINDS = [
   "pin_close",
@@ -80,14 +86,15 @@ function usage(): never {
       "                 [--reviewer human|agent] [--expect <sha256-hash> ...]",
       "  review log [--reviewer human|agent] [--operator <name>] [--kind <kind>]",
       "             [--since <N>h|<N>d|<N>w|YYYY-MM-DD] [--limit <n>] [--json]",
-      "  review corpus [--json]",
+      "  review corpus [--blind] [--json]",
       `  kinds: ${KINDS.join(" | ")}`,
       "  --reviewer  who decided: human (default) or agent (unsupervised autopilot)",
       "  --expect    repeatable; the latest-per-source payload hashes you assessed (from `show`) —",
       "              the write refuses if the live evidence differs",
       "  --blind     hide prior verdicts; show the machine's own derivation of the sources",
       "  log         the verdict ledger, newest first, with each verdict's standing today",
-      "  corpus      the shadow-gate corpus: honored verdicts grouped by what a blind proposal must reproduce",
+      "  corpus      the shadow-gate corpus: honored verdicts grouped by what a blind proposal must reproduce;",
+      "              --blind prints only the ids, flat and ungrouped (the proposer's view; the scorer reads the rest)",
     ].join("\n"),
   );
   process.exit(2);
@@ -105,15 +112,6 @@ if (
 )
   usage();
 let showArgs: { ocdId: string; blind: boolean } | null = null;
-if (command === "show") {
-  const ocdId = rest[0];
-  if (!ocdId || ocdId.startsWith("--")) usage();
-  const { values } = parseArgs({
-    args: rest.slice(1),
-    options: { blind: { type: "boolean" } },
-  });
-  showArgs = { ocdId, blind: values.blind === true };
-}
 let resolveArgs: {
   ocdId: string;
   kind: Kind;
@@ -123,57 +121,15 @@ let resolveArgs: {
   reviewer: Reviewer;
   expect?: string[];
 } | null = null;
-if (command === "resolve") {
-  const ocdId = rest[0];
-  if (!ocdId || ocdId.startsWith("--")) usage();
-  const { values } = parseArgs({
-    args: rest.slice(1),
-    options: {
-      kind: { type: "string" },
-      close: { type: "string" },
-      note: { type: "string" },
-      operator: { type: "string" },
-      reviewer: { type: "string" },
-      expect: { type: "string", multiple: true },
-    },
-  });
-  const kind = values.kind as Kind | undefined;
-  if (!kind || !KINDS.includes(kind) || !values.note) usage();
-  const reviewer = (values.reviewer ?? "human") as Reviewer;
-  if (!REVIEWERS.includes(reviewer)) {
-    console.error(
-      `review resolve: --reviewer must be one of ${REVIEWERS.join(" | ")} (got "${String(values.reviewer)}")`,
-    );
-    process.exit(2);
-  }
-  const expect = values.expect;
-  if (expect !== undefined) {
-    const bad = expect.filter((h) => !SHA256.test(h));
-    if (expect.length === 0 || bad.length > 0) {
-      console.error(
-        `review resolve: --expect takes sha256 hex payload hashes as printed by \`review show\` (bad: ${bad.join(", ") || "(none given)"})`,
-      );
-      process.exit(2);
-    }
-  }
-  const operator =
-    values.operator ?? process.env.REVIEW_OPERATOR ?? process.env.USER;
-  if (!operator) {
-    console.error(
-      "review resolve: no operator (pass --operator or set REVIEW_OPERATOR)",
-    );
-    process.exit(1);
-  }
-  resolveArgs = {
-    ocdId,
-    kind,
-    close: values.close,
-    note: values.note,
-    operator,
-    reviewer,
-    ...(expect !== undefined ? { expect } : {}),
-  };
-}
+let logArgs: {
+  reviewer?: Reviewer;
+  operator?: string;
+  kind?: Kind;
+  since?: Date;
+  limit?: number;
+  json: boolean;
+} | null = null;
+let corpusArgs: { blind: boolean; json: boolean } | null = null;
 
 /** `--since`: a relative window (`12h`, `7d`, `2w`) or an ISO calendar date (UTC midnight). */
 function parseSince(raw: string, now: Date): Date {
@@ -183,79 +139,149 @@ function parseSince(raw: string, now: Date): Date {
     const unitMs = { h: 3_600_000, d: 86_400_000, w: 7 * 86_400_000 }[
       rel[2] as "h" | "d" | "w"
     ];
-    return new Date(now.getTime() - n * unitMs);
-  }
-  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+    // Bounded so the arithmetic can never produce an Invalid Date that reaches the query.
+    if (Number.isSafeInteger(n) && n <= 100_000) {
+      const d = new Date(now.getTime() - n * unitMs);
+      if (!Number.isNaN(d.getTime())) return d;
+    }
+  } else if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
     const d = new Date(`${raw}T00:00:00Z`);
     if (!Number.isNaN(d.getTime()) && d.toISOString().startsWith(raw)) return d;
   }
   console.error(
-    `review log: --since takes <N>h | <N>d | <N>w or YYYY-MM-DD (got "${raw}")`,
+    `review log: --since takes <N>h | <N>d | <N>w (N ≤ 100000) or a valid YYYY-MM-DD (got "${raw}")`,
   );
   process.exit(2);
 }
-let logArgs: {
-  reviewer?: Reviewer;
-  operator?: string;
-  kind?: Kind;
-  since?: Date;
-  limit?: number;
-  json: boolean;
-} | null = null;
-if (command === "log") {
-  const { values } = parseArgs({
-    args: rest,
-    options: {
-      reviewer: { type: "string" },
-      operator: { type: "string" },
-      kind: { type: "string" },
-      since: { type: "string" },
-      limit: { type: "string" },
-      json: { type: "boolean" },
-    },
-  });
-  const reviewer = values.reviewer as Reviewer | undefined;
-  if (reviewer !== undefined && !REVIEWERS.includes(reviewer)) {
-    console.error(
-      `review log: --reviewer must be one of ${REVIEWERS.join(" | ")} (got "${String(values.reviewer)}")`,
-    );
-    process.exit(2);
+
+try {
+  if (command === "show") {
+    const ocdId = rest[0];
+    if (!ocdId || ocdId.startsWith("--")) usage();
+    const { values } = parseArgs({
+      args: rest.slice(1),
+      options: { blind: { type: "boolean" } },
+    });
+    showArgs = { ocdId, blind: values.blind === true };
   }
-  const kind = values.kind as Kind | undefined;
-  if (kind !== undefined && !KINDS.includes(kind)) {
-    console.error(
-      `review log: --kind must be one of ${KINDS.join(" | ")} (got "${String(values.kind)}")`,
-    );
-    process.exit(2);
-  }
-  let limit: number | undefined;
-  if (values.limit !== undefined) {
-    limit = Number(values.limit);
-    if (!Number.isInteger(limit) || limit <= 0) {
+  if (command === "resolve") {
+    const ocdId = rest[0];
+    if (!ocdId || ocdId.startsWith("--")) usage();
+    const { values } = parseArgs({
+      args: rest.slice(1),
+      options: {
+        kind: { type: "string" },
+        close: { type: "string" },
+        note: { type: "string" },
+        operator: { type: "string" },
+        reviewer: { type: "string" },
+        expect: { type: "string", multiple: true },
+      },
+    });
+    const kind = values.kind as Kind | undefined;
+    if (!kind || !KINDS.includes(kind) || !values.note) usage();
+    const reviewer = (values.reviewer ?? "human") as Reviewer;
+    if (!REVIEWERS.includes(reviewer)) {
       console.error(
-        `review log: --limit must be a positive integer (got "${values.limit}")`,
+        `review resolve: --reviewer must be one of ${REVIEWERS.join(" | ")} (got "${String(values.reviewer)}")`,
       );
       process.exit(2);
     }
+    const expect = values.expect;
+    if (expect !== undefined) {
+      const bad = expect.filter((h) => !SHA256.test(h));
+      if (expect.length === 0 || bad.length > 0) {
+        console.error(
+          `review resolve: --expect takes sha256 hex payload hashes as printed by \`review show\` (bad: ${bad.join(", ") || "(none given)"})`,
+        );
+        process.exit(2);
+      }
+    }
+    const operator =
+      values.operator ?? process.env.REVIEW_OPERATOR ?? process.env.USER;
+    if (!operator) {
+      console.error(
+        "review resolve: no operator (pass --operator or set REVIEW_OPERATOR)",
+      );
+      process.exit(1);
+    }
+    resolveArgs = {
+      ocdId,
+      kind,
+      close: values.close,
+      note: values.note,
+      operator,
+      reviewer,
+      ...(expect !== undefined ? { expect } : {}),
+    };
   }
-  logArgs = {
-    ...(reviewer !== undefined ? { reviewer } : {}),
-    ...(values.operator !== undefined ? { operator: values.operator } : {}),
-    ...(kind !== undefined ? { kind } : {}),
-    ...(values.since !== undefined
-      ? { since: parseSince(values.since, new Date()) }
-      : {}),
-    ...(limit !== undefined ? { limit } : {}),
-    json: values.json === true,
-  };
-}
-let corpusArgs: { json: boolean } | null = null;
-if (command === "corpus") {
-  const { values } = parseArgs({
-    args: rest,
-    options: { json: { type: "boolean" } },
-  });
-  corpusArgs = { json: values.json === true };
+
+  if (command === "log") {
+    const { values } = parseArgs({
+      args: rest,
+      options: {
+        reviewer: { type: "string" },
+        operator: { type: "string" },
+        kind: { type: "string" },
+        since: { type: "string" },
+        limit: { type: "string" },
+        json: { type: "boolean" },
+      },
+    });
+    const reviewer = values.reviewer as Reviewer | undefined;
+    if (reviewer !== undefined && !REVIEWERS.includes(reviewer)) {
+      console.error(
+        `review log: --reviewer must be one of ${REVIEWERS.join(" | ")} (got "${String(values.reviewer)}")`,
+      );
+      process.exit(2);
+    }
+    const kind = values.kind as Kind | undefined;
+    if (kind !== undefined && !KINDS.includes(kind)) {
+      console.error(
+        `review log: --kind must be one of ${KINDS.join(" | ")} (got "${String(values.kind)}")`,
+      );
+      process.exit(2);
+    }
+    let limit: number | undefined;
+    if (values.limit !== undefined) {
+      limit = /^\d+$/.test(values.limit) ? Number(values.limit) : NaN;
+      if (!Number.isSafeInteger(limit) || limit <= 0 || limit > 10_000) {
+        console.error(
+          `review log: --limit must be an integer from 1 to 10000 (got "${values.limit}")`,
+        );
+        process.exit(2);
+      }
+    }
+    logArgs = {
+      ...(reviewer !== undefined ? { reviewer } : {}),
+      ...(values.operator !== undefined ? { operator: values.operator } : {}),
+      ...(kind !== undefined ? { kind } : {}),
+      ...(values.since !== undefined
+        ? { since: parseSince(values.since, new Date()) }
+        : {}),
+      ...(limit !== undefined ? { limit } : {}),
+      json: values.json === true,
+    };
+  }
+  if (command === "corpus") {
+    const { values } = parseArgs({
+      args: rest,
+      options: { blind: { type: "boolean" }, json: { type: "boolean" } },
+    });
+    corpusArgs = { blind: values.blind === true, json: values.json === true };
+  }
+} catch (err) {
+  // parseArgs rejects unknown options and missing values with ERR_PARSE_ARGS_*: an operator typo,
+  // reported as usage (still argument-side, still before any DB connection), not a stack trace.
+  const code =
+    err && typeof err === "object" && "code" in err ? String(err.code) : "";
+  if (code.startsWith("ERR_PARSE_ARGS")) {
+    console.error(
+      `review ${command}: ${err instanceof Error ? err.message : String(err)}`,
+    );
+    usage();
+  }
+  throw err;
 }
 
 const sql = createClient();
@@ -373,12 +399,28 @@ try {
           .map(([k, n]) => `${k}=${n}`)
           .join(" ") || "(none)";
       console.log(
-        `\nby kind: ${fmt(log.byKind)}\nby standing: ${fmt(log.byStanding)}`,
+        `\nby kind: ${fmt(log.byKind)}\nby standing: ${fmt(log.byStanding)}` +
+          (log.truncated
+            ? `\n⚠ truncated at --limit ${filter.limit ?? 50}: more verdicts match — raise --limit before sampling or counting`
+            : ""),
       );
     }
   } else if (command === "corpus") {
     const corpus = await reviewCorpus(sql);
-    if (corpusArgs!.json) {
+    if (corpusArgs!.blind) {
+      // The proposer's view: ids only, flat, ordered by sha256(id) — nothing about kind or expectation.
+      const ids = corpusBlindIds(corpus);
+      if (corpusArgs!.json) {
+        console.log(
+          JSON.stringify({ generated_at: corpus.generated_at, ids }, null, 2),
+        );
+      } else {
+        console.log(
+          `review corpus --blind: ${ids.length} id(s), order carries no information — propose on \`show <id> --blind\`; the scorer reads \`corpus --json\` afterwards`,
+        );
+        for (const id of ids) console.log(id);
+      }
+    } else if (corpusArgs!.json) {
       console.log(JSON.stringify(corpus, null, 2));
     } else {
       const line = (i: {
@@ -411,7 +453,11 @@ try {
       );
       for (const i of corpus.other) console.log(`${line(i)}  ${i.kind}`);
       for (const i of corpus.not_honored)
-        console.log(`${line(i)}  ${i.kind} ${i.standing}`);
+        console.log(
+          i.standing === "unparseable"
+            ? `    ${i.ocd_id}  (latest verdict ${i.fetched_at.slice(0, 10)})  unparseable raw`
+            : `${line(i)}  ${i.kind} ${i.standing}`,
+        );
     }
   } else {
     const out = await resolveWindow(sql, resolveArgs!);

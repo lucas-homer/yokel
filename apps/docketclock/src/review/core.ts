@@ -651,7 +651,12 @@ export interface LogEntry {
 }
 
 export interface LogFilter {
-  /** Decision authority. Rows without the key are `human` (the contract default) and match `human`. */
+  /**
+   * Decision authority. Rows without the key are `human` (the contract default) and match `human`.
+   * Every filter matches the raw's fields AS STORED (SQL-side, so `limit` means "the newest N
+   * matching"): an unparseable raw whose fields happen to match is listed, with standing
+   * `unparseable` — a malformed agent row belongs in the agent's log, never hidden from it.
+   */
   reviewer?: HumanReviewVerdictReviewer;
   operator?: string;
   kind?: HumanReviewVerdictKind;
@@ -666,6 +671,11 @@ export interface LogResult {
   /** Counts over the RETURNED entries (after filters and the limit), so a report line is honest. */
   byKind: Record<string, number>;
   byStanding: Record<VerdictStanding, number>;
+  /**
+   * True when more rows matched than `limit` returned. A sample drawn from `entries` is then NOT a
+   * sample of the population (the Monday audit must raise the limit, never sample a truncated list).
+   */
+  truncated: boolean;
 }
 
 /**
@@ -679,7 +689,8 @@ export async function reviewLog(
   filter: LogFilter = {},
 ): Promise<LogResult> {
   const limit = filter.limit ?? 50;
-  const rows = await sql<
+  // Fetch one more than asked: the only honest way to say "there were more".
+  const fetched = await sql<
     { observation_id: string; ocd_id: string; fetched_at: Date; raw: unknown }[]
   >`
     select observation_id, ocd_id, fetched_at, raw from observations
@@ -689,8 +700,10 @@ export async function reviewLog(
       ${filter.kind !== undefined ? sql`and raw->>'kind' = ${filter.kind}` : sql``}
       ${filter.since !== undefined ? sql`and fetched_at >= ${filter.since}` : sql``}
     order by fetched_at desc, observation_id desc
-    limit ${limit}
+    limit ${limit + 1}
   `;
+  const truncated = fetched.length > limit;
+  const rows = fetched.slice(0, limit);
   // One chain read per DISTINCT window among the returned rows: the honored verdict (engine rule)
   // and the id of the window's latest verdict row (to tell "superseded" from "invalidated").
   const chains = new Map<
@@ -737,7 +750,7 @@ export async function reviewLog(
     byKind[k] = (byKind[k] ?? 0) + 1;
     byStanding[e.standing]++;
   }
-  return { entries, byKind, byStanding };
+  return { entries, byKind, byStanding, truncated };
 }
 
 /** One window of the shadow-gate corpus: what a blinded proposal is compared against. */
@@ -768,8 +781,15 @@ export interface Corpus {
   withdrawals: CorpusItem[];
   /** Honored dismiss / reopened verdicts: outside the v1 write policy, listed so nothing is hidden; not gated. */
   other: CorpusItem[];
-  /** Windows whose latest verdict is NOT honored (evidence moved, or raw unparseable): outside the gate. */
-  not_honored: (CorpusItem & { standing: "invalidated" | "unparseable" })[];
+  /**
+   * Windows whose latest verdict is NOT honored: outside the gate. `invalidated` carries the verdict
+   * as written (evidence moved since); `unparseable` carries no verdict fields at all — inventing a
+   * kind or an authority for a raw the contract rejects would misdescribe the observation.
+   */
+  not_honored: (
+    | (CorpusItem & { standing: "invalidated" })
+    | { ocd_id: string; fetched_at: string; standing: "unparseable" }
+  )[];
 }
 
 export async function reviewCorpus(
@@ -805,10 +825,6 @@ export async function reviewCorpus(
     if (!parsed.success) {
       corpus.not_honored.push({
         ocd_id: row.ocd_id,
-        kind: "dismiss_conflict", // placeholder kind for an unparseable raw; standing says what it is
-        expected_close: null,
-        reviewer: "human",
-        operator: "(unparseable)",
         fetched_at: row.fetched_at.toISOString(),
         standing: "unparseable",
       });
@@ -838,6 +854,25 @@ export async function reviewCorpus(
     }
   }
   return corpus;
+}
+
+/**
+ * The PROPOSER's view of the corpus: a flat list of the gated ids, ordered by the sha256 of each id —
+ * deterministic across runs, but carrying no grouping, no expectation and no verdict kind. A proposer
+ * that saw `pins` / `escalations` / `expected_close` could not be blinded afterwards by `show --blind`
+ * (review round 1, P1). Not-honored windows are excluded: they are not gated. The SCORER reads the
+ * full corpus only after the proposals are sealed in the ledger.
+ */
+export function corpusBlindIds(corpus: Corpus): string[] {
+  const key = (id: string) => createHash("sha256").update(id).digest("hex");
+  return [
+    ...corpus.pins,
+    ...corpus.escalations,
+    ...corpus.withdrawals,
+    ...corpus.other,
+  ]
+    .map((i) => i.ocd_id)
+    .sort((a, b) => key(a).localeCompare(key(b)));
 }
 
 /** Re-exported for callers that reason about honoring without the DB (tests, the autopilot). */
