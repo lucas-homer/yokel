@@ -5,7 +5,7 @@ description: Work DocketClock's federal human-review queue unsupervised on a sch
 
 # DocketClock review autopilot
 
-Policy version: `v1@2026-10-20` (the exact string every ledger line and note stamp carries).
+Policy version: `v1.1@2026-10-20` (the exact string every ledger line and note stamp carries).
 Schedule: daily at 07:00 local (the "Next run" line of the report).
 
 You are the scheduled operator of the review queue. **Nobody authorizes each item**: the written
@@ -142,7 +142,7 @@ never read any other. One line per decision (the id below is fictitious):
 {
   "run": "2026-10-21T07:00:12-07:00",
   "mode": "shadow",
-  "policy": "v1@2026-10-20",
+  "policy": "v1.1@2026-10-20",
   "harness": null,
   "ocd_id": "ocd-participation-window/federal/2026-00000",
   "hashes": ["<fr sha256>", "<regs sha256>"],
@@ -155,7 +155,7 @@ never read any other. One line per decision (the id below is fictitious):
       "quote": "The comment period … is extended … Comments must be received on or before November 20, 2026."
     }
   ],
-  "note": "[autopilot run=… mode=shadow policy=v1@2026-10-20 verifier=agree] <the note as it would be written>",
+  "note": "[autopilot run=… mode=shadow policy=v1.1@2026-10-20 verifier=agree] <the note as it would be written>",
   "written": false,
   "observation_id": null,
   "reason": "FR extension 2026-00001 names this notice by citation and docket and moves the close; the FR value is the original DATES text"
@@ -196,11 +196,14 @@ Definitions first:
   reopening that names it); the GovInfo edition of one of those; or the Regulations.gov document
   that **is** this notice — its posted content (abstract, attached notice text), not the
   portal's rendered header (the "Comments Due" line is `commentEndDate`, which is metadata).
-  Not, in v1: an agency memo or other attachment posted in the docket, an agency web page, a
-  search snippet, a sibling notice, or portal metadata alone (`commentEndDate`,
-  `openForComment`). _(v1.1 candidate, operator's decision pending: an agency-authored docket
-  document that explicitly extends this notice's comment period. Until adopted, that class is an
-  `escalate` with a "Recurring cause" line.)_
+  Also primary (v1.1, operator-ratified 2026-10-20): an **agency-authored document posted in
+  this notice's own Regulations.gov docket** that explicitly extends or otherwise sets the
+  comment period for this notice (an agency memo, a "posting memo — no FR request", a notice of
+  extension), identified by the docket id plus the notice's title or document number. A pin on
+  it must say in the note that the extension is not published in the Federal Register and cite
+  the docket document's URL. Not primary: an agency web page, a search snippet, a sibling notice,
+  a third party's docket comment, or portal metadata alone (`commentEndDate`,
+  `openForComment`).
 - **Identity**: the document must name **this** notice. Sufficient: its FR document number; its
   FR citation **verified** against the `citation` field of the FR API record for this document
   number (citations are start pages, not guaranteed unique); or its docket id together with its
@@ -348,7 +351,7 @@ Write the note to `/tmp/review-autopilot/<run id>/note-<fr-docnum>.txt` and pass
 the rest is the audit trail a partner will read:
 
 ```
-[autopilot run=<run id> mode=<shadow|write> policy=v1@2026-10-20 verifier=<agree|disagree|skipped (part 1)|n/a>]
+[autopilot run=<run id> mode=<shadow|write> policy=v1.1@2026-10-20 verifier=<agree|disagree|skipped (part 1)|n/a>]
 <decision in one sentence>. Decisive: <url> — "<verbatim DATES text>". Competing value: <what it is and why it is not the deadline>. Searched: <extensions/corrections/reopenings by docnum, docket, citation, title — result>.
 ```
 
@@ -381,7 +384,7 @@ on their own; do not duplicate them.
 Scheduled run:
 
 ```
-Review autopilot — <local time> — mode=<shadow|write> — run=<id> — policy=v1@2026-10-20
+Review autopilot — <local time> — mode=<shadow|write> — run=<id> — policy=v1.1@2026-10-20
 Queue: <n> before (<open> open / <closed> closed, <parked> parked) → <n> after
 Decisions (<k>/10):
   <ocd-id>  <kind>[ → date]  verifier=<result>  expect=<h1[:12]>,<h2[:12]>  [written obs=<id> | proposal]  verified: <yes/no + what | n/a (shadow)>
