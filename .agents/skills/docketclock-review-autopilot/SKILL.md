@@ -182,8 +182,8 @@ curl -fsS -H 'Title: Review autopilot: <what>' --data-binary @/tmp/review-autopi
 ```
 
 If that file is missing, say so in the report; do not go looking for the secret. Blind roles
-never page. A failure the scheduled prompt already paged (the checkout update) is reported under
-Tooling, not paged again.
+never page. A failure the scheduled prompt already paged (the checkout update, when its curl
+succeeded) is reported under Tooling, not paged again; if the prompt's page failed, page it here.
 
 ## The write policy (v1) — evaluated in this order
 
@@ -283,18 +283,22 @@ week would carry your own reasoning and repeat your own evidence error.
    Pick 5 of the week's `honored` agent verdicts (all if fewer) deterministically: order the ids
    by the sha256 of `<run id>:<ocd-id>` and take the first 5 — never "pick some", which favours
    the ones you remember as clean. Then `review queue` for every parked item
-   (`[escalated by …]`), noting which were parked by a human (operator other than `autopilot`);
+   (`[escalated by <operator> (<reviewer>) …]`), noting which were parked by a **human** — the
+   mark's reviewer is `human`, whoever executed the write; `autopilot`-parked means reviewer `agent`;
    in shadow mode add every ledger `escalate` proposal of the last 7 days (shadow never parks
    anything in the DB, so the ledger is the only place they exist).
 2. Dispatch the auditor (see "Dispatching children"): provider `claudeAgent`, model
    `claude-opus-5-5`, effort `high`, role `review`. Its task text contains, verbatim, this
    skill's "Hard limits", "Runtime" (all subsections) and "The write policy (v1)" sections, and
-   **only** the ocd-ids — not the verdicts, not the dates, not the ledger. It runs `review show
-<ocd-id> --blind` and the full search on each and returns, per id, its own verdict (`pin_close`
-   - date, `confirm_withdrawn`, `escalate`, or `insufficient` when a source was unreachable) with
-     the decisive URL and verbatim text. It writes nothing and pages nobody.
+   **only** the ocd-ids — not the verdicts, not the dates, not the ledger — plus this exemption:
+   the auditor is an independent evidence reading, so it does **not** dispatch the verifier (rule
+   2's verifier clause is the parent's job before any write) and does not write a ledger. It runs
+   `review show <ocd-id> --blind` and the full search on each and returns, per id, exactly one of
+   `pin_close` + date, `confirm_withdrawn`, `escalate`, `skip` (rules 4–5, with the reason) or
+   `insufficient` (a source unreachable), with the decisive URL and verbatim text. It writes
+   nothing and pages nobody.
 3. Compare. For a sampled agent verdict, agreement means the same kind and (for a pin) the same
-   date; `insufficient` is "could not audit", reported, not a disagreement. A disagreement is an
+   date; `insufficient` and `skip` are "could not audit", reported, not a disagreement. A disagreement is an
    `escalate` in write mode (written through the normal guarded path, budgeted, with both
    readings in the note; it supersedes the pin and parks the item) and a report line in shadow.
    For a parked item or a shadow escalation: if it was parked by a **human**, only report the
@@ -405,7 +409,11 @@ un-told by `show --blind` — and you are also the daily part 2 proposer, so you
 
 **As the orchestrator:**
 
-1. `review corpus --blind` → a flat, sha256-ordered list of ids, nothing else. Shuffle it (order
+1. Seal the scorer's snapshot first, without looking at it: run `review corpus --json` with its
+   output redirected straight into `~/.config/yokel/review-autopilot/harness-<run id>/corpus.json`
+   (`… corpus --json > that-file`; never print or open it). The gate is scored against this
+   snapshot, so a window whose verdict is invalidated while the proposers work stays in the
+   denominator instead of silently leaving it. Then `review corpus --blind` → a flat, sha256-ordered list of ids, nothing else. Shuffle it (order
    by the sha256 of `<harness run id>:<ocd-id>`) and split it into batches of at most 5.
 2. For each batch dispatch a **fresh proposer** (see "Dispatching children"): provider
    `claudeAgent`, model `claude-opus-5-5`, effort `high`, role `general`. Its task text
@@ -419,9 +427,13 @@ id>/batch-<n>.jsonl` with `"harness": "<run id>"`, `"mode": "shadow"`, `"written
    propose on every id given; write nothing to the cluster; page nobody.
 3. Only after every proposer has returned, dispatch a **fresh scorer**: provider `claudeAgent`,
    model `claude-sonnet-5-5`, effort `medium`, role `review`. Its task text contains the harness
-   run id, the "Runtime" command block, and these scoring rules; it reads `review corpus --json`,
-   the runbook's required part 3 set (`docs/runbooks/review-queue.md`, "Shadow gate"), and the
-   `harness-<run id>/` files, and returns the tallies:
+   run id, the "Runtime" command block, and these scoring rules; it reads the sealed
+   `harness-<run id>/corpus.json` (never a fresh `corpus --json`), the runbook's required part 3
+   set (`docs/runbooks/review-queue.md`, "Shadow gate"), and the `harness-<run id>/batch-*.jsonl`
+   files, and returns the tallies. It also runs `review corpus --json` once at scoring time and
+   lists every snapshot id whose standing changed meanwhile (now `not_honored`, or a different
+   `expected_close`): those are scored against the snapshot and reported as "changed during the
+   run" so the operator can re-run them; they are never dropped.
    - **Part 1** — for each id in `pins` whose `reviewer` is `human` (agent pins are the
      autopilot's own output and are not precedent): agree iff `proposal.kind == "pin_close"` and
      `proposal.close == expected_close`. The denominator is the **whole** list: a missing or

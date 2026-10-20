@@ -142,6 +142,10 @@ function sinceOrExit(raw: string): Date {
 }
 
 try {
+  if (command === "queue") {
+    // No options yet: anything after `queue` is a typo, reported argument-side like every other.
+    parseArgs({ args: rest, options: {} });
+  }
   if (command === "show") {
     const ocdId = rest[0];
     if (!ocdId || ocdId.startsWith("--")) usage();

@@ -58,6 +58,16 @@ const cases: {
     expect: /^usage: review/m,
   },
   {
+    name: "queue --bogus → unknown option reported, then usage",
+    args: ["queue", "--bogus"],
+    expect: /Unknown option[\s\S]*usage: review/,
+  },
+  {
+    name: "queue with a stray positional → reported, then usage",
+    args: ["queue", "unexpected"],
+    expect: /Unexpected argument[\s\S]*usage: review/,
+  },
+  {
     name: "log --since with a word → specific message",
     args: ["log", "--since", "yesterday"],
     expect: /--since takes/,
