@@ -295,6 +295,22 @@ proposals are re-investigated weekly and skip-reuse is scoped by policy version;
 examples are full commands (zsh does not word-split `$R`); the scheduled prompt pages a failed
 checkout update inline and continues; `--since`/`--limit` are bounded argument-side; an unparseable
 corpus row carries no invented kind or authority; plus a spawned CLI argument-validation test.
+Shadow smoke run (Claude Opus 5.5, high, 2026-10-20, three items, outcomes withheld, no writes,
+no pages): one `pin_close` agreeing with the human precedent via an FR extension found only by
+full-text search, two `escalate`; 18 skill findings folded in (full commands; a fictitious ledger
+example; identity rule widened to verified citations and docket+title+date, RIN alone
+insufficient; "material", "primary document", time-of-day and extension-vs-reopening defined;
+search mechanics and keyless source access prescribed, Regulations.gov via the Playwright browser,
+`.playwright-mcp/` gitignored; `show` prints an identity line and labels each close field; the
+ledger gains `note`, `section` and a defined `verifier` for non-pins; child dispatch via
+`orchestrator_capabilities` with a timeout rule; a hash refresh before every ledger line; a report
+variant for harness runs). **Open policy question for the operator** (v1.1 candidate): an
+agency-authored document posted in the notice's own Regulations.gov docket that explicitly extends
+the comment period (an "FDMS posting memo — no FR request") is not a v1 primary document, so the
+EPA construction-general-permit extension to 2026-09-17 — which a person pinned in September — is
+an `escalate` under v1. Recommendation: adopt it as v1.1 with a note requirement ("extension not
+published in the FR"), since the precedent is already on record; until then that class escalates
+with a "Recurring cause" line.
 
 `.agents/skills/docketclock-review-autopilot/SKILL.md` (the existing guided skill stays for
 interactive use and is referenced, not duplicated): the write policy above, the run procedure,

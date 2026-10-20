@@ -222,6 +222,31 @@ try {
   `;
   await reconcileOcdId(sql, OCD_F, T6);
 
+  // ── SHOW identity (smoke finding 8): what the evidence card needs, from source raw, blind-safe ────
+  {
+    const plain = await reviewShow(sql, OCD_A);
+    const blind = await reviewShow(sql, OCD_A, { blind: true });
+    const idOk = (i: typeof plain.identity) =>
+      i.fr_document_number === "2025-02910" &&
+      (i.title ?? "").startsWith(
+        "Two Actions Published by the Environmental Protection Agency",
+      ) &&
+      i.docket_ids.join(",") === "EPA-HQ-OW-2024-0454" &&
+      i.regs_document_id === "FAA-2025-5396-0001" &&
+      i.regs_docket_id === "FAA-2025-5396" &&
+      i.regs_fr_doc_num === "2025-02910" &&
+      i.citation === null; // the fixture carries no citation: null, never invented
+    assert(
+      "SHOW identity: document number, title, dockets and the Regs document/docket/frDocNum from the raw",
+      idOk(plain.identity),
+      JSON.stringify(plain.identity),
+    );
+    assert(
+      "SHOW --blind identity: identical (source raw only, nothing verdict-derived)",
+      JSON.stringify(blind.identity) === JSON.stringify(plain.identity),
+    );
+  }
+
   // ── LOG: everything, newest first, with standing ──────────────────────────────────────────────────
   const all = await reviewLog(sql);
   assert(

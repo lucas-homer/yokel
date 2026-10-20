@@ -332,6 +332,14 @@ try {
     console.log(
       `  conflicts: ${s.liveConflicts} live / ${s.retiredConflicts} retired; chain links: ${s.blind ? "(hidden in blind mode)" : String(s.chainLinks.length)}`,
     );
+    const id = s.identity;
+    console.log(
+      `  identity: FR ${id.fr_document_number ?? "(none)"} — ${id.title ? JSON.stringify(id.title) : "(no title)"}` +
+        ` — ${id.citation ?? "(no citation)"}${id.publication_date ? ` published ${id.publication_date}` : ""}` +
+        ` — dockets [${id.docket_ids.join(", ")}] — RIN ${id.rins.length > 0 ? id.rins.join(", ") : "none"}` +
+        `\n            Regs ${id.regs_document_id ?? "(none)"} — docket ${id.regs_docket_id ?? "(none)"} — frDocNum ${id.regs_fr_doc_num ?? "(none)"}` +
+        (id.regs_title ? ` — ${JSON.stringify(id.regs_title)}` : ""),
+    );
     if (!s.blind) {
       console.log(
         s.honored
@@ -344,8 +352,14 @@ try {
     }
     console.log(`\n  latest per source:`);
     for (const src of s.sources) {
+      const closeField =
+        src.source === "federal_register"
+          ? "comments_close_on"
+          : src.source === "regulations_gov"
+            ? "commentEndDate"
+            : "close";
       console.log(
-        `    ${src.source} @ ${src.fetched_at}\n      close=${src.close_value ?? "null"}` +
+        `    ${src.source} @ ${src.fetched_at}\n      ${closeField}=${src.close_value ?? "null"}` +
           ` withdrawn=${src.withdrawn ?? "n/a"} openForComment=${src.open_for_comment ?? "n/a"}` +
           ` flags[w/e/r]=${Number(src.is_withdrawal)}${Number(src.is_extension)}${Number(src.is_reopening)}` +
           `\n      hash=${src.payload_hash}`,

@@ -224,6 +224,27 @@ export interface SourceSummary {
   is_reopening: boolean;
 }
 
+/**
+ * Who this window IS, from the latest source payloads — the identifiers an investigation needs to
+ * check identity (document number, citation, dockets, RINs) and to search for extensions, without
+ * a round-trip to the FR API. Source raw only, so it is safe in blind mode. (PR-A3 smoke finding:
+ * `show --blind` used to omit everything the evidence card asks for.)
+ */
+export interface WindowIdentity {
+  fr_document_number: string | null;
+  title: string | null;
+  /** e.g. "91 FR 54096" — the FR citation an extension notice uses to name this document. */
+  citation: string | null;
+  publication_date: string | null;
+  docket_ids: string[];
+  rins: string[];
+  regs_document_id: string | null;
+  regs_docket_id: string | null;
+  regs_title: string | null;
+  /** The FR document number Regulations.gov attaches to its document — the cross-source identity check. */
+  regs_fr_doc_num: string | null;
+}
+
 export interface PriorVerdict {
   observation_id: string;
   fetched_at: string;
@@ -243,6 +264,7 @@ export interface HonoredSummary {
 
 export interface ShowResult {
   window: Record<string, unknown> | null;
+  identity: WindowIdentity;
   sources: SourceSummary[];
   priorVerdicts: PriorVerdict[];
   /** null when no verdict exists or the latest one is superseded by evidence. Always null when blind. */
@@ -302,18 +324,46 @@ export async function reviewShow(
   `;
 
   const sources: SourceSummary[] = [];
+  const identity: WindowIdentity = {
+    fr_document_number: null,
+    title: null,
+    citation: null,
+    publication_date: null,
+    docket_ids: [],
+    rins: [],
+    regs_document_id: null,
+    regs_docket_id: null,
+    regs_title: null,
+    regs_fr_doc_num: null,
+  };
+  const str = (v: unknown): string | null =>
+    typeof v === "string" && v.trim().length > 0 ? v.trim() : null;
   for (const o of latest) {
     if (o.source === "human_review") continue; // verdicts listed separately, ALL of them, below
     let close: string | null = null;
     let withdrawn: boolean | null = null;
     let open: boolean | null = null;
     if (o.source === "federal_register") {
-      close = extractFr(o.raw).commentsCloseOn;
+      const f = extractFr(o.raw);
+      close = f.commentsCloseOn;
+      const doc = (o.raw ?? {}) as Record<string, unknown>;
+      identity.fr_document_number = f.documentNumber;
+      identity.title = f.title;
+      identity.citation = str(doc.citation);
+      identity.publication_date = f.publicationDate;
+      identity.docket_ids = f.docketIds;
+      identity.rins = f.rins;
     } else if (o.source === "regulations_gov") {
       const f = extractRegs(o.raw);
       close = f.commentEndDate;
       withdrawn = f.withdrawn ?? null;
       open = f.openForComment ?? null;
+      const data = ((o.raw ?? {}) as { data?: Record<string, unknown> }).data;
+      const attrs = (data?.attributes ?? {}) as Record<string, unknown>;
+      identity.regs_document_id = str(data?.id);
+      identity.regs_docket_id = f.docketId;
+      identity.regs_title = str(attrs.title);
+      identity.regs_fr_doc_num = str(attrs.frDocNum);
     }
     sources.push({
       source: o.source,
@@ -340,6 +390,7 @@ export async function reviewShow(
     if (chain.length === 0)
       return {
         window: null,
+        identity,
         sources,
         priorVerdicts: [],
         honored: null,
@@ -351,6 +402,7 @@ export async function reviewShow(
     const derived = reconcile(chain, opts.now ?? new Date());
     return {
       window: stored ? { ...derived.window } : null,
+      identity,
       sources,
       priorVerdicts: [],
       honored: null,
@@ -411,6 +463,7 @@ export async function reviewShow(
 
   return {
     window: stored ?? null,
+    identity,
     sources,
     priorVerdicts,
     honored,
