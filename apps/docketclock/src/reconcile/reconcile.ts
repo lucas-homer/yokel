@@ -18,6 +18,14 @@
  * to this versioned rulebook, never an override around it — same chain in, same window out, exactly as
  * deterministic as every other rule.
  *
+ * reconcile-v2.3 (ADR 0015, contract 0.11.0): the verdict's `reviewer` decides the provenance flag —
+ * human_resolved when a person authorized it (the default, every pre-0.11.0 row), agent_resolved when
+ * an autopilot chose it unsupervised. The `escalate` kind is honored for FRESHNESS only (it parks the
+ * item until invalidating evidence arrives) and changes NOTHING in the derivation: no flag, no
+ * observation id, no close, no status — the window and its live ConflictRecord are byte-for-byte what
+ * the machine derives alone. The honor-the-verdict decision is exported (selectHonoredVerdict) so the
+ * review CLI reports honoring by the same rule instead of inferring it from a flag.
+ *
  * Determinism: `now` is injectable so tests pin every timestamp; it is used only for the engine's own
  * stamps (detected_at / change-tracking), never read off a wall clock implicitly.
  *
@@ -47,7 +55,7 @@ import {
 } from "./eastern-date.js";
 
 /** Pins the rulebook version — bump on any rule change (mirrors PARSER_VERSION in the adapters). */
-export const RECONCILER_VERSION = "reconcile-v2.2";
+export const RECONCILER_VERSION = "reconcile-v2.3";
 
 export interface ReconcileResult {
   window: ParticipationWindow;
@@ -140,6 +148,82 @@ function regsCloseToUtc(commentEndDate: string | null): string | null {
       return null;
   }
   return d.toISOString();
+}
+
+/** The latest human_review verdict when it is HONORED under the freshness rule, with its row. */
+export interface HonoredVerdict {
+  verdict: HumanReviewVerdict;
+  observation: Observation;
+}
+
+/**
+ * selectHonoredVerdict — the honor-the-verdict decision (reconcile-v2.1, ADR 0010; amended by v2.2,
+ * ADR 0014), pure and exported since v2.3 (ADR 0015) so the review CLI and the autopilot can ask
+ * "is the latest verdict honored?" by the engine's own rule rather than inferring it from a flag —
+ * an `escalate` verdict leaves no flag on the window at all.
+ *
+ * Returns the latest human_review observation's parsed verdict when EVERY non-human observation
+ * strictly newer than it (the v2 tie policy: equal fetched_at is not newer) is a proven
+ * Regulations.gov metadata-only refresh of the reviewed baseline (v2.1), or — for a pin_close whose
+ * date equals the portal's own Eastern close date — the portal recording that close
+ * (portalCloseEchoPreservesPin, v2.2). Otherwise null: the verdict is superseded by evidence and the
+ * window derives purely from sources. An unparseable raw is null too (defense-in-depth).
+ *
+ * What "honored" MEANS is the caller's business: reconcile() applies the kind's overlay for every
+ * kind except `escalate`, which is honored for freshness only (parked, nothing derived).
+ */
+export function selectHonoredVerdict(
+  observations: Observation[],
+): HonoredVerdict | null {
+  const human = latestBySource(observations, "human_review");
+  if (!human) return null;
+  const v = HumanReviewVerdict.safeParse(human.raw);
+  if (!v.success) return null;
+  const reviewedAt = new Date(human.fetched_at).getTime();
+  const newerSources = observations.filter(
+    (o) =>
+      o.source !== "human_review" &&
+      new Date(o.fetched_at).getTime() > reviewedAt,
+  );
+  const baseline = latestBySource(
+    observations.filter((o) => new Date(o.fetched_at).getTime() <= reviewedAt),
+    "regulations_gov",
+  );
+  // Every intervening observation must match, not just the latest: a material change
+  // followed by a reversion must never silently revive an outdated verdict.
+  const baselineReviewed =
+    baseline !== null &&
+    v.data.reviewed_payload_hashes.includes(baseline.payload_hash);
+  const stillReviewed = newerSources.every(
+    (o) => baselineReviewed && sameReviewedRegsEvidence(baseline!, o),
+  );
+  if (stillReviewed) return { verdict: v.data, observation: human };
+  if (
+    baselineReviewed &&
+    v.data.kind === "pin_close" &&
+    v.data.pinned_close_date !== undefined
+  ) {
+    // v2.2 clause 2: the pin must equal the PORTAL'S OWN Eastern close date — the UTC-day
+    // artifact matters here (commentEndDate 2026-10-07T03:59:59Z is Eastern 10-06, so a pin of
+    // 10-07 is NOT equal). A null/rolled-over commentEndDate predicts nothing -> no exception.
+    const baselineClose = regsCloseToUtc(
+      extractRegs(baseline!.raw).commentEndDate,
+    );
+    const portalEastern = baselineClose
+      ? easternCalendarDate(new Date(baselineClose))
+      : null;
+    if (
+      portalEastern !== null &&
+      portalEastern === v.data.pinned_close_date &&
+      portalCloseEchoPreservesPin(
+        baseline!,
+        newerSources,
+        frCloseDateToUtcInstant(v.data.pinned_close_date),
+      )
+    )
+      return { verdict: v.data, observation: human };
+  }
+  return null;
 }
 
 export function reconcile(
@@ -382,78 +466,41 @@ export function reconcile(
   //
   // The overlay runs AFTER the machine rulebook so dual-fire stays computed from real machine state:
   // an honored verdict CHANGES WHAT WE ASSERT (the window fields), not what we watch. The machine's
-  // conflict flags are CARRIED (plus human_resolved) so the window still shows what was disputed; the
-  // live ConflictRecord is not emitted while honored — persist retires it as RESOLVED (resolved_at),
-  // and the same-pair upsert revives it if it ever re-fires. A verdict whose raw fails
+  // conflict flags are CARRIED (plus the provenance flag) so the window still shows what was disputed;
+  // the live ConflictRecord is not emitted while honored — persist retires it as RESOLVED
+  // (resolved_at), and the same-pair upsert revives it if it ever re-fires. A verdict whose raw fails
   // HumanReviewVerdict is IGNORED (defense-in-depth — the ingest seam already rejects these; a bad
   // legacy row must degrade to pure derivation, not brick the window forever).
-  const human = latestBySource(observations, "human_review");
-  let honoredVerdict: HumanReviewVerdict | null = null;
-  if (human) {
-    const v = HumanReviewVerdict.safeParse(human.raw);
-    if (v.success) {
-      const reviewedAt = new Date(human.fetched_at).getTime();
-      const newerSources = observations.filter(
-        (o) =>
-          o.source !== "human_review" &&
-          new Date(o.fetched_at).getTime() > reviewedAt,
-      );
-      const baseline = latestBySource(
-        observations.filter(
-          (o) => new Date(o.fetched_at).getTime() <= reviewedAt,
-        ),
-        "regulations_gov",
-      );
-      // Every intervening observation must match, not just the latest: a material change
-      // followed by a reversion must never silently revive an outdated verdict.
-      const baselineReviewed =
-        baseline !== null &&
-        v.data.reviewed_payload_hashes.includes(baseline.payload_hash);
-      const stillReviewed = newerSources.every(
-        (o) => baselineReviewed && sameReviewedRegsEvidence(baseline!, o),
-      );
-      if (stillReviewed) {
-        honoredVerdict = v.data;
-      } else if (
-        baselineReviewed &&
-        v.data.kind === "pin_close" &&
-        v.data.pinned_close_date !== undefined
-      ) {
-        // v2.2 clause 2: the pin must equal the PORTAL'S OWN Eastern close date — the UTC-day
-        // artifact matters here (commentEndDate 2026-10-07T03:59:59Z is Eastern 10-06, so a pin of
-        // 10-07 is NOT equal). A null/rolled-over commentEndDate predicts nothing -> no exception.
-        const baselineClose = regsCloseToUtc(
-          extractRegs(baseline!.raw).commentEndDate,
-        );
-        const portalEastern = baselineClose
-          ? easternCalendarDate(new Date(baselineClose))
-          : null;
-        if (
-          portalEastern !== null &&
-          portalEastern === v.data.pinned_close_date &&
-          portalCloseEchoPreservesPin(
-            baseline!,
-            newerSources,
-            frCloseDateToUtcInstant(v.data.pinned_close_date),
-          )
-        )
-          honoredVerdict = v.data;
-      }
-    }
-  }
+  //
+  // v2.3 (ADR 0015): the decision itself lives in selectHonoredVerdict (exported — the review CLI
+  // reports "honored" by this exact rule). Two additions, both OUTSIDE the machine rulebook:
+  //   • `escalate` is honored for freshness (it stays the latest verdict and is parked until
+  //     invalidating evidence arrives) but is SKIPPED here entirely — no provenance flag, no
+  //     observation id, no case below — so the derivation is byte-for-byte the machine's own and the
+  //     ConflictRecord stays live. Parking is visible (CLI, gauge, alert); it is never silence.
+  //   • the provenance flag follows the verdict's `reviewer`: human_resolved when a person authorized
+  //     it (the default, hence every pre-0.11.0 row), agent_resolved when an autopilot chose it.
+  const honored = selectHonoredVerdict(observations);
 
-  if (honoredVerdict) {
-    conflictFlags = [...conflictFlags, "human_resolved"];
-    currentObservationIds.push(human!.observation_id);
+  if (honored && honored.verdict.kind !== "escalate") {
+    const honoredVerdict = honored.verdict;
+    conflictFlags = [
+      ...conflictFlags,
+      honoredVerdict.reviewer === "agent" ? "agent_resolved" : "human_resolved",
+    ];
+    currentObservationIds.push(honored.observation.observation_id);
     switch (honoredVerdict.kind) {
       case "pin_close": {
         // The operator asserts the operative close. Date-only, so the 11:59:59 p.m. ET convention
         // applies exactly as it does to an FR date-only value; the display carries the calendar date
         // (the reconcile-v1.1 lesson). Confidence HIGH per the locked decision; status derives from
         // the pinned close alone — while honored, the pin outranks a stale openForComment flag.
+        // The attribution names the DECIDING authority (ADR 0015): the legacy wording for a human
+        // (every pre-0.11.0 row keeps its exact display), "agent review" when reviewer=agent — a
+        // consumer-facing field must not claim a person authorized what an autopilot chose.
         const pinned = honoredVerdict.pinned_close_date!;
         resolvedCloseUtc = frCloseDateToUtcInstant(pinned);
-        resolvedCloseDisplay = `closes ${pinned} at 11:59 p.m. ET (pinned by human review)`;
+        resolvedCloseDisplay = `closes ${pinned} at 11:59 p.m. ET (pinned by ${honoredVerdict.reviewer === "agent" ? "agent" : "human"} review)`;
         confidence = "high";
         status = new Date(resolvedCloseUtc) > now ? "open" : "closed";
         break;

@@ -248,6 +248,12 @@ deploy + sweep, `review queue` shows the 7 gone and `review show` shows `human_r
 
 ### PR-A2 — ADR 0015 + contract 0.11.0 + reconciler + CLI: `escalate`, `reviewer`, `agent_resolved`, `--expect`
 
+Status 2026-10-19: implemented on branch `t3/review-escalate-provenance` (ADR 0015, contract
+0.11.0, `reconcile-v2.3`, CLI flags, `escalated` gauge series + `review-queue-escalated` rule);
+deploy, sweep and the live #127 round-trip pending merge. One deliberate reading recorded in the
+ADR: the 0014 echo exception is not extended to `escalate`, so the portal's own close flip un-parks
+an open escalated item once.
+
 ADR 0015 (agent authority) first. Contract-keeper: `HumanReviewVerdictKind += escalate` (date
 forbidden — the existing pin⇔date refinement already covers it; note + hashes required),
 `HumanReviewVerdict.reviewer` optional enum defaulting to `human`, `ConflictFlag += agent_resolved`.

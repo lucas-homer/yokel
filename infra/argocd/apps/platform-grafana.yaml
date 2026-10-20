@@ -2355,6 +2355,72 @@ spec:
                   cadence: daily
                 annotations:
                   summary: "The oldest unresolved review-queue item is past 7 days \u2014 human judgment is rotting in the queue. Run the weekly sweep: `review queue` / `review show` / `review resolve` (docs/runbooks/review-queue.md). Depth and age are on the DocketClock \u2014 App dashboard's Review queue row."
+              # Escalations pending (review autopilot PR-A2, ADR 0015): the PARKED subset of the queue
+              # \u2014 windows whose latest honored verdict is `escalate` ("primary sources examined; the
+              # discrepancy cannot be resolved from documents; a human decision or agency clarification
+              # is needed"). An escalation derives NOTHING (the window stays conflicting, the rot alert
+              # keeps ageing it \u2014 by design), so without this rule a parked item would be
+              # indistinguishable from an unworked one. The series is published every poll cycle with
+              # an explicit 0 (metrics.ts recordReviewQueue), hence noDataState OK: no data means a
+              # dark poller, which is poller-stalled's + the dead-man's job, never "nothing parked".
+              # for: 1h \u2014 the count only moves at poll-cycle cadence; an escalation written and
+              # superseded within the hour (a human already acted) should not page.
+              # cadence=daily: a standing condition, like rot \u2014 nags once a day until a human
+              # supersedes every parked item with a real verdict (`review resolve`).
+              - uid: review-queue-escalated
+                title: Review queue escalations pending (a human decision is owed)
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: sum(docketclock_review_queue_depth{app_kubernetes_io_component="poller", reason="escalated"})
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: gt
+                        params:
+                        - 0
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: OK
+                execErrState: Error
+                for: 1h
+                labels:
+                  severity: warning
+                  cadence: daily
+                annotations:
+                  # Same Helm-tpl escape idiom as pass-failing/accuracy-degraded: the outer Go-template
+                  # emits literal braces; Grafana expands $values at notification time.
+                  summary: "{{ \"{{ $values.A }}\" }} review-queue item(s) are parked as ESCALATED \u2014 a reviewer examined the primary sources and could not resolve the discrepancy from documents; a human decision or agency clarification is owed. `review queue` lists them with [escalated by \u2026]; read `review show <ocd-id>` (the note says what was searched) and supersede with a real verdict via `review resolve` (docs/runbooks/review-queue.md). Nothing is derived while parked: the window stays conflicting by design."
             # --- Backups (PR-5, plans/backups-restore-drill.md). Routes to local-noop like everything
             # else until Slice V's V3 lands a real receiver. Metric sources: cnpg_objectstore_* comes
             # from kube-state-metrics customResourceState over the barman ObjectStore CR (with plugin

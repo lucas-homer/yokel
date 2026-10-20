@@ -24,4 +24,6 @@ contingency still emits OCD-Event-shaped records so it can rejoin DocketClock la
 Status: **built and in active use** (see `package.json` for the current version; changes go
 through the contract-keeper flow with a version bump). The `AccuracyRecord` shape landed at
 0.9.0 with the post-close verification slice (V, PR-V1); the `human_review` source +
-`HumanReviewVerdict` + `human_resolved` flag landed at 0.10.0 with the review/resolve slice (R, PR-R1).
+`HumanReviewVerdict` + `human_resolved` flag landed at 0.10.0 with the review/resolve slice (R, PR-R1);
+the `escalate` verdict kind, `HumanReviewVerdict.reviewer` (`human` | `agent`) and the `agent_resolved`
+flag landed at 0.11.0 with the review autopilot's PR-A2 (ADR 0015).

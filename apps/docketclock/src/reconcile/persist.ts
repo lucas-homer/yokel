@@ -21,9 +21,10 @@
  * live (resolved_at=NULL) and any OTHER still-open (superseded) pair for the ocd_id is retired. The
  * proof feed publishes only live conflicts (resolved_at IS NULL).
  */
-import type { Sql } from "../db/client.js";
+import type { Sql, SqlHandle } from "../db/client.js";
 import type {
   ChangeHistoryEntry,
+  Observation,
   ObservationSource,
   ParticipationWindow,
 } from "@yokel/contracts";
@@ -232,14 +233,17 @@ export interface ReconcileOcdIdResult extends ReconcileResult {
 }
 
 /**
- * Read every Observation for an ocd_id from the log, run the pure engine, persist the projection.
- * The single DB-aware orchestration point; the rulebook itself stays pure + deterministic.
+ * loadObservations — the FULL Observation chain for one ocd_id, in the engine's deterministic read
+ * order (fetched_at asc, observation_id asc), shaped as the contract carries it (fetched_at ISO).
+ * Shared by reconcileOcdId and the review CLI (honoring, the blind derivation, escalation marks —
+ * PR-A2) so every caller asks the engine about the SAME chain the projection was derived from.
+ * Returns [] for an unknown ocd_id; the caller decides whether that is an error. Takes any handle,
+ * so a caller can read the chain inside its own transaction (the review write's escalate check).
  */
-export async function reconcileOcdId(
-  sql: Sql,
+export async function loadObservations(
+  sql: SqlHandle,
   ocdId: string,
-  now: Date = new Date(),
-): Promise<ReconcileOcdIdResult> {
+): Promise<Observation[]> {
   const rows = await sql<
     {
       observation_id: string;
@@ -270,15 +274,26 @@ export async function reconcileOcdId(
     order by fetched_at asc, observation_id asc
   `;
 
-  if (rows.length === 0)
-    throw new Error(`reconcileOcdId: no observations for ocd_id "${ocdId}"`);
-
-  const observations = rows.map((r) => ({
+  return rows.map((r) => ({
     ...r,
     // postgres.js returns timestamptz as a Date; the contract carries an ISO string.
     fetched_at:
       r.fetched_at instanceof Date ? r.fetched_at.toISOString() : r.fetched_at,
   }));
+}
+
+/**
+ * Read every Observation for an ocd_id from the log, run the pure engine, persist the projection.
+ * The single DB-aware orchestration point; the rulebook itself stays pure + deterministic.
+ */
+export async function reconcileOcdId(
+  sql: Sql,
+  ocdId: string,
+  now: Date = new Date(),
+): Promise<ReconcileOcdIdResult> {
+  const observations = await loadObservations(sql, ocdId);
+  if (observations.length === 0)
+    throw new Error(`reconcileOcdId: no observations for ocd_id "${ocdId}"`);
 
   const result = reconcile(observations, now);
   const persist = await persistReconciliation(sql, result, now);
