@@ -1,8 +1,8 @@
 /**
- * review/cli.ts — the operator review CLI (Slice R, PR-R3; review autopilot PR-A2): `queue` / `show`
- * / `resolve` over review/core.ts. CLI-first, operator-only by design (locked decision) — the delivery
- * API stays read-only; this is the ONLY write path for human_review observations until the D5
- * console, and that console's spec is this CLI.
+ * review/cli.ts — the operator review CLI (Slice R, PR-R3; review autopilot PR-A2/PR-A3): `queue` /
+ * `show` / `resolve` / `log` / `corpus` over review/core.ts. CLI-first, operator-only by design
+ * (locked decision) — the delivery API stays read-only; this is the ONLY write path for human_review
+ * observations until the D5 console, and that console's spec is this CLI.
  *
  * Run (host-side, DATABASE_URL via the usual port-forward):
  *   DATABASE_URL=… pnpm --filter @yokel/docketclock review queue
@@ -10,6 +10,9 @@
  *   DATABASE_URL=… pnpm --filter @yokel/docketclock review resolve <ocd-id> \
  *     --kind pin_close --close 2026-09-20 --note "why" [--operator name] \
  *     [--reviewer human|agent] [--expect <sha256> --expect <sha256> …]
+ *   DATABASE_URL=… pnpm --filter @yokel/docketclock review log [--reviewer agent] [--operator x] \
+ *     [--kind k] [--since 7d|2026-10-01] [--limit 50] [--json]
+ *   DATABASE_URL=… pnpm --filter @yokel/docketclock review corpus [--json]
  * or in-cluster (zero setup — the poller image ships src/ + env):
  *   kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts queue
  *
@@ -34,6 +37,14 @@
  *
  * --blind (the shadow-gate harness): hides prior verdicts and shows the machine's own derivation of
  * the sources, so an agent under measurement cannot read the answer off the projection.
+ *
+ * log (PR-A3): the verdict ledger, newest first, each with its STANDING under the engine's honoring
+ * rule (honored / parked / superseded / invalidated / unparseable). `--reviewer agent --since 7d` is
+ * how an operator reads what the autopilot wrote this week without opening its thread.
+ *
+ * corpus (PR-A3): the shadow-gate corpus computed live — every window whose latest verdict is honored
+ * now, grouped by what a blinded proposal must reproduce (pins → the date; escalations → `escalate`;
+ * withdrawals → `confirm_withdrawn`). The harness feeds these ocd-ids to `show --blind`.
  */
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -44,7 +55,8 @@ const envPath = fileURLToPath(new URL("../../../../.env", import.meta.url));
 if (existsSync(envPath)) process.loadEnvFile(envPath);
 
 const { createClient } = await import("../db/client.js");
-const { reviewQueue, reviewShow, resolveWindow } = await import("./core.js");
+const { reviewQueue, reviewShow, resolveWindow, reviewLog, reviewCorpus } =
+  await import("./core.js");
 
 const KINDS = [
   "pin_close",
@@ -66,11 +78,16 @@ function usage(): never {
       "  review show <ocd-id> [--blind]",
       "  review resolve <ocd-id> --kind <kind> [--close YYYY-MM-DD] --note <why> [--operator <name>]",
       "                 [--reviewer human|agent] [--expect <sha256-hash> ...]",
+      "  review log [--reviewer human|agent] [--operator <name>] [--kind <kind>]",
+      "             [--since <N>h|<N>d|<N>w|YYYY-MM-DD] [--limit <n>] [--json]",
+      "  review corpus [--json]",
       `  kinds: ${KINDS.join(" | ")}`,
       "  --reviewer  who decided: human (default) or agent (unsupervised autopilot)",
       "  --expect    repeatable; the latest-per-source payload hashes you assessed (from `show`) —",
       "              the write refuses if the live evidence differs",
       "  --blind     hide prior verdicts; show the machine's own derivation of the sources",
+      "  log         the verdict ledger, newest first, with each verdict's standing today",
+      "  corpus      the shadow-gate corpus: honored verdicts grouped by what a blind proposal must reproduce",
     ].join("\n"),
   );
   process.exit(2);
@@ -79,7 +96,14 @@ function usage(): never {
 // Validate EVERYTHING argument-side before opening a DB connection (#117 Copilot): `review` alone,
 // a bad command, or missing flags must print usage — never a DATABASE_URL / connection error.
 const [command, ...rest] = process.argv.slice(2);
-if (command !== "queue" && command !== "show" && command !== "resolve") usage();
+if (
+  command !== "queue" &&
+  command !== "show" &&
+  command !== "resolve" &&
+  command !== "log" &&
+  command !== "corpus"
+)
+  usage();
 let showArgs: { ocdId: string; blind: boolean } | null = null;
 if (command === "show") {
   const ocdId = rest[0];
@@ -149,6 +173,89 @@ if (command === "resolve") {
     reviewer,
     ...(expect !== undefined ? { expect } : {}),
   };
+}
+
+/** `--since`: a relative window (`12h`, `7d`, `2w`) or an ISO calendar date (UTC midnight). */
+function parseSince(raw: string, now: Date): Date {
+  const rel = /^(\d+)([hdw])$/.exec(raw);
+  if (rel) {
+    const n = Number(rel[1]);
+    const unitMs = { h: 3_600_000, d: 86_400_000, w: 7 * 86_400_000 }[
+      rel[2] as "h" | "d" | "w"
+    ];
+    return new Date(now.getTime() - n * unitMs);
+  }
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+    const d = new Date(`${raw}T00:00:00Z`);
+    if (!Number.isNaN(d.getTime()) && d.toISOString().startsWith(raw)) return d;
+  }
+  console.error(
+    `review log: --since takes <N>h | <N>d | <N>w or YYYY-MM-DD (got "${raw}")`,
+  );
+  process.exit(2);
+}
+let logArgs: {
+  reviewer?: Reviewer;
+  operator?: string;
+  kind?: Kind;
+  since?: Date;
+  limit?: number;
+  json: boolean;
+} | null = null;
+if (command === "log") {
+  const { values } = parseArgs({
+    args: rest,
+    options: {
+      reviewer: { type: "string" },
+      operator: { type: "string" },
+      kind: { type: "string" },
+      since: { type: "string" },
+      limit: { type: "string" },
+      json: { type: "boolean" },
+    },
+  });
+  const reviewer = values.reviewer as Reviewer | undefined;
+  if (reviewer !== undefined && !REVIEWERS.includes(reviewer)) {
+    console.error(
+      `review log: --reviewer must be one of ${REVIEWERS.join(" | ")} (got "${String(values.reviewer)}")`,
+    );
+    process.exit(2);
+  }
+  const kind = values.kind as Kind | undefined;
+  if (kind !== undefined && !KINDS.includes(kind)) {
+    console.error(
+      `review log: --kind must be one of ${KINDS.join(" | ")} (got "${String(values.kind)}")`,
+    );
+    process.exit(2);
+  }
+  let limit: number | undefined;
+  if (values.limit !== undefined) {
+    limit = Number(values.limit);
+    if (!Number.isInteger(limit) || limit <= 0) {
+      console.error(
+        `review log: --limit must be a positive integer (got "${values.limit}")`,
+      );
+      process.exit(2);
+    }
+  }
+  logArgs = {
+    ...(reviewer !== undefined ? { reviewer } : {}),
+    ...(values.operator !== undefined ? { operator: values.operator } : {}),
+    ...(kind !== undefined ? { kind } : {}),
+    ...(values.since !== undefined
+      ? { since: parseSince(values.since, new Date()) }
+      : {}),
+    ...(limit !== undefined ? { limit } : {}),
+    json: values.json === true,
+  };
+}
+let corpusArgs: { json: boolean } | null = null;
+if (command === "corpus") {
+  const { values } = parseArgs({
+    args: rest,
+    options: { json: { type: "boolean" } },
+  });
+  corpusArgs = { json: values.json === true };
 }
 
 const sql = createClient();
@@ -227,6 +334,84 @@ try {
             : `${v.verdict.kind}${v.verdict.pinned_close_date ? ` → ${v.verdict.pinned_close_date}` : ""} by ${v.verdict.operator} (${v.verdict.reviewer}): ${v.verdict.note}`;
         console.log(`    ${v.fetched_at}  ${body}`);
       }
+    }
+  } else if (command === "log") {
+    const { json, ...filter } = logArgs!;
+    const log = await reviewLog(sql, filter);
+    if (json) {
+      console.log(JSON.stringify(log, null, 2));
+    } else {
+      const applied = [
+        filter.reviewer ? `reviewer=${filter.reviewer}` : null,
+        filter.operator ? `operator=${filter.operator}` : null,
+        filter.kind ? `kind=${filter.kind}` : null,
+        filter.since ? `since=${filter.since.toISOString()}` : null,
+        `limit=${filter.limit ?? 50}`,
+      ]
+        .filter((x) => x !== null)
+        .join(" ");
+      console.log(
+        `review log: ${log.entries.length} verdict(s), newest first (${applied})` +
+          (log.entries.length === 0 ? "" : "\n"),
+      );
+      for (const e of log.entries) {
+        const body =
+          "unparseable" in e.verdict
+            ? "(unparseable raw)"
+            : `${e.verdict.kind}${e.verdict.pinned_close_date ? ` → ${e.verdict.pinned_close_date}` : ""} by ${e.verdict.operator} (${e.verdict.reviewer})`;
+        const note =
+          "unparseable" in e.verdict
+            ? ""
+            : `\n    note: ${e.verdict.note.length > 160 ? `${e.verdict.note.slice(0, 157)}…` : e.verdict.note}`;
+        console.log(
+          `  ${e.fetched_at}  ${e.ocd_id}\n    ${body} — ${e.standing.toUpperCase()}${note}`,
+        );
+      }
+      const fmt = (o: Record<string, number>) =>
+        Object.entries(o)
+          .filter(([, n]) => n > 0)
+          .map(([k, n]) => `${k}=${n}`)
+          .join(" ") || "(none)";
+      console.log(
+        `\nby kind: ${fmt(log.byKind)}\nby standing: ${fmt(log.byStanding)}`,
+      );
+    }
+  } else if (command === "corpus") {
+    const corpus = await reviewCorpus(sql);
+    if (corpusArgs!.json) {
+      console.log(JSON.stringify(corpus, null, 2));
+    } else {
+      const line = (i: {
+        ocd_id: string;
+        expected_close: string | null;
+        operator: string;
+        reviewer: string;
+        fetched_at: string;
+      }) =>
+        `    ${i.ocd_id}${i.expected_close ? `  expect ${i.expected_close}` : ""}  (${i.operator}, ${i.reviewer}, ${i.fetched_at.slice(0, 10)})`;
+      console.log(
+        `review corpus (shadow-gate harness, ADR 0015 §6) — generated ${corpus.generated_at}\n` +
+          `  feed each ocd-id to \`review show <ocd-id> --blind\`; the expectation is what the blind proposal must reproduce.\n`,
+      );
+      console.log(
+        `  part 1 — honored pins (${corpus.pins.length}): propose a date; expected = the pinned date`,
+      );
+      for (const i of corpus.pins) console.log(line(i));
+      console.log(
+        `\n  part 3 — escalation discipline: parked items (${corpus.escalations.length}) → expect \`escalate\`` +
+          `; honored withdrawals (${corpus.withdrawals.length}) → expect \`confirm_withdrawn\``,
+      );
+      for (const i of corpus.escalations) console.log(line(i));
+      for (const i of corpus.withdrawals) console.log(line(i));
+      console.log(
+        `\n  part 2 — the held-out set is the operator's sealed list of CURRENT queue items (runbook: Autopilot); not derivable from the DB.`,
+      );
+      console.log(
+        `\n  not gated — other honored kinds (${corpus.other.length}); latest verdict not honored (${corpus.not_honored.length})`,
+      );
+      for (const i of corpus.other) console.log(`${line(i)}  ${i.kind}`);
+      for (const i of corpus.not_honored)
+        console.log(`${line(i)}  ${i.kind} ${i.standing}`);
     }
   } else {
     const out = await resolveWindow(sql, resolveArgs!);

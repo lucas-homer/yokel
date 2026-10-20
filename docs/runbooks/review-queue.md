@@ -24,7 +24,15 @@ kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/revie
 kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts resolve <ocd-id> \
   --kind pin_close --close 2026-09-20 --note "why, in one honest sentence" --operator lucas \
   [--reviewer human|agent] [--expect <sha256> --expect <sha256> …]
+kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts log \
+  [--reviewer human|agent] [--operator <name>] [--kind <kind>] [--since 7d|2026-10-01] [--limit 50] [--json]
+kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts corpus [--json]
 ```
+
+`log` is the verdict ledger, newest first, each verdict with its **standing** under the engine's
+honoring rule: `honored`, `parked` (an honored `escalate`), `superseded` (a later verdict exists),
+`invalidated` (the latest verdict, but newer evidence returned the window to machine derivation) or
+`unparseable`. `corpus` is the shadow-gate harness input (below).
 
 `--reviewer` says who **decided** (default `human`; `agent` only for an unsupervised autopilot write,
 [ADR 0015](../decisions/0015-agent-review-authority.md)); `--operator` says who executed the write.
@@ -102,6 +110,84 @@ both before and after the insert. The refusal names which assessed hashes are no
 which latest hashes were never assessed; re-run `show` and reassess. Automation always passes
 `--expect`; a human may omit it and binds to whatever is live at write time (`reviewed_payload_hashes`
 is filled either way).
+
+## Autopilot — the scheduled agent
+
+The review autopilot (`plans/review-autopilot.md`, [ADR 0015](../decisions/0015-agent-review-authority.md))
+is a T3 Code scheduled task that runs the
+[`docketclock-review-autopilot`](../../.agents/skills/docketclock-review-autopilot/SKILL.md) skill
+daily at 07:00 local in a dedicated "Review autopilot" thread (provider `claudeAgent`, model
+`claude-opus-5-5`, effort `high`; the thread lives in its own worktree on `main`, which each run
+fast-forwards first). It is an operator like any other: it uses only this CLI through
+`kubectl exec`, writes nothing the CLI would refuse, and has a phone-pageable owner. Its decisions
+are bound by the plan's **write policy v1**: `escalate` first; `pin_close` only on a primary
+document that states the deadline for that exact notice, explains the competing value, and that an
+independent cross-provider verifier reads the same way; `confirm_withdrawn` on a live identity
+check; never `dismiss_conflict` or `confirm_reopened`; at most 10 decisions per run; every write
+`--reviewer agent --operator autopilot` with `--expect` for every live hash.
+
+**Mode.** The task's prompt (kept verbatim in
+[`scheduled-prompt.md`](../../.agents/skills/docketclock-review-autopilot/scheduled-prompt.md))
+carries `AUTOPILOT_MODE=shadow|write`. In **shadow** it investigates and decides exactly as write
+mode would but writes nothing and pages nobody except for tooling failures; its decisions are
+_proposals_ in the host-side ledger `~/.config/yokel/review-autopilot/ledger.jsonl` and in the
+run report. **Write** mode may be set only after the gate record below is complete.
+
+**Pause / resume / kill.** From any T3 thread in this project: `list_scheduled_tasks` →
+`update_scheduled_task enabled=false` (instant; resume with `enabled=true`), or
+`delete_scheduled_task`. Verdicts already written remain, each supersedable (next item). Pause the
+task **before** any rollback of the provenance-aware reconciler (ADR 0015).
+
+**Reading what it did.** The narrative is the run report in the "Review autopilot" thread (queue
+before/after, every decision with its verifier result and the `--expect` hashes, skips, pages).
+The ledger of record is the DB:
+
+```sh
+kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts log --reviewer agent --since 7d
+```
+
+`honored` means the verdict still governs the window; `invalidated` means newer evidence overrode
+it — the signal the Monday audit and PR-A4's attributable monitoring read. Shadow proposals are only
+in `ledger.jsonl` (one JSON line per decision: run, hashes, proposal, verifier, evidence, reason).
+
+**Superseding an agent verdict.** Write a human verdict; the latest wins and the window stamps
+`human_resolved` instead of `agent_resolved`:
+
+```sh
+kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts resolve <ocd-id> \
+  --kind <pin_close|confirm_withdrawn|confirm_reopened|dismiss_conflict|escalate> [--close YYYY-MM-DD] \
+  --operator <you> --note "why the agent's verdict was wrong, with the decisive source"
+```
+
+Never edit or delete the agent's row; corrections accrete. If the same mistake recurs, amend the
+policy in the plan (and this skill) before re-enabling write mode.
+
+### Shadow gate — what must be true before write mode
+
+Three parts, measured on `show --blind` (prior verdicts hidden), each recorded here with the date,
+the run id and the tally. Write mode may be enabled only when all three are recorded as met.
+
+1. **Blinded historical agreement** — `review corpus` part 1: every honored `pin_close`. The
+   agent's blind proposal must equal the pinned date on ≥ 95 % of them, with every disagreement
+   explained. Measures agreement with human-authorized precedent, not truth: a floor, not the gate.
+2. **Held-out independent set** — 10 current queue items the operator reviews **before** seeing
+   any proposal. Protocol: pick the ids from `review queue`; write your verdict for each (`kind`,
+   `close` for a pin, one line of reasoning) to `~/.config/yokel/review-autopilot/held-out-<date>.json`
+   _before_ reading the thread or the ledger; let the daily shadow runs propose; compare. Agreement
+   on kind ≥ 9/10; **any false pin** (the agent pins where you escalated or chose another date) is
+   blocking until explained and the policy amended. Refresh the set whenever the policy changes.
+3. **Escalation discipline** — `review corpus` part 3: every parked item → `escalate`, every
+   honored withdrawal → `confirm_withdrawn`, and zero proposed `dismiss_conflict` /
+   `confirm_reopened` anywhere in the runs.
+
+| part                             | date | run id | result | met? |
+| -------------------------------- | ---- | ------ | ------ | ---- |
+| 1 — blinded historical agreement |      |        |        |      |
+| 2 — held-out independent set     |      |        |        |      |
+| 3 — escalation discipline        |      |        |        |      |
+
+Flipping to write: update `scheduled-prompt.md` and the task's prompt (`update_scheduled_task`)
+to `AUTOPILOT_MODE=write` in the same change, and note the date in this table's caption.
 
 ## Supersedence — what "honored" means
 

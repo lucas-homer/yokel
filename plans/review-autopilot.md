@@ -248,11 +248,12 @@ deploy + sweep, `review queue` shows the 7 gone and `review show` shows `human_r
 
 ### PR-A2 — ADR 0015 + contract 0.11.0 + reconciler + CLI: `escalate`, `reviewer`, `agent_resolved`, `--expect`
 
-Status 2026-10-19: implemented on branch `t3/review-escalate-provenance` (ADR 0015, contract
-0.11.0, `reconcile-v2.3`, CLI flags, `escalated` gauge series + `review-queue-escalated` rule);
-deploy, sweep and the live #127 round-trip pending merge. One deliberate reading recorded in the
-ADR: the 0014 echo exception is not extended to `escalate`, so the portal's own close flip un-parks
-an open escalated item once.
+Status 2026-10-19: merged (#133) and deployed the same evening; the v2.3 sweep re-stamped 7,896
+windows with 0 derivation changes, as predicted; the live round-trip escalated CDC `2026-15983`
+(reviewer human, `--expect` both hashes) — parked, queue 35 with 1 parked, gauge `escalated=1`,
+rule `review-queue-escalated` fired through ntfy after exactly the 1h hold. One deliberate reading
+recorded in the ADR: the 0014 echo exception is not extended to `escalate`, so the portal's own
+close flip un-parks an open escalated item once. The other two #127 items are not escalated yet.
 
 ADR 0015 (agent authority) first. Contract-keeper: `HumanReviewVerdictKind += escalate` (date
 forbidden — the existing pin⇔date refinement already covers it; note + hashes required),
@@ -275,6 +276,16 @@ item; the gauge visible in Prometheus and the alert fires/resolves through the d
 
 ### PR-A3 — the autopilot skill, the scheduled task, shadow mode
 
+Status 2026-10-20: implemented on branch `t3/review-autopilot-shadow`: the skill (policy, run
+procedure, evidence card, verifier hand-off, note and report formats, weekly audit, mode switch,
+harness), the scheduled task's prompt kept verbatim in the skill directory, the runbook's
+"Autopilot" section with the gate record table, and two read-only CLI additions this slice needs:
+`review log` (the verdict ledger with each verdict's standing: honored / parked / superseded /
+invalidated / unparseable — how an operator reads the agent's work) and `review corpus` (the
+shadow-gate corpus computed live from honored verdicts, so the harness never goes stale). The CLI
+additions mean the poller image is redeployed through the app's usual path; no cluster or chart
+change. The scheduled task is created after merge, from a dedicated "Review autopilot" thread.
+
 `.agents/skills/docketclock-review-autopilot/SKILL.md` (the existing guided skill stays for
 interactive use and is referenced, not duplicated): the write policy above, the run procedure,
 the evidence-card format, the verifier hand-off, the report format, the parked-item weekly
@@ -285,7 +296,8 @@ section (how to pause, how to read a report, how to supersede an agent verdict).
 chart changes.
 
 **Verify:** shadow gate parts 1–3 met and recorded in the runbook; only then flip the prompt to
-`write`.
+`write`. The gate record lives in the runbook ("Shadow gate — what must be true before write
+mode"); the held-out set is sealed host-side before any proposal is read.
 
 ### PR-A4 — attributable post-close monitoring
 
