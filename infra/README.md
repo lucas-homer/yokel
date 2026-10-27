@@ -327,6 +327,25 @@ task minio   # port-forward the MinIO console :9001 → localhost:9001 (creds fr
   Tailscale host the lima DNS forwarder (`192.168.5.2`) is unreliable. Fix: restart colima with public
   DNS — `colima restart --dns 1.1.1.1 --dns 8.8.8.8` — then `task dev-down && task dev-up`. (Baked into
   `task cluster-up` for fresh starts.)
+- **Mass `Evicted` pods / nodes tainted `DiskPressure`.** The colima VM disk (60 GiB) holds the k3d
+  nodes, every PVC, *and* every other project's docker images and build cache on the same daemon. The
+  kubelet evicts everything at 95% used (`nodefs.available<5%`), Grafana included (2026-10-15). The
+  `Platform` alert group pages at >80% (warning) and >88% (critical). Check `colima ssh -- df -h /` and
+  `docker system df`; `docker image prune -af` and `docker builder prune -af` are the safe first moves
+  (yokel's own images also live in `yokel-registry`). Look before pruning volumes: unused anonymous
+  volumes may be another project's data. The BuildKit cache is capped at 10 GB in
+  `~/.colima/default/colima.yaml` (host config, not in git; re-add it if colima is ever recreated):
+  ```yaml
+  docker:
+    builder:
+      gc:
+        enabled: true
+        defaultKeepStorage: 10GB
+    log-opts:
+      max-size: 50m
+      max-file: "3"
+  ```
+  Applying a change means `colima restart` then `task cluster-restart`.
 - **Main Vault stuck sealed / `vault` Application never goes Healthy.** The transit seal: the
   `vault-transit` pod restarted and is sealed (it persists its key but starts sealed), so the main Vault
   can't reach `transit/encrypt/autounseal` (`404 route entry not found`) and crashloops. In-place fix:
