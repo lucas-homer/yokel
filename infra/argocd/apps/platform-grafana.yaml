@@ -1755,8 +1755,8 @@ spec:
                     {
                       "id": 25,
                       "type": "timeseries",
-                      "title": "Node disk used (root fs)",
-                      "description": "",
+                      "title": "Node disk used (colima VM disk)",
+                      "description": "Used % of the filesystem behind /var/lib/kubelet (the kubelet nodefs). In k3d a node's / is overlay, which node-exporter skips, so mountpoint=\"/\" matched nothing. Every k3d bind mount is the same colima VM disk. The kubelet evicts pods at 95% used (nodefs.available<5%).",
                       "datasource": {
                         "type": "prometheus",
                         "uid": "prometheus"
@@ -1798,7 +1798,7 @@ spec:
                             "uid": "prometheus"
                           },
                           "editorMode": "code",
-                          "expr": "100 * (1 - node_filesystem_avail_bytes{mountpoint=\"/\"} / node_filesystem_size_bytes{mountpoint=\"/\"})",
+                          "expr": "100 * (1 - node_filesystem_avail_bytes{mountpoint=\"/var/lib/kubelet\"} / node_filesystem_size_bytes{mountpoint=\"/var/lib/kubelet\"})",
                           "legendFormat": "{{instance}}",
                           "range": true,
                           "instant": false,
@@ -2643,6 +2643,121 @@ spec:
                   severity: warning
                 annotations:
                   summary: "The hourly r2-mirror CronJob has not succeeded in >3h (3 missed runs) \u2014 the offsite copy is falling behind and the \u22641h offsite RPO is blown."
+            # Platform (2026-10-27, after the 2026-10-15 DiskPressure outage and a 91% reading on the
+            # 2026-10-27 reboot). The colima VM disk is shared with every project's docker builds; the
+            # kubelet evicts everything at 95% used (nodefs.available<5%), Grafana included, so these must
+            # fire well before that. /var/lib/kubelet is the kubelet nodefs and, like every k3d bind mount,
+            # sits on the VM disk (a node's / is overlay, which node-exporter skips).
+            - orgId: 1
+              name: platform
+              folder: Platform
+              interval: 1m
+              rules:
+              # noDataState Alerting on the warning rule only: the 10-15 lesson is that a disk check
+              # matching nothing is silent, and that IS the failure. The critical rule stays NoData so a
+              # missing metric pages once, not twice.
+              - uid: node-disk-high
+                title: colima VM disk >80% used
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: max(100 * (1 - node_filesystem_avail_bytes{mountpoint="/var/lib/kubelet"} / node_filesystem_size_bytes{mountpoint="/var/lib/kubelet"}))
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: gt
+                        params:
+                        - 80
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: Alerting
+                execErrState: Error
+                for: 10m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: "The colima VM disk (shared by the k3d nodes and every project's docker builds) is over 80% used. The kubelet evicts the whole cluster at 95%. Check `colima ssh -- df -h /` and `docker system df`; `docker image prune -af` / `docker builder prune -af` are the usual fixes."
+              - uid: node-disk-critical
+                title: colima VM disk >88% used
+                condition: C
+                data:
+                - refId: A
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: prometheus
+                  model:
+                    datasource:
+                      type: prometheus
+                      uid: prometheus
+                    editorMode: code
+                    expr: max(100 * (1 - node_filesystem_avail_bytes{mountpoint="/var/lib/kubelet"} / node_filesystem_size_bytes{mountpoint="/var/lib/kubelet"}))
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    refId: A
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    refId: C
+                    expression: A
+                    datasource:
+                      type: __expr__
+                      uid: __expr__
+                    conditions:
+                    - type: query
+                      evaluator:
+                        type: gt
+                        params:
+                        - 88
+                        - 0
+                      operator:
+                        type: and
+                      query:
+                        params:
+                        - C
+                      reducer:
+                        type: last
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                noDataState: NoData
+                execErrState: Error
+                for: 5m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "The colima VM disk is over 88% used, a few GB from the 95% kubelet eviction threshold that takes down the whole cluster (2026-10-15). Free space now: `docker image prune -af`, `docker builder prune -af`, then check unused volumes."
           contactpoints.yaml:
             apiVersion: 1
             contactPoints:
