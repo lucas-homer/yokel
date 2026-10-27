@@ -328,7 +328,7 @@ task minio   # port-forward the MinIO console :9001 → localhost:9001 (creds fr
   DNS — `colima restart --dns 1.1.1.1 --dns 8.8.8.8` — then `task dev-down && task dev-up`. (Baked into
   `task cluster-up` for fresh starts.)
 - **Mass `Evicted` pods / nodes tainted `DiskPressure`.** The colima VM disk (60 GiB) holds the k3d
-  nodes, every PVC, *and* every other project's docker images and build cache on the same daemon. The
+  nodes, every PVC, _and_ every other project's docker images and build cache on the same daemon. The
   kubelet evicts everything at 95% used (`nodefs.available<5%`), Grafana included (2026-10-15). The
   `Platform` alert group pages at >80% (warning) and >88% (critical). Check `colima ssh -- df -h /` and
   `docker system df`; `docker image prune -af` and `docker builder prune -af` are the safe first moves
