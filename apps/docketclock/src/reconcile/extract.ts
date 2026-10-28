@@ -74,6 +74,50 @@ export interface FrFields {
   rin: string | null;
   // rins = the FULL regulation_id_numbers array (FR's real RIN field — plural; often [] for Notices).
   rins: string[];
+  // FR `citation` ("91 FR 57828" — volume + START page). NOT unique on its own (several documents can
+  // start on one page); the chain pass only trusts it through a corpus-wide uniqueness index (chain.ts).
+  citation: string | null;
+  // The FR document number THIS document corrects — the last path segment of FR's structured
+  // `correction_of` URL (".../api/v1/documents/2026-18574" -> "2026-18574"). null when absent.
+  correctionOf: string | null;
+  // The FR document numbers that correct THIS document (FR `corrections`, a list of the same URLs).
+  corrections: string[];
+}
+
+/**
+ * The FR document number named by an FR API document URL — the last non-empty path segment, with any
+ * ".json" suffix dropped ("https://www.federalregister.gov/api/v1/documents/2026-18574" -> "2026-18574").
+ * FR's `correction_of` / `corrections` carry these URLs, not bare numbers. A non-URL string is taken as
+ * the number itself (trimmed); anything empty is null.
+ */
+export function frDocNumberFromUrl(v: unknown): string | null {
+  const s = asStr(v)?.trim();
+  if (!s) return null;
+  const seg = s
+    .split(/[?#]/)[0]!
+    .split("/")
+    .filter((p) => p.length > 0)
+    .at(-1);
+  if (!seg) return null;
+  const num = seg.replace(/\.json$/i, "");
+  return num.length > 0 ? num : null;
+}
+
+/**
+ * The DERIVED is_correction of an FR observation row (fr-v3 rule, applied to every row regardless of the
+ * parser that wrote it): the stored keyword flag OR a non-empty FR `correction_of`. FR prints a
+ * correction's title WITHOUT any "Correction" suffix and leaves action/dates/abstract empty, so the
+ * keyword pass never fires on it (C1-2026-18574) — but the API carries the structured link. fr-v2 rows
+ * are never backfilled (the log is append-only), so EVERY read that builds a chain or amendment
+ * candidate goes through this helper and an fr-v2 row behaves exactly like an fr-v3 one.
+ */
+export function derivedIsCorrection(row: {
+  is_correction: boolean;
+  raw: unknown;
+}): boolean {
+  if (row.is_correction) return true;
+  const doc = asObj(row.raw);
+  return doc !== null && frDocNumberFromUrl(doc.correction_of) !== null;
 }
 
 export function extractFr(raw: unknown): FrFields {
@@ -89,6 +133,9 @@ export function extractFr(raw: unknown): FrFields {
       docketIds: [],
       rin: null,
       rins: [],
+      citation: null,
+      correctionOf: null,
+      corrections: [],
     };
   // FR's real RIN field is the PLURAL ARRAY `regulation_id_numbers` (the singular `regulation_id_number`
   // comes back null on every live document). Read the array; the single `rin` projection takes its first
@@ -110,6 +157,11 @@ export function extractFr(raw: unknown): FrFields {
     docketIds: asStrArray(doc.docket_ids),
     rin: rins.length > 0 ? rins[0]! : null,
     rins,
+    citation: asStr(doc.citation)?.trim() || null,
+    correctionOf: frDocNumberFromUrl(doc.correction_of),
+    corrections: asStrArray(doc.corrections)
+      .map(frDocNumberFromUrl)
+      .filter((n): n is string => n !== null),
   };
 }
 

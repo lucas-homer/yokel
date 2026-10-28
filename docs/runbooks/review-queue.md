@@ -300,3 +300,146 @@ bumps, because the pinned instant equals the `resolved_close_utc` already stored
 kind and the `reviewer`-driven provenance flag. No existing row derives differently (no escalate or
 agent verdicts exist before it ships), so its sweep is expected to re-stamp every window and change
 nothing; run it anyway so the stamps are honest.
+
+### `reconcile-v2.4` — the amended FR close ([ADR 0016](../decisions/0016-fr-amendment-close.md))
+
+`reconcile-v2.4` lets a deterministically linked FR extension or correction move the original
+window's FR side, verified from the amendment's published GovInfo text. It also adds a GovInfo
+sweep and a post-chain re-derive pass to the poll cycle, the FR parser bump `fr-v3`
+(`correction_of` ⇒ correction) and contract 0.12.0 (`fr_close_amended`). Its one migration, 0013,
+only adds indexes for the amendment loader; `govinfo` is already a 0001 `source` member, and
+`conflict_flags` is JSONB with no CHECK.
+
+**Expected result, in one line** (measured on a replay of the 2026-10-27 production dump): the
+rederive sweep reports `versionBumped 1` and `failed 0`; the three target windows leave the queue
+`high` with `fr_close_amended`; 12 closed windows enter it as `conflicting`; `review queue` goes
+from 36 to 45. Every protected window (PHMSA, USCG, ICE, EPA, listed below) is unchanged.
+
+**Deploy.** The docketclock app tier is a plain Helm release, not an Argo application
+(`app-docketclock.yaml` was never applied), so merging alone does not deploy it. Deploy it the way
+`reconcile-v2.2`/`v2.3` and the autopilot PRs were: run Tilt in CI mode from a clean checkout of the
+merged `main`. Tilt builds the image, pushes it to the k3d registry (`yokel-registry:5000`, tag
+`tilt-<content hash>`), applies the chart with local values, re-runs the migrate Job (migration 0013)
+and waits for both workloads:
+
+```sh
+git worktree add --detach /tmp/yokel-deploy origin/main   # clean tree at the merge commit
+cd /tmp/yokel-deploy && tilt ci --port 10351
+```
+
+Before relying on it, confirm the release really is Helm-only with
+`kubectl -n argocd get application docketclock` (expect NotFound). If it is now Argo-managed, the
+deploy is git → Argo sync instead, and Tilt would fight it.
+
+**First poll cycles.** After the FR pass, `govinfoSweepOnce` (log line `govinfo sweep cycle`)
+fetches the GovInfo HTML for every FR amendment document in the 120-day keyword lookback that has no
+`govinfo` observation yet. That means any of the four flags, or a non-empty `correction_of`, which
+also catches the stored fr-v2 C1 row. It fetches at most 50 per cycle
+(`GOVINFO_MAX_FETCHES_PER_CYCLE`), 300 ms apart, never-failed documents first and then newest
+first. It is append-only and backfills the existing amendments over the first few cycles.
+U+0000 page-break artifacts are stripped from each page before storage (Postgres cannot hold them).
+A 404 within 3 days of publication counts as `notPublished` and is retried next cycle. A later 404,
+or any other error, is recorded in `poll_dead_letter` (source `govinfo`). After 3 consecutive
+failures the document is dead-lettered (WARN `govinfo sweep: document DEAD-LETTERED`), and from
+then on it is retried only once a day, behind every fresh candidate. To list them:
+`select document_key, attempts, last_error from poll_dead_letter where source = 'govinfo'`. After the chain pass, `rederiveChainOriginals` (log `amended originals cycle`,
+or a WARN `amended originals MOVED a close`) re-derives the originals of every confident
+cross_window link. That way the Census, USDA and IRS windows pick up the amendment in the same
+cycle the text lands. Expect the chain summary's `linked` to rise: the IRS correction is now
+chained through `correction_of`, and the USDA and USCG pairs become confident through the
+`citation` basis. `llmLinked` drops correspondingly. Expect no new pass failures
+(`docketclock_poll_pass_failures_total{pass="govinfo"|"amended_originals"}`).
+
+**Then run the rederive sweep** once, after the GovInfo backfill has landed (at least one full
+cycle with `govinfo sweep cycle` showing `candidates: 0`, or no remaining amendment candidates):
+
+```sh
+kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/db/rederive-stale-windows.ts
+```
+
+It re-stamps every window `reconcile-v2.4`. Migration 0013 adds the indexes the amendment loader
+needs, and the migrate Job applies it on deploy. On a production copy (8,296 windows) the sweep took
+24–29 s. Before 0013, the same copy took 65 s with no loader, and an estimated hours with the
+unindexed loader. Expect `failed 0` and `versionBumped 1`. On the 2026-10-27 production copy the one
+bump was EPA 2026-05167: an FR-only window, LOW confidence, closing May 1. Extension 2026-08518
+(shared docket and RIN, published May 1) moves it to May 15. Any other bump means a close moved
+unexpectedly: inspect it with `review show` before going further.
+
+**Verify.**
+
+```sh
+kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts show ocd-participation-window/federal/2026-18481
+kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts show ocd-participation-window/federal/2026-18531
+kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts show ocd-participation-window/federal/2026-18574
+kubectl -n docketclock exec deploy/docketclock-poller -- pnpm exec tsx src/review/cli.ts queue
+```
+
+**Expected effect.** The IRS (2026-18574, Oct 16 → Oct 26 via C1-2026-18574), Census (2026-18481 →
+Nov 2 via 2026-20328) and USDA (2026-18531 → Nov 2 via 2026-19710) windows become `high` with
+`fr_close_amended`, plus `tz_normalization_only` where the UTC day differs. Their cross_source
+conflicts retire, so they leave `review queue`. `raw_fr_close_date` still shows the original FR
+date.
+
+**Human verdicts survive the GovInfo sweep.** The sweep appends a `govinfo` observation to every
+recent amendment document's own chain, including windows a person already resolved. Under
+`reconcile-v2.4` that row is not evidence about the window (ADR 0016 §6; only `federal_register` and
+`regulations_gov` are). It neither supersedes an honored verdict nor un-parks an escalation, and it
+is not part of the `--expect` set: `review show` lists it under `context`. On the replay, 12
+human-resolved windows had such a row land after their verdict:
+2026-13006, 15026, 15671, 16083, 16246, 16247, 16713, 17890, 18218, 18297, 18298 and 18300. All 12
+must still show their verdict as `honored verdict:` after the sweep and after the rederive sweep. If any of
+them shows "superseded by newer evidence" with only a `govinfo` row newer than its verdict, that is a
+regression.
+
+**A linked amendment newer than a verdict reopens it (ADR 0016 §7).** A linked extension,
+correction, reopening or withdrawal is an input to the original window's derivation. If one lands
+after the window's verdict and changes what the window derives, the verdict is superseded and the
+window returns to the queue for re-review. A GovInfo copy that only confirms the same date does
+not count. `review show` now lists the linked amendments' FR and GovInfo rows under "latest per
+source" (`linked amendment <docnum> …`), and those hashes are part of `--expect`. On the
+2026-10-27 production copy, the seven closed pinned windows that gain `fr_close_amended`
+(2026-07061, 07800, 10815, 12621, 13294, 13674, 16965) all stay honored. Each amendment was
+fetched before its verdict and each pin already equals the amended date.
+
+Measured on the 2026-10-27 production copy, 23 windows derive differently in total. An amended date
+moves a window only when it is corroborated (ADR 0016 §8): by the window's own portal close, or by
+the amendment's own plausible FR `comments_close_on`. `ambiguous` never changes a window.
+
+- **3 conflicting → high.** The three windows above, all corroborated by the portal. Census's
+  amendment also carries a matching FR close; USDA's FR value (2026-09-11) is the bad one and is not
+  used; IRS's correction has none.
+- **7 high → high.** Closed windows; the only change is the added `fr_close_amended` flag. Each is
+  corroborated by both the portal and the amendment's FR close.
+- **1 low → low, close moved.** EPA 2026-05167, FR-only with no portal. It moves May 1 → May 15
+  because extension 2026-08518's own FR `comments_close_on` (May 15) corroborates the text.
+- **12 medium → conflicting.** All closed: 2026-09791, 09792, 10611, 12696, 12922, 13123, 13944,
+  14552, 14702, 14974, 15483 and 16258. Their own FR close and the portal agreed; the portal had
+  already flipped `openForComment` to false, which is why they were MEDIUM. A deterministically
+  linked, text-verified extension then moved the FR side later, and in every case the extension's
+  own FR `comments_close_on` corroborates the new date. Their portals disagree, so they are
+  conflicting.
+- **2026-13761 stays unchanged.** It was the 13th last round. Its extension 2026-18218 really does
+  extend the period 90 days to Dec 7, but nothing corroborates that: its FR `comments_close_on`
+  (2026-07-08) is a publication-date extraction error, like USDA's, and the portal still shows
+  Sep 8. That is the deliberate cost of the backstop.
+  - **Stale polling is not the cause.** In all 13 (the 12 above plus 2026-13761), measured on both the production copy and the
+    replay database, we fetched a Regulations.gov observation of the original document after the
+    extension was published (and after we had ingested it). It still showed the original date. The
+    agency extended through the new FR document and left the original's portal date where it was.
+  - **Consequence.** These are real FR-vs-portal disagreements, not artifacts of our polling. The
+    published close stays the portal instant, and they enter the closed part of `review queue`.
+  - **Decision for the user.** Whether to accept them in the queue as they are; the reconciler does
+    not change their semantics.
+
+Nothing else should change. In particular:
+
+- ICE 2026-20660 stays as it is: its stored 12-07 value has no amendment, and FR revising its own
+  metadata is a separate follow-up.
+- The USCG 2026-17216/19895 reopening stays `ambiguous`, so no move.
+- PHMSA and EPA 2026-18134 have no FR amendment, so they stay unchanged.
+
+`show` on a window with any other movement should explain it with an `fr_close_amended` flag and an
+amendment observation id in `current_observation_ids`. Anything unexplained is a regression. Roll
+back by redeploying the previous image, then running its rederive sweep. The observation log is
+append-only, so re-deriving under the old engine restores the old projection. The `govinfo` rows
+stay in the log, and the old engine ignores them.

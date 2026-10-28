@@ -347,6 +347,14 @@ try {
     }
     console.log(`\n  latest per source:`);
     for (const src of s.sources) {
+      if (src.amendment_window) {
+        // A linked amendment's observation (ADR 0016 §7): evidence about this window — pass it as --expect.
+        console.log(
+          `    linked amendment ${src.amendment_window.split("/").pop()} ${src.source} @ ${src.fetched_at}` +
+            `\n      hash=${src.payload_hash}`,
+        );
+        continue;
+      }
       const closeField =
         src.source === "federal_register"
           ? "comments_close_on"
@@ -359,6 +367,16 @@ try {
           ` flags[w/e/r]=${Number(src.is_withdrawal)}${Number(src.is_extension)}${Number(src.is_reopening)}` +
           `\n      hash=${src.payload_hash}`,
       );
+    }
+    if (s.context.length > 0) {
+      // Not evidence about THIS window (ADR 0016): read it, but never pass it as --expect.
+      console.log(
+        `\n  context (not evidence for this window; not an --expect hash):`,
+      );
+      for (const c of s.context)
+        console.log(
+          `    ${c.source} @ ${c.fetched_at}\n      dates_text=${c.dates_text ?? "null"}`,
+        );
     }
     if (s.priorVerdicts.length > 0) {
       console.log(`\n  prior verdicts (latest first):`);

@@ -3,7 +3,7 @@
  * (Watershed Watch). Verticals join on stable OCD-IDs, never internal UUIDs.
  *
  * ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
- * │ FROZEN @ 0.11.0 (2026-10-19)                                                                   │
+ * │ FROZEN @ 0.12.0 (2026-10-27)                                                                   │
  * │                                                                                               │
  * │ LOCKED (builders may propose changes; the contract-keeper adjudicates — nobody else edits):   │
  * │   • Confidence / ConflictFlag / WindowType / WindowStatus enums.                              │
@@ -39,6 +39,11 @@
  * │       every pre-0.11.0 row parses unchanged; `operator` stays the executor); ConflictFlag +=      │
  * │       "agent_resolved" (the human_resolved pattern, stamped when the honored verdict's reviewer   │
  * │       is "agent"). Honoring/supersedence stays app-side (reconcile-v2.3). [2026-10-19]            │
+ * │   • FR amendment close (ADR 0016; plans/fr-amendment-linking.md): ConflictFlag +=              │
+ * │       "fr_close_amended" — INFORMATIONAL provenance (the llm_corroborated pattern): the window's   │
+ * │       FR side is the close stated by a DETERMINISTICALLY linked FR correction/extension, verified │
+ * │       from its published text. Any confidence; no pairing constraint. Rule app-side (v2.4).       │
+ * │       [2026-10-27]                                                                              │
  * │   • REST response envelope: DISCLAIMER + API_VERSION constants, EnvelopeMeta, Pagination, and  │
  * │       the apiItemEnvelope / apiListEnvelope factories (the single source for response shape so  │
  * │       the published OpenAPI and actual responses can never diverge).                            │
@@ -77,6 +82,22 @@
  * └─────────────────────────────────────────────────────────────────────────────────────────────┘
  *
  * REVISIONS
+ *   • 0.12.0 (2026-10-27) — the amended FR close (ADR 0016; docs/plans/fr-amendment-linking.md). ONE
+ *       ADDITIVE change; nothing reordered, renamed or removed; every pre-0.12.0 window and
+ *       ConflictRecord parses unchanged. ConflictFlag += "fr_close_amended" (appended): a PROVENANCE /
+ *       honesty marker in the llm_corroborated pattern, NOT a confidence score. It means "the FR side of
+ *       this window is the close stated by a DETERMINISTICALLY linked FR correction or extension (FR's
+ *       structured correction_of, an explicit doc-number reference, a shared docket + RIN, or A's unique
+ *       FR citation plus a corroborator — never an LLM-only link), verified from its published text".
+ *       The original FR value stays visible in raw_fr_close_date (it is the raw field); the amendment's
+ *       observation ids join current_observation_ids. It composes with ANY confidence — an amended FR
+ *       side agreeing with the portal derives HIGH (alongside tz_normalization_only when the UTC day
+ *       differs), a disagreeing one stays CONFLICTING with the amended value — so, like human_resolved,
+ *       no confidence-pairing superRefine constrains it (tz_normalization_only remains the only flag
+ *       with one). Rides on ParticipationWindow.conflict_flags and, when the window is conflicting, on
+ *       its cross_source ConflictRecord. The rule itself (which links count, which text is read, the
+ *       post-lapse guard) is app-side in reconcile-v2.4. No migration: conflict_flags is JSONB with no
+ *       CHECK enumerating members (0003).
  *   • 0.11.0 (2026-10-19) — agent authority over review verdicts (ADR 0015; plans/review-autopilot.md,
  *       PR-A2). Three ADDITIVE changes; nothing reordered, renamed or removed; every pre-0.11.0 row
  *       parses to the same output plus `reviewer: "human"`. (1) HumanReviewVerdictKind += "escalate"
@@ -284,6 +305,7 @@ export const ConflictFlag = z.enum([
   "llm_corroborated", // PROVENANCE/honesty marker (NOT a confidence score — confidence is NEVER LLM-scored): a cross_window (chain) link the LLM adjudicator AFFIRMED for a pair that passed the structural rules (shared docket + amendment-after-original ordering + recency) but had NO deterministic identity corroboration (no shared RIN AND no explicit doc-number reference). Signals LOWER certainty than a deterministically-corroborated link; rides ALONGSIDE the link's type flag(s) (extension_chain_unresolved / correction_pending / withdrawn_vs_open / reopening), as multi_target_notice does.
   "human_resolved", // PROVENANCE/honesty marker (the llm_corroborated pattern; NOT a confidence score): the current window derivation HONORS a human_review verdict (Slice R) — a human read the evidence and resolved it, and every consumer can see so. Rides ALONGSIDE the type flag(s) it resolves; composes with ANY confidence — in particular HIGH, since an honored pin_close derives HIGH — with NO confidence-pairing constraint (tz_normalization_only is the only flag carrying one). Newer source evidence invalidates it except proven Regs metadata refreshes (reconcile-v2.1, ADR 0010) and, for a pin_close equal to the portal's own Eastern close date, the portal recording that close by flipping openForComment / withinCommentPeriod true→false after the pinned instant (reconcile-v2.2, ADR 0014) — never sticky, never a silence path.
   "agent_resolved", // PROVENANCE/honesty marker, the human_resolved pattern (@0.11.0, ADR 0015): the current window derivation HONORS a human_review verdict whose `reviewer` is "agent" — an autopilot chose it unsupervised under the written policy, no person authorized this specific verdict, and every consumer can see so. Stamped INSTEAD of human_resolved (exactly one of the two rides on an honored non-escalate verdict); identical composition rules and identical freshness rules (ADR 0010 / 0014). An `escalate` verdict stamps NEITHER flag — it asserts nothing.
+  "fr_close_amended", // PROVENANCE/honesty marker, the llm_corroborated pattern (@0.12.0, ADR 0016; NOT a confidence score): the FR side of this window is the close stated by a DETERMINISTICALLY linked FR correction/extension (FR correction_of, an explicit doc-number reference, shared docket + RIN, or a unique FR citation plus a corroborator — never an LLM-only link), verified from its published text. raw_fr_close_date keeps the original FR value; the amendment's observations join current_observation_ids. Composes with ANY confidence (HIGH when the amended value agrees with Regulations.gov, CONFLICTING when it does not) with NO confidence-pairing constraint. Reopenings and withdrawals never produce it.
 ]);
 export type ConflictFlag = z.infer<typeof ConflictFlag>;
 

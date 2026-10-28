@@ -26,6 +26,18 @@
  * the machine derives alone. The honor-the-verdict decision is exported (selectHonoredVerdict) so the
  * review CLI reports honoring by the same rule instead of inferring it from a flag.
  *
+ * reconcile-v2.4 (ADR 0016, contract 0.12.0): the FR side may be AMENDED. An extension or correction is
+ * a separate FR document (its own ocd_id), so this single-window engine never saw it and the original's
+ * superseded close stayed the FR value forever. The caller now passes `options.amendment` — the outcome
+ * of the pure resolver (amendment.ts) over the window's DETERMINISTICALLY linked amendments, loaded by
+ * persist.ts loadAmendmentEvidence. Only `kind: "amended"` changes anything: the FR side's Eastern close
+ * becomes the amended date BEFORE the rulebook runs (so FR-vs-Regs agreement/mismatch is judged exactly as
+ * before, on the amended value), the informational fr_close_amended flag rides along, the amendment's
+ * observations join current_observation_ids, and an FR-driven display names the amendment.
+ * raw_fr_close_date stays the ORIGINAL raw FR value. `none` / `ambiguous` / absent derive byte-for-byte
+ * what v2.3 derived. Every caller that derives a window passes the same outcome (same log in, same window
+ * out) — otherwise the next Regs poll would flip the window back.
+ *
  * Determinism: `now` is injectable so tests pin every timestamp; it is used only for the engine's own
  * stamps (detected_at / change-tracking), never read off a wall clock implicitly.
  *
@@ -43,8 +55,16 @@ import {
   type OcdId,
   type WindowStatus,
 } from "@yokel/contracts";
+import {
+  amendmentChangedSince,
+  corroborateAmendedClose,
+  resolveAmendedClose,
+  type AmendmentInputs,
+  type AmendmentOutcome,
+} from "./amendment.js";
 import { extractFr, extractRegs } from "./extract.js";
 import {
+  isDerivationSource,
   portalCloseEchoPreservesPin,
   sameReviewedRegsEvidence,
 } from "./review-evidence.js";
@@ -55,11 +75,41 @@ import {
 } from "./eastern-date.js";
 
 /** Pins the rulebook version — bump on any rule change (mirrors PARSER_VERSION in the adapters). */
-export const RECONCILER_VERSION = "reconcile-v2.3";
+export const RECONCILER_VERSION = "reconcile-v2.4";
 
 export interface ReconcileResult {
   window: ParticipationWindow;
   conflict: ConflictRecord | null;
+}
+
+/** Inputs from OUTSIDE this window's own observation chain (reconcile-v2.4). */
+export interface ReconcileOptions {
+  /**
+   * The resolved close of this window's deterministically linked FR amendments (amendment.ts
+   * resolveAmendedClose, loaded by persist.ts loadAmendmentEvidence). Only `amended` changes the
+   * derivation; absent / `none` / `ambiguous` derive exactly as reconcile-v2.3 did.
+   */
+  amendment?: AmendmentOutcome;
+  /**
+   * The evidence `amendment` was resolved from (persist.ts loadAmendmentInputs), with each linked
+   * amendment's FR / govinfo fetch times. Two uses: when `amendment` is absent the engine resolves it
+   * from these itself; and the honor-the-verdict rule re-resolves them AS THEY STOOD at the verdict to
+   * decide whether a linked amendment is new evidence for this window (ADR 0016 §7).
+   */
+  amendmentInputs?: AmendmentInputs;
+}
+
+/** The amendment outcome a derivation uses: the caller's, else resolved from the inputs. */
+function amendmentOutcomeOf(
+  options: ReconcileOptions,
+): AmendmentOutcome | undefined {
+  if (options.amendment) return options.amendment;
+  return options.amendmentInputs
+    ? resolveAmendedClose(
+        options.amendmentInputs.original,
+        options.amendmentInputs.amendments,
+      )
+    : undefined;
 }
 
 /** Latest observation of a given source, compared by PARSED epoch-ms (not lexicographic string). */
@@ -162,27 +212,52 @@ export interface HonoredVerdict {
  * "is the latest verdict honored?" by the engine's own rule rather than inferring it from a flag —
  * an `escalate` verdict leaves no flag on the window at all.
  *
- * Returns the latest human_review observation's parsed verdict when EVERY non-human observation
- * strictly newer than it (the v2 tie policy: equal fetched_at is not newer) is a proven
+ * Returns the latest human_review observation's parsed verdict when EVERY derivation-source
+ * observation (DERIVATION_SOURCES: federal_register, regulations_gov — the only sources this engine
+ * reads for the window's deadline) strictly newer than it (the v2 tie policy: equal fetched_at is not
+ * newer) is a proven
  * Regulations.gov metadata-only refresh of the reviewed baseline (v2.1), or — for a pin_close whose
  * date equals the portal's own Eastern close date — the portal recording that close
  * (portalCloseEchoPreservesPin, v2.2). Otherwise null: the verdict is superseded by evidence and the
  * window derives purely from sources. An unparseable raw is null too (defense-in-depth).
+ *
+ * reconcile-v2.4 (ADR 0016 §6): observations of any OTHER source on this chain are not evidence about
+ * this window and never supersede a verdict — in particular a `govinfo` row, the published text of an
+ * amendment document, which lands on that document's own chain and is read only by the ORIGINAL
+ * window's amendment loader. "No new evidence, no invalidation" (the ADR 0010 / 0014 principle).
+ *
+ * The converse (ADR 0016 §7): a LINKED amendment IS an input to this window's derivation, so it is
+ * evidence here although it lives on another chain. When `options` carries the amendment inputs, they
+ * are re-resolved as they stood at the verdict's fetched_at (an FR or govinfo row fetched later — or at
+ * an unknown time — had not been seen); if that changes what the window derives (amended date vs the
+ * original's, or a different amended date), the verdict is superseded exactly like a newer FR
+ * observation. A copy of an amendment the reviewer already had, confirming the same date, is not new.
  *
  * What "honored" MEANS is the caller's business: reconcile() applies the kind's overlay for every
  * kind except `escalate`, which is honored for freshness only (parked, nothing derived).
  */
 export function selectHonoredVerdict(
   observations: Observation[],
+  options: ReconcileOptions = {},
 ): HonoredVerdict | null {
   const human = latestBySource(observations, "human_review");
   if (!human) return null;
   const v = HumanReviewVerdict.safeParse(human.raw);
   if (!v.success) return null;
   const reviewedAt = new Date(human.fetched_at).getTime();
+  // §7 first: a linked amendment that changed this window's derivation since the verdict is new
+  // evidence, whatever the window's own chain says.
+  if (
+    amendmentChangedSince(
+      reviewedAt,
+      amendmentOutcomeOf(options),
+      options.amendmentInputs,
+    )
+  )
+    return null;
   const newerSources = observations.filter(
     (o) =>
-      o.source !== "human_review" &&
+      isDerivationSource(o.source) &&
       new Date(o.fetched_at).getTime() > reviewedAt,
   );
   const baseline = latestBySource(
@@ -229,6 +304,7 @@ export function selectHonoredVerdict(
 export function reconcile(
   observations: Observation[],
   now: Date = new Date(),
+  options: ReconcileOptions = {},
 ): ReconcileResult {
   if (observations.length === 0)
     throw new Error("reconcile: no observations supplied");
@@ -249,13 +325,25 @@ export function reconcile(
   const regsFields = regs ? extractRegs(regs.raw) : null;
 
   // ── normalize both sources' close to comparable forms ──────────────────────────────────────────
-  const frEastern = frFields?.commentsCloseOn ?? null; // already an Eastern date-only string
+  const rawFrEastern = frFields?.commentsCloseOn ?? null; // already an Eastern date-only string
+  // reconcile-v2.4: a verified amendment replaces the FR side's close BEFORE the rulebook runs, so every
+  // branch below judges the amended value exactly as it would judge FR's own. Applied only when this
+  // window HAS an FR observation (the amendment amends an FR document) — never invented for a Regs-only
+  // window. raw_fr_close_date keeps rawFrEastern: it is the raw field, not the derivation.
   const regsCloseUtcInstant = regsCloseToUtc(
     regsFields?.commentEndDate ?? null,
   );
   const regsEastern = regsCloseUtcInstant
     ? easternCalendarDate(new Date(regsCloseUtcInstant))
     : null;
+  // §8 backstop (ADR 0016): the amended date must be corroborated by the portal's own close or by the
+  // amendment's own plausible FR comments_close_on — otherwise it is `ambiguous` and changes nothing.
+  const outcome = corroborateAmendedClose(
+    amendmentOutcomeOf(options),
+    regsEastern,
+  );
+  const amended = fr !== null && outcome?.kind === "amended" ? outcome : null;
+  const frEastern = amended ? amended.date : rawFrEastern;
   const regsUtc = regsCloseUtcInstant
     ? utcCalendarDate(new Date(regsCloseUtcInstant))
     : null;
@@ -281,6 +369,9 @@ export function reconcile(
   const currentObservationIds = [
     fr?.observation_id,
     regs?.observation_id,
+    // v2.4: the amendment's own FR (+ govinfo, when its text was read) observations — the evidence the
+    // amended FR side rests on, so provenance names it and a change_history entry records it.
+    ...(amended ? amended.observation_ids : []),
   ].filter((x): x is string => typeof x === "string");
 
   // ── the rulebook — produce confidence, flags, resolved close, status ─────────────────────────────
@@ -304,8 +395,11 @@ export function reconcile(
   // Like regsDisplay, the display MUST carry the calendar date — this string is the human-readable
   // close, and a reader gets no second field to consult (v1 omitted the date; every FR-only row
   // rendered as a time with no day. reconcile-v1.1).
+  // v2.4: when the FR side is an amended close, the display says WHICH FR document set it.
   const frDisplay = (d: string) =>
-    `closes ${d} at 11:59 p.m. ET (inferred from FR date-only value)`;
+    amended
+      ? `closes ${d} at 11:59 p.m. ET (per FR ${amended.change} ${amended.amendment.fr_document_number}; inferred from FR date-only value)`
+      : `closes ${d} at 11:59 p.m. ET (inferred from FR date-only value)`;
   const regsDisplay = (d: string) => `closes ${d} (per Regulations.gov)`;
 
   if (regsWithdrawn && frReadsOpen) {
@@ -430,6 +524,10 @@ export function reconcile(
     resolvedCloseDisplay = null;
   }
 
+  // v2.4 provenance marker: the FR side above was the amended close. Appended after the machine
+  // branch's own flags (informational — any confidence; never tz_normalization_only's pairing rule).
+  if (amended) conflictFlags = [...conflictFlags, "fr_close_amended"];
+
   // ── status (WindowStatus) — kept simple + documented ─────────────────────────────────────────────
   // withdrawn if Regs says so; else open if Regs openForComment OR a future close; else closed if the
   // close is in the past; else unknown.
@@ -451,7 +549,8 @@ export function reconcile(
   // Newer source evidence invalidates the latest human verdict, except Regulations.gov refreshes
   // that differ from the reviewed baseline only in modifyDate / links.self. The baseline must be
   // present in reviewed_payload_hashes; all intervening observations must qualify. Unknown changes,
-  // missing evidence, parser/notice-flag changes, and newer FR/GovInfo observations invalidate it.
+  // missing evidence, parser/notice-flag changes, and newer FR observations invalidate it (v2.4: only
+  // DERIVATION_SOURCES count as evidence — a govinfo row on this chain is not read here, so it cannot).
   // Equal fetched_at keeps the original v2 tie policy. Raw observations and audit hashes never change.
   //
   // v2.2 adds ONE further exception, for pin_close only (ADR 0014): when the pinned date EQUALS the
@@ -480,7 +579,7 @@ export function reconcile(
   //     ConflictRecord stays live. Parking is visible (CLI, gauge, alert); it is never silence.
   //   • the provenance flag follows the verdict's `reviewer`: human_resolved when a person authorized
   //     it (the default, hence every pre-0.11.0 row), agent_resolved when an autopilot chose it.
-  const honored = selectHonoredVerdict(observations);
+  const honored = selectHonoredVerdict(observations, options);
 
   if (honored && honored.verdict.kind !== "escalate") {
     const honoredVerdict = honored.verdict;
@@ -558,7 +657,7 @@ export function reconcile(
     window_type: "comment",
     resolved_close_utc: resolvedCloseUtc,
     resolved_close_display: resolvedCloseDisplay,
-    raw_fr_close_date: frEastern,
+    raw_fr_close_date: rawFrEastern,
     raw_regs_close_datetime: regsFields?.commentEndDate ?? null,
     confidence,
     conflict_flags: conflictFlags,

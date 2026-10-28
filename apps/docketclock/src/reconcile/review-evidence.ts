@@ -1,5 +1,35 @@
 import { isDeepStrictEqual } from "node:util";
-import type { Observation } from "@yokel/contracts";
+import type { Observation, ObservationSource } from "@yokel/contracts";
+
+/**
+ * The machine sources reconcile() READS to derive a window's own deadline — the ONLY observations
+ * that are evidence about it (reconcile-v2.4, ADR 0016, amending the ADR 0010 freshness rule). Named
+ * explicitly, never "every source that is not human_review": a source the engine does not read for
+ * this window cannot be new evidence about it, and a future source must be ADDED here deliberately,
+ * not inherited by default. `govinfo` is the case that forced this: the published text of an
+ * amendment document lands on that document's own chain, where reconcile() never reads it (it only
+ * informs the ORIGINAL window, via loadAmendmentEvidence) — yet as "a newer non-human observation" it
+ * superseded twelve honored verdicts on the 2026-10-27 replay.
+ *
+ * Every freshness / evidence-set decision uses this one list: the honor-the-verdict rule
+ * (selectHonoredVerdict), the review write's evidence binding and race check (latestSourceHashes),
+ * the hashes `review show` lists for --expect, and — with human_review added
+ * (RECONCILE_INPUT_SOURCES) — verify's post-close confirmed check.
+ */
+export const DERIVATION_SOURCES = [
+  "federal_register",
+  "regulations_gov",
+] as const satisfies readonly ObservationSource[];
+
+/** Everything reconcile() reads for a window: the derivation sources plus the human verdict overlay. */
+export const RECONCILE_INPUT_SOURCES = [
+  ...DERIVATION_SOURCES,
+  "human_review",
+] as const satisfies readonly ObservationSource[];
+
+export function isDerivationSource(source: string): boolean {
+  return (DERIVATION_SOURCES as readonly string[]).includes(source);
+}
 
 function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -32,7 +62,9 @@ function evidenceRaw(raw: unknown): unknown {
 /**
  * Compare the whole observation envelope and raw payload, except ingestion identity/time/hash
  * and explicitly irrelevant metadata. Never change the immutable observation or its hash.
- * Only Regulations.gov gets this exception; newer FR/GovInfo evidence still invalidates review.
+ * Only Regulations.gov gets this exception; newer FR evidence still invalidates review. (GovInfo is
+ * not a derivation source of the window it lands on, so it never reaches this comparison at all —
+ * see DERIVATION_SOURCES.)
  */
 export function sameReviewedRegsEvidence(
   a: Observation,
@@ -137,8 +169,8 @@ function allowedEchoFlips(
  *      data.attributes.withinCommentPeriod, and each of those is either deep-equal to the baseline or
  *      boolean false where the baseline is boolean true. Anything else invalidates: absent<->present,
  *      non-boolean values (the string "false"), true->null, false->true, any other attribute, any
- *      top-level / data-level / envelope change, a non-Regs newer observation (FR/GovInfo still
- *      invalidate). Either flag alone may flip.
+ *      top-level / data-level / envelope change, a newer FR observation (still invalidates; a
+ *      govinfo row is not a derivation source and is never passed in). Either flag alone may flip.
  *   4. Every post-verdict observation showing a flipped value has fetched_at STRICTLY after
  *      `pinnedCloseUtc` (11:59:59 p.m. ET of the pinned date, DST-correct). Equality fails.
  *      Observations identical to the baseline may of course occur before it.
@@ -149,8 +181,8 @@ function allowedEchoFlips(
  *      fetched_at epoch but disagreeing in flag state invalidate (ambiguous order fails closed).
  *
  * Pure and side-effect-free: the caller's array is copied before sorting; no observation, payload or
- * hash is ever mutated. `newer` is every non-human observation strictly after the verdict (the v2
- * tie policy stands: fetched_at == reviewedAt is NOT newer). An empty `newer` returns true (nothing
+ * hash is ever mutated. `newer` is every DERIVATION-SOURCE observation strictly after the verdict
+ * (DERIVATION_SOURCES; the v2 tie policy stands: fetched_at == reviewedAt is NOT newer). An empty `newer` returns true (nothing
  * to object to — the caller's v2.1 path already covers it).
  */
 export function portalCloseEchoPreservesPin(

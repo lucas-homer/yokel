@@ -317,6 +317,10 @@ try {
         dates_text: "Comments due Feb 1, 2025.",
         status: "open",
         resolved_close_utc: "2025-02-02T04:59:59Z",
+        citation: null,
+        correction_of: null,
+        corrections: [],
+        govinfo_text: null,
       };
       const b = {
         ...a,

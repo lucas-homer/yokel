@@ -29,15 +29,27 @@ import type {
   ParticipationWindow,
 } from "@yokel/contracts";
 import type { ReconcileResult } from "./reconcile.js";
-import { RECONCILER_VERSION, reconcile } from "./reconcile.js";
+import {
+  RECONCILER_VERSION,
+  reconcile,
+  type ReconcileOptions,
+} from "./reconcile.js";
 import {
   chainAmbiguousPairs,
   chainReconcile,
   isAmendment,
+  isKeywordFalsePositive,
+  linkBasis,
   type ChainCandidate,
   type ChainConflict,
 } from "./chain.js";
-import { extractFr } from "./extract.js";
+import { derivedIsCorrection, extractFr } from "./extract.js";
+import {
+  resolveAmendedClose,
+  type AmendmentEvidence,
+  type AmendmentInputs,
+  type AmendmentOutcome,
+} from "./amendment.js";
 import type { Adjudicator } from "../adjudicator/port.js";
 import { selectAdjudicator } from "../adjudicator/select.js";
 import {
@@ -282,9 +294,556 @@ export async function loadObservations(
   }));
 }
 
+/** A latest-FR-observation row (plus its latest govinfo text) as the amendment loader reads it. */
+export interface FrAmendmentRow {
+  observation_id: string;
+  ocd_id: string;
+  fr_document_number: string | null;
+  is_extension: boolean;
+  is_correction: boolean;
+  is_withdrawal: boolean;
+  is_reopening: boolean;
+  raw: unknown;
+  govinfo_observation_id: string | null;
+  govinfo_text: string | null;
+  /** When this FR row / its latest govinfo row were fetched, and their payload hashes (§7 freshness + the review write's evidence binding). */
+  fetched_at?: Date | string | null;
+  payload_hash?: string | null;
+  govinfo_fetched_at?: Date | string | null;
+  govinfo_payload_hash?: string | null;
+}
+
+const toIso = (v: Date | string | null | undefined): string | null =>
+  v instanceof Date ? v.toISOString() : (v ?? null);
+
+/** One linked amendment observation the window's derivation reads — part of a verdict's evidence set. */
+export interface AmendmentEvidenceRow {
+  source: "federal_register" | "govinfo";
+  /** the AMENDMENT document's window (not the window being derived). */
+  ocd_id: string;
+  observation_id: string;
+  payload_hash: string;
+  fetched_at: string | null;
+}
+
+/** Everything the amendment loader resolved for one window. */
+export interface LoadedAmendment {
+  outcome: AmendmentOutcome;
+  /** the resolver's inputs (null when the window has no FR row / publication date / linked amendment). */
+  inputs: AmendmentInputs | null;
+  /** the linked amendments' latest FR + govinfo observations — evidence about THIS window (ADR 0016 §7). */
+  evidenceRows: AmendmentEvidenceRow[];
+}
+
+/** The ReconcileOptions a derivation of this window passes (same log in, same window out). */
+export function reconcileOptionsOf(l: LoadedAmendment): ReconcileOptions {
+  return {
+    amendment: l.outcome,
+    ...(l.inputs ? { amendmentInputs: l.inputs } : {}),
+  };
+}
+
+/** A ChainCandidate built from an FR row for identity checks only (status/close are not read by linkBasis). */
+function identityCandidate(r: FrAmendmentRow): ChainCandidate {
+  const fr = extractFr(r.raw);
+  return {
+    ocd_id: r.ocd_id,
+    fr_observation_id: r.observation_id,
+    fr_document_number: fr.documentNumber ?? r.fr_document_number,
+    docket_ids: fr.docketIds,
+    rin: fr.rin,
+    rins: fr.rins,
+    is_extension: r.is_extension,
+    is_correction: derivedIsCorrection(r),
+    is_withdrawal: r.is_withdrawal,
+    is_reopening: r.is_reopening,
+    title: fr.title,
+    publication_date: fr.publicationDate,
+    govinfo_url: null,
+    dates_text: fr.datesText,
+    status: "unknown",
+    resolved_close_utc: null,
+    citation: fr.citation,
+    correction_of: fr.correctionOf,
+    corrections: fr.corrections,
+    govinfo_text: r.govinfo_text,
+  };
+}
+
 /**
- * Read every Observation for an ocd_id from the log, run the pure engine, persist the projection.
- * The single DB-aware orchestration point; the rulebook itself stays pure + deterministic.
+ * The amendment CORPUS: every FR and govinfo row — the full HISTORY, not only the latest (round 2,
+ * finding 1) — of every window whose FR rows EVER carried an amendment signal (the four flags, or a
+ * non-empty correction_of — the fr-v3 rule read off raw, so fr-v2 rows count). Every candidate B of
+ * every window A is drawn from it; it is a pure function of the FR + govinfo rows of the log,
+ * independent of A. Whether B is an amendment, and linked to A, is decided per STATE (its latest rows
+ * as of a time), so a document whose latest row lost its flags is not an amendment NOW but was one
+ * before — exactly what the verdict-freshness timeline needs.
+ *
+ * FR `raw` is SLIMMED to the fields the identity / resolver path reads (extractFr, the deny-list, the
+ * correction rule); govinfo rows carry only their extracted text, so the corpus stays a few MB.
+ */
+interface CorpusFrRow {
+  row: FrAmendmentRow; // govinfo_* fields null — attached per state (docStateAt)
+  at: number; // fetched_at, epoch ms
+}
+interface CorpusGovRow {
+  observation_id: string;
+  at: number;
+  fetched_at: Date | string;
+  raw_dates_text: string | null;
+  payload_hash: string;
+}
+interface CorpusDoc {
+  ocd_id: string;
+  fr: CorpusFrRow[]; // ascending (fetched_at, observation_id)
+  gov: CorpusGovRow[]; // ascending
+  /** unions over ALL rows — the prefilter must admit B if ANY of its states could link. */
+  publication_dates: string[];
+  docket_ids: Set<string>;
+  correction_ofs: Set<string>;
+  /** every FR dates text and govinfo text, whitespace-collapsed (the citation necessary condition). */
+  texts: string[];
+}
+interface AmendmentCorpus {
+  stamp: string;
+  docs: CorpusDoc[];
+}
+
+/** B's rows as they stood at `atMs`: its latest FR row and latest govinfo row at or before it. */
+function docStateAt(doc: CorpusDoc, atMs: number): FrAmendmentRow | null {
+  let fr: CorpusFrRow | null = null;
+  for (const r of doc.fr) if (r.at <= atMs) fr = r;
+  if (!fr) return null;
+  let gov: CorpusGovRow | null = null;
+  for (const g of doc.gov) if (g.at <= atMs) gov = g;
+  return {
+    ...fr.row,
+    govinfo_observation_id: gov?.observation_id ?? null,
+    govinfo_text: gov?.raw_dates_text ?? null,
+    govinfo_fetched_at: gov?.fetched_at ?? null,
+    govinfo_payload_hash: gov?.payload_hash ?? null,
+  };
+}
+
+/** The raw keys every reader downstream of the corpus consults (extractFr, isDenied, derivedIsCorrection). */
+const CORPUS_RAW_KEYS = [
+  "document_number",
+  "publication_date",
+  "title",
+  "dates",
+  "comments_close_on",
+  "comment_url",
+  "docket_ids",
+  "regulation_id_numbers",
+  "citation",
+  "correction_of",
+  "corrections",
+] as const;
+
+function slimRaw(raw: unknown): Record<string, unknown> {
+  const src =
+    raw && typeof raw === "object" && !Array.isArray(raw)
+      ? (raw as Record<string, unknown>)
+      : {};
+  const out: Record<string, unknown> = {};
+  for (const k of CORPUS_RAW_KEYS) if (k in src) out[k] = src[k];
+  return out;
+}
+
+const collapseWs = (s: string) => s.replace(/\s+/g, " ");
+
+/**
+ * The freshness stamp of the corpus: the observations table's OID (a schema reset is a new table) plus
+ * the row count and max fetched_at over exactly the FR + govinfo rows. The log is APPEND-ONLY (0001
+ * rejects UPDATE / DELETE / TRUNCATE by trigger), so any change to what the corpus reads is an insert,
+ * and every insert bumps the count. (The dev-only #O4 backfill, which disables that trigger to re-stamp
+ * flags, is the one exception: restart any long-lived process after running it.) Index-only on 0013.
+ */
+async function corpusStamp(sql: SqlHandle): Promise<string> {
+  const [r] = await sql<{ stamp: string }[]>`
+    select 'observations'::regclass::oid::text || ':' || count(*)::text || ':' ||
+           coalesce(max(fetched_at)::text, '') as stamp
+    from observations
+    where source in ('federal_register', 'govinfo')
+  `;
+  return r!.stamp;
+}
+
+async function buildAmendmentCorpus(
+  sql: SqlHandle,
+  stamp: string,
+): Promise<AmendmentCorpus> {
+  // Windows that EVER carried a signal (partial index 0013/3), then ALL their FR and govinfo rows in
+  // time order (0013/1). govinfo `raw` (the whole page) is never read here — only its extracted text.
+  const rows = await sql<
+    {
+      observation_id: string;
+      ocd_id: string;
+      source: "federal_register" | "govinfo";
+      fr_document_number: string | null;
+      is_extension: boolean;
+      is_correction: boolean;
+      is_withdrawal: boolean;
+      is_reopening: boolean;
+      raw: unknown;
+      raw_dates_text: string | null;
+      fetched_at: Date;
+      payload_hash: string;
+    }[]
+  >`
+    with amend as (
+      select distinct ocd_id from observations
+      where source = 'federal_register'
+        and (is_extension or is_correction or is_withdrawal or is_reopening
+             or coalesce(raw->>'correction_of', '') <> '')
+    )
+    select o.observation_id, o.ocd_id, o.source, o.fr_document_number,
+           o.is_extension, o.is_correction, o.is_withdrawal, o.is_reopening,
+           case when o.source = 'federal_register' then o.raw end as raw,
+           o.raw_dates_text, o.fetched_at, o.payload_hash
+    from amend a
+    join observations o
+      on o.ocd_id = a.ocd_id and o.source in ('federal_register', 'govinfo')
+    order by o.ocd_id, o.fetched_at, o.observation_id
+  `;
+  const byDoc = new Map<string, CorpusDoc>();
+  for (const r of rows) {
+    let doc = byDoc.get(r.ocd_id);
+    if (!doc) {
+      doc = {
+        ocd_id: r.ocd_id,
+        fr: [],
+        gov: [],
+        publication_dates: [],
+        docket_ids: new Set(),
+        correction_ofs: new Set(),
+        texts: [],
+      };
+      byDoc.set(r.ocd_id, doc);
+    }
+    const at = r.fetched_at.getTime();
+    if (r.source === "govinfo") {
+      doc.gov.push({
+        observation_id: r.observation_id,
+        at,
+        fetched_at: r.fetched_at,
+        raw_dates_text: r.raw_dates_text,
+        payload_hash: r.payload_hash,
+      });
+      if (r.raw_dates_text) doc.texts.push(collapseWs(r.raw_dates_text));
+      continue;
+    }
+    const row: FrAmendmentRow = {
+      observation_id: r.observation_id,
+      ocd_id: r.ocd_id,
+      fr_document_number: r.fr_document_number,
+      is_extension: r.is_extension,
+      is_correction: r.is_correction,
+      is_withdrawal: r.is_withdrawal,
+      is_reopening: r.is_reopening,
+      raw: slimRaw(r.raw),
+      govinfo_observation_id: null,
+      govinfo_text: null,
+      fetched_at: r.fetched_at,
+      payload_hash: r.payload_hash,
+    };
+    doc.fr.push({ row, at });
+    const fr = extractFr(row.raw);
+    if (fr.publicationDate) doc.publication_dates.push(fr.publicationDate);
+    for (const d of fr.docketIds) doc.docket_ids.add(d);
+    if (fr.correctionOf) doc.correction_ofs.add(fr.correctionOf);
+    if (fr.datesText) doc.texts.push(collapseWs(fr.datesText));
+  }
+  return { stamp, docs: [...byDoc.values()].filter((d) => d.fr.length > 0) };
+}
+
+/**
+ * Per-client corpus memo. Keyed by the POOL client: a transaction handle (it has `savepoint`) may see
+ * its own uncommitted inserts, so it always builds a private corpus and never stores one — no other
+ * caller can ever observe a corpus built from uncommitted rows. The stamp is read BEFORE the corpus,
+ * so a row committed between the two reads can only make the memo NEWER than its stamp, which forces a
+ * rebuild on the next call, never a stale hit.
+ */
+const corpusMemo = new WeakMap<object, AmendmentCorpus>();
+
+async function amendmentCorpus(sql: SqlHandle): Promise<AmendmentCorpus> {
+  const stamp = await corpusStamp(sql);
+  if ("savepoint" in sql) return buildAmendmentCorpus(sql, stamp);
+  const hit = corpusMemo.get(sql);
+  if (hit && hit.stamp === stamp) return hit;
+  const built = await buildAmendmentCorpus(sql, stamp);
+  corpusMemo.set(sql, built);
+  return built;
+}
+
+/**
+ * loadAmendmentEvidence — the AMENDED-CLOSE outcome for one window (reconcile-v2.4, ADR 0016): read the
+ * window's own latest FR observation (A), find the FR amendment documents DETERMINISTICALLY linked to it
+ * (B) with each B's latest govinfo text, and hand them to the pure resolver (amendment.ts).
+ *
+ * Candidate Bs come from the amendment CORPUS (every window whose latest FR row carries an amendment
+ * signal, with its latest govinfo text — memoized per pool client behind an append-only freshness stamp,
+ * so a whole poll pass or rederive sweep reads it once). A cheap NECESSARY condition for a non-null
+ * linkBasis narrows it (shared docket, B's correction_of naming A, or A's citation in B's collapsed
+ * FR-dates / govinfo text — the doc_number and docket_rin bases both need the shared docket); the
+ * survivors go to amendmentOutcomeFromRows, where linkBasis (correction_of | doc_number | docket_rin |
+ * citation, the citation basis gated by A's citation being carried by exactly ONE FR document across the
+ * log), the deny-list and the after-A ordering decide exactly as before. An LLM-affirmed link is NOT read
+ * here — llm_corroborated pairs never move a date.
+ *
+ * Reads ONLY the observation log — never participation_windows / conflict_records — so it carries no
+ * verdict-derived state: the review CLI's blind derivation can call it without leaking a verdict, and
+ * every derivation path gets the same answer for the same log. Takes any handle (the review write
+ * derives inside its own transaction). Returns `none` when A has no FR observation / publication date.
+ *
+ * Cost (0013 indexes): two index lookups + the stamp per call; the corpus rebuild runs only when an FR
+ * or govinfo row was appended since the last call on this client.
+ */
+export async function loadAmendmentEvidence(
+  sql: SqlHandle,
+  ocdId: string,
+): Promise<AmendmentOutcome> {
+  return (await loadAmendmentInputs(sql, ocdId)).outcome;
+}
+
+/**
+ * loadAmendmentInputs — loadAmendmentEvidence's full result: the outcome, the resolver INPUTS (with each
+ * linked amendment's fetch times, which the honor-the-verdict rule needs — ADR 0016 §7) and the linked
+ * amendment observations as evidence rows (the review write binds a verdict to them). Every derivation
+ * path calls this (reconcileOcdId, the review core), so they all see the same evidence.
+ */
+export async function loadAmendmentInputs(
+  sql: SqlHandle,
+  ocdId: string,
+): Promise<LoadedAmendment> {
+  const NONE: LoadedAmendment = {
+    outcome: { kind: "none" },
+    inputs: null,
+    evidenceRows: [],
+  };
+  const [aRow] = await sql<FrAmendmentRow[]>`
+    select observation_id, ocd_id, fr_document_number,
+           is_extension, is_correction, is_withdrawal, is_reopening, raw,
+           null::uuid as govinfo_observation_id, null::text as govinfo_text
+    from observations
+    where ocd_id = ${ocdId} and source = 'federal_register'
+    order by fetched_at desc, observation_id desc
+    limit 1
+  `;
+  if (!aRow) return NONE;
+  const a = identityCandidate(aRow);
+  if (!a.publication_date) return NONE;
+
+  const aNum = a.fr_document_number;
+  const aDockets = a.docket_ids;
+  const aCitation = (a.citation ?? "").replace(/\s+/g, " ").trim();
+  const corpus = await amendmentCorpus(sql);
+  // Candidates: documents that could be linked to A in ANY of their states (unions over all rows) — a
+  // necessary condition for a non-null linkBasis: a shared docket, B's correction_of naming A, or A's
+  // citation in B's text (doc_number and docket_rin both need the shared docket).
+  let citationSeen = false;
+  const candidates: CorpusDoc[] = [];
+  for (const d of corpus.docs) {
+    if (d.ocd_id === ocdId) continue;
+    if (!d.publication_dates.some((p) => p > a.publication_date!)) continue;
+    const cites =
+      aCitation.length > 0 && d.texts.some((t) => t.includes(aCitation));
+    if (
+      cites ||
+      (aNum !== null && d.correction_ofs.has(aNum)) ||
+      aDockets.some((k) => d.docket_ids.has(k))
+    ) {
+      candidates.push(d);
+      if (cites) citationSeen = true;
+    }
+  }
+  if (candidates.length === 0) return NONE;
+
+  // The citation uniqueness index linkBasis needs — only A's citation is ever looked up, and only when
+  // some candidate's text carries it (otherwise the citation basis cannot fire and the count is moot).
+  // Counted over EVERY FR document carrying it, PER STATE (round 3, finding 1): a document counts from
+  // its FIRST FR fetch on, and each such arrival is a timeline boundary. Today's count applied to every
+  // state would let an unrelated document sharing A's citation, arriving later, erase an extension from
+  // the past — and revive a verdict that extension had superseded. Expression index 0013/4.
+  const citationArrivals: number[] = [];
+  if (a.citation && citationSeen) {
+    const rows = await sql<{ first_at: Date }[]>`
+      select min(fetched_at) as first_at
+      from observations
+      where source = 'federal_register'
+        and regexp_replace(btrim(raw->>'citation'), '\\s+', ' ', 'g') = ${aCitation}
+      group by fr_document_number
+    `;
+    for (const r of rows) citationArrivals.push(r.first_at.getTime());
+  }
+  const citationKey = a.citation?.trim() ?? "";
+  const indexAt = (atMs: number): Map<string, number> =>
+    citationKey && citationArrivals.length > 0
+      ? new Map([
+          [citationKey, citationArrivals.filter((t) => t <= atMs).length],
+        ])
+      : new Map();
+
+  // Per-(FR row, govinfo row, citation count) evidence, memoized: a state is just the set of rows
+  // current at a time, read with that time's citation count.
+  const memo = new Map<string, AmendmentEvidence | null>();
+  const evidenceOf = (
+    r: FrAmendmentRow,
+    index: Map<string, number>,
+  ): AmendmentEvidence | null => {
+    const key = `${r.observation_id}|${r.govinfo_observation_id ?? ""}|${index.get(citationKey) ?? ""}`;
+    if (!memo.has(key))
+      memo.set(
+        key,
+        amendmentInputsFromRows(aRow, [r], index)?.inputs.amendments[0] ?? null,
+      );
+    return memo.get(key)!;
+  };
+  const stateAt = (atMs: number) =>
+    candidates
+      .map((d) => docStateAt(d, atMs))
+      .filter((r): r is FrAmendmentRow => r !== null);
+  // The timeline (ADR 0016 §7): the linked evidence set after each fetch time of any candidate's FR or
+  // govinfo row AND each arrival of a document carrying A's citation (round 3). The last state is NOW.
+  const times = [
+    ...new Set([
+      ...candidates.flatMap((d) => [
+        ...d.fr.map((r) => r.at),
+        ...d.gov.map((g) => g.at),
+      ]),
+      ...citationArrivals,
+    ]),
+  ].sort((x, y) => x - y);
+  const timeline = times.map((t) => {
+    const index = indexAt(t);
+    return {
+      at: new Date(t).toISOString(),
+      amendments: stateAt(t)
+        .map((r) => evidenceOf(r, index))
+        .filter((e): e is AmendmentEvidence => e !== null),
+    };
+  });
+
+  const built = amendmentInputsFromRows(
+    aRow,
+    stateAt(Number.POSITIVE_INFINITY),
+    indexAt(Number.POSITIVE_INFINITY),
+  );
+  if (!built) return NONE;
+  built.inputs.timeline = timeline;
+  const evidenceRows: AmendmentEvidenceRow[] = [];
+  for (const r of built.rows) {
+    if (r.payload_hash)
+      evidenceRows.push({
+        source: "federal_register",
+        ocd_id: r.ocd_id,
+        observation_id: r.observation_id,
+        payload_hash: r.payload_hash,
+        fetched_at: toIso(r.fetched_at),
+      });
+    if (r.govinfo_observation_id && r.govinfo_payload_hash)
+      evidenceRows.push({
+        source: "govinfo",
+        ocd_id: r.ocd_id,
+        observation_id: r.govinfo_observation_id,
+        payload_hash: r.govinfo_payload_hash,
+        fetched_at: toIso(r.govinfo_fetched_at),
+      });
+  }
+  return {
+    outcome: resolveAmendedClose(
+      built.inputs.original,
+      built.inputs.amendments,
+    ),
+    inputs: built.inputs,
+    evidenceRows,
+  };
+}
+
+/**
+ * amendmentOutcomeFromRows — the PURE half of loadAmendmentEvidence: given A's latest FR row, the
+ * prefiltered candidate B rows (each with its latest govinfo text) and the citation uniqueness index,
+ * keep the Bs that are amendments (derived flags), not keyword false-positives, published after A, with
+ * a non-null linkBasis — and resolve. Exported so the recorded production rows can be driven through
+ * the exact selection logic without a database.
+ */
+export function amendmentOutcomeFromRows(
+  aRow: FrAmendmentRow,
+  bRows: readonly FrAmendmentRow[],
+  citationIndex: Map<string, number>,
+): AmendmentOutcome {
+  const built = amendmentInputsFromRows(aRow, bRows, citationIndex);
+  return built
+    ? resolveAmendedClose(built.inputs.original, built.inputs.amendments)
+    : { kind: "none" };
+}
+
+/**
+ * The selection half of amendmentOutcomeFromRows: the resolver inputs (original + the linked amendment
+ * evidence, with fetch times) and the B rows they came from. null when A has no publication date.
+ */
+export function amendmentInputsFromRows(
+  aRow: FrAmendmentRow,
+  bRows: readonly FrAmendmentRow[],
+  citationIndex: Map<string, number>,
+): { inputs: AmendmentInputs; rows: FrAmendmentRow[] } | null {
+  const a = identityCandidate(aRow);
+  const aFr = extractFr(aRow.raw);
+  if (!a.publication_date) return null;
+  const evidence: AmendmentEvidence[] = [];
+  const rows: FrAmendmentRow[] = [];
+  for (const r of bRows) {
+    const b = identityCandidate(r);
+    if (!isAmendment(b) || isKeywordFalsePositive(b)) continue;
+    if (
+      r.ocd_id === aRow.ocd_id ||
+      !b.publication_date ||
+      !(b.publication_date > a.publication_date)
+    )
+      continue;
+    const basis = linkBasis(a, b, citationIndex);
+    if (basis === null) continue;
+    const bFr = extractFr(r.raw);
+    evidence.push({
+      ocd_id: r.ocd_id,
+      fr_document_number: b.fr_document_number ?? "",
+      fr_observation_id: r.observation_id,
+      govinfo_observation_id: r.govinfo_observation_id,
+      publication_date: b.publication_date,
+      is_extension: b.is_extension,
+      is_correction: b.is_correction,
+      is_reopening: b.is_reopening,
+      is_withdrawal: b.is_withdrawal,
+      fr_comments_close_on: bFr.commentsCloseOn,
+      fr_dates_text: bFr.datesText,
+      govinfo_text: r.govinfo_text,
+      basis,
+      fr_fetched_at: toIso(r.fetched_at),
+      govinfo_fetched_at: r.govinfo_observation_id
+        ? toIso(r.govinfo_fetched_at)
+        : null,
+    });
+    rows.push(r);
+  }
+  return {
+    inputs: {
+      original: {
+        fr_close: aFr.commentsCloseOn,
+        publication_date: a.publication_date,
+        fr_document_number: a.fr_document_number,
+      },
+      amendments: evidence,
+    },
+    rows,
+  };
+}
+
+/**
+ * Read every Observation for an ocd_id from the log, resolve its linked FR amendments
+ * (loadAmendmentEvidence, reconcile-v2.4), run the pure engine, persist the projection. The single
+ * DB-aware orchestration point; the rulebook itself stays pure + deterministic. Every write path that
+ * derives a window — FR/Regs ingest, the rederive sweep, the status refresh, the review write — comes
+ * through here, so they all pass the SAME amendment outcome.
  */
 export async function reconcileOcdId(
   sql: Sql,
@@ -295,7 +854,8 @@ export async function reconcileOcdId(
   if (observations.length === 0)
     throw new Error(`reconcileOcdId: no observations for ocd_id "${ocdId}"`);
 
-  const result = reconcile(observations, now);
+  const amendment = await loadAmendmentInputs(sql, ocdId);
+  const result = reconcile(observations, now, reconcileOptionsOf(amendment));
   const persist = await persistReconciliation(sql, result, now);
   return { ...result, persist };
 }
@@ -488,13 +1048,18 @@ export async function chainReconcileOnce(
       status: string;
       resolved_close_utc: Date | string | null;
       govinfo_url: string | null;
+      govinfo_text: string | null;
     }[]
   >`
     select distinct on (w.ocd_id)
       w.ocd_id,
       o.observation_id as fr_observation_id,
       o.is_extension, o.is_correction, o.is_withdrawal, o.is_reopening, o.raw,
-      w.status, w.resolved_close_utc, w.govinfo_url
+      w.status, w.resolved_close_utc, w.govinfo_url,
+      (select g.raw_dates_text from observations g
+        where g.ocd_id = w.ocd_id and g.source = 'govinfo'
+        order by g.fetched_at desc, g.observation_id desc
+        limit 1) as govinfo_text
     from participation_windows w
     join observations o
       on o.ocd_id = w.ocd_id and o.source = 'federal_register'
@@ -511,7 +1076,8 @@ export async function chainReconcileOnce(
       rin: fr.rin,
       rins: fr.rins,
       is_extension: r.is_extension,
-      is_correction: r.is_correction,
+      // fr-v3 rule read off raw, so an fr-v2 correction row (correction_of, no keyword) is a correction.
+      is_correction: derivedIsCorrection(r),
       is_withdrawal: r.is_withdrawal,
       is_reopening: r.is_reopening,
       title: fr.title,
@@ -523,6 +1089,10 @@ export async function chainReconcileOnce(
         r.resolved_close_utc instanceof Date
           ? r.resolved_close_utc.toISOString()
           : r.resolved_close_utc,
+      citation: fr.citation,
+      correction_of: fr.correctionOf,
+      corrections: fr.corrections,
+      govinfo_text: r.govinfo_text,
     };
   });
 
@@ -570,4 +1140,48 @@ export async function chainReconcileOnce(
     deferred: adjudicated.deferred,
     ...persisted,
   };
+}
+
+export interface ChainOriginalsRederiveResult {
+  /** side-A windows of the live CONFIDENT cross_window set, re-derived this pass. */
+  scanned: number;
+  /** re-derivations that moved the operative close (an amendment taking effect — expected, audited). */
+  versionBumped: number;
+  /** re-derivations that threw (isolated per window; retried next cycle). */
+  failed: number;
+}
+
+/**
+ * rederiveChainOriginals — the reconcile-v2.4 trigger (ADR 0016): re-derive every side-A window of the
+ * live CONFIDENT cross_window set, so an amendment that arrived (or whose GovInfo text arrived) this
+ * cycle moves its original in the SAME cycle instead of waiting for the original's next Regs poll. Runs
+ * after chainReconcileOnce. LLM-affirmed links (llm_corroborated) are skipped — they never move a date,
+ * so re-deriving their originals would be pure churn. Idempotent: an unchanged derivation is a no-op
+ * refresh (persistReconciliation's own version discipline). Per-window failures are isolated.
+ */
+export async function rederiveChainOriginals(
+  sql: Sql,
+  now: Date = new Date(),
+): Promise<ChainOriginalsRederiveResult> {
+  const rows = await sql<{ ocd_id: string }[]>`
+    select distinct ocd_id from conflict_records
+    where conflict_scope = 'cross_window'
+      and resolved_at is null
+      and not (conflict_flags @> '["llm_corroborated"]'::jsonb)
+    order by ocd_id
+  `;
+  const result: ChainOriginalsRederiveResult = {
+    scanned: rows.length,
+    versionBumped: 0,
+    failed: 0,
+  };
+  for (const { ocd_id } of rows) {
+    try {
+      const r = await reconcileOcdId(sql, ocd_id, now);
+      if (r.persist.versionBumped) result.versionBumped++;
+    } catch {
+      result.failed++;
+    }
+  }
+  return result;
 }
