@@ -218,8 +218,9 @@ Definitions first:
   `conditions[agencies][]=<slug>` for each agency on this notice's FR record, every page read) in
   which no document other than this notice carries this docket id in `docket_ids`,
   `regulations_dot_gov_info` or its title — the FR docket fields are often empty or hold only an
-  internal id, so (b) alone can miss a sibling. If any check is unavailable or shows a second
-  same-day FR document, the date does not identify the notice. For these docket documents only,
+  internal id, so (b) alone can miss a sibling. If any check is unavailable or identifies another
+  FR document published that day in this docket, the date does not identify the notice; unrelated
+  documents returned by the agency search do not count. For these docket documents only,
   an identification established this way satisfies rule 2's identity requirement. A pin relying
   on the date must also say in the note how the single-notice condition was checked (the
   `Identity (v1.2)` line of "Note format"), in addition to the v1.1 note requirements. Not
