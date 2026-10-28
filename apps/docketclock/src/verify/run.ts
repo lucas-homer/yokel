@@ -32,13 +32,17 @@
  * CONFIRMED CHECK (the never-correctness-by-default rule): a successful source fetch STRICTLY after
  * the published close — regs_poll_watch.last_checked_at (it advances even on a dedupe-skip, which is
  * exactly "we checked and nothing changed"), OR any post-close observation landing for the window
- * (an observation IS a successful fetch; FR re-serving a doc counts this way).
+ * (an observation IS a successful fetch; FR re-serving a doc counts this way) — of a source the
+ * engine reads for the window (RECONCILE_INPUT_SOURCES, ADR 0016). A govinfo row on the window's own
+ * chain is the published text of the document, fetched for OTHER windows' amendment resolution; it
+ * checks nothing about this window's close and must never stand in for a post-close check.
  *
  * CONCURRENCY(single-writer): same discipline as the other passes — runs inside the one poller
  * process, never overlapping. DETERMINISTIC: the clock is injected via opts.now (tests drive a fake).
  */
 import { AccuracyRecord } from "@yokel/contracts";
 import type { Sql } from "../db/client.js";
+import { RECONCILE_INPUT_SOURCES } from "../reconcile/review-evidence.js";
 import { componentLogger } from "../log.js";
 import {
   classifyHorizon,
@@ -202,6 +206,7 @@ async function evaluateWatch(
     left join observation_targets t on t.observation_id = o.observation_id
     where (o.ocd_id = ${watch.ocd_id} or t.ocd_id = ${watch.ocd_id})
       and o.fetched_at > ${publishedCloseIso}
+      and o.source = any(${[...RECONCILE_INPUT_SOURCES]}::text[])
   `;
 
   // CONFIRMED CHECK: the latest post-close source check (see header). Pre-/at-close instants prove

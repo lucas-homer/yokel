@@ -57,64 +57,179 @@ export interface PostOpts extends FetchOpts {
   transport?: FetchLike;
 }
 
+/**
+ * Read a response body UNDER the request's abort signal (round-1 review, finding 6). The per-attempt
+ * timeout must bound the WHOLE request — a server that sends headers and then stalls the body would
+ * otherwise hang `res.text()` / `res.json()` forever, and with it the single-writer poll cycle. On abort
+ * the unfinished body is cancelled (freeing the socket) and the read rejects; the listener is removed
+ * once the read settles, so a completed read is never disturbed.
+ */
+async function readBody(res: Response, signal: AbortSignal): Promise<string> {
+  const body = res.body;
+  if (!body) return "";
+  // Our own reader (not res.text()): a body that ignores the abort signal can still be CANCELLED through
+  // the reader we hold — res.text() would lock the stream and make it uncancellable.
+  const reader = body.getReader();
+  let onAbort: () => void = () => {};
+  const aborted = new Promise<never>((_, reject) => {
+    onAbort = () => {
+      reader.cancel().catch(() => {});
+      reject(new Error("response body timed out"));
+    };
+    if (signal.aborted) onAbort();
+    else signal.addEventListener("abort", onAbort, { once: true });
+  });
+  aborted.catch(() => {}); // settled by the race below; never an unhandled rejection
+  const chunks: Uint8Array[] = [];
+  const drain = (async () => {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+    }
+    return new TextDecoder().decode(Buffer.concat(chunks));
+  })();
+  drain.catch(() => {});
+  try {
+    return await Promise.race([drain, aborted]);
+  } finally {
+    signal.removeEventListener("abort", onAbort);
+  }
+}
+
+/** A body-read failure worth retrying: the timeout fired or the stream broke — never a malformed body. */
+function transientBodyError(err: unknown, signal: AbortSignal): boolean {
+  return signal.aborted || !(err instanceof SyntaxError);
+}
+
+/**
+ * The ONE retry loop behind every adapter request (memory: fetch-retry-scope-gotcha). Per attempt an
+ * AbortController + timer bound the request AND its body read (readBody). Retried: network/abort
+ * failures of the send, transient body-read failures, 429 and 5xx (honoring a capped Retry-After). Not
+ * retried: any other 4xx (fails fast with the status in the message), a malformed body. `notFound`
+ * turns a 404 into a value instead of a throw (GovInfo's "not published yet").
+ */
+async function requestWithRetry<T>(
+  method: "GET" | "POST",
+  url: string,
+  send: (signal: AbortSignal) => Promise<Response>,
+  readOk: (body: string) => T,
+  opts: { retries: number; timeoutMs: number },
+  notFound?: { value: T },
+): Promise<T> {
+  type Attempt = { done: true; value: T } | { done: false; backoff: number };
+  let attempt = 0;
+  const once = async (): Promise<Attempt> => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), opts.timeoutMs);
+    try {
+      // Only send failures (network/abort) are caught here — HTTP-status handling lives outside, so a
+      // non-retriable 4xx throw propagates immediately instead of being retried.
+      let res: Response;
+      try {
+        res = await send(ctrl.signal);
+      } catch (err) {
+        if (attempt >= opts.retries) throw err;
+        return { done: false, backoff: Math.min(30_000, 500 * 2 ** attempt++) };
+      }
+
+      if (res.ok) {
+        try {
+          return {
+            done: true,
+            value: readOk(await readBody(res, ctrl.signal)),
+          };
+        } catch (err) {
+          if (!transientBodyError(err, ctrl.signal) || attempt >= opts.retries)
+            throw err;
+          return {
+            done: false,
+            backoff: Math.min(30_000, 500 * 2 ** attempt++),
+          };
+        }
+      }
+      if (res.status === 404 && notFound) {
+        await readBody(res, ctrl.signal).catch(() => "");
+        return { done: true, value: notFound.value };
+      }
+
+      // 4xx (other than 429) is non-retriable — a 404/422 (or a 400/401/403 bad key) fails fast.
+      const retriable = res.status === 429 || res.status >= 500;
+      if (!retriable || attempt >= opts.retries) {
+        const body = await readBody(res, ctrl.signal).catch(() => "");
+        throw new Error(
+          `${method} ${url} -> ${res.status} ${res.statusText}${body ? `: ${body.slice(0, 300)}` : ""}`,
+        );
+      }
+
+      // Retriable (429 / 5xx): back off, honoring (a capped) Retry-After when present.
+      const backoff = retriableBackoffMs(res, attempt++);
+      res.body?.cancel().catch(() => {});
+      return { done: false, backoff };
+    } finally {
+      clearTimeout(timer); // the timer bounds the attempt, never the backoff sleep
+    }
+  };
+  for (;;) {
+    const r = await once();
+    if (r.done) return r.value;
+    await sleep(r.backoff);
+  }
+}
+
 /** GET a URL as JSON, with exponential backoff on RETRIABLE failures only. */
 export async function fetchJsonWithRetry(
   url: string,
   opts: FetchOpts = {},
 ): Promise<unknown> {
   const { retries = 4, timeoutMs = 30_000, headers = {} } = opts;
-  let attempt = 0;
-
-  for (;;) {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-
-    // Only network/abort failures are caught here (retriable). HTTP-status handling lives OUTSIDE this
-    // try, so a non-retriable 4xx throw propagates immediately instead of being retried.
-    let res: Response;
-    try {
-      res = await fetch(url, {
+  return requestWithRetry<unknown>(
+    "GET",
+    url,
+    (signal) =>
+      fetch(url, {
         headers: { Accept: "application/json", ...headers },
-        signal: ctrl.signal,
-      });
-    } catch (err) {
-      clearTimeout(timer);
-      if (attempt >= retries) throw err;
-      const backoff = Math.min(30_000, 500 * 2 ** attempt);
-      attempt++;
-      await sleep(backoff);
-      continue;
-    }
-    clearTimeout(timer);
+        signal,
+      }),
+    (text) => JSON.parse(text) as unknown,
+    { retries, timeoutMs },
+  );
+}
 
-    if (res.ok) return (await res.json()) as unknown;
-
-    // 4xx (other than 429) is non-retriable — a 404/422 must fail fast, not burn retries.
-    const retriable = res.status === 429 || res.status >= 500;
-    if (!retriable || attempt >= retries) {
-      const body = await res.text().catch(() => "");
-      throw new Error(
-        `GET ${url} -> ${res.status} ${res.statusText}${body ? `: ${body.slice(0, 300)}` : ""}`,
-      );
-    }
-
-    // Retriable (429 / 5xx): back off, honoring (a capped) Retry-After when present.
-    const backoff = retriableBackoffMs(res, attempt);
-    attempt++;
-    await sleep(backoff);
-  }
+/**
+ * GET a URL as TEXT (e.g. a GovInfo HTML rendition), with the SAME retry scope as fetchJsonWithRetry.
+ * ONE addition: `notFoundAsNull` turns a 404 into a `null` result instead of a throw — for a source where
+ * "not there yet" is a normal outcome (GovInfo publishes the rendition after the FR API lists a
+ * document), so the caller can skip and retry next cycle without that ordinary state being logged as a
+ * failure. Off by default (a 404 throws, as for JSON). The timeout bounds the body read too (readBody).
+ */
+export async function fetchTextWithRetry(
+  url: string,
+  opts: FetchOpts & { accept?: string; notFoundAsNull?: boolean } = {},
+): Promise<string | null> {
+  const {
+    retries = 4,
+    timeoutMs = 30_000,
+    headers = {},
+    accept = "text/html",
+    notFoundAsNull = false,
+  } = opts;
+  return requestWithRetry<string | null>(
+    "GET",
+    url,
+    (signal) => fetch(url, { headers: { Accept: accept, ...headers }, signal }),
+    (text) => text,
+    { retries, timeoutMs },
+    notFoundAsNull ? { value: null } : undefined,
+  );
 }
 
 /**
  * POST a JSON body and read JSON back, with the SAME retry SCOPE discipline as fetchJsonWithRetry
- * (memory: fetch-retry-scope-gotcha): ONLY the `await transport()` (network/abort) is inside the
- * try/catch — retriable. HTTP-status handling lives OUTSIDE it, so a non-retriable 4xx (e.g. a 400/401/403
- * for a bad or absent API key) throws IMMEDIATELY instead of burning the retry budget. We retry ONLY
- * network/abort errors, 429, and 5xx.
- *
- * The timeout is enforced with an AbortController per attempt; an abort surfaces as a thrown (network-like)
- * error that is itself retriable. The transport is injectable (default global `fetch`) so tests need no
- * network. Returns the parsed JSON body.
+ * (memory: fetch-retry-scope-gotcha): network/abort failures, transient body-read failures, 429 and 5xx
+ * are retried; a non-retriable 4xx (e.g. a 400/401/403 for a bad or absent API key) throws IMMEDIATELY
+ * instead of burning the retry budget. The timeout bounds the body read too (readBody). The transport is
+ * injectable (default global `fetch`) so tests need no network. Returns the parsed JSON body.
  */
 export async function postJsonWithRetry(
   url: string,
@@ -128,17 +243,11 @@ export async function postJsonWithRetry(
     transport = fetch as unknown as FetchLike,
   } = opts;
   const payload = JSON.stringify(body);
-  let attempt = 0;
-
-  for (;;) {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-
-    // Only network/abort failures are caught here (retriable). HTTP-status handling lives OUTSIDE this
-    // try, so a non-retriable 4xx throw propagates immediately instead of being retried.
-    let res: Response;
-    try {
-      res = await transport(url, {
+  return requestWithRetry<unknown>(
+    "POST",
+    url,
+    (signal) =>
+      transport(url, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -146,32 +255,9 @@ export async function postJsonWithRetry(
           ...headers,
         },
         body: payload,
-        signal: ctrl.signal,
-      });
-    } catch (err) {
-      clearTimeout(timer);
-      if (attempt >= retries) throw err;
-      const backoff = Math.min(30_000, 500 * 2 ** attempt);
-      attempt++;
-      await sleep(backoff);
-      continue;
-    }
-    clearTimeout(timer);
-
-    if (res.ok) return (await res.json()) as unknown;
-
-    // 4xx (other than 429) is non-retriable — a 400/401/403 (bad/absent key) must fail fast.
-    const retriable = res.status === 429 || res.status >= 500;
-    if (!retriable || attempt >= retries) {
-      const errBody = await res.text().catch(() => "");
-      throw new Error(
-        `POST ${url} -> ${res.status} ${res.statusText}${errBody ? `: ${errBody.slice(0, 300)}` : ""}`,
-      );
-    }
-
-    // Retriable (429 / 5xx): back off, honoring (a capped) Retry-After when present.
-    const backoff = retriableBackoffMs(res, attempt);
-    attempt++;
-    await sleep(backoff);
-  }
+        signal,
+      }),
+    (text) => JSON.parse(text) as unknown,
+    { retries, timeoutMs },
+  );
 }

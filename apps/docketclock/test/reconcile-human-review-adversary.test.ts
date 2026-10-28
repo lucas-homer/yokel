@@ -293,10 +293,14 @@ const withdrawnVsOpenChain = () => [
   }
 }
 
-// ═══ S2 — GOVINFO OBSERVATIONS GATE THE VERDICT (though they play no part in derivation) ═════════════
+// ═══ S2 — GOVINFO IS NOT EVIDENCE ABOUT ITS OWN WINDOW (reconcile-v2.4, ADR 0016 §6) ══════════════
+// Through v2.3 every newer non-human observation gated the verdict, govinfo included, and S2a pinned
+// that. ADR 0016 §6 deliberately reverses it: reconcile() never reads a window's own govinfo row, so it
+// cannot be new evidence about that window (the 2026-10-27 replay lost 12 honored verdicts to the
+// GovInfo sweep). Only DERIVATION_SOURCES (federal_register, regulations_gov) gate; S2c keeps the
+// dual-fire property under the new rule with a newer FR observation.
 
-// S2a: a govinfo observation is the NEWEST thing in the chain — the verdict MUST be un-honored and the
-// machine conflict must resurface with its ConflictRecord.
+// S2a: a govinfo observation is the NEWEST thing in the chain — the verdict STAYS honored.
 {
   const pin = hrObs(
     { kind: "pin_close", pinned_close_date: "2026-07-20" },
@@ -311,20 +315,49 @@ const withdrawnVsOpenChain = () => [
   );
   if (r) {
     assert(
-      "S2a: govinfo (non-derivation source) UN-honors the verdict — CONFLICTING resurfaces",
+      "S2a: govinfo (not a derivation source) does NOT un-honor the verdict — pin honored at HIGH, no record",
+      r.window.confidence === "high" &&
+        r.window.conflict_flags.includes("human_resolved") &&
+        r.conflict === null,
+      `${r.window.confidence} [${r.window.conflict_flags.join(",")}]`,
+    );
+    parses("S2a", r.window);
+  }
+}
+
+// S2c: a newer FEDERAL REGISTER observation (a derivation source) un-honors the verdict and the
+// machine conflict resurfaces WITH its ConflictRecord — dual-fire preserved past a staled verdict.
+{
+  const pin = hrObs(
+    { kind: "pin_close", pinned_close_date: "2026-07-20" },
+    "2026-05-03T00:00:00Z",
+  );
+  const newerFr = frObs(
+    { comments_close_on: "2026-07-16" },
+    "2026-05-04T00:00:00Z",
+  );
+  const r = track(
+    "S2c",
+    runs("S2c newer FR", () =>
+      reconcile([...conflictChain(), pin, newerFr], NOW),
+    ),
+  );
+  if (r) {
+    assert(
+      "S2c: a newer FR observation UN-honors the verdict — CONFLICTING resurfaces",
       r.window.confidence === "conflicting" &&
         !r.window.conflict_flags.includes("human_resolved"),
       `${r.window.confidence} [${r.window.conflict_flags.join(",")}]`,
     );
     assert(
-      "S2a: ConflictRecord emitted (dual-fire preserved past a govinfo-staled verdict)",
+      "S2c: ConflictRecord emitted (dual-fire preserved past a staled verdict)",
       r.conflict !== null &&
         !((r.conflict?.conflict_flags ?? []) as string[]).includes(
           "human_resolved",
         ),
       r.conflict === null ? "null" : r.conflict.conflict_flags.join(","),
     );
-    parses("S2a", r.window);
+    parses("S2c", r.window);
   }
 }
 

@@ -15,6 +15,7 @@ import { makeOcdId, type ObservationSource } from "@yokel/contracts";
 import { fetchJsonWithRetry, type FetchOpts } from "./http.js";
 import { payloadHash } from "./payload.js";
 import { noticeFlags, type NoticeFlags } from "./notice-flags.js";
+import { derivedIsCorrection } from "../reconcile/extract.js";
 import {
   ObservationCandidateSchema,
   type ObservationCandidate,
@@ -31,7 +32,11 @@ const FR_DOC_URL = (documentNumber: string) =>
   `${frBase()}/documents/${encodeURIComponent(documentNumber)}.json`;
 
 /** Pins which parser produced the notice-type flags below. Bump when the flag logic changes. */
-export const PARSER_VERSION = "fr-v2"; // v2: reopening split out of is_extension into is_reopening (#O4)
+// v2: reopening split out of is_extension into is_reopening (#O4).
+// v3: a non-empty structured `correction_of` makes is_correction true (FR correction docs carry no
+//     "Correction" keyword in title/action — C1-2026-18574). Old rows are NOT backfilled; every chain /
+//     amendment read derives the same value via derivedIsCorrection (reconcile/extract.ts).
+export const PARSER_VERSION = "fr-v3";
 
 const SOURCE: ObservationSource = "federal_register";
 
@@ -94,6 +99,7 @@ interface FrDocShape {
   type?: string | null;
   action?: string | null;
   dates?: string | null;
+  correction_of?: string | null;
   regulations_dot_gov_info?: FrRegsInfo | null;
 }
 
@@ -112,7 +118,18 @@ export function frNoticeFlags(raw: unknown): NoticeFlags {
   const haystack = [doc.title, doc.type, doc.action]
     .map((s) => str(s) ?? "")
     .join(" \n ");
-  return noticeFlags(haystack);
+  const flags = noticeFlags(haystack);
+  // fr-v3: FR's STRUCTURED correction link is a correction regardless of wording. A correction document's
+  // title has no "Correction" suffix and its action/dates/abstract are empty, so the keyword rules never
+  // fire on it — but `correction_of` names the corrected document. The same rule is applied at read time
+  // to fr-v2 rows (derivedIsCorrection, reconcile/extract.ts), so live parsing and old rows agree.
+  return {
+    ...flags,
+    is_correction: derivedIsCorrection({
+      is_correction: flags.is_correction,
+      raw,
+    }),
+  };
 }
 
 /**

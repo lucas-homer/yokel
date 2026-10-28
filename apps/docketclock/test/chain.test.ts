@@ -49,6 +49,10 @@ function original(over: Partial<ChainCandidate> = {}): ChainCandidate {
     dates_text: "Comments must be received on or before February 1, 2025.",
     status: "open",
     resolved_close_utc: "2025-02-02T04:59:59Z",
+    citation: null,
+    correction_of: null,
+    corrections: [],
+    govinfo_text: null,
     ...over,
   };
 }
@@ -74,6 +78,10 @@ function amendment(over: Partial<ChainCandidate> = {}): ChainCandidate {
       "The comment period is extended. Comments now due March 1, 2025.",
     status: "open",
     resolved_close_utc: "2025-03-02T04:59:59Z",
+    citation: null,
+    correction_of: null,
+    corrections: [],
+    govinfo_text: null,
     ...over,
   };
 }

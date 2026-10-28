@@ -136,7 +136,15 @@ export function recordRegsPoll(s: PollSummary): void {
   pollTruncated.set({ source: "regs" }, s.truncated ? 1 : 0);
 }
 export function recordPollPassFailure(
-  pass: "fr" | "regs" | "chain" | "status_refresh" | "verify" | "queue_stats",
+  pass:
+    | "fr"
+    | "regs"
+    | "govinfo"
+    | "chain"
+    | "amended_originals"
+    | "status_refresh"
+    | "verify"
+    | "queue_stats",
 ): void {
   pollPassFailures.inc({ pass });
 }

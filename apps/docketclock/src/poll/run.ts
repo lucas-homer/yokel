@@ -5,7 +5,11 @@
  *
  *   1. pollFrOnce  — FR open-comment discovery (FIRST), then
  *   2. pollRegsOnce — Regs.gov differential + re-poll pass, then
+ *   2b. govinfoSweepOnce — the published GovInfo text of recent FR amendment documents (ADR 0016):
+ *      append-only, capped per cycle; BEFORE the chain pass so the text is there to link and resolve on,
  *   3. chainReconcileOnce — the cross_window (chain) reconcile sweep (#31), then
+ *   3b. rederiveChainOriginals — re-derive the side-A windows of the confident links (reconcile-v2.4)
+ *      so an amendment that arrived this cycle moves its original in the SAME cycle, then
  *   4. refreshStaleOpenWindows — the status refresh (#107): re-derive open windows whose close has
  *      passed, so status flips closed within one cycle instead of waiting for an observation a settled
  *      notice may never produce. Runs BEFORE verify so a window flipped closed here is snapshot-eligible
@@ -68,7 +72,9 @@ if (existsSync(envPath)) process.loadEnvFile(envPath);
 const { createClient } = await import("../db/client.js");
 const { componentLogger } = await import("../log.js");
 const { regsApiKey } = await import("../sources/regulations-gov.js");
-const { chainReconcileOnce } = await import("../reconcile/persist.js");
+const { chainReconcileOnce, rederiveChainOriginals } =
+  await import("../reconcile/persist.js");
+const { govinfoSweepOnce } = await import("../sources/govinfo.js");
 const { refreshStaleOpenWindows } =
   await import("../reconcile/status-refresh.js");
 const { reviewQueueStats } = await import("../review/core.js");
@@ -156,6 +162,16 @@ async function main(): Promise<void> {
         recordPollPassFailure("regs");
         log.error({ err }, "regs poll failed");
       }
+      // 2b — GovInfo text for FR amendment documents (ADR 0016). After FR ingest (the amendments it
+      // just ingested are candidates) and BEFORE the chain pass (which links on that text).
+      // INDEPENDENTLY try/caught; the sweep isolates per-document failures itself.
+      try {
+        const govinfo = await govinfoSweepOnce(sql, new Date());
+        log.info({ summary: govinfo }, "govinfo sweep cycle");
+      } catch (err) {
+        recordPollPassFailure("govinfo");
+        log.error({ err }, "govinfo sweep failed");
+      }
       // 3rd pass — cross_window (chain) reconcile sweep. Runs LAST (derive-over-derived; see header) and
       // is INDEPENDENTLY try/caught so a chain failure cannot affect the FR/Regs passes (and vice-versa).
       try {
@@ -167,6 +183,19 @@ async function main(): Promise<void> {
       } catch (err) {
         recordPollPassFailure("chain");
         log.error({ err }, "chain reconcile failed");
+      }
+      // 3b — the reconcile-v2.4 trigger: re-derive the originals of the confident links so a newly
+      // linked amendment moves its original this cycle (idempotent). A moved close is logged loudly.
+      try {
+        const originals = await rederiveChainOriginals(sql, new Date());
+        if (originals.versionBumped > 0) {
+          log.warn({ summary: originals }, "amended originals MOVED a close");
+        } else {
+          log.info({ summary: originals }, "amended originals cycle");
+        }
+      } catch (err) {
+        recordPollPassFailure("amended_originals");
+        log.error({ err }, "amended originals re-derive failed");
       }
       // 4th pass — status refresh (#107): re-derive open windows whose close has passed so status
       // flips closed without waiting for a fresh observation. BEFORE verify (a window flipped closed

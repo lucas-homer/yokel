@@ -42,6 +42,8 @@ import {
 import type { Sql, SqlHandle } from "../db/client.js";
 import { ingestObservationWithin } from "../ingest/observe.js";
 import {
+  loadAmendmentInputs,
+  reconcileOptionsOf,
   loadObservations,
   reconcileOcdId,
   type ReconcileOcdIdResult,
@@ -52,6 +54,10 @@ import {
   type HonoredVerdict,
 } from "../reconcile/reconcile.js";
 import { extractFr, extractRegs } from "../reconcile/extract.js";
+import {
+  DERIVATION_SOURCES,
+  isDerivationSource,
+} from "../reconcile/review-evidence.js";
 
 /** A parked item: the window's latest verdict is an HONORED `escalate` (PR-A2, ADR 0015). */
 export interface EscalationMark {
@@ -90,6 +96,25 @@ function markOf(h: HonoredVerdict): EscalationMark {
 }
 
 /**
+ * The engine's honoring decision for a window, asked with the SAME inputs every derivation uses: the
+ * window's chain AND its linked amendments (loadAmendmentInputs — ADR 0016 §7: a linked amendment that
+ * changed the derivation since the verdict is new evidence). Every "is the latest verdict honored?"
+ * question in this module goes through here, so `queue`, the gauge, `show`, `log`, `corpus` and the
+ * write's confirmation can never disagree with the reconciler.
+ */
+async function honoredFor(
+  sql: SqlHandle,
+  ocdId: string,
+): Promise<{ honored: HonoredVerdict | null; observations: Observation[] }> {
+  const observations = await loadObservations(sql, ocdId);
+  const amendment = await loadAmendmentInputs(sql, ocdId);
+  return {
+    honored: selectHonoredVerdict(observations, reconcileOptionsOf(amendment)),
+    observations,
+  };
+}
+
+/**
  * escalationMarks — which of these windows are parked by an HONORED `escalate`. SQL narrows to the
  * windows whose LATEST human_review row says escalate (the only ones that can be parked), then the
  * honoring decision is the ENGINE's over the full chain (selectHonoredVerdict) — never a SQL
@@ -110,7 +135,7 @@ async function escalationMarks(
   `;
   for (const c of candidates) {
     if (c.kind !== "escalate") continue;
-    const honored = selectHonoredVerdict(await loadObservations(sql, c.ocd_id));
+    const { honored } = await honoredFor(sql, c.ocd_id);
     if (honored && honored.verdict.kind === "escalate")
       marks.set(c.ocd_id, markOf(honored));
   }
@@ -212,6 +237,11 @@ export async function reviewQueueStats(
 /** Per-source summary for `review show` — the values a reviewer actually compares. */
 export interface SourceSummary {
   source: string;
+  /**
+   * Set on a LINKED AMENDMENT's observation (ADR 0016 §7): the amendment document's own window. These
+   * rows are evidence about this window too (its derivation reads them), so they are --expect hashes.
+   */
+  amendment_window?: string;
   observation_id: string;
   fetched_at: string;
   payload_hash: string;
@@ -262,10 +292,25 @@ export interface HonoredSummary {
   parked: boolean;
 }
 
+/** A non-evidence source row shown for context (today: the window's own GovInfo published text). */
+export interface ContextSource {
+  source: string;
+  observation_id: string;
+  fetched_at: string;
+  /** the extracted DATES section / correction instructions (govinfo raw_dates_text). */
+  dates_text: string | null;
+}
+
 export interface ShowResult {
   window: Record<string, unknown> | null;
   identity: WindowIdentity;
+  /**
+   * The latest observation per DERIVATION source (DERIVATION_SOURCES) — exactly the evidence set a
+   * verdict binds to, so "pass every hash listed here as --expect" stays true (ADR 0016).
+   */
   sources: SourceSummary[];
+  /** Latest non-evidence rows (govinfo), for the reviewer's reading only — never an --expect hash. */
+  context: ContextSource[];
   priorVerdicts: PriorVerdict[];
   /** null when no verdict exists or the latest one is superseded by evidence. Always null when blind. */
   honored: HonoredSummary | null;
@@ -310,13 +355,14 @@ export async function reviewShow(
       fetched_at: Date;
       payload_hash: string;
       raw: unknown;
+      raw_dates_text: string | null;
       is_withdrawal: boolean;
       is_extension: boolean;
       is_reopening: boolean;
     }[]
   >`
     select distinct on (source)
-      source, observation_id, fetched_at, payload_hash, raw,
+      source, observation_id, fetched_at, payload_hash, raw, raw_dates_text,
       is_withdrawal, is_extension, is_reopening
     from observations
     where ocd_id = ${ocdId}
@@ -324,6 +370,7 @@ export async function reviewShow(
   `;
 
   const sources: SourceSummary[] = [];
+  const context: ContextSource[] = [];
   const identity: WindowIdentity = {
     fr_document_number: null,
     title: null,
@@ -340,6 +387,16 @@ export async function reviewShow(
     typeof v === "string" && v.trim().length > 0 ? v.trim() : null;
   for (const o of latest) {
     if (o.source === "human_review") continue; // verdicts listed separately, ALL of them, below
+    if (!isDerivationSource(o.source)) {
+      // Not evidence about this window (ADR 0016) — listed for context, never as an --expect hash.
+      context.push({
+        source: o.source,
+        observation_id: o.observation_id,
+        fetched_at: o.fetched_at.toISOString(),
+        dates_text: o.raw_dates_text,
+      });
+      continue;
+    }
     let close: string | null = null;
     let withdrawn: boolean | null = null;
     let open: boolean | null = null;
@@ -378,6 +435,22 @@ export async function reviewShow(
       is_reopening: o.is_reopening,
     });
   }
+  // The linked amendments' latest FR + govinfo observations — evidence about this window (§7), listed so
+  // that "every hash under latest per source" stays exactly the set a verdict binds to.
+  for (const r of (await loadAmendmentInputs(sql, ocdId)).evidenceRows)
+    sources.push({
+      source: r.source,
+      amendment_window: r.ocd_id,
+      observation_id: r.observation_id,
+      fetched_at: r.fetched_at ?? "",
+      payload_hash: r.payload_hash,
+      close_value: null,
+      withdrawn: null,
+      open_for_comment: null,
+      is_withdrawal: false,
+      is_extension: false,
+      is_reopening: false,
+    });
 
   if (blind) {
     // The machine's own view: re-derive from the source chain alone, in memory. Nothing persisted,
@@ -392,6 +465,7 @@ export async function reviewShow(
         window: null,
         identity,
         sources,
+        context,
         priorVerdicts: [],
         honored: null,
         liveConflicts: 0,
@@ -399,11 +473,18 @@ export async function reviewShow(
         chainLinks: [],
         blind: true,
       };
-    const derived = reconcile(chain, opts.now ?? new Date());
+    // The amended-close outcome (reconcile-v2.4) reads only the observation log — no verdict-derived
+    // state — so the blind derivation asks the engine exactly what the projection was derived from.
+    const derived = reconcile(
+      chain,
+      opts.now ?? new Date(),
+      reconcileOptionsOf(await loadAmendmentInputs(sql, ocdId)),
+    );
     return {
       window: stored ? { ...derived.window } : null,
       identity,
       sources,
+      context,
       priorVerdicts: [],
       honored: null,
       liveConflicts: derived.conflict ? 1 : 0,
@@ -442,7 +523,7 @@ export async function reviewShow(
   }
   let honored: HonoredSummary | null = null;
   if (verdictRows.length > 0) {
-    const h = selectHonoredVerdict(await loadObservations(sql, ocdId));
+    const h = (await honoredFor(sql, ocdId)).honored;
     if (h)
       honored = {
         observation_id: h.observation.observation_id,
@@ -465,6 +546,7 @@ export async function reviewShow(
     window: stored ?? null,
     identity,
     sources,
+    context,
     priorVerdicts,
     honored,
     liveConflicts: Number(conflictCounts?.live ?? 0),
@@ -531,17 +613,33 @@ function sameHashSet(a: readonly string[], b: readonly string[]): boolean {
   return true;
 }
 
-/** The latest observation per SOURCE (human_review excluded) — the evidence set a verdict binds to. */
+/**
+ * The latest observation per DERIVATION SOURCE (DERIVATION_SOURCES — federal_register,
+ * regulations_gov) — the evidence set a verdict binds to. The same list the engine's honoring rule
+ * uses (ADR 0016): a govinfo row on this chain is not evidence about this window, so it is neither
+ * recorded in reviewed_payload_hashes, nor required by --expect, nor a reason to abort the write when
+ * it lands mid-transaction.
+ */
 async function latestSourceHashes(
   sql: SqlHandle,
   ocdId: string,
 ): Promise<{ source: string; payload_hash: string }[]> {
-  return sql<{ source: string; payload_hash: string }[]>`
+  const own = await sql<{ source: string; payload_hash: string }[]>`
     select distinct on (source) source, payload_hash
     from observations
-    where ocd_id = ${ocdId} and source <> 'human_review'
+    where ocd_id = ${ocdId} and source = any(${[...DERIVATION_SOURCES]}::text[])
     order by source, fetched_at desc, observation_id desc
   `;
+  // ADR 0016 §7: the linked amendments' latest FR + govinfo observations are evidence about THIS window
+  // (its derivation reads them), so a verdict binds to them too — and a new one landing between `show`
+  // and the write refuses it, exactly like a new FR / Regs observation of the window itself.
+  const linked = (await loadAmendmentInputs(sql, ocdId)).evidenceRows.map(
+    (r) => ({
+      source: `amendment ${r.ocd_id.split("/").pop()} ${r.source}`,
+      payload_hash: r.payload_hash,
+    }),
+  );
+  return [...own, ...linked];
 }
 
 /**
@@ -647,7 +745,11 @@ export async function resolveWindow(
     // insert back. Superseding an honored pin with an escalate (the weekly audit's disagreement)
     // passes: the window returns to its machine derivation, which was conflicting.
     if (input.kind === "escalate") {
-      const derived = reconcile(await loadObservations(tx, input.ocdId), now);
+      const derived = reconcile(
+        await loadObservations(tx, input.ocdId),
+        now,
+        reconcileOptionsOf(await loadAmendmentInputs(tx, input.ocdId)),
+      );
       const c = derived.window.confidence;
       if (c !== "conflicting" && c !== "stale")
         throw new Error(
@@ -659,9 +761,7 @@ export async function resolveWindow(
   });
 
   const result = await reconcileOcdId(sql, input.ocdId, now);
-  const honoredNow = selectHonoredVerdict(
-    await loadObservations(sql, input.ocdId),
-  );
+  const honoredNow = (await honoredFor(sql, input.ocdId)).honored;
   const honored = honoredIsThisWrite(honoredNow, {
     observationId: written.ingest.observationId,
     payloadHash: written.payloadHash,
@@ -800,10 +900,10 @@ export async function reviewLog(
   >();
   for (const r of rows) {
     if (chains.has(r.ocd_id)) continue;
-    const observations = await loadObservations(sql, r.ocd_id);
+    const { honored, observations } = await honoredFor(sql, r.ocd_id);
     const verdicts = observations.filter((o) => o.source === "human_review");
     chains.set(r.ocd_id, {
-      honored: selectHonoredVerdict(observations),
+      honored,
       latestVerdictId: verdicts.at(-1)?.observation_id ?? null,
     });
   }
@@ -919,9 +1019,7 @@ export async function reviewCorpus(
       continue;
     }
     // The honoring rule only ever honors the LATEST verdict, so "honored" here means this row.
-    const honored = selectHonoredVerdict(
-      await loadObservations(sql, row.ocd_id),
-    );
+    const { honored } = await honoredFor(sql, row.ocd_id);
     const item = base(parsed.data);
     if (!honored || honored.observation.observation_id !== row.observation_id) {
       corpus.not_honored.push({ ...item, standing: "invalidated" });

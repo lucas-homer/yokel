@@ -82,8 +82,9 @@ try {
     `reopen=${reopen!.is_reopening} ext=${reopen!.is_extension}`,
   );
   assert(
-    "SPLIT: reopening row re-stamped parser_version fr-v2",
-    reopen!.parser_version === "fr-v2",
+    // The backfill stamps the CURRENT FR parser version (fr-v3 since ADR 0016's correction_of rule).
+    "SPLIT: reopening row re-stamped parser_version fr-v3",
+    reopen!.parser_version === "fr-v3",
     reopen!.parser_version,
   );
 

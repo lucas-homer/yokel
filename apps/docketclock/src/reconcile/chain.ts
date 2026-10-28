@@ -12,10 +12,11 @@
  * certainty"). A FALSE chain conflict (claiming two unrelated windows conflict) burns the credibility
  * moat; a MISSED chain conflict is a known, honest gap. So the linkage rulebook is CONSERVATIVE /
  * HIGH-PRECISION: when in doubt, emit NOTHING. Shared docket alone is NEVER enough (dockets accrete many
- * unrelated notices over years) — linkage additionally requires identity corroboration (shared RIN OR an
- * explicit doc-number reference in the amendment's DATES text), strict amendment-after-original ordering,
- * and a live/recent original. A known keyword false-positive (the BLM 2023-27468 "land withdrawal"
- * pattern) is denied outright.
+ * unrelated notices over years) — linkage requires a DETERMINISTIC identity basis (linkBasis, ADR 0016:
+ * FR's structured correction_of; shared docket + an explicit doc-number reference in B's DATES or
+ * published text; shared docket + shared RIN; or A's unique FR citation in B's text plus a corroborator),
+ * strict amendment-after-original ordering, and a live/recent original. A known keyword false-positive
+ * (the BLM 2023-27468 "land withdrawal" pattern) is denied outright.
  *
  * PURE + DETERMINISTIC: no DB, no hidden clock. `now` is injected (used only for detected_at), and the
  * output is sorted (by ocd_id, then ocd_id_b, then the observation ids) so the same input ALWAYS yields
@@ -74,7 +75,36 @@ export interface ChainCandidate {
   dates_text: string | null;
   status: string;
   resolved_close_utc: string | null;
+  // ── deterministic identity inputs (FR amendment linking, ADR 0016) ──────────────────────────────
+  // null / [] means "unknown" — the candidate simply never links by that basis.
+  /** FR `citation` ("91 FR 57828"); trusted only via the corpus-wide uniqueness index (linkBasis). */
+  citation: string | null;
+  /** The doc number FR's structured `correction_of` names (last URL path segment); null when absent. */
+  correction_of: string | null;
+  /** The doc numbers FR's `corrections` lists for THIS document (the inverse link; informational). */
+  corrections: string[];
+  /** This document's latest govinfo observation raw_dates_text (DATES section / correction body). */
+  govinfo_text: string | null;
 }
+
+/**
+ * How a (A, B) pair is DETERMINISTICALLY identified — the strongest basis wins, in this order:
+ *   • correction_of — FR's structured `correction_of` on B names A. The strongest: FR itself states the
+ *     link, so no docket is required (a correction can sit under any docket string).
+ *   • doc_number   — shared docket AND B's FR DATES text OR published GovInfo text names A's document
+ *     number as a whole token (the tolerant matcher below).
+ *   • docket_rin   — shared docket AND a shared non-empty RIN (the original rule 2).
+ *   • citation     — B's GovInfo or FR DATES text carries A's FR citation as a whole token, that
+ *     citation is UNIQUE among all candidates, AND a corroborator holds: shared docket, shared non-empty
+ *     RIN, or B's title starts with A's full title. No docket required, so an amendment filed under a
+ *     different docket string is still found; a citation is never sufficient alone.
+ * An LLM verdict is never a basis — linkBasis is pure identity, decided by these rules alone.
+ */
+export type LinkBasis =
+  | "correction_of"
+  | "citation"
+  | "doc_number"
+  | "docket_rin";
 
 /** What persistChainConflicts needs to build a contract-valid cross_window ConflictRecord. */
 export interface ChainConflict {
@@ -94,8 +124,9 @@ export interface ChainConflict {
 /**
  * An AMBIGUOUS (A, B) candidate pair (#31 Slice 3b) — a pair the CONSERVATIVE engine deliberately DROPS:
  * it passes the STRUCTURAL rules (rule 1 shared docket + rule 3 ordering + rule 4 recency + isAmendment +
- * NOT a keyword false-positive) but FAILS rule 2 identity corroboration (NO shared RIN AND NO explicit
- * doc-number reference). These are exactly the borderline pairs the LLM adjudicator is asked to settle.
+ * NOT a keyword false-positive) but has NO deterministic identity basis (linkBasis null: in particular NO
+ * shared RIN AND NO explicit doc-number reference). These are exactly the borderline pairs the LLM
+ * adjudicator is asked to settle.
  *
  * It carries BOTH full candidate sides (a/b) so the async orchestration can build the AdjudicationInput
  * chain payload AND — on an `affirm` verdict — the promoted ChainConflict, via the SAME buildChainConflict
@@ -122,7 +153,7 @@ export function isAmendment(c: ChainCandidate): boolean {
  * haystack is BOTH the title and the DATES text — checking only dates_text was structurally blind to the
  * exact trap (BLM 2023-27468) this rule exists to prevent.
  */
-function isKeywordFalsePositive(c: ChainCandidate): boolean {
+export function isKeywordFalsePositive(c: ChainCandidate): boolean {
   const haystack = [c.title, c.dates_text].filter(Boolean).join(" ");
   return isDenied(haystack);
 }
@@ -173,20 +204,20 @@ function shareRin(a: ChainCandidate, b: ChainCandidate): boolean {
 }
 
 /**
- * Rule 2 — identity corroboration: shared non-empty RIN OR B's DATES text explicitly names A's
- * fr_document_number. Shared docket ALONE is insufficient (dockets accrete unrelated notices for years).
+ * The explicit doc-number reference used by the `doc_number` basis: does `text` (B's FR DATES text or
+ * its published GovInfo text) name A's fr_document_number? Shared docket ALONE is insufficient (dockets
+ * accrete unrelated notices for years), so this is one of the corroborations linkBasis requires.
  *
- * Explicit-reference detection is intentionally STRICT to stay high-precision: we look for A's document
- * number as a whole token in B's DATES text, tolerating the FR convention of an embedded space after the
- * year (the EPA 2025-02910 fixture writes "FR 2025- 00734"). A doc number like "2024-30637" is matched
- * literally OR with that single optional space after the first dash group.
+ * Intentionally STRICT to stay high-precision: we look for A's document number as a whole token,
+ * tolerating the FR convention of an embedded space after the year (the EPA 2025-02910 fixture writes
+ * "FR 2025- 00734"). A doc number like "2024-30637" is matched literally OR with that single optional
+ * space after the first dash group.
  */
-function explicitlyReferences(
-  b: ChainCandidate,
+function namesDocNumber(
+  text: string | null | undefined,
   aDocNum: string | null,
 ): boolean {
   if (!aDocNum) return false;
-  const text = b.dates_text;
   if (!text) return false;
   // Build a tolerant pattern: escape regex metachars, then allow an optional single space after the
   // first hyphen (the FR "2025- 00734" line-wrap artifact). Require word boundaries so a doc number is
@@ -195,6 +226,97 @@ function explicitlyReferences(
   const tolerant = escaped.replace(/-/, "-\\s?"); // first dash may be followed by a stray space
   const re = new RegExp(`(?<![\\w-])${tolerant}(?![\\w-])`);
   return re.test(text);
+}
+
+/** Whitespace-normalized, case-folded title for the "B's title starts with A's title" corroborator. */
+function normTitle(t: string | null | undefined): string {
+  return (t ?? "").replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+/**
+ * Does `text` carry `citation` ("91 FR 57828") as a WHOLE token? Digits may not touch either end, so
+ * "91 FR 578280" and "191 FR 57828" never match, and a pin-cite range ("91 FR 57820, 57828") never matches
+ * its later page — no page arithmetic, no range expansion. Whitespace between the parts is tolerated
+ * (GPO line wraps: "at\n91 FR 54729").
+ */
+export function textCitesCitation(
+  text: string | null | undefined,
+  citation: string | null | undefined,
+): boolean {
+  if (!text || !citation) return false;
+  const parts = citation
+    .trim()
+    .split(/\s+/)
+    .filter((p) => p.length > 0);
+  if (parts.length === 0) return false;
+  const body = parts
+    .map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("\\s+");
+  return new RegExp(`(?<![\\d])${body}(?![\\d])`).test(text);
+}
+
+/**
+ * The citation uniqueness index linkBasis needs: citation -> the number of DISTINCT FR document numbers
+ * carrying it across ALL candidates. A citation names a volume + START page, and several documents can
+ * start on one page, so a count above 1 means the citation does not identify a document and the
+ * `citation` basis is off for it. Build it over the WHOLE candidate set, never a filtered subset.
+ */
+export function buildCitationIndex(
+  candidates: readonly Pick<
+    ChainCandidate,
+    "citation" | "fr_document_number"
+  >[],
+): Map<string, number> {
+  const docs = new Map<string, Set<string>>();
+  for (const c of candidates) {
+    const cit = c.citation?.trim();
+    if (!cit || !c.fr_document_number) continue;
+    let set = docs.get(cit);
+    if (!set) docs.set(cit, (set = new Set()));
+    set.add(c.fr_document_number);
+  }
+  const index = new Map<string, number>();
+  for (const [cit, set] of docs) index.set(cit, set.size);
+  return index;
+}
+
+/**
+ * linkBasis — the DETERMINISTIC identity of an (A original, B amendment) pair, or null when nothing but
+ * (at most) a shared docket ties them. PURE identity only: ordering (rule 3), recency (rule 4), the
+ * amendment signal and the deny-list (rule 5) are the caller's (chainCore / loadAmendmentEvidence).
+ * See LinkBasis for the four bases, strongest first. `citationIndex` must be buildCitationIndex over the
+ * full candidate set (a citation shared by two candidates never links).
+ */
+export function linkBasis(
+  a: ChainCandidate,
+  b: ChainCandidate,
+  citationIndex: Map<string, number>,
+): LinkBasis | null {
+  if (a.ocd_id === b.ocd_id) return null;
+  const aNum = a.fr_document_number;
+  if (aNum && b.correction_of && b.correction_of === aNum)
+    return "correction_of";
+  const docket = shareDocket(a, b);
+  if (
+    docket &&
+    (namesDocNumber(b.dates_text, aNum) || namesDocNumber(b.govinfo_text, aNum))
+  )
+    return "doc_number";
+  const rin = shareRin(a, b);
+  if (docket && rin) return "docket_rin";
+  const cit = a.citation?.trim();
+  if (
+    cit &&
+    citationIndex.get(cit) === 1 &&
+    (textCitesCitation(b.govinfo_text, cit) ||
+      textCitesCitation(b.dates_text, cit))
+  ) {
+    const aTitle = normTitle(a.title);
+    const titleCorroborates =
+      aTitle.length > 0 && normTitle(b.title).startsWith(aTitle);
+    if (docket || rin || titleCorroborates) return "citation";
+  }
+  return null;
 }
 
 /**
@@ -302,6 +424,8 @@ function chainCore(
 
   const confident: ChainConflict[] = [];
   const ambiguous: AmbiguousPair[] = [];
+  // Citation uniqueness over ALL candidates (not just amendments) — see buildCitationIndex.
+  const citationIndex = buildCitationIndex(candidates);
 
   for (const b of amendments) {
     const bMs = pubMs(b.publication_date);
@@ -319,8 +443,9 @@ function chainCore(
       if (a.ocd_id === b.ocd_id) continue; // B cannot amend itself
       if (a.fr_observation_id === b.fr_observation_id) continue;
 
-      // Rule 1 — shared docket.
-      if (!shareDocket(a, b)) continue;
+      // Rule 1 — shared docket. Since ADR 0016 it gates only the DOCKET-BASED bases and the ambiguous
+      // tail: a correction_of / citation basis is decided by linkBasis below without one.
+      const docket = shareDocket(a, b);
 
       // Rule 3 — amendment strictly AFTER the original (both publication dates present).
       const aMs = pubMs(a.publication_date);
@@ -337,15 +462,14 @@ function chainCore(
       }
       if (!relevant) continue;
 
-      // Rule 2 — identity corroboration (shared non-empty RIN [array intersection] OR explicit
-      // doc-number reference). RINs are FR's plural array; intersection links multi-RIN docs that a
-      // scalar first-element equality would miss, while empty arrays never corroborate.
-      const sharedRin = shareRin(a, b);
-      const referenced = explicitlyReferences(b, a.fr_document_number);
-      if (!sharedRin && !referenced) {
-        // STRUCTURAL rules passed but rule 2 FAILED → this is an ambiguous pair (the confident path drops
-        // it). Surfaced for LLM escalation; never auto-linked here.
-        ambiguousForB.push(a);
+      // Rule 2 — deterministic identity (linkBasis: correction_of | doc_number | docket_rin | citation).
+      // The original rule 2 (shared docket AND [shared non-empty RIN OR explicit doc-number reference]) is
+      // a subset of it, so every pre-ADR-0016 confident link stays confident.
+      if (linkBasis(a, b, citationIndex) === null) {
+        // STRUCTURAL rules passed (WITH a shared docket) but no deterministic basis → an ambiguous pair
+        // (the confident path drops it). Surfaced for LLM escalation; never auto-linked here. Without a
+        // shared docket there is nothing structural to escalate — the pair is simply unrelated.
+        if (docket) ambiguousForB.push(a);
         continue;
       }
 

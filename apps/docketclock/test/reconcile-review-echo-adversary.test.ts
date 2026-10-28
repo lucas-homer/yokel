@@ -18,7 +18,8 @@
  *   A5 — monotonic: flip-then-revert (both flags, each alone); a material change then a revert
  *        before the flip; same-fetched_at disagreement.
  *   A6 — other sources: a newer FR observation interleaved anywhere; a newer govinfo observation
- *        (synthetic AND spliced into every live history).
+ *        (synthetic AND spliced into every live history) — since reconcile-v2.4 (ADR 0016 §6) govinfo
+ *        is NOT a derivation source, so it must leave the echo decision exactly as without it.
  *   A7 — flag shapes: false->true when the baseline was already false; absent->present(false);
  *        present(true)->absent; the string "false"; true->null; true->0.
  *   A8 — evidence: reviewed_payload_hashes lacks the baseline hash; omitted history.
@@ -564,13 +565,29 @@ unhonored("A6d newer FR observation at the same fetched_at as the flip", [
   refresh(BASE, AFTER, FLIPPED),
   frAt(AFTER),
 ]);
-unhonored("A6e newer govinfo observation", [
-  fr,
-  baseline,
-  verdict,
-  source("govinfo", { notice: "additional evidence" }, "2026-10-05T00:00:00Z"),
-  refresh(BASE, AFTER, FLIPPED),
-]);
+// A6e — reconcile-v2.4 (ADR 0016 §6): a newer govinfo row is not evidence about this window (only
+// DERIVATION_SOURCES are), so the echo exception decides exactly as it would without it: honored.
+{
+  const flip = refresh(BASE, AFTER, FLIPPED); // ONE row shared by both chains (ids are minted per call)
+  const withGov = reconcile(
+    [
+      fr,
+      baseline,
+      verdict,
+      source("govinfo", { notice: "published text" }, "2026-10-05T00:00:00Z"),
+      flip,
+    ],
+    NOW,
+  );
+  const without = reconcile([fr, baseline, verdict, flip], NOW);
+  produced.push({ label: "A6e newer govinfo observation", r: withGov });
+  assert(
+    "A6e newer govinfo observation — the echo exception decides as without it (honored, same window)",
+    withGov.window.conflict_flags.includes("human_resolved") &&
+      JSON.stringify(withGov.window) === JSON.stringify(without.window),
+    `${withGov.window.confidence} ${withGov.window.conflict_flags.join(",")}`,
+  );
+}
 
 // ═══ A7 — FLAG SHAPES ═══════════════════════════════════════════════════════════════════════════════
 {
@@ -856,21 +873,37 @@ for (const [ocd, history] of historyByOcd) {
     ],
     human,
   );
-  liveUnhonored(
-    `LIVE ${doc} + newer govinfo observation`,
-    [
-      ...history,
-      {
-        ...source(
-          "govinfo",
-          { notice: "additional evidence" },
-          "2026-10-12T00:00:00Z",
-        ),
-        ocd_id: ocd,
-      },
-    ],
-    human,
-  );
+  {
+    // v2.4 (ADR 0016 §6): a newer govinfo row leaves the live decision exactly as without it.
+    const withGov = reconcile(
+      [
+        ...history,
+        {
+          ...source(
+            "govinfo",
+            { notice: "published text" },
+            "2026-10-12T00:00:00Z",
+          ),
+          ocd_id: ocd,
+        },
+      ],
+      EXPORTED_AT,
+    );
+    const without = reconcile(history, EXPORTED_AT);
+    produced.push({
+      label: `LIVE ${doc} + newer govinfo observation`,
+      r: withGov,
+    });
+    assert(
+      `LIVE ${doc} + newer govinfo observation — decided exactly as without it`,
+      JSON.stringify(withGov.window) === JSON.stringify(without.window) &&
+        withGov.window.current_observation_ids.includes(
+          human.observation_id,
+        ) ===
+          without.window.current_observation_ids.includes(human.observation_id),
+      `${withGov.window.confidence} ${withGov.window.conflict_flags.join(",")}`,
+    );
+  }
   liveUnhonored(
     `LIVE ${doc} + a revert to open after the flip`,
     [

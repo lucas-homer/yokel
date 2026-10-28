@@ -160,12 +160,18 @@ staysUnreviewed("FR refresh retains conservative invalidation", [
   human,
   { ...fr, observation_id: "new-fr", fetched_at: "2026-09-23T00:00:00Z" },
 ]);
-staysUnreviewed("new GovInfo source reopens review", [
-  fr,
-  regs,
-  human,
-  source("govinfo", { notice: "additional evidence" }, "2026-09-23T00:00:00Z"),
-]);
+// reconcile-v2.4 (ADR 0016 §6) reverses the v2.1 expectation that a newer GovInfo row reopens review:
+// reconcile() never reads a window's own govinfo row, so it is not evidence about that window and the
+// verdict stays honored. Only federal_register / regulations_gov (DERIVATION_SOURCES) gate it.
+assert.ok(
+  reconcile([
+    fr,
+    regs,
+    human,
+    source("govinfo", { notice: "published text" }, "2026-09-23T00:00:00Z"),
+  ]).window.conflict_flags.includes("human_resolved"),
+  "a newer GovInfo row is not evidence about this window: the review stays honored",
+);
 const unknownHashes = {
   ...human,
   raw: { ...(human.raw as object), reviewed_payload_hashes: ["f".repeat(64)] },

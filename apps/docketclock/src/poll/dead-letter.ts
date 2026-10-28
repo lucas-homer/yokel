@@ -30,7 +30,10 @@ const MAX_ERROR_LEN = 500; // truncate last_error so a giant stack/payload can't
 
 function truncateError(msg: string | undefined): string | null {
   if (msg === undefined || msg === null) return null;
-  return msg.length > MAX_ERROR_LEN ? msg.slice(0, MAX_ERROR_LEN) : msg;
+  // U+0000 cannot be stored in a Postgres text column; an error message that quotes an upstream body
+  // (a GovInfo page carries NUL page-break artifacts) would otherwise make the ledger write itself fail.
+  const clean = msg.replace(/\u0000/g, "");
+  return clean.length > MAX_ERROR_LEN ? clean.slice(0, MAX_ERROR_LEN) : clean;
 }
 
 /**
