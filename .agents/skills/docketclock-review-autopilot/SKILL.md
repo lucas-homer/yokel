@@ -5,7 +5,7 @@ description: Work DocketClock's federal human-review queue unsupervised on a sch
 
 # DocketClock review autopilot
 
-Policy version: `v1.1@2026-10-20` (the exact string every ledger line and note stamp carries).
+Policy version: `v1.2@2026-10-28` (the exact string every ledger line and note stamp carries).
 Schedule: daily at 07:00 local (the "Next run" line of the report).
 
 You are the scheduled operator of the review queue. **Nobody authorizes each item**: the written
@@ -142,7 +142,7 @@ never read any other. One line per decision (the id below is fictitious):
 {
   "run": "2026-10-21T07:00:12-07:00",
   "mode": "shadow",
-  "policy": "v1.1@2026-10-20",
+  "policy": "v1.2@2026-10-28",
   "harness": null,
   "ocd_id": "ocd-participation-window/federal/2026-00000",
   "hashes": ["<fr sha256>", "<regs sha256>"],
@@ -155,7 +155,7 @@ never read any other. One line per decision (the id below is fictitious):
       "quote": "The comment period … is extended … Comments must be received on or before November 20, 2026."
     }
   ],
-  "note": "[autopilot run=… mode=shadow policy=v1.1@2026-10-20 verifier=agree] <the note as it would be written>",
+  "note": "[autopilot run=… mode=shadow policy=v1.2@2026-10-28 verifier=agree] <the note as it would be written>",
   "written": false,
   "observation_id": null,
   "reason": "FR extension 2026-00001 names this notice by citation and docket and moves the close; the FR value is the original DATES text"
@@ -201,9 +201,17 @@ Definitions first:
   comment period for this notice (an agency memo, a "posting memo — no FR request", a notice of
   extension), identified by the docket id plus the notice's title or document number. A pin on
   it must say in the note that the extension is not published in the Federal Register and cite
-  the docket document's URL. Not primary: an agency web page, a search snippet, a sibling notice,
-  a third party's docket comment, or portal metadata alone (`commentEndDate`,
-  `openForComment`).
+  the docket document's URL. Since v1.2 (operator-ratified 2026-10-28), the docket id plus the
+  notice's FR **publication date** also identifies the notice for such a document, but only when
+  that docket contains **exactly one** Federal Register notice published on that date. You must
+  establish that condition from both the docket's document list on Regulations.gov and a Federal
+  Register search on the docket id (the docket-id searches of "The full search", step 4) that
+  returns no other FR document published that day; if either check is unavailable or shows a
+  second same-day FR document, the date does not identify the notice. A pin relying on the date
+  must also say in the note how the single-notice condition was checked (the docket list and the
+  FR search, and what each returned), in addition to the v1.1 note requirements. Not primary: an
+  agency web page, a search snippet, a sibling notice, a third party's docket comment, or portal
+  metadata alone (`commentEndDate`, `openForComment`).
 - **Identity**: the document must name **this** notice. Sufficient: its FR document number; its
   FR citation **verified** against the `citation` field of the FR API record for this document
   number (citations are start pages, not guaranteed unique); or its docket id together with its
@@ -351,7 +359,7 @@ Write the note to `/tmp/review-autopilot/<run id>/note-<fr-docnum>.txt` and pass
 the rest is the audit trail a partner will read:
 
 ```
-[autopilot run=<run id> mode=<shadow|write> policy=v1.1@2026-10-20 verifier=<agree|disagree|skipped (part 1)|n/a>]
+[autopilot run=<run id> mode=<shadow|write> policy=v1.2@2026-10-28 verifier=<agree|disagree|skipped (part 1)|n/a>]
 <decision in one sentence>. Decisive: <url> — "<verbatim DATES text>". Competing value: <what it is and why it is not the deadline>. Searched: <extensions/corrections/reopenings by docnum, docket, citation, title — result>.
 ```
 
@@ -384,7 +392,7 @@ on their own; do not duplicate them.
 Scheduled run:
 
 ```
-Review autopilot — <local time> — mode=<shadow|write> — run=<id> — policy=v1.1@2026-10-20
+Review autopilot — <local time> — mode=<shadow|write> — run=<id> — policy=v1.2@2026-10-28
 Queue: <n> before (<open> open / <closed> closed, <parked> parked) → <n> after
 Decisions (<k>/10):
   <ocd-id>  <kind>[ → date]  verifier=<result>  expect=<h1[:12]>,<h2[:12]>  [written obs=<id> | proposal]  verified: <yes/no + what | n/a (shadow)>
