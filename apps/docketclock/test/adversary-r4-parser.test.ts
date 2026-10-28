@@ -80,7 +80,10 @@ for (const role of [
 
 const page = (doc: string) =>
   govinfoPlainText(
-    readFileSync(`/tmp/amend-replay/govinfo/${doc}.htm`, "utf8"),
+    readFileSync(
+      new URL(`./fixtures/fr-amendments/govinfo/${doc}.htm`, import.meta.url),
+      "utf8",
+    ),
   );
 for (const doc of ["2026-19710", "2026-20328"]) {
   test(`R4 real ${doc} unchanged positive`, () => {
