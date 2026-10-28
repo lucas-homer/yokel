@@ -1,5 +1,5 @@
 /**
- * amendment-verdict-freshness.test.ts — round-1 finding #1 (BLOCKER) through the real DB paths
+ * adversary-r2-history.test.ts — adversary round 2, finding 1, through the real DB paths
  * (ADR 0016 §7). THROWAWAY Postgres (drops + recreates the public schema).
  *
  * Real data (the recorded production log): Census 2026-18481, pinned to its original Oct 13 close on
@@ -11,8 +11,12 @@
  *   • `review show`: honored null; its sources list the linked amendment's FR row (an --expect hash);
  *   • a re-review bound to those hashes succeeds and is honored; the amendment's later GovInfo copy
  *     (same Nov 2) does not un-honor it — but a write whose --expect predates that copy is refused.
+ * The baseline above is copied from amendment-verdict-freshness.test.ts (round 1). Round 2 adds the
+ * history cases: a newer FR row for the reviewed amendment with the SAME deadline must keep the pin
+ * honored, and a later row that drops the amendment's flags must supersede it (a material change is
+ * never undone by a later reversion).
  *
- * Run: DATABASE_URL=postgres://… pnpm --filter @yokel/docketclock exec tsx test/amendment-verdict-freshness.test.ts
+ * Run: DATABASE_URL=postgres://… pnpm --filter @yokel/docketclock exec tsx test/adversary-r2-history.test.ts
  */
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
