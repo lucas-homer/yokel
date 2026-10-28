@@ -5,7 +5,7 @@ description: Work DocketClock's federal human-review queue unsupervised on a sch
 
 # DocketClock review autopilot
 
-Policy version: `v1.1@2026-10-20` (the exact string every ledger line and note stamp carries).
+Policy version: `v1.2@2026-10-28` (the exact string every ledger line and note stamp carries).
 Schedule: daily at 07:00 local (the "Next run" line of the report).
 
 You are the scheduled operator of the review queue. **Nobody authorizes each item**: the written
@@ -142,7 +142,7 @@ never read any other. One line per decision (the id below is fictitious):
 {
   "run": "2026-10-21T07:00:12-07:00",
   "mode": "shadow",
-  "policy": "v1.1@2026-10-20",
+  "policy": "v1.2@2026-10-28",
   "harness": null,
   "ocd_id": "ocd-participation-window/federal/2026-00000",
   "hashes": ["<fr sha256>", "<regs sha256>"],
@@ -155,7 +155,7 @@ never read any other. One line per decision (the id below is fictitious):
       "quote": "The comment period … is extended … Comments must be received on or before November 20, 2026."
     }
   ],
-  "note": "[autopilot run=… mode=shadow policy=v1.1@2026-10-20 verifier=agree] <the note as it would be written>",
+  "note": "[autopilot run=… mode=shadow policy=v1.2@2026-10-28 verifier=agree] <the note as it would be written>",
   "written": false,
   "observation_id": null,
   "reason": "FR extension 2026-00001 names this notice by citation and docket and moves the close; the FR value is the original DATES text"
@@ -201,9 +201,31 @@ Definitions first:
   comment period for this notice (an agency memo, a "posting memo — no FR request", a notice of
   extension), identified by the docket id plus the notice's title or document number. A pin on
   it must say in the note that the extension is not published in the Federal Register and cite
-  the docket document's URL. Not primary: an agency web page, a search snippet, a sibling notice,
-  a third party's docket comment, or portal metadata alone (`commentEndDate`,
-  `openForComment`).
+  the docket document's URL. Since v1.2 (operator-ratified 2026-10-28), the docket id plus the
+  notice's FR **publication date** also identifies the notice for such a document, but only when
+  the docket document itself states that date as the date the notice was published in the
+  Federal Register (a posting, signature, public-inspection, period-start or comment-close date
+  in it does not identify the notice, nor does a document that states no date), and only when
+  that docket contains **exactly one** Federal Register document published on that date and that
+  document is this notice. The date is the FR API `publication_date`, a calendar date; the
+  Regulations.gov posted date is a UTC timestamp and never substitutes for it. You must establish
+  that condition from all three of: (a) the docket's document list on Regulations.gov, where
+  every entry that carries an `frDocNum` or is typed Rule, Proposed Rule or Notice counts, dated
+  by its FR API record; (b) a Federal Register search on the docket id (both docket-id queries of
+  "The full search", step 4, read for that one day) that returns no other FR document of any type
+  published that day, whether or not it names this notice; and (c) a list of every FR document
+  published that day by this notice's agencies (`conditions[publication_date][is]=<date>` with
+  `conditions[agencies][]=<slug>` for each agency on this notice's FR record, every page read) in
+  which no document other than this notice carries this docket id in `docket_ids`,
+  `regulations_dot_gov_info` or its title — the FR docket fields are often empty or hold only an
+  internal id, so (b) alone can miss a sibling. If any check is unavailable or identifies another
+  FR document published that day in this docket, the date does not identify the notice; unrelated
+  documents returned by the agency search do not count. For these docket documents only,
+  an identification established this way satisfies rule 2's identity requirement. A pin relying
+  on the date must also say in the note how the single-notice condition was checked (the
+  `Identity (v1.2)` line of "Note format"), in addition to the v1.1 note requirements. Not
+  primary: an agency web page, a search snippet, a sibling notice, a third party's docket
+  comment, or portal metadata alone (`commentEndDate`, `openForComment`).
 - **Identity**: the document must name **this** notice. Sufficient: its FR document number; its
   FR citation **verified** against the `citation` field of the FR API record for this document
   number (citations are start pages, not guaranteed unique); or its docket id together with its
@@ -230,7 +252,8 @@ Rules, in order:
    explains any date discrepancy, so check rule 3 before escalating on one. The note must say
    what was searched. Never escalate to clear an alert or skip work.
 2. **`pin_close`** only if 1 does not apply, and all of: a primary document **explicitly states**
-   the operative comment deadline for **this exact notice** (identity as defined); the evidence
+   the operative comment deadline for **this exact notice** (identity as defined, or for a docket
+   document the v1.2 docket-and-date route under "Primary document"); the evidence
    **explains** the competing value (a petition, reply, meeting or effective date; an extension
    that moved it; a portal sentinel); the note cites the URL and the verbatim DATES text; and the
    independent verifier returns the same date from the evidence card.
@@ -336,9 +359,12 @@ Documents (verbatim quotes; each with URL, the document's own identifiers, and t
   1. <url> — DATES: "<text>"
   2. <url> (<docnum>, <citation>, published <date>) — DATES: "<extension / correction text>"  |  or: no extension, correction or reopening found; searched <terms, since <date>>
   3. <url> — <section>: "<Regulations.gov document / docket text relevant to the deadline>"
+Identity basis: <FR document number | verified citation | docket+title+date | docket+date (v1.2)> — <for v1.2: the docket document's verbatim date text, and each check's same-day FR documents by docnum>
 Question: From these documents alone, what is the operative comment deadline for THIS notice
-(calendar date, Eastern), and what explains the other source's value? Answer with one date
-or INSUFFICIENT, and one paragraph of reasoning. Do not infer from patterns or sibling notices.
+(calendar date, Eastern), and what explains the other source's value? If the identity basis does
+not establish that the deciding document is about THIS notice, answer INSUFFICIENT. Answer with
+one date or INSUFFICIENT, and one paragraph of reasoning. Do not infer from patterns or sibling
+notices.
 ```
 
 Verifier agreement means its date equals yours. `INSUFFICIENT` or a different date → `escalate`,
@@ -351,8 +377,14 @@ Write the note to `/tmp/review-autopilot/<run id>/note-<fr-docnum>.txt` and pass
 the rest is the audit trail a partner will read:
 
 ```
-[autopilot run=<run id> mode=<shadow|write> policy=v1.1@2026-10-20 verifier=<agree|disagree|skipped (part 1)|n/a>]
+[autopilot run=<run id> mode=<shadow|write> policy=v1.2@2026-10-28 verifier=<agree|disagree|skipped (part 1)|n/a>]
 <decision in one sentence>. Decisive: <url> — "<verbatim DATES text>". Competing value: <what it is and why it is not the deadline>. Searched: <extensions/corrections/reopenings by docnum, docket, citation, title — result>.
+```
+
+When identity rests on the v1.2 docket-and-date route, add one line after the decision:
+
+```
+Identity (v1.2): docket <id> + FR date <YYYY-MM-DD>, stated by the docket document as "<verbatim date text>"; docket list: <FR-published entries dated that day, by docnum>; FR docket-id search (<queries run>): <FR documents published that day, by docnum>; FR date+agency search (<agency slugs>): <documents carrying this docket id, by docnum>.
 ```
 
 For `escalate`: the stamp, what was searched, the two readings, what (if anything) explains the
@@ -384,7 +416,7 @@ on their own; do not duplicate them.
 Scheduled run:
 
 ```
-Review autopilot — <local time> — mode=<shadow|write> — run=<id> — policy=v1.1@2026-10-20
+Review autopilot — <local time> — mode=<shadow|write> — run=<id> — policy=v1.2@2026-10-28
 Queue: <n> before (<open> open / <closed> closed, <parked> parked) → <n> after
 Decisions (<k>/10):
   <ocd-id>  <kind>[ → date]  verifier=<result>  expect=<h1[:12]>,<h2[:12]>  [written obs=<id> | proposal]  verified: <yes/no + what | n/a (shadow)>
