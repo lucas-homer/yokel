@@ -5,7 +5,7 @@ description: Work DocketClock's federal human-review queue unsupervised on a sch
 
 # DocketClock review autopilot
 
-Policy version: `v1.2@2026-10-28` (the exact string every ledger line and note stamp carries).
+Policy version: `v1.3@2026-10-31` (the exact string every ledger line and note stamp carries).
 Schedule: daily at 07:00 local (the "Next run" line of the report).
 
 You are the scheduled operator of the review queue. **Nobody authorizes each item**: the written
@@ -147,7 +147,7 @@ never read any other. One line per decision (the id below is fictitious):
 {
   "run": "2026-10-21T07:00:12-07:00",
   "mode": "shadow",
-  "policy": "v1.2@2026-10-28",
+  "policy": "v1.3@2026-10-31",
   "harness": null,
   "ocd_id": "ocd-participation-window/federal/2026-00000",
   "hashes": ["<fr sha256>", "<regs sha256>"],
@@ -161,7 +161,7 @@ never read any other. One line per decision (the id below is fictitious):
       "quote": "The comment period … is extended … Comments must be received on or before November 20, 2026."
     }
   ],
-  "note": "[autopilot run=… mode=shadow policy=v1.2@2026-10-28 verifier=agree] <the note as it would be written>",
+  "note": "[autopilot run=… mode=shadow policy=v1.3@2026-10-31 verifier=agree] <the note as it would be written>",
   "written": false,
   "observation_id": null,
   "reason": "FR extension 2026-00001 names this notice by citation and docket and moves the close; the FR value is the original DATES text"
@@ -261,9 +261,31 @@ Rules, in order:
 2. **`pin_close`** only if 1 does not apply, and all of: a primary document **explicitly states**
    the operative comment deadline for **this exact notice** (identity as defined, or for a docket
    document the v1.2 docket-and-date route under "Primary document"); the evidence
-   **explains** the competing value (a petition, reply, meeting or effective date; an extension
-   that moved it; a portal sentinel); the note cites the URL and the verbatim DATES text; and the
+   **explains** the competing value (a petition, reply, meeting or effective date, only as rule
+   2a allows when the notice sets more than one deadline; an extension that moved it; a portal
+   sentinel); the note cites the URL and the verbatim DATES text; and the
    independent verifier returns the same date from the evidence card.
+
+   **2a. Multi-deadline notices** (v1.3, operator-ratified 2026-10-31; subordinate to rules 1
+   and 3). When the notice's DATES text sets more than one participation deadline (comments,
+   replies, oppositions, hearing requests, petitions, PRA/information-collection comments to OMB,
+   meetings or registrations):
+   - **Which date.** The operative comment deadline is that of the **initial comment round**: the
+     round the notice's general invitation to comment opens, **as amended** by any extension or
+     correction this policy accepts. It is not the chronologically first date: a PRA or
+     hearing-request date often comes first.
+   - **What explains a competing value.** Another deadline in the text explains it only if all of
+     these hold: its date equals that deadline's date exactly; no other deadline in the text
+     shares that date; and no later round is the **first chance to comment for some class** of
+     participant (for example, opponents' first round after supporters' comments).
+   - **Escalate under rule 1** when a later round is some class's first chance to comment; when
+     the roles, classes or order of the dates cannot be told from the text; or when a document
+     states a deadline time other than 11:59 p.m. Eastern (for example, ITC filings due in EDIS
+     by 5:15 p.m.).
+   - **Unchanged.** Identity, the full search, the withdrawal check (rule 3) and the independent
+     verifier apply exactly as above.
+   - **The note** carries a `Deadlines (v1.3)` line (see "Note format").
+
 3. **`confirm_withdrawn`** when live Regulations.gov shows **this** document withdrawn — the
    document whose `frDocNum` is this notice's document number, or the FR notice itself withdrawn
    by a later FR document that names it — cited in the note. If the portal's document is a
@@ -376,8 +398,12 @@ Documents (verbatim quotes; each with URL, the document's own identifiers, and t
   3. <url> — <section>: "<Regulations.gov document / docket text relevant to the deadline>"
 Identity basis: <FR document number | verified citation | docket+title+date | docket+date (v1.2)> — <for v1.2: the docket document's verbatim date text, and each check's same-day FR documents by docnum>
 Question: From these documents alone, what is the operative comment deadline for THIS notice
-(calendar date, Eastern), and what explains the other source's value? If the identity basis does
-not establish that the deciding document is about THIS notice, answer INSUFFICIENT. Answer with
+(calendar date, Eastern), and what explains the other source's value? If the notice sets more than
+one deadline, the operative comment deadline is the initial comment round's (the round the
+notice's general invitation to comment opens, as amended), not the chronologically first date; if
+a later round is some class's first chance to comment, or the roles of the dates cannot be told
+from the text, answer INSUFFICIENT. If the identity basis does not establish that the deciding
+document is about THIS notice, answer INSUFFICIENT. Answer with
 one date or INSUFFICIENT, and one paragraph of reasoning. Do not infer from patterns or sibling
 notices.
 ```
@@ -392,7 +418,7 @@ Write the note to `/tmp/review-autopilot/<run id>/note-<fr-docnum>.txt` and pass
 the rest is the audit trail a partner will read:
 
 ```
-[autopilot run=<run id> mode=<shadow|write> policy=v1.2@2026-10-28 verifier=<agree|disagree|skipped (part 1)|n/a>]
+[autopilot run=<run id> mode=<shadow|write> policy=v1.3@2026-10-31 verifier=<agree|disagree|skipped (part 1)|n/a>]
 <decision in one sentence>. Decisive: <url> — "<verbatim DATES text>". Competing value: <what it is and why it is not the deadline>. Searched: <extensions/corrections/reopenings by docnum, docket, citation, title — result>.
 ```
 
@@ -400,6 +426,13 @@ When identity rests on the v1.2 docket-and-date route, add one line after the de
 
 ```
 Identity (v1.2): docket <id> + FR date <YYYY-MM-DD>, stated by the docket document as "<verbatim date text>"; docket list: <FR-published entries dated that day, by docnum>; FR docket-id search (<queries run>): <FR documents published that day, by docnum>; FR date+agency search (<agency slugs>): <documents carrying this docket id, by docnum>.
+```
+
+When the notice sets more than one participation deadline (rule 2a), add one line listing every
+deadline in the text, in the text's order:
+
+```
+Deadlines (v1.3): <kind> · <YYYY-MM-DD> · <time if stated, else "no time stated"> · <who may file> · <route>; <next deadline>; …
 ```
 
 For `escalate`: the stamp, what was searched, the two readings, what (if anything) explains the
@@ -431,7 +464,7 @@ on their own; do not duplicate them.
 Scheduled run:
 
 ```
-Review autopilot — <local time> — mode=<shadow|write> — run=<id> — policy=v1.2@2026-10-28
+Review autopilot — <local time> — mode=<shadow|write> — run=<id> — policy=v1.3@2026-10-31
 Queue: <n> before (<open> open / <closed> closed, <parked> parked) → <n> after
 Decisions (<k>/10):
   <ocd-id>  <kind>[ → date]  verifier=<result>  expect=<h1[:12]>,<h2[:12]>  [written obs=<id> | proposal]  verified: <yes/no + what | n/a (shadow)>
