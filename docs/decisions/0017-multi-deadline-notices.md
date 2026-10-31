@@ -340,6 +340,9 @@ operative comment deadline" and what counts as explaining a competing value.
 >     - its date equals that deadline exactly;
 >     - no other deadline in the text shares that date;
 >     - no later round is the **first chance to comment for some class** of participant.
+>   - Dates are compared as in force after every amendment this policy accepts, for every round. A
+>     date an accepted amendment superseded explains nothing on its own (added 2026-10-31 after
+>     review, operator-approved).
 > - **Escalate under rule 1** when:
 >   - a later round is a class's first chance (2026-21939);
 >   - roles, classes or the order of dates can't be told from the text;
@@ -462,7 +465,11 @@ Decisions 1–9 were made on 2026-10-31.
    5. **Consumers are told before the first sibling is minted:** the contract 0.14.0 changelog, the
       API docs, a release note ("one FR document can now have several windows; group by
       `parent_ocd_id`"), and the DocketClock MCP server spec.
-9. **Ratify interim rule 2a. Decided: ratified as written, as policy v1.3.**
+9. **Ratify interim rule 2a. Decided: ratified as policy v1.3**, applied in #143. A two-reviewer
+   pass on #143 (Codex GPT-6 Astra high, Claude Fable 5.1 high) found no deviation from the
+   ratified text. The operator approved one tightening: matching uses the dates in force after
+   accepted amendments, and a superseded date explains nothing on its own. The skill also carries
+   this ADR's comment-period and first-chance definitions, because it is self-contained.
    - **Why.** Policy v1.2's rule 2 already allows a pin "explained" by a reply or petition date,
      but with no guardrails and no definition of the operative date. 2a adds both and aligns the
      policy with decision 1.
