@@ -262,22 +262,34 @@ Rules, in order:
    the operative comment deadline for **this exact notice** (identity as defined, or for a docket
    document the v1.2 docket-and-date route under "Primary document"); the evidence
    **explains** the competing value (a petition, reply, meeting or effective date, only as rule
-   2a allows when the notice sets more than one deadline; an extension that moved it; a portal
-   sentinel); the note cites the URL and the verbatim DATES text; and the
+   2a allows when the notice sets more than one participation deadline; an extension that moved
+   it; a portal sentinel); the note cites the URL and the verbatim DATES text; and the
    independent verifier returns the same date from the evidence card.
 
    **2a. Multi-deadline notices** (v1.3, operator-ratified 2026-10-31; subordinate to rules 1
    and 3). When the notice's DATES text sets more than one participation deadline (comments,
    replies, oppositions, hearing requests, petitions, PRA/information-collection comments to OMB,
    meetings or registrations):
+   - **Terms.** A **comment period** is a round in which some class of participant may, _for the
+     first time in this notice_, submit written views the agency says it will consider on the
+     proposal. A round is a class's **first chance to comment** only if it is such a round for
+     that class. A reply confined to answering filed comments is never a first chance, whoever may
+     file it and whether or not it is conditional (for example, STB's "if any comments are filed,
+     Applicants may file a reply"). Neither is a hearing request, a petition or a PRA comment:
+     each goes to a separate proceeding or route. Opponents' first round after supporters'
+     comments is a first chance.
    - **Which date.** The operative comment deadline is that of the **initial comment round**: the
-     round the notice's general invitation to comment opens, **as amended** by any extension or
-     correction this policy accepts. It is not the chronologically first date: a PRA or
-     hearing-request date often comes first.
-   - **What explains a competing value.** Another deadline in the text explains it only if all of
-     these hold: its date equals that deadline's date exactly; no other deadline in the text
-     shares that date; and no later round is the **first chance to comment for some class** of
-     participant (for example, opponents' first round after supporters' comments).
+     round the notice's general invitation to comment opens (its main invitation, even when that
+     is addressed to a named class such as registrants or interested parties), **as amended** by
+     any extension or correction this policy accepts. It is not the chronologically first date: a
+     PRA or hearing-request date often comes first.
+   - **What explains a competing value.** Another deadline in the text (an effective or meeting
+     date counts) explains it only if all of these hold: its date equals that deadline's date
+     exactly; no other deadline in the text shares that date; and no later round is some class's
+     first chance to comment. Compare against the dates **in force** after every amendment this
+     policy accepts, for every round. A date an accepted amendment superseded explains nothing on
+     its own; a source still carrying it is explained only by the amendment evidence, under rule
+     2's "an extension that moved it".
    - **Escalate under rule 1** when a later round is some class's first chance to comment; when
      the roles, classes or order of the dates cannot be told from the text; or when a document
      states a deadline time other than 11:59 p.m. Eastern (for example, ITC filings due in EDIS
@@ -399,17 +411,26 @@ Documents (verbatim quotes; each with URL, the document's own identifiers, and t
 Identity basis: <FR document number | verified citation | docket+title+date | docket+date (v1.2)> — <for v1.2: the docket document's verbatim date text, and each check's same-day FR documents by docnum>
 Question: From these documents alone, what is the operative comment deadline for THIS notice
 (calendar date, Eastern), and what explains the other source's value? If the notice sets more than
-one deadline, the operative comment deadline is the initial comment round's (the round the
-notice's general invitation to comment opens, as amended), not the chronologically first date; if
-a later round is some class's first chance to comment, or the roles of the dates cannot be told
-from the text, answer INSUFFICIENT. If the identity basis does not establish that the deciding
-document is about THIS notice, answer INSUFFICIENT. Answer with
+one participation deadline: the operative comment deadline is the initial comment round's (the
+round the notice's main invitation to comment opens, even when addressed to a named class, as
+amended), not the chronologically first date. A later round is a class's first chance to comment
+only if it invites that class, for the first time in this notice, to submit views on the proposal;
+a reply confined to answering filed comments (conditional or not), a hearing request, a petition
+or a PRA comment is not. Another deadline explains the other source's value only if its date,
+as in force after any amendment in the documents, equals that value exactly and no other deadline
+shares that date; name that deadline. Answer INSUFFICIENT if no deadline or amendment in the
+documents explains the value that way, if a later round is some class's first chance to comment,
+if the roles, classes or order of the dates cannot be told from the text, or if a document states
+a deadline time other than 11:59 p.m. Eastern. If the identity basis does not establish that the
+deciding document is about THIS notice, answer INSUFFICIENT. Answer with
 one date or INSUFFICIENT, and one paragraph of reasoning. Do not infer from patterns or sibling
 notices.
 ```
 
-Verifier agreement means its date equals yours. `INSUFFICIENT` or a different date → `escalate`,
-with both readings in the note.
+Verifier agreement means its date equals yours and, for a multi-deadline notice (rule 2a), the
+deadline or amendment it names as explaining the other value is the one you relied on.
+`INSUFFICIENT`, a different date or a different explanation → `escalate`, with both readings in
+the note.
 
 ## Note format (both modes; written in write mode, recorded in the ledger in shadow)
 
@@ -428,8 +449,10 @@ When identity rests on the v1.2 docket-and-date route, add one line after the de
 Identity (v1.2): docket <id> + FR date <YYYY-MM-DD>, stated by the docket document as "<verbatim date text>"; docket list: <FR-published entries dated that day, by docnum>; FR docket-id search (<queries run>): <FR documents published that day, by docnum>; FR date+agency search (<agency slugs>): <documents carrying this docket id, by docnum>.
 ```
 
-When the notice sets more than one participation deadline (rule 2a), add one line listing every
-deadline in the text, in the text's order:
+When the notice sets more than one participation deadline (rule 2a), add one line after the
+decision line, for every verdict kind including `escalate`, listing every deadline in the text in
+the text's order. Put any condition in the "who may file" field (for example, "Applicants, if any
+comments are filed"), and give dates as in force after accepted amendments:
 
 ```
 Deadlines (v1.3): <kind> · <YYYY-MM-DD> · <time if stated, else "no time stated"> · <who may file> · <route>; <next deadline>; …
