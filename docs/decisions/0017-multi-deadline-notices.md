@@ -1,8 +1,8 @@
 # 0017. Notices that set more than one participation deadline
 
-- Status: Proposed. All nine operator decisions were recorded on 2026-10-31 (see "Decisions only
-  the operator can make"). They confirm the recommended shape: (c) documentary context, plus (a)
-  siblings for first-chance rounds and FDA petitions.
+- Status: Accepted (2026-10-31). All nine operator decisions are recorded under "Decisions only the
+  operator can make". They confirm the recommended shape: (c) documentary context, plus (a)
+  siblings for first-chance rounds and FDA petitions. The build starts at gate 0.
 - Date: 2026-10-28
 - Issues: #137 (general problem), #124 (FDA petitions, first slice). #127 is the contrast case.
 - Builds on: [0010](0010-review-evidence-freshness.md), [0014](0014-portal-close-echo-preserves-pin.md),
@@ -69,7 +69,7 @@ compares them. In these notices they often describe different actions.
 - **Verification watches.** They don't re-snapshot a window whose close moves _earlier_
   (`verify/run.ts`).
 
-## Vocabulary (proposed; the operator's working definition, sharpened by the data)
+## Vocabulary (the operator's working definition, sharpened by the data)
 
 - **Deadline.** A dated action a notice sets. It has:
   - a _kind_: initial comment, opposition, reply, hearing request, petition, PRA/ICR, meeting or
@@ -235,7 +235,7 @@ The window keeps one close: the comment period's, under F1 to F3. It gains `rela
 - **Where (c) alone falls short.** Opponents' round in 2026-21939 is a comment period, and #124's
   petitions need independent review. Neither has a home in documentary entries.
 
-## Decision (proposed)
+## Decision
 
 **Recommended: (c) as documentary context, plus (a) siblings for any deadline that needs a public
 "open" claim, reminders or its own review. Never (b).**
