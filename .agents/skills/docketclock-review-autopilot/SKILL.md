@@ -264,7 +264,8 @@ Rules, in order:
    **explains** the competing value (a petition, reply, meeting or effective date, only as rule
    2a allows when the notice sets more than one participation deadline; an extension that moved
    it; a portal sentinel); the note cites the URL and the verbatim DATES text; and the
-   independent verifier returns the same date from the evidence card.
+   independent verifier returns the same date from the evidence card (and, under rule 2a, the same
+   explaining basis).
 
    **2a. Multi-deadline notices** (v1.3, operator-ratified 2026-10-31; subordinate to rules 1
    and 3). When the notice's DATES text sets more than one participation deadline (comments,
@@ -294,8 +295,9 @@ Rules, in order:
      the roles, classes or order of the dates cannot be told from the text; or when a document
      states a deadline time other than 11:59 p.m. Eastern (for example, ITC filings due in EDIS
      by 5:15 p.m.).
-   - **Unchanged.** Identity, the full search, the withdrawal check (rule 3) and the independent
-     verifier apply exactly as above.
+   - **Unchanged.** Identity, the full search and the withdrawal check (rule 3) apply exactly as
+     above. The verifier stays independent and cross-provider; its agreement rule for these
+     notices is under "Evidence card".
    - **The note** carries a `Deadlines (v1.3)` line (see "Note format").
 
 3. **`confirm_withdrawn`** when live Regulations.gov shows **this** document withdrawn — the
@@ -437,6 +439,7 @@ notices.
 Verifier agreement means its date equals yours and, for a multi-deadline notice (rule 2a), the
 basis it names as explaining the other value (the same deadline, amendment document or
 placeholder, not the same wording) is the one you relied on.
+A multi-deadline answer that names no basis counts as a different explanation.
 `INSUFFICIENT`, a different date or a different explanation → `escalate`, with both readings in
 the note.
 
