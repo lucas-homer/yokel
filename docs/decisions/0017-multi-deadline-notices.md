@@ -1,7 +1,7 @@
 # 0017. Notices that set more than one participation deadline
 
-- Status: Proposed. The operator picks a model before any build starts. Operator decisions 1–7
-  were recorded on 2026-10-31 (see "Decisions only the operator can make"); 8–9 are still open.
+- Status: Proposed. The operator picks a model before any build starts. Operator decisions 1–8
+  were recorded on 2026-10-31 (see "Decisions only the operator can make"); 9 is still open.
 - Date: 2026-10-28
 - Issues: #137 (general problem), #124 (FDA petitions, first slice). #127 is the contrast case.
 - Builds on: [0010](0010-review-evidence-freshness.md), [0014](0014-portal-close-echo-preserves-pin.md),
@@ -169,8 +169,9 @@ Each deadline becomes its own `ParticipationWindow`, with its own OCD-ID, linked
     history keeps its meaning.
   - Siblings get one trailing segment: `ocd-participation-window/federal/{frDocNum}/{kind}:{class}`,
     e.g. `/petition:due-diligence` or `/comment:opponents`. The qualifier is derived from the role,
-    never from a date.
-  - The `OcdId` regex gains the optional segment, and `makeOcdId` gains a `round` argument.
+    never from a date. This format and its rules are decision 8.
+  - The `OcdId` regex gains the optional segment, limited to the closed `SiblingRound` list, and
+    `makeOcdId` gains a `round` argument.
   - Consumers that take the last path segment as the document number break: in this repo, two
     review display lines (`review/core.ts`, `review/cli.ts`). The API's `/v1/windows/*` wildcard
     route already accepts slashes.
@@ -401,7 +402,7 @@ petition-window fixtures.
 
 ## Decisions only the operator can make
 
-Decisions 1–7 were made on 2026-10-31.
+Decisions 1–8 were made on 2026-10-31.
 
 1. **The comment-period definition. Decided: the sharpened test** (see Vocabulary). "Substantive
    submission" would have made about 67 notices carry two comment periods (FDA petitions and
@@ -441,7 +442,24 @@ Decisions 1–7 were made on 2026-10-31.
    migration". A recount was rejected because it would redefine `was_correct` for every record.
    The underlying gap (the gauge measures source contradiction, so it can't see a wrong-round close
    that both sources agree on) is tracked in #142.
-8. **The public join key.** The sibling OCD-ID format, and how consumers are told.
+8. **The public join key. Decided: one extra OCD-style segment**,
+   `ocd-participation-window/federal/{frDocNum}/{kind}:{class}`, e.g.
+   `…/2026-18297/petition:due-diligence`. The alternatives were a qualifier inside the last segment
+   (`2026-18297~petition.due-diligence`), which keeps contract 0.2.1's no-slash rule literally but
+   forces an unusual separator on every consumer, and a namespace per kind, which has no natural
+   home for the opponents' round. Five rules come with the format:
+   1. **A closed, never-renamed qualifier list** in the contract (`SiblingRound`), starting with
+      `petition:due-diligence` and `comment:opponents`. Additions need a contract minor version; a
+      rename is a retirement plus a new ID. The `OcdId` pattern allows exactly one extra segment and
+      only from this list, which keeps 0.2.1's goal: no ambiguous or traversal-shaped keys.
+   2. **Role, never date or position:** no `round-2`.
+   3. **Only under `{frDocNum}` IDs**, never under `regs:` IDs, which have no DATES text.
+   4. **An explicit link:** every sibling carries `parent_ocd_id` and `round`. Prefix matching must
+      use `{parent}/`, with the slash. The two review display lines that take the last ID segment
+      (`review/core.ts`, `review/cli.ts`) switch to `fr_document_number`.
+   5. **Consumers are told before the first sibling is minted:** the contract 0.14.0 changelog, the
+      API docs, a release note ("one FR document can now have several windows; group by
+      `parent_ocd_id`"), and the DocketClock MCP server spec.
 9. **Ratify interim rule 2a.**
 
 Not operator choices, because they are required for correctness: verdict isolation (an
@@ -481,5 +499,5 @@ conservative routing, and retire-not-delete.
 - **Operator decisions (2026-10-31).** Decisions 1–5 recorded. They added the `audience` field and
   its filter, the headline and second-line rule, the PRA display rule, and comment-period-only
   reminders (expansion in #141), and increment 2 straight after increment 1 with FDA petitions in
-  scope, and footnoting the accuracy history (role-error measurement in #142). Decisions 8–9 are
-  still open.
+  scope, footnoting the accuracy history (role-error measurement in #142), and the sibling OCD-ID
+  format with its five rules. Decision 9 is still open.
