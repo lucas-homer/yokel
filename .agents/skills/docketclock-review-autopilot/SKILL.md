@@ -93,7 +93,12 @@ For a federal window the ocd-id suffix **is** the FR document number
 the source payloads — title, FR citation (e.g. `91 FR 12345`), publication date, docket ids,
 RINs, the Regulations.gov document id and docket, and the `frDocNum` the portal attaches — and
 each source's close under its own field name (`comments_close_on`, `commentEndDate`). It does not
-print the DATES text or any document body; read those at the sources.
+print the DATES text or any document body; read those at the sources. Under every `hash=` it prints a
+`fingerprint=fp1:<sha256>`: the same evidence with only the metadata the engine itself ignores removed
+(Regulations.gov `modifyDate` and `links.self`, which change on almost every daily fetch). Fingerprints
+are for the ledger skip rule only; `--expect` always takes the `hash=` values. If `show` prints no
+`fingerprint=` lines (a CLI older than the fingerprint change), record no `fingerprints` field and
+match by `hashes` only.
 
 Access, keyless (verified 2026-10-20):
 
@@ -146,6 +151,7 @@ never read any other. One line per decision (the id below is fictitious):
   "harness": null,
   "ocd_id": "ocd-participation-window/federal/2026-00000",
   "hashes": ["<fr sha256>", "<regs sha256>"],
+  "fingerprints": ["fp1:<fr sha256>", "fp1:<regs sha256>"],
   "proposal": { "kind": "pin_close", "close": "2026-11-20" },
   "verifier": { "model": "gpt-6-astra/high", "result": "2026-11-20" },
   "evidence": [
@@ -162,7 +168,8 @@ never read any other. One line per decision (the id below is fictitious):
 }
 ```
 
-`proposal.kind` is one of the three permitted kinds or `skip` (with `reason`). `policy` is the
+`hashes` and `fingerprints` are every `hash=` and every `fingerprint=` value from the refreshed `show`
+(step 6), in the same order. `proposal.kind` is one of the three permitted kinds or `skip` (with `reason`). `policy` is the
 version at the top of this file. `harness` is `null` for a scheduled run, or the harness run id
 for a proposer line. `verifier` is `{"model": null, "result": "n/a"}` for anything but a
 `pin_close`, and `{"model": null, "result": "skipped (part 1)"}` when a part 1 proposer omits
@@ -281,12 +288,20 @@ Rules, in order:
    Mondays), done.
 4. **Order of work**: open windows closing soonest first, then closed windows oldest conflict
    first. Skip parked items. Shadow mode only — the ledger skip rule, for a previous line with
-   `harness: null`, the **same hash set** and the **same policy version**: a `pin_close` or
+   `harness: null`, the **same evidence** and the **same policy version**: a `pin_close` or
    `confirm_withdrawn` proposal skips the item indefinitely (already decided; in write mode those
    decisions are in the DB); an `escalate` proposal skips it for 7 days, then it is re-investigated
    (a separately ingested extension can explain a discrepancy without touching this window's
    hashes, so shadow escalations get the weekly re-inspection parked items get in write mode); a
-   `skip` never skips. Stop when the budget is spent.
+   `skip` never skips. The most recent matching line that is not a `skip` decides (lines of the same run: the later
+   one in the file). **Same
+   evidence** means the line's `hashes` equal today's `hash=` set, or the line has `fingerprints`
+   and they equal today's `fingerprint=` set, every one with the same version prefix (`fp1:`). Sets
+   are compared order-free and must have the same size. Never compare a hash with a fingerprint: a
+   line without `fingerprints`, or with another version, matches by `hashes` only, so items decided
+   before fingerprints existed are re-checked once and skip from then on. Name the match in the
+   Skipped line ("same fingerprints" or "same hashes"). Reference implementation and tests:
+   `ledgerSkip` in `apps/docketclock/src/review/fingerprint.ts`. Stop when the budget is spent.
 5. **Per item**: `review show <ocd-id> --blind` (prior verdicts are not evidence); the full
    search; build the evidence card; decide; for a `pin_close`, hand the card to the verifier.
 6. **Record**: refresh first — `review show <ocd-id> --blind` again (shadow) or `review show

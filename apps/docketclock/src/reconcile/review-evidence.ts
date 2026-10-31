@@ -35,8 +35,12 @@ function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-/** Ignore only known Regulations.gov metadata; unknown content remains evidence. */
-function evidenceRaw(raw: unknown): unknown {
+/**
+ * Ignore only known Regulations.gov metadata; unknown content remains evidence. Also the basis of the
+ * review autopilot's decision fingerprint (src/review/fingerprint.ts), so "unchanged evidence" means
+ * the same thing to the shadow ledger as it does to the honor-the-verdict rule.
+ */
+export function evidenceRaw(raw: unknown): unknown {
   if (!object(raw) || !object(raw.data) || !object(raw.data.attributes))
     return raw;
   const attributes = { ...raw.data.attributes };
