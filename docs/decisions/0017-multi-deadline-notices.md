@@ -1,7 +1,7 @@
 # 0017. Notices that set more than one participation deadline
 
-- Status: Proposed. The operator picks a model before any build starts. Operator decisions 1–5
-  were recorded on 2026-10-31 (see "Decisions only the operator can make"); 6–9 are still open.
+- Status: Proposed. The operator picks a model before any build starts. Operator decisions 1–6
+  were recorded on 2026-10-31 (see "Decisions only the operator can make"); 7–9 are still open.
 - Date: 2026-10-28
 - Issues: #137 (general problem), #124 (FDA petitions, first slice). #127 is the contrast case.
 - Builds on: [0010](0010-review-evidence-freshness.md), [0014](0014-portal-close-echo-preserves-pin.md),
@@ -285,7 +285,8 @@ coverage before increment 1 starts. This is "validate before building".
   - **Finalized records.** Kept as they are, including the 15 that graded a reply or opposition
     close.
 
-**Increment 2: sibling windows, contract 0.14.0.** Siblings for:
+**Increment 2: sibling windows, contract 0.14.0.** It follows increment 1 directly; it does not
+wait for notifications or demand (decision 6). Siblings for:
 
 - **first-chance rounds** (2–4 notices): comment periods by definition;
 - **FDA due-diligence petitions** (#124): 26 notices, 4 open, separate docket, own review history;
@@ -397,7 +398,7 @@ petition-window fixtures.
 
 ## Decisions only the operator can make
 
-Decisions 1–5 were made on 2026-10-31.
+Decisions 1–6 were made on 2026-10-31.
 
 1. **The comment-period definition. Decided: the sharpened test** (see Vocabulary). "Substantive
    submission" would have made about 67 notices carry two comment periods (FDA petitions and
@@ -420,8 +421,15 @@ Decisions 1–5 were made on 2026-10-31.
    window's lifecycle, so each kind added later becomes a sibling. Replies open to anyone (about
    40 notices), other kinds open to anyone, and restricted opt-in are tracked in #141, for when
    notifications are built (they are deferred today).
-6. **Scope of increment 2.** Build FDA petitions now (#124: 4 open), or wait for demand? Promote NRC
-   hearing requests (28, restricted, separate route)?
+6. **Scope of increment 2. Decided: build it after increment 1, with first-chance rounds and FDA
+   due-diligence petitions (#124).** NRC hearing requests are not promoted: they would be 28
+   text-only siblings at MEDIUM with no review history. The deciding factor was accuracy: a petition
+   date that passes as a listed entry is never graded, and grades can't be recovered later, because
+   a deadline is graded only if it was published before it closed. At decision time 8 petition
+   deadlines were upcoming (about 1–2 new FDA notices a month), against 4 open comment windows. Other
+   gains: 2026-21939's opponents' round shows as an open comment period, and sibling windows are
+   proven on a steady template before notifications depend on them. Accepted cost: decision 8 must
+   be made before increment 2, and minted sibling IDs are permanent.
 7. **How the accuracy gauge shows history.** Footnote the 15 reply-close records, or not. The record
    handling itself is not optional: records are append-only, and `reinterpreted` is required.
 8. **The public join key.** The sibling OCD-ID format, and how consumers are told.
@@ -463,4 +471,5 @@ conservative routing, and retire-not-delete.
       Sibling rollback is retire, not delete.
 - **Operator decisions (2026-10-31).** Decisions 1–5 recorded. They added the `audience` field and
   its filter, the headline and second-line rule, the PRA display rule, and comment-period-only
-  reminders (expansion in #141). The model choice and decisions 6–9 are still open.
+  reminders (expansion in #141), and increment 2 straight after increment 1 with FDA petitions in
+  scope. The model choice and decisions 7–9 are still open.
