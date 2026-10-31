@@ -189,6 +189,10 @@ most.
 - **Accuracy records.** 67 records graded these windows "correct". 15 of those graded a reply or
   opposition close, 14 of them at HIGH. The headline accuracy gauge counts a reply-round close as
   a correct comment close.
+  - **Effect on the gauge (2026-10-31).** The 90-day HIGH ratio read 1,379 / 1,382 = 99.8%.
+    Counting the 14 HIGH reply-close records as misses gives at most 1,365 / 1,382 = 98.8%. It is
+    an upper bound, because some of the 14 may already be outside the window. The alert fires
+    below 95%.
 
 ## What the data says about the working definition
 

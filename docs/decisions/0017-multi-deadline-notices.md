@@ -1,7 +1,7 @@
 # 0017. Notices that set more than one participation deadline
 
-- Status: Proposed. The operator picks a model before any build starts. Operator decisions 1–6
-  were recorded on 2026-10-31 (see "Decisions only the operator can make"); 7–9 are still open.
+- Status: Proposed. The operator picks a model before any build starts. Operator decisions 1–7
+  were recorded on 2026-10-31 (see "Decisions only the operator can make"); 8–9 are still open.
 - Date: 2026-10-28
 - Issues: #137 (general problem), #124 (FDA petitions, first slice). #127 is the contrast case.
 - Builds on: [0010](0010-review-evidence-freshness.md), [0014](0014-portal-close-echo-preserves-pin.md),
@@ -283,7 +283,10 @@ coverage before increment 1 starts. This is "validate before building".
     backdated close (already past when first published) is never graded, because it was never
     claimed in time.
   - **Finalized records.** Kept as they are, including the 15 that graded a reply or opposition
-    close.
+    close (decision 7). Increment 1's release adds a Grafana annotation on the accuracy panel:
+    "records before this graded the published close; 15 multi-deadline windows showed a
+    reply-round date". Any future public accuracy figure starts at that release or carries the same
+    footnote.
 
 **Increment 2: sibling windows, contract 0.14.0.** It follows increment 1 directly; it does not
 wait for notifications or demand (decision 6). Siblings for:
@@ -398,7 +401,7 @@ petition-window fixtures.
 
 ## Decisions only the operator can make
 
-Decisions 1–6 were made on 2026-10-31.
+Decisions 1–7 were made on 2026-10-31.
 
 1. **The comment-period definition. Decided: the sharpened test** (see Vocabulary). "Substantive
    submission" would have made about 67 notices carry two comment periods (FDA petitions and
@@ -430,8 +433,14 @@ Decisions 1–6 were made on 2026-10-31.
    gains: 2026-21939's opponents' round shows as an open comment period, and sibling windows are
    proven on a steady template before notifications depend on them. Accepted cost: decision 8 must
    be made before increment 2, and minted sibling IDs are permanent.
-7. **How the accuracy gauge shows history.** Footnote the 15 reply-close records, or not. The record
-   handling itself is not optional: records are append-only, and `reinterpreted` is required.
+7. **How the accuracy gauge shows history. Decided: footnote, don't recount.** The 15 records stay
+   as written (append-only), and `reinterpreted` is still required for pending watches. On
+   2026-10-31 the 90-day HIGH gauge read 1,379 / 1,382 = 99.8%; counting the 14 HIGH reply-close
+   records as misses gives at most 1,365 / 1,382 = 98.8%, against the 95% alert. They age out of
+   the 90-day window by about late January 2027. The footnote is described under "Verification
+   migration". A recount was rejected because it would redefine `was_correct` for every record.
+   The underlying gap (the gauge measures source contradiction, so it can't see a wrong-round close
+   that both sources agree on) is tracked in #142.
 8. **The public join key.** The sibling OCD-ID format, and how consumers are told.
 9. **Ratify interim rule 2a.**
 
@@ -472,4 +481,5 @@ conservative routing, and retire-not-delete.
 - **Operator decisions (2026-10-31).** Decisions 1–5 recorded. They added the `audience` field and
   its filter, the headline and second-line rule, the PRA display rule, and comment-period-only
   reminders (expansion in #141), and increment 2 straight after increment 1 with FDA petitions in
-  scope. The model choice and decisions 7–9 are still open.
+  scope, and footnoting the accuracy history (role-error measurement in #142). Decisions 8–9 are
+  still open.
