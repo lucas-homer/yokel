@@ -132,8 +132,10 @@ const ESCALATE_SKIP_MS = 7 * 24 * 3600 * 1000;
  *
  * A previous scheduled line (harness null) for the same window and the same policy version, whose
  * evidence matches today's, skips the item: a pin_close / confirm_withdrawn proposal indefinitely, an
- * escalate for 7 days from its run; a skip never skips. The most recent matching decisive line decides. Evidence matches when the payload hash sets
- * are equal, or when BOTH lines carry fingerprints of one version and those sets are equal. A hash is
+ * escalate for 7 days from its run; a skip never skips. The most recent matching decisive line
+ * decides (`lines` in ledger order; equal run stamps resolve to the later line). Evidence matches
+ * when the payload hash sets are equal, or when BOTH lines carry fingerprints of one version and
+ * those sets are equal. A hash is
  * never compared with a fingerprint, so lines written before fingerprints existed match by hash only
  * (in practice: re-checked once, then fingerprinted).
  */
@@ -141,14 +143,18 @@ export function ledgerSkip(
   lines: readonly LedgerLine[],
   cur: CurrentEvidence,
 ): SkipDecision {
+  // Most recent first. `run` is a per-run stamp shared by every line of that run, so ties fall back
+  // to ledger (append) order: the later line wins.
   const candidates = lines
+    .map((l, i) => ({ l, i }))
     .filter(
-      (l) =>
+      ({ l }) =>
         l.harness === null &&
         l.ocd_id === cur.ocd_id &&
         l.policy === cur.policy,
     )
-    .sort((a, b) => Date.parse(b.run) - Date.parse(a.run));
+    .sort((a, b) => Date.parse(b.l.run) - Date.parse(a.l.run) || b.i - a.i)
+    .map(({ l }) => l);
   for (const l of candidates) {
     const byHash = sameSet(l.hashes, cur.hashes);
     const byFp =

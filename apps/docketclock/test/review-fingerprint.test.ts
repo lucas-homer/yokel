@@ -211,6 +211,47 @@ assert(
   fpRegs(driftAndDate) !== fp0,
 );
 
+// Normalization boundaries (review round 1): evidenceRaw drops ONLY a string/null modifyDate and a
+// string/null top-level links.self; anything else stays evidence.
+const fpRaw = (raw: unknown) =>
+  decisionFingerprint({
+    source: "regulations_gov",
+    payload_hash: "0".repeat(64),
+    raw,
+  });
+const withAttr = (k: string, v: unknown) =>
+  regs((r) => (r.data.attributes[k] = v));
+assert(
+  "BOUNDARY: a non-string modifyDate is kept (changes are seen)",
+  fpRaw(withAttr("modifyDate", 1)) !== fpRaw(withAttr("modifyDate", 2)),
+);
+assert(
+  "BOUNDARY: a non-string top-level links.self is kept",
+  fpRaw({ ...base, links: { self: { href: "a" } } }) !==
+    fpRaw({ ...base, links: { self: { href: "b" } } }),
+);
+assert(
+  "BOUNDARY: other top-level links keys are kept",
+  fpRaw({ ...base, links: { self: "x", related: "a" } }) !==
+    fpRaw({ ...base, links: { self: "x", related: "b" } }),
+);
+assert(
+  "BOUNDARY: non-object raw is fingerprinted whole",
+  fpRaw("a") !== fpRaw("b") && fpRaw(null) !== fpRaw([]),
+);
+assert(
+  "BOUNDARY: raw without data.attributes is fingerprinted whole",
+  fpRaw({ data: { id: "x" }, m: 1 }) !== fpRaw({ data: { id: "x" }, m: 2 }),
+);
+assert(
+  "BOUNDARY: non-object data.attributes is fingerprinted whole",
+  fpRaw({ data: { attributes: "a" } }) !== fpRaw({ data: { attributes: "b" } }),
+);
+assert(
+  "BOUNDARY: modifyDate outside data.attributes is NOT exempt",
+  fpRaw({ ...base, modifyDate: "1" }) !== fpRaw({ ...base, modifyDate: "2" }),
+);
+
 // Envelope fields the parser derives: a parser that reads the same raw differently is a change too.
 const obs = parseRegsObservation(base);
 assert(
@@ -269,6 +310,30 @@ assert(
       parseFrObservation({ ...frFixture, comments_close_on: "2026-09-15" }),
     ),
 );
+const frMut: [string, Record<string, unknown>][] = [
+  ["comments_close_on", { comments_close_on: "2026-09-16" }],
+  [
+    "dates text",
+    { dates: "Comments must be received on or before September 30, 2026." },
+  ],
+  ["document_number (identity)", { document_number: "2025-02911" }],
+  ["citation", { citation: "91 FR 99999" }],
+  ["publication_date", { publication_date: "2025-02-11" }],
+  ["docket_ids", { docket_ids: ["FAA-2025-9999"] }],
+  ["title (withdrawal wording)", { title: "Withdrawal of proposed rule" }],
+  ["action", { action: "Proposed rule; withdrawal." }],
+];
+for (const [name, m] of frMut)
+  assert(
+    `FR: CHANGES on ${name}`,
+    decisionFingerprint(
+      parseFrObservation({
+        ...frFixture,
+        comments_close_on: "2026-09-15",
+        ...m,
+      }),
+    ) !== decisionFingerprint(fr),
+  );
 const am = (h: string, w = "ocd-participation-window/federal/2026-00001") =>
   decisionFingerprint({
     source: "govinfo",
@@ -415,6 +480,31 @@ assert(
   "ORDER: an old escalate past 7 days is not revived by a later skip line",
   !d13.skip,
   JSON.stringify(d13),
+);
+
+const d14 = ledgerSkip(
+  [
+    line({ run: "2026-10-20T07:00:00-07:00", proposal: { kind: "pin_close" } }),
+    line({ run: "2026-10-20T07:00:00-07:00", proposal: { kind: "escalate" } }),
+  ],
+  { ...cur, now: new Date("2026-10-31T14:00:00Z") },
+);
+assert(
+  "ORDER: equal run stamps — the later ledger line (escalate, 7+ days old) decides, not the earlier pin",
+  !d14.skip,
+  JSON.stringify(d14),
+);
+const d15 = ledgerSkip(
+  [
+    line({ run: "2026-10-30T07:00:00-07:00", proposal: { kind: "escalate" } }),
+    line({ run: "2026-10-30T07:00:00-07:00", proposal: { kind: "pin_close" } }),
+  ],
+  { ...cur, now: new Date("2026-11-20T14:00:00Z") },
+);
+assert(
+  "ORDER: equal run stamps — a later pin decides over an earlier escalate",
+  d15.skip && d15.line.proposal.kind === "pin_close",
+  JSON.stringify(d15),
 );
 
 console.log("review-fingerprint.test.ts");

@@ -293,7 +293,8 @@ Rules, in order:
    decisions are in the DB); an `escalate` proposal skips it for 7 days, then it is re-investigated
    (a separately ingested extension can explain a discrepancy without touching this window's
    hashes, so shadow escalations get the weekly re-inspection parked items get in write mode); a
-   `skip` never skips. The most recent matching line that is not a `skip` decides. **Same
+   `skip` never skips. The most recent matching line that is not a `skip` decides (lines of the same run: the later
+   one in the file). **Same
    evidence** means the line's `hashes` equal today's `hash=` set, or the line has `fingerprints`
    and they equal today's `fingerprint=` set, every one with the same version prefix (`fp1:`). Sets
    are compared order-free and must have the same size. Never compare a hash with a fingerprint: a
