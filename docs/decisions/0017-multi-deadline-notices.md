@@ -1,6 +1,7 @@
 # 0017. Notices that set more than one participation deadline
 
-- Status: Proposed. The operator picks a model before any build starts.
+- Status: Proposed. The operator picks a model before any build starts. Operator decisions 1–4
+  were recorded on 2026-10-31 (see "Decisions only the operator can make"); 5–9 are still open.
 - Date: 2026-10-28
 - Issues: #137 (general problem), #124 (FDA petitions, first slice). #127 is the contrast case.
 - Builds on: [0010](0010-review-evidence-freshness.md), [0014](0014-portal-close-echo-preserves-pin.md),
@@ -77,8 +78,9 @@ compares them. In these notices they often describe different actions.
   - any _condition_, e.g. STB's "if any comments are filed";
   - a date, with its time only if the text states one;
   - its evidence.
-- **Comment period.** A round in which some class of participant may, _for the first time in this
-  notice_, submit written views the agency says it will consider on the proposal.
+- **Comment period** (adopted, decision 1). A round in which some class of participant may, _for
+  the first time in this notice_, submit written views the agency says it will consider on the
+  proposal.
   - Supporters' initial round and opponents' first round both count.
   - These do not count: a reply restricted to answering filed comments, and a filing that starts or
     joins a separate proceeding (a petition docket, a hearing, an intervention).
@@ -87,7 +89,11 @@ compares them. In these notices they often describe different actions.
     different route.
 - **Initial comment round.** The comment period the notice's general invitation opens, _as amended_
   (ADR 0016). It is not "the first deadline".
-- **Related deadline.** Any other deadline in the notice.
+- **Related deadline.** Any other deadline in the notice. PRA/ICR comments to OMB are a related
+  deadline (decision 2): the route is OMB and the subject is the collection, not the proposal.
+- **Audience.** Who may use the comment period: `anyone`, or `restricted` with the named class
+  (e.g. ITC "interested parties", DEA "registered bulk manufacturers and applicants"). It answers
+  "who", so `status` only has to answer "when".
 
 ## Foundations every option needs
 
@@ -223,7 +229,7 @@ The window keeps one close: the comment period's, under F1 to F3. It gains `rela
     disputed entry surfaces through `deadline_role_unresolved`.
 - **Contract (0.13.0, additive):** `DeadlineKind`, `RelatedDeadline`, `related_deadlines` (default
   `[]`), the flags `secondary_deadline_explained` (informational) and `deadline_role_unresolved`,
-  and an opportunity read field (see Status).
+  the `audience` field, and an opportunity read field (see Status).
 - **Where (c) alone falls short.** Opponents' round in 2026-21939 is a comment period, and #124's
   petitions need independent review. Neither has a home in documentary entries.
 
@@ -246,14 +252,27 @@ coverage before increment 1 starts. This is "validate before building".
   conflict is never retired by routing.
 - **Amendments.** ADR 0016 is unchanged in scope. An amendment whose text carries more than one
   deadline stays `ambiguous`, as today. Routing uses the amended initial date wherever 0016 moved it.
-- **Status.**
+- **Status** (decision 4: the comment-period meaning, plus a separate `audience`).
   - The window's `status` becomes the **comment period's** status, derived from its own close and
-    the flags routed to it.
+    the flags routed to it. It answers "when" only.
+  - A new field, `audience: {scope: 'anyone' | 'restricted', class?: string}`, says who may use the
+    comment period. It is derived by F1 from the initial round's participant class; `single`
+    notices default to `anyone`, and an unattributable class leaves the window `unresolved` (F3).
+    A restricted period is `status: open` with `audience.scope: restricted`, never a new status
+    member, so the restriction survives the period's close.
   - A new read field, `open_opportunities: [{kind, class, date, ocd_id?}]`, lists every deadline
     still upcoming. It is computed at read time and drawn from siblings and related entries.
-  - The API's `status=open` filter keeps meaning "comment period open". A new `has_open_opportunity`
-    filter covers "anything still open".
-  - Which of these drives the headline is decision 3.
+  - The API's `status=open` filter keeps its literal meaning, "comment period open". A new
+    `audience=anyone` filter narrows it, and a new `has_open_opportunity` filter covers "anything
+    still open". **Non-expert surfaces default to `status=open&audience=anyone`.**
+- **Headline** (decision 3).
+  - The headline is the **comment period's close**.
+  - A second line shows the **next deadline open to anyone** from `open_opportunities`, when it is
+    a different deadline. PRA follows this rule, so on a typical EPA rule the earlier OMB date
+    shows as "Paperwork comments to OMB due {date} (earlier than the comment deadline)".
+  - A notice with nothing open to anyone says so instead of "Open", e.g. "Parties only: eligible
+    parties' comments due Nov 16 (ITC, by 5:15 p.m.)".
+  - Restricted deadlines are still shown, labelled with the class that may file.
 - **Verification migration.** This is required engineering, not an option.
   - **The problem.** Moving a close earlier does not create a new verification watch, and a
     pending watch could then grade a reinterpretation as a source-evidence miss.
@@ -349,7 +368,7 @@ petition-window fixtures.
 ## Consequences
 
 - **Contracts and versions.**
-  - 0.13.0: `DeadlineKind`, `RelatedDeadline`, `related_deadlines`, two flags,
+  - 0.13.0: `DeadlineKind`, `RelatedDeadline`, `related_deadlines`, two flags, `audience`,
     `open_opportunities`, and `AccuracyBasis.reinterpreted`.
   - 0.14.0: the `OcdId` widening and `round`.
   - `reconcile-v2.5`; classifier `deadline-v1`; the review policy's next version.
@@ -357,7 +376,8 @@ petition-window fixtures.
   window version, and `change_history` keeps the old close. For open windows the comment period may
   turn `closed` while `open_opportunities` still lists the reply round.
   - Consumers must be told before release. Anyone filtering `status=open` loses those notices
-    unless they adopt `has_open_opportunity`.
+    unless they adopt `has_open_opportunity`. Restricted periods (e.g. ITC) stay `status: open`
+    but drop out of the non-expert default once it filters on `audience=anyone`.
 - **About 12 of the 54 become `deadline_role_unresolved`** at MEDIUM and enter the queue. That is
   the price of not asserting a role we can't confirm, paid in the safe direction.
 - **The queue.** It loses the pure role conflicts (at most 6 of today's 10) and gains the unresolved
@@ -376,16 +396,22 @@ petition-window fixtures.
 
 ## Decisions only the operator can make
 
-1. **The comment-period definition.** Adopt the sharpened test, or keep "substantive submission".
-   Under the latter, FDA petitions and NRC hearing requests are comment periods.
-2. **PRA.** Is it a comment period or a related deadline? Its date precedes the rule's comment close
-   in 15 of 16 notices.
-3. **The headline.** Choose among the comment period's close, the next deadline **open to anyone**,
-   or the next deadline of any kind. "The next one a user can use" isn't computable, because the
-   user's class is unknown. Also decide what a notice with nothing open to anyone shows, such as ITC
-   five-year reviews.
-4. **What `status: open` means** in the API and on consumer surfaces: the comment period
-   (recommended), or any opportunity.
+Decisions 1–4 were made on 2026-10-31.
+
+1. **The comment-period definition. Decided: the sharpened test** (see Vocabulary). "Substantive
+   submission" would have made about 67 notices carry two comment periods (FDA petitions and
+   hearing requests), against 2–4 under the sharpened test. Borderline kinds, such as IRS and EEOC
+   requests to speak at a hearing, are related deadlines unless a later ruling says otherwise.
+2. **PRA. Decided: a related deadline**, shown as an earlier second line when it precedes the
+   comment close (15 of 16 notices). The 4 existing PRA verdicts already pin the rule's round. This
+   covers PRA rounds inside a rule's notice only; standalone ICR notices are their own windows.
+3. **The headline. Decided:** the comment period's close, with the next deadline open to anyone as
+   a second line, and an explicit "parties only" state when nothing is open to anyone (see
+   Headline under Increment 1).
+4. **What `status: open` means. Decided: the comment period**, with a separate `audience` field
+   rather than a new status member. Non-expert surfaces default to `status=open&audience=anyone`.
+   Accepted cost: consumers filtering `status=open` lose reply-round-only notices and must be told
+   before release.
 5. **Which classes get reminders.** Each such class becomes a sibling in increment 2. Restricted
    classes opt-in only?
 6. **Scope of increment 2.** Build FDA petitions now (#124: 4 open), or wait for demand? Promote NRC
@@ -429,3 +455,6 @@ conservative routing, and retire-not-delete.
   11. Prevalence is a lower bound, and template frequency is not precision. Added gate 0.
   12. First-chance cases are gated until increment 2. Related-entry revisions are versioned.
       Sibling rollback is retire, not delete.
+- **Operator decisions (2026-10-31).** Decisions 1–4 recorded. They added the `audience` field and
+  its filter, the headline and second-line rule, and the PRA display rule. The model choice and
+  decisions 5–9 are still open.
