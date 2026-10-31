@@ -395,6 +395,16 @@ to that verdict and fires the new rule in the drill folder; `validate-argocd-app
   documents published that day by the notice's agencies, scanned for the docket id, because FR
   docket fields are often empty); and an `Identity basis` line on the verifier's evidence card,
   which answers INSUFFICIENT when identity is not established.
+- **2026-10-31 (operator-approved fix):** the shadow ledger skip rule matches on a versioned
+  decision fingerprint as well as on payload hashes. Regulations.gov bumps `modifyDate` on almost
+  every daily fetch (8,618 of 8,795 consecutive observation pairs), so no payload hash survived a
+  day and the autopilot re-verified the same pins daily (5 of 10 decisions on 2026-10-31).
+  `review show` now prints `fingerprint=fp1:…` under each `hash=`, computed with the engine's own evidence
+  normalization (`evidenceRaw`, ADR 0010: only `modifyDate` and `links.self` ignored; FR, GovInfo
+  and linked amendments fingerprint their payload hash). Ledger lines record `fingerprints`; a
+  hash is never compared with a fingerprint, so lines written before this change match by hash only
+  and are re-checked once. `--expect`, the write gate, policy v1.2's decision rules, verifier usage
+  and the schedule are unchanged.
 - **2026-10-20 (PR-A3 reviews):** the pin row's identity clause above was amended to match the
   executed policy (a RIN alone is insufficient — the SBA size-standards pair shares one); the
   harness was made blind by construction (orchestrator / proposer / scorer in separate contexts;
