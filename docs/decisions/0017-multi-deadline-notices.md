@@ -1,7 +1,8 @@
 # 0017. Notices that set more than one participation deadline
 
-- Status: Proposed. The operator picks a model before any build starts. Operator decisions 1–8
-  were recorded on 2026-10-31 (see "Decisions only the operator can make"); 9 is still open.
+- Status: Proposed. All nine operator decisions were recorded on 2026-10-31 (see "Decisions only
+  the operator can make"). They confirm the recommended shape: (c) documentary context, plus (a)
+  siblings for first-chance rounds and FDA petitions.
 - Date: 2026-10-28
 - Issues: #137 (general problem), #124 (FDA petitions, first slice). #127 is the contrast case.
 - Builds on: [0010](0010-review-evidence-freshness.md), [0014](0014-portal-close-echo-preserves-pin.md),
@@ -322,7 +323,8 @@ Increment 2 also carries:
 
 ### Interim review-policy rule (until increment 1 ships)
 
-This becomes the next policy version after v1.2 (#138). It goes into the review policy and the
+Ratified by the operator on 2026-10-31 (decision 9) as policy **v1.3**. A separate policy PR
+applies it. This becomes the next policy version after v1.2 (#138). It goes into the review policy and the
 autopilot skill as rule 2a, **subordinate to rules 1 and 3**. It changes only which date is "the
 operative comment deadline" and what counts as explaining a competing value.
 
@@ -402,7 +404,7 @@ petition-window fixtures.
 
 ## Decisions only the operator can make
 
-Decisions 1–8 were made on 2026-10-31.
+Decisions 1–9 were made on 2026-10-31.
 
 1. **The comment-period definition. Decided: the sharpened test** (see Vocabulary). "Substantive
    submission" would have made about 67 notices carry two comment periods (FDA petitions and
@@ -460,7 +462,19 @@ Decisions 1–8 were made on 2026-10-31.
    5. **Consumers are told before the first sibling is minted:** the contract 0.14.0 changelog, the
       API docs, a release note ("one FR document can now have several windows; group by
       `parent_ocd_id`"), and the DocketClock MCP server spec.
-9. **Ratify interim rule 2a.**
+9. **Ratify interim rule 2a. Decided: ratified as written, as policy v1.3.**
+   - **Why.** Policy v1.2's rule 2 already allows a pin "explained" by a reply or petition date,
+     but with no guardrails and no definition of the operative date. 2a adds both and aligns the
+     policy with decision 1.
+   - **Follow-up work.** A separate PR updates the autopilot skill (rule 2a, the deadline-list
+     note line, the version string) and the decision log in `plans/review-autopilot.md`. The
+     operator refreshes the held-out set (runbook gate part 2), which is required whenever the
+     policy changes.
+   - **Queue at ratification** (all 10 items still conflicting, queue 49):
+     - DEA 2026-19538 shows the hearing-request date (Nov 23) and would pin the registrants'
+       comment deadline (Dec 23). That is the only pin that changes what users see. The operator
+       may pin it by hand before Nov 23.
+     - The other pins confirm dates already shown.
 
 Not operator choices, because they are required for correctness: verdict isolation (an
 `ocd_id`-scoped evidence boundary), the honest unresolved state, the verification migration,
@@ -500,4 +514,4 @@ conservative routing, and retire-not-delete.
   its filter, the headline and second-line rule, the PRA display rule, and comment-period-only
   reminders (expansion in #141), and increment 2 straight after increment 1 with FDA petitions in
   scope, footnoting the accuracy history (role-error measurement in #142), and the sibling OCD-ID
-  format with its five rules. Decision 9 is still open.
+  format with its five rules, and rule 2a ratified as policy v1.3. All nine decisions are made.
