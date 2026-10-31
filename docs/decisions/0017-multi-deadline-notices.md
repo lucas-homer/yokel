@@ -1,7 +1,7 @@
 # 0017. Notices that set more than one participation deadline
 
-- Status: Proposed. The operator picks a model before any build starts. Operator decisions 1–4
-  were recorded on 2026-10-31 (see "Decisions only the operator can make"); 5–9 are still open.
+- Status: Proposed. The operator picks a model before any build starts. Operator decisions 1–5
+  were recorded on 2026-10-31 (see "Decisions only the operator can make"); 6–9 are still open.
 - Date: 2026-10-28
 - Issues: #137 (general problem), #124 (FDA petitions, first slice). #127 is the contrast case.
 - Builds on: [0010](0010-review-evidence-freshness.md), [0014](0014-portal-close-echo-preserves-pin.md),
@@ -289,7 +289,8 @@ coverage before increment 1 starts. This is "validate before building".
 
 - **first-chance rounds** (2–4 notices): comment periods by definition;
 - **FDA due-diligence petitions** (#124): 26 notices, 4 open, separate docket, own review history;
-- any class the operator wants reminders for (decision 5).
+- no further classes for reminders: decision 5 reminds comment periods only. Expanding that is
+  #141, and each added kind would be a sibling here.
 
 Increment 2 also carries:
 
@@ -396,7 +397,7 @@ petition-window fixtures.
 
 ## Decisions only the operator can make
 
-Decisions 1–4 were made on 2026-10-31.
+Decisions 1–5 were made on 2026-10-31.
 
 1. **The comment-period definition. Decided: the sharpened test** (see Vocabulary). "Substantive
    submission" would have made about 67 notices carry two comment periods (FDA petitions and
@@ -412,8 +413,13 @@ Decisions 1–4 were made on 2026-10-31.
    rather than a new status member. Non-expert surfaces default to `status=open&audience=anyone`.
    Accepted cost: consumers filtering `status=open` lose reply-round-only notices and must be told
    before release.
-5. **Which classes get reminders.** Each such class becomes a sibling in increment 2. Restricted
-   classes opt-in only?
+5. **Which classes get reminders. Decided: comment periods only** (the initial round and
+   first-chance rounds). Related deadlines get no reminder of their own. They travel as labelled
+   context in the comment period's reminder ("Replies due Nov 5, from the notice text, not
+   separately verified"). Restricted kinds are never reminded by default. A reminder needs a
+   window's lifecycle, so each kind added later becomes a sibling. Replies open to anyone (about
+   40 notices), other kinds open to anyone, and restricted opt-in are tracked in #141, for when
+   notifications are built (they are deferred today).
 6. **Scope of increment 2.** Build FDA petitions now (#124: 4 open), or wait for demand? Promote NRC
    hearing requests (28, restricted, separate route)?
 7. **How the accuracy gauge shows history.** Footnote the 15 reply-close records, or not. The record
@@ -455,6 +461,6 @@ conservative routing, and retire-not-delete.
   11. Prevalence is a lower bound, and template frequency is not precision. Added gate 0.
   12. First-chance cases are gated until increment 2. Related-entry revisions are versioned.
       Sibling rollback is retire, not delete.
-- **Operator decisions (2026-10-31).** Decisions 1–4 recorded. They added the `audience` field and
-  its filter, the headline and second-line rule, and the PRA display rule. The model choice and
-  decisions 5–9 are still open.
+- **Operator decisions (2026-10-31).** Decisions 1–5 recorded. They added the `audience` field and
+  its filter, the headline and second-line rule, the PRA display rule, and comment-period-only
+  reminders (expansion in #141). The model choice and decisions 6–9 are still open.
