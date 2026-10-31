@@ -416,19 +416,27 @@ round the notice's main invitation to comment opens, even when addressed to a na
 amended), not the chronologically first date. A later round is a class's first chance to comment
 only if it invites that class, for the first time in this notice, to submit views on the proposal;
 a reply confined to answering filed comments (conditional or not), a hearing request, a petition
-or a PRA comment is not. Another deadline explains the other source's value only if its date,
-as in force after any amendment in the documents, equals that value exactly and no other deadline
-shares that date; name that deadline. Answer INSUFFICIENT if no deadline or amendment in the
-documents explains the value that way, if a later round is some class's first chance to comment,
-if the roles, classes or order of the dates cannot be told from the text, or if a document states
-a deadline time other than 11:59 p.m. Eastern. If the identity basis does not establish that the
+or a PRA comment is not. The other source's value may be explained in one of three ways; name
+which, and the specific deadline, document or placeholder:
+(a) another deadline in the text, only if its date, as in force after any amendment in the
+documents, equals that value exactly and no other deadline shares that date;
+(b) an extension or correction in the documents that superseded the value (no date match
+needed);
+(c) a portal placeholder, meaning a Regulations.gov commentEndDate in a far-future year (such as
+9999), before the document was posted, or equal to the posting date when the text sets a later
+deadline.
+For such a multi-deadline notice, answer INSUFFICIENT if none of these explains the value, if a
+later round is some class's first chance to comment, if the roles, classes or order of the dates
+cannot be told from the text, or if a document states a deadline time other than 11:59 p.m.
+Eastern. If the identity basis does not establish that the
 deciding document is about THIS notice, answer INSUFFICIENT. Answer with
 one date or INSUFFICIENT, and one paragraph of reasoning. Do not infer from patterns or sibling
 notices.
 ```
 
 Verifier agreement means its date equals yours and, for a multi-deadline notice (rule 2a), the
-deadline or amendment it names as explaining the other value is the one you relied on.
+basis it names as explaining the other value (the same deadline, amendment document or
+placeholder, not the same wording) is the one you relied on.
 `INSUFFICIENT`, a different date or a different explanation → `escalate`, with both readings in
 the note.
 
