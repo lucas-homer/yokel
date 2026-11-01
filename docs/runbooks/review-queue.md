@@ -125,7 +125,7 @@ daily at 07:00 local in a dedicated "Review autopilot" thread (provider `claudeA
 `t3/review-autopilot`, created from `main`, never committed to, and fast-forwarded to `origin/main`
 by each run). It is an operator like any other: it uses only this CLI through
 `kubectl exec`, writes nothing the CLI would refuse, and has a phone-pageable owner. Its decisions
-are bound by the plan's **write policy v1.1**: `escalate` first; `pin_close` only on a primary
+are bound by the plan's **write policy v1.2**: `escalate` first; `pin_close` only on a primary
 document (an FR document, its GovInfo edition, the notice's own Regulations.gov text, or an
 agency-authored extension document in the notice's own docket) that states the deadline for that
 exact notice, explains the competing value, and that an

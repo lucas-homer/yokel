@@ -54,6 +54,7 @@ import {
   type HonoredVerdict,
 } from "../reconcile/reconcile.js";
 import { extractFr, extractRegs } from "../reconcile/extract.js";
+import { decisionFingerprint } from "./fingerprint.js";
 import {
   DERIVATION_SOURCES,
   isDerivationSource,
@@ -245,6 +246,11 @@ export interface SourceSummary {
   observation_id: string;
   fetched_at: string;
   payload_hash: string;
+  /**
+   * Versioned decision fingerprint (src/review/fingerprint.ts): what the shadow ledger compares to
+   * decide whether evidence changed. Never an --expect value.
+   */
+  fingerprint: string;
   /** FR comments_close_on / Regs commentEndDate — the raw close each source asserts. */
   close_value: string | null;
   withdrawn: boolean | null;
@@ -359,11 +365,18 @@ export async function reviewShow(
       is_withdrawal: boolean;
       is_extension: boolean;
       is_reopening: boolean;
+      is_correction: boolean;
+      ocd_id: string;
+      fr_document_number: string | null;
+      regs_document_id: string | null;
+      regs_object_id: string | null;
+      parser_version: string | null;
     }[]
   >`
     select distinct on (source)
       source, observation_id, fetched_at, payload_hash, raw, raw_dates_text,
-      is_withdrawal, is_extension, is_reopening
+      is_withdrawal, is_extension, is_reopening, is_correction,
+      ocd_id, fr_document_number, regs_document_id, regs_object_id, parser_version
     from observations
     where ocd_id = ${ocdId}
     order by source, fetched_at desc, observation_id desc
@@ -427,6 +440,7 @@ export async function reviewShow(
       observation_id: o.observation_id,
       fetched_at: o.fetched_at.toISOString(),
       payload_hash: o.payload_hash,
+      fingerprint: decisionFingerprint(o),
       close_value: close,
       withdrawn,
       open_for_comment: open,
@@ -444,6 +458,11 @@ export async function reviewShow(
       observation_id: r.observation_id,
       fetched_at: r.fetched_at ?? "",
       payload_hash: r.payload_hash,
+      fingerprint: decisionFingerprint({
+        source: r.source,
+        payload_hash: r.payload_hash,
+        amendment_window: r.ocd_id,
+      }),
       close_value: null,
       withdrawn: null,
       open_for_comment: null,

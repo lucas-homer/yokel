@@ -132,6 +132,27 @@ const cases: {
     args: ["resolve", "ocd-participation-window/federal/x", "--note", "n"],
     expect: /^usage: review/m,
   },
+  {
+    name: "resolve --expect <fingerprint> → refused: fingerprints are for the ledger skip, never --expect",
+    args: [
+      "resolve",
+      "ocd-participation-window/federal/x",
+      "--kind",
+      "pin_close",
+      "--close",
+      "2026-10-01",
+      "--note",
+      "n",
+      "--reviewer",
+      "agent",
+      "--operator",
+      "autopilot",
+      "--expect",
+      "fp1:" + "a".repeat(64),
+    ],
+    expect:
+      /--expect takes sha256 hex payload hashes[\s\S]*fingerprint= value is for the ledger skip only/,
+  },
 ];
 
 for (const c of cases) {

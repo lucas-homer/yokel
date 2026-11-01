@@ -183,7 +183,10 @@ try {
       const bad = expect.filter((h) => !SHA256.test(h));
       if (expect.length === 0 || bad.length > 0) {
         console.error(
-          `review resolve: --expect takes sha256 hex payload hashes as printed by \`review show\` (bad: ${bad.join(", ") || "(none given)"})`,
+          `review resolve: --expect takes sha256 hex payload hashes as printed by \`review show\` (bad: ${bad.join(", ") || "(none given)"})` +
+            (bad.some((h) => h.startsWith("fp"))
+              ? " — a fingerprint= value is for the ledger skip only; pass the hash= values"
+              : ""),
         );
         process.exit(2);
       }
@@ -351,7 +354,8 @@ try {
         // A linked amendment's observation (ADR 0016 §7): evidence about this window — pass it as --expect.
         console.log(
           `    linked amendment ${src.amendment_window.split("/").pop()} ${src.source} @ ${src.fetched_at}` +
-            `\n      hash=${src.payload_hash}`,
+            `\n      hash=${src.payload_hash}` +
+            `\n      fingerprint=${src.fingerprint}`,
         );
         continue;
       }
@@ -365,7 +369,9 @@ try {
         `    ${src.source} @ ${src.fetched_at}\n      ${closeField}=${src.close_value ?? "null"}` +
           ` withdrawn=${src.withdrawn ?? "n/a"} openForComment=${src.open_for_comment ?? "n/a"}` +
           ` flags[w/e/r]=${Number(src.is_withdrawal)}${Number(src.is_extension)}${Number(src.is_reopening)}` +
-          `\n      hash=${src.payload_hash}`,
+          `\n      hash=${src.payload_hash}` +
+          // Ledger-skip comparison only (SKILL.md § Ledger) — never an --expect value.
+          `\n      fingerprint=${src.fingerprint}`,
       );
     }
     if (s.context.length > 0) {
