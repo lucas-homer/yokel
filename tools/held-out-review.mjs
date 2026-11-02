@@ -14,16 +14,18 @@
 //   --out <path>          default ~/.config/yokel/review-autopilot/held-out-<date>.json
 //   --port <n>            default 8791 (binds 127.0.0.1 only)
 //   --context <name>      kubectl context, default k3d-yokel
+// The page listens on 127.0.0.1 only; from another machine use `ssh -L 8791:127.0.0.1:8791 <mini>`.
+// Drafts live in the browser's storage for that origin, so restart on the same --port to keep them.
 // Ids may be full OCD-IDs or bare FR document numbers (2026-12345).
 // Node 24, no dependencies.
 
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { mkdir, open } from "node:fs/promises";
+import { link, mkdir, open, unlink } from "node:fs/promises";
 import { createServer } from "node:http";
 import { homedir } from "node:os";
-import { dirname, join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import { parseArgs } from "node:util";
 
 const KINDS = [
@@ -35,24 +37,47 @@ const KINDS = [
 ];
 const OCD_RE = /^ocd-participation-window\/federal\/(\d{4}-\d{5})$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-
-const { values: opt, positionals } = parseArgs({
-  allowPositionals: true,
-  options: {
-    date: { type: "string" },
-    policy: { type: "string" },
-    out: { type: "string" },
-    port: { type: "string", default: "8791" },
-    context: { type: "string", default: "k3d-yokel" },
-  },
-});
+// A real calendar date in YYYY-MM-DD form (rejects 2026-02-30, 2026-99-99 and non-strings).
+function isDate(v) {
+  if (typeof v !== "string" || !DATE_RE.test(v)) return false;
+  const [y, m, d] = v.split("-").map(Number);
+  const t = new Date(Date.UTC(y, m - 1, d));
+  return (
+    t.getUTCFullYear() === y &&
+    t.getUTCMonth() === m - 1 &&
+    t.getUTCDate() === d
+  );
+}
+const USAGE =
+  "usage: node tools/held-out-review.mjs --date YYYY-MM-DD --policy <version> [--out <path>] [--port 8791] [--context k3d-yokel] <id> [<id> ...]";
 
 function die(msg) {
-  console.error(`held-out-review: ${msg}`);
+  console.error(`held-out-review: ${msg}\n${USAGE}`);
   process.exit(2);
 }
 
-if (!opt.date || !DATE_RE.test(opt.date)) die("--date YYYY-MM-DD is required");
+let opt, positionals;
+try {
+  ({ values: opt, positionals } = parseArgs({
+    allowPositionals: true,
+    options: {
+      date: { type: "string" },
+      policy: { type: "string" },
+      out: { type: "string" },
+      port: { type: "string", default: "8791" },
+      context: { type: "string", default: "k3d-yokel" },
+      help: { type: "boolean", short: "h", default: false },
+    },
+  }));
+} catch (e) {
+  die(e.message);
+}
+if (opt.help) {
+  console.log(USAGE);
+  process.exit(0);
+}
+
+if (!isDate(opt.date)) die("--date must be a real date, YYYY-MM-DD");
 if (!opt.policy) die("--policy <version> is required (e.g. v1.3@2026-10-31)");
 const ids = [
   ...new Set(
@@ -75,8 +100,11 @@ const outPath =
 if (existsSync(outPath))
   die(`${outPath} already exists (sealed). Pick another --date or --out.`);
 const port = Number(opt.port);
+if (!Number.isInteger(port) || port < 1024 || port > 65535)
+  die("--port must be an integer from 1024 to 65535");
 
 let sealed = null; // { path, sha256, sealed_at } once written
+let sealing = false;
 
 // ---------- sources ----------
 
@@ -115,58 +143,128 @@ function runBlindShow(id) {
   });
 }
 
+// Parses `review show --blind` (apps/docketclock/src/review/cli.ts). Missing values print as
+// "(none)" / "none" there; they become null here. Anything that fails to parse is reported in
+// `warnings` so the page never presents a silently empty field as "nothing there".
+const nil = (v) => (v == null || v === "(none)" || v === "none" ? null : v);
 function parseBlind(text) {
+  const warnings = [];
   const m = (re) => text.match(re)?.[1] ?? null;
-  const fr = text.match(
-    /identity: FR (\S+) — "(.*?)" — (.*?) published (\d{4}-\d{2}-\d{2}) — dockets \[(.*?)\](?: — RIN (\S+))?/,
-  );
-  const regs = text.match(/\n\s+Regs (\S+) — docket (\S+) — frDocNum/);
-  const frLatest = text.match(
-    /federal_register @ (\S+)\n\s+comments_close_on=(\S+)/,
-  );
-  const regsLatest = text.match(
-    /regulations_gov @ (\S+)\n\s+commentEndDate=(\S+) withdrawn=(\S+) openForComment=(\S+)/,
-  );
+
+  let fr = null;
+  const idLine = m(/identity: FR (.*)/);
+  if (!idLine) warnings.push("no identity line in the blind output");
+  else {
+    const head = idLine.match(/^(\S+) — ("(?:[^"\\]|\\.)*"|\(no title\))/);
+    let title = null;
+    let rest = "";
+    if (head) {
+      try {
+        title = head[2].startsWith('"') ? JSON.parse(head[2]) : null;
+      } catch {
+        warnings.push("could not read the title from the identity line");
+      }
+      rest = idLine.slice(head[0].length);
+    } else warnings.push("could not parse the identity line");
+    const cit = rest.match(
+      /^ — (.*?)(?: published (\d{4}-\d{2}-\d{2}))? — dockets \[/,
+    );
+    const dk = rest.match(/ — dockets \[(.*?)\]/);
+    const rin = rest.match(/ — RIN (.+)$/);
+    if (head && !dk) warnings.push("no dockets field in the identity line");
+    if (head && !rin) warnings.push("no RIN field in the identity line");
+    fr = {
+      docNum: nil(idLine.match(/^(\S+)/)?.[1]),
+      title,
+      citation: cit && cit[1] !== "(no citation)" ? cit[1] : null,
+      published: cit?.[2] ?? null,
+      dockets: (dk?.[1] ?? "")
+        .split(",")
+        .map((x) => x.trim())
+        .filter(Boolean),
+      rins: nil(rin?.[1]?.trim())
+        ? rin[1]
+            .split(",")
+            .map((x) => x.trim())
+            .filter(Boolean)
+        : [],
+    };
+  }
+
+  const regs = text.match(/\n\s+Regs (\S+) — docket (\S+) — frDocNum (\S+)/);
+  if (!regs) warnings.push("no Regulations.gov identity line");
+  // Own-source rows start with exactly four spaces; linked-amendment rows say "linked amendment".
+  const obs = (src, field) => {
+    const r = text.match(
+      new RegExp(
+        `\\n    ${src} @ (\\S+)\\n\\s+${field}=(\\S+) withdrawn=(\\S+) openForComment=(\\S+)(?: flags\\[w/e/r\\]=(\\d{3}))?`,
+      ),
+    );
+    return (
+      r && {
+        observedAt: r[1],
+        close: nil(r[2] === "null" ? null : r[2]),
+        withdrawn: r[3],
+        openForComment: r[4],
+        wer: r[5] ?? null,
+      }
+    );
+  };
+  const frObs = obs("federal_register", "comments_close_on");
+  const regsObs = obs("regulations_gov", "commentEndDate");
+  const amendments = [
+    ...text.matchAll(/\n\s+linked amendment (\S+) (\S+) @ (\S+)/g),
+  ].map((a) => ({ docNum: a[1], source: a[2], observedAt: a[3] }));
+
+  let flags = [];
+  try {
+    flags = JSON.parse(m(/flags=(\[.*?\])/) ?? "[]");
+  } catch {
+    warnings.push("could not read the window flags");
+  }
   return {
     confidence: m(/confidence=(\S+)/),
     status: m(/status=(\S+)/),
-    flags: (() => {
-      try {
-        return JSON.parse(m(/flags=(\[.*?\])/) ?? "[]");
-      } catch {
-        return [];
-      }
-    })(),
+    flags,
     close: m(/\n\s+close: (.*)/),
     conflicts: m(/conflicts: (\d+) live/),
-    fr: fr && {
-      docNum: fr[1],
-      title: fr[2],
-      citation: fr[3],
-      published: fr[4],
-      dockets: fr[5]
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
-      rin: fr[6] ?? null,
+    fr,
+    regs: regs && {
+      documentId: nil(regs[1]),
+      docket: nil(regs[2]),
+      frDocNum: nil(regs[3]),
     },
-    regs: regs && { documentId: regs[1], docket: regs[2] },
     latest: {
-      fr: frLatest && { observedAt: frLatest[1], commentsCloseOn: frLatest[2] },
-      regs: regsLatest && {
-        observedAt: regsLatest[1],
-        commentEndDate: regsLatest[2],
-        withdrawn: regsLatest[3],
-        openForComment: regsLatest[4],
+      fr: frObs && {
+        observedAt: frObs.observedAt,
+        commentsCloseOn: frObs.close,
+        wer: frObs.wer,
+      },
+      regs: regsObs && {
+        observedAt: regsObs.observedAt,
+        commentEndDate: regsObs.close,
+        withdrawn: regsObs.withdrawn,
+        openForComment: regsObs.openForComment,
+        wer: regsObs.wer,
       },
     },
+    amendments,
+    warnings,
   };
 }
 
 const FR = "https://www.federalregister.gov/api/v1";
 async function frJson(url) {
-  const res = await fetch(url, { headers: { accept: "application/json" } });
-  if (!res.ok) throw new Error(`FR API ${res.status}`);
+  const res = await fetch(url, {
+    headers: { accept: "application/json" },
+    signal: AbortSignal.timeout(20_000),
+  });
+  if (!res.ok) {
+    const ra = res.headers.get("retry-after");
+    throw new Error(
+      `FR API ${res.status}${res.status === 429 ? ` (rate limited${ra ? `; retry after ${ra}s` : ""})` : ""}`,
+    );
+  }
   return res.json();
 }
 function frDoc(num) {
@@ -188,6 +286,7 @@ function frDoc(num) {
     `${FR}/documents/${num}.json?${f.map((x) => `fields%5B%5D=${x}`).join("&")}`,
   );
 }
+const SEARCH_PAGE = 100;
 async function frSearch(value, condition = "term") {
   const f = [
     "document_number",
@@ -199,11 +298,13 @@ async function frSearch(value, condition = "term") {
     "comments_close_on",
   ];
   const v = condition === "term" ? `"${value}"` : value;
-  const q = `conditions%5B${condition}%5D=${encodeURIComponent(v)}&per_page=50&order=oldest`;
+  // Newest first: if a long docket overflows one page, the old documents are the ones cut.
+  const q = `conditions%5B${condition}%5D=${encodeURIComponent(v)}&per_page=${SEARCH_PAGE}&order=newest`;
   const j = await frJson(
     `${FR}/documents.json?${q}&${f.map((x) => `fields%5B%5D=${x}`).join("&")}`,
   );
-  return j.results ?? [];
+  const results = j.results ?? [];
+  return { results, count: Number(j.count ?? results.length) };
 }
 
 async function loadItem(id) {
@@ -216,27 +317,38 @@ async function loadItem(id) {
   if (blind.status === "fulfilled") {
     item.blindText = blind.value;
     item.parsed = parseBlind(blind.value);
+    for (const w of item.parsed.warnings)
+      item.errors.push(`blind output: ${w}`);
   } else item.errors.push(blind.reason.message);
   if (doc.status === "fulfilled") item.frDoc = doc.value;
   else item.errors.push(`FR document: ${doc.reason.message}`);
 
   // Search aid for rule 3 (other FR documents on this docket or citing this document).
   // Not exhaustive: the page says so.
-  const terms = new Set([
-    docNum,
-    ...(item.frDoc?.docket_ids ?? []),
-    ...(item.parsed?.fr?.dockets ?? []),
-  ]);
-  if (item.parsed?.regs?.docket) terms.add(item.parsed.regs.docket);
-  const rin = item.parsed?.fr?.rin;
-  if (rin) terms.add(`RIN ${rin}`);
+  const terms = new Set(
+    [
+      docNum,
+      ...(item.frDoc?.docket_ids ?? []),
+      ...(item.parsed?.fr?.dockets ?? []),
+      item.parsed?.regs?.docket,
+    ].filter((t) => typeof t === "string" && t.trim() && nil(t)),
+  );
+  for (const rin of item.parsed?.fr?.rins ?? []) terms.add(`RIN ${rin}`);
   const found = new Map();
+  item.search = [];
   await Promise.all(
     [...terms].map(async (t) => {
       try {
-        const results = t.startsWith("RIN ")
+        const { results, count } = t.startsWith("RIN ")
           ? await frSearch(t.slice(4), "regulation_id_number")
           : await frSearch(t);
+        // Counts exclude this document itself, so they match the table.
+        const self = results.some((r) => r.document_number === docNum) ? 1 : 0;
+        item.search.push({
+          term: t,
+          count: count - self,
+          shown: results.length - self,
+        });
         for (const r of results) {
           if (r.document_number === docNum) continue;
           const prev = found.get(r.document_number);
@@ -244,6 +356,7 @@ async function loadItem(id) {
           else found.set(r.document_number, { ...r, matched: [t] });
         }
       } catch (e) {
+        item.search.push({ term: t, error: e.message });
         item.errors.push(`FR search "${t}": ${e.message}`);
       }
     }),
@@ -251,7 +364,6 @@ async function loadItem(id) {
   item.related = [...found.values()].sort((a, b) =>
     a.publication_date.localeCompare(b.publication_date),
   );
-  item.searchTerms = [...terms];
   return item;
 }
 
@@ -283,13 +395,15 @@ function validate(body) {
   const items = Array.isArray(body?.items) ? body.items : [];
   const seen = new Set();
   for (const it of items) {
+    if (it === null || typeof it !== "object") {
+      errs.push("an item is not an object");
+      continue;
+    }
     if (!ids.includes(it.ocd_id)) errs.push(`unknown id ${it.ocd_id}`);
     if (seen.has(it.ocd_id)) errs.push(`duplicate ${it.ocd_id}`);
     seen.add(it.ocd_id);
     if (!KINDS.includes(it.kind)) errs.push(`${it.ocd_id}: kind`);
-    if (
-      it.kind === "pin_close" ? !DATE_RE.test(it.close ?? "") : it.close != null
-    )
+    if (it.kind === "pin_close" ? !isDate(it.close) : it.close != null)
       errs.push(
         `${it.ocd_id}: close is required for pin_close and only for it`,
       );
@@ -325,12 +439,34 @@ async function seal(body) {
     }),
   };
   const text = `${JSON.stringify(doc, null, 2)}\n`;
-  await mkdir(dirname(outPath), { recursive: true, mode: 0o700 });
-  const fh = await open(outPath, "wx", 0o600); // fails if the file exists
+  // Write a private temp file, flush it, then publish it with link(): atomic and never replaces
+  // an existing file (rename would). A crash leaves at most a stray temp file, never a
+  // half-written answer key under the real name.
+  const dir = dirname(outPath);
+  await mkdir(dir, { recursive: true, mode: 0o700 });
+  const tmp = join(
+    dir,
+    `.${basename(outPath)}.${process.pid}.${Date.now()}.tmp`,
+  );
+  const fh = await open(tmp, "wx", 0o600);
   try {
-    await fh.writeFile(text);
+    try {
+      await fh.writeFile(text);
+      await fh.sync();
+    } finally {
+      await fh.close();
+    }
+    await link(tmp, outPath); // EEXIST if anything is already there
   } finally {
-    await fh.close();
+    await unlink(tmp).catch(() => {});
+  }
+  const dh = await open(dir, "r");
+  try {
+    await dh.sync();
+  } catch {
+    // some filesystems refuse fsync on a directory; the link is already in place
+  } finally {
+    await dh.close();
   }
   return {
     path: outPath,
@@ -346,8 +482,8 @@ function send(res, status, body, type = "application/json; charset=utf-8") {
     "content-type": type,
     "cache-control": "no-store",
     "x-content-type-options": "nosniff",
-    "content-security-policy":
-      "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'",
+    "content-security-policy": `default-src 'none'; script-src ${SCRIPT_SRC}; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'`,
+    "x-frame-options": "DENY",
   });
   res.end(typeof body === "string" ? body : JSON.stringify(body));
 }
@@ -380,16 +516,35 @@ const server = createServer(async (req, res) => {
       if (req.headers["content-type"] !== "application/json")
         return send(res, 415, { error: "json only" });
       if (sealed) return send(res, 409, { error: "already sealed", sealed });
-      let raw = "";
+      if (sealing) return send(res, 409, { error: "a seal is in progress" });
+      const chunks = [];
+      let size = 0;
       for await (const chunk of req) {
-        raw += chunk;
-        if (raw.length > 1 << 20) return send(res, 413, { error: "too large" });
+        size += chunk.length;
+        if (size > 1 << 20) return send(res, 413, { error: "too large" });
+        chunks.push(chunk);
       }
-      const body = JSON.parse(raw);
+      let body;
+      try {
+        body = JSON.parse(
+          new TextDecoder("utf-8", { fatal: true }).decode(
+            Buffer.concat(chunks),
+          ),
+        );
+      } catch {
+        return send(res, 400, { error: "body is not valid UTF-8 JSON" });
+      }
       const errs = validate(body);
       if (errs.length)
         return send(res, 400, { error: "invalid", details: errs });
-      sealed = await seal(body);
+      if (sealed || sealing)
+        return send(res, 409, { error: "already sealed or sealing" });
+      sealing = true;
+      try {
+        sealed = await seal(body);
+      } finally {
+        sealing = false;
+      }
       console.log(`sealed ${sealed.path} sha256=${sealed.sha256}`);
       return send(res, 200, { sealed });
     }
@@ -556,6 +711,7 @@ const storeKey = () => "heldout:" + SET.date + ":" + SET.policy + ":" + SET.ids.
 function loadDrafts() { try { drafts = JSON.parse(localStorage.getItem(storeKey()) || "{}"); } catch { drafts = {}; } }
 function saveDrafts() { localStorage.setItem(storeKey(), JSON.stringify(drafts)); }
 const shortId = (id) => id.split("/").pop();
+const safeUrl = (u) => (typeof u === "string" && /^https:\/\//.test(u) ? u : null);
 function state(id) {
   const d = drafts[id];
   if (!d || (!d.kind && !d.reason)) return "";
@@ -593,9 +749,15 @@ function renderList() {
   $("#sealBtn").disabled = !!SET.sealed || done !== SET.ids.length;
 }
 
+// flags[w/e/r] from the blind output: is_withdrawal, is_extension, is_reopening.
+function werText(w) {
+  const on = ["withdrawal", "extension", "reopening"].filter((_, i) => w[i] === "1");
+  return on.length ? "notice flags: " + on.join(", ") : "notice flags: none";
+}
 function highlightDates(text) {
   const frag = document.createDocumentFragment();
-  const re = /((?:January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}, \d{4})/g;
+  const MON = "(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?";
+  const re = new RegExp("(" + MON + " \\d{1,2}(?:, \\d{4})?|\\b\\d{1,2}/\\d{1,2}/\\d{4}\\b)", "g");
   let last = 0, m;
   while ((m = re.exec(text))) {
     frag.append(text.slice(last, m.index), h("mark", null, m[1]));
@@ -617,7 +779,7 @@ function renderItem(it) {
   const pub = doc.publication_date || fr.published;
 
   const links = h("div", { class: "links" },
-    h("a", { href: doc.html_url || ("https://www.federalregister.gov/d/" + it.docNum), target: "_blank", rel: "noopener" }, "Federal Register ↗"),
+    h("a", { href: safeUrl(doc.html_url) || ("https://www.federalregister.gov/d/" + it.docNum), target: "_blank", rel: "noopener" }, "Federal Register ↗"),
     pub && h("a", { href: "https://www.govinfo.gov/content/pkg/FR-" + pub + "/html/" + it.docNum + ".htm", target: "_blank", rel: "noopener" }, "GovInfo text ↗"),
     regs.documentId && h("a", { href: "https://www.regulations.gov/document/" + encodeURIComponent(regs.documentId), target: "_blank", rel: "noopener" }, "Regs.gov document ↗"),
     regs.docket && h("a", { href: "https://www.regulations.gov/docket/" + encodeURIComponent(regs.docket), target: "_blank", rel: "noopener" }, "Regs.gov docket ↗"),
@@ -630,7 +792,7 @@ function renderItem(it) {
       doc.type && h("span", null, doc.type),
       fr.citation && h("span", null, fr.citation),
       pub && h("span", null, "published " + pub),
-      fr.rin && h("span", null, "RIN " + fr.rin)),
+      (fr.rins || []).length ? h("span", null, "RIN " + fr.rins.join(", ")) : null),
     h("div", { class: "chips" },
       p.confidence && h("span", { class: "chip c-" + p.confidence }, p.confidence),
       p.status && h("span", { class: "chip" }, "status " + p.status),
@@ -644,12 +806,16 @@ function renderItem(it) {
         h("div", { class: "v" }, frLatest ? frLatest.commentsCloseOn : "—"),
         doc.comments_close_on && doc.comments_close_on !== (frLatest && frLatest.commentsCloseOn) &&
           h("div", { class: "x" }, "FR API today: " + doc.comments_close_on),
-        h("div", { class: "x" }, frLatest ? "observed " + frLatest.observedAt : "")),
+        h("div", { class: "x" }, frLatest ? "observed " + frLatest.observedAt + (frLatest.wer ? " · " + werText(frLatest.wer) : "") : "")),
       h("div", { class: "src" }, h("div", { class: "k" }, "Regulations.gov · commentEndDate"),
         h("div", { class: "v" }, regsLatest ? (etDate(regsLatest.commentEndDate) || regsLatest.commentEndDate) : "—"),
         regsLatest && h("div", { class: "x" }, regsLatest.commentEndDate + " = " + (etFromZ(regsLatest.commentEndDate) || "?")),
-        regsLatest && h("div", { class: "x" }, "withdrawn=" + regsLatest.withdrawn + " open=" + regsLatest.openForComment + " · observed " + regsLatest.observedAt))),
-    p.close && h("div", { class: "hint", style: "margin-top:10px" }, "Machine derivation: " + p.close));
+        regsLatest && h("div", { class: "x" }, "withdrawn=" + regsLatest.withdrawn + " open=" + regsLatest.openForComment + " · observed " + regsLatest.observedAt + (regsLatest.wer ? " · " + werText(regsLatest.wer) : "")))),
+    (p.amendments || []).length ? h("div", { class: "hint", style: "margin-top:10px" },
+      "Linked amendments (ADR 0016) DocketClock already applies to this window: ",
+      ...p.amendments.map((a, i) => [i ? ", " : "", h("a", { href: "https://www.federalregister.gov/d/" + encodeURIComponent(a.docNum), target: "_blank", rel: "noopener" }, a.docNum), " (" + a.source + ")"])) : null,
+    p.conflicts != null && h("div", { class: "hint", style: "margin-top:6px" }, "Live conflicts on this window: " + p.conflicts),
+    p.close && h("div", { class: "hint", style: "margin-top:6px" }, "Machine derivation: " + p.close));
 
   const dates = h("div", { class: "card" }, h("h2", null, "DATES section (Federal Register)"),
     doc.dates ? h("div", { class: "dates" }, highlightDates(doc.dates)) : h("div", { class: "hint" }, "No DATES text in the FR API; read the document."),
@@ -657,14 +823,15 @@ function renderItem(it) {
 
   const rel = it.related || [];
   const related = h("div", { class: "card" }, h("h2", null, "Other FR documents mentioning this docket or document"),
-    h("div", { class: "hint" }, "Search aid only, not exhaustive: full-text term search for " + (it.searchTerms || []).join(", ") + ". Extensions sometimes appear only on Regulations.gov, so check the docket too before concluding nothing superseded the date."),
+    h("div", { class: "hint" }, "Search aid only, not exhaustive. Extensions sometimes appear only on Regulations.gov, so check the docket too before concluding nothing superseded the date."),
+    h("div", { class: "hint" }, "Searched: ", ...(it.search || []).map((x, i) => [i ? " · " : "", x.term + ": " + (x.error ? "FAILED (" + x.error + ")" : x.count > x.shown ? x.shown + " newest of " + x.count + " shown" : x.count + " found")])),
     rel.length ? h("table", { class: "rel" },
       h("tr", null, h("th", null, "published"), h("th", null, "type"), h("th", null, "document"), h("th", null, "closes")),
       ...rel.map((r) => h("tr", null, h("td", null, r.publication_date), h("td", null, r.type),
-        h("td", null, h("a", { href: r.html_url, target: "_blank", rel: "noopener" }, r.document_number), " ", r.title,
+        h("td", null, h("a", { href: safeUrl(r.html_url), target: "_blank", rel: "noopener" }, r.document_number), " ", r.title,
           h("div", { class: "hint" }, "matched " + r.matched.join(", "))),
         h("td", null, r.comments_close_on || "")))) :
-      h("div", { style: "margin-top:8px" }, "None found by this search."));
+      h("div", { style: "margin-top:8px" }, (it.search || []).some((x) => x.error) ? "None found, but at least one search failed; see above." : "None found by this search."));
 
   const raw = h("div", { class: "card" }, h("details", null, h("summary", null, "Raw review show --blind output"), h("pre", null, it.blindText || "(none)")));
   const errs = (it.errors || []).length ? h("div", { class: "card" },
@@ -780,3 +947,7 @@ $("#sealBtn").addEventListener("click", openSeal);
 </script>
 </body>
 </html>`;
+// The page's single inline script, allowed by hash instead of 'unsafe-inline'.
+const SCRIPT_SRC = `'sha256-${createHash("sha256")
+  .update(PAGE.match(/<script>([\s\S]*?)<\/script>/)[1])
+  .digest("base64")}'`;
