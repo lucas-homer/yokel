@@ -709,7 +709,11 @@ function h(tag, attrs, ...kids) {
 }
 const storeKey = () => "heldout:" + SET.date + ":" + SET.policy + ":" + SET.ids.join(",");
 function loadDrafts() { try { drafts = JSON.parse(localStorage.getItem(storeKey()) || "{}"); } catch { drafts = {}; } }
-function saveDrafts() { localStorage.setItem(storeKey(), JSON.stringify(drafts)); }
+let draftsUnsaved = null;
+function saveDrafts() {
+  try { localStorage.setItem(storeKey(), JSON.stringify(drafts)); }
+  catch (e) { draftsUnsaved = e.name || "error"; renderList(); }
+}
 const shortId = (id) => id.split("/").pop();
 const safeUrl = (u) => (typeof u === "string" && /^https:\/\//.test(u) ? u : null);
 function state(id) {
@@ -745,7 +749,8 @@ function renderList() {
   }));
   const done = SET.ids.filter((id) => complete(drafts[id])).length;
   $("#bar").style.width = (100 * done / SET.ids.length) + "%";
-  $("#setmeta").textContent = done + " of " + SET.ids.length + " judged · policy " + SET.policy + " · set " + SET.date;
+  $("#setmeta").textContent = done + " of " + SET.ids.length + " judged · policy " + SET.policy + " · set " + SET.date +
+    (draftsUnsaved ? " · DRAFTS NOT SAVED (" + draftsUnsaved + "): finish and seal in this tab" : "");
   $("#sealBtn").disabled = !!SET.sealed || done !== SET.ids.length;
 }
 
