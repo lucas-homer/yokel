@@ -206,6 +206,10 @@ or this table could not be blinded afterwards.
    verifier included); compare. Agreement on kind ≥ 9/10; **any false pin** (the agent pins where
    you escalated or chose another date) is blocking until explained and the policy amended.
    Refresh the set whenever the policy changes. The agent is forbidden to read these files.
+   On the Mini, `node tools/held-out-review.mjs --date <YYYY-MM-DD> --policy <version> <ids…>`
+   serves a local workbench (http://127.0.0.1:8791/, loopback only; from the Air, tunnel with
+   `ssh -L 8791:127.0.0.1:8791 <mini>`) that shows each item's blind evidence, keeps drafts in
+   the browser, and writes the file once (mode 0600), printing its sha256.
 3. **Escalation discipline** — the **required set** below, plus whatever `review corpus` part 3
    lists at run time: every one of these must be proposed `escalate` (the #127 cases) or
    `confirm_withdrawn` (the withdrawals), and zero `dismiss_conflict` / `confirm_reopened` may
