@@ -125,7 +125,10 @@ Access, keyless (verified 2026-10-20):
 1. The FR notice: the `dates` field and the DATES/ADDRESSES sections of the body.
 2. The GovInfo edition of the same document.
 3. The Regulations.gov document and its docket's **document list** (an extension can be posted
-   there as a separate document).
+   there as a separate document). Since v1.4, when the notice covers more than one substantive
+   docket (one per site or action, say), read the document list of **every** substantive docket
+   it covers, and every agency amendment there that applies to any covered site, action or
+   participant class, including amendments not published in the Federal Register.
 4. Extensions, corrections, reopenings, withdrawals: FR API **full-text** search
    (`conditions[term]=`) for the document number, each docket id, the citation, and a distinctive
    title phrase, since the publication date; also `conditions[docket_id]=`. The docket filter is
@@ -252,12 +255,17 @@ Definitions first:
   docket document whose own text applies to only **part** of what this notice covers, such as one
   of its several dockets, sites, actions or participant classes (for example, a memo extending
   one site's docket in a notice that proposes deleting three sites, each with its own docket). It
-  amends only that part. Read every amendment for its scope: one that names one docket id of a
-  multi-docket notice, or one site, action or class of several, is partial unless its text says it
-  covers the whole notice. If the parts then have **different** operative deadlines, this window
-  has no single operative comment deadline: escalate under rule 1, never pin either date, and
-  list each part with its deadline on the note's `Deadlines (v1.3)` line. The portal value a
-  partial amendment produces is not "explained" for the whole notice.
+  amends only that part. Determine scope from the substantive text of the notice and of the
+  amendment, not by counting identifiers: an internal agency id listed as a docket (EPA's
+  `FRL-…` numbers, for example) is not another covered part, and an amendment that names one
+  docket but whose text covers the whole action is not partial. Evaluate the deadlines in force
+  after **all** accepted amendments: if every covered part ends with the same operative deadline
+  (three memos extending three sites to the same date, say), the amendments together explain it
+  and a pin is possible; a split that a later amendment closed does not by itself require
+  escalation. If the parts end with **different** operative deadlines, or the scope of any
+  amendment cannot be told from its text, this window has no single operative comment deadline:
+  escalate under rule 1, never pin any of the dates, and list each part with its deadline on the
+  note's `Deadlines (v1.3)` line.
 
 Rules, in order:
 
@@ -273,8 +281,9 @@ Rules, in order:
    the operative comment deadline for **this exact notice** (identity as defined, or for a docket
    document the v1.2 docket-and-date route under "Primary document"); the evidence
    **explains** the competing value (a petition, reply, meeting or effective date, only as rule
-   2a allows when the notice sets more than one participation deadline; an extension that moved
-   it for the **whole** notice, not a partial amendment; a portal sentinel); the note cites the
+   2a allows when the notice sets more than one participation deadline; an accepted extension
+   or correction, or a set of accepted amendments, that together establish the same operative
+   comment deadline for every covered part of the notice; a portal sentinel); the note cites the
    URL and the verbatim DATES text; and the independent verifier returns the same date from the evidence card (and, under rule 2a, the same
    explaining basis).
 
@@ -423,6 +432,7 @@ Documents (verbatim quotes; each with URL, the document's own identifiers, and t
   2. <url> (<docnum>, <citation>, published <date>) — DATES: "<extension / correction text>"  |  or: no extension, correction or reopening found; searched <terms, since <date>>
   3. <url> — <section>: "<Regulations.gov document / docket text relevant to the deadline>"
 Identity basis: <FR document number | verified citation | docket+title+date | docket+date (v1.2)> — <for v1.2: the docket document's verbatim date text, and each check's same-day FR documents by docnum>
+Scope evidence (v1.4): <notice URL and verbatim text naming every covered docket, site, action and participant class>; <for each amendment: URL and verbatim applicability, limitation and supersession text, including text outside DATES>
 Question: From these documents alone, what is the operative comment deadline for THIS notice
 (calendar date, Eastern), and what explains the other source's value? If the notice sets more than
 one participation deadline: the operative comment deadline is the initial comment round's (the
@@ -444,7 +454,8 @@ later round is some class's first chance to comment, if the roles, classes or or
 cannot be told from the text, or if a document states a deadline time other than 11:59 p.m.
 Eastern. If an extension, correction or docket document applies by its own text to only some
 of the notice's dockets, sites, actions or participant classes, and the parts then have different
-deadlines, answer INSUFFICIENT. If the identity basis does not establish that the
+deadlines, or if the scope evidence cannot establish which parts each amendment covers and the
+resulting deadline for each, answer INSUFFICIENT. If the identity basis does not establish that the
 deciding document is about THIS notice, answer INSUFFICIENT. Answer with
 one date or INSUFFICIENT, and one paragraph of reasoning. Do not infer from patterns or sibling
 notices.
