@@ -5,7 +5,7 @@ description: Work DocketClock's federal human-review queue unsupervised on a sch
 
 # DocketClock review autopilot
 
-Policy version: `v1.3@2026-10-31` (the exact string every ledger line and note stamp carries).
+Policy version: `v1.4@2026-11-03` (the exact string every ledger line and note stamp carries).
 Schedule: daily at 07:00 local (the "Next run" line of the report).
 
 You are the scheduled operator of the review queue. **Nobody authorizes each item**: the written
@@ -147,7 +147,7 @@ never read any other. One line per decision (the id below is fictitious):
 {
   "run": "2026-10-21T07:00:12-07:00",
   "mode": "shadow",
-  "policy": "v1.3@2026-10-31",
+  "policy": "v1.4@2026-11-03",
   "harness": null,
   "ocd_id": "ocd-participation-window/federal/2026-00000",
   "hashes": ["<fr sha256>", "<regs sha256>"],
@@ -161,7 +161,7 @@ never read any other. One line per decision (the id below is fictitious):
       "quote": "The comment period … is extended … Comments must be received on or before November 20, 2026."
     }
   ],
-  "note": "[autopilot run=… mode=shadow policy=v1.3@2026-10-31 verifier=agree] <the note as it would be written>",
+  "note": "[autopilot run=… mode=shadow policy=v1.4@2026-11-03 verifier=agree] <the note as it would be written>",
   "written": false,
   "observation_id": null,
   "reason": "FR extension 2026-00001 names this notice by citation and docket and moves the close; the FR value is the original DATES text"
@@ -248,6 +248,16 @@ Definitions first:
   publication date is after the original close. A document that reopens a period that had already
   lapsed, or sets a new period starting after a gap, is `confirm_reopened` — forbidden in v1 →
   `escalate`.
+- **Partial amendment** (v1.4, operator-ratified <date>): an extension, correction, reopening or
+  docket document whose own text applies to only **part** of what this notice covers, such as one
+  of its several dockets, sites, actions or participant classes (for example, a memo extending
+  one site's docket in a notice that proposes deleting three sites, each with its own docket). It
+  amends only that part. Read every amendment for its scope: one that names one docket id of a
+  multi-docket notice, or one site, action or class of several, is partial unless its text says it
+  covers the whole notice. If the parts then have **different** operative deadlines, this window
+  has no single operative comment deadline: escalate under rule 1, never pin either date, and
+  list each part with its deadline on the note's `Deadlines (v1.3)` line. The portal value a
+  partial amendment produces is not "explained" for the whole notice.
 
 Rules, in order:
 
@@ -255,16 +265,17 @@ Rules, in order:
    evidence this policy accepts** (an explanation that rests on a non-primary document is still
    an escalate, and the note says what explains it and why it does not count); or the verifier
    disagrees with you; or a document states a deadline time that is not 11:59 p.m. Eastern; or
-   the correct verdict is one this policy forbids. A live withdrawal of this document (rule 3)
-   explains any date discrepancy, so check rule 3 before escalating on one. The note must say
+   a partial amendment leaves the notice's parts with different deadlines (see "Partial
+   amendment"); or the correct verdict is one this policy forbids. A live withdrawal of this
+   document (rule 3) explains any date discrepancy, so check rule 3 before escalating on one. The note must say
    what was searched. Never escalate to clear an alert or skip work.
 2. **`pin_close`** only if 1 does not apply, and all of: a primary document **explicitly states**
    the operative comment deadline for **this exact notice** (identity as defined, or for a docket
    document the v1.2 docket-and-date route under "Primary document"); the evidence
    **explains** the competing value (a petition, reply, meeting or effective date, only as rule
    2a allows when the notice sets more than one participation deadline; an extension that moved
-   it; a portal sentinel); the note cites the URL and the verbatim DATES text; and the
-   independent verifier returns the same date from the evidence card (and, under rule 2a, the same
+   it for the **whole** notice, not a partial amendment; a portal sentinel); the note cites the
+   URL and the verbatim DATES text; and the independent verifier returns the same date from the evidence card (and, under rule 2a, the same
    explaining basis).
 
    **2a. Multi-deadline notices** (v1.3, operator-ratified 2026-10-31; subordinate to rules 1
@@ -294,7 +305,8 @@ Rules, in order:
    - **Escalate under rule 1** when a later round is some class's first chance to comment; when
      the roles, classes or order of the dates cannot be told from the text; or when a document
      states a deadline time other than 11:59 p.m. Eastern (for example, ITC filings due in EDIS
-     by 5:15 p.m.).
+     by 5:15 p.m.). A notice whose DATES text sets one deadline can still end up with several
+     after a partial amendment; that is the same escalation, under rule 1.
    - **Unchanged.** Identity, the full search and the withdrawal check (rule 3) apply exactly as
      above. The verifier stays independent and cross-provider; its agreement rule for these
      notices is under "Evidence card".
@@ -430,7 +442,9 @@ deadline.
 For such a multi-deadline notice, answer INSUFFICIENT if none of these explains the value, if a
 later round is some class's first chance to comment, if the roles, classes or order of the dates
 cannot be told from the text, or if a document states a deadline time other than 11:59 p.m.
-Eastern. If the identity basis does not establish that the
+Eastern. If an extension, correction or docket document applies by its own text to only some
+of the notice's dockets, sites, actions or participant classes, and the parts then have different
+deadlines, answer INSUFFICIENT. If the identity basis does not establish that the
 deciding document is about THIS notice, answer INSUFFICIENT. Answer with
 one date or INSUFFICIENT, and one paragraph of reasoning. Do not infer from patterns or sibling
 notices.
@@ -450,7 +464,7 @@ Write the note to `/tmp/review-autopilot/<run id>/note-<fr-docnum>.txt` and pass
 the rest is the audit trail a partner will read:
 
 ```
-[autopilot run=<run id> mode=<shadow|write> policy=v1.3@2026-10-31 verifier=<agree|disagree|skipped (part 1)|n/a>]
+[autopilot run=<run id> mode=<shadow|write> policy=v1.4@2026-11-03 verifier=<agree|disagree|skipped (part 1)|n/a>]
 <decision in one sentence>. Decisive: <url> — "<verbatim DATES text>". Competing value: <what it is and why it is not the deadline>. Searched: <extensions/corrections/reopenings by docnum, docket, citation, title — result>.
 ```
 
@@ -498,7 +512,7 @@ on their own; do not duplicate them.
 Scheduled run:
 
 ```
-Review autopilot — <local time> — mode=<shadow|write> — run=<id> — policy=v1.3@2026-10-31
+Review autopilot — <local time> — mode=<shadow|write> — run=<id> — policy=v1.4@2026-11-03
 Queue: <n> before (<open> open / <closed> closed, <parked> parked) → <n> after
 Decisions (<k>/10):
   <ocd-id>  <kind>[ → date]  verifier=<result>  expect=<h1[:12]>,<h2[:12]>  [written obs=<id> | proposal]  verified: <yes/no + what | n/a (shadow)>
