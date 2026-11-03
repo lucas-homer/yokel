@@ -339,7 +339,8 @@ function sentences(para) {
     const before = para.slice(Math.max(start, end - 12), end);
     const next = para.slice(m.index + m[0].length);
     if (/\b[ap]\.m\.$/i.test(before)) {
-      if (TZ_NEXT.test(next)) continue;
+      // "5 p.m. Eastern", "5 p.m. July 1, 2026": the time belongs to what follows.
+      if (TZ_NEXT.test(next) || DATE_NEXT.test(next)) continue;
     } else if (ABBREV.test(before)) continue;
     out.push(para.slice(start, m.index + m[0].trimEnd().length).trim());
     start = m.index + m[0].length;
@@ -386,6 +387,27 @@ function isoDates(s) {
   return out;
 }
 const hasDate = (s) => new RegExp(DATE_IN_TEXT.source).test(s);
+const DATE_NEXT = new RegExp(
+  `^(?:${MON_RE}\\s+\\d|(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day\\b)`,
+);
+// Dates a deadline connector points at ("by July 1", "is 5:15 p.m. on July 1", "to September
+// 2"), as opposed to other dates in the same sentence (a hearing, a publication date).
+const CONNECT_NEAR =
+  /\b(?:by|no later than|not later than|on or before|until|through|due)\b[^;]{0,30}$/i;
+const CONNECT_ADJ =
+  /\b(?:is|are|to|before)\s+(?:\d{1,2}(?::\d{2})?\s*[ap]\.?\s?m\.?,?\s+(?:\w+\s+)?on\s+)?(?:\w+day,?\s+)?$/i;
+function deadlineDates(s) {
+  const out = [];
+  let prevEnd = 0;
+  for (const m of s.matchAll(DATE_IN_TEXT)) {
+    const before = s.slice(Math.max(prevEnd, m.index - 60), m.index);
+    prevEnd = m.index + m[0].length;
+    if (!CONNECT_NEAR.test(before) && !CONNECT_ADJ.test(before)) continue;
+    const iso = isoDates(m[0]);
+    if (iso.length) out.push(iso[0]);
+  }
+  return out;
+}
 
 // Sentences that set or change a submission deadline (rule 3 search aid). A connector counts
 // only when a date follows it closely ("filed by Acme Corp" does not).
@@ -412,9 +434,13 @@ function deadlineSentences(paras) {
 
 // Stated times of day near a deadline (rule 1's time clause, rule 2a).
 const TIME_RE =
-  /\b(?:\d{1,2}(?::\d{2})?\s*(?:[ap]\.\s?m\.|[ap]m\b)|noon|midnight)(?:\s*,?\s*\(?(?:Eastern|Central|Mountain|Pacific|Atlantic|Alaska|Hawaii)(?:\s+(?:Standard|Daylight|Prevailing))?(?:\s+Time)?\)?|\s*,?\s*\(?(?:E\.?[SD]?T\.?|ET|[CMP][SD]T|UTC|GMT)\)?|\s+local\s+time)?/gi;
+  /\b(?:\d{1,2}(?::\d{2})?\s*(?:[ap]\.\s?m(?:\.|\b)|[ap]m\b)|noon|midnight)(?:\s*,?\s*\(?(?:Eastern|Central|Mountain|Pacific|Atlantic|Alaska|Hawaii)(?:\s+(?:Standard|Daylight|Prevailing))?(?:\s+Time)?\)?|\s*,?\s*\(?(?:E\.?[SD]?T\.?|ET|[CMP][SD]T|UTC|GMT)\)?|\s+local\s+time)?/gi;
 const DEADLINE_WORD =
   /\b(?:deadlines?|due|no later than|not later than|on or before|received|postmarked|submit\w*|fil(?:e|ed|ing)|comments?|responses?|requests?|petitions?|objections?|registration|register|close[sd]?)\b/i;
+// A time in a sentence with no date still counts when the sentence plainly sets a deadline
+// ("Comments must be received by noon."); the date may sit in DATES.
+const STRONG_DEADLINE =
+  /\b(?:deadlines?|due|no later than|not later than|on or before|must be (?:received|submitted|filed|postmarked|delivered)|(?:received|submitted|filed|postmarked) (?:by|after|before))\b/i;
 // 11:59 p.m. with no zone or an Eastern zone is the convention; anything else is a stated time.
 const isConvention = (t) =>
   /^11:59\s*p\.?\s?m\.?\s*(?:,?\s*\(?(?:Eastern(?:\s+(?:Standard|Daylight|Prevailing))?(?:\s+Time)?|E\.?[SD]?T\.?|ET)\)?)?$/i.test(
@@ -425,7 +451,9 @@ function statedTimes(paras) {
   const seen = new Set();
   for (const p of paras)
     for (const s of sentences(p)) {
-      if (s.length > 1500 || !hasDate(s) || !DEADLINE_WORD.test(s)) continue;
+      if (s.length > 1500) continue;
+      if (!(hasDate(s) && DEADLINE_WORD.test(s)) && !STRONG_DEADLINE.test(s))
+        continue;
       const times = [...s.matchAll(TIME_RE)]
         .map((m) => m[0].trim())
         .filter((t) => !isConvention(t));
@@ -563,6 +591,7 @@ async function loadItem(id) {
         const { text, truncated } = await frText(item.frDoc.raw_text_url);
         ownParas.push(...textParagraphs(text));
         item.ownText.scanned = true;
+        item.ownText.partial = truncated;
         if (truncated)
           item.errors.push(
             `full text over ${TEXT_CAP >> 20} MB; only the first part was scanned for stated times`,
@@ -642,7 +671,7 @@ async function scanRelated(item) {
       const k = s.replace(/\s+/g, " ").toLowerCase();
       if (seen.has(k)) return;
       seen.add(k);
-      sents.push({ text: s, src, dates: isoDates(s) });
+      sents.push({ text: s, src, dates: deadlineDates(s), all: isoDates(s) });
     };
     if (r.dates) for (const s of deadlineSentences([r.dates])) add(s, "DATES");
     if (toRead.has(r.document_number)) {
@@ -659,16 +688,29 @@ async function scanRelated(item) {
         r.textError = e.message;
       }
     } else r.textScan = "skipped";
+    // Only dates a deadline connector points at decide the flag; any other later date in
+    // these sentences (a hearing, a meeting) is reported separately for inspection.
     const latest =
       sents
         .flatMap((s) => s.dates)
         .sort()
         .at(-1) ?? null;
+    const latestAny =
+      sents
+        .flatMap((s) => s.all)
+        .sort()
+        .at(-1) ?? null;
     r.deadline = {
-      sentences: sents.slice(0, SENTENCES_SHOWN),
+      sentences: sents
+        .slice(0, SENTENCES_SHOWN)
+        .map(({ text, src }) => ({ text, src })),
       more: Math.max(0, sents.length - SENTENCES_SHOWN),
       latest,
       laterThanClose: !!(close && latest && latest > close),
+      laterOtherDate:
+        close && latestAny && latestAny > close && !(latest && latest > close)
+          ? latestAny
+          : null,
     };
     delete r.dates; // shown through r.deadline
   };
@@ -1136,6 +1178,7 @@ function renderItem(it) {
     h("div", { class: "chips" },
       times.length ? h("span", { class: "chip alarm", title: "See the DATES card" }, "⚠ Deadline time stated: " + times.join(", ")) : null,
       own.scanned === false && h("span", { class: "chip flag", title: own.error || "" }, "full text not scanned for stated times"),
+      own.partial && h("span", { class: "chip flag" }, "full text only partly scanned for stated times"),
       p.confidence && h("span", { class: "chip c-" + p.confidence }, p.confidence),
       p.status && h("span", { class: "chip" }, "status " + p.status),
       ...(p.flags || []).map((f) => h("span", { class: "chip" }, f)),
@@ -1165,7 +1208,9 @@ function renderItem(it) {
     times.length ? h("div", { class: "note bad" },
       h("b", null, "Deadline time stated: " + times.join(", ") + " — rules 1 and 2a: a document stating a deadline time other than 11:59 p.m. Eastern → escalate. Check that each sentence sets a participation deadline (not office hours or a meeting time)."),
       h("ul", { class: "evid" }, ...own.times.map((x) => h("li", null, highlightDates(x.sentence, x.times))))) : null,
-    h("div", { class: "hint", style: "margin-top:8px" }, own.scanned
+    h("div", { class: "hint", style: "margin-top:8px" }, own.scanned && own.partial
+      ? "Full text only PARTLY scanned (very long document: the first part only)" + (times.length ? "." : "; no stated time found in that part, the rest is unchecked.")
+      : own.scanned
       ? (times.length ? "Scanned the full text (not only DATES) for deadline times." : "Scanned the full text (not only DATES): no deadline time other than 11:59 p.m. Eastern found near a deadline. Search aid, not proof.")
       : "Full text NOT scanned (" + (own.error || "no FR record") + "); only DATES was checked for stated times."),
     doc.action && h("div", { class: "hint", style: "margin-top:8px" }, "Action: " + doc.action));
@@ -1180,7 +1225,7 @@ function renderItem(it) {
         h("td", null, h("a", { href: safeUrl(r.html_url), target: "_blank", rel: "noopener" }, r.document_number), " ", r.title,
           h("div", { class: "hint" }, "matched " + r.matched.join(", ")),
           relEvidence(r, it.closeForCompare)),
-        h("td", null, r.comments_close_on || "", r.deadline && r.deadline.laterThanClose ? h("div", null, h("span", { class: "chip flag", title: "A deadline in this document (" + r.deadline.latest + ") is later than this notice's FR close (" + it.closeForCompare + ")" }, "may reopen/extend")) : null)))) :
+        h("td", null, r.comments_close_on || "", r.deadline && r.deadline.laterThanClose ? h("div", null, h("span", { class: "chip flag", title: "A deadline in this document (" + r.deadline.latest + ") is later than this notice's FR close (" + it.closeForCompare + ")" }, "may reopen/extend")) : r.deadline && r.deadline.laterOtherDate ? h("div", null, h("span", { class: "chip", title: "A date in a deadline sentence (" + r.deadline.laterOtherDate + ") is later than this notice's FR close, but no deadline connector points at it" }, "later date — inspect")) : null)))) :
       h("div", { style: "margin-top:8px" }, (it.search || []).some((x) => x.error) ? "None found, but at least one search failed; see above." : "None found by this search."));
 
   const raw = h("div", { class: "card" }, h("details", null, h("summary", null, "Raw review show --blind output"), h("pre", null, it.blindText || "(none)")));
@@ -1201,7 +1246,7 @@ function relEvidence(r, close) {
   return h("div", null,
     d.sentences.length ? h("ul", { class: "evid" }, ...d.sentences.map((x) => h("li", null, h("span", { class: "src" }, x.src + " "), highlightDates(x.text)))) : null,
     h("div", { class: "hint" }, (d.sentences.length ? (d.more ? "+" + d.more + " more deadline sentences · " : "") : "No deadline-setting sentence found · ") + scan +
-      (d.laterThanClose ? " · latest date " + d.latest + " is after this notice's FR close " + close : "")));
+      (d.laterThanClose ? " · deadline " + d.latest + " is after this notice's FR close " + close : d.laterOtherDate ? " · a later date (" + d.laterOtherDate + ") appears but not as a deadline; read the sentence" : "")));
 }
 
 function renderVerdict() {
