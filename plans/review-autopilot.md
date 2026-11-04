@@ -430,7 +430,14 @@ to that verdict and fires the new rule in the drill folder; `validate-argocd-app
   same date; the full search reads every substantive docket the notice covers, including
   amendments posted only in a docket; the evidence card gains a `Scope evidence` line and the
   verifier answers INSUFFICIENT when scope can't be established. Codex GPT-6 Astra (high)
-  reviewed the draft: five findings, all folded in. Found by the v1.3 held-out comparison (2026-11-03):
+  reviewed the draft: five findings, all folded in. A blind adjudication of the held-out
+  disagreements (Claude Fable 5.1, high) added three more: a covered docket that cannot be read
+  (a rate limit, say) is a `skip`, never a pin, and escalates after two earlier runs skipped on
+  the same docket; the v1.1 docket-document identity sentence also accepts a verified FR
+  citation, as the general Identity definition already does; and "what counts as a reopening"
+  is defined, including an advisory-committee meeting notice that accepts additional written
+  comments to the rulemaking docket after the lapse (#145). A reopening always escalates, so
+  docket id plus title is enough to recognize one, and it never supports a pin. Found by the v1.3 held-out comparison (2026-11-03):
   a docket memo extending one site's docket of a three-site NPL deletion notice could be read as
   pinnable under v1.3's literal text. Policy version string `v1.4@2026-11-03` (to become the
   ratification date). Ratifying it changes the version, so the ledger skip re-decides the whole

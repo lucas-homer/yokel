@@ -128,7 +128,12 @@ Access, keyless (verified 2026-10-20):
    there as a separate document). Since v1.4, when the notice covers more than one substantive
    docket (one per site or action, say), read the document list of **every** substantive docket
    it covers, and every agency amendment there that applies to any covered site, action or
-   participant class, including amendments not published in the Federal Register.
+   participant class, including amendments not published in the Federal Register. If any covered
+   docket's document list, or a document in it that could bear on the deadline, cannot be read
+   this run (a rate limit, an outage), the item is a `skip` with that reason: never a pin, and not
+   an escalate on that ground alone. If the ledger already holds two `skip` lines for this item
+   under this policy for the same unreadable docket, from two earlier runs, escalate instead and
+   say which docket could not be read.
 4. Extensions, corrections, reopenings, withdrawals: FR API **full-text** search
    (`conditions[term]=`) for the document number, each docket id, the citation, and a distinctive
    title phrase, since the publication date; also `conditions[docket_id]=`. The docket filter is
@@ -209,7 +214,9 @@ Definitions first:
   Also primary (v1.1, operator-ratified 2026-10-20): an **agency-authored document posted in
   this notice's own Regulations.gov docket** that explicitly extends or otherwise sets the
   comment period for this notice (an agency memo, a "posting memo — no FR request", a notice of
-  extension), identified by the docket id plus the notice's title or document number. A pin on
+  extension), identified by the docket id plus the notice's title, its document number, or (since
+  v1.4) its FR citation verified against the FR API `citation` field for this document number.
+  A pin on
   it must say in the note that the extension is not published in the Federal Register and cite
   the docket document's URL. Since v1.2 (operator-ratified 2026-10-28), the docket id plus the
   notice's FR **publication date** also identifies the notice for such a document, but only when
@@ -251,6 +258,16 @@ Definitions first:
   publication date is after the original close. A document that reopens a period that had already
   lapsed, or sets a new period starting after a gap, is `confirm_reopened` — forbidden in v1 →
   `escalate`.
+- **What counts as a reopening** (v1.4): a document that invites written comments on this
+  proposal, which the agency says it will consider, by a date after the original period lapsed.
+  That includes a document that is not itself about the proposal, such as an advisory-committee
+  meeting notice saying the agency "will also accept additional written comments" submitted to
+  this rulemaking's docket by a stated date. A document that only lists the docket for context,
+  or invites comments on something else (the meeting itself, an information collection), is
+  not one. Because a reopening always escalates in v1, a document that names this notice's
+  docket id together with its title (or its document number or verified citation) is enough to
+  treat the discrepancy as explained by a reopening: escalate and say so in the note, citing the
+  document and its verbatim sentence. A reopening never supports a pin.
 - **Partial amendment** (v1.4, operator-ratified <date>): an extension, correction, reopening or
   docket document whose own text applies to only **part** of what this notice covers, such as one
   of its several dockets, sites, actions or participant classes (for example, a memo extending
