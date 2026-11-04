@@ -268,15 +268,21 @@ function parseBlind(text) {
 const DOCKET_LABEL =
   /^\s*(?:(?:[A-Z]{2,5}\s+)?(?:Docket|Dkt\.?)(?:\s+ID)?(?:\s+(?:Nos?\.?|Numbers?|Number\(s\)|No\(s\)\.?|#))?|Investigation\s+(?:Nos?\.?|Numbers?))\s*:?\s*/i;
 const ID_TOKEN = /\b(?=[A-Za-z0-9-]*\d)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)+\b/g;
+const notDateLike = (t) => !/^\d{4}-\d{2}-\d{2}$/.test(t);
 function docketIds(raw) {
   if (typeof raw !== "string" || !nil(raw.trim())) return [];
+  const labelled = DOCKET_LABEL.test(raw);
   const rest = raw.replace(DOCKET_LABEL, "").trim();
   // A single token after the label is the id itself, hyphenated or not ("Docket No. 12345").
   if (/^[A-Za-z0-9][A-Za-z0-9._-]{3,}$/.test(rest) && /\d/.test(rest))
-    return [rest];
-  return [...rest.matchAll(ID_TOKEN)]
+    return notDateLike(rest) ? [rest] : [];
+  const ids = [...rest.matchAll(ID_TOKEN)]
     .map((m) => m[0])
-    .filter((t) => t.length >= 5 && !/^\d{4}-\d{2}-\d{2}$/.test(t));
+    .filter((t) => t.length >= 5 && notDateLike(t));
+  // After a docket label, bare numbers are ids too ("Docket Nos. 12345 and 12346").
+  if (labelled && !ids.length)
+    for (const m of rest.matchAll(/(?<![\w-])\d{4,}(?![\w-])/g)) ids.push(m[0]);
+  return ids;
 }
 // EPA's FRL number is a document control number, not a docket.
 const isDocket = (id) => !/^FRL-/i.test(id);
@@ -300,7 +306,7 @@ function decodeEntities(s) {
           : parseInt(e.slice(1), 10);
       return n === 160
         ? " "
-        : Number.isFinite(n)
+        : Number.isInteger(n) && n > 0 && n <= 0x10ffff
           ? String.fromCodePoint(n)
           : all;
     }
@@ -486,7 +492,8 @@ async function frText(url) {
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
-    chunks.push(value);
+    const room = TEXT_CAP - size;
+    chunks.push(value.length > room ? value.subarray(0, room) : value);
     size += value.length;
     if (size > TEXT_CAP) {
       truncated = true;
@@ -621,8 +628,9 @@ async function loadItem(id) {
   const terms = new Set([docNum, ...idTerms]);
   for (const rin of item.parsed?.fr?.rins ?? []) terms.add(`RIN ${rin}`);
   const found = new Map();
+  const order = [...terms];
   await Promise.all(
-    [...terms].map(async (t) => {
+    order.map(async (t) => {
       try {
         const { results, count } = t.startsWith("RIN ")
           ? await frSearch(t.slice(4), "regulation_id_number")
@@ -648,6 +656,11 @@ async function loadItem(id) {
   );
   item.related = [...found.values()].sort((a, b) =>
     a.publication_date.localeCompare(b.publication_date),
+  );
+  // Promise.all settles in network order; show the searches in a stable order.
+  item.search.sort(
+    (a, b) =>
+      (order.indexOf(a.term) + 1 || -1) - (order.indexOf(b.term) + 1 || -1),
   );
   await Promise.all([scanRelated(item), ownScan]);
   return item;
