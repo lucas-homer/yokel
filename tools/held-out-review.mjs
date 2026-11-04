@@ -6,6 +6,11 @@
 // Register API. It never reads the autopilot thread, the shadow ledger, or any earlier
 // held-out file. Sealing writes the output file once (O_EXCL) and never overwrites it.
 //
+// Search aids it adds from the FR text (aids, not verdicts): bare docket ids for the related
+// search, deadline-setting sentences in each related document (flagged when later than this
+// notice's close), deadline times other than 11:59 p.m. stated anywhere in the notice, and a
+// note when the notice covers several dockets.
+//
 //   node tools/held-out-review.mjs --date 2026-10-31 --policy v1.3@2026-10-31 <id> [<id> ...]
 //
 // Options:
@@ -253,7 +258,254 @@ function parseBlind(text) {
   };
 }
 
+// ---------- text evidence (docket ids, deadline sentences, stated times) ----------
+
+// FR `docket_ids` entries are free text: "Docket No. PHMSA-2025-1271", "Docket ID Nos.
+// EPA-HQ-OAR-2026-0001 and EPA-HQ-OAR-2026-0002", "Investigation Nos. 701-TA-526 and
+// 731-TA-1262 (Second Review)". Searching such a string as one exact phrase misses documents
+// that write the id with another label ("Docket Number PHMSA-2025-1271"), so the search uses
+// bare id tokens only. A string with no id token is skipped (never searched as prose).
+const DOCKET_LABEL =
+  /^\s*(?:(?:[A-Z]{2,5}\s+)?(?:Docket|Dkt\.?)(?:\s+ID)?(?:\s+(?:Nos?\.?|Numbers?|Number\(s\)|No\(s\)\.?|#))?|Investigation\s+(?:Nos?\.?|Numbers?))\s*:?\s*/i;
+const ID_TOKEN = /\b(?=[A-Za-z0-9-]*\d)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)+\b/g;
+const notDateLike = (t) => !/^\d{4}-\d{2}-\d{2}$/.test(t);
+function docketIds(raw) {
+  if (typeof raw !== "string" || !nil(raw.trim())) return [];
+  const labelled = DOCKET_LABEL.test(raw);
+  const rest = raw.replace(DOCKET_LABEL, "").trim();
+  // A single token after the label is the id itself, hyphenated or not ("Docket No. 12345").
+  if (/^[A-Za-z0-9][A-Za-z0-9._-]{3,}$/.test(rest) && /\d/.test(rest))
+    return notDateLike(rest) ? [rest] : [];
+  const ids = [...rest.matchAll(ID_TOKEN)]
+    .map((m) => m[0])
+    .filter((t) => t.length >= 5 && notDateLike(t));
+  // After a docket label, bare numbers are ids too ("Docket Nos. 12345 and 12346").
+  if (labelled && !ids.length)
+    for (const m of rest.matchAll(/(?<![\w-])\d{4,}(?![\w-])/g)) ids.push(m[0]);
+  return ids;
+}
+// EPA's FRL number is a document control number, not a docket.
+const isDocket = (id) => !/^FRL-/i.test(id);
+
+// FR raw text is an HTML page around a <pre> with hard-wrapped lines. Paragraphs start after a
+// blank line or with an indent; lines inside a paragraph are joined.
+const ENTITIES = {
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  nbsp: " ",
+};
+function decodeEntities(s) {
+  return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (all, e) => {
+    if (e[0] === "#") {
+      const n =
+        e[1] === "x" || e[1] === "X"
+          ? parseInt(e.slice(2), 16)
+          : parseInt(e.slice(1), 10);
+      return n === 160
+        ? " "
+        : Number.isInteger(n) && n > 0 && n <= 0x10ffff
+          ? String.fromCodePoint(n)
+          : all;
+    }
+    return ENTITIES[e.toLowerCase()] ?? all;
+  });
+}
+function textParagraphs(html) {
+  const pre = html.match(/<pre>([\s\S]*?)<\/pre>/i)?.[1] ?? html;
+  const text = decodeEntities(
+    pre.replace(/<bullet>/gi, "•").replace(/<[^>]+>/g, ""),
+  ).replace(/``|''/g, '"');
+  const paras = [];
+  let cur = [];
+  for (const line of text.split(/\r?\n/)) {
+    if (!line.trim() || /^\s{2,}\S/.test(line)) {
+      if (cur.length) paras.push(cur.join(" "));
+      cur = [];
+    }
+    if (line.trim()) cur.push(line.trim());
+  }
+  if (cur.length) paras.push(cur.join(" "));
+  return paras.map((p) => p.replace(/\s+/g, " ").trim()).filter(Boolean);
+}
+// Sentence split that keeps "a.m.", "No.", "Sec.", "U.S." and initials inside the sentence.
+const ABBREV =
+  /(?:\b(?:No|Nos|Sec|Secs|Mr|Ms|Mrs|Dr|St|Inc|Co|Corp|Ltd|Jr|Sr|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|Vol|Fed|Reg|Pub|Stat|App|Pt|Ch|Subch|Div|Dept|Admin|al|etc|e\.g|i\.e|U\.S|U\.S\.C|C\.F\.R|D\.C|cf|vs|approx|Rev|Supp|art|para|pp?|ex|Ex|Nat|Assn|Ass'n)|\b[A-Z])\.$/;
+const TZ_NEXT =
+  /^(?:E\.?[SD]?T\.?|Eastern|Central|Mountain|Pacific|Atlantic|Alaska|Hawaii|[CMP][SD]T|Coordinated|UTC|GMT|local|Local|ET)\b/;
+function sentences(para) {
+  const out = [];
+  let start = 0;
+  const re = /[.?!]["')\]]?\s+(?=["'(]?[A-Z0-9•])/g;
+  let m;
+  while ((m = re.exec(para))) {
+    const end = m.index + 1;
+    const before = para.slice(Math.max(start, end - 12), end);
+    const next = para.slice(m.index + m[0].length);
+    if (/\b[ap]\.m\.$/i.test(before)) {
+      // "5 p.m. Eastern", "5 p.m. July 1, 2026": the time belongs to what follows.
+      if (TZ_NEXT.test(next) || DATE_NEXT.test(next)) continue;
+    } else if (ABBREV.test(before)) continue;
+    out.push(para.slice(start, m.index + m[0].trimEnd().length).trim());
+    start = m.index + m[0].length;
+  }
+  out.push(para.slice(start).trim());
+  return out.filter(Boolean);
+}
+const MONTHS = [
+  "jan",
+  "feb",
+  "mar",
+  "apr",
+  "may",
+  "jun",
+  "jul",
+  "aug",
+  "sep",
+  "oct",
+  "nov",
+  "dec",
+];
+const MON_RE =
+  "(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?";
+const DATE_IN_TEXT = new RegExp(
+  `\\b${MON_RE}\\s+\\d{1,2}(?:st|nd|rd|th)?(?:,?\\s+(\\d{4}))?|\\b\\d{1,2}/\\d{1,2}/\\d{4}\\b`,
+  "g",
+);
+// Every full date (with a year) in a sentence, as YYYY-MM-DD.
+function isoDates(s) {
+  const out = [];
+  for (const m of s.matchAll(DATE_IN_TEXT)) {
+    let y, mo, d;
+    const num = m[0].match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (num) [mo, d, y] = [+num[1], +num[2], +num[3]];
+    else {
+      if (!m[1]) continue;
+      mo = MONTHS.indexOf(m[0].slice(0, 3).toLowerCase()) + 1;
+      d = +m[0].match(/\s(\d{1,2})/)[1];
+      y = +m[1];
+    }
+    const iso = `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    if (isDate(iso)) out.push(iso);
+  }
+  return out;
+}
+const DATE_ONE = new RegExp(DATE_IN_TEXT.source);
+const hasDate = (s) => DATE_ONE.test(s);
+const DATE_NEXT = new RegExp(
+  `^(?:${MON_RE}\\s+\\d|(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day\\b)`,
+);
+// Dates a deadline connector points at ("by July 1", "is 5:15 p.m. on July 1", "to September
+// 2"), as opposed to other dates in the same sentence (a hearing, a publication date).
+const CONNECT_NEAR =
+  /\b(?:by|no later than|not later than|on or before|until|through|due)\b[^;]{0,30}$/i;
+const CONNECT_ADJ =
+  /\b(?:is|are|to|before)\s+(?:\d{1,2}(?::\d{2})?\s*[ap]\.?\s?m\.?,?\s+(?:\w+\s+)?on\s+)?(?:\w+day,?\s+)?$/i;
+function deadlineDates(s) {
+  const out = [];
+  let prevEnd = 0;
+  for (const m of s.matchAll(DATE_IN_TEXT)) {
+    const before = s.slice(Math.max(prevEnd, m.index - 60), m.index);
+    prevEnd = m.index + m[0].length;
+    if (!CONNECT_NEAR.test(before) && !CONNECT_ADJ.test(before)) continue;
+    const iso = isoDates(m[0]);
+    if (iso.length) out.push(iso[0]);
+  }
+  return out;
+}
+
+// Sentences that set or change a submission deadline (rule 3 search aid). A connector counts
+// only when a date follows it closely ("filed by Acme Corp" does not).
+const SUBMIT_BY = new RegExp(
+  `\\b(?:comments?|submissions?|statements?|responses?|requests?|petitions?|objections?|nominations?)\\b[^]*?\\b(?:by|no later than|not later than|on or before|before|until|through)\\b[^;]{0,45}?(?:${MON_RE}\\s+\\d|\\d{1,2}/\\d{1,2}/\\d{4})`,
+  "i",
+);
+const CHANGE_WORD =
+  /\b(?:accept(?:s|ing)?\s+(?:additional\s+)?(?:written\s+)?comments|comment period|deadline)\b/i;
+const changes = (s) =>
+  CHANGE_WORD.test(s) ||
+  (/\b(?:extend(?:s|ed|ing)?|extension|reopen(?:s|ed|ing)?|reopening)\b/i.test(
+    s,
+  ) &&
+    /\b(?:comments?|submissions?|deadline)\b/i.test(s));
+function deadlineSentences(paras) {
+  const out = [];
+  for (const p of paras)
+    for (const s of sentences(p))
+      if (s.length <= 1500 && hasDate(s) && (SUBMIT_BY.test(s) || changes(s)))
+        out.push(s);
+  return out;
+}
+
+// Stated times of day near a deadline (rule 1's time clause, rule 2a).
+const TIME_RE =
+  /\b(?:\d{1,2}(?::\d{2})?\s*(?:[ap]\.\s?m(?:\.|\b)|[ap]m\b)|noon|midnight)(?![A-Za-z])(?:\s*,?\s*\(?(?:Eastern|Central|Mountain|Pacific|Atlantic|Alaska|Hawaii)(?:\s+(?:Standard|Daylight|Prevailing))?(?:\s+Time)?(?![A-Za-z])\)?|\s*,?\s*\(?(?:E\.?[SD]?T\.?|ET|[CMP][SD]T|UTC|GMT)(?![A-Za-z])\)?|\s+local\s+time\b)?/gi;
+const DEADLINE_WORD =
+  /\b(?:deadlines?|due|no later than|not later than|on or before|received|postmarked|submit\w*|fil(?:e|ed|ing)|comments?|responses?|requests?|petitions?|objections?|registration|register|close[sd]?)\b/i;
+// A time in a sentence with no date still counts when the sentence plainly sets a deadline
+// ("Comments must be received by noon."); the date may sit in DATES.
+const STRONG_DEADLINE =
+  /\b(?:deadlines?|due|no later than|not later than|on or before|must be (?:received|submitted|filed|postmarked|delivered)|(?:received|submitted|filed|postmarked) (?:by|after|before))\b/i;
+// 11:59 p.m. with no zone or an Eastern zone is the convention; anything else is a stated time.
+const isConvention = (t) =>
+  /^11:59\s*p\.?\s?m\.?\s*(?:,?\s*\(?(?:Eastern(?:\s+(?:Standard|Daylight|Prevailing))?(?:\s+Time)?|E\.?[SD]?T\.?|ET)\)?)?$/i.test(
+    t.trim(),
+  );
+function statedTimes(paras) {
+  const hits = [];
+  const seen = new Set();
+  for (const p of paras)
+    for (const s of sentences(p)) {
+      if (s.length > 1500) continue;
+      if (!(hasDate(s) && DEADLINE_WORD.test(s)) && !STRONG_DEADLINE.test(s))
+        continue;
+      const times = [...s.matchAll(TIME_RE)]
+        .map((m) => m[0].trim())
+        .filter((t) => !isConvention(t));
+      const key = s.replace(/\s+/g, " ");
+      if (times.length && !seen.has(key)) {
+        seen.add(key);
+        hits.push({ sentence: s, times });
+      }
+    }
+  return hits;
+}
+
 const FR = "https://www.federalregister.gov/api/v1";
+// Raw document text, capped so a very long rule can't stall the item.
+const TEXT_CAP = 6 << 20;
+async function frText(url) {
+  if (!/^https:\/\/www\.federalregister\.gov\//.test(url ?? ""))
+    throw new Error("no federalregister.gov raw text URL");
+  const res = await fetch(url, { signal: AbortSignal.timeout(20_000) });
+  if (!res.ok) throw new Error(`FR text ${res.status}`);
+  if (!/^https:\/\/www\.federalregister\.gov\//.test(res.url)) {
+    await res.body?.cancel().catch(() => {});
+    throw new Error("FR text redirected off federalregister.gov");
+  }
+  const reader = res.body.getReader();
+  const chunks = [];
+  let size = 0;
+  let truncated = false;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    const room = TEXT_CAP - size;
+    chunks.push(value.length > room ? value.subarray(0, room) : value);
+    size += value.length;
+    if (size > TEXT_CAP) {
+      truncated = true;
+      await reader.cancel().catch(() => {});
+      break;
+    }
+  }
+  return {
+    text: new TextDecoder().decode(Buffer.concat(chunks)),
+    truncated,
+  };
+}
 async function frJson(url) {
   const res = await fetch(url, {
     headers: { accept: "application/json" },
@@ -281,6 +533,7 @@ function frDoc(num) {
     "comments_close_on",
     "correction_of",
     "corrections",
+    "raw_text_url",
   ];
   return frJson(
     `${FR}/documents/${num}.json?${f.map((x) => `fields%5B%5D=${x}`).join("&")}`,
@@ -296,6 +549,8 @@ async function frSearch(value, condition = "term") {
     "publication_date",
     "html_url",
     "comments_close_on",
+    "dates",
+    "raw_text_url",
   ];
   const v = condition === "term" ? `"${value}"` : value;
   // Newest first: if a long docket overflows one page, the old documents are the ones cut.
@@ -323,21 +578,59 @@ async function loadItem(id) {
   if (doc.status === "fulfilled") item.frDoc = doc.value;
   else item.errors.push(`FR document: ${doc.reason.message}`);
 
+  // Docket labels as published, and the bare ids the search uses.
+  const docketLabels = [
+    ...(item.frDoc?.docket_ids ?? []),
+    ...(item.parsed?.fr?.dockets ?? []),
+    item.parsed?.regs?.docket,
+  ].filter((t) => typeof t === "string" && t.trim() && nil(t));
+  const idTerms = new Set();
+  item.search = [];
+  for (const label of new Set(docketLabels)) {
+    const got = docketIds(label);
+    if (got.length) for (const t of got) idTerms.add(t);
+    else
+      item.search.push({ term: label, skipped: "no docket id in this label" });
+  }
+  item.docketIds = [...idTerms].filter(isDocket);
+
+  // Rule 1 / 2a aid: deadline times stated anywhere in the notice, not only in DATES.
+  item.ownText = { scanned: false, times: [] };
+  const ownScan = (async () => {
+    try {
+      const ownParas = item.frDoc?.dates ? [item.frDoc.dates] : [];
+      if (item.frDoc) {
+        try {
+          const { text, truncated } = await frText(item.frDoc.raw_text_url);
+          ownParas.push(...textParagraphs(text));
+          item.ownText.scanned = true;
+          item.ownText.partial = truncated;
+          if (truncated)
+            item.errors.push(
+              `full text over ${TEXT_CAP >> 20} MB; only the first part was scanned for stated times`,
+            );
+        } catch (e) {
+          item.ownText.error = e.message;
+          item.errors.push(
+            `full text: ${e.message} (stated-time scan covers DATES only)`,
+          );
+        }
+      }
+      item.ownText.times = statedTimes(ownParas);
+    } catch (e) {
+      item.ownText = { scanned: false, times: [], error: e.message };
+      item.errors.push(`stated-time scan failed: ${e.message}`);
+    }
+  })();
+
   // Search aid for rule 3 (other FR documents on this docket or citing this document).
   // Not exhaustive: the page says so.
-  const terms = new Set(
-    [
-      docNum,
-      ...(item.frDoc?.docket_ids ?? []),
-      ...(item.parsed?.fr?.dockets ?? []),
-      item.parsed?.regs?.docket,
-    ].filter((t) => typeof t === "string" && t.trim() && nil(t)),
-  );
+  const terms = new Set([docNum, ...idTerms]);
   for (const rin of item.parsed?.fr?.rins ?? []) terms.add(`RIN ${rin}`);
   const found = new Map();
-  item.search = [];
+  const order = [...terms];
   await Promise.all(
-    [...terms].map(async (t) => {
+    order.map(async (t) => {
       try {
         const { results, count } = t.startsWith("RIN ")
           ? await frSearch(t.slice(4), "regulation_id_number")
@@ -364,7 +657,104 @@ async function loadItem(id) {
   item.related = [...found.values()].sort((a, b) =>
     a.publication_date.localeCompare(b.publication_date),
   );
+  // Promise.all settles in network order; show the searches in a stable order.
+  item.search.sort(
+    (a, b) =>
+      (order.indexOf(a.term) + 1 || -1) - (order.indexOf(b.term) + 1 || -1),
+  );
+  await Promise.all([scanRelated(item), ownScan]);
   return item;
+}
+
+// For each related document: the sentences that set or change a submission deadline, from its
+// DATES field (every row) and its full text (at most RELATED_TEXT_CAP rows: the ones published
+// on or after this notice first, oldest first, then earlier ones, newest first). A row whose
+// deadline is later than this notice's FR close is flagged.
+const RELATED_TEXT_CAP = 15;
+const SENTENCES_SHOWN = 6;
+async function scanRelated(item) {
+  const close =
+    item.frDoc?.comments_close_on ??
+    item.parsed?.latest?.fr?.commentsCloseOn ??
+    null;
+  item.closeForCompare = close;
+  const pub = item.frDoc?.publication_date ?? item.parsed?.fr?.published ?? "";
+  const after = item.related.filter((r) => r.publication_date >= pub);
+  const before = item.related.filter((r) => r.publication_date < pub).reverse();
+  const toRead = new Set(
+    [...after, ...before]
+      .slice(0, RELATED_TEXT_CAP)
+      .map((r) => r.document_number),
+  );
+  const queue = item.related.slice();
+  const one = async (r) => {
+    const sents = [];
+    const seen = new Set();
+    const add = (s, src) => {
+      const k = s.replace(/\s+/g, " ").toLowerCase();
+      if (seen.has(k)) return;
+      seen.add(k);
+      sents.push({ text: s, src, dates: deadlineDates(s), all: isoDates(s) });
+    };
+    if (r.dates) for (const s of deadlineSentences([r.dates])) add(s, "DATES");
+    if (toRead.has(r.document_number)) {
+      try {
+        const { text, truncated } = await frText(r.raw_text_url);
+        const paras = textParagraphs(text);
+        // Strong signals first, then the rest in document order.
+        const all = deadlineSentences(paras);
+        for (const s of all.filter(changes)) add(s, "text");
+        for (const s of all) add(s, "text");
+        r.textScan = truncated ? "partial" : "full";
+      } catch (e) {
+        r.textScan = "failed";
+        r.textError = e.message;
+      }
+    } else r.textScan = "skipped";
+    // Only dates a deadline connector points at decide the flag; any other later date in
+    // these sentences (a hearing, a meeting) is reported separately for inspection.
+    const latest =
+      sents
+        .flatMap((s) => s.dates)
+        .sort()
+        .at(-1) ?? null;
+    const latestAny =
+      sents
+        .flatMap((s) => s.all)
+        .sort()
+        .at(-1) ?? null;
+    r.deadline = {
+      sentences: sents
+        .slice(0, SENTENCES_SHOWN)
+        .map(({ text, src }) => ({ text, src })),
+      more: Math.max(0, sents.length - SENTENCES_SHOWN),
+      latest,
+      // Only a document published on or after this notice can extend or reopen it; a later
+      // date in an earlier document (an original period this notice shortened) is "inspect".
+      laterThanClose: !!(
+        close &&
+        latest &&
+        latest > close &&
+        r.publication_date >= pub
+      ),
+      laterOtherDate: null,
+    };
+    if (!r.deadline.laterThanClose && close) {
+      const later = [latest, latestAny].filter((d) => d && d > close).sort();
+      r.deadline.laterOtherDate = later.at(-1) ?? null;
+    }
+    delete r.dates; // shown through r.deadline
+  };
+  // Four at a time per item; the server loads two items at once.
+  const run = async () => {
+    while (queue.length) await one(queue.shift());
+  };
+  await Promise.all([run(), run(), run(), run()]);
+  const failed = item.related.filter((r) => r.textScan === "failed").length;
+  if (failed)
+    item.errors.push(
+      `related documents: ${failed} full-text fetch${failed > 1 ? "es" : ""} failed; those rows show DATES-field sentences only`,
+    );
 }
 
 // Prefetch with low concurrency: each `review show` is a kubectl exec into the poller.
@@ -619,6 +1009,15 @@ main { overflow: auto; min-height: 0; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .chip { background: var(--chip); border-radius: 999px; padding: 2px 9px; font-size: 12px; font-family: var(--mono); }
 .chip.c-conflicting { color: var(--bad); }
+.chip.alarm { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); font-weight: 650; font-family: inherit; }
+.chip.flag { background: color-mix(in srgb, var(--warn) 20%, transparent); color: var(--warn); font-weight: 600; font-family: inherit; }
+.note { margin-top: 10px; border-left: 3px solid var(--warn); padding: 6px 10px; font-size: 13px; background: color-mix(in srgb, var(--warn) 8%, transparent); border-radius: 0 6px 6px 0; }
+.note.bad { border-left-color: var(--bad); background: color-mix(in srgb, var(--bad) 8%, transparent); }
+.note b { display: block; margin-bottom: 4px; }
+ul.evid { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
+ul.evid li { margin: 3px 0; }
+ul.evid .src { border: 0; padding: 0; color: var(--muted); font-size: 11px; font-family: var(--mono); }
+mark.tm { background: color-mix(in srgb, var(--bad) 25%, transparent); color: inherit; border-radius: 3px; padding: 0 2px; font-weight: 600; }
 .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .links a { font-size: 13px; text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; }
 .links a:hover { border-color: var(--accent); }
@@ -628,7 +1027,7 @@ main { overflow: auto; min-height: 0; }
 .src .v { font-size: 20px; font-weight: 650; font-variant-numeric: tabular-nums; margin: 2px 0; }
 .src .x { color: var(--muted); font-size: 12px; font-family: var(--mono); word-break: break-all; }
 .dates { white-space: pre-wrap; font-size: 14px; line-height: 1.6; }
-.dates mark { background: color-mix(in srgb, var(--warn) 22%, transparent); color: inherit; border-radius: 3px; padding: 0 2px; }
+.dates mark, ul.evid mark, .note mark { background: color-mix(in srgb, var(--warn) 22%, transparent); color: inherit; border-radius: 3px; padding: 0 2px; }
 table.rel { width: 100%; border-collapse: collapse; font-size: 13px; }
 table.rel td, table.rel th { text-align: left; padding: 6px 8px; border-top: 1px solid var(--line); vertical-align: top; }
 table.rel th { color: var(--muted); font-weight: 500; font-size: 12px; border-top: 0; }
@@ -759,17 +1158,23 @@ function werText(w) {
   const on = ["withdrawal", "extension", "reopening"].filter((_, i) => w[i] === "1");
   return on.length ? "notice flags: " + on.join(", ") : "notice flags: none";
 }
-function highlightDates(text) {
+// Marks dates, and (when given) the stated times the server found, as text nodes only.
+function highlightDates(text, times) {
   const frag = document.createDocumentFragment();
   const MON = "(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?";
-  const re = new RegExp("(" + MON + " \\d{1,2}(?:, \\d{4})?|\\b\\d{1,2}/\\d{1,2}/\\d{4}\\b)", "g");
+  const esc = (x) => x.replace(/[.*+?^$(){}|[\]\\]/g, "\\$&");
+  const tm = [...new Set(times || [])].sort((a, b) => b.length - a.length).map(esc);
+  const re = new RegExp("(" + MON + " \\d{1,2}(?:, \\d{4})?|\\b\\d{1,2}/\\d{1,2}/\\d{4}\\b)" + (tm.length ? "|(" + tm.join("|") + ")" : ""), "g");
   let last = 0, m;
   while ((m = re.exec(text))) {
-    frag.append(text.slice(last, m.index), h("mark", null, m[1]));
-    last = m.index + m[1].length;
+    frag.append(text.slice(last, m.index), m[1] ? h("mark", null, m[1]) : h("mark", { class: "tm" }, m[2]));
+    last = m.index + m[0].length;
   }
   frag.append(text.slice(last));
   return frag;
+}
+function timeList(it) {
+  return [...new Set(((it.ownText || {}).times || []).flatMap((x) => x.times))];
 }
 
 function renderItem(it) {
@@ -782,13 +1187,16 @@ function renderItem(it) {
   const regsLatest = (p.latest || {}).regs;
   const frLatest = (p.latest || {}).fr;
   const pub = doc.publication_date || fr.published;
+  const ids = it.docketIds || [];
+  const own = it.ownText || {};
+  const times = timeList(it);
 
   const links = h("div", { class: "links" },
     h("a", { href: safeUrl(doc.html_url) || ("https://www.federalregister.gov/d/" + it.docNum), target: "_blank", rel: "noopener" }, "Federal Register ↗"),
     pub && h("a", { href: "https://www.govinfo.gov/content/pkg/FR-" + pub + "/html/" + it.docNum + ".htm", target: "_blank", rel: "noopener" }, "GovInfo text ↗"),
     regs.documentId && h("a", { href: "https://www.regulations.gov/document/" + encodeURIComponent(regs.documentId), target: "_blank", rel: "noopener" }, "Regs.gov document ↗"),
     regs.docket && h("a", { href: "https://www.regulations.gov/docket/" + encodeURIComponent(regs.docket), target: "_blank", rel: "noopener" }, "Regs.gov docket ↗"),
-    h("a", { href: "https://www.federalregister.gov/documents/search?conditions%5Bterm%5D=" + encodeURIComponent('"' + (dockets[0] || it.docNum) + '"'), target: "_blank", rel: "noopener" }, "FR search ↗"));
+    h("a", { href: "https://www.federalregister.gov/documents/search?conditions%5Bterm%5D=" + encodeURIComponent('"' + (ids[0] || it.docNum) + '"'), target: "_blank", rel: "noopener" }, "FR search ↗"));
 
   const head = h("div", { class: "card" },
     h("div", { class: "title" }, doc.title || fr.title || it.docNum),
@@ -799,10 +1207,14 @@ function renderItem(it) {
       pub && h("span", null, "published " + pub),
       (fr.rins || []).length ? h("span", null, "RIN " + fr.rins.join(", ")) : null),
     h("div", { class: "chips" },
+      times.length ? h("span", { class: "chip alarm", title: "See the DATES card" }, "⚠ Deadline time stated: " + times.join(", ")) : null,
+      own.scanned === false && h("span", { class: "chip flag", title: own.error || "" }, "full text not scanned for stated times"),
+      own.partial && h("span", { class: "chip flag" }, "full text only partly scanned for stated times"),
       p.confidence && h("span", { class: "chip c-" + p.confidence }, p.confidence),
       p.status && h("span", { class: "chip" }, "status " + p.status),
       ...(p.flags || []).map((f) => h("span", { class: "chip" }, f)),
       ...dockets.map((d) => h("span", { class: "chip" }, d))),
+    ids.length > 1 ? h("div", { class: "note" }, "This notice covers " + ids.length + " dockets: " + ids.join(", ") + " — check whether any extension or memo applies to all of them.") : null,
     links);
 
   const sources = h("div", { class: "card" }, h("h2", null, "What each source says now"),
@@ -823,19 +1235,28 @@ function renderItem(it) {
     p.close && h("div", { class: "hint", style: "margin-top:6px" }, "Machine derivation: " + p.close));
 
   const dates = h("div", { class: "card" }, h("h2", null, "DATES section (Federal Register)"),
-    doc.dates ? h("div", { class: "dates" }, highlightDates(doc.dates)) : h("div", { class: "hint" }, "No DATES text in the FR API; read the document."),
+    doc.dates ? h("div", { class: "dates" }, highlightDates(doc.dates, times)) : h("div", { class: "hint" }, "No DATES text in the FR API; read the document."),
+    times.length ? h("div", { class: "note bad" },
+      h("b", null, "Deadline time stated: " + times.join(", ") + " — rules 1 and 2a: a document stating a deadline time other than 11:59 p.m. Eastern → escalate. Check that each sentence sets a participation deadline (not office hours or a meeting time)."),
+      h("ul", { class: "evid" }, ...own.times.map((x) => h("li", null, highlightDates(x.sentence, x.times))))) : null,
+    h("div", { class: "hint", style: "margin-top:8px" }, own.scanned && own.partial
+      ? "Full text only PARTLY scanned (very long document: the first part only)" + (times.length ? "." : "; no stated time found in that part, the rest is unchecked.")
+      : own.scanned
+      ? (times.length ? "Scanned the full text (not only DATES) for deadline times." : "Scanned the full text (not only DATES): no deadline time other than 11:59 p.m. Eastern found near a deadline. Search aid, not proof.")
+      : "Full text NOT scanned (" + (own.error || "no FR record") + "); only DATES was checked for stated times."),
     doc.action && h("div", { class: "hint", style: "margin-top:8px" }, "Action: " + doc.action));
 
   const rel = it.related || [];
   const related = h("div", { class: "card" }, h("h2", null, "Other FR documents mentioning this docket or document"),
     h("div", { class: "hint" }, "Search aid only, not exhaustive. Extensions sometimes appear only on Regulations.gov, so check the docket too before concluding nothing superseded the date."),
-    h("div", { class: "hint" }, "Searched: ", ...(it.search || []).map((x, i) => [i ? " · " : "", x.term + ": " + (x.error ? "FAILED (" + x.error + ")" : x.count > x.shown ? x.shown + " newest of " + x.count + " shown" : x.count + " found")])),
+    h("div", { class: "hint" }, "Searched: ", ...(it.search || []).map((x, i) => [i ? " · " : "", x.term + ": " + (x.skipped ? "not searched (" + x.skipped + ")" : x.error ? "FAILED (" + x.error + ")" : x.count > x.shown ? x.shown + " newest of " + x.count + " shown" : x.count + " found")])),
     rel.length ? h("table", { class: "rel" },
       h("tr", null, h("th", null, "published"), h("th", null, "type"), h("th", null, "document"), h("th", null, "closes")),
       ...rel.map((r) => h("tr", null, h("td", null, r.publication_date), h("td", null, r.type),
         h("td", null, h("a", { href: safeUrl(r.html_url), target: "_blank", rel: "noopener" }, r.document_number), " ", r.title,
-          h("div", { class: "hint" }, "matched " + r.matched.join(", "))),
-        h("td", null, r.comments_close_on || "")))) :
+          h("div", { class: "hint" }, "matched " + r.matched.join(", ")),
+          relEvidence(r, it.closeForCompare)),
+        h("td", null, r.comments_close_on || "", r.deadline && r.deadline.laterThanClose ? h("div", null, h("span", { class: "chip flag", title: "A deadline in this document (" + r.deadline.latest + ") is later than this notice's FR close (" + it.closeForCompare + ")" }, "may reopen/extend")) : r.deadline && r.deadline.laterOtherDate ? h("div", null, h("span", { class: "chip", title: "A date in a deadline sentence (" + r.deadline.laterOtherDate + ") is later than this notice's FR close, but no deadline connector points at it or the document predates this notice" }, "later date — inspect")) : null)))) :
       h("div", { style: "margin-top:8px" }, (it.search || []).some((x) => x.error) ? "None found, but at least one search failed; see above." : "None found by this search."));
 
   const raw = h("div", { class: "card" }, h("details", null, h("summary", null, "Raw review show --blind output"), h("pre", null, it.blindText || "(none)")));
@@ -844,6 +1265,19 @@ function renderItem(it) {
     h("button", { class: "btn", style: "margin-top:8px", onclick: () => select(current, true) }, "Retry")) : null;
 
   return h("div", { class: "col" }, head, errs, sources, dates, related, raw);
+}
+
+// Why a related document matters: the sentences in it that set or change a submission deadline.
+function relEvidence(r, close) {
+  const d = r.deadline;
+  if (!d) return null;
+  const scan = r.textScan === "failed" ? "full text FAILED (" + r.textError + "); DATES field only"
+    : r.textScan === "skipped" ? "full text not scanned (cap of 15 per item); DATES field only"
+    : r.textScan === "partial" ? "full text scanned (first part only: very long document)" : "DATES and full text scanned";
+  return h("div", null,
+    d.sentences.length ? h("ul", { class: "evid" }, ...d.sentences.map((x) => h("li", null, h("span", { class: "src" }, x.src + " "), highlightDates(x.text)))) : null,
+    h("div", { class: "hint" }, (d.sentences.length ? (d.more ? "+" + d.more + " more deadline sentences · " : "") : "No deadline-setting sentence found · ") + scan +
+      (d.laterThanClose ? " · deadline " + d.latest + " is after this notice's FR close " + close : d.laterOtherDate ? " · a later date (" + d.laterOtherDate + ") appears, but not as a deadline set by a document published on or after this notice; read the sentence" : "")));
 }
 
 function renderVerdict() {
