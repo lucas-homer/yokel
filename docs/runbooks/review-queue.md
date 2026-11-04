@@ -210,6 +210,29 @@ or this table could not be blinded afterwards.
    serves a local workbench (http://127.0.0.1:8791/, loopback only; from the Air, tunnel with
    `ssh -L 8791:127.0.0.1:8791 <mini>`) that shows each item's blind evidence, keeps drafts in
    the browser, and writes the file once (mode 0600), printing its sha256.
+   - **Scoring** (operator-approved 2026-11-03). Compare each item's sealed verdict with the
+     autopilot's latest scheduled proposal under the policy being tested (`harness: null`, kind
+     not `skip`). Kinds agree when equal. A **forced escalate** counts as agreement: the operator
+     chose `dismiss_conflict` or `confirm_reopened`, which the autopilot may never propose, and
+     the autopilot escalated as the policy requires. A pin with the operator's kind but another
+     date agrees on kind and is still a false pin. An item with no counting proposal is not yet
+     scored; the set is complete when all ten have one. On the Mini,
+     `node tools/held-out-compare.mjs --held-out <sealed file> --sha256 <hash>` checks the
+     sealed file's hash, applies these rules and writes an HTML report next to the sealed file.
+   - **Adjudication.** Each disagreement may be adjudicated before the result is recorded, by a
+     reviewer who is neither the operator nor the autopilot and who sees neither verdict: give
+     it the item ids, the policy text **of the version under test** (not later amendments), the
+     verdict-kind table and primary sources, and forbid the ledger, the thread, the sealed file
+     and any document that lists expected outcomes (ADR 0017's expected-effect list, this plan's
+     decision log). Its verdict replaces the operator's for that item only; the sealed file is
+     never edited. Record both rows in the table below, raw and adjudicated, naming the
+     adjudicator. Part 2 is met on the **adjudicated** score: agreement ≥ 9/10 and no false
+     pin. A false pin against either the raw or the adjudicated answer still blocks until
+     explained and the policy amended.
+   - A disagreement the adjudicator resolves in the operator's favour, where the autopilot
+     escalated, is a candidate policy clarification, not a gate failure in itself: the
+     autopilot erred in the safe direction. Note it, and amend the policy if the text left the
+     safer reading open.
 3. **Escalation discipline** — the **required set** below, plus whatever `review corpus` part 3
    lists at run time: every one of these must be proposed `escalate` (the #127 cases) or
    `confirm_withdrawn` (the withdrawals), and zero `dismiss_conflict` / `confirm_reopened` may
