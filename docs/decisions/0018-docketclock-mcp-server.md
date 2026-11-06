@@ -1,11 +1,10 @@
-# 0017. Expose reconciled federal deadlines through a read-only OAuth MCP surface
+# 0018. Expose reconciled federal deadlines through a read-only OAuth MCP surface
 
 - Status: **Accepted** — approach approved 2026-10-20; implementation/release remain gated.
 - Date: 2026-10-19
 - Revised: 2026-10-20 after Claude Fable 5.1 cross-provider review.
 - Plan: [DocketClock MCP specification and phased implementation](../../plans/docketclock-mcp-server.md)
 - Builds on: ADRs 0008/0009 (platform), 0013 (public release boundary) and 0015 (review authority).
-- Number 0016 remains reserved for the review-policy decision in `plans/review-learning-loop.md`.
 
 ## Context
 
@@ -45,7 +44,7 @@ Adopt the following, conditional on the plan's measured gates:
    roles and no civic write grants. Deny state data across every result, count and evidence
    relationship; passing a future state's release gate does not automatically widen MCP v1.
 4. **Contract-keeper owns additions.** Propose the next free additive minor, assigned by the
-   keeper because review-learning-loop PR-L1 also proposes 0.12.0:
+   keeper (0.12.0 shipped with ADR 0016, so 0.13.0 or later):
    MCP inputs, bounded output DTOs, error/abstention envelopes and probes. Existing contracts,
    IDs, enums and REST `API_VERSION` remain compatible. Phase 0 candidates are reviewed
    before the value gate and frozen afterward; no production schema fork or keeper bypass.

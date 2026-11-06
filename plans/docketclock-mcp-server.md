@@ -3,7 +3,9 @@
 > Status: **APPROVED APPROACH**, 2026-10-20; Phase 0 implementation authorized by the operator.
 > Originally specified 2026-10-19; revised 2026-10-20 after cross-provider review.
 > Baseline inspected: `24a4fce`, contracts **0.11.0**, reconciler `reconcile-v2.3`.
-> Decision: [proposed ADR 0017](../docs/decisions/0017-docketclock-mcp-server.md).
+> Rebased 2026-11-06 onto `59e5968`, contracts **0.12.0**, reconciler `reconcile-v2.4`. The ADR moved
+> from 0017 to 0018 because multi-deadline notices took that number.
+> Decision: [ADR 0018](../docs/decisions/0018-docketclock-mcp-server.md).
 > No server, contract changes, infrastructure, client registrations or deployments are created
 > by this document. Numbers below are proposed budgets and acceptance thresholds, not measurements.
 > Authorization: begin the gated implementation, including the lightweight-AS spike after
@@ -150,8 +152,8 @@ These are implementation roles, not work dispatched or authorized by this planni
 ## 4. Proposed contracts and six v1 tools
 
 Submit a change request to the contract-keeper for the **next free minor version**.
-`plans/review-learning-loop.md` PR-L1 already proposes 0.12.0; the keeper assigns the MCP
-version after resolving that sequencing. During Phase 0, candidate DTOs can live in the app
+0.12.0 shipped with ADR 0016, and `plans/review-learning-loop.md` PR-L1 also proposes a
+minor; the keeper assigns the MCP version after resolving that sequencing. During Phase 0, candidate DTOs can live in the app
 under keeper review; freeze them in the shared package only at the Phase 0 go gate. Remove
 those temporary definitions when adopting the exports; no production schema fork.
 Additive only: retain existing enums, ID scheme, `ParticipationWindow`, `Observation`,
