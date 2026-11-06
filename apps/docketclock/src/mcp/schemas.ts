@@ -87,7 +87,16 @@ export const ListWindowsInput = Page.extend({
   agency: AgencySlug.optional(),
   docket_id: z.string().min(1).max(160).optional(),
   rin: z.string().min(1).max(80).optional(),
-  keyword: z.string().trim().min(1).max(200).optional(),
+  keyword: z
+    .string()
+    .trim()
+    .min(1)
+    .max(200)
+    // A search continuation must round-trip, and the query grammar has no escapes for these.
+    .refine((value) => !/\p{Cc}|\p{Cs}/u.test(value), {
+      message: "must not contain control characters",
+    })
+    .optional(),
   status: WindowStatus.optional(),
   confidence: Confidence.optional(),
   window_type: WindowType.default("comment"),

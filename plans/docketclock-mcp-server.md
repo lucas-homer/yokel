@@ -424,8 +424,8 @@ inferred agency/date query; the tool description teaches the conversion.
 
 Prefer a stored safe GovInfo URL for citations, then a validated official FR/Regs document
 URL derived from observed identity (never an invented submission link). Search hits require a
-usable citation URL; rows lacking one remain accessible through `list_windows` and are counted
-in a warning. `fetch` with no usable URL returns `citation_unavailable` with its enveloped
+usable citation URL; rows lacking one remain accessible through `list_windows`. A `search` page containing one
+returns `citation_unavailable` rather than dropping it, because a dropped row would falsify totals. `fetch` with no usable URL returns `citation_unavailable` with its enveloped
 window metadata. Do not invent a public DocketClock HTML page or cite the authenticated MCP
 endpoint as though it were a readable notice.
 
@@ -1065,14 +1065,30 @@ private client registration and four scored runs. Pure MCP probes are included i
 app test script; destructive DB checks require explicit disposable test URLs and never fall
 back to `DATABASE_URL`.
 
+**Rebase and review, 2026-11-06.** The code was written against `reconcile-v2.3` and rebased onto
+`reconcile-v2.4` and contracts 0.12.0. Fable's implementation review then found that honoring ignored
+linked FR amendments and that `raw_fr_close_date` read as the current FR value on `fr_close_amended`
+windows. Honoring now also receives the engine's amendment inputs, and those windows label the
+original value as superseded. The corpus gained case 21 for this, so the fixed corpus is **21 cases**.
+Collections now withhold one unsafe stored link instead of failing the page, and search keywords
+reject control characters so continuations always round-trip. The latency, memory and call-count
+figures above predate this rebase. The cost of the amendment read on real data is not measured.
+
 **Remaining gates:** Claude Code and Codex CLI actual rendering/negotiation and the four
-operator-scored 20-case runs; current real-notice checks; a completed Fable implementation
-review after the provider rate limit clears; contract-keeper freeze only after the go decision.
+operator-scored 21-case runs; current real-notice checks; contract-keeper freeze only after the go decision.
 The installed clients are Claude Code **2.1.301** and Codex CLI **0.163.0**. Their help confirms
 temporary-config controls, but no successful model-driven client evaluation is claimed.
 Remote OAuth, tunnel exposure and vendor/cloud checks remain Phase 1+ work.
 
 ## Review log
+
+- **Implementation review (2026-11-06, Claude Fable 5.1, high):** read-only review of the rebased
+  branch after the 2026-10-20 attempt hit a rate limit. Verdict: mergeable as a local prototype after
+  two P1 fixes. Accepted and fixed: amendment-aware honoring, `fr_close_amended` labelling, unsafe links
+  in collections, keyword continuation, the misleading reduced-page warning, and integration assertions
+  that matched any window. Documented instead of changed: the 16 KiB stdio frame limit and the
+  `citation_unavailable` search behavior. Left open: `agency_slugs.max(20)` may reject a document with
+  more than 20 agencies, and GovInfo evidence rows carry no source URL.
 
 - **Operator approval (2026-10-20):** approved the approach and authorized proceeding after
   discussion of the lightweight OAuth library, owned login/consent/persistence responsibilities,

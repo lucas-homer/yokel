@@ -100,19 +100,25 @@ try {
         windows.some((w) => w.ocd_id === id),
         `${item.id}: missing window ${id}`,
       );
+    // Assert on the windows the case names, not on any window in the output.
+    const named = item.expected.windowIds
+      ? windows.filter((w) =>
+          item.expected.windowIds!.includes(String(w.ocd_id)),
+        )
+      : windows;
     if (item.expected.confidence)
       assert.ok(
-        windows.some((w) => w.confidence === item.expected.confidence),
+        named.some((w) => w.confidence === item.expected.confidence),
         item.id,
       );
     if ("close" in item.expected)
       assert.ok(
-        windows.some((w) => w.resolved_close_utc === item.expected.close),
+        named.some((w) => w.resolved_close_utc === item.expected.close),
         item.id,
       );
     for (const flag of item.expected.flags ?? [])
       assert.ok(
-        windows.some((w) => (w.conflict_flags as string[]).includes(flag)),
+        named.some((w) => (w.conflict_flags as string[]).includes(flag)),
         `${item.id}: ${flag}`,
       );
     if (item.args.section === "verdicts") {

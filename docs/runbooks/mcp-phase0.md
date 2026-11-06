@@ -66,7 +66,9 @@ pnpm typecheck
 pnpm lint
 ```
 
-The first command is pure and needs no DB. The query test requires
+The stdio transport rejects any single JSON-RPC message over 16 KiB by closing the session, and
+logs only `MCP transport error`. Tool inputs are capped far below that, so restart the client if a
+session ends this way. The first command is pure and needs no DB. The query test requires
 `MCP_TEST_DATABASE_URL` with a disposable schema-owning role and **resets public**.
 Run it before restoring the reader's four explicit grants. Permissions and integration
 checks require both that writer URL and `MCP_TEST_READER_URL`; only the reader URL is
@@ -74,7 +76,7 @@ passed as `MCP_DATABASE_URL` to the spawned stdio process. The integration test 
 fixed fixtures, checks the actual SDK connection and outputs latency/revision/RSS evidence.
 Do not use the ordinary application's `DATABASE_URL` for any of these new DB tests.
 
-The fixed 20 cases and helper live in
+The fixed 21 cases and helper live in
 [`mcp-evaluation.ts`](../../apps/docketclock/test/fixtures/mcp-evaluation.ts).
 `cases` exports `{id, question, tool, args, expected}`; `expected.checks` is the human rubric,
 and optional expected fields are machine-checkable subsets. Treat `windowIds`, flags and
@@ -164,7 +166,7 @@ no observation or projection rollback is needed.
 
 ## Four scored runs
 
-Freeze corpus and fixture revision before the first scored run. Run the **same 20 questions**
+Freeze corpus and fixture revision before the first scored run. Run the **same 21 questions**
 in order twice through Claude Code and twice through Codex CLI (80 scored case executions).
 Use fresh conversations for cases to avoid earlier answers supplying the evidence. Show the
 synthetic-only context and ask each question verbatim; allow relevant follow-up calls. The

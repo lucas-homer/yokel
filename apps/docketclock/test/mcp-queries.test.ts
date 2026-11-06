@@ -18,6 +18,7 @@ import {
   getEvidencePage,
   readEvidenceByIds,
   getEngineObservations,
+  getEngineReconcileOptions,
   getProjectionStamp,
 } from "../src/api/mcp-queries.js";
 
@@ -547,6 +548,13 @@ try {
           (r) => r.observation_id,
         ),
         ["a-old", "a-latest", "late"],
+      );
+      // The real amendment loader must run under the guarded read adapter, and stay federal-only.
+      assert.deepEqual(await read((tx) => getEngineReconcileOptions(tx, A)), {
+        amendment: { kind: "none" },
+      });
+      await assert.rejects(() =>
+        read((tx) => getEngineReconcileOptions(tx, STATE)),
       );
       assert.deepEqual(
         await read((tx) => getEvidencePage(tx, ocd("2026-ABSENT"))),

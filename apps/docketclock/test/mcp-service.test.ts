@@ -7,7 +7,10 @@ import {
   type ConflictRecord,
 } from "@yokel/contracts";
 import { McpReadError, type WindowMetadata } from "../src/api/mcp-queries.js";
-import { RECONCILER_VERSION } from "../src/reconcile/reconcile.js";
+import {
+  RECONCILER_VERSION,
+  type ReconcileOptions,
+} from "../src/reconcile/reconcile.js";
 import {
   MAX_RESULT_BYTES,
   RESULT_FRAME_RESERVE_BYTES,
@@ -26,6 +29,7 @@ import {
   type ToolServiceOptions,
 } from "../src/mcp/service.js";
 import { parseSearchQuery } from "../src/mcp/query.js";
+import { ListWindowsInput } from "../src/mcp/schemas.js";
 
 let failures = 0;
 let probes = 0;
@@ -287,6 +291,7 @@ interface World {
   conflicts?: ConflictRecord[];
   stamps?: typeof STAMPS;
   oversizeChains?: string[];
+  reconcileOptions?: Record<string, ReconcileOptions>;
   failWith?: unknown;
 }
 const epoch = (s: string) => Date.parse(s);
@@ -403,6 +408,9 @@ function fakePort(world: World): McpReadPort & { reads: number } {
       return observations
         .filter((o) => o.ocd_id === id)
         .sort((a, b) => epoch(a.fetched_at) - epoch(b.fetched_at));
+    },
+    async getEngineReconcileOptions(id) {
+      return world.reconcileOptions?.[id] ?? { amendment: { kind: "none" } };
     },
     async getProjectionStamp(id) {
       return world.stamps?.[id] ?? { derivedAt: null, reconcilerVersion: null };
@@ -801,6 +809,133 @@ await check(
       assert.equal(errorCode(failed), "internal_error", link);
       assert.ok(!JSON.stringify(failed).includes(link));
     }
+  },
+);
+await check(
+  "collections withhold one unsafe stored link instead of failing the page",
+  async () => {
+    const unsafe = win("2026-50003", {
+      submission_url: "http://127.0.0.1/admin",
+    });
+    const safe = win("2026-50004");
+    const output = await call(
+      "list_windows",
+      { limit: 10 },
+      { windows: [unsafe, safe] },
+    );
+    assert.equal(output.data.length, 2);
+    const row = output.data.find(
+      (w: { ocd_id: string }) => w.ocd_id === unsafe.ocd_id,
+    );
+    assert.equal(row.submission_url, null);
+    assert.ok(!JSON.stringify(output).includes("127.0.0.1"));
+    assert.ok(output.delivery.warnings.some((w: string) => /withheld/.test(w)));
+  },
+);
+await check(
+  "search: a keyword that cannot round-trip is rejected as input, never mid-continuation",
+  async () => {
+    const output = await call("search", { query: '"water\tquality"' });
+    assert.notEqual(errorCode(output), "internal_error");
+    assert.throws(() => ListWindowsInput.parse({ keyword: "water\tquality" }));
+    assert.equal(
+      ListWindowsInput.parse({ keyword: "water quality" }).keyword,
+      "water quality",
+    );
+  },
+);
+await check(
+  "fr_close_amended: the original FR value is labelled superseded on every surface",
+  async () => {
+    const amended = win("2026-50005", {
+      raw_fr_close_date: "2026-10-16",
+      resolved_close_utc: "2026-10-27T03:59:59.000Z",
+      resolved_close_display:
+        "closes 2026-10-26 at 11:59 p.m. ET (per FR correction 2026-50006; inferred from FR date-only value)",
+      conflict_flags: ["fr_close_amended"],
+      confidence: "high",
+    });
+    const world = { windows: [amended] };
+    const fetched = await call("fetch", { id: amended.ocd_id }, world);
+    assert.match(fetched.text, /2026-10-16 \(original value, superseded/);
+    assert.ok(
+      fetched.metadata.delivery.warnings.some((w: string) =>
+        /original Federal Register value/.test(w),
+      ),
+    );
+    const listed = await call("list_windows", { limit: 10 }, world);
+    assert.ok(
+      listed.delivery.warnings.some((w: string) =>
+        /carry fr_close_amended/.test(w),
+      ),
+    );
+    const explained = await call(
+      "explain_window",
+      { id: amended.ocd_id, section: "summary" },
+      world,
+    );
+    assert.ok(
+      explained.data.summary.explanation_limits.some((l: string) =>
+        /superseded it/.test(l),
+      ),
+    );
+  },
+);
+await check(
+  "honoring: a verdict the engine dropped for a linked amendment is not reported as honored",
+  async () => {
+    const options: ReconcileOptions = {
+      amendment: {
+        kind: "amended",
+        date: "2026-12-01",
+        change: "extension",
+        observation_ids: ["amendment-fr"],
+        amendment: {
+          ocd_id: "ocd-participation-window/federal/2026-50007",
+          fr_document_number: "2026-50007",
+          fr_observation_id: "amendment-fr",
+          govinfo_observation_id: null,
+          publication_date: "2026-10-20",
+          is_extension: true,
+          is_correction: false,
+          is_reopening: false,
+          is_withdrawal: false,
+          fr_comments_close_on: "2026-12-01",
+          fr_dates_text: null,
+          govinfo_text: null,
+          basis: "doc_number",
+          fr_fetched_at: "2099-01-01T00:00:00.000Z",
+        },
+      },
+    };
+    const before = await call("explain_window", {
+      id: REVIEWED.ocd_id,
+      section: "summary",
+    });
+    assert.ok(
+      before.data.summary.honored_verdict,
+      "fixture verdict is honored",
+    );
+    const world = {
+      ...WORLD,
+      reconcileOptions: { [REVIEWED.ocd_id]: options },
+    };
+    const summary = await call(
+      "explain_window",
+      { id: REVIEWED.ocd_id, section: "summary" },
+      world,
+    );
+    assert.equal(summary.data.summary.honored_verdict, null);
+    const verdicts = await call(
+      "explain_window",
+      { id: REVIEWED.ocd_id, section: "verdicts" },
+      world,
+    );
+    assert.ok(
+      verdicts.data.items.every(
+        (v: { honoring: string }) => v.honoring !== "honored",
+      ),
+    );
   },
 );
 await check(

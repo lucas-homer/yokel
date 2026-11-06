@@ -10,6 +10,11 @@ import {
   makeOcdId,
 } from "@yokel/contracts";
 import type { Sql, SqlHandle } from "../db/client.js";
+import {
+  loadAmendmentInputs,
+  reconcileOptionsOf,
+} from "../reconcile/persist.js";
+import type { ReconcileOptions } from "../reconcile/reconcile.js";
 
 export type McpReadTx = postgres.TransactionSql;
 export type McpReadErrorCode =
@@ -441,6 +446,14 @@ export async function getEngineObservations(
       "The complete engine observation chain exceeds 1000 rows.",
     );
   return rows.map(observationFrom);
+}
+/** The amendment evidence the engine passes to the honoring rule (ADR 0016 §7). Reads observations only. */
+export async function getEngineReconcileOptions(
+  tx: SqlHandle,
+  ocdId: string,
+): Promise<ReconcileOptions> {
+  requireFederal(ocdId);
+  return reconcileOptionsOf(await loadAmendmentInputs(tx, ocdId));
 }
 export async function getProjectionStamp(
   tx: SqlHandle,

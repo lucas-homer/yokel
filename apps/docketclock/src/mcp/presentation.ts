@@ -241,7 +241,11 @@ export function renderFetchText({
     `Operative close (UTC): ${window.resolved_close_utc ?? "none published"}`,
     `Confidence: ${window.confidence}. Conflict flags: ${flagList(window.conflict_flags)}.`,
     confidenceSentence(window),
-    `Source close values: Federal Register date ${window.raw_fr_close_date ?? "none"}; ` +
+    `Source close values: Federal Register date ${window.raw_fr_close_date ?? "none"}` +
+      (window.conflict_flags.includes("fr_close_amended")
+        ? " (original value, superseded by a verified FR amendment named in the close wording)"
+        : "") +
+      "; " +
       `Regulations.gov datetime ${window.raw_regs_close_datetime ?? "none"}.`,
     `Identifiers: FR ${window.fr_document_number ?? "none"}; Regs document ${window.regs_document_id ?? "none"}; ` +
       `dockets ${window.docket_id.length ? window.docket_id.join(", ") : "none"}; RIN ${window.rin ?? "none"}.`,

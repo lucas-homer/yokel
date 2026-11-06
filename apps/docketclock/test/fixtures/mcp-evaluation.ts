@@ -344,9 +344,24 @@ export const cases: readonly EvaluationCase[] = [
       ],
     },
   },
+  {
+    id: "21-amended",
+    question: "What is the Federal Register deadline for 2026-EVAL-AMENDED?",
+    tool: "fetch",
+    args: { id: id("AMENDED") },
+    expected: {
+      windowIds: [id("AMENDED")],
+      confidence: "high",
+      close: "2026-11-11T04:59:59.000Z",
+      flags: ["fr_close_amended"],
+      checks: [
+        "Reports the amended close, not October 31, and says October 31 is the superseded original FR value.",
+      ],
+    },
+  },
 ];
-assert.equal(cases.length, 20);
-assert.equal(new Set(cases.map((item) => item.id)).size, 20);
+assert.equal(cases.length, 21);
+assert.equal(new Set(cases.map((item) => item.id)).size, 21);
 
 /** Additive, idempotent fixture insertion; no migrations, resets, connection creation or env reads.
  * URL routing/name checks remain the caller's responsibility BEFORE opening this handle.
@@ -501,6 +516,13 @@ export async function seedEvaluation(sql: Sql): Promise<void> {
       { source: "govinfo" },
     );
     observation("ABSTAIN-fr", id("ABSTAIN"), metadata("ABSTAIN"));
+    observation("AMENDED-fr", id("AMENDED"), metadata("AMENDED"));
+    window("AMENDED", {
+      resolved_close_utc: "2026-11-11T04:59:59.000Z",
+      resolved_close_display:
+        "closes 2026-11-10 at 11:59 p.m. ET (per FR extension 2026-EVAL-AMENDED-EXT; inferred from FR date-only value)",
+      conflict_flags: ["fr_close_amended"],
+    });
     window("ABSTAIN", {
       confidence: "conflicting",
       resolved_close_utc: null,

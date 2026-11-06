@@ -8,7 +8,8 @@
  * returned flags); every answer carries the exact disclaimer; citations are official HTTPS pages,
  * never raw payload URLs; review executors and notes stay redacted; the federal boundary is applied
  * by the read adapter before pagination. Honoring uses the engine's pure selector on the COMPLETE
- * primary chain only; it never re-derives or persists a deadline.
+ * primary chain plus the engine's linked-amendment inputs (ADR 0016 §7); it never re-derives or
+ * persists a deadline.
  */
 import { randomUUID } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
@@ -25,6 +26,7 @@ import {
 import {
   McpReadError,
   getEngineObservations,
+  getEngineReconcileOptions,
   getEvidencePage,
   getProjectionStamp,
   getWindowMetadata,
@@ -45,6 +47,7 @@ import {
   RECONCILER_VERSION,
   selectHonoredVerdict,
   type HonoredVerdict,
+  type ReconcileOptions,
 } from "../reconcile/reconcile.js";
 import {
   citationFor,
@@ -248,6 +251,7 @@ export interface McpReader {
   ): Promise<McpPageResult<McpEvidenceRow>>;
   readEvidenceByIds(ocdId: string, ids: string[]): Promise<Observation[]>;
   getEngineObservations(ocdId: string): Promise<Observation[]>;
+  getEngineReconcileOptions(ocdId: string): Promise<ReconcileOptions>;
   getProjectionStamp(
     id: string,
   ): Promise<{ derivedAt: string | null; reconcilerVersion: string | null }>;
@@ -268,6 +272,7 @@ export function sqlReadPort(sql: Sql): McpReadPort {
           getEvidencePage: (id, options) => getEvidencePage(tx, id, options),
           readEvidenceByIds: (id, ids) => readEvidenceByIds(tx, id, ids),
           getEngineObservations: (id) => getEngineObservations(tx, id),
+          getEngineReconcileOptions: (id) => getEngineReconcileOptions(tx, id),
           getProjectionStamp: (id) => getProjectionStamp(tx, id),
         }),
       ),
@@ -557,6 +562,26 @@ function assertLinksSafe(links: (string | null)[]): void {
       "A stored record failed the link-safety check and is withheld. Consult the official source.",
     );
 }
+const withholdUnsafe = (link: string | null) =>
+  linkSafety(link) === "unsafe" ? null : link;
+/**
+ * Collections show other windows too, so one unsafe stored link is withheld rather than failing the
+ * page. Single-window answers keep failing closed through windowSummaryOf.
+ */
+function withholdUnsafeLinks(window: ParticipationWindow): ParticipationWindow {
+  const submission_url = withholdUnsafe(window.submission_url);
+  const govinfo_url = withholdUnsafe(window.govinfo_url);
+  return submission_url === window.submission_url &&
+    govinfo_url === window.govinfo_url
+    ? window
+    : { ...window, submission_url, govinfo_url };
+}
+const withheldLinkWarning = (count: number) =>
+  count === 0
+    ? []
+    : [
+        `${count} stored record(s) here had a link that failed the safety check. It is withheld and shown as null, so consult the official notice.`,
+      ];
 /** Bounded public summary of a validated projection. Indivisible oversize values are never shortened. */
 export function windowSummaryOf(
   window: ParticipationWindow,
@@ -665,6 +690,10 @@ export function windowWarnings(window: WindowSummary): string[] {
     warnings.push(
       `Confidence is ${window.confidence}: ${confidenceSentence(window)}`,
     );
+  if (window.conflict_flags.includes("fr_close_amended"))
+    warnings.push(
+      `raw_fr_close_date ${window.raw_fr_close_date ?? "(none)"} is the original Federal Register value, superseded by a verified FR amendment. Do not report it as the current FR deadline.`,
+    );
   if (
     window.submission_url !== null &&
     linkSafety(window.submission_url) !== "official"
@@ -705,6 +734,13 @@ function collectionTrustWarnings(windows: WindowSummary[]): string[] {
     warnings.push(
       `${disputed} returned window(s) carry a disputed (conflicting) close; it is shown for transparency, not as the settled deadline.`,
     );
+  const amended = windows.filter((w) =>
+    w.conflict_flags.includes("fr_close_amended"),
+  ).length;
+  if (amended)
+    warnings.push(
+      `${amended} returned window(s) carry fr_close_amended: raw_fr_close_date is the original FR value, superseded by a verified FR amendment.`,
+    );
   const offHost = windows.filter(
     (w) =>
       w.submission_url !== null && linkSafety(w.submission_url) !== "official",
@@ -732,7 +768,7 @@ function pagingWarnings(
   const warnings: string[] = [];
   if (reduced)
     warnings.push(
-      `Only ${count} item(s) fit the 48 KiB result limit; continue from next_offset.`,
+      `Only ${count} item(s) fit the 48 KiB result or warning limit; continue from next_offset.`,
     );
   if (offset + count < total && offset + count > 1000)
     warnings.push(
@@ -812,9 +848,13 @@ function coverageWarnings(
 async function readWindowPage(reader: McpReader, input: ListWindowsInput) {
   const page = await reader.listWindows(windowFilters(input));
   const summaries: WindowSummary[] = [];
-  for (const window of page.rows)
-    summaries.push(await summarize(reader, window));
-  return { page, summaries, coverage: coverageOf(page, input) };
+  let withheld = 0;
+  for (const window of page.rows) {
+    const safe = withholdUnsafeLinks(window);
+    if (safe !== window) withheld++;
+    summaries.push(await summarize(reader, safe));
+  }
+  return { page, summaries, withheld, coverage: coverageOf(page, input) };
 }
 
 async function listWindowsTool(
@@ -822,8 +862,14 @@ async function listWindowsTool(
   input: ListWindowsInput,
   ctx: Ctx,
 ) {
-  const { page, summaries, coverage } = await readWindowPage(reader, input);
-  const base = coverageWarnings(input, coverage);
+  const { page, summaries, withheld, coverage } = await readWindowPage(
+    reader,
+    input,
+  );
+  const base = [
+    ...withheldLinkWarning(withheld),
+    ...coverageWarnings(input, coverage),
+  ];
   return fitPage(summaries, ctx, (slice, reduced) => {
     const warnings = [
       ...base,
@@ -884,7 +930,10 @@ async function searchTool(reader: McpReader, input: SearchInput, ctx: Ctx) {
       throw inputFailure(error, "query", SEARCH_FILTER_NAMES);
     throw error;
   }
-  const { page, summaries, coverage } = await readWindowPage(reader, filters);
+  const { page, summaries, withheld, coverage } = await readWindowPage(
+    reader,
+    filters,
+  );
   const cited = summaries.map((window) => ({
     window,
     citation: citationFor(window),
@@ -896,7 +945,10 @@ async function searchTool(reader: McpReader, input: SearchInput, ctx: Ctx) {
       "citation_unavailable",
       `${uncited} matching window(s) on this page have no usable official citation URL. Use list_windows with the same filters to inspect them.`,
     );
-  const base = coverageWarnings(filters, coverage);
+  const base = [
+    ...withheldLinkWarning(withheld),
+    ...coverageWarnings(filters, coverage),
+  ];
   return fitPage(
     cited as { window: WindowSummary; citation: Citation }[],
     ctx,
@@ -1051,19 +1103,29 @@ async function listConflictsTool(
 ) {
   const page = await reader.listConflicts(input);
   const windows = new Map<string, WindowSummary>();
+  const unsafeSides = new Set<string>();
   const side = async (ocdId: string) => {
     const cached = windows.get(ocdId);
     if (cached) return cached;
     const window = await reader.resolveWindow(ocdId);
     if (!window)
       throw new Error("A live conflict references a window that is not stored");
-    const summary = await summarize(reader, window);
+    const safe = withholdUnsafeLinks(window);
+    if (safe !== window) unsafeSides.add(ocdId);
+    const summary = await summarize(reader, safe);
     windows.set(ocdId, summary);
     return summary;
   };
   const items: { item: ConflictEvidence; warnings: string[] }[] = [];
-  for (const record of page.rows) {
-    assertLinksSafe([record.govinfo_url, record.govinfo_url_b]);
+  for (const stored of page.rows) {
+    const record = {
+      ...stored,
+      govinfo_url: withholdUnsafe(stored.govinfo_url),
+      govinfo_url_b: withholdUnsafe(stored.govinfo_url_b),
+    };
+    const unsafeRecord =
+      record.govinfo_url !== stored.govinfo_url ||
+      record.govinfo_url_b !== stored.govinfo_url_b;
     const side_a = await side(record.ocd_id);
     const side_b =
       record.conflict_scope === "cross_window" && record.ocd_id_b !== null
@@ -1085,6 +1147,11 @@ async function listConflictsTool(
     items.push({
       item: { record, side_a, side_b, evidence_a, evidence_b },
       warnings: [
+        ...withheldLinkWarning(
+          (unsafeRecord ? 1 : 0) +
+            (unsafeSides.has(side_a.ocd_id) ? 1 : 0) +
+            (side_b && unsafeSides.has(side_b.ocd_id) ? 1 : 0),
+        ),
         ...missingEvidenceWarning(evidence_a),
         ...missingEvidenceWarning(evidence_b),
       ],
@@ -1127,7 +1194,7 @@ async function listConflictsTool(
 // ─── explain_window ──────────────────────────────────────────────────────────────────────────
 
 type EngineChain =
-  | { ok: true; observations: Observation[] }
+  | { ok: true; observations: Observation[]; options: ReconcileOptions }
   | { ok: false; reason: string };
 /** The engine's exact chain (primary OCD-ID). Oversize or unreadable means unknown, never truncated. */
 async function engineChain(
@@ -1138,6 +1205,7 @@ async function engineChain(
     return {
       ok: true,
       observations: await reader.getEngineObservations(ocdId),
+      options: await reader.getEngineReconcileOptions(ocdId),
     };
   } catch (error) {
     if (error instanceof McpReadError && error.code === "result_too_large")
@@ -1279,7 +1347,9 @@ async function explainWindowTool(
     const chain = await engineChain(reader, window.ocd_id);
     const stamp = await reader.getProjectionStamp(window.ocd_id);
     const observations = chain.ok ? chain.observations : null;
-    const honored = observations ? selectHonoredVerdict(observations) : null;
+    const honored = chain.ok
+      ? selectHonoredVerdict(chain.observations, chain.options)
+      : null;
     const latest = observations ? latestVerdict(observations) : null;
     const { alignment, reason } = projectionAlignment({
       window,
@@ -1291,8 +1361,12 @@ async function explainWindowTool(
     const limits = [
       "No causal rules trace is recorded; this explains stored fields, source close values, flags and verdicts only.",
       "projection_alignment covers only the review overlay, not the whole deadline derivation.",
-      "Honoring uses the engine's own selector on the complete primary chain at read_at; nothing is re-derived or published.",
+      "Honoring uses the engine's own selector on the complete primary chain and linked FR amendments at read_at; nothing is re-derived or published.",
     ];
+    if (window.conflict_flags.includes("fr_close_amended"))
+      limits.push(
+        "source_close_values.raw_fr_close_date is the original FR value. A verified FR amendment superseded it; resolved_close_display names the amending document.",
+      );
     const warnings = [...baseWarnings];
     if (!chain.ok) {
       limits.push(
@@ -1481,7 +1555,7 @@ async function explainWindowTool(
     )
     .sort((a, b) => (newerThan(a, b) ? -1 : newerThan(b, a) ? 1 : 0));
   if (input.section === "verdicts") {
-    const honored = selectHonoredVerdict(chain.observations);
+    const honored = selectHonoredVerdict(chain.observations, chain.options);
     const slice = verdicts.slice(input.offset, input.offset + input.limit);
     const items: VerdictSummary[] = mapped(slice, (o) =>
       toVerdictSummary(o, {
