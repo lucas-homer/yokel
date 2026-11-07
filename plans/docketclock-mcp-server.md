@@ -878,7 +878,7 @@ Deliver in small slices:
 3. On the Mini, invoke stdio from Claude Code and Codex CLI using a dedicated read-only DB
    role; a local process may connect through the established loopback DB port-forward.
    No need to distribute DB credentials to remote buyers. Desktop stdio is optional.
-4. Fix a 20-case corpus before evaluating: all nine jobs, all six confidence states,
+4. Fix a 21-case corpus before evaluating: all nine jobs, all six confidence states,
    null and non-null conflicts, timezone-only agreement, cross-window/side-B and multi-target
    evidence, human/agent/superseded/escalated verdicts, missing submission link, malicious
    notice text and at least one metadata-missing case. Historical fixture agreement is not
@@ -889,7 +889,7 @@ match REST for the same version; finite paging/counts and error envelopes work; 
 using the actual MCP DB role; state fixtures cannot escape any path. Run existing contracts
 and API tests plus new focused read/MCP tests, then each CLI over the same corpus twice.
 
-**Go:** at least 18/20 jobs useful to the operator in each CLI run; 100% preservation of
+**Go:** at least 19/21 jobs useful to the operator in each CLI run; 100% preservation of
 confidence/flags/disclaimer/citations in tool output; zero invented operative closes or
 hidden conflicts in rendered answers. At least three cases demonstrate reconciliation/
 provenance value over a single-source response. Tool p95 under one second at local pilot

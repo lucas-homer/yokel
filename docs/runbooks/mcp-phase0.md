@@ -167,7 +167,7 @@ no observation or projection rollback is needed.
 ## Four scored runs
 
 Freeze corpus and fixture revision before the first scored run. Run the **same 21 questions**
-in order twice through Claude Code and twice through Codex CLI (80 scored case executions).
+in order twice through Claude Code and twice through Codex CLI (84 scored case executions).
 Use fresh conversations for cases to avoid earlier answers supplying the evidence. Show the
 synthetic-only context and ask each question verbatim; allow relevant follow-up calls. The
 listed `tool`/`args` provides a deterministic smoke invocation and expected first evidence
@@ -195,7 +195,7 @@ Record one row per execution:
 | -------------- | ------- | ------- | ---------- | ---------------------- | ------------------------------ | ------------------- |
 | pending        | pending | pending | pending    | pending                | pending                        | not executed        |
 
-Each of the four runs must score **at least 18/20** independently; no averaging to hide a
+Each of the four runs must score **at least 19/21** independently; no averaging to hide a
 failed client/run. The trust invariants above are hard gates even when the usefulness score
 passes. Operator identifies at least three cases where reconciliation/provenance adds value
 over one source (candidates: 03, 10, 11, 13–17), stating what a single-source answer misses.
