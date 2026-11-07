@@ -5,9 +5,12 @@
  */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { Observation, ParticipationWindow } from "@yokel/contracts";
 import { createClient } from "../src/db/client.js";
 import { runMigrations } from "../src/db/migrate.js";
+import { selectHonoredVerdict } from "../src/reconcile/reconcile.js";
+import { parseGovinfoObservation } from "../src/sources/govinfo.js";
 import {
   McpReadError,
   withMcpRead,
@@ -560,6 +563,85 @@ try {
         await read((tx) => getEvidencePage(tx, ocd("2026-ABSENT"))),
         { rows: [], total: 0, limit: 10, offset: 0 },
       );
+    },
+  );
+  await check(
+    "a real FR correction drops an earlier verdict through the guarded read adapter",
+    async () => {
+      // Recorded IRS rows (ADR 0016): 2026-18574 and its correction, which arrives after the verdict.
+      const stored: Observation[] = JSON.parse(
+        readFileSync(
+          new URL(
+            "./fixtures/fr-amendments/stored/observations.json",
+            import.meta.url,
+          ),
+          "utf8",
+        ),
+      );
+      const verdictAt = "2026-09-25T00:00:00.000Z";
+      const rows = stored.filter(
+        (o) =>
+          o.fr_document_number === "C1-2026-18574" ||
+          (o.fr_document_number === "2026-18574" && o.fetched_at <= verdictAt),
+      );
+      for (const row of rows)
+        await seedObservation(row.observation_id, row.ocd_id, row.raw, row);
+      const correction = JSON.parse(
+        readFileSync(
+          new URL(
+            "./fixtures/fr-amendments/fr-api/C1-2026-18574.json",
+            import.meta.url,
+          ),
+          "utf8",
+        ),
+      );
+      const govinfo = parseGovinfoObservation({
+        frDocNum: "C1-2026-18574",
+        publicationDate: correction.publication_date,
+        url: `https://www.govinfo.gov/content/pkg/FR-${correction.publication_date}/html/C1-2026-18574.htm`,
+        html: readFileSync(
+          new URL(
+            "./fixtures/fr-amendments/govinfo/C1-2026-18574.htm",
+            import.meta.url,
+          ),
+          "utf8",
+        ),
+        isCorrection: true,
+      });
+      await seedObservation("irs-govinfo", govinfo.ocd_id, govinfo.raw, {
+        ...govinfo,
+        fetched_at: "2026-11-01T00:00:00.000Z",
+      } as Partial<Observation>);
+      const id = ocd("2026-18574");
+      const baseline = rows
+        .filter((o) => o.source === "regulations_gov")
+        .at(-1)!;
+      await seedObservation(
+        "irs-verdict",
+        id,
+        {
+          kind: "pin_close",
+          pinned_close_date: "2026-10-16",
+          operator: "test",
+          note: "synthetic",
+          reviewer: "human",
+          reviewed_payload_hashes: [baseline.payload_hash],
+        },
+        { source: "human_review", fetched_at: verdictAt },
+      );
+      const [chain, options] = await read(
+        async (tx) =>
+          [
+            await getEngineObservations(tx, id),
+            await getEngineReconcileOptions(tx, id),
+          ] as const,
+      );
+      assert.equal(options.amendment?.kind, "amended");
+      assert.ok(
+        selectHonoredVerdict(chain),
+        "without amendments it reads honored",
+      );
+      assert.equal(selectHonoredVerdict(chain, options), null);
     },
   );
   await check(

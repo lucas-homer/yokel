@@ -537,7 +537,7 @@ check(
     assert.throws(() =>
       toWindowSummary(canonical(), {
         ...metadata,
-        agencySlugs: Array(21).fill("epa"),
+        agencySlugs: Array(101).fill("epa"),
       }),
     );
     assert.throws(() =>

@@ -833,6 +833,56 @@ await check(
   },
 );
 await check(
+  "conflict pages withhold unsafe links on the record and on each side",
+  async () => {
+    const left = win("2026-50008", {
+      submission_url: "http://127.0.0.1/admin",
+      confidence: "conflicting",
+      conflict_flags: ["fr_regs_date_mismatch"],
+    });
+    const base = WORLD.conflicts![0]!;
+    const record = {
+      ...base,
+      ocd_id: left.ocd_id,
+      govinfo_url: "https://user:pw@www.govinfo.gov/x",
+    };
+    const output = await call(
+      "list_conflicts",
+      { limit: 10 },
+      { ...WORLD, windows: [...WORLD.windows, left], conflicts: [record] },
+    );
+    assert.equal(output.data.length, 1);
+    assert.equal(output.data[0].record.govinfo_url, null);
+    assert.equal(output.data[0].side_a.submission_url, null);
+    assert.ok(!JSON.stringify(output).includes("127.0.0.1"));
+    assert.ok(!JSON.stringify(output).includes("user:pw"));
+    assert.ok(
+      output.delivery.warnings.some((w: string) => /2 stored record/.test(w)),
+    );
+  },
+);
+await check(
+  "real-data bounds: 44 agencies and a 255-character docket string stay answerable",
+  async () => {
+    const big = win("2026-50009", { docket_id: ["D".repeat(255)] });
+    const output = await call(
+      "fetch",
+      { id: big.ocd_id },
+      {
+        windows: [big],
+        metadata: {
+          [big.ocd_id]: {
+            ...METADATA[HIGH.ocd_id]!,
+            agencySlugs: Array.from({ length: 44 }, (_, i) => `agency-${i}`),
+          },
+        },
+      },
+    );
+    assert.equal(errorCode(output), undefined);
+    assert.equal(output.metadata.data.agency_slugs.length, 44);
+  },
+);
+await check(
   "search: a keyword that cannot round-trip is rejected as input, never mid-continuation",
   async () => {
     const output = await call("search", { query: '"water\tquality"' });

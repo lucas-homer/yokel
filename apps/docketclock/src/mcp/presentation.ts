@@ -243,7 +243,7 @@ export function renderFetchText({
     confidenceSentence(window),
     `Source close values: Federal Register date ${window.raw_fr_close_date ?? "none"}` +
       (window.conflict_flags.includes("fr_close_amended")
-        ? " (original value, superseded by a verified FR amendment named in the close wording)"
+        ? " (original value, superseded by a verified FR amendment)"
         : "") +
       "; " +
       `Regulations.gov datetime ${window.raw_regs_close_datetime ?? "none"}.`,

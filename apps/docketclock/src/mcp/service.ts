@@ -1365,7 +1365,7 @@ async function explainWindowTool(
     ];
     if (window.conflict_flags.includes("fr_close_amended"))
       limits.push(
-        "source_close_values.raw_fr_close_date is the original FR value. A verified FR amendment superseded it; resolved_close_display names the amending document.",
+        "source_close_values.raw_fr_close_date is the original FR value. A verified FR amendment superseded it.",
       );
     const warnings = [...baseWarnings];
     if (!chain.ok) {

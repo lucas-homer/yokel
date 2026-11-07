@@ -1072,7 +1072,18 @@ windows. Honoring now also receives the engine's amendment inputs, and those win
 original value as superseded. The corpus gained case 21 for this, so the fixed corpus is **21 cases**.
 Collections now withhold one unsafe stored link instead of failing the page, and search keywords
 reject control characters so continuations always round-trip. The latency, memory and call-count
-figures above predate this rebase. The cost of the amendment read on real data is not measured.
+figures above predate this rebase.
+
+**Real-data check, 2026-11-07.** All six tools ran against a throwaway copy of the local database
+(8,679 federal windows) through the SELECT-only role. `fetch` and `explain_window` summary were
+called for every window, with 153 `list_windows`, 40 `list_conflicts` and 37 `search` pages, and
+no errors. This found that a 44-agency document and two long docket strings were refused and blocked
+a `list_windows` page, so the bounds are now 100 agencies and 512 characters. `explain_window`
+summary, including the amendment read, was p50 46 ms and p95 61 ms locally. Honoring matched the
+engine on all 53 reviewed windows, and the pre-fix code also did, so the amendment bug needs a verdict
+older than a linked amendment with no newer portal change. That was reproduced on three windows only
+by editing the copy. All 23 `fr_close_amended` windows label the original FR date. The SDK stdio
+client negotiated 2025-11-25; the 2026-07-28 revision is unproven.
 
 **Remaining gates:** Claude Code and Codex CLI actual rendering/negotiation and the four
 operator-scored 21-case runs; current real-notice checks; contract-keeper freeze only after the go decision.
@@ -1087,8 +1098,7 @@ Remote OAuth, tunnel exposure and vendor/cloud checks remain Phase 1+ work.
   two P1 fixes. Accepted and fixed: amendment-aware honoring, `fr_close_amended` labelling, unsafe links
   in collections, keyword continuation, the misleading reduced-page warning, and integration assertions
   that matched any window. Documented instead of changed: the 16 KiB stdio frame limit and the
-  `citation_unavailable` search behavior. Left open: `agency_slugs.max(20)` may reject a document with
-  more than 20 agencies, and GovInfo evidence rows carry no source URL.
+  `citation_unavailable` search behavior. Left open: GovInfo evidence rows carry no source URL.
 
 - **Operator approval (2026-10-20):** approved the approach and authorized proceeding after
   discussion of the lightweight OAuth library, owned login/consent/persistence responsibilities,

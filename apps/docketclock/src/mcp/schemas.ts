@@ -283,7 +283,7 @@ export const WindowSummary = z
     fr_document_number: z.string().max(256).nullable(),
     regs_document_id: z.string().max(256).nullable(),
     regs_object_id: z.string().max(256).nullable(),
-    docket_id: z.array(z.string().max(160)).max(100),
+    docket_id: z.array(z.string().max(512)).max(100),
     rin: z.string().max(80).nullable(),
     window_type: WindowType,
     resolved_close_utc: CanonicalInstant.nullable(),
@@ -298,7 +298,7 @@ export const WindowSummary = z
     tags: z.array(z.string().max(256)).max(100),
     version: Count,
     title: PageExcerpt,
-    agency_slugs: z.array(AgencySlug).max(20),
+    agency_slugs: z.array(AgencySlug).max(100),
     metadata_observation_ids: z.array(ObservationId).max(2),
     evidence_counts: EvidenceCounts,
   })
