@@ -50,6 +50,8 @@ jobs:
       - name: alchemy state bootstrap
         working-directory: infra/cloudflare
         run: pnpm exec alchemy state bootstrap --no-input
+      # `deploy` asks for approval before applying, and CI has no terminal: choosing "deploy" when you
+      # start this workflow IS the approval, so pass --yes for it. `plan` has no such flag.
       - name: alchemy ${{ inputs.action }}
         working-directory: infra/cloudflare
-        run: pnpm exec alchemy ${{ inputs.action }} --stage prod --no-input
+        run: pnpm exec alchemy ${{ inputs.action }} --stage prod --no-input ${{ inputs.action == 'deploy' && '--yes' || '' }}
