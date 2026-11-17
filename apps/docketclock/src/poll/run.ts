@@ -95,10 +95,18 @@ const {
   setHeartbeat,
 } = await import("../metrics.js");
 const { startMetricsServer } = await import("../metrics-server.js");
+const { withCycleLock } = await import("./cycle-lock.js");
 
 const log = componentLogger("poller");
 
 const INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS) || 15 * 60_000;
+
+// RUN-ONCE MODE: `run.ts --once` (or POLL_ONCE=1) runs exactly ONE cycle, then drains and exits — no
+// loop, no /metrics server. This is the entrypoint for a scheduler that lives OUTSIDE the process (the
+// planned Cloudflare Cron Trigger → Container path, or a k8s CronJob). Exit code: 0 when the cycle ran
+// (pass-level failures are isolated and logged, as in the loop) or was skipped because another cycle holds
+// the lock; 1 only when the cycle itself could not run (e.g. the database is unreachable).
+const ONCE = process.argv.includes("--once") || process.env.POLL_ONCE === "1";
 
 // LIVENESS (#25): the poller serves no HTTP, so Kubernetes can't probe an endpoint. Instead the loop
 // rewrites this heartbeat file at the end of EVERY settled cycle; the poller Deployment's exec
@@ -125,7 +133,9 @@ async function main(): Promise<void> {
   const sql = createClient();
   // Expose /metrics so an in-cluster Prometheus can scrape the poller (which serves no other HTTP). Started
   // before the loop so metrics are available the instant the container is up; closed on drain (below).
-  const metricsServer = startMetricsServer();
+  // Not in run-once mode: a process that exits after one cycle is never scraped, and binding the port
+  // could collide with a live poller on the same host.
+  const metricsServer = ONCE ? null : startMetricsServer();
   // Construct the adjudicator ONCE (not per cycle) so its observability tracer — and, when Langfuse is
   // configured, the long-lived Langfuse client — is reused across cycles and drained on shutdown (below).
   // No LANGFUSE_* env → the tracer is a NoopTracer (true no-op); ADJUDICATOR≠gemini → NullAdjudicator.
@@ -134,129 +144,148 @@ async function main(): Promise<void> {
   let timer: NodeJS.Timeout | null = null;
   let running = false; // re-entrancy guard (belt-and-braces alongside the self-reschedule)
   let stopping = false;
+  let cycleFailed = false; // set when a cycle could not run at all (run-once mode exits 1 on it)
 
   async function tick(): Promise<void> {
     if (running) return; // never overlap a still-running cycle
     running = true;
     const cycleStart = Date.now();
+    let skipped = false;
     try {
-      // SEQUENTIAL single-writer cycle: FR discovery FIRST (so its regs_document_id handoff is visible
-      // to the SAME cycle's Regs re-poll pass), then the Regs differential + re-poll pass.
-      //
-      // ISOLATED PASSES (fix B2): the two passes are independently try/caught so an FR-side failure
-      // (e.g. FR returns an HTTP 400 / is down) is logged but DOES NOT starve the Regs withdrawal-
-      // detection pass that cycle, and vice-versa. Each summary is logged independently.
-      try {
-        const fr = await pollFrOnce(sql);
-        log.info({ summary: fr }, "fr poll cycle");
-        recordFrPoll(fr);
-      } catch (err) {
-        recordPollPassFailure("fr");
-        log.error({ err }, "fr poll failed");
-      }
-      try {
-        const regs = await pollRegsOnce(sql);
-        log.info({ summary: regs }, "regs poll cycle");
-        recordRegsPoll(regs);
-      } catch (err) {
-        recordPollPassFailure("regs");
-        log.error({ err }, "regs poll failed");
-      }
-      // 2b — GovInfo text for FR amendment documents (ADR 0016). After FR ingest (the amendments it
-      // just ingested are candidates) and BEFORE the chain pass (which links on that text).
-      // INDEPENDENTLY try/caught; the sweep isolates per-document failures itself.
-      try {
-        const govinfo = await govinfoSweepOnce(sql, new Date());
-        log.info({ summary: govinfo }, "govinfo sweep cycle");
-      } catch (err) {
-        recordPollPassFailure("govinfo");
-        log.error({ err }, "govinfo sweep failed");
-      }
-      // 3rd pass — cross_window (chain) reconcile sweep. Runs LAST (derive-over-derived; see header) and
-      // is INDEPENDENTLY try/caught so a chain failure cannot affect the FR/Regs passes (and vice-versa).
-      try {
-        const chain = await chainReconcileOnce(sql, new Date(), {
-          adjudicator,
-        });
-        log.info({ summary: chain }, "chain reconcile cycle");
-        recordChainCycle(chain);
-      } catch (err) {
-        recordPollPassFailure("chain");
-        log.error({ err }, "chain reconcile failed");
-      }
-      // 3b — the reconcile-v2.4 trigger: re-derive the originals of the confident links so a newly
-      // linked amendment moves its original this cycle (idempotent). A moved close is logged loudly.
-      try {
-        const originals = await rederiveChainOriginals(sql, new Date());
-        if (originals.versionBumped > 0) {
-          log.warn({ summary: originals }, "amended originals MOVED a close");
-        } else {
-          log.info({ summary: originals }, "amended originals cycle");
+      // CROSS-PROCESS SINGLE WRITER: the whole cycle runs under a Postgres advisory lock (cycle-lock.ts).
+      // The `running` flag above only stops THIS process overlapping itself; the lock also stops a second
+      // process (a run-once trigger, a cutover twin) from writing at the same time. A busy lock SKIPS the
+      // cycle rather than queueing behind it — the next scheduled cycle picks the work up.
+      const outcome = await withCycleLock(sql, async () => {
+        // SEQUENTIAL single-writer cycle: FR discovery FIRST (so its regs_document_id handoff is visible
+        // to the SAME cycle's Regs re-poll pass), then the Regs differential + re-poll pass.
+        //
+        // ISOLATED PASSES (fix B2): the two passes are independently try/caught so an FR-side failure
+        // (e.g. FR returns an HTTP 400 / is down) is logged but DOES NOT starve the Regs withdrawal-
+        // detection pass that cycle, and vice-versa. Each summary is logged independently.
+        try {
+          const fr = await pollFrOnce(sql);
+          log.info({ summary: fr }, "fr poll cycle");
+          recordFrPoll(fr);
+        } catch (err) {
+          recordPollPassFailure("fr");
+          log.error({ err }, "fr poll failed");
         }
-      } catch (err) {
-        recordPollPassFailure("amended_originals");
-        log.error({ err }, "amended originals re-derive failed");
-      }
-      // 4th pass — status refresh (#107): re-derive open windows whose close has passed so status
-      // flips closed without waiting for a fresh observation. BEFORE verify (a window flipped closed
-      // here is snapshot-eligible this same cycle), INDEPENDENTLY try/caught like every pass. A
-      // non-zero versionBumped is logged loudly — a status flip must never move the close.
-      try {
-        const refresh = await refreshStaleOpenWindows(sql);
-        if (refresh.versionBumped > 0) {
-          log.warn({ summary: refresh }, "status refresh MOVED a close");
-        } else {
-          log.info({ summary: refresh }, "status refresh cycle");
+        try {
+          const regs = await pollRegsOnce(sql);
+          log.info({ summary: regs }, "regs poll cycle");
+          recordRegsPoll(regs);
+        } catch (err) {
+          recordPollPassFailure("regs");
+          log.error({ err }, "regs poll failed");
         }
-        recordStatusRefresh(refresh);
-      } catch (err) {
-        recordPollPassFailure("status_refresh");
-        log.error({ err }, "status refresh failed");
-      }
-      // 5th pass — post-close verification (slice V). Runs LAST (it reads what the first four just
-      // wrote; see header) and is INDEPENDENTLY try/caught like every pass: a verify failure must
-      // never affect discovery/reconcile (and vice-versa). The headline gauge is recomputed from SQL
-      // each cycle so a restart never leaves it stale-at-zero.
-      try {
-        const verify = await verifyOnce(sql);
-        log.info({ summary: verify }, "verify cycle");
-        recordVerifyCycle(verify);
-        const { ratio, sample } = await highCorrectRatio90d(sql);
-        setAccuracyHighRatio(ratio, sample);
-        log.debug({ ratio, sample }, "accuracy high-ratio 90d rollup");
-      } catch (err) {
-        recordPollPassFailure("verify");
-        log.error({ err }, "verify pass failed");
-      }
-      // 6th pass — review-queue observability (Slice R, PR-R4). READ-ONLY: two aggregates feeding
-      // the depth gauges + the rot alert. Runs LAST (reads what every earlier pass just wrote) and
-      // is INDEPENDENTLY try/caught like every pass.
-      try {
-        const queue = await reviewQueueStats(sql);
-        log.info({ summary: queue }, "review queue stats");
-        recordReviewQueue(queue);
-      } catch (err) {
-        recordPollPassFailure("queue_stats");
-        log.error({ err }, "review queue stats failed");
+        // 2b — GovInfo text for FR amendment documents (ADR 0016). After FR ingest (the amendments it
+        // just ingested are candidates) and BEFORE the chain pass (which links on that text).
+        // INDEPENDENTLY try/caught; the sweep isolates per-document failures itself.
+        try {
+          const govinfo = await govinfoSweepOnce(sql, new Date());
+          log.info({ summary: govinfo }, "govinfo sweep cycle");
+        } catch (err) {
+          recordPollPassFailure("govinfo");
+          log.error({ err }, "govinfo sweep failed");
+        }
+        // 3rd pass — cross_window (chain) reconcile sweep. Runs LAST (derive-over-derived; see header) and
+        // is INDEPENDENTLY try/caught so a chain failure cannot affect the FR/Regs passes (and vice-versa).
+        try {
+          const chain = await chainReconcileOnce(sql, new Date(), {
+            adjudicator,
+          });
+          log.info({ summary: chain }, "chain reconcile cycle");
+          recordChainCycle(chain);
+        } catch (err) {
+          recordPollPassFailure("chain");
+          log.error({ err }, "chain reconcile failed");
+        }
+        // 3b — the reconcile-v2.4 trigger: re-derive the originals of the confident links so a newly
+        // linked amendment moves its original this cycle (idempotent). A moved close is logged loudly.
+        try {
+          const originals = await rederiveChainOriginals(sql, new Date());
+          if (originals.versionBumped > 0) {
+            log.warn({ summary: originals }, "amended originals MOVED a close");
+          } else {
+            log.info({ summary: originals }, "amended originals cycle");
+          }
+        } catch (err) {
+          recordPollPassFailure("amended_originals");
+          log.error({ err }, "amended originals re-derive failed");
+        }
+        // 4th pass — status refresh (#107): re-derive open windows whose close has passed so status
+        // flips closed without waiting for a fresh observation. BEFORE verify (a window flipped closed
+        // here is snapshot-eligible this same cycle), INDEPENDENTLY try/caught like every pass. A
+        // non-zero versionBumped is logged loudly — a status flip must never move the close.
+        try {
+          const refresh = await refreshStaleOpenWindows(sql);
+          if (refresh.versionBumped > 0) {
+            log.warn({ summary: refresh }, "status refresh MOVED a close");
+          } else {
+            log.info({ summary: refresh }, "status refresh cycle");
+          }
+          recordStatusRefresh(refresh);
+        } catch (err) {
+          recordPollPassFailure("status_refresh");
+          log.error({ err }, "status refresh failed");
+        }
+        // 5th pass — post-close verification (slice V). Runs LAST (it reads what the first four just
+        // wrote; see header) and is INDEPENDENTLY try/caught like every pass: a verify failure must
+        // never affect discovery/reconcile (and vice-versa). The headline gauge is recomputed from SQL
+        // each cycle so a restart never leaves it stale-at-zero.
+        try {
+          const verify = await verifyOnce(sql);
+          log.info({ summary: verify }, "verify cycle");
+          recordVerifyCycle(verify);
+          const { ratio, sample } = await highCorrectRatio90d(sql);
+          setAccuracyHighRatio(ratio, sample);
+          log.debug({ ratio, sample }, "accuracy high-ratio 90d rollup");
+        } catch (err) {
+          recordPollPassFailure("verify");
+          log.error({ err }, "verify pass failed");
+        }
+        // 6th pass — review-queue observability (Slice R, PR-R4). READ-ONLY: two aggregates feeding
+        // the depth gauges + the rot alert. Runs LAST (reads what every earlier pass just wrote) and
+        // is INDEPENDENTLY try/caught like every pass.
+        try {
+          const queue = await reviewQueueStats(sql);
+          log.info({ summary: queue }, "review queue stats");
+          recordReviewQueue(queue);
+        } catch (err) {
+          recordPollPassFailure("queue_stats");
+          log.error({ err }, "review queue stats failed");
+        }
+      });
+      if (!outcome.acquired) {
+        skipped = true;
+        log.warn(
+          "poll cycle skipped: another process holds the poll-cycle lock",
+        );
       }
     } catch (err) {
-      // Belt-and-braces: anything outside the two passes (should be nothing) must not kill the scheduler.
+      // Belt-and-braces: anything outside the isolated passes (taking the lock, a lost DB connection) must
+      // not kill the scheduler. In run-once mode it is the one failure that sets a non-zero exit code.
+      cycleFailed = true;
       log.error({ err }, "poll cycle failed");
     } finally {
       running = false;
-      observePollCycle((Date.now() - cycleStart) / 1000);
+      // A skipped cycle did no work, so it must not drag the cycle-duration histogram toward zero.
+      if (!skipped) observePollCycle((Date.now() - cycleStart) / 1000);
       // Mark this cycle SETTLED (liveness #25). Written here in `finally`, not on full success: a pass-
       // level failure (FR down, Regs 4xx) is already isolated above and must NOT restart the pod — the
       // loop is still healthily cycling. Only a loop that never reaches this point (hung inside a pass,
       // awaiting forever) lets the file go stale and earns a restart.
       writeHeartbeat();
+      // Run-once: drain and exit instead of rescheduling.
+      if (ONCE) void shutdown("once", cycleFailed ? 1 : 0);
       // Queue the NEXT cycle only now that this one has settled — self-rescheduling, never overlapping.
-      if (!stopping) timer = setTimeout(() => void tick(), INTERVAL_MS);
+      else if (!stopping) timer = setTimeout(() => void tick(), INTERVAL_MS);
     }
   }
 
   // Drain on shutdown: stop scheduling, wait for any in-flight cycle, close the pool, exit cleanly.
-  async function shutdown(signal: string): Promise<void> {
+  async function shutdown(signal: string, exitCode = 0): Promise<void> {
     if (stopping) return;
     stopping = true;
     log.info({ signal }, "draining poll scheduler");
@@ -269,10 +298,14 @@ async function main(): Promise<void> {
     // Bound the metrics-server drain like the DB drain beside it: close() alone waits for open sockets to
     // end, so a keep-alive Prometheus scrape held at shutdown could hang past the grace period. Terminate
     // idle/active connections first (Node ≥18) so the close() callback fires promptly.
-    metricsServer.closeAllConnections();
-    await new Promise<void>((resolve) => metricsServer.close(() => resolve()));
+    if (metricsServer) {
+      metricsServer.closeAllConnections();
+      await new Promise<void>((resolve) =>
+        metricsServer.close(() => resolve()),
+      );
+    }
     await sql.end({ timeout: 5 });
-    process.exit(0);
+    process.exit(exitCode);
   }
   process.on("SIGTERM", () => void shutdown("SIGTERM"));
   process.on("SIGINT", () => void shutdown("SIGINT"));
