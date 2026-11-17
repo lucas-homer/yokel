@@ -24,7 +24,9 @@ import type { PollerContainer } from "./src/poller.ts";
 
 /** Repo root: the Docker build context the image already expects (see apps/docketclock/Dockerfile). */
 const REPO_ROOT = `${import.meta.dirname}/../..`;
-const DOCKERFILE = "apps/docketclock/Dockerfile"; // relative to the context
+// Alchemy realPaths `dockerfile` against the cwd (infra/cloudflare), not `context`,
+// despite its docs, so pass an absolute path.
+const DOCKERFILE = `${REPO_ROOT}/apps/docketclock/Dockerfile`;
 
 const secret = (name: string) => Config.Redacted(name);
 
@@ -49,6 +51,8 @@ export default Alchemy.Stack(
       pgVersion: 18,
       databaseName: "docketclock",
       roleName: "docketclock",
+      // Neon free plan caps history retention at 6h; the 24h default is rejected.
+      historyRetentionSeconds: 21600,
     });
 
     const poller = yield* Cloudflare.Worker("Poller", {
