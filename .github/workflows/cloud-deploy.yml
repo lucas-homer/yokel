@@ -15,6 +15,10 @@ on:
         type: choice
         options: [plan, deploy]
         default: plan
+      adopt:
+        description: "Take over cloud resources that exist but are missing from Alchemy state (e.g. left by a deploy that failed mid-way). Leave off unless a run fails with OwnedBySomeoneElse."
+        type: boolean
+        default: false
 
 # Never run two applies against the same stack at once.
 concurrency:
@@ -50,6 +54,8 @@ jobs:
       - name: alchemy state bootstrap
         working-directory: infra/cloudflare
         run: pnpm exec alchemy state bootstrap --no-input
+      # `deploy` asks for approval before applying, and CI has no terminal: choosing "deploy" when you
+      # start this workflow IS the approval, so pass --yes for it. `plan` has no such flag.
       - name: alchemy ${{ inputs.action }}
         working-directory: infra/cloudflare
-        run: pnpm exec alchemy ${{ inputs.action }} --stage prod --no-input
+        run: pnpm exec alchemy ${{ inputs.action }} --stage prod --no-input ${{ inputs.action == 'deploy' && '--yes' || '' }} ${{ inputs.adopt && '--adopt' || '' }}
