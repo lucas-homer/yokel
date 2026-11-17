@@ -45,8 +45,11 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile --filter @yokel/docketclock-cloud...
-      # --yes lets CI create (or upgrade) Alchemy's state store Worker on first use; without it Alchemy
-      # refuses in CI. That store is the only thing a `plan` run can create.
+      # Create Alchemy's state store Worker on first use, or confirm it is ready. In CI, plan/deploy refuse
+      # to create it themselves, and `plan` has no --yes flag; this explicit step is idempotent.
+      - name: alchemy state bootstrap
+        working-directory: infra/cloudflare
+        run: pnpm exec alchemy state bootstrap --no-input
       - name: alchemy ${{ inputs.action }}
         working-directory: infra/cloudflare
-        run: pnpm exec alchemy ${{ inputs.action }} --stage prod --no-input --yes
+        run: pnpm exec alchemy ${{ inputs.action }} --stage prod --no-input
