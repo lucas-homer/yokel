@@ -24,6 +24,7 @@ COPY packages/contracts/package.json packages/contracts/
 COPY apps/docketclock/package.json apps/docketclock/
 COPY apps/watershed-watch/package.json apps/watershed-watch/
 COPY spikes/package.json spikes/
+COPY infra/cloudflare/package.json infra/cloudflare/
 
 # Install ONLY @yokel/docketclock and its dependencies (incl. tsx + @yokel/contracts). The trailing
 # `...` pulls in dependencies; spikes (duckdb) and watershed-watch are out of scope. Frozen = reproducible.

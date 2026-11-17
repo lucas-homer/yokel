@@ -1,0 +1,26 @@
+{
+  "name": "@yokel/docketclock-cloud",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DocketClock on Cloudflare (Containers + Cron) and Neon, declared with Alchemy v2.",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "plan": "alchemy plan --stage prod --env-file ../../.env",
+    "deploy": "alchemy deploy --stage prod --env-file ../../.env",
+    "logs": "alchemy logs --stage prod --tail"
+  },
+  "dependencies": {
+    "@cloudflare/containers": "0.3.7"
+  },
+  "devDependencies": {
+    "@alchemy.run/cloudflare": "2.0.0-beta.87",
+    "@alchemy.run/neon": "2.0.0-beta.87",
+    "@cloudflare/workers-types": "^4.20251115.0",
+    "@effect/platform-node": "^4.1.4",
+    "@types/node": "^22.0.0",
+    "alchemy": "2.0.0-beta.87",
+    "effect": "4.1.4",
+    "typescript": "^5.6.0"
+  }
+}
