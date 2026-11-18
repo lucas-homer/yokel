@@ -100,6 +100,23 @@ function capture(): {
   );
 }
 
+// ── (b2) the level is written as its NAME, not pino's number (Workers Logs reads the label) ─────────────
+{
+  const cap = capture();
+  const log = buildLogger({ level: "debug", destination: cap.stream });
+  log.debug("d");
+  log.info("i");
+  log.warn("w");
+  log.error("e");
+  const levels = cap.lines().map((l) => l.level);
+  assert(
+    "each line's level is the label (debug/info/warn/error), not 20/30/40/50",
+    JSON.stringify(levels) ===
+      JSON.stringify(["debug", "info", "warn", "error"]),
+    JSON.stringify(levels),
+  );
+}
+
 // ── (c) default level is info when LOG_LEVEL is unset ─────────────────────────────────────────────────
 {
   const prev = process.env.LOG_LEVEL;
