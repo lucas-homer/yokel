@@ -76,6 +76,9 @@ export default Alchemy.Stack(
           dockerfile: DOCKERFILE,
           // Ship container stdout (the app's pino NDJSON) into Workers Logs.
           observability: { logs: { enabled: true } },
+          // Run near Neon (aws-us-west-2). Unpinned, the first cycle landed in IAD and every query crossed
+          // the country (8.5-minute cycle).
+          constraints: { regions: ["WNAM"] },
           instanceType: "basic", // 1/4 vCPU, 1 GiB: tsx + the full pass set does not fit "lite" (256 MiB)
           maxInstances: 1,
         }),
@@ -100,6 +103,9 @@ export default Alchemy.Stack(
           context: REPO_ROOT,
           dockerfile: DOCKERFILE,
           observability: { logs: { enabled: true } },
+          // Run near Neon (aws-us-west-2). Unpinned, the first cycle landed in IAD and every query crossed
+          // the country (8.5-minute cycle).
+          constraints: { regions: ["WNAM"] },
           instanceType: "basic",
           maxInstances: 2,
         }),
