@@ -62,7 +62,9 @@ Postgres tools run inside the CNPG pod (same 18.x version as Neon), so nothing e
 ### 1. Stop the Mini poller
 
 The Mini runs the chart with Helm (`task app-local`) or Tilt, not Argo. Scale the poller to zero. Neither
-Helm nor Tilt restores replicas on its own, but stop `tilt up` first if it is running on the Mini.
+Helm nor Tilt restores replicas on its own, but if `tilt up` is running on the Mini, stop that process
+with Ctrl-C. **Never run `tilt down` here**: it deletes everything Tilt deployed, including the
+`docketclock-pg` Cluster and its volume.
 
 ```sh
 kubectl -n docketclock scale deploy/docketclock-poller --replicas=0
