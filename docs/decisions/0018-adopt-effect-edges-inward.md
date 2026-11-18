@@ -15,7 +15,7 @@ arithmetic, and has needed several review rounds to get right (memory: fetch-ret
 round-1 finding 6).
 
 Effect 4.0 shipped stable on 2026-09-30 (4.1.4 is current), with a much smaller runtime than 3.x.
-Alchemy v2, a candidate for managing a Cloudflare deployment, is itself written in Effect and requires
+Alchemy v2, which now deploys DocketClock to Cloudflare (ADR 0019), is itself written in Effect and requires
 `effect ^4.1.4`.
 
 ## Decision
