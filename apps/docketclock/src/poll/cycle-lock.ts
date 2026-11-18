@@ -18,14 +18,16 @@
  * A busy lock returns `{ acquired: false }` instead of waiting: a cycle that finds another one running
  * should skip, not queue behind it (the next trigger will pick the work up).
  *
- * HEARTBEAT: while the cycle runs we send `select 1` on the reserved connection every `heartbeatMs`
- * (default 60s). Neon scales the compute to zero after 5 minutes WITHOUT QUERIES — idle open connections do
- * not count — and a cycle can spend longer than that in pure HTTP work (the GovInfo sweep). On 2026-11-18
- * the compute suspended mid-cycle, every connection was cut, chain reconcile failed with EPIPE and the
- * final unlock on the dead reserved connection crashed the process. The heartbeat keeps the compute awake only while a cycle holds the
- * lock; between cycles it still sleeps. A failed heartbeat is reported via `onHeartbeatError`, never thrown.
- * If the session dies anyway, the lock went with it: the next query reconnects, the final unlock finds
- * nothing to release, and that loss is reported through the same callback.
+ * HEARTBEAT: while the cycle runs, the lock session runs back-to-back `pg_sleep(heartbeatMs)` queries
+ * (default 5s), so Postgres always shows one ACTIVE backend. Neon scales the compute to zero after 5
+ * minutes of inactivity, and a cycle's passes spend minutes in HTTP and LLM calls between short queries.
+ * On 2026-11-18 the compute suspended mid-cycle twice: at 16:06 every connection was cut and the final
+ * unlock on a dead reserved connection crashed the process; at 17:06 it suspended again even with a
+ * `select 1` every 60s, so short, spaced-out queries do not count as activity. The heartbeat keeps the
+ * compute awake only while a cycle holds the lock; between cycles it still scales to zero. A failed
+ * heartbeat is reported via `onHeartbeatError`, never thrown. If the session dies anyway, the lock went
+ * with it: the next query reconnects, the final unlock finds nothing to release, and that loss is
+ * reported through the same callback.
  */
 import type { Sql } from "../db/client.js";
 
@@ -47,13 +49,14 @@ export type CycleLockResult<T> =
  */
 export interface CycleLockOptions {
   key?: number;
-  /** Interval between keep-alive queries on the lock connection while `fn` runs. Default 60s. */
+  /** Length of each back-to-back `pg_sleep` on the lock session while `fn` runs (and the most the unlock
+   *  waits after `fn` settles). Default 5s. */
   heartbeatMs?: number;
   /** Called when a heartbeat or the final unlock fails, or the lock was lost (the cycle is not interrupted). */
   onHeartbeatError?: (err: unknown) => void;
 }
 
-export const DEFAULT_HEARTBEAT_MS = 60_000;
+export const DEFAULT_HEARTBEAT_MS = 5_000;
 
 export async function withCycleLock<T>(
   session: Sql,
@@ -73,25 +76,29 @@ export async function withCycleLock<T>(
   `;
   if (!row?.locked) return { acquired: false };
 
-  // One heartbeat in flight at a time; the unlock waits for it so the two never interleave.
-  let inFlight: Promise<void> = Promise.resolve();
-  let beating = false;
-  const timer = setInterval(() => {
-    if (beating) return;
-    beating = true;
-    inFlight = session`select 1`
-      .then(() => undefined)
-      .catch(onError)
-      .finally(() => {
-        beating = false;
-      });
-  }, heartbeatMs);
-  timer.unref?.();
+  // Keep the lock session ACTIVE (not merely connected) for the whole cycle: back-to-back
+  // `pg_sleep(heartbeatMs)` queries. A short `select 1` every minute did NOT stop Neon suspending the
+  // compute mid-cycle (2026-11-18 17:06): its idle detector evidently samples for active backends, and a
+  // 1 ms query is almost never seen. A backend that is always mid-query is. On error (the compute restarted
+  // under us) wait one interval and go again: the one-connection client reconnects by itself.
+  let stopping = false;
+  const keepBusy = (async () => {
+    const seconds = heartbeatMs / 1000;
+    while (!stopping) {
+      try {
+        await session`select pg_sleep(${seconds})`;
+      } catch (err) {
+        if (stopping) break;
+        onError(err);
+        await new Promise((r) => setTimeout(r, heartbeatMs).unref?.());
+      }
+    }
+  })();
   try {
     return { acquired: true, value: await fn() };
   } finally {
-    clearInterval(timer);
-    await inFlight;
+    stopping = true;
+    await keepBusy; // at most one heartbeatMs: the in-flight pg_sleep finishes, then the loop exits
     try {
       const [u] = await session<{ unlocked: boolean }[]>`
         select pg_advisory_unlock(${key}::bigint) as unlocked
