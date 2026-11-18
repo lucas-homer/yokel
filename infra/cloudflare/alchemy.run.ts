@@ -30,6 +30,15 @@ const DOCKERFILE = `${REPO_ROOT}/apps/docketclock/Dockerfile`;
 
 const secret = (name: string) => Config.Redacted(name);
 
+// Workers Logs + automatic traces for every invocation (cron, fetch, Durable Object calls). Volume is tiny
+// (96 cron runs a day plus API traffic), so sample everything. Logs and traces are kept 7 days.
+const OBSERVABILITY = {
+  enabled: true,
+  headSamplingRate: 1,
+  logs: { enabled: true, invocationLogs: true, headSamplingRate: 1 },
+  traces: { enabled: true, headSamplingRate: 1 },
+} as const;
+
 export default Alchemy.Stack(
   "DocketClock",
   {
@@ -57,6 +66,7 @@ export default Alchemy.Stack(
 
     const poller = yield* Cloudflare.Worker("Poller", {
       main: `${import.meta.dirname}/src/poller.ts`,
+      observability: OBSERVABILITY,
       // Empty list = no Cron Triggers (also removes any left from an earlier deploy).
       crons: pollCron ? [pollCron] : [],
       env: {
@@ -64,6 +74,8 @@ export default Alchemy.Stack(
           className: "PollerContainer",
           context: REPO_ROOT,
           dockerfile: DOCKERFILE,
+          // Ship container stdout (the app's pino NDJSON) into Workers Logs.
+          observability: { logs: { enabled: true } },
           instanceType: "basic", // 1/4 vCPU, 1 GiB: tsx + the full pass set does not fit "lite" (256 MiB)
           maxInstances: 1,
         }),
@@ -79,6 +91,7 @@ export default Alchemy.Stack(
 
     const api = yield* Cloudflare.Worker("Api", {
       main: `${import.meta.dirname}/src/api.ts`,
+      observability: OBSERVABILITY,
       // workers.dev until the docketclock.app zone is on the account (then set DOCKETCLOCK_API_DOMAIN).
       domain: apiDomain || undefined,
       env: {
@@ -86,6 +99,7 @@ export default Alchemy.Stack(
           className: "ApiContainer",
           context: REPO_ROOT,
           dockerfile: DOCKERFILE,
+          observability: { logs: { enabled: true } },
           instanceType: "basic",
           maxInstances: 2,
         }),
