@@ -50,3 +50,12 @@ Rules for every step:
 - A timeout now surfaces as `"<METHOD> <url> aborted: timed out after <n>ms"` instead of whatever the
   transport threw on abort. Callers that match `/abort/i` are unaffected.
 - `effect` is a new runtime dependency of `@yokel/docketclock`.
+
+## Update, 2026-11-18: observability joins the track
+
+Slices 2 and 3 move the cycle lock and the poll scheduler to Effect and add tracing. Effect 4's
+built-in OTLP exporter (`effect/observability/Otlp`) sends one span per cycle and one per pass to any
+OTLP endpoint (Grafana Cloud is the plan). It is off unless `OTEL_EXPORTER_OTLP_ENDPOINT` is set, and
+it flushes before a run-once container exits. Spans only nest inside Effect code, so HTTP, SQL and
+adjudicator spans arrive as later slices move the passes themselves into Effect. Log levels are fixed
+separately in pino (`log.ts` writes the level name), with no Effect involved.

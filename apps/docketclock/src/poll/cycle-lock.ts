@@ -28,7 +28,15 @@
  * heartbeat is reported via `onHeartbeatError`, never thrown. If the session dies anyway, the lock went
  * with it: the next query reconnects, the final unlock finds nothing to release, and that loss is
  * reported through the same callback.
+ *
+ * EFFECT (ADR 0018, slice 2): `cycleLock` is the Effect-native form; `withCycleLock` is the Promise
+ * wrapper existing callers and tests use. The shape is `Effect.acquireUseRelease`: ACQUIRE starts the
+ * keep-busy heartbeat as its own fiber, USE runs the cycle, RELEASE interrupts the heartbeat and unlocks.
+ * Release runs whether the cycle succeeds, fails or is interrupted (a SIGTERM drain), which replaces the
+ * hand-rolled `stopping` flag + `finally`. On a one-connection client postgres.js queues the unlock behind
+ * any in-flight `pg_sleep`, so interrupting the heartbeat mid-sleep cannot reorder the two.
  */
+import { Data, Effect, Fiber } from "effect";
 import type { Sql } from "../db/client.js";
 
 /**
@@ -42,15 +50,15 @@ export type CycleLockResult<T> =
   | { acquired: false };
 
 /**
- * Run `fn` only if no other session holds the poll-cycle lock. Returns `{ acquired: false }` without
- * running `fn` when the lock is held elsewhere. The lock is released whether `fn` resolves or throws; an
- * error from `fn` propagates to the caller. `session` must be a one-connection client
- * (`createSessionClient`), so the lock, heartbeats and unlock all share one Postgres session.
+ * Run a cycle only if no other session holds the poll-cycle lock. `{ acquired: false }` without running it
+ * when the lock is held elsewhere. The lock is released whether the cycle succeeds or fails; its error
+ * propagates to the caller. `session` must be a one-connection client (`createSessionClient`), so the
+ * lock, heartbeats and unlock all share one Postgres session.
  */
 export interface CycleLockOptions {
   key?: number;
-  /** Length of each back-to-back `pg_sleep` on the lock session while `fn` runs (and the most the unlock
-   *  waits after `fn` settles). Default 5s. */
+  /** Length of each back-to-back `pg_sleep` on the lock session while the cycle runs, and the pause after
+   *  a failed one. Default 5s. */
   heartbeatMs?: number;
   /** Called when a heartbeat or the final unlock fails, or the lock was lost (the cycle is not interrupted). */
   onHeartbeatError?: (err: unknown) => void;
@@ -58,60 +66,103 @@ export interface CycleLockOptions {
 
 export const DEFAULT_HEARTBEAT_MS = 5_000;
 
+/** A failed query on the lock session (or a misused client), carrying the original error. */
+export class LockSessionError extends Data.TaggedError("LockSessionError")<{
+  readonly cause: unknown;
+}> {}
+
+const onSession = <A>(query: () => PromiseLike<A>) =>
+  Effect.tryPromise({
+    try: () => query(),
+    catch: (cause) => new LockSessionError({ cause }),
+  });
+
+/**
+ * The Effect form. Fails (with the driver's error) only if TAKING the lock fails; heartbeat and unlock
+ * problems go to `onHeartbeatError` and never fail the cycle.
+ */
+export const cycleLock = <A, E, R>(
+  session: Sql,
+  cycle: Effect.Effect<A, E, R>,
+  opts: CycleLockOptions = {},
+): Effect.Effect<CycleLockResult<A>, E | LockSessionError, R> =>
+  Effect.gen(function* () {
+    if (session.options.max !== 1) {
+      return yield* new LockSessionError({
+        cause: new Error(
+          "withCycleLock needs a one-connection client (createSessionClient); a pool could unlock on another session",
+        ),
+      });
+    }
+    const key = opts.key ?? POLL_CYCLE_LOCK_KEY;
+    const heartbeatMs = opts.heartbeatMs ?? DEFAULT_HEARTBEAT_MS;
+    const onError = opts.onHeartbeatError ?? (() => {});
+    const report = (err: unknown) => Effect.sync(() => onError(err));
+
+    const [row] = yield* onSession(
+      () => session<{ locked: boolean }[]>`
+        select pg_try_advisory_lock(${key}::bigint) as locked
+      `,
+    );
+    if (!row?.locked) return { acquired: false } as const;
+
+    // Keep the lock session ACTIVE (not merely connected) for the whole cycle: back-to-back
+    // `pg_sleep(heartbeatMs)` queries. A short `select 1` every minute did NOT stop Neon suspending the
+    // compute mid-cycle (2026-11-18 17:06): its idle detector evidently samples for active backends, and a
+    // 1 ms query is almost never seen. A backend that is always mid-query is. On error (the compute
+    // restarted under us) report, wait one interval and go again: the one-connection client reconnects.
+    const keepBusy = onSession(
+      () => session`select pg_sleep(${heartbeatMs / 1000})`,
+    ).pipe(
+      Effect.catch((err) =>
+        report(err.cause).pipe(Effect.andThen(Effect.sleep(heartbeatMs))),
+      ),
+      Effect.forever,
+      Effect.interruptible,
+    );
+
+    const unlock = onSession(
+      () => session<{ unlocked: boolean }[]>`
+        select pg_advisory_unlock(${key}::bigint) as unlocked
+      `,
+    ).pipe(
+      // false = this session no longer holds the lock: the original session died mid-cycle (Postgres
+      // dropped its lock) and the client reconnected. Nothing to release, but the overlap guard lapsed.
+      Effect.flatMap(([u]) =>
+        u?.unlocked
+          ? Effect.void
+          : report(
+              new Error(
+                "poll-cycle lock was lost mid-cycle (its session ended)",
+              ),
+            ),
+      ),
+      Effect.catch((err) => report(err.cause)),
+    );
+
+    return yield* Effect.acquireUseRelease(
+      Effect.forkDetach(keepBusy),
+      () => Effect.map(cycle, (value) => ({ acquired: true, value }) as const),
+      (heartbeat) => Fiber.interrupt(heartbeat).pipe(Effect.andThen(unlock)),
+    );
+  });
+
+/** The Promise form: `fn` is the cycle. Same contract as `cycleLock`. */
 export async function withCycleLock<T>(
   session: Sql,
   fn: () => Promise<T>,
   opts: CycleLockOptions = {},
 ): Promise<CycleLockResult<T>> {
-  if (session.options.max !== 1) {
-    throw new Error(
-      "withCycleLock needs a one-connection client (createSessionClient); a pool could unlock on another session",
-    );
-  }
-  const key = opts.key ?? POLL_CYCLE_LOCK_KEY;
-  const heartbeatMs = opts.heartbeatMs ?? DEFAULT_HEARTBEAT_MS;
-  const onError = opts.onHeartbeatError ?? (() => {});
-  const [row] = await session<{ locked: boolean }[]>`
-    select pg_try_advisory_lock(${key}::bigint) as locked
-  `;
-  if (!row?.locked) return { acquired: false };
-
-  // Keep the lock session ACTIVE (not merely connected) for the whole cycle: back-to-back
-  // `pg_sleep(heartbeatMs)` queries. A short `select 1` every minute did NOT stop Neon suspending the
-  // compute mid-cycle (2026-11-18 17:06): its idle detector evidently samples for active backends, and a
-  // 1 ms query is almost never seen. A backend that is always mid-query is. On error (the compute restarted
-  // under us) wait one interval and go again: the one-connection client reconnects by itself.
-  let stopping = false;
-  const keepBusy = (async () => {
-    const seconds = heartbeatMs / 1000;
-    while (!stopping) {
-      try {
-        await session`select pg_sleep(${seconds})`;
-      } catch (err) {
-        if (stopping) break;
-        onError(err);
-        await new Promise((r) => setTimeout(r, heartbeatMs).unref?.());
-      }
-    }
-  })();
-  try {
-    return { acquired: true, value: await fn() };
-  } finally {
-    stopping = true;
-    await keepBusy; // at most one heartbeatMs: the in-flight pg_sleep finishes, then the loop exits
-    try {
-      const [u] = await session<{ unlocked: boolean }[]>`
-        select pg_advisory_unlock(${key}::bigint) as unlocked
-      `;
-      // false = this session no longer holds the lock: the original session died mid-cycle (Postgres
-      // dropped its lock) and the client reconnected. Nothing to release, but the overlap guard lapsed.
-      if (!u?.unlocked) {
-        onError(
-          new Error("poll-cycle lock was lost mid-cycle (its session ended)"),
-        );
-      }
-    } catch (err) {
-      onError(err);
-    }
-  }
+  return Effect.runPromise(
+    cycleLock(
+      session,
+      Effect.tryPromise({ try: () => fn(), catch: (cause) => cause }),
+      opts,
+    ).pipe(
+      // Rethrow what the caller saw before: the driver's error, or the cycle's own.
+      Effect.catch((err) =>
+        Effect.die(err instanceof LockSessionError ? err.cause : err),
+      ),
+    ),
+  );
 }
