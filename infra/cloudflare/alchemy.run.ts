@@ -85,10 +85,10 @@ export default Alchemy.Stack(
         // DIRECT, not pooled: the poll-cycle advisory lock is session-scoped (see src/poller.ts).
         DATABASE_URL: db.connectionUri,
         REGS_API_KEY: secret("REGS_API_KEY"),
-        ADJUDICATOR: yield* Config.String("ADJUDICATOR").pipe(
-          Config.withDefault("gemini"),
-        ),
-        GEMINI_API_KEY: secret("GEMINI_API_KEY"),
+        // LLM adjudication goes through Cloudflare AI Gateway. The live model is ADJUDICATOR_MODEL in
+        // apps/docketclock/src/adjudicator/model.ts (code, not config); this only supplies the credentials.
+        CLOUDFLARE_ACCOUNT_ID: yield* Config.String("CLOUDFLARE_ACCOUNT_ID"),
+        CLOUDFLARE_AI_TOKEN: secret("CLOUDFLARE_AI_TOKEN"),
       },
     });
 

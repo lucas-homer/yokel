@@ -30,7 +30,7 @@ drills, and a post-close accuracy loop that grades every published deadline afte
 yokel/
 ├─ apps/
 │  ├─ docketclock/       ← the substrate: FR + Regs.gov ingest → observation log → reconcile
-│  │                        (RuleBox + optional Gemini adjudicator) → delivery API. BUILT.
+│  │                        (RuleBox + optional LLM adjudicator) → delivery API. BUILT.
 │  └─ watershed-watch/   ← first vertical wedge. Stub (shelved at the W3 spike gate).
 ├─ packages/
 │  └─ contracts/         ← THE SEAM: shared Zod schemas (ParticipationWindow, AccuracyRecord,
@@ -61,7 +61,7 @@ yokel/
   live `/v1/conflicts` proof feed, differential poller with dead-lettering, delivery API,
   cross-window chain conflicts
 - ✅ LLM adjudication: deterministic RuleBox (rules-as-data) + provider-agnostic adjudicator port
-  with a Gemini adapter, content-hash verdict cache, call budgets
+  through Cloudflare AI Gateway, content-hash verdict cache, call budgets
 - ✅ Observability (slices A–D): pino → Loki/Alloy logs, Prometheus metrics + Grafana
   dashboards/alerts, Langfuse LLM tracing, gold-corpus adjudicator evals with a CI regression gate
 - ✅ Backups + restore drills: CNPG PITR (barman plugin → MinIO, RPO ≤5 min), hourly Cloudflare R2
@@ -110,7 +110,7 @@ REGS_API_KEY=xxx bash infra/scripts/seed-docketclock-secrets.sh
 
 - `REGS_API_KEY` — Regulations.gov v4 key ([api.data.gov/signup](https://api.data.gov/signup/));
   the Federal Register API needs no key
-- `GEMINI_API_KEY` (with `ADJUDICATOR=gemini`) — optional LLM adjudication of borderline chain links
+- `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_AI_TOKEN` — optional LLM adjudication of borderline chain links via Cloudflare AI Gateway (model pinned in `apps/docketclock/src/adjudicator/model.ts`)
 - `DOCKETCLOCK_API_KEYS` — keys for the delivery API's `x-api-key` auth (fails closed)
 - `WEBHOOK_HMAC_SECRET` — signing secret for the webhook delivery surface (seeded now; consumed
   once webhooks land)

@@ -56,25 +56,11 @@ spec:
                 secretKeyRef:
                   name: docketclock-external
                   key: regs_api_key
-            # LLM adjudicator (Slice 3c). selectAdjudicator gates on ADJUDICATOR==gemini AND a non-empty
-            # GEMINI_API_KEY; the ESO secret key is lowercase gemini_api_key (empty => null:abstain, safe).
-            # ADJUDICATOR is the generic provider SELECTOR (the provider-agnostic seam); the credential is
-            # named for its provider (GEMINI_API_KEY) since a key only works with one provider.
+            # LLM adjudicator. Every LLM call now goes through Cloudflare AI Gateway and the live model is
+            # ADJUDICATOR_MODEL in code; the cloud poller is the live one. This chart keeps the in-cluster
+            # poller deterministic-only (ADJUDICATOR=off) — it has no gateway token.
             - name: ADJUDICATOR
-              value: {{ .Values.adjudicator.provider | quote }}
-            - name: GEMINI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: docketclock-external
-                  key: gemini_api_key
-                  # OPTIONAL by design — unlike REGS_API_KEY (a hard dependency), the LLM is an optional
-                  # enhancement that DEGRADES to null:abstain when absent. Without this, the poller would
-                  # CrashLoopBackOff in the window after this chart deploys but before the integrator
-                  # re-seeds gemini_api_key into Vault (the synced Secret still lacks the key). optional:true
-                  # → GEMINI_API_KEY simply unset → deterministic-only, so polling never goes down for it.
-                  optional: true
-            - name: GEMINI_MODEL
-              value: {{ .Values.adjudicator.model | quote }}
+              value: {{ .Values.adjudicator.mode | quote }}
             - name: CHAIN_MAX_ESCALATIONS_PER_CYCLE
               value: {{ .Values.adjudicator.maxEscalationsPerCycle | quote }}
             # Per-cycle Regs re-poll budget (rate-limit safety). Bounds the re-poll pass's request burst so a

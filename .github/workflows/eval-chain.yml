@@ -2,7 +2,7 @@ name: Eval — chain adjudicator
 
 # Regression gate for the chain adjudicator's amends/doesn't-amend quality (Slice D, PR-D3).
 # The gold corpus (apps/docketclock/eval/chain-gold.json) is STATIC, so the only inputs that move
-# the score are (a) Gemini's slow provider drift and (b) OUR changes at a commit. Two triggers,
+# the score are (a) the provider's slow model drift and (b) OUR changes at a commit. Two triggers,
 # matched to those two sources:
 #   • schedule  — a WEEKLY canary for provider drift (low noise; ~4 runs/mo).
 #   • push:main — path-filtered to the files that can actually change the verdict, so a regression
@@ -11,8 +11,8 @@ name: Eval — chain adjudicator
 #
 # The eval CORE is Langfuse-independent: gold -> adjudicate -> score -> threshold. The local
 # Langfuse server is unreachable from Actions, so NO LANGFUSE_* is set here (the run skips the
-# optional dataset-run push cleanly). It needs only GEMINI_API_KEY. ~50 small gemini-2.5-flash
-# calls per run (~$0.10-0.15).
+# optional dataset-run push cleanly). It scores the LIVE model (ADJUDICATOR_MODEL in
+# apps/docketclock/src/adjudicator/model.ts) through Cloudflare AI Gateway: ~50 small calls per run.
 
 on:
   schedule:
@@ -21,7 +21,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "apps/docketclock/src/adjudicator/**"
+      - "apps/docketclock/src/adjudicator/**" # incl. model.ts, so a model switch is scored on merge
       - "apps/docketclock/src/rulebox/**"
       - "apps/docketclock/eval/chain-gold.json"
       - "apps/docketclock/scripts/eval-chain.ts" # the gate logic itself (scoreEval helpers live under adjudicator/**)
@@ -33,7 +33,7 @@ on:
         required: false
         default: "0.85"
 
-# Serialize on main so two near-simultaneous merges don't double-bill Gemini; let the newest win.
+# Serialize on main so two near-simultaneous merges don't double-bill the provider; let the newest win.
 concurrency:
   group: eval-chain-${{ github.ref }}
   cancel-in-progress: true
@@ -41,7 +41,7 @@ concurrency:
 jobs:
   eval:
     runs-on: ubuntu-latest
-    # ~50 serial Gemini calls with no per-call timeout; cap the job so a hung/looping
+    # ~50 serial model calls with no per-call timeout; cap the job so a hung/looping
     # provider call can't burn up to the 6h default on a stuck adjudicate().
     timeout-minutes: 20
     steps:
@@ -60,7 +60,7 @@ jobs:
       # input can't inject a command; the script's numArg parses it back to a number.
       - name: Run chain eval (gate)
         env:
-          ADJUDICATOR: gemini
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
           MIN_ACCURACY: ${{ github.event.inputs.min_accuracy || '0.85' }}
         run: pnpm --filter @yokel/docketclock eval:chain --min-accuracy "$MIN_ACCURACY"

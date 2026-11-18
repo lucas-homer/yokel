@@ -17,8 +17,8 @@ export interface PollerEnv {
   POLLER: DurableObjectNamespace<PollerContainer>;
   DATABASE_URL: string;
   REGS_API_KEY: string;
-  ADJUDICATOR: string;
-  GEMINI_API_KEY: string;
+  CLOUDFLARE_ACCOUNT_ID: string;
+  CLOUDFLARE_AI_TOKEN: string;
   LOG_LEVEL?: string;
 }
 
@@ -49,8 +49,8 @@ export class PollerContainer extends Container<PollerEnv> {
         LOG_LEVEL: e.LOG_LEVEL ?? "info",
         DATABASE_URL: e.DATABASE_URL,
         REGS_API_KEY: e.REGS_API_KEY,
-        ADJUDICATOR: e.ADJUDICATOR,
-        GEMINI_API_KEY: e.GEMINI_API_KEY,
+        CLOUDFLARE_ACCOUNT_ID: e.CLOUDFLARE_ACCOUNT_ID,
+        CLOUDFLARE_AI_TOKEN: e.CLOUDFLARE_AI_TOKEN,
       },
     });
     return "started";
