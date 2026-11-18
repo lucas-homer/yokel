@@ -31,9 +31,11 @@ Both containers run the **existing** image (`apps/docketclock/Dockerfile`), so t
 | `REGS_API_KEY`           | GitHub secret; repo-root `.env` locally          | yes (the poller)                                            |
 | `GEMINI_API_KEY`         | GitHub secret; repo-root `.env` locally          | yes (the poller)                                            |
 | `DOCKETCLOCK_API_KEYS`   | GitHub secret; repo-root `.env` locally          | yes (the API)                                               |
-| `ADJUDICATOR`            | `.env` / environment                             | no (defaults to `gemini`)                                   |
 | `DOCKETCLOCK_POLL_CRON`  | GitHub variable / `.env`                         | no (unset means the cron is off; `*/15 * * * *` at cutover) |
 | `DOCKETCLOCK_API_DOMAIN` | GitHub variable / `.env`                         | no (for example `api.docketclock.app`)                      |
+
+The live adjudicator and its model are not settings: they are pinned in `alchemy.run.ts` (`ADJUDICATOR`,
+`GEMINI_MODEL` / `LLM_MODEL`), so changing models is a reviewed one-line diff.
 
 `REGS_API_KEY`, `GEMINI_API_KEY` and `DOCKETCLOCK_API_KEYS` are new GitHub secrets. Use the values the
 cluster uses today. Alchemy binds each one as a Worker secret, and the Durable Object hands it to its

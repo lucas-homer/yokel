@@ -66,7 +66,7 @@ async function main(): Promise<void> {
   console.log(`adjudicator.id = ${adjudicator.id}`);
   if (adjudicator.id.startsWith("null:")) {
     throw new Error(
-      "selectAdjudicator() returned the null adjudicator — set ADJUDICATOR=gemini + GEMINI_API_KEY, or ADJUDICATOR=cloudflare + CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_AI_TOKEN",
+      "selectAdjudicator() returned the null adjudicator — set ADJUDICATOR=gemini + GEMINI_API_KEY, or ADJUDICATOR=ai-gateway + CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_AI_TOKEN",
     );
   }
 

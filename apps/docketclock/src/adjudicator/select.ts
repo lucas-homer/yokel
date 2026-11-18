@@ -7,7 +7,7 @@
  * live integrator step provisions the key and invokes selectAdjudicator(); until then this is exercised
  * only by tests.
  *
- * ADJUDICATOR=cloudflare → Cloudflare AI Gateway (see cloudflareAdjudicator below).
+ * ADJUDICATOR=ai-gateway → Cloudflare AI Gateway (see cloudflareAdjudicator below).
  *
  * PRECEDENCE (a Gemini adapter requires BOTH a provider selector AND a key, else we fall back to null):
  *   1. ADJUDICATOR must equal "gemini" (case-insensitive). Any other value, or unset, or "null" → NullAdjudicator.
@@ -62,7 +62,7 @@ export function selectTracer(env: NodeJS.ProcessEnv = process.env): LlmTracer {
 export const DEFAULT_CLOUDFLARE_MODEL = "google/gemini-2.5-flash";
 
 /**
- * cloudflareAdjudicator — the Cloudflare AI Gateway branch (ADJUDICATOR=cloudflare). Needs BOTH
+ * cloudflareAdjudicator — the Cloudflare AI Gateway branch (ADJUDICATOR=ai-gateway). Needs BOTH
  * CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_AI_TOKEN (an API token with Account > Workers AI > Read; billing is
  * the account's AI Gateway Unified Billing credits). Missing either → undefined (caller degrades to null).
  *   - LLM_MODEL            catalog model id (default google/gemini-2.5-flash, i.e. today's model)
@@ -87,7 +87,7 @@ export function cloudflareAdjudicator(
     baseUrl: `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/v1`,
     apiKey,
     model,
-    idPrefix: "cfai",
+    idPrefix: "aigw",
     headers: { "cf-aig-gateway-id": gateway },
     timeoutMs:
       Number.isFinite(timeoutMs) && timeoutMs > 0
@@ -102,7 +102,7 @@ export function selectAdjudicator(
   env: NodeJS.ProcessEnv = process.env,
 ): Adjudicator {
   const provider = (env.ADJUDICATOR ?? "").trim().toLowerCase();
-  if (provider === "cloudflare") {
+  if (provider === "ai-gateway") {
     return cloudflareAdjudicator(env) ?? new NullAdjudicator();
   }
   if (provider !== "gemini") {

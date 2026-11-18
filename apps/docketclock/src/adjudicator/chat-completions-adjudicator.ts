@@ -30,7 +30,7 @@ export interface ChatCompletionsAdjudicatorOpts {
   apiKey: string;
   /** Model string as the endpoint names it, e.g. "google/gemini-3-flash". */
   model: string;
-  /** Provenance prefix for `id` (e.g. "cfai" → "cfai:google/gemini-3-flash"). */
+  /** Provenance prefix for `id` (e.g. "aigw" → "aigw:google/gemini-3-flash"). */
   idPrefix: string;
   /** Extra request headers (e.g. Cloudflare's `cf-aig-gateway-id`). Never put secrets in the id/logs. */
   headers?: Record<string, string>;

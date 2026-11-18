@@ -5,7 +5,7 @@
  * Pins: request shape (Bearer auth in the header, gateway header, model, temperature 0, strict json_schema,
  * shared prompt text); happy-path parse incl. fenced JSON and array content; malformed → throw; the knob
  * ladder (400 naming temperature / response_format drops ONLY that knob; 401/402 never ladder); and the
- * selectAdjudicator cloudflare branch (needs account id AND token, else null; LLM_MODEL → id).
+ * selectAdjudicator ai-gateway branch (needs account id AND token, else null; LLM_MODEL → id).
  */
 import type { AdjudicationInput } from "@yokel/contracts";
 import { ChatCompletionsAdjudicator } from "../src/adjudicator/chat-completions-adjudicator.js";
@@ -83,7 +83,7 @@ const make = (transport: FetchLike) =>
     baseUrl: "https://api.example.test/ai/v1/",
     apiKey: "tok-not-real",
     model: "google/gemini-3-flash",
-    idPrefix: "cfai",
+    idPrefix: "aigw",
     headers: { "cf-aig-gateway-id": "docketclock" },
     retries: 0,
     timeoutMs: 2000,
@@ -105,7 +105,7 @@ const make = (transport: FetchLike) =>
   const a = make(transport);
   const v = await a.adjudicate(chainInput);
   const c = calls[0]!;
-  assert("id is prefix:model", a.id === "cfai:google/gemini-3-flash", a.id);
+  assert("id is prefix:model", a.id === "aigw:google/gemini-3-flash", a.id);
   assert(
     "POSTs to {base}/chat/completions (trailing slash trimmed)",
     c.url === "https://api.example.test/ai/v1/chat/completions",
@@ -283,22 +283,22 @@ await rejects(
   );
 }
 
-// ── selectAdjudicator cloudflare branch ────────────────────────────────────────────────────────────
+// ── selectAdjudicator ai-gateway branch ────────────────────────────────────────────────────────────
 {
   const base = {
-    ADJUDICATOR: "cloudflare",
+    ADJUDICATOR: "ai-gateway",
     CLOUDFLARE_ACCOUNT_ID: "acct123",
     CLOUDFLARE_AI_TOKEN: "tok\n",
   };
   assert(
-    "cloudflare + id + token → cfai default model",
-    selectAdjudicator(base).id === "cfai:google/gemini-2.5-flash",
+    "ai-gateway + id + token → aigw default model",
+    selectAdjudicator(base).id === "aigw:google/gemini-2.5-flash",
     selectAdjudicator(base).id,
   );
   assert(
     "LLM_MODEL picks the model",
     selectAdjudicator({ ...base, LLM_MODEL: "openai/gpt-5.4-mini" }).id ===
-      "cfai:openai/gpt-5.4-mini",
+      "aigw:openai/gpt-5.4-mini",
   );
   assert(
     "no token → null",
@@ -314,8 +314,8 @@ await rejects(
   );
   assert(
     "CASE-insensitive selector",
-    selectAdjudicator({ ...base, ADJUDICATOR: "Cloudflare" }).id.startsWith(
-      "cfai:",
+    selectAdjudicator({ ...base, ADJUDICATOR: "AI-Gateway" }).id.startsWith(
+      "aigw:",
     ),
   );
 }

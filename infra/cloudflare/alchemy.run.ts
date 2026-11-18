@@ -85,9 +85,13 @@ export default Alchemy.Stack(
         // DIRECT, not pooled: the poll-cycle advisory lock is session-scoped (see src/poller.ts).
         DATABASE_URL: db.connectionUri,
         REGS_API_KEY: secret("REGS_API_KEY"),
-        ADJUDICATOR: yield* Config.String("ADJUDICATOR").pipe(
-          Config.withDefault("gemini"),
-        ),
+        // The LIVE adjudicator, pinned here in code so a provider/model switch is a reviewed one-line diff.
+        // Every verdict row records `${ADJUDICATOR id}@rulebook` (e.g. "gemini:gemini-2.5-flash@..."), so
+        // the database says which model produced each answer. To move to Cloudflare AI Gateway set
+        // ADJUDICATOR "ai-gateway", LLM_MODEL "<catalog id>" and pass CLOUDFLARE_ACCOUNT_ID +
+        // CLOUDFLARE_AI_TOKEN; pick the model with the "Eval — compare models" workflow first.
+        ADJUDICATOR: "gemini",
+        GEMINI_MODEL: "gemini-2.5-flash",
         GEMINI_API_KEY: secret("GEMINI_API_KEY"),
       },
     });
