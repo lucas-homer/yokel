@@ -6,7 +6,8 @@ name: Cloud deploy
 #
 # Repo secrets: CLOUDFLARE_API_TOKEN, NEON_API_KEY, REGS_API_KEY, CLOUDFLARE_AI_TOKEN, DOCKETCLOCK_API_KEYS.
 # Repo variables: CLOUDFLARE_ACCOUNT_ID (required); DOCKETCLOCK_POLL_CRON (optional; unset = cron OFF);
-# DOCKETCLOCK_API_DOMAIN (optional; unset = workers.dev).
+# DOCKETCLOCK_API_DOMAIN (optional; unset = workers.dev); OTEL_EXPORTER_OTLP_ENDPOINT (optional; unset =
+# no trace export) with its secret OTEL_EXPORTER_OTLP_HEADERS (e.g. Grafana Cloud's Authorization header).
 on:
   workflow_dispatch:
     inputs:
@@ -41,6 +42,8 @@ jobs:
       DOCKETCLOCK_API_KEYS: ${{ secrets.DOCKETCLOCK_API_KEYS }}
       DOCKETCLOCK_POLL_CRON: ${{ vars.DOCKETCLOCK_POLL_CRON }}
       DOCKETCLOCK_API_DOMAIN: ${{ vars.DOCKETCLOCK_API_DOMAIN }}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${{ vars.OTEL_EXPORTER_OTLP_ENDPOINT }}
+      OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

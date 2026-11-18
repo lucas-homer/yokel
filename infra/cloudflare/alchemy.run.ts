@@ -53,6 +53,11 @@ export default Alchemy.Stack(
     const apiDomain = yield* Config.String("DOCKETCLOCK_API_DOMAIN").pipe(
       Config.withDefault(""),
     );
+    // Trace export from the poller container (apps/docketclock/src/telemetry.ts). Unset = off. When the
+    // endpoint is set, its headers secret must be too (Grafana Cloud's `Authorization=Basic%20...`).
+    const otelEndpoint = yield* Config.String(
+      "OTEL_EXPORTER_OTLP_ENDPOINT",
+    ).pipe(Config.withDefault(""));
 
     const db = yield* Neon.Project("Db", {
       name: "docketclock",
@@ -89,6 +94,12 @@ export default Alchemy.Stack(
         // apps/docketclock/src/adjudicator/model.ts (code, not config); this only supplies the credentials.
         CLOUDFLARE_ACCOUNT_ID: yield* Config.String("CLOUDFLARE_ACCOUNT_ID"),
         CLOUDFLARE_AI_TOKEN: secret("CLOUDFLARE_AI_TOKEN"),
+        ...(otelEndpoint
+          ? {
+              OTEL_EXPORTER_OTLP_ENDPOINT: otelEndpoint,
+              OTEL_EXPORTER_OTLP_HEADERS: secret("OTEL_EXPORTER_OTLP_HEADERS"),
+            }
+          : {}),
       },
     });
 

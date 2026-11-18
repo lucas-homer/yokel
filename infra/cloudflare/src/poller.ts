@@ -20,6 +20,9 @@ export interface PollerEnv {
   CLOUDFLARE_ACCOUNT_ID: string;
   CLOUDFLARE_AI_TOKEN: string;
   LOG_LEVEL?: string;
+  /** Optional OTLP trace export (apps/docketclock/src/telemetry.ts); both unset = off. */
+  OTEL_EXPORTER_OTLP_ENDPOINT?: string;
+  OTEL_EXPORTER_OTLP_HEADERS?: string;
 }
 
 /** The DO instance name. Fixed, so every cron fire reaches the same container. */
@@ -51,6 +54,13 @@ export class PollerContainer extends Container<PollerEnv> {
         REGS_API_KEY: e.REGS_API_KEY,
         CLOUDFLARE_ACCOUNT_ID: e.CLOUDFLARE_ACCOUNT_ID,
         CLOUDFLARE_AI_TOKEN: e.CLOUDFLARE_AI_TOKEN,
+        ...(e.OTEL_EXPORTER_OTLP_ENDPOINT
+          ? {
+              OTEL_EXPORTER_OTLP_ENDPOINT: e.OTEL_EXPORTER_OTLP_ENDPOINT,
+              OTEL_EXPORTER_OTLP_HEADERS: e.OTEL_EXPORTER_OTLP_HEADERS ?? "",
+              OTEL_SERVICE_NAME: "docketclock-poller",
+            }
+          : {}),
       },
     });
     return "started";
