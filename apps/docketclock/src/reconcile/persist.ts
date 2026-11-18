@@ -35,8 +35,7 @@ import {
   type ReconcileOptions,
 } from "./reconcile.js";
 import {
-  chainAmbiguousPairs,
-  chainReconcile,
+  chainCore,
   isAmendment,
   isKeywordFalsePositive,
   linkBasis,
@@ -1101,13 +1100,14 @@ export async function chainReconcileOnce(
 
   // CONFIDENT links — the deterministic engine (rules 1–5). Byte-identical to today's output. Under the
   // null adapter the merged set below equals exactly this (Invariant 1).
-  const confident = chainReconcile(candidates, now);
+  // chainCore computes BOTH sets in one pass over the pairs (chainReconcile / chainAmbiguousPairs are each
+  // exactly one half of it), so the O(amendments x candidates) loop runs once per cycle, not twice.
+  const { confident, ambiguous: ambiguousPairs } = chainCore(candidates, now);
 
   // AMBIGUOUS tail — pairs the confident path UNDER-LINKS (structural rules pass, rule-2 corroboration
   // fails). Escalate them to the adjudicator; only an `affirm` promotes a pair to a cross_window link
   // (carrying `llm_corroborated`). A null adapter / outage / reject / uncertain → no promotion (worst case
   // is today's confident-only output). Errors are isolated per-pair inside adjudicateAmbiguousPairs.
-  const ambiguousPairs = chainAmbiguousPairs(candidates, now);
   const adjudicated = await adjudicateAmbiguousPairs(
     sql,
     adjudicator,

@@ -172,14 +172,14 @@ try {
       `;
       return row?.pid;
     };
-    let seen: { query: string; age_ms: number } | undefined;
+    let seen: { query: string; state: string } | undefined;
     const r = await withCycleLock(
       lockA,
       async () => {
         await new Promise((res) => setTimeout(res, 300));
         const pid = await holderPid();
-        const [row] = await other<{ query: string; age_ms: number }[]>`
-          select query, (extract(epoch from now() - query_start) * 1000)::int as age_ms
+        const [row] = await other<{ query: string; state: string }[]>`
+          select query, state
           from pg_stat_activity where pid = ${pid ?? -1}
         `;
         seen = row;
@@ -192,8 +192,8 @@ try {
       r.acquired && r.value === "beat",
     );
     assert(
-      "heartbeat → lock session ran `select 1` during the cycle",
-      !!seen && /select 1/.test(seen.query) && seen.age_ms < 250,
+      "heartbeat → lock session is ACTIVE in pg_sleep during the cycle",
+      !!seen && seen.state === "active" && /pg_sleep/.test(seen.query),
       JSON.stringify(seen),
     );
     assert("heartbeat → lock released afterwards", !(await lockHeldAnywhere()));
