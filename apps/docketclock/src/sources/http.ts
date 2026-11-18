@@ -26,6 +26,7 @@
  * and get the typed `HttpError` union.
  */
 import { Data, Duration, Effect, Schedule } from "effect";
+import { runAmbient } from "../ambient.js";
 
 /**
  * Ceiling for a server-provided Retry-After sleep. regulations.gov answers a burst over its ~1,000 req/hr
@@ -210,13 +211,31 @@ interface RequestSpec<T> {
   notFound?: { value: T };
 }
 
-/** Send once, check the status, read the body — all bounded by one timeout. */
-const attempt = <T>(spec: RequestSpec<T>): Effect.Effect<T, HttpError> =>
+/**
+ * The URL as a span may carry it: origin + path only. Our keyed sources send their keys as headers, never
+ * in the URL, but a query string is where a key would go (api.data.gov accepts `api_key=`), so a trace
+ * never gets one.
+ */
+export function spanUrl(url: string): { full: string; host: string } {
+  try {
+    const u = new URL(url);
+    return { full: `${u.origin}${u.pathname}`, host: u.hostname };
+  } catch {
+    return { full: "(unparseable url)", host: "" };
+  }
+}
+
+/** Send once, check the status, read the body — all bounded by one timeout. One client span per attempt. */
+const attempt = <T>(
+  spec: RequestSpec<T>,
+  resendCount: number,
+): Effect.Effect<T, HttpError> =>
   Effect.gen(function* () {
     const res = yield* Effect.tryPromise({
       try: (signal) => spec.send(signal),
       catch: (cause) => new NetworkError({ cause }),
     });
+    yield* Effect.annotateCurrentSpan("http.response.status_code", res.status);
 
     if (res.ok) {
       const text = yield* readBody(res);
@@ -250,17 +269,33 @@ const attempt = <T>(spec: RequestSpec<T>): Effect.Effect<T, HttpError> =>
           }),
         ),
     }),
+    // OpenTelemetry HTTP client conventions: the span is named for the method; retries are resends.
+    Effect.withSpan(spec.method, {
+      kind: "client",
+      attributes: {
+        "http.request.method": spec.method,
+        "url.full": spanUrl(spec.url).full,
+        "server.address": spanUrl(spec.url).host,
+        ...(resendCount > 0
+          ? { "http.request.resend_count": resendCount }
+          : {}),
+      },
+    }),
   );
 
 /** The ONE retry loop behind every adapter request: an attempt, retried per the scope above. */
 const request = <T>(spec: RequestSpec<T>): Effect.Effect<T, HttpError> =>
-  attempt(spec).pipe(
-    Effect.retry({
-      schedule: backoff,
-      times: spec.retries,
-      while: isRetriable,
-    }),
-  );
+  // `sent` counts attempts for this one request (fresh per run); retries re-run only the inner attempt.
+  Effect.suspend(() => {
+    let sent = 0;
+    return Effect.suspend(() => attempt(spec, sent++)).pipe(
+      Effect.retry({
+        schedule: backoff,
+        times: spec.retries,
+        while: isRetriable,
+      }),
+    );
+  });
 
 // ── Effect-native API ───────────────────────────────────────────────────────────────────────────────
 
@@ -351,7 +386,7 @@ export const httpPostJson = (
  * for a failed send or broken body, the SyntaxError for a malformed body, and an Error with the status
  * (or the timeout) in its message otherwise.
  */
-function toThrown(e: HttpError): unknown {
+export function toThrown(e: HttpError): unknown {
   switch (e._tag) {
     case "NetworkError":
     case "BodyReadError":
@@ -363,8 +398,9 @@ function toThrown(e: HttpError): unknown {
   }
 }
 
+// runAmbient: inside a traced pass, the request's spans join that pass's trace (telemetry.ts).
 const runAsPromise = <T>(program: Effect.Effect<T, HttpError>): Promise<T> =>
-  Effect.runPromise(
+  runAmbient(
     program.pipe(Effect.catch((e: HttpError) => Effect.die(toThrown(e)))),
   );
 

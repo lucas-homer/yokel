@@ -15,9 +15,23 @@
  * those knobs we retry ONCE per knob without it (schema → json_object → none), in that order. The prompt
  * already demands JSON and the parse is strict, so dropping a knob can never let a malformed verdict
  * through — it only lets a model that can't take the knob still be scored. Auth/402/404 never ladder.
+ *
+ * EFFECT (ADR 0018, slice 4). The call is an Effect program: the ladder is one `Effect.catchTag` on the
+ * typed `HttpStatusError`, and a bad answer is a tagged `BadCompletion`. The whole call is one OpenTelemetry
+ * GenAI client span (`chat <model>`, with token usage, finish reason, verdict and the knobs the ladder
+ * dropped) whose HTTP attempts are child spans. Inside a traced poll pass the span joins that pass's trace
+ * (ambient.ts). `adjudicate()` keeps the Promise port and throws exactly what it threw before.
  */
 import { AdjudicationVerdict, type AdjudicationInput } from "@yokel/contracts";
-import { postJsonWithRetry, type FetchLike } from "../sources/http.js";
+import { Data, Effect } from "effect";
+import { runAmbient } from "../ambient.js";
+import {
+  httpPostJson,
+  toThrown,
+  type FetchLike,
+  type HttpError,
+  type HttpStatusError,
+} from "../sources/http.js";
 import { adjudicationContentHash } from "./content-hash.js";
 import type { Adjudicator } from "./port.js";
 import { SYSTEM_INSTRUCTION, buildPrompt } from "./prompt.js";
@@ -113,12 +127,18 @@ function parseUsage(
   return Object.keys(usage).length > 0 ? usage : undefined;
 }
 
+/** The response arrived but holds no usable verdict (no choice, empty text, not JSON). Never retried. */
+export class BadCompletion extends Data.TaggedError("BadCompletion")<{
+  readonly message: string;
+}> {}
+
 /** A 400/422 whose body names a knob we can drop. Other 4xx (401/402/403/404) never ladder. */
 function rejectedKnob(
-  err: unknown,
+  err: HttpStatusError,
 ): "temperature" | "response_format" | undefined {
-  const msg = err instanceof Error ? err.message : String(err);
-  if (!/-> (400|422) /.test(msg)) return undefined;
+  if (err.status !== 400 && err.status !== 422) return undefined;
+  // The same text the pre-Effect ladder matched: the error message, which carries the first 300 body chars.
+  const msg = err.message;
   if (/temperature/i.test(msg)) return "temperature";
   if (
     /response_format|json_schema|json schema|structured output|schema/i.test(
@@ -127,6 +147,13 @@ function rejectedKnob(
   )
     return "response_format";
   return undefined;
+}
+
+/** `gen_ai.provider.name` from the gateway model id: "google/gemini-3-flash" → "google", "@cf/…" → workers-ai. */
+function providerOf(model: string): string {
+  if (model.startsWith("@cf/")) return "cloudflare.workers_ai";
+  const slash = model.indexOf("/");
+  return slash > 0 ? model.slice(0, slash) : "unknown";
 }
 
 export class ChatCompletionsAdjudicator implements Adjudicator {
@@ -194,77 +221,154 @@ export class ChatCompletionsAdjudicator implements Adjudicator {
     };
   }
 
-  async adjudicate(input: AdjudicationInput): Promise<AdjudicationVerdict> {
-    let withTemperature = true;
-    let format: ResponseFormatMode = "schema";
-    const startedAt = Date.now();
-    let raw: ChatCompletionResponse;
-    // At most 1 (temperature) + 2 (schema→json→none) knob drops, so the loop is bounded at 4 sends.
-    for (;;) {
-      try {
-        raw = (await postJsonWithRetry(
-          this.url,
-          this.body(input, withTemperature, format),
-          {
-            headers: {
-              Authorization: `Bearer ${this.apiKey}`,
-              ...this.headers,
-            },
-            timeoutMs: this.timeoutMs,
-            retries: this.retries,
-            ...(this.transport ? { transport: this.transport } : {}),
-          },
-        )) as ChatCompletionResponse;
-        break;
-      } catch (err) {
+  /**
+   * One send, then the ladder: a 400/422 that names a droppable knob re-sends once without it. Every other
+   * failure passes through untouched.
+   */
+  private send(
+    input: AdjudicationInput,
+    withTemperature: boolean,
+    format: ResponseFormatMode,
+    dropped: string[],
+  ): Effect.Effect<ChatCompletionResponse, HttpError> {
+    return httpPostJson(this.url, this.body(input, withTemperature, format), {
+      headers: { Authorization: `Bearer ${this.apiKey}`, ...this.headers },
+      timeoutMs: this.timeoutMs,
+      retries: this.retries,
+      ...(this.transport ? { transport: this.transport } : {}),
+    }).pipe(
+      Effect.map((raw) => raw as ChatCompletionResponse),
+      // At most 1 (temperature) + 2 (schema→json→none) knob drops, so this recursion is bounded at 4 sends.
+      Effect.catchTag("HttpStatusError", (err) => {
         const knob = rejectedKnob(err);
         if (knob === "temperature" && withTemperature) {
-          withTemperature = false;
-          continue;
+          return this.send(input, false, format, [...dropped, "temperature"]);
         }
         if (knob === "response_format" && format !== "none") {
-          format = format === "schema" ? "json" : "none";
-          continue;
+          const next = format === "schema" ? "json" : "none";
+          return this.send(input, withTemperature, next, [
+            ...dropped,
+            `response_format:${format}`,
+          ]);
         }
-        throw err;
-      }
-    }
-    const latencyMs = Date.now() - startedAt;
+        return Effect.fail(err);
+      }),
+      Effect.tap(() =>
+        dropped.length > 0
+          ? Effect.annotateCurrentSpan(
+              "docketclock.ladder.dropped",
+              dropped.join(","),
+            )
+          : Effect.void,
+      ),
+    );
+  }
 
+  /** The verdict in the completion, or a BadCompletion saying why there isn't one. */
+  private verdictOf(
+    raw: ChatCompletionResponse,
+  ): Effect.Effect<AdjudicationVerdict, BadCompletion> {
     const choice = raw.choices?.[0];
-    if (!choice) throw new Error(`${this.id}: no choice in response`);
+    if (!choice)
+      return Effect.fail(
+        new BadCompletion({ message: `${this.id}: no choice in response` }),
+      );
     const text = contentText(choice.message?.content);
     if (!text) {
-      throw new Error(
-        `${this.id}: empty choice (finish_reason=${choice.finish_reason ?? "unknown"}${
-          choice.message?.refusal
-            ? `, refusal=${choice.message.refusal.slice(0, 100)}`
-            : ""
-        })`,
+      return Effect.fail(
+        new BadCompletion({
+          message: `${this.id}: empty choice (finish_reason=${choice.finish_reason ?? "unknown"}${
+            choice.message?.refusal
+              ? `, refusal=${choice.message.refusal.slice(0, 100)}`
+              : ""
+          })`,
+        }),
       );
     }
-    let parsed: unknown;
-    try {
-      parsed = extractJson(text);
-    } catch {
-      throw new Error(
-        `${this.id}: choice text was not valid JSON: ${text.slice(0, 200)}`,
+    return Effect.try({
+      try: () => extractJson(text),
+      catch: () =>
+        new BadCompletion({
+          message: `${this.id}: choice text was not valid JSON: ${text.slice(0, 200)}`,
+        }),
+    }).pipe(
+      // A wrong verdict shape is a ZodError, rethrown as-is at the Promise boundary (a defect here).
+      Effect.map((parsed) => AdjudicationVerdict.parse(parsed)),
+    );
+  }
+
+  /** The whole adjudication as an Effect: one GenAI client span around the sends, the parse and the record. */
+  adjudicateEffect(
+    input: AdjudicationInput,
+  ): Effect.Effect<AdjudicationVerdict, HttpError | BadCompletion> {
+    const self = this;
+    return Effect.gen(function* () {
+      const startedAt = Date.now();
+      const raw = yield* self.send(input, true, "schema", []);
+      const latencyMs = Date.now() - startedAt;
+      const usage = parseUsage(raw.usage);
+      if (usage?.input !== undefined)
+        yield* Effect.annotateCurrentSpan(
+          "gen_ai.usage.input_tokens",
+          usage.input,
+        );
+      if (usage?.output !== undefined)
+        yield* Effect.annotateCurrentSpan(
+          "gen_ai.usage.output_tokens",
+          usage.output,
+        );
+      const finish = raw.choices?.[0]?.finish_reason;
+      if (finish)
+        yield* Effect.annotateCurrentSpan("gen_ai.response.finish_reasons", [
+          finish,
+        ]);
+      const verdict = yield* self.verdictOf(raw);
+      yield* Effect.annotateCurrentSpan(
+        "docketclock.verdict.classification",
+        verdict.classification,
       );
-    }
-    const verdict = AdjudicationVerdict.parse(parsed);
-    const usage = parseUsage(raw.usage);
-    this.tracer.recordGeneration({
-      model: this.model,
-      input,
-      output: verdict,
-      verdict,
-      ...(usage ? { usage } : {}),
-      latencyMs,
-      contentHash: adjudicationContentHash(input),
-      adjudicatorId: `${this.id}@${input.rulebook_version}`,
-      rulebookVersion: input.rulebook_version,
-      kind: input.kind,
-    });
-    return verdict;
+      const contentHash = adjudicationContentHash(input);
+      self.tracer.recordGeneration({
+        model: self.model,
+        input,
+        output: verdict,
+        verdict,
+        ...(usage ? { usage } : {}),
+        latencyMs,
+        contentHash,
+        adjudicatorId: `${self.id}@${input.rulebook_version}`,
+        rulebookVersion: input.rulebook_version,
+        kind: input.kind,
+      });
+      return verdict;
+    }).pipe(
+      // OpenTelemetry GenAI conventions: span "chat <model>", kind client.
+      Effect.withSpan(`chat ${this.model}`, {
+        kind: "client",
+        attributes: {
+          "gen_ai.operation.name": "chat",
+          "gen_ai.provider.name": providerOf(this.model),
+          "gen_ai.request.model": this.model,
+          "gen_ai.request.temperature": 0,
+          "docketclock.adjudication.kind": input.kind,
+          "docketclock.rulebook_version": input.rulebook_version,
+        },
+      }),
+    );
+  }
+
+  /** The Promise port: the same errors as before (HTTP errors as http.ts throws them, a BadCompletion's message). */
+  adjudicate(input: AdjudicationInput): Promise<AdjudicationVerdict> {
+    return runAmbient(
+      this.adjudicateEffect(input).pipe(
+        Effect.catch((err) =>
+          Effect.die(
+            err._tag === "BadCompletion"
+              ? new Error(err.message)
+              : toThrown(err),
+          ),
+        ),
+      ),
+    );
   }
 }
