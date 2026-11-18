@@ -61,18 +61,21 @@ Postgres tools run inside the CNPG pod (same 18.x version as Neon), so nothing e
 
 ### 1. Stop the Mini poller
 
-Merging the cutover PR sets `poller.enabled=false` in `infra/argocd/apps/app-docketclock.yaml`, and Argo
-deletes the `docketclock-poller` Deployment on its next sync (about 3 minutes). To sync now:
+The Mini runs the chart with Helm (`task app-local`) or Tilt, not Argo. Scale the poller to zero. Neither
+Helm nor Tilt restores replicas on its own, but stop `tilt up` first if it is running on the Mini.
 
 ```sh
-kubectl -n argocd annotate application docketclock argocd.argoproj.io/refresh=normal --overwrite
+kubectl -n docketclock scale deploy/docketclock-poller --replicas=0
 ```
 
-Check that it is gone. This must print `No resources found`:
+Check that it is gone. This must show no `Running` pod (old `Completed` pods do not matter):
 
 ```sh
 kubectl -n docketclock get pods -l app.kubernetes.io/component=poller
 ```
+
+To keep it off across a later `task app-local`, pass `--set poller.enabled=false`. (The Argo app in
+`infra/argocd/apps/app-docketclock.yaml` already sets that, for a cluster where Argo runs the chart.)
 
 Grafana's **Poller stalled** alert fires once the heartbeat goes stale. Silence it, or ignore it.
 
