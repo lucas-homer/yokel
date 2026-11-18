@@ -7,6 +7,8 @@
  * live integrator step provisions the key and invokes selectAdjudicator(); until then this is exercised
  * only by tests.
  *
+ * ADJUDICATOR=cloudflare → Cloudflare AI Gateway (see cloudflareAdjudicator below).
+ *
  * PRECEDENCE (a Gemini adapter requires BOTH a provider selector AND a key, else we fall back to null):
  *   1. ADJUDICATOR must equal "gemini" (case-insensitive). Any other value, or unset, or "null" → NullAdjudicator.
  *   2. The provider's OWN key must be present: GEMINI_API_KEY. (Credentials are provider-specific, so the env
@@ -21,6 +23,7 @@
 import type { Adjudicator } from "./port.js";
 import { NullAdjudicator } from "./null-adjudicator.js";
 import { GeminiAdjudicator } from "./gemini-adjudicator.js";
+import { ChatCompletionsAdjudicator } from "./chat-completions-adjudicator.js";
 import {
   NOOP_TRACER,
   safeTracer,
@@ -56,10 +59,52 @@ export function selectTracer(env: NodeJS.ProcessEnv = process.env): LlmTracer {
   }
 }
 
+export const DEFAULT_CLOUDFLARE_MODEL = "google/gemini-2.5-flash";
+
+/**
+ * cloudflareAdjudicator — the Cloudflare AI Gateway branch (ADJUDICATOR=cloudflare). Needs BOTH
+ * CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_AI_TOKEN (an API token with Account > Workers AI > Read; billing is
+ * the account's AI Gateway Unified Billing credits). Missing either → undefined (caller degrades to null).
+ *   - LLM_MODEL            catalog model id (default google/gemini-2.5-flash, i.e. today's model)
+ *   - CLOUDFLARE_AI_GATEWAY gateway id sent as cf-aig-gateway-id (default "default", auto-created)
+ *   - LLM_TIMEOUT_MS       per-attempt timeout (default 15000)
+ * Exported so the eval can build one adjudicator per model with its own tracer.
+ */
+export function cloudflareAdjudicator(
+  env: NodeJS.ProcessEnv,
+  overrides: { model?: string; tracer?: LlmTracer } = {},
+): ChatCompletionsAdjudicator | undefined {
+  const accountId = (env.CLOUDFLARE_ACCOUNT_ID || "").trim();
+  const apiKey = (env.CLOUDFLARE_AI_TOKEN || "").trim();
+  if (!accountId || !apiKey) return undefined;
+  const model =
+    overrides.model?.trim() ||
+    (env.LLM_MODEL || "").trim() ||
+    DEFAULT_CLOUDFLARE_MODEL;
+  const gateway = (env.CLOUDFLARE_AI_GATEWAY || "").trim() || "default";
+  const timeoutMs = Number(env.LLM_TIMEOUT_MS);
+  return new ChatCompletionsAdjudicator({
+    baseUrl: `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/v1`,
+    apiKey,
+    model,
+    idPrefix: "cfai",
+    headers: { "cf-aig-gateway-id": gateway },
+    timeoutMs:
+      Number.isFinite(timeoutMs) && timeoutMs > 0
+        ? timeoutMs
+        : DEFAULT_TIMEOUT_MS,
+    tracer:
+      overrides.tracer ?? composeTracers(getMetricsTracer(), selectTracer(env)),
+  });
+}
+
 export function selectAdjudicator(
   env: NodeJS.ProcessEnv = process.env,
 ): Adjudicator {
   const provider = (env.ADJUDICATOR ?? "").trim().toLowerCase();
+  if (provider === "cloudflare") {
+    return cloudflareAdjudicator(env) ?? new NullAdjudicator();
+  }
   if (provider !== "gemini") {
     // unset / "null" / anything else → the safe abstain default.
     return new NullAdjudicator();
