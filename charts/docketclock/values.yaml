@@ -90,6 +90,9 @@ migrations:
 # and the probe can never drift: the heartbeat updates once per cycle, so the probe must tolerate up to
 # one fully-missed cycle (idle wait + a cycle's own runtime) before it restarts the single pod.
 poller:
+  # false removes the poller Deployment. Argo sets it false on the Mini (app-docketclock.yaml) since the
+  # cloud cutover (infra/cloudflare/README.md): two pollers must never write at once.
+  enabled: true
   command: ["pnpm", "exec", "tsx", "src/poll/run.ts"]
   pollIntervalMs: 900000 # 15 min
   # REGS_MAX_REPOLLS_PER_CYCLE — max seen-open windows the Regs re-poll pass re-fetches per cycle. The

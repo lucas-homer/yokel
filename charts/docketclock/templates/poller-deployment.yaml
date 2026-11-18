@@ -3,6 +3,7 @@
 # open-comment documents, re-polls seen-open windows for withdrawals, and reconciles — advancing the
 # persisted cursor. NO Service/Ingress (it serves no HTTP); a single replica (the ingest/reconcile path
 # assumes ONE writer — see the CONCURRENCY note in observe.ts), so do NOT scale this beyond 1.
+{{- if .Values.poller.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -107,3 +108,4 @@ spec:
             failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+{{- end }}
