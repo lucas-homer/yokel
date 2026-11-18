@@ -105,6 +105,7 @@ const { cycleLock } = await import("./cycle-lock.js");
 const { cycleOutcome, recordPollCycle, scalarSummary } =
   await import("./cycle-log.js");
 const { telemetryLayer } = await import("../telemetry.js");
+const { withAmbient } = await import("../ambient.js");
 const { Cause, Effect, Schedule } = await import("effect");
 
 const log = componentLogger("poller");
@@ -168,7 +169,8 @@ const pass = <A>(
   Effect.suspend(() => {
     const t0 = Date.now();
     let summary: Record<string, number | boolean> = {};
-    return Effect.tryPromise({ try: run, catch: (cause) => cause }).pipe(
+    // withAmbient: Effect code inside the Promise pass (HTTP, the adjudicator) nests under this span.
+    return withAmbient(run).pipe(
       Effect.tap((result) =>
         Effect.suspend(() => {
           summary = scalarSummary(result);

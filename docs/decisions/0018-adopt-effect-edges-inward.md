@@ -59,3 +59,18 @@ OTLP endpoint (Grafana Cloud is the plan). It is off unless `OTEL_EXPORTER_OTLP_
 it flushes before a run-once container exits. Spans only nest inside Effect code, so HTTP, SQL and
 adjudicator spans arrive as later slices move the passes themselves into Effect. Log levels are fixed
 separately in pino (`log.ts` writes the level name), with no Effect involved.
+
+## Update, 2026-11-18: the adjudicator and HTTP spans (slice 4)
+
+`ChatCompletionsAdjudicator` is an Effect program. The portability ladder is one `Effect.catchTag` on
+`HttpStatusError`, and an unusable answer is a tagged `BadCompletion`; `adjudicate()` keeps its Promise
+port and throws the same errors. Each LLM call is one OpenTelemetry GenAI span (`chat <model>`) with token
+usage, finish reason, verdict and the knobs the ladder dropped, and every HTTP attempt in `http.ts` is a
+client span (`GET`/`POST`, status code, resend count, URL without its query string).
+
+Most passes are still Promise code, so `src/ambient.ts` bridges them: `run.ts` runs each pass
+`withAmbient`, and Effect code inside it (`http.ts`, the adjudicator) runs `runAmbient`, which reuses the
+pass's span and tracer from an AsyncLocalStorage. The bridge goes away once the passes are Effect code.
+
+Langfuse stays as it is: it is configured only on the Mac mini and in the eval workflow, and the cloud
+poller sends its LLM spans to the same OTLP endpoint as everything else.
