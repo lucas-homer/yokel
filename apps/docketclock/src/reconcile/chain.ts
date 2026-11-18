@@ -256,6 +256,40 @@ export function textCitesCitation(
 }
 
 /**
+ * PERF memo for chainCore. textCitesCitation compiles a regex and scans the WHOLE text, and chainCore asks
+ * it for every (original, amendment) pair: with ~8k windows and GovInfo texts in the tens of KB that is
+ * minutes of synchronous CPU (2026-11-18: ~6 min on the 1/4-vCPU poller, which blocked the event loop
+ * long enough for Neon to suspend mid-cycle). Instead, scan each text ONCE for every "<vol> FR <page>"
+ * token and answer membership from a Set.
+ *
+ * EXACTLY equivalent to textCitesCitation for citations of the form /^\d+\s+FR\s+\d+$/: the scan is a
+ * zero-width lookahead at every position not preceded by a digit, so overlapping tokens are all found;
+ * greedy \d+ runs plus the same (?<!\d)/(?!\d) guards mean a key matches iff the original regex would.
+ * Any other citation shape falls back to textCitesCitation itself.
+ */
+const CITATION_SHAPE = /^(\d+)\s+FR\s+(\d+)$/;
+const CITATION_SCAN = /(?<!\d)(?=(\d+)\s+FR\s+(\d+)(?!\d))/g;
+
+export class CitationMemo {
+  private readonly byText = new Map<string, Set<string>>();
+
+  cites(text: string | null | undefined, citation: string): boolean {
+    if (!text) return false;
+    const m = CITATION_SHAPE.exec(citation.trim());
+    if (!m) return textCitesCitation(text, citation);
+    let set = this.byText.get(text);
+    if (!set) {
+      set = new Set<string>();
+      for (const hit of text.matchAll(CITATION_SCAN)) {
+        set.add(`${hit[1]} FR ${hit[2]}`);
+      }
+      this.byText.set(text, set);
+    }
+    return set.has(`${m[1]} FR ${m[2]}`);
+  }
+}
+
+/**
  * The citation uniqueness index linkBasis needs: citation -> the number of DISTINCT FR document numbers
  * carrying it across ALL candidates. A citation names a volume + START page, and several documents can
  * start on one page, so a count above 1 means the citation does not identify a document and the
@@ -291,6 +325,7 @@ export function linkBasis(
   a: ChainCandidate,
   b: ChainCandidate,
   citationIndex: Map<string, number>,
+  memo?: CitationMemo,
 ): LinkBasis | null {
   if (a.ocd_id === b.ocd_id) return null;
   const aNum = a.fr_document_number;
@@ -308,8 +343,10 @@ export function linkBasis(
   if (
     cit &&
     citationIndex.get(cit) === 1 &&
-    (textCitesCitation(b.govinfo_text, cit) ||
-      textCitesCitation(b.dates_text, cit))
+    (memo
+      ? memo.cites(b.govinfo_text, cit) || memo.cites(b.dates_text, cit)
+      : textCitesCitation(b.govinfo_text, cit) ||
+        textCitesCitation(b.dates_text, cit))
   ) {
     const aTitle = normTitle(a.title);
     const titleCorroborates =
@@ -412,7 +449,7 @@ function compareConflict(x: ChainConflict, y: ChainConflict): number {
  * the ambiguous set CANNOT change any confident record's flags. An ambiguous pair carries NO conflict
  * record until/unless the async path promotes it (this function never builds an ambiguous ChainConflict).
  */
-function chainCore(
+export function chainCore(
   candidates: ChainCandidate[],
   now: Date,
 ): { confident: ChainConflict[]; ambiguous: AmbiguousPair[] } {
@@ -426,6 +463,13 @@ function chainCore(
   const ambiguous: AmbiguousPair[] = [];
   // Citation uniqueness over ALL candidates (not just amendments) — see buildCitationIndex.
   const citationIndex = buildCitationIndex(candidates);
+  const memo = new CitationMemo();
+  // PERF: per-candidate values the inner loop used to recompute for every pair (pubMs was ~35% of the
+  // pass). Same functions, computed once: index i lines up with candidates[i].
+  const pubMsOf = candidates.map((c) => pubMs(c.publication_date));
+  const closeMsOf = candidates.map((c) =>
+    c.resolved_close_utc ? new Date(c.resolved_close_utc).getTime() : NaN,
+  );
 
   for (const b of amendments) {
     const bMs = pubMs(b.publication_date);
@@ -439,16 +483,13 @@ function chainCore(
     const targets: ChainCandidate[] = [];
     // Pairs that pass the STRUCTURAL rules (1+3+4) but FAIL rule 2 — the ambiguous tail for THIS b.
     const ambiguousForB: ChainCandidate[] = [];
-    for (const a of candidates) {
+    for (let i = 0; i < candidates.length; i++) {
+      const a = candidates[i]!;
       if (a.ocd_id === b.ocd_id) continue; // B cannot amend itself
       if (a.fr_observation_id === b.fr_observation_id) continue;
 
-      // Rule 1 — shared docket. Since ADR 0016 it gates only the DOCKET-BASED bases and the ambiguous
-      // tail: a correction_of / citation basis is decided by linkBasis below without one.
-      const docket = shareDocket(a, b);
-
       // Rule 3 — amendment strictly AFTER the original (both publication dates present).
-      const aMs = pubMs(a.publication_date);
+      const aMs = pubMsOf[i]!;
       if (aMs === null) continue;
       if (!(bMs > aMs)) continue;
 
@@ -456,16 +497,21 @@ function chainCore(
       // B's publication. (An amendment to a long-dead docket is not a live conflict.)
       let relevant = a.status === "open";
       if (!relevant && a.resolved_close_utc) {
-        const closeMs = new Date(a.resolved_close_utc).getTime();
+        const closeMs = closeMsOf[i]!;
         if (!Number.isNaN(closeMs) && closeMs >= bMs - RECENCY_WINDOW_MS)
           relevant = true;
       }
       if (!relevant) continue;
 
+      // Rule 1 — shared docket. Since ADR 0016 it gates only the DOCKET-BASED bases and the ambiguous
+      // tail: a correction_of / citation basis is decided by linkBasis below without one. (Pure, so
+      // computing it after the cheap date filters changes nothing but the cost.)
+      const docket = shareDocket(a, b);
+
       // Rule 2 — deterministic identity (linkBasis: correction_of | doc_number | docket_rin | citation).
       // The original rule 2 (shared docket AND [shared non-empty RIN OR explicit doc-number reference]) is
       // a subset of it, so every pre-ADR-0016 confident link stays confident.
-      if (linkBasis(a, b, citationIndex) === null) {
+      if (linkBasis(a, b, citationIndex, memo) === null) {
         // STRUCTURAL rules passed (WITH a shared docket) but no deterministic basis → an ambiguous pair
         // (the confident path drops it). Surfaced for LLM escalation; never auto-linked here. Without a
         // shared docket there is nothing structural to escalate — the pair is simply unrelated.
