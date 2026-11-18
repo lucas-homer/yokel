@@ -3,7 +3,7 @@
  * `pnpm --filter @yokel/docketclock eval:chain [--min-accuracy <x>] [--limit <n>]`.
  *
  * CORE (always runs, Langfuse-independent): loadGold() → adjudicate(input) per item → scoreEval() → print
- * the binary "amends?" headline + the 3×3 confusion matrix. Needs only ADJUDICATOR=gemini + GEMINI_API_KEY.
+ * the binary "amends?" headline + the 3×3 confusion matrix. Needs only CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_AI_TOKEN; scores the live ADJUDICATOR_MODEL unless ADJUDICATOR overrides it.
  * This is exactly what the nightly/on-merge CI gate runs (no Langfuse, no Postgres).
  *
  *   • CACHE-BYPASSED: we call adjudicator.adjudicate(input) DIRECTLY, never consultAdjudicator — the eval
@@ -66,7 +66,7 @@ async function main(): Promise<void> {
   console.log(`adjudicator.id = ${adjudicator.id}`);
   if (adjudicator.id.startsWith("null:")) {
     throw new Error(
-      "selectAdjudicator() returned the null adjudicator — set ADJUDICATOR=gemini + GEMINI_API_KEY, or ADJUDICATOR=ai-gateway + CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_AI_TOKEN",
+      "selectAdjudicator() returned the null adjudicator — set CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_AI_TOKEN (and leave ADJUDICATOR unset to test the live model)",
     );
   }
 

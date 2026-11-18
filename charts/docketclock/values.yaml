@@ -108,19 +108,14 @@ poller:
   # default (METRICS_PORT); kept in values so the chart annotation, env, and containerPort stay in lockstep.
   metricsPort: 9464
 
-# LLM adjudicator (chain-seam escalation, Slice 3). Activation is gated by BOTH provider==gemini AND a
-# non-empty gemini_api_key (from Vault via ESO). With the key empty (the seeded default) the poller runs
-# null:abstain — byte-identical to deterministic-only, so this chart is SAFE/dormant until a real key is
-# seeded. ACTIVATION needs no Helm/values change, but is NOT automatic: (1) seed a real gemini_api_key into
-# Vault, (2) let ESO refresh the docketclock-external Secret (its refreshInterval, ≤1h, or force it), then
-# (3) RESTART the poller pod — GEMINI_API_KEY is a secretKeyRef env read at pod start, so a running pod will
-# not pick up the new value until it rolls (`kubectl -n docketclock rollout restart deploy/docketclock-poller`).
+# LLM adjudicator (chain-seam escalation). All LLM calls go through Cloudflare AI Gateway with the model
+# pinned in code (apps/docketclock/src/adjudicator/model.ts); the Cloudflare poller is the live one. The
+# in-cluster poller has no gateway token, so it runs deterministic-only.
 adjudicator:
-  provider: gemini # selectAdjudicator gate; "null"/unset disables regardless of key
-  model: gemini-2.5-flash
+  mode: "off" # ADJUDICATOR env: "off" = null:abstain; a catalog id would override the model
   maxEscalationsPerCycle: 25 # CHAIN_MAX_ESCALATIONS_PER_CYCLE — max FRESH LLM calls (cache misses) per
   # cycle; cache hits are free and uncapped, so a backlog of ambiguous pairs drains over cycles without
-  # starving any pair. Tunable: bound on per-cycle Gemini cost, not on coverage.
+  # starving any pair. Tunable: bound on per-cycle LLM cost, not on coverage.
 
 # NOTE: the `vault-backend` ClusterSecretStore (the ESO → Vault seam these ExternalSecrets reference) used
 # to live in this chart but was hoisted to a platform-tier Argo app (#51) — it's cluster-scoped and shared

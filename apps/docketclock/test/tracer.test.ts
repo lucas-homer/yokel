@@ -6,7 +6,7 @@
  *     is the default with no LANGFUSE_* env, so the adjudication path is byte-for-byte unchanged.
  *   • selectTracer is ALL-OR-NOTHING — a NoopTracer unless LANGFUSE_HOST + PUBLIC_KEY + SECRET_KEY are ALL
  *     present (whitespace-only counts as absent); only then a LangfuseTracer.
- *   • GeminiAdjudicator parses `usageMetadata` (prompt/candidates/total → input/output/total) and feeds the
+ *   • the AI Gateway adapter parses `usage` (prompt/completion/total → input/output/total) and feeds the
  *     INJECTED tracer a generation with model, verdict, latency, content_hash, adjudicator_id, kind.
  *   • The API key NEVER appears in what is handed to the tracer (deep-stringify check).
  *   • LangfuseTracer maps a generation → trace.generation(...).end({ usage: {..., unit:"TOKENS"} }) and a
@@ -16,7 +16,7 @@
  * Repo test style: hand-rolled assert, out[] accumulator, failures counter, process.exit. Needs no DB.
  */
 import type { AdjudicationInput } from "@yokel/contracts";
-import { GeminiAdjudicator } from "../src/adjudicator/gemini-adjudicator.js";
+import { ChatCompletionsAdjudicator } from "../src/adjudicator/chat-completions-adjudicator.js";
 import { selectAdjudicator, selectTracer } from "../src/adjudicator/select.js";
 import { MetricsTracer } from "../src/adjudicator/metrics-tracer.js";
 import {
@@ -45,8 +45,8 @@ function assert(name: string, cond: boolean, detail = "") {
   if (!cond) failures++;
 }
 
-const MODEL = "gemini-2.5-flash";
-const KEY = "AIzaSy-super-secret-not-real-key";
+const MODEL = "google/gemini-2.5-flash";
+const KEY = "cf-token-super-secret-not-real";
 const RULEBOOK = "rulebox-2026-06-18";
 
 const noticeInput: AdjudicationInput = {
@@ -86,20 +86,32 @@ function captureTracer(): LlmTracer & {
   return t;
 }
 
-/** A Gemini OK response carrying a verdict JSON in parts[0].text and an optional usageMetadata block. */
-function geminiOk(verdictJson: unknown, usageMetadata?: unknown): Response {
+/** A chat-completions OK response carrying a verdict JSON in choices[0].message.content and optional usage. */
+function chatOk(verdictJson: unknown, usage?: unknown): Response {
   const body: Record<string, unknown> = {
-    candidates: [
+    choices: [
       {
-        content: { parts: [{ text: JSON.stringify(verdictJson) }] },
-        finishReason: "STOP",
+        message: { content: JSON.stringify(verdictJson) },
+        finish_reason: "stop",
       },
     ],
   };
-  if (usageMetadata) body.usageMetadata = usageMetadata;
+  if (usage) body.usage = usage;
   return new Response(JSON.stringify(body), {
     status: 200,
     headers: { "content-type": "application/json" },
+  });
+}
+
+/** The gateway adapter as select.ts builds it, over a stub transport. */
+function gatewayAdj(transport: FetchLike, tracer: LlmTracer) {
+  return new ChatCompletionsAdjudicator({
+    baseUrl: "https://api.example.test/ai/v1",
+    apiKey: KEY,
+    model: MODEL,
+    retries: 0,
+    transport,
+    tracer,
   });
 }
 
@@ -122,13 +134,13 @@ function onceTransport(res: Response): FetchLike {
       verdict: { classification: "affirm", rationale: "x" },
       latencyMs: 5,
       contentHash: "0".repeat(64),
-      adjudicatorId: `gemini:${MODEL}@${RULEBOOK}`,
+      adjudicatorId: `${MODEL}@${RULEBOOK}`,
       rulebookVersion: RULEBOOK,
       kind: "notice",
     });
     noop.recordCacheHit({
       contentHash: "0".repeat(64),
-      adjudicatorId: `gemini:${MODEL}@${RULEBOOK}`,
+      adjudicatorId: `${MODEL}@${RULEBOOK}`,
       rulebookVersion: RULEBOOK,
       kind: "chain",
       classification: "reject",
@@ -189,46 +201,40 @@ function onceTransport(res: Response): FetchLike {
   // so the adapter still traces to metrics but never constructs a Langfuse client (the invariant that
   // matters is preserved: no LANGFUSE_* ⇒ no Langfuse push).
   const gemNoop = selectAdjudicator({
-    ADJUDICATOR: "gemini",
-    GEMINI_API_KEY: KEY,
-  } as NodeJS.ProcessEnv) as GeminiAdjudicator;
+    CLOUDFLARE_ACCOUNT_ID: "acct",
+    CLOUDFLARE_AI_TOKEN: KEY,
+  } as NodeJS.ProcessEnv) as ChatCompletionsAdjudicator;
   assert(
-    "selectAdjudicator: gemini + no LANGFUSE → adapter.tracer is the always-on MetricsTracer (no Langfuse)",
+    "selectAdjudicator: gateway + no LANGFUSE → adapter.tracer is the always-on MetricsTracer (no Langfuse)",
     gemNoop.tracer instanceof MetricsTracer,
   );
   const gemLf = selectAdjudicator({
-    ADJUDICATOR: "gemini",
-    GEMINI_API_KEY: KEY,
+    CLOUDFLARE_ACCOUNT_ID: "acct",
+    CLOUDFLARE_AI_TOKEN: KEY,
     LANGFUSE_HOST: "http://langfuse.langfuse.svc:3000",
     LANGFUSE_PUBLIC_KEY: "pk-lf-dev-docketclock",
     LANGFUSE_SECRET_KEY: "sk-lf-dev-docketclock",
-  } as NodeJS.ProcessEnv) as GeminiAdjudicator;
+  } as NodeJS.ProcessEnv) as ChatCompletionsAdjudicator;
   assert(
-    "selectAdjudicator: gemini + all LANGFUSE → adapter.tracer composes metrics + a configured Langfuse tracer",
+    "selectAdjudicator: gateway + all LANGFUSE → adapter.tracer composes metrics + a configured Langfuse tracer",
     gemLf.tracer !== NOOP_TRACER &&
       !(gemLf.tracer instanceof NoopTracer) &&
       !(gemLf.tracer instanceof MetricsTracer),
   );
 }
 
-// ── GeminiAdjudicator parses usageMetadata + feeds the injected tracer ───────────────────────────────
+// ── the gateway adapter parses usage + feeds the injected tracer ───────────────────────────────
 {
   const tracer = captureTracer();
-  const adj = new GeminiAdjudicator({
-    apiKey: KEY,
-    model: MODEL,
-    transport: onceTransport(
-      geminiOk(
+  const adj = gatewayAdj(
+    onceTransport(
+      chatOk(
         { classification: "affirm", rationale: "genuine action" },
-        {
-          promptTokenCount: 120,
-          candidatesTokenCount: 8,
-          totalTokenCount: 128,
-        },
+        { prompt_tokens: 120, completion_tokens: 8, total_tokens: 128 },
       ),
     ),
     tracer,
-  });
+  );
   const v = await adj.adjudicate(noticeInput);
   assert(
     "verdict is returned unchanged (side channel did not alter it)",
@@ -242,7 +248,7 @@ function onceTransport(res: Response): FetchLike {
   const g = tracer.generations[0]!;
   assert("generation carries the model id", g.model === MODEL, g.model);
   assert(
-    "usageMetadata parsed: input=promptTokenCount, output=candidatesTokenCount, total=totalTokenCount",
+    "usage parsed: input=prompt_tokens, output=completion_tokens, total=total_tokens",
     g.usage?.input === 120 && g.usage?.output === 8 && g.usage?.total === 128,
     JSON.stringify(g.usage),
   );
@@ -256,8 +262,8 @@ function onceTransport(res: Response): FetchLike {
     g.contentHash,
   );
   assert(
-    "generation carries adjudicator_id provenance gemini:<model>@<rulebook>",
-    g.adjudicatorId === `gemini:${MODEL}@${RULEBOOK}`,
+    "generation carries adjudicator_id provenance <model>@<rulebook>",
+    g.adjudicatorId === `${MODEL}@${RULEBOOK}`,
     g.adjudicatorId,
   );
   assert(
@@ -273,26 +279,22 @@ function onceTransport(res: Response): FetchLike {
   // KEY NON-LEAK: nothing the adapter handed the tracer may contain the API key.
   const blob = JSON.stringify(g);
   assert(
-    "the Gemini API key NEVER appears in what is handed to the tracer",
+    "the API token NEVER appears in what is handed to the tracer",
     !blob.includes(KEY),
     blob.includes(KEY) ? "LEAKED" : "ok",
   );
 }
 
-// ── usageMetadata ABSENT → generation recorded without usage (no fabricated zeros) ───────────────────
+// ── usage ABSENT → generation recorded without usage (no fabricated zeros) ───────────────────
 {
   const tracer = captureTracer();
-  const adj = new GeminiAdjudicator({
-    apiKey: KEY,
-    model: MODEL,
-    transport: onceTransport(
-      geminiOk({ classification: "reject", rationale: "fp" }),
-    ),
+  const adj = gatewayAdj(
+    onceTransport(chatOk({ classification: "reject", rationale: "fp" })),
     tracer,
-  });
+  );
   await adj.adjudicate(noticeInput);
   assert(
-    "no usageMetadata → generation.usage is undefined (no fabricated token counts)",
+    "no usage → generation.usage is undefined (no fabricated token counts)",
     tracer.generations.length === 1 &&
       tracer.generations[0]!.usage === undefined,
     JSON.stringify(tracer.generations[0]?.usage),
@@ -302,20 +304,15 @@ function onceTransport(res: Response): FetchLike {
 // ── MALFORMED response → THROW and NO generation recorded (trace mirrors persisted set) ──────────────
 {
   const tracer = captureTracer();
-  const adj = new GeminiAdjudicator({
-    apiKey: KEY,
-    model: MODEL,
-    transport: onceTransport(
-      new Response(
-        JSON.stringify({ promptFeedback: { blockReason: "SAFETY" } }),
-        {
-          status: 200,
-          headers: { "content-type": "application/json" },
-        },
-      ),
+  const adj = gatewayAdj(
+    onceTransport(
+      new Response(JSON.stringify({ choices: [] }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
     ),
     tracer,
-  });
+  );
   let threw = false;
   try {
     await adj.adjudicate(noticeInput);
@@ -399,7 +396,7 @@ function onceTransport(res: Response): FetchLike {
     usage: { input: 100, output: 10, total: 110 },
     latencyMs: 42,
     contentHash: "a".repeat(64),
-    adjudicatorId: `gemini:${MODEL}@${RULEBOOK}`,
+    adjudicatorId: `${MODEL}@${RULEBOOK}`,
     rulebookVersion: RULEBOOK,
     kind: "chain",
     // NB: adapter does NOT pass OCD-ids — they must come from setActivePair.
@@ -419,7 +416,7 @@ function onceTransport(res: Response): FetchLike {
   assert(
     "generation metadata carries content_hash / adjudicator_id / kind / cached=false",
     meta.content_hash === "a".repeat(64) &&
-      meta.adjudicator_id === `gemini:${MODEL}@${RULEBOOK}` &&
+      meta.adjudicator_id === `${MODEL}@${RULEBOOK}` &&
       meta.kind === "chain" &&
       meta.cached === false,
     JSON.stringify(meta),
@@ -441,7 +438,7 @@ function onceTransport(res: Response): FetchLike {
 
   tracer.recordCacheHit({
     contentHash: "b".repeat(64),
-    adjudicatorId: `gemini:${MODEL}@${RULEBOOK}`,
+    adjudicatorId: `${MODEL}@${RULEBOOK}`,
     rulebookVersion: RULEBOOK,
     kind: "chain",
     classification: "reject",
@@ -509,7 +506,7 @@ function onceTransport(res: Response): FetchLike {
     verdict: { classification: "affirm", rationale: "x" },
     latencyMs: 1,
     contentHash: "c".repeat(64),
-    adjudicatorId: `gemini:${MODEL}@${RULEBOOK}`,
+    adjudicatorId: `${MODEL}@${RULEBOOK}`,
     rulebookVersion: RULEBOOK,
     kind: "notice",
   });
@@ -555,13 +552,13 @@ function onceTransport(res: Response): FetchLike {
       verdict: { classification: "affirm", rationale: "x" },
       latencyMs: 1,
       contentHash: "a".repeat(64),
-      adjudicatorId: `gemini:${MODEL}@${RULEBOOK}`,
+      adjudicatorId: `${MODEL}@${RULEBOOK}`,
       rulebookVersion: RULEBOOK,
       kind: "notice",
     });
     safe.recordCacheHit({
       contentHash: "b".repeat(64),
-      adjudicatorId: `gemini:${MODEL}@${RULEBOOK}`,
+      adjudicatorId: `${MODEL}@${RULEBOOK}`,
       rulebookVersion: RULEBOOK,
       kind: "chain",
       classification: "reject",

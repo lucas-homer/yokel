@@ -138,7 +138,7 @@ async function main(): Promise<void> {
   const metricsServer = ONCE ? null : startMetricsServer();
   // Construct the adjudicator ONCE (not per cycle) so its observability tracer — and, when Langfuse is
   // configured, the long-lived Langfuse client — is reused across cycles and drained on shutdown (below).
-  // No LANGFUSE_* env → the tracer is a NoopTracer (true no-op); ADJUDICATOR≠gemini → NullAdjudicator.
+  // No LANGFUSE_* env → the tracer is a NoopTracer (true no-op); no CLOUDFLARE_AI_TOKEN (or ADJUDICATOR=off) → NullAdjudicator.
   const adjudicator = selectAdjudicator();
 
   let timer: NodeJS.Timeout | null = null;

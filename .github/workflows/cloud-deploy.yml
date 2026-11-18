@@ -4,7 +4,7 @@ name: Cloud deploy
 # Run it from the Actions tab → "Cloud deploy" → Run workflow, and pick `plan` (preview, changes nothing)
 # or `deploy`.
 #
-# Repo secrets: CLOUDFLARE_API_TOKEN, NEON_API_KEY, REGS_API_KEY, GEMINI_API_KEY, DOCKETCLOCK_API_KEYS.
+# Repo secrets: CLOUDFLARE_API_TOKEN, NEON_API_KEY, REGS_API_KEY, CLOUDFLARE_AI_TOKEN, DOCKETCLOCK_API_KEYS.
 # Repo variables: CLOUDFLARE_ACCOUNT_ID (required); DOCKETCLOCK_POLL_CRON (optional; unset = cron OFF);
 # DOCKETCLOCK_API_DOMAIN (optional; unset = workers.dev).
 on:
@@ -37,7 +37,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
       REGS_API_KEY: ${{ secrets.REGS_API_KEY }}
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
       DOCKETCLOCK_API_KEYS: ${{ secrets.DOCKETCLOCK_API_KEYS }}
       DOCKETCLOCK_POLL_CRON: ${{ vars.DOCKETCLOCK_POLL_CRON }}
       DOCKETCLOCK_API_DOMAIN: ${{ vars.DOCKETCLOCK_API_DOMAIN }}

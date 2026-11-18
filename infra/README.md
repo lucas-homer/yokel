@@ -218,7 +218,7 @@ user — no manual UI bootstrap.
 task langfuse   # port-forward svc/langfuse :3000 → localhost:3001 (login admin@docketclock.local)
 ```
 
-The poller sends adjudicator traces (PR-C2): with `ADJUDICATOR=gemini`, a `GEMINI_API_KEY`, and the three
+The poller sends adjudicator traces (PR-C2): with `CLOUDFLARE_ACCOUNT_ID`, a `CLOUDFLARE_AI_TOKEN`, and the three
 `LANGFUSE_*` vars set, each chain-adjudicate cycle opens a trace with a `generation` per real LLM call
 (model, input/output, token usage, latency). `pnpm --filter @yokel/docketclock smoke:langfuse` lands one
 trace on demand (synthetic ambiguous pair) to prove the wiring.

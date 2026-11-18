@@ -30,8 +30,6 @@ export interface ChatCompletionsAdjudicatorOpts {
   apiKey: string;
   /** Model string as the endpoint names it, e.g. "google/gemini-3-flash". */
   model: string;
-  /** Provenance prefix for `id` (e.g. "aigw" → "aigw:google/gemini-3-flash"). */
-  idPrefix: string;
   /** Extra request headers (e.g. Cloudflare's `cf-aig-gateway-id`). Never put secrets in the id/logs. */
   headers?: Record<string, string>;
   timeoutMs?: number;
@@ -162,7 +160,9 @@ export class ChatCompletionsAdjudicator implements Adjudicator {
     this.retries = opts.retries ?? 4;
     this.transport = opts.transport;
     this.tracer = opts.tracer ?? NOOP_TRACER;
-    this.id = `${opts.idPrefix}:${model}`;
+    // Provenance is the model id itself (e.g. "google/gemini-3-flash"): the transport is always the gateway,
+    // so only the model changes what a verdict means.
+    this.id = model;
   }
 
   private body(

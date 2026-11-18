@@ -5,11 +5,12 @@
  * Pins: request shape (Bearer auth in the header, gateway header, model, temperature 0, strict json_schema,
  * shared prompt text); happy-path parse incl. fenced JSON and array content; malformed → throw; the knob
  * ladder (400 naming temperature / response_format drops ONLY that knob; 401/402 never ladder); and the
- * selectAdjudicator ai-gateway branch (needs account id AND token, else null; LLM_MODEL → id).
+ * selectAdjudicator (gateway only; ADJUDICATOR overrides the model or turns it off; no creds → null).
  */
 import type { AdjudicationInput } from "@yokel/contracts";
 import { ChatCompletionsAdjudicator } from "../src/adjudicator/chat-completions-adjudicator.js";
 import { selectAdjudicator } from "../src/adjudicator/select.js";
+import { ADJUDICATOR_MODEL } from "../src/adjudicator/model.js";
 import type { FetchLike } from "../src/sources/http.js";
 
 let failures = 0;
@@ -83,7 +84,6 @@ const make = (transport: FetchLike) =>
     baseUrl: "https://api.example.test/ai/v1/",
     apiKey: "tok-not-real",
     model: "google/gemini-3-flash",
-    idPrefix: "aigw",
     headers: { "cf-aig-gateway-id": "docketclock" },
     retries: 0,
     timeoutMs: 2000,
@@ -105,7 +105,7 @@ const make = (transport: FetchLike) =>
   const a = make(transport);
   const v = await a.adjudicate(chainInput);
   const c = calls[0]!;
-  assert("id is prefix:model", a.id === "aigw:google/gemini-3-flash", a.id);
+  assert("id is the model id", a.id === "google/gemini-3-flash", a.id);
   assert(
     "POSTs to {base}/chat/completions (trailing slash trimmed)",
     c.url === "https://api.example.test/ai/v1/chat/completions",
@@ -283,40 +283,49 @@ await rejects(
   );
 }
 
-// ── selectAdjudicator ai-gateway branch ────────────────────────────────────────────────────────────
+// ── selectAdjudicator: the gateway is the only path; ADJUDICATOR only overrides the model ────────────
 {
   const base = {
-    ADJUDICATOR: "ai-gateway",
     CLOUDFLARE_ACCOUNT_ID: "acct123",
     CLOUDFLARE_AI_TOKEN: "tok\n",
   };
+  const id = (env: Record<string, string>) => selectAdjudicator(env).id;
   assert(
-    "ai-gateway + id + token → aigw default model",
-    selectAdjudicator(base).id === "aigw:google/gemini-2.5-flash",
-    selectAdjudicator(base).id,
+    "unset ADJUDICATOR → the live ADJUDICATOR_MODEL",
+    id(base) === ADJUDICATOR_MODEL,
+    id(base),
   );
   assert(
-    "LLM_MODEL picks the model",
-    selectAdjudicator({ ...base, LLM_MODEL: "openai/gpt-5.4-mini" }).id ===
-      "aigw:openai/gpt-5.4-mini",
+    "ADJUDICATOR=<catalog id> → that model",
+    id({ ...base, ADJUDICATOR: "openai/gpt-5.4-mini" }) ===
+      "openai/gpt-5.4-mini",
+  );
+  assert(
+    "Workers AI ids work too",
+    id({ ...base, ADJUDICATOR: "@cf/zai-org/glm-5.3-flash" }) ===
+      "@cf/zai-org/glm-5.3-flash",
+  );
+  for (const off of ["off", "OFF", "null", "none"]) {
+    assert(
+      `ADJUDICATOR=${off} → null`,
+      id({ ...base, ADJUDICATOR: off }).startsWith("null:"),
+    );
+  }
+  assert(
+    "retired 'gemini' value → null, never a made-up model id",
+    id({ ...base, ADJUDICATOR: "gemini" }).startsWith("null:"),
   );
   assert(
     "no token → null",
-    selectAdjudicator({ ...base, CLOUDFLARE_AI_TOKEN: "  " }).id.startsWith(
-      "null:",
-    ),
+    id({ ...base, CLOUDFLARE_AI_TOKEN: "  " }).startsWith("null:"),
   );
   assert(
     "no account → null",
-    selectAdjudicator({ ...base, CLOUDFLARE_ACCOUNT_ID: "" }).id.startsWith(
-      "null:",
-    ),
+    id({ ...base, CLOUDFLARE_ACCOUNT_ID: "" }).startsWith("null:"),
   );
   assert(
-    "CASE-insensitive selector",
-    selectAdjudicator({ ...base, ADJUDICATOR: "AI-Gateway" }).id.startsWith(
-      "aigw:",
-    ),
+    "empty env → null (tests/CI never hit the network)",
+    id({}).startsWith("null:"),
   );
 }
 

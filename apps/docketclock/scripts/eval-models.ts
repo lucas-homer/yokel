@@ -3,7 +3,7 @@
  * one comparison table. `pnpm --filter @yokel/docketclock eval:models --models a,b,c [--concurrency 4]
  * [--limit n] [--out results.json]`. Models may also come from EVAL_MODELS (comma-separated).
  *
- * Needs CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_AI_TOKEN (see select.ts cloudflareAdjudicator). Cache-bypassed
+ * Needs CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_AI_TOKEN (see select.ts aiGatewayAdjudicator). Cache-bypassed
  * like eval-chain.ts: every item is a live call, so each model costs ~50 small requests.
  *
  * Scoring reuses scoreEval (binary amends? accuracy is the headline; FP = a fabricated link, the worst
@@ -12,7 +12,7 @@
  */
 import { appendFileSync, existsSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { cloudflareAdjudicator } from "../src/adjudicator/select.js";
+import { aiGatewayAdjudicator } from "../src/adjudicator/select.js";
 import { loadGold, type GoldEntry } from "../src/adjudicator/eval-gold.js";
 import { scoreEval, type EvalResult } from "../src/adjudicator/eval-score.js";
 import {
@@ -86,7 +86,7 @@ async function runModel(
     LANGFUSE_PUBLIC_KEY: "",
     LANGFUSE_SECRET_KEY: "",
   };
-  const adjudicator = cloudflareAdjudicator(env, { model, tracer });
+  const adjudicator = aiGatewayAdjudicator(env, model, tracer);
   if (!adjudicator)
     throw new Error("set CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_AI_TOKEN");
 

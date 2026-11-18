@@ -29,15 +29,16 @@ Both containers run the **existing** image (`apps/docketclock/Dockerfile`), so t
 | `CLOUDFLARE_ACCOUNT_ID`  | GitHub variable, or your Alchemy profile locally | yes                                                         |
 | `NEON_API_KEY`           | GitHub secret; repo-root `.env` locally          | yes                                                         |
 | `REGS_API_KEY`           | GitHub secret; repo-root `.env` locally          | yes (the poller)                                            |
-| `GEMINI_API_KEY`         | GitHub secret; repo-root `.env` locally          | yes (the poller)                                            |
+| `CLOUDFLARE_AI_TOKEN`    | GitHub secret; repo-root `.env` locally          | yes (the poller)                                            |
 | `DOCKETCLOCK_API_KEYS`   | GitHub secret; repo-root `.env` locally          | yes (the API)                                               |
 | `DOCKETCLOCK_POLL_CRON`  | GitHub variable / `.env`                         | no (unset means the cron is off; `*/15 * * * *` at cutover) |
 | `DOCKETCLOCK_API_DOMAIN` | GitHub variable / `.env`                         | no (for example `api.docketclock.app`)                      |
 
-The live adjudicator and its model are not settings: they are pinned in `alchemy.run.ts` (`ADJUDICATOR`,
-`GEMINI_MODEL` / `LLM_MODEL`), so changing models is a reviewed one-line diff.
+LLM adjudication goes through Cloudflare AI Gateway. The live model is not a setting: it is
+`ADJUDICATOR_MODEL` in `apps/docketclock/src/adjudicator/model.ts`, so changing models is a reviewed
+one-line diff. `CLOUDFLARE_AI_TOKEN` is an account API token with Account > Workers AI > Read.
 
-`REGS_API_KEY`, `GEMINI_API_KEY` and `DOCKETCLOCK_API_KEYS` are new GitHub secrets. Use the values the
+`REGS_API_KEY`, `CLOUDFLARE_AI_TOKEN` and `DOCKETCLOCK_API_KEYS` are GitHub secrets. Use the values the
 cluster uses today. Alchemy binds each one as a Worker secret, and the Durable Object hands it to its
 container as an environment variable.
 
