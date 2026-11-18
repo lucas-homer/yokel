@@ -35,7 +35,6 @@ import {
   type ReconcileOptions,
 } from "./reconcile.js";
 import {
-  chainCore,
   isAmendment,
   isKeywordFalsePositive,
   linkBasis,
@@ -50,11 +49,6 @@ import {
   type AmendmentOutcome,
 } from "./amendment.js";
 import type { Adjudicator } from "../adjudicator/port.js";
-import { selectAdjudicator } from "../adjudicator/select.js";
-import {
-  adjudicateAmbiguousPairs,
-  chainMaxEscalations,
-} from "./chain-adjudicate.js";
 
 export interface PersistResult {
   inserted: boolean; // true if this was a first-time insert of the window
@@ -1011,136 +1005,9 @@ export interface ChainReconcileOnceOptions {
   cap?: number;
 }
 
-/**
- * chainReconcileOnce — read the candidate set (every participation_window joined to its LATEST
- * federal_register observation, so the amendment flags + DATES text reflect the current FR doc), build
- * ChainCandidate[], run the pure chain engine, and persist. The single DB-aware orchestration point; the
- * rulebook (chain.ts) stays pure + deterministic.
- *
- * Candidate join: a window contributes a candidate only when it HAS a federal_register observation (the
- * chain conflict is FR-doc ↔ FR-doc). We pick the LATEST FR observation per ocd_id by fetched_at. is_*
- * flags + raw come straight off that observation row; publication_date / docket_ids / rin / dates_text are
- * extracted from the FR raw payload (extractFr) — the same projection reconcile.ts uses, so the chain pass
- * sees identical structured fields.
- */
-export async function chainReconcileOnce(
-  sql: Sql,
-  now: Date = new Date(),
-  options: ChainReconcileOnceOptions = {},
-): Promise<ChainReconcileOnceResult> {
-  const adjudicator = options.adjudicator ?? selectAdjudicator();
-  const cap = options.cap ?? chainMaxEscalations();
-  // LATEST federal_register observation per window, joined to the window's status + resolved close +
-  // govinfo anchor. distinct on (w.ocd_id) ordered by fetched_at desc gives the freshest FR doc.
-  // INVARIANT (N1): this read THROWS on any DB failure (postgres.js rejects), so it can NEVER silently
-  // return [] and trip the retire-all-cross_window path below. The empty live set only retires-all on a
-  // GENUINELY empty candidate set (no FR-backed windows), never on a transient DB error.
-  const rows = await sql<
-    {
-      ocd_id: string;
-      fr_observation_id: string;
-      is_extension: boolean;
-      is_correction: boolean;
-      is_withdrawal: boolean;
-      is_reopening: boolean;
-      raw: unknown;
-      status: string;
-      resolved_close_utc: Date | string | null;
-      govinfo_url: string | null;
-      govinfo_text: string | null;
-    }[]
-  >`
-    select distinct on (w.ocd_id)
-      w.ocd_id,
-      o.observation_id as fr_observation_id,
-      o.is_extension, o.is_correction, o.is_withdrawal, o.is_reopening, o.raw,
-      w.status, w.resolved_close_utc, w.govinfo_url,
-      (select g.raw_dates_text from observations g
-        where g.ocd_id = w.ocd_id and g.source = 'govinfo'
-        order by g.fetched_at desc, g.observation_id desc
-        limit 1) as govinfo_text
-    from participation_windows w
-    join observations o
-      on o.ocd_id = w.ocd_id and o.source = 'federal_register'
-    order by w.ocd_id, o.fetched_at desc, o.observation_id desc
-  `;
-
-  const candidates: ChainCandidate[] = rows.map((r) => {
-    const fr = extractFr(r.raw);
-    return {
-      ocd_id: r.ocd_id,
-      fr_observation_id: r.fr_observation_id,
-      fr_document_number: fr.documentNumber,
-      docket_ids: fr.docketIds,
-      rin: fr.rin,
-      rins: fr.rins,
-      is_extension: r.is_extension,
-      // fr-v3 rule read off raw, so an fr-v2 correction row (correction_of, no keyword) is a correction.
-      is_correction: derivedIsCorrection(r),
-      is_withdrawal: r.is_withdrawal,
-      is_reopening: r.is_reopening,
-      title: fr.title,
-      publication_date: fr.publicationDate,
-      govinfo_url: r.govinfo_url,
-      dates_text: fr.datesText,
-      status: r.status,
-      resolved_close_utc:
-        r.resolved_close_utc instanceof Date
-          ? r.resolved_close_utc.toISOString()
-          : r.resolved_close_utc,
-      citation: fr.citation,
-      correction_of: fr.correctionOf,
-      corrections: fr.corrections,
-      govinfo_text: r.govinfo_text,
-    };
-  });
-
-  // Count amendments by the SAME predicate the engine links on (single source of truth — see chain.ts).
-  const amendments = candidates.filter(isAmendment).length;
-
-  // CONFIDENT links — the deterministic engine (rules 1–5). Byte-identical to today's output. Under the
-  // null adapter the merged set below equals exactly this (Invariant 1).
-  // chainCore computes BOTH sets in one pass over the pairs (chainReconcile / chainAmbiguousPairs are each
-  // exactly one half of it), so the O(amendments x candidates) loop runs once per cycle, not twice.
-  const { confident, ambiguous: ambiguousPairs } = chainCore(candidates, now);
-
-  // AMBIGUOUS tail — pairs the confident path UNDER-LINKS (structural rules pass, rule-2 corroboration
-  // fails). Escalate them to the adjudicator; only an `affirm` promotes a pair to a cross_window link
-  // (carrying `llm_corroborated`). A null adapter / outage / reject / uncertain → no promotion (worst case
-  // is today's confident-only output). Errors are isolated per-pair inside adjudicateAmbiguousPairs.
-  const adjudicated = await adjudicateAmbiguousPairs(
-    sql,
-    adjudicator,
-    ambiguousPairs,
-    now,
-    cap,
-  );
-
-  // MERGE confident + LLM-affirmed, then RE-SORT with the SAME total order the engine uses so the persisted
-  // set is stable regardless of which links were LLM-promoted. (A confident and a promoted pair can never
-  // collide on the 4-tuple key: an ambiguous pair fails rule 2, so it is never also a confident link.)
-  const merged = [...confident, ...adjudicated.links].sort(
-    (x, y) =>
-      x.ocd_id.localeCompare(y.ocd_id) ||
-      x.ocd_id_b.localeCompare(y.ocd_id_b) ||
-      x.observation_a_id.localeCompare(y.observation_a_id) ||
-      x.observation_b_id.localeCompare(y.observation_b_id),
-  );
-
-  const persisted = await persistChainConflicts(sql, merged, now);
-
-  return {
-    candidates: candidates.length,
-    amendments,
-    linked: confident.length,
-    ambiguous: adjudicated.ambiguous,
-    cacheHits: adjudicated.cacheHits,
-    llmCalls: adjudicated.llmCalls,
-    llmLinked: adjudicated.llmLinked,
-    deferred: adjudicated.deferred,
-    ...persisted,
-  };
-}
+// chainReconcileOnce lives in chain-pass.ts (an Effect program, ADR 0018 slice 5); re-exported here so
+// existing imports keep working.
+export { chainReconcileOnce } from "./chain-pass.js";
 
 export interface ChainOriginalsRederiveResult {
   /** side-A windows of the live CONFIDENT cross_window set, re-derived this pass. */

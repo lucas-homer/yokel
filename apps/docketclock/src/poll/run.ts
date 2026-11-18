@@ -7,7 +7,7 @@
  *   2. pollRegsOnce — Regs.gov differential + re-poll pass, then
  *   2b. govinfoSweepOnce — the published GovInfo text of recent FR amendment documents (ADR 0016):
  *      append-only, capped per cycle; BEFORE the chain pass so the text is there to link and resolve on,
- *   3. chainReconcileOnce — the cross_window (chain) reconcile sweep (#31), then
+ *   3. chainReconcile (chain-pass.ts) — the cross_window (chain) reconcile sweep (#31), then
  *   3b. rederiveChainOriginals — re-derive the side-A windows of the confident links (reconcile-v2.4)
  *      so an amendment that arrived this cycle moves its original in the SAME cycle, then
  *   4. refreshStaleOpenWindows — the status refresh (#107): re-derive open windows whose close has
@@ -78,8 +78,7 @@ if (existsSync(envPath)) process.loadEnvFile(envPath);
 const { createClient, createSessionClient } = await import("../db/client.js");
 const { componentLogger } = await import("../log.js");
 const { regsApiKey } = await import("../sources/regulations-gov.js");
-const { chainReconcileOnce, rederiveChainOriginals } =
-  await import("../reconcile/persist.js");
+const { rederiveChainOriginals } = await import("../reconcile/persist.js");
 const { govinfoSweepOnce } = await import("../sources/govinfo.js");
 const { refreshStaleOpenWindows } =
   await import("../reconcile/status-refresh.js");
@@ -106,6 +105,7 @@ const { cycleOutcome, recordPollCycle, scalarSummary } =
   await import("./cycle-log.js");
 const { telemetryLayer } = await import("../telemetry.js");
 const { withAmbient } = await import("../ambient.js");
+const { chainReconcile } = await import("../reconcile/chain-pass.js");
 const { Cause, Effect, Schedule } = await import("effect");
 
 const log = componentLogger("poller");
@@ -163,14 +163,14 @@ const pass = <A>(
   name: string,
   failureLabel: Parameters<typeof recordPollPassFailure>[0],
   failureMessage: string,
-  run: () => Promise<A>,
+  /** the pass itself: an Effect, or Promise code wrapped in withAmbient (see ambient.ts) */
+  run: import("effect").Effect.Effect<A, unknown>,
   done: (result: A) => void | Promise<void>,
 ) =>
   Effect.suspend(() => {
     const t0 = Date.now();
     let summary: Record<string, number | boolean> = {};
-    // withAmbient: Effect code inside the Promise pass (HTTP, the adjudicator) nests under this span.
-    return withAmbient(run).pipe(
+    return run.pipe(
       Effect.tap((result) =>
         Effect.suspend(() => {
           summary = scalarSummary(result);
@@ -250,7 +250,7 @@ const program = Effect.gen(function* () {
       "fr",
       "fr",
       "fr poll failed",
-      () => pollFrOnce(sql),
+      withAmbient(() => pollFrOnce(sql)),
       (fr) => {
         log.info({ summary: fr }, "fr poll cycle");
         recordFrPoll(fr);
@@ -260,7 +260,7 @@ const program = Effect.gen(function* () {
       "regs",
       "regs",
       "regs poll failed",
-      () => pollRegsOnce(sql),
+      withAmbient(() => pollRegsOnce(sql)),
       (regs) => {
         log.info({ summary: regs }, "regs poll cycle");
         recordRegsPoll(regs);
@@ -271,7 +271,7 @@ const program = Effect.gen(function* () {
       "govinfo",
       "govinfo",
       "govinfo sweep failed",
-      () => govinfoSweepOnce(sql, new Date()),
+      withAmbient(() => govinfoSweepOnce(sql, new Date())),
       (govinfo) => log.info({ summary: govinfo }, "govinfo sweep cycle"),
     );
     // 3 — cross_window (chain) reconcile sweep (derive-over-derived; see header).
@@ -279,7 +279,8 @@ const program = Effect.gen(function* () {
       "chain",
       "chain",
       "chain reconcile failed",
-      () => chainReconcileOnce(sql, new Date(), { adjudicator }),
+      // An Effect program (chain-pass.ts): its steps are child spans. suspend → a fresh `now` per cycle.
+      Effect.suspend(() => chainReconcile(sql, new Date(), { adjudicator })),
       (chain) => {
         log.info({ summary: chain }, "chain reconcile cycle");
         recordChainCycle(chain);
@@ -290,7 +291,7 @@ const program = Effect.gen(function* () {
       "amended_originals",
       "amended_originals",
       "amended originals re-derive failed",
-      () => rederiveChainOriginals(sql, new Date()),
+      withAmbient(() => rederiveChainOriginals(sql, new Date())),
       (originals) => {
         if (originals.versionBumped > 0) {
           log.warn({ summary: originals }, "amended originals MOVED a close");
@@ -304,7 +305,7 @@ const program = Effect.gen(function* () {
       "status_refresh",
       "status_refresh",
       "status refresh failed",
-      () => refreshStaleOpenWindows(sql),
+      withAmbient(() => refreshStaleOpenWindows(sql)),
       (refresh) => {
         if (refresh.versionBumped > 0) {
           log.warn({ summary: refresh }, "status refresh MOVED a close");
@@ -319,7 +320,7 @@ const program = Effect.gen(function* () {
       "verify",
       "verify",
       "verify pass failed",
-      () => verifyOnce(sql),
+      withAmbient(() => verifyOnce(sql)),
       async (verify) => {
         log.info({ summary: verify }, "verify cycle");
         recordVerifyCycle(verify);
@@ -333,7 +334,7 @@ const program = Effect.gen(function* () {
       "queue_stats",
       "queue_stats",
       "review queue stats failed",
-      () => reviewQueueStats(sql),
+      withAmbient(() => reviewQueueStats(sql)),
       (queue) => {
         log.info({ summary: queue }, "review queue stats");
         recordReviewQueue(queue);
