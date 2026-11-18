@@ -102,6 +102,8 @@ const {
 } = await import("../metrics.js");
 const { startMetricsServer } = await import("../metrics-server.js");
 const { cycleLock } = await import("./cycle-lock.js");
+const { cycleOutcome, recordPollCycle, scalarSummary } =
+  await import("./cycle-log.js");
 const { telemetryLayer } = await import("../telemetry.js");
 const { Cause, Effect, Schedule } = await import("effect");
 
@@ -136,23 +138,20 @@ function writeHeartbeat(): void {
   }
 }
 
-type Summary = Record<string, unknown>;
+type PassRecord = import("./cycle-log.js").PassRecord;
 
 /** Put a pass summary's top-level numbers and booleans on the current span, as `summary.<field>`. */
-const annotateSummary = (summary: unknown) =>
-  Effect.sync(() =>
-    summary && typeof summary === "object"
-      ? Object.entries(summary as Summary).filter(
-          ([, v]) => typeof v === "number" || typeof v === "boolean",
-        )
-      : [],
-  ).pipe(
-    Effect.flatMap((fields) =>
-      Effect.forEach(fields, ([k, v]) =>
-        Effect.annotateCurrentSpan(`summary.${k}`, v),
-      ),
-    ),
+const annotateSummary = (fields: Record<string, number | boolean>) =>
+  Effect.forEach(Object.entries(fields), ([k, v]) =>
+    Effect.annotateCurrentSpan(`summary.${k}`, v),
   );
+
+// The passes of the cycle in progress, in run order, for its poll_cycles row (cycle-log.ts). `tick`
+// resets it; cycles never overlap within a process (Effect.repeat runs them one after another).
+let cyclePasses: PassRecord[] = [];
+
+const errorText = (err: unknown) =>
+  (err instanceof Error ? err.message : String(err)).slice(0, 300);
 
 /**
  * One ISOLATED pass: run it in its own span, record its result, and turn a failure into a metric + error
@@ -166,24 +165,45 @@ const pass = <A>(
   run: () => Promise<A>,
   done: (result: A) => void | Promise<void>,
 ) =>
-  Effect.tryPromise({ try: run, catch: (cause) => cause }).pipe(
-    Effect.tap((result) => annotateSummary(result)),
-    // `done` (logging, metrics, follow-up reads) can fail too; that is a pass failure like any other.
-    Effect.tap((result) =>
-      Effect.tryPromise({
-        try: async () => done(result),
-        catch: (cause) => cause,
-      }),
-    ),
-    Effect.withSpan(`poll.pass.${name}`),
-    Effect.asVoid,
-    Effect.catch((err) =>
-      Effect.sync(() => {
-        recordPollPassFailure(failureLabel);
-        log.error({ err }, failureMessage);
-      }),
-    ),
-  );
+  Effect.suspend(() => {
+    const t0 = Date.now();
+    let summary: Record<string, number | boolean> = {};
+    return Effect.tryPromise({ try: run, catch: (cause) => cause }).pipe(
+      Effect.tap((result) =>
+        Effect.suspend(() => {
+          summary = scalarSummary(result);
+          return annotateSummary(summary);
+        }),
+      ),
+      // `done` (logging, metrics, follow-up reads) can fail too; that is a pass failure like any other.
+      Effect.tap((result) =>
+        Effect.tryPromise({
+          try: async () => done(result),
+          catch: (cause) => cause,
+        }),
+      ),
+      Effect.withSpan(`poll.pass.${name}`),
+      Effect.asVoid,
+      Effect.tap(() =>
+        Effect.sync(() => {
+          cyclePasses.push({ name, ok: true, ms: Date.now() - t0, summary });
+        }),
+      ),
+      Effect.catch((err) =>
+        Effect.sync(() => {
+          cyclePasses.push({
+            name,
+            ok: false,
+            ms: Date.now() - t0,
+            summary,
+            error: errorText(err),
+          });
+          recordPollPassFailure(failureLabel);
+          log.error({ err }, failureMessage);
+        }),
+      ),
+    );
+  });
 
 const program = Effect.gen(function* () {
   regsApiKey(); // fail loudly on a missing key before we enter the loop
@@ -325,17 +345,31 @@ const program = Effect.gen(function* () {
   // rather than queueing behind it — the next scheduled cycle picks the work up.
   const tick = Effect.gen(function* () {
     const cycleStart = Date.now();
+    cyclePasses = [];
+    let traceId: string | null = null;
+    let failed = false;
     const outcome = yield* cycleLock(lockSession, passes, {
       // Neon scales to zero after 5 minutes without activity; keep it awake while this cycle runs.
       onHeartbeatError: (err) => log.warn({ err }, "cycle lock session error"),
     }).pipe(
       Effect.tap((o) => Effect.annotateCurrentSpan("skipped", !o.acquired)),
+      Effect.tap(() =>
+        Effect.currentSpan.pipe(
+          Effect.tap((span) =>
+            Effect.sync(() => {
+              traceId = span.traceId;
+            }),
+          ),
+          Effect.ignore,
+        ),
+      ),
       Effect.withSpan("poll.cycle", { attributes: { once: ONCE } }),
       // Anything outside the isolated passes (taking the lock, a lost DB connection) must not kill the
       // scheduler. In run-once mode it is the one failure that sets a non-zero exit code.
       Effect.catch((err) =>
         Effect.sync(() => {
           cycleFailed = true;
+          failed = true;
           log.error({ err }, "poll cycle failed");
           return null;
         }),
@@ -348,6 +382,27 @@ const program = Effect.gen(function* () {
     if (!outcome || outcome.acquired) {
       observePollCycle((Date.now() - cycleStart) / 1000);
     }
+    // The durable per-cycle row for long-term trends (cycle-log.ts). Written after the lock is released;
+    // a failed write (e.g. the database is the reason the cycle failed) is logged and never fails the loop.
+    const passesRun = cyclePasses;
+    yield* Effect.tryPromise(() =>
+      recordPollCycle(sql, {
+        startedAt: new Date(cycleStart),
+        finishedAt: new Date(),
+        outcome: cycleOutcome({
+          failed,
+          skipped: !!outcome && !outcome.acquired,
+          passes: passesRun,
+        }),
+        runOnce: ONCE,
+        traceId,
+        passes: passesRun,
+      }),
+    ).pipe(
+      Effect.catch((err) =>
+        Effect.sync(() => log.warn({ err }, "poll cycle record write failed")),
+      ),
+    );
     // Mark this cycle SETTLED (liveness #25) — even after a pass-level failure, which is isolated and must
     // not restart the pod. Only a loop that never gets here (hung inside a pass) lets the file go stale.
     writeHeartbeat();
