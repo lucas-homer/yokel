@@ -25,6 +25,14 @@ import pino, { type DestinationStream, type Logger } from "pino";
 /** The default level when LOG_LEVEL is unset/empty — normal progress visible, debug chatter suppressed. */
 const DEFAULT_LEVEL = "info";
 
+/**
+ * Write the level as its NAME ("info", "warn", "error"), not pino's default number (30, 40, 50). Cloudflare
+ * Workers Logs (where the container's stdout lands since the move off the Mac mini) does not map pino's
+ * numbers, so every line showed as info; a label is what it and most log tools read. Nothing in this repo
+ * parses the numeric form (no Loki query or alert matches `level` as a number).
+ */
+const levelLabel = (label: string): { level: string } => ({ level: label });
+
 export interface BuildLoggerOptions {
   /** Explicit level override; falls back to LOG_LEVEL (empty/whitespace ignored), then DEFAULT_LEVEL. */
   level?: string;
@@ -44,7 +52,8 @@ export interface BuildLoggerOptions {
 export function buildLogger(opts: BuildLoggerOptions = {}): Logger {
   const envLevel = process.env.LOG_LEVEL?.trim();
   const level = opts.level ?? (envLevel || DEFAULT_LEVEL);
-  return opts.destination ? pino({ level }, opts.destination) : pino({ level });
+  const options = { level, formatters: { level: levelLabel } };
+  return opts.destination ? pino(options, opts.destination) : pino(options);
 }
 
 /** The process-wide root logger. Every subsystem child descends from this (one config, one stdout sink). */

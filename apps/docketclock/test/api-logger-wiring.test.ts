@@ -88,9 +88,10 @@ const marker = JSON.parse(markerLine.slice("__MARKER__".length)) as {
   ready503Body: { status: string; db: string };
 };
 
-// Parse the pino NDJSON lines the worker emitted (everything that is valid JSON with a numeric level).
+// Parse the pino NDJSON lines the worker emitted (everything that is valid JSON with a level LABEL —
+// log.ts writes "info"/"warn", not pino's numbers, so Workers Logs shows the real level).
 type LogLine = {
-  level?: number;
+  level?: string;
   component?: string;
   req?: { url?: string };
   msg?: string;
@@ -105,7 +106,7 @@ const logLines: LogLine[] = stdout
       return {} as LogLine;
     }
   })
-  .filter((o) => typeof o.level === "number");
+  .filter((o) => typeof o.level === "string");
 
 const urlsLogged = logLines
   .map((l) => l.req?.url)
