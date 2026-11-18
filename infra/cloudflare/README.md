@@ -93,7 +93,7 @@ Keep this file until the cloud poller has run cleanly for a few days.
 
 ### 3. Get the Neon connection string
 
-In the Neon console, open project **docketclock**, then click **Connect**. Choose branch `production`,
+In the Neon console, open project **docketclock**, then click **Connect**. Choose branch `main`,
 database `docketclock` and role `docketclock`, and turn **Connection pooling** off (the poller's advisory
 lock needs a direct connection). Copy the string, then paste it at this hidden prompt so it stays out of
 your shell history:
