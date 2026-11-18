@@ -21,6 +21,27 @@ export function databaseUrl(): string {
   return url;
 }
 
+/**
+ * idle_timeout closes a pooled connection after 2 idle minutes, so the pool never hands out a socket the
+ * server side may already have dropped (Neon cuts every connection when it scales to zero, after 5 minutes
+ * without queries). postgres.js reconnects transparently on the next query.
+ */
+export const IDLE_TIMEOUT_SECONDS = 120;
+
 export function createClient(url: string = databaseUrl()): Sql {
-  return postgres(url, { onnotice: () => {} }); // silence NOTICE chatter (e.g. IF NOT EXISTS skips)
+  return postgres(url, {
+    onnotice: () => {}, // silence NOTICE chatter (e.g. IF NOT EXISTS skips)
+    idle_timeout: IDLE_TIMEOUT_SECONDS,
+  });
+}
+
+/**
+ * A ONE-connection client for session-scoped state (the poll-cycle advisory lock, cycle-lock.ts). Use this
+ * instead of `sql.reserve()` for anything that must outlive a dropped socket: postgres.js 3.4 crashes the
+ * process (an uncaught TypeError in `nextWrite`) when a query runs on a RESERVED connection whose socket has
+ * already closed, and `release()` hands that dead connection back to the pool. A plain max:1 client instead
+ * reconnects on its next query, so a dropped session costs one failed query, never the process.
+ */
+export function createSessionClient(url: string = databaseUrl()): Sql {
+  return postgres(url, { onnotice: () => {}, max: 1 });
 }

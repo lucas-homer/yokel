@@ -1,11 +1,11 @@
 /**
  * langfuse.smoke.ts — a one-shot LIVE proof that the adjudicator → Langfuse tracing seam works end to end
- * (NOT a gated test; it makes a REAL Gemini call AND ships a real trace to Langfuse). It exercises the exact
- * production path — selectAdjudicator() builds a GeminiAdjudicator with a LangfuseTracer injected from env —
+ * (NOT a gated test; it makes a REAL model call through AI Gateway AND ships a real trace to Langfuse). It exercises the exact
+ * production path — selectAdjudicator() builds the AI Gateway adjudicator with a LangfuseTracer injected from env —
  * but feeds ONE hand-crafted ambiguous chain pair so a generation deterministically lands, instead of
  * waiting for the live poller to happen upon an ambiguous pair.
  *
- * Requires (in repo-root .env): ADJUDICATOR=gemini, a real GEMINI_API_KEY, and all three LANGFUSE_* vars.
+ * Requires (in repo-root .env): CLOUDFLARE_ACCOUNT_ID, a real CLOUDFLARE_AI_TOKEN, and all three LANGFUSE_* vars.
  * With `task langfuse` running, LANGFUSE_HOST=http://localhost:3001 reaches the in-cluster server.
  *
  * Run:  pnpm --filter @yokel/docketclock smoke:langfuse
@@ -47,7 +47,7 @@ async function main(): Promise<void> {
   console.log(`adjudicator.id = ${adjudicator.id}`);
   if (adjudicator.id.startsWith("null:")) {
     throw new Error(
-      "selectAdjudicator() returned the null adjudicator — set ADJUDICATOR=gemini and a real GEMINI_API_KEY in .env",
+      "selectAdjudicator() returned the null adjudicator — set CLOUDFLARE_ACCOUNT_ID and a real CLOUDFLARE_AI_TOKEN in .env",
     );
   }
   // This is a LIVE proof — it must trace to a REAL Langfuse, not silently no-op. selectAdjudicator() →
@@ -64,7 +64,7 @@ async function main(): Promise<void> {
         "(set them in .env and run `task langfuse`)",
     );
   }
-  // GeminiAdjudicator always carries a tracer, but the Adjudicator port types it `tracer?` — narrow it for
+  // The gateway adjudicator always carries a tracer, but the Adjudicator port types it `tracer?` — narrow it for
   // TS (strict) and as a last-line guard.
   const tracer = adjudicator.tracer;
   if (!tracer) {
@@ -80,7 +80,7 @@ async function main(): Promise<void> {
     toOcdId: "ocd-notice/smoke-b",
   });
 
-  console.log("calling Gemini…");
+  console.log("calling the model via AI Gateway…");
   const verdict = await adjudicator.adjudicate(input);
   console.log("verdict:", JSON.stringify(verdict));
 

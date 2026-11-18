@@ -22,7 +22,7 @@ Three non-negotiables (see the design for why):
 - `src/ingest/` — append-only observation log (mutation-rejecting triggers)
 - `src/reconcile/` + `src/rulebox/` — window projection, cross-window chain links, deterministic
   rules-as-data classification
-- `src/adjudicator/` — provider-agnostic LLM port (Gemini adapter) for borderline chain links,
+- `src/adjudicator/` — provider-agnostic LLM port (Cloudflare AI Gateway adapter; live model in `model.ts`) for borderline chain links,
   verdict cache, Langfuse tracing, gold-corpus evals
 - `src/poll/` — single-writer poll loop (FR → Regs → chain reconcile), dead-lettering, heartbeat
 - `src/api/` — Fastify delivery API (`/v1/windows`, `/v1/conflicts`, `/openapi.json`), fail-closed

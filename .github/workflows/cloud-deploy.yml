@@ -1,0 +1,61 @@
+name: Cloud deploy
+
+# DocketClock on Cloudflare + Neon (infra/cloudflare). MANUAL ONLY: nothing deploys on push or merge.
+# Run it from the Actions tab → "Cloud deploy" → Run workflow, and pick `plan` (preview, changes nothing)
+# or `deploy`.
+#
+# Repo secrets: CLOUDFLARE_API_TOKEN, NEON_API_KEY, REGS_API_KEY, CLOUDFLARE_AI_TOKEN, DOCKETCLOCK_API_KEYS.
+# Repo variables: CLOUDFLARE_ACCOUNT_ID (required); DOCKETCLOCK_POLL_CRON (optional; unset = cron OFF);
+# DOCKETCLOCK_API_DOMAIN (optional; unset = workers.dev).
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "plan = preview only; deploy = apply"
+        type: choice
+        options: [plan, deploy]
+        default: plan
+      adopt:
+        description: "Take over cloud resources that exist but are missing from Alchemy state (e.g. left by a deploy that failed mid-way). Leave off unless a run fails with OwnedBySomeoneElse."
+        type: boolean
+        default: false
+
+# Never run two applies against the same stack at once.
+concurrency:
+  group: cloud-deploy-prod
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  alchemy:
+    runs-on: ubuntu-latest # has Docker, which builds the container image
+    env:
+      CI: "true"
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+      REGS_API_KEY: ${{ secrets.REGS_API_KEY }}
+      CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+      DOCKETCLOCK_API_KEYS: ${{ secrets.DOCKETCLOCK_API_KEYS }}
+      DOCKETCLOCK_POLL_CRON: ${{ vars.DOCKETCLOCK_POLL_CRON }}
+      DOCKETCLOCK_API_DOMAIN: ${{ vars.DOCKETCLOCK_API_DOMAIN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --filter @yokel/docketclock-cloud...
+      # Create Alchemy's state store Worker on first use, or confirm it is ready. In CI, plan/deploy refuse
+      # to create it themselves, and `plan` has no --yes flag; this explicit step is idempotent.
+      - name: alchemy state bootstrap
+        working-directory: infra/cloudflare
+        run: pnpm exec alchemy state bootstrap --no-input
+      # `deploy` asks for approval before applying, and CI has no terminal: choosing "deploy" when you
+      # start this workflow IS the approval, so pass --yes for it. `plan` has no such flag.
+      - name: alchemy ${{ inputs.action }}
+        working-directory: infra/cloudflare
+        run: pnpm exec alchemy ${{ inputs.action }} --stage prod --no-input ${{ inputs.action == 'deploy' && '--yes' || '' }} ${{ inputs.adopt && '--adopt' || '' }}

@@ -18,6 +18,11 @@ spec:
       valueFiles:
         - values.yaml
         - values-local.yaml
+      # Cloud cutover (infra/cloudflare/README.md): the Cloudflare poller is the single writer now, so the
+      # Mini's poller is off. Set here, not in values-local.yaml, so Tilt's local loop still gets one.
+      parameters:
+        - name: poller.enabled
+          value: "false"
   destination:
     server: https://kubernetes.default.svc
     namespace: docketclock

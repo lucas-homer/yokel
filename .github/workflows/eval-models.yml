@@ -1,0 +1,53 @@
+name: Eval — compare models
+
+# Manual, on-demand comparison of candidate adjudicator models over the chain gold corpus, all through
+# Cloudflare AI Gateway (one token, one bill, every call visible in the gateway's logs). No gate: this
+# picks a model; eval-chain.yml stays the regression gate for whichever model is live.
+#
+# Needs repo secret CLOUDFLARE_AI_TOKEN (API token with Account > Workers AI > Read) and the existing
+# repo variable CLOUDFLARE_ACCOUNT_ID, plus Unified Billing credits on the account for third-party models.
+# Cost per run: ~50 short calls per model (well under $0.10/model for flash/mini-class models).
+
+on:
+  workflow_dispatch:
+    inputs:
+      models:
+        description: "Comma-separated AI Gateway model ids"
+        required: true
+        default: "google/gemini-2.5-flash,google/gemini-3-flash,google/gemini-3.1-flash-lite,openai/gpt-5.4-mini,openai/gpt-5.4-nano,anthropic/claude-haiku-4.5,anthropic/claude-haiku-5.5,google/gemini-3.8-flash,@cf/zai-org/glm-5.3-flash,@cf/deepseek-ai/deepseek-v4.1-flash-1017,@cf/google/gemma-4-26b-a4b-it,@cf/openai/gpt-oss-120b"
+      gateway:
+        description: "AI Gateway id (auto-created if 'default')"
+        required: false
+        default: "default"
+
+concurrency:
+  group: eval-models
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Inputs go through env (never interpolated into the shell string) so a dispatch can't inject a command.
+      - name: Compare models
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_AI_GATEWAY: ${{ inputs.gateway }}
+          EVAL_MODELS: ${{ inputs.models }}
+          LLM_TIMEOUT_MS: "60000"
+        run: pnpm --filter @yokel/docketclock eval:models --concurrency 4 --out "$RUNNER_TEMP/eval-models.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-models
+          path: ${{ runner.temp }}/eval-models.json
+          if-no-files-found: ignore

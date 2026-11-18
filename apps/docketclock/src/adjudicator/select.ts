@@ -1,26 +1,25 @@
 /**
- * adjudicator/select.ts — the config-driven factory that picks WHICH Adjudicator the substrate uses.
- * Slice 3a wires gemini-or-null; the SAFE DEFAULT is NullAdjudicator (abstain), so prod/CI with no
- * provider configured and no API key is unchanged and never reaches the network.
+ * adjudicator/select.ts — builds the Adjudicator the poller uses.
  *
- * NOT wired into any pipeline in this slice — nothing in src/sources|reconcile|poll calls this yet. The
- * live integrator step provisions the key and invokes selectAdjudicator(); until then this is exercised
- * only by tests.
+ * Every LLM call goes through Cloudflare AI Gateway (ai-gateway.ts below: one Cloudflare API token, one
+ * bill, every call in the gateway's logs). The only real choice is WHICH MODEL, and the live one is the
+ * ADJUDICATOR_MODEL constant in ./model.ts — change models with a reviewed one-line diff there, after the
+ * "Eval — compare models" workflow picks a winner.
  *
- * PRECEDENCE (a Gemini adapter requires BOTH a provider selector AND a key, else we fall back to null):
- *   1. ADJUDICATOR must equal "gemini" (case-insensitive). Any other value, or unset, or "null" → NullAdjudicator.
- *   2. The provider's OWN key must be present: GEMINI_API_KEY. (Credentials are provider-specific, so the env
- *      var names the provider — the provider-agnostic seam is THIS selector + the Adjudicator port, not the
- *      key name. A future provider adds its own branch reading e.g. ANTHROPIC_API_KEY.) ADJUDICATOR=gemini
- *      with NO key → NullAdjudicator (we do NOT construct a keyless gemini client).
- *   3. Only when both hold do we return GeminiAdjudicator with:
- *        - GEMINI_MODEL   (default "gemini-2.5-flash") → id "gemini:<model>"
- *        - GEMINI_BASE_URL (optional; default the public endpoint)
- *        - LLM_TIMEOUT_MS (generic — a timeout is provider-agnostic behavior, not a credential; default 15000)
+ * ADJUDICATOR (env) is an override, not the source of truth:
+ *   - unset / ""             → ADJUDICATOR_MODEL (the live model)
+ *   - "off" | "null" | "none" → NullAdjudicator (deterministic-only)
+ *   - a catalog id containing "/" (e.g. "openai/gpt-5.4-mini", "@cf/zai-org/glm-5.3-flash") → that model
+ *   - anything else (e.g. the retired "gemini") → NullAdjudicator, so a stale value can never call a
+ *     made-up model id.
+ * The gateway needs CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_AI_TOKEN (Account > Workers AI > Read); missing
+ * either → NullAdjudicator, so tests, CI and keyless dev never reach the network.
+ * Optional: CLOUDFLARE_AI_GATEWAY (gateway id, default "default"), LLM_TIMEOUT_MS (default 15000).
  */
 import type { Adjudicator } from "./port.js";
 import { NullAdjudicator } from "./null-adjudicator.js";
-import { GeminiAdjudicator } from "./gemini-adjudicator.js";
+import { ADJUDICATOR_MODEL } from "./model.js";
+import { ChatCompletionsAdjudicator } from "./chat-completions-adjudicator.js";
 import {
   NOOP_TRACER,
   safeTracer,
@@ -30,7 +29,6 @@ import {
 import { LangfuseTracer } from "./langfuse-tracer.js";
 import { getMetricsTracer } from "./metrics-tracer.js";
 
-const DEFAULT_MODEL = "gemini-2.5-flash";
 const DEFAULT_TIMEOUT_MS = 15_000;
 
 /**
@@ -56,42 +54,51 @@ export function selectTracer(env: NodeJS.ProcessEnv = process.env): LlmTracer {
   }
 }
 
-export function selectAdjudicator(
-  env: NodeJS.ProcessEnv = process.env,
-): Adjudicator {
-  const provider = (env.ADJUDICATOR ?? "").trim().toLowerCase();
-  if (provider !== "gemini") {
-    // unset / "null" / anything else → the safe abstain default.
-    return new NullAdjudicator();
-  }
-
-  // The gemini provider reads its OWN key, GEMINI_API_KEY (a credential is provider-specific — the
-  // abstraction lives in this selector, not the key name). TRIM it: secret material from K8s/Vault/ESO
-  // commonly carries a trailing newline, and a whitespace-only value is NOT a usable key — treating it as
-  // present would construct a client that 400s every cycle instead of degrading. Trimming keeps the
-  // safe-default guard honest for mis-provisioned env.
-  const apiKey = (env.GEMINI_API_KEY || "").trim();
-  if (!apiKey) {
-    // provider selected but no (usable) key → do NOT construct a keyless client; degrade to abstain.
-    return new NullAdjudicator();
-  }
-
-  const model = (env.GEMINI_MODEL || "").trim() || DEFAULT_MODEL;
-  const baseUrl = (env.GEMINI_BASE_URL || "").trim();
+/**
+ * aiGatewayAdjudicator — the Cloudflare AI Gateway adjudicator for one model, or undefined when the
+ * account id / token are missing. Exported so the eval can build one per candidate model with its own tracer.
+ */
+export function aiGatewayAdjudicator(
+  env: NodeJS.ProcessEnv,
+  model: string,
+  tracer?: LlmTracer,
+): ChatCompletionsAdjudicator | undefined {
+  const accountId = (env.CLOUDFLARE_ACCOUNT_ID || "").trim();
+  // TRIM: secret material commonly carries a trailing newline; whitespace-only is not a usable token.
+  const apiKey = (env.CLOUDFLARE_AI_TOKEN || "").trim();
+  if (!accountId || !apiKey) return undefined;
+  const gateway = (env.CLOUDFLARE_AI_GATEWAY || "").trim() || "default";
   const timeoutMs = Number(env.LLM_TIMEOUT_MS);
-  // Construct the observability tracer ONCE here and inject it: the SAME instance is shared between the
-  // adapter (which records each real call as a generation) and the chain orchestrator (which reads it off
-  // `adjudicator.tracer` to open the per-cycle trace + flush). Compose two sinks: the ALWAYS-ON MetricsTracer
-  // (Prometheus, Langfuse-independent) and the ALL-OR-NOTHING Langfuse tracer (a NoopTracer, dropped by
-  // composeTracers, when LANGFUSE_* is unset). So metrics always populate; the Langfuse push stays gated.
-  return new GeminiAdjudicator({
+  return new ChatCompletionsAdjudicator({
+    baseUrl: `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/v1`,
     apiKey,
     model,
-    ...(baseUrl ? { baseUrl } : {}),
+    headers: { "cf-aig-gateway-id": gateway },
     timeoutMs:
       Number.isFinite(timeoutMs) && timeoutMs > 0
         ? timeoutMs
         : DEFAULT_TIMEOUT_MS,
-    tracer: composeTracers(getMetricsTracer(), selectTracer(env)),
+    // ONE tracer instance shared by the adapter (records each real call) and the chain orchestrator (reads
+    // it off `adjudicator.tracer` for the per-cycle trace + flush): the always-on MetricsTracer plus the
+    // all-or-nothing Langfuse tracer (dropped when LANGFUSE_* is unset).
+    tracer: tracer ?? composeTracers(getMetricsTracer(), selectTracer(env)),
   });
+}
+
+/** Resolve which model the ADJUDICATOR override asks for; undefined means "off". */
+export function resolveAdjudicatorModel(
+  env: NodeJS.ProcessEnv = process.env,
+): string | undefined {
+  const raw = (env.ADJUDICATOR ?? "").trim();
+  if (!raw) return ADJUDICATOR_MODEL;
+  if (["off", "null", "none"].includes(raw.toLowerCase())) return undefined;
+  return raw.includes("/") ? raw : undefined;
+}
+
+export function selectAdjudicator(
+  env: NodeJS.ProcessEnv = process.env,
+): Adjudicator {
+  const model = resolveAdjudicatorModel(env);
+  if (!model) return new NullAdjudicator();
+  return aiGatewayAdjudicator(env, model) ?? new NullAdjudicator();
 }
