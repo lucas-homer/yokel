@@ -22,9 +22,11 @@
  * other writers. versionBumped should be ~0 every cycle — a status flip never moves the close — so a
  * non-zero count is surfaced in the summary for loud logging/alerting, same audit posture as #106.
  */
+import { Effect } from "effect";
+import { runAmbient } from "../ambient.js";
 import type { Sql } from "../db/client.js";
-import { rederiveOcdIds } from "./rederive.js";
-
+import { dbQuery, type SqlError } from "../db/effect.js";
+import { rederiveWindows } from "./rederive.js";
 export interface StatusRefreshSummary {
   /** open windows with a passed close found this cycle (candidates re-derived). */
   scanned: number;
@@ -44,39 +46,57 @@ export interface StatusRefreshSummary {
   failed: number;
 }
 
-/** Re-derive every stale-open window (status='open', close in the past) through the real engine. */
-export async function refreshStaleOpenWindows(
+/**
+ * Re-derive every stale-open window (status='open', close in the past) through the real engine. An
+ * Effect program (ADR 0018 slice 5b): the scan and each window's re-derivation are child spans.
+ */
+export const statusRefresh = (
+  sql: Sql,
+  now: Date = new Date(),
+): Effect.Effect<StatusRefreshSummary, SqlError> =>
+  Effect.gen(function* () {
+    const stale = yield* dbQuery(
+      "SELECT stale open windows",
+      () => sql<{ ocd_id: string }[]>`
+        select ocd_id from participation_windows
+        where status = 'open'
+          and resolved_close_utc is not null
+          and resolved_close_utc <= ${now.toISOString()}
+        order by ocd_id
+      `,
+      (rows) => ({ "db.response.returned_rows": rows.length }),
+    );
+
+    const rows = yield* rederiveWindows(
+      sql,
+      stale.map((r) => r.ocd_id),
+      now,
+    );
+
+    const summary: StatusRefreshSummary = {
+      scanned: rows.length,
+      closed: 0,
+      stillOpen: 0,
+      otherStatus: 0,
+      versionBumped: 0,
+      failed: 0,
+    };
+    for (const r of rows) {
+      if (r.error !== null) summary.failed++;
+      else if (r.status === "closed") summary.closed++;
+      else if (r.status === "open") summary.stillOpen++;
+      else summary.otherStatus++;
+      if (r.versionBumped) summary.versionBumped++;
+    }
+    return summary;
+  });
+
+/** Promise form of statusRefresh; rejects with the driver's own error, as before. */
+export function refreshStaleOpenWindows(
   sql: Sql,
   now: Date = new Date(),
 ): Promise<StatusRefreshSummary> {
-  const stale = await sql<{ ocd_id: string }[]>`
-    select ocd_id from participation_windows
-    where status = 'open'
-      and resolved_close_utc is not null
-      and resolved_close_utc <= ${now.toISOString()}
-    order by ocd_id
-  `;
-
-  const rows = await rederiveOcdIds(
-    sql,
-    stale.map((r) => r.ocd_id),
-    now,
+  return runAmbient(
+    statusRefresh(sql, now).pipe(Effect.catch((e) => Effect.die(e.cause))),
   );
-
-  const summary: StatusRefreshSummary = {
-    scanned: rows.length,
-    closed: 0,
-    stillOpen: 0,
-    otherStatus: 0,
-    versionBumped: 0,
-    failed: 0,
-  };
-  for (const r of rows) {
-    if (r.error !== null) summary.failed++;
-    else if (r.status === "closed") summary.closed++;
-    else if (r.status === "open") summary.stillOpen++;
-    else summary.otherStatus++;
-    if (r.versionBumped) summary.versionBumped++;
-  }
-  return summary;
 }

@@ -8,9 +8,9 @@
  *   2b. govinfoSweepOnce — the published GovInfo text of recent FR amendment documents (ADR 0016):
  *      append-only, capped per cycle; BEFORE the chain pass so the text is there to link and resolve on,
  *   3. chainReconcile (chain-pass.ts) — the cross_window (chain) reconcile sweep (#31), then
- *   3b. rederiveChainOriginals — re-derive the side-A windows of the confident links (reconcile-v2.4)
+ *   3b. amendedOriginals — re-derive the side-A windows of the confident links (reconcile-v2.4)
  *      so an amendment that arrived this cycle moves its original in the SAME cycle, then
- *   4. refreshStaleOpenWindows — the status refresh (#107): re-derive open windows whose close has
+ *   4. statusRefresh — the status refresh (#107): re-derive open windows whose close has
  *      passed, so status flips closed within one cycle instead of waiting for an observation a settled
  *      notice may never produce. Runs BEFORE verify so a window flipped closed here is snapshot-eligible
  *      for the SAME cycle's verification pass. Then
@@ -78,10 +78,9 @@ if (existsSync(envPath)) process.loadEnvFile(envPath);
 const { createClient, createSessionClient } = await import("../db/client.js");
 const { componentLogger } = await import("../log.js");
 const { regsApiKey } = await import("../sources/regulations-gov.js");
-const { rederiveChainOriginals } = await import("../reconcile/persist.js");
+const { amendedOriginals } = await import("../reconcile/rederive.js");
 const { govinfoSweepOnce } = await import("../sources/govinfo.js");
-const { refreshStaleOpenWindows } =
-  await import("../reconcile/status-refresh.js");
+const { statusRefresh } = await import("../reconcile/status-refresh.js");
 const { reviewQueueStats } = await import("../review/core.js");
 const { selectAdjudicator } = await import("../adjudicator/select.js");
 const { pollFrOnce } = await import("./fr-poll.js");
@@ -291,7 +290,8 @@ const program = Effect.gen(function* () {
       "amended_originals",
       "amended_originals",
       "amended originals re-derive failed",
-      withAmbient(() => rederiveChainOriginals(sql, new Date())),
+      // An Effect program (rederive.ts): each re-derived window is a child span.
+      Effect.suspend(() => amendedOriginals(sql, new Date())),
       (originals) => {
         if (originals.versionBumped > 0) {
           log.warn({ summary: originals }, "amended originals MOVED a close");
@@ -305,7 +305,8 @@ const program = Effect.gen(function* () {
       "status_refresh",
       "status_refresh",
       "status refresh failed",
-      withAmbient(() => refreshStaleOpenWindows(sql)),
+      // An Effect program (status-refresh.ts): the scan and each re-derived window are child spans.
+      Effect.suspend(() => statusRefresh(sql, new Date())),
       (refresh) => {
         if (refresh.versionBumped > 0) {
           log.warn({ summary: refresh }, "status refresh MOVED a close");

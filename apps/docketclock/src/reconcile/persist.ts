@@ -22,6 +22,7 @@
  * proof feed publishes only live conflicts (resolved_at IS NULL).
  */
 import type { Sql, SqlHandle } from "../db/client.js";
+import { ambientQuery } from "../db/effect.js";
 import type {
   ChangeHistoryEntry,
   Observation,
@@ -453,12 +454,15 @@ const collapseWs = (s: string) => s.replace(/\s+/g, " ");
  * flags, is the one exception: restart any long-lived process after running it.) Index-only on 0013.
  */
 async function corpusStamp(sql: SqlHandle): Promise<string> {
-  const [r] = await sql<{ stamp: string }[]>`
+  const [r] = await ambientQuery(
+    "SELECT amendment corpus stamp",
+    () => sql<{ stamp: string }[]>`
     select 'observations'::regclass::oid::text || ':' || count(*)::text || ':' ||
            coalesce(max(fetched_at)::text, '') as stamp
     from observations
     where source in ('federal_register', 'govinfo')
-  `;
+  `,
+  );
   return r!.stamp;
 }
 
@@ -468,22 +472,24 @@ async function buildAmendmentCorpus(
 ): Promise<AmendmentCorpus> {
   // Windows that EVER carried a signal (partial index 0013/3), then ALL their FR and govinfo rows in
   // time order (0013/1). govinfo `raw` (the whole page) is never read here — only its extracted text.
-  const rows = await sql<
-    {
-      observation_id: string;
-      ocd_id: string;
-      source: "federal_register" | "govinfo";
-      fr_document_number: string | null;
-      is_extension: boolean;
-      is_correction: boolean;
-      is_withdrawal: boolean;
-      is_reopening: boolean;
-      raw: unknown;
-      raw_dates_text: string | null;
-      fetched_at: Date;
-      payload_hash: string;
-    }[]
-  >`
+  const rows = await ambientQuery(
+    "SELECT amendment corpus",
+    () => sql<
+      {
+        observation_id: string;
+        ocd_id: string;
+        source: "federal_register" | "govinfo";
+        fr_document_number: string | null;
+        is_extension: boolean;
+        is_correction: boolean;
+        is_withdrawal: boolean;
+        is_reopening: boolean;
+        raw: unknown;
+        raw_dates_text: string | null;
+        fetched_at: Date;
+        payload_hash: string;
+      }[]
+    >`
     with amend as (
       select distinct ocd_id from observations
       where source = 'federal_register'
@@ -498,7 +504,9 @@ async function buildAmendmentCorpus(
     join observations o
       on o.ocd_id = a.ocd_id and o.source in ('federal_register', 'govinfo')
     order by o.ocd_id, o.fetched_at, o.observation_id
-  `;
+  `,
+    (rows) => ({ "db.response.returned_rows": rows.length }),
+  );
   const byDoc = new Map<string, CorpusDoc>();
   for (const r of rows) {
     let doc = byDoc.get(r.ocd_id);
@@ -614,7 +622,9 @@ export async function loadAmendmentInputs(
     inputs: null,
     evidenceRows: [],
   };
-  const [aRow] = await sql<FrAmendmentRow[]>`
+  const [aRow] = await ambientQuery(
+    "SELECT latest FR observation",
+    () => sql<FrAmendmentRow[]>`
     select observation_id, ocd_id, fr_document_number,
            is_extension, is_correction, is_withdrawal, is_reopening, raw,
            null::uuid as govinfo_observation_id, null::text as govinfo_text
@@ -622,7 +632,8 @@ export async function loadAmendmentInputs(
     where ocd_id = ${ocdId} and source = 'federal_register'
     order by fetched_at desc, observation_id desc
     limit 1
-  `;
+  `,
+  );
   if (!aRow) return NONE;
   const a = identityCandidate(aRow);
   if (!a.publication_date) return NONE;
@@ -660,13 +671,16 @@ export async function loadAmendmentInputs(
   // the past — and revive a verdict that extension had superseded. Expression index 0013/4.
   const citationArrivals: number[] = [];
   if (a.citation && citationSeen) {
-    const rows = await sql<{ first_at: Date }[]>`
+    const rows = await ambientQuery(
+      "SELECT citation arrivals",
+      () => sql<{ first_at: Date }[]>`
       select min(fetched_at) as first_at
       from observations
       where source = 'federal_register'
         and regexp_replace(btrim(raw->>'citation'), '\\s+', ' ', 'g') = ${aCitation}
       group by fr_document_number
-    `;
+    `,
+    );
     for (const r of rows) citationArrivals.push(r.first_at.getTime());
   }
   const citationKey = a.citation?.trim() ?? "";
@@ -831,27 +845,8 @@ export function amendmentInputsFromRows(
   };
 }
 
-/**
- * Read every Observation for an ocd_id from the log, resolve its linked FR amendments
- * (loadAmendmentEvidence, reconcile-v2.4), run the pure engine, persist the projection. The single
- * DB-aware orchestration point; the rulebook itself stays pure + deterministic. Every write path that
- * derives a window — FR/Regs ingest, the rederive sweep, the status refresh, the review write — comes
- * through here, so they all pass the SAME amendment outcome.
- */
-export async function reconcileOcdId(
-  sql: Sql,
-  ocdId: string,
-  now: Date = new Date(),
-): Promise<ReconcileOcdIdResult> {
-  const observations = await loadObservations(sql, ocdId);
-  if (observations.length === 0)
-    throw new Error(`reconcileOcdId: no observations for ocd_id "${ocdId}"`);
-
-  const amendment = await loadAmendmentInputs(sql, ocdId);
-  const result = reconcile(observations, now, reconcileOptionsOf(amendment));
-  const persist = await persistReconciliation(sql, result, now);
-  return { ...result, persist };
-}
+// reconcileOcdId — derive one window — is an Effect program with a span per step (ADR 0018 slice 5b).
+export { reconcileOcdId } from "./reconcile-window.js";
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────────
 // CROSS-WINDOW (chain) pass — #31 Slice 3. The DB-aware sibling of persistReconciliation/reconcileOcdId,
@@ -1018,37 +1013,5 @@ export interface ChainOriginalsRederiveResult {
   failed: number;
 }
 
-/**
- * rederiveChainOriginals — the reconcile-v2.4 trigger (ADR 0016): re-derive every side-A window of the
- * live CONFIDENT cross_window set, so an amendment that arrived (or whose GovInfo text arrived) this
- * cycle moves its original in the SAME cycle instead of waiting for the original's next Regs poll. Runs
- * after chainReconcileOnce. LLM-affirmed links (llm_corroborated) are skipped — they never move a date,
- * so re-deriving their originals would be pure churn. Idempotent: an unchanged derivation is a no-op
- * refresh (persistReconciliation's own version discipline). Per-window failures are isolated.
- */
-export async function rederiveChainOriginals(
-  sql: Sql,
-  now: Date = new Date(),
-): Promise<ChainOriginalsRederiveResult> {
-  const rows = await sql<{ ocd_id: string }[]>`
-    select distinct ocd_id from conflict_records
-    where conflict_scope = 'cross_window'
-      and resolved_at is null
-      and not (conflict_flags @> '["llm_corroborated"]'::jsonb)
-    order by ocd_id
-  `;
-  const result: ChainOriginalsRederiveResult = {
-    scanned: rows.length,
-    versionBumped: 0,
-    failed: 0,
-  };
-  for (const { ocd_id } of rows) {
-    try {
-      const r = await reconcileOcdId(sql, ocd_id, now);
-      if (r.persist.versionBumped) result.versionBumped++;
-    } catch {
-      result.failed++;
-    }
-  }
-  return result;
-}
+// rederiveChainOriginals — the reconcile-v2.4 trigger (ADR 0016) — is an Effect program in rederive.ts.
+export { rederiveChainOriginals } from "./rederive.js";
