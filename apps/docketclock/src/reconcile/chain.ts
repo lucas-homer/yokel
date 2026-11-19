@@ -158,8 +158,8 @@ export function isKeywordFalsePositive(c: ChainCandidate): boolean {
   return isDenied(haystack);
 }
 
-/** Parse "YYYY-MM-DD" to a UTC instant ms, or null. */
-function pubMs(date: string | null): number | null {
+/** Parse "YYYY-MM-DD" to a UTC instant ms, or null. Exported for the chain-index equivalence test. */
+export function pubMs(date: string | null): number | null {
   if (!date) return null;
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
   if (!m) return null;
@@ -275,8 +275,14 @@ export class CitationMemo {
 
   cites(text: string | null | undefined, citation: string): boolean {
     if (!text) return false;
-    const m = CITATION_SHAPE.exec(citation.trim());
-    if (!m) return textCitesCitation(text, citation);
+    const key = citationKey(citation);
+    if (key === null) return textCitesCitation(text, citation);
+    return this.tokens(text).has(key);
+  }
+
+  /** Every "<vol> FR <page>" key the text carries (scanned once, then cached). */
+  tokens(text: string | null | undefined): ReadonlySet<string> {
+    if (!text) return EMPTY_KEYS;
     let set = this.byText.get(text);
     if (!set) {
       set = new Set<string>();
@@ -285,7 +291,67 @@ export class CitationMemo {
       }
       this.byText.set(text, set);
     }
-    return set.has(`${m[1]} FR ${m[2]}`);
+    return set;
+  }
+}
+
+const EMPTY_KEYS: ReadonlySet<string> = new Set();
+
+/** The memo key for a citation of the plain "<vol> FR <page>" shape, or null for any other shape. */
+export function citationKey(citation: string): string | null {
+  const m = CITATION_SHAPE.exec(citation.trim());
+  return m ? `${m[1]} FR ${m[2]}` : null;
+}
+
+/**
+ * PERF index for chainCore. linkBasis can only return non-null, and a pair can only be ambiguous, when one
+ * of these holds: (1) A and B share a docket; (2) B's correction_of equals A's fr_document_number; (3) A's
+ * citation is cited in B's GovInfo or DATES text. Every docket-free basis is one of (2) or (3), and the
+ * ambiguous tail requires (1). So for each amendment B, chainCore visits only the candidates this index
+ * returns, instead of all of them (on 2026-11-18 that was 1,609 x 8,415 pairs, 48 s of CPU per cycle).
+ * Only UNIQUE citations are indexed (a shared citation never links, see buildCitationIndex). Citations
+ * outside the plain "<vol> FR <page>" shape cannot be keyed, so those candidates are always visited (the
+ * textCitesCitation fallback decides them, exactly as before).
+ */
+class CandidateIndex {
+  private readonly byDocket = new Map<string, number[]>();
+  private readonly byDocNumber = new Map<string, number[]>();
+  private readonly byCitationKey = new Map<string, number[]>();
+  private readonly oddCitation: number[] = [];
+
+  constructor(
+    candidates: readonly ChainCandidate[],
+    citationIndex: ReadonlyMap<string, number>,
+  ) {
+    const push = (m: Map<string, number[]>, k: string, i: number) => {
+      const list = m.get(k);
+      if (list) list.push(i);
+      else m.set(k, [i]);
+    };
+    candidates.forEach((c, i) => {
+      for (const d of c.docket_ids) push(this.byDocket, d, i);
+      if (c.fr_document_number) push(this.byDocNumber, c.fr_document_number, i);
+      const cit = c.citation?.trim();
+      if (cit && citationIndex.get(cit) === 1) {
+        const key = citationKey(cit);
+        if (key === null) this.oddCitation.push(i);
+        else push(this.byCitationKey, key, i);
+      }
+    });
+  }
+
+  /** The candidate indices that could pair with b, ascending (the same visit order as a full scan). */
+  reachable(b: ChainCandidate, memo: CitationMemo): number[] {
+    const seen = new Set<number>();
+    const add = (list: readonly number[] | undefined) => {
+      if (list) for (const i of list) seen.add(i);
+    };
+    for (const d of b.docket_ids) add(this.byDocket.get(d));
+    if (b.correction_of) add(this.byDocNumber.get(b.correction_of));
+    for (const k of memo.tokens(b.govinfo_text)) add(this.byCitationKey.get(k));
+    for (const k of memo.tokens(b.dates_text)) add(this.byCitationKey.get(k));
+    add(this.oddCitation);
+    return [...seen].sort((x, y) => x - y);
   }
 }
 
@@ -471,6 +537,8 @@ export function chainCore(
     c.resolved_close_utc ? new Date(c.resolved_close_utc).getTime() : NaN,
   );
 
+  const index = new CandidateIndex(candidates, citationIndex);
+
   for (const b of amendments) {
     const bMs = pubMs(b.publication_date);
     // Rule 3 needs B's publication date; without it we cannot know B is the amendment → do NOT link.
@@ -483,7 +551,9 @@ export function chainCore(
     const targets: ChainCandidate[] = [];
     // Pairs that pass the STRUCTURAL rules (1+3+4) but FAIL rule 2 — the ambiguous tail for THIS b.
     const ambiguousForB: ChainCandidate[] = [];
-    for (let i = 0; i < candidates.length; i++) {
+    // Only candidates the index says could pair with b (see CandidateIndex); all others have
+    // linkBasis === null and no shared docket, so a full scan would skip them anyway.
+    for (const i of index.reachable(b, memo)) {
       const a = candidates[i]!;
       if (a.ocd_id === b.ocd_id) continue; // B cannot amend itself
       if (a.fr_observation_id === b.fr_observation_id) continue;
