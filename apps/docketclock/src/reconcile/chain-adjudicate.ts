@@ -37,6 +37,11 @@
  *   cycle via the peek. An `uncertain` verdict is cached too, so a non-affirmed pair is a FREE peek-hit on
  *   later cycles (no re-spend) rather than a re-consult.
  *
+ *   EFFECT (ADR 0018, slice 5) — the loop is an Effect program (`adjudicateAmbiguous`) in a
+ *   `chain.adjudicate` span: each cache peek is a `SELECT adjudication cache` span and each fresh consult a
+ *   `chain.adjudicate.consult` span with the adapter's `chat <model>` span inside. `adjudicateAmbiguousPairs`
+ *   keeps the Promise signature for existing callers and tests.
+ *
  *   PER-PAIR ERROR ISOLATION — each fresh consult is wrapped in try/catch. A throw (gemini down / timeout /
  *   malformed) is logged and the pair SKIPPED (no link); the cycle continues. The throw STILL spent its
  *   budget unit (a fresh-call ATTEMPT consumes budget whether it returns or throws), so a flapping provider
@@ -53,7 +58,10 @@ import { NULL_ADJUDICATOR_ID } from "../adjudicator/null-adjudicator.js";
 import type { Adjudicator } from "../adjudicator/port.js";
 import { NOOP_TRACER, safeTracer } from "../adjudicator/tracer.js";
 import type { Sql } from "../db/client.js";
+import { dbQuery, type SqlError } from "../db/effect.js";
 import { componentLogger } from "../log.js";
+import { runAmbient, withAmbient } from "../ambient.js";
+import { Effect } from "effect";
 import {
   buildChainConflict,
   classify,
@@ -97,7 +105,7 @@ export interface ChainAdjudicateResult {
 }
 
 /**
- * adjudicateAmbiguousPairs — iterate the ambiguous pairs in their existing deterministic sort order and,
+ * adjudicateAmbiguous — iterate the ambiguous pairs in their existing deterministic sort order and,
  * for EACH, first PEEK the verdict cache (a SELECT, no LLM call):
  *   • Cache HIT  → apply the stored verdict for FREE (no call, no budget). An `affirm` still promotes the
  *                  link, so already-decided pairs keep their links every cycle, UNCAPPED.
@@ -115,158 +123,179 @@ export interface ChainAdjudicateResult {
  * multi_target computation stays byte-identical under the null adapter (Invariant 1), and an LLM-judged
  * link is never dressed up with a deterministic multi-target claim it didn't earn.
  */
-export async function adjudicateAmbiguousPairs(
+export const adjudicateAmbiguous = (
+  sql: Sql,
+  adjudicator: Adjudicator,
+  ambiguousPairs: AmbiguousPair[],
+  now: Date,
+  cap: number,
+): Effect.Effect<ChainAdjudicateResult, SqlError> =>
+  Effect.gen(function* () {
+    const ambiguous = ambiguousPairs.length;
+
+    // NULL-ADAPTER NO-OP: short-circuit before any peek/consult — nothing promoted, nothing cached.
+    if (adjudicator.id === NULL_ADJUDICATOR_ID) {
+      if (ambiguous > 0) {
+        log.info(
+          { surfaced: ambiguous },
+          "chain adjudicate skipped — no real adjudicator configured (null:abstain)",
+        );
+      }
+      return {
+        ambiguous,
+        cacheHits: 0,
+        llmCalls: 0,
+        deferred: 0,
+        llmLinked: 0,
+        links: [],
+      };
+    }
+
+    // The FRESH-CALL budget. Spent only on cache MISSES (real consults); a peek HIT is free.
+    let callBudget = Math.max(0, cap);
+
+    // Open the per-cycle trace (PR-C2) on the adjudicator's injected tracer — safeTracer so a misbehaving
+    // tracer can never throw into the pass (defense-in-depth on top of each impl's own swallow).
+    const tracer = safeTracer(adjudicator.tracer ?? NOOP_TRACER);
+    tracer.startCycle({ kind: "chain", surfaced: ambiguous, cap });
+
+    const links: ChainConflict[] = [];
+    let cacheHits = 0;
+    let llmCalls = 0;
+    let deferred = 0;
+
+    for (const { a, b } of ambiguousPairs) {
+      // shared_docket is TRUE by construction (AmbiguousPair only surfaces docket-sharing pairs); RIN is not
+      // shared and there is no explicit reference — that's exactly why the pair is ambiguous.
+      const input = {
+        kind: "chain" as const,
+        rulebook_version: RULEBOOK_VERSION,
+        a_title: a.title ?? "",
+        a_dates_text: a.dates_text,
+        a_publication_date: a.publication_date,
+        b_title: b.title ?? "",
+        b_dates_text: b.dates_text,
+        b_publication_date: b.publication_date,
+        shared_docket: true,
+        shared_rin: false,
+        explicit_reference: false,
+      };
+
+      // Tag this pair on the tracer so the adapter's generation (if a fresh call) carries from/to OCD-ids.
+      tracer.setActivePair({ fromOcdId: a.ocd_id, toOcdId: b.ocd_id });
+
+      // PEEK first — a SELECT, never an LLM call, never spends budget. A DB failure here fails the pass
+      // (SqlError), as before: it is not a per-pair adjudication failure.
+      const cached = yield* dbQuery("SELECT adjudication cache", () =>
+        peekAdjudication(sql, adjudicator, input),
+      );
+
+      let verdict: AdjudicationVerdict;
+      if (cached) {
+        // HIT — apply the stored verdict for FREE: no call, no budget spent, no fresh write.
+        cacheHits++;
+        verdict = cached;
+        tracer.recordCacheHit({
+          contentHash: adjudicationContentHash(input),
+          adjudicatorId: `${adjudicator.id}@${input.rulebook_version}`,
+          rulebookVersion: input.rulebook_version,
+          kind: "chain",
+          classification: cached.classification,
+          fromOcdId: a.ocd_id,
+          toOcdId: b.ocd_id,
+        });
+      } else {
+        // MISS — needs a real consult. Out of budget → DEFER (surfaces again next cycle, no starvation).
+        if (callBudget <= 0) {
+          deferred++;
+          continue;
+        }
+        // Spend the budget BEFORE calling: a fresh-call ATTEMPT consumes budget whether it returns or throws.
+        callBudget--;
+        llmCalls++;
+        // consultAdjudicator is Promise code that calls the adapter; withAmbient lets the adapter's
+        // `chat <model>` span nest under this pair's span (ambient.ts).
+        const consulted = yield* withAmbient(() =>
+          consultAdjudicator(sql, adjudicator, input),
+        ).pipe(
+          Effect.withSpan("chain.adjudicate.consult", {
+            attributes: {
+              "docketclock.from": a.ocd_id,
+              "docketclock.to": b.ocd_id,
+            },
+          }),
+          Effect.result,
+        );
+        if (consulted._tag === "Failure") {
+          // PER-PAIR ERROR ISOLATION: a failed adjudication (down/timeout/malformed) is logged and SKIPPED
+          // (no link). One bad call must not abort the cycle or the other pairs — worst case is today's
+          // output. The budget unit was already spent above (deliberate — see the flapping-provider note).
+          log.warn(
+            { err: consulted.failure, from: a.ocd_id, to: b.ocd_id },
+            "chain adjudicate consult failed; skipping (no link)",
+          );
+          continue;
+        }
+        verdict = consulted.success.verdict;
+      }
+
+      // CONSERVATIVE ENVELOPE: ONLY affirm adds a link. reject / uncertain → no link (cache hit OR fresh).
+      if (verdict.classification !== "affirm") continue;
+
+      const flags = [...classify(b, false), "llm_corroborated" as const];
+      links.push(buildChainConflict(a, b, flags, now));
+    }
+
+    // FLUSH the per-cycle trace (PR-C2). Best-effort: flush() swallows its own errors.
+    yield* Effect.promise(() => tracer.flush());
+
+    // Only log when something actually happened — poll/run.ts already logs the per-cycle chain summary.
+    if (ambiguous > 0) {
+      log.info(
+        {
+          surfaced: ambiguous,
+          cacheHits,
+          llmCalls,
+          deferred,
+          llmLinked: links.length,
+          cap,
+        },
+        "chain adjudicate cycle",
+      );
+    }
+
+    yield* Effect.annotateCurrentSpan({
+      "docketclock.chain.ambiguous": ambiguous,
+      "docketclock.chain.cache_hits": cacheHits,
+      "docketclock.chain.llm_calls": llmCalls,
+      "docketclock.chain.deferred": deferred,
+      "docketclock.chain.llm_linked": links.length,
+    });
+
+    return {
+      ambiguous,
+      cacheHits,
+      llmCalls,
+      deferred,
+      llmLinked: links.length,
+      links,
+    };
+  }).pipe(Effect.withSpan("chain.adjudicate"));
+
+/**
+ * adjudicateAmbiguousPairs — the Promise form of `adjudicateAmbiguous` (ADR 0018 Promise boundary). A
+ * failed cache peek rejects with the driver's own error, exactly as before.
+ */
+export function adjudicateAmbiguousPairs(
   sql: Sql,
   adjudicator: Adjudicator,
   ambiguousPairs: AmbiguousPair[],
   now: Date,
   cap: number,
 ): Promise<ChainAdjudicateResult> {
-  const ambiguous = ambiguousPairs.length;
-
-  // NULL-ADAPTER SHORT-CIRCUIT: an always-abstaining adjudicator would only ever return `uncertain`, so
-  // consulting it is pure waste. The cache key is now (content_hash, adjudicator_id) (migration 0009), so a
-  // persisted `null:abstain@<rb>` row can NO LONGER shadow a real provider's verdict (distinct adjudicator_id
-  // ⇒ distinct key) — but we still do ZERO consults and ZERO cache writes when no real provider is
-  // configured: a true no-op. Ambiguous pairs are still counted/surfaced; nothing is escalated or linked.
-  if (adjudicator.id === NULL_ADJUDICATOR_ID) {
-    if (ambiguous > 0) {
-      log.info(
-        { surfaced: ambiguous },
-        "chain adjudicate skipped — no real adjudicator configured (null:abstain)",
-      );
-    }
-    return {
-      ambiguous,
-      cacheHits: 0,
-      llmCalls: 0,
-      deferred: 0,
-      llmLinked: 0,
-      links: [],
-    };
-  }
-
-  // Budget = max fresh LLM CALLS this cycle (cache misses). Floor a botched/negative cap to 0 (defense in
-  // depth: even if a caller bypasses chainMaxEscalations and passes a negative, we never escalate-everything).
-  let callBudget = Math.max(0, cap);
-
-  // Observability (PR-C2): open ONE trace per cycle. The tracer rides on the adjudicator (injected in
-  // select.ts) and is the SAME instance the adapter records generations on, so a real call's generation
-  // lands under this cycle's trace. With no LANGFUSE_* env this is the NoopTracer — a true no-op.
-  // safeTracer at the POINT OF USE (not just in select.ts): chainReconcileOnce accepts an injected
-  // adjudicator (options.adjudicator — tests/future callers), whose .tracer we did NOT construct, so the
-  // wrap here makes the "tracing is a side channel, never throws into the deterministic cycle" invariant
-  // structural for EVERY injection path — a misbehaving tracer can't abort this cycle's confident links.
-  const tracer = safeTracer(adjudicator.tracer ?? NOOP_TRACER);
-  tracer.startCycle({ kind: "chain", surfaced: ambiguous, cap });
-
-  const links: ChainConflict[] = [];
-  let cacheHits = 0;
-  let llmCalls = 0;
-  let deferred = 0;
-
-  // Iterate in the EXISTING deterministic sort order (determinism preserved). For each pair: peek first.
-  for (const { a, b } of ambiguousPairs) {
-    // For an ambiguous pair, by DEFINITION: shared_docket=true, shared_rin=false, explicit_reference=false
-    // (those are exactly the rule-2 signals that failed; the structural rules 1/3/4 passed).
-    const input = {
-      kind: "chain" as const,
-      rulebook_version: RULEBOOK_VERSION,
-      a_title: a.title ?? "",
-      a_dates_text: a.dates_text,
-      a_publication_date: a.publication_date,
-      b_title: b.title ?? "",
-      b_dates_text: b.dates_text,
-      b_publication_date: b.publication_date,
-      shared_docket: true,
-      shared_rin: false,
-      explicit_reference: false,
-    };
-
-    // Tag the active pair so a fresh call's generation (which the adapter records without knowing the
-    // OCD-ids) cross-references this pair in the trace. Cheap; the NoopTracer ignores it.
-    tracer.setActivePair({ fromOcdId: a.ocd_id, toOcdId: b.ocd_id });
-
-    // PEEK the cache first — a SELECT, never an LLM call. peek and consult key IDENTICALLY: same content
-    // hash AND same adjudicator_id (peek now takes the adjudicator so it computes the SAME key consult does).
-    const cached = await peekAdjudication(sql, adjudicator, input);
-
-    let verdict: AdjudicationVerdict;
-    if (cached) {
-      // CACHE HIT — apply the stored verdict for FREE. Does NOT consume the fresh-call budget, so ALL
-      // previously-decided pairs are covered every cycle, uncapped. (This is the anti-starvation core: a
-      // pair adjudicated last cycle is replayed here without spending budget, freeing it for new pairs.)
-      cacheHits++;
-      verdict = cached;
-      // Record the hit as a cheap cached span (no LLM call was made) so the trace shows hit-vs-call.
-      tracer.recordCacheHit({
-        contentHash: adjudicationContentHash(input),
-        adjudicatorId: `${adjudicator.id}@${input.rulebook_version}`,
-        rulebookVersion: input.rulebook_version,
-        kind: "chain",
-        classification: cached.classification,
-        fromOcdId: a.ocd_id,
-        toOcdId: b.ocd_id,
-      });
-    } else {
-      // CACHE MISS — needs a real call. Only spend it if the budget remains; else DEFER (no verdict this
-      // cycle; the pair surfaces again next cycle and gets adjudicated once the cap-many ahead of it cache).
-      if (callBudget <= 0) {
-        deferred++;
-        continue;
-      }
-      // A fresh-call ATTEMPT spends budget whether it returns OR throws — so a flapping provider is not
-      // hammered across the whole surfaced set in one cycle. Decrement BEFORE awaiting.
-      callBudget--;
-      llmCalls++;
-      try {
-        ({ verdict } = await consultAdjudicator(sql, adjudicator, input));
-      } catch (err) {
-        // PER-PAIR ERROR ISOLATION: a thrown adjudication (down/timeout/malformed) is logged and SKIPPED
-        // (no link). One bad call must not abort the cycle or the other pairs — worst case is today's
-        // output. The budget unit was already spent above (deliberate — see the flapping-provider note).
-        log.warn(
-          { err, from: a.ocd_id, to: b.ocd_id },
-          "chain adjudicate consult failed; skipping (no link)",
-        );
-        continue;
-      }
-    }
-
-    // CONSERVATIVE ENVELOPE: ONLY affirm adds a link. reject / uncertain → no link (cache hit OR fresh).
-    if (verdict.classification !== "affirm") continue;
-
-    const flags = [...classify(b, false), "llm_corroborated" as const];
-    links.push(buildChainConflict(a, b, flags, now));
-  }
-
-  // FLUSH the per-cycle trace (PR-C2): the poller is long-lived and the SDK batches in the background, so we
-  // push this cycle's events now rather than waiting for the buffer to fill. Best-effort + awaited next to
-  // the existing log — flush() swallows its own errors, so a tracing hiccup never breaks the cycle.
-  await tracer.flush();
-
-  // Only log when something actually happened — poll/run.ts already logs the per-cycle chain summary, so
-  // an unconditional line here would just add steady-state noise on every (mostly-empty) reconcile.
-  if (ambiguous > 0) {
-    log.info(
-      {
-        surfaced: ambiguous,
-        cacheHits,
-        llmCalls,
-        deferred,
-        llmLinked: links.length,
-        cap,
-      },
-      "chain adjudicate cycle",
-    );
-  }
-
-  return {
-    ambiguous,
-    cacheHits,
-    llmCalls,
-    deferred,
-    llmLinked: links.length,
-    links,
-  };
+  return runAmbient(
+    adjudicateAmbiguous(sql, adjudicator, ambiguousPairs, now, cap).pipe(
+      Effect.catch((err) => Effect.die(err.cause)),
+    ),
+  );
 }

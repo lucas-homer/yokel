@@ -74,3 +74,17 @@ pass's span and tracer from an AsyncLocalStorage. The bridge goes away once the 
 
 Langfuse stays as it is: it is configured only on the Mac mini and in the eval workflow, and the cloud
 poller sends its LLM spans to the same OTLP endpoint as everything else.
+
+## Update, 2026-11-18: the first pass moves inward (slice 5a, chain)
+
+The chain pass is the first pass written as an Effect program (`src/reconcile/chain-pass.ts`, with
+`chain-adjudicate.ts`). `run.ts` runs it directly, while the other passes still go through `withAmbient`.
+Its steps are child spans of `poll.pass.chain`: `SELECT chain candidates`, `chain.core`,
+`chain.adjudicate` (one `SELECT adjudication cache` per peek, one `chain.adjudicate.consult` per fresh
+call) and `TRANSACTION chain conflicts`. `src/db/effect.ts` lifts one postgres.js query or transaction
+into Effect as `dbQuery(name, run)`, with a typed `SqlError` and a database client span. The client itself
+is unchanged. `chainReconcileOnce` and `adjudicateAmbiguousPairs` keep their Promise signatures (the first
+is re-exported from `persist.ts`) and reject with the driver's own error.
+
+Motivation: production traces show the chain pass at about 63 of 142 seconds per cycle, with no LLM
+calls and nothing inside it to say why. The step spans answer that before any optimisation is attempted.
