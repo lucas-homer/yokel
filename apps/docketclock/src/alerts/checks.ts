@@ -1,7 +1,7 @@
 /**
  * alerts/checks.ts — the cloud alert definitions, in code (the Mac mini's Grafana rules, ported).
  *
- * Delivery: healthchecks.io → its integrations (Signal, email). Each check below is one healthchecks.io check, addressed by SLUG under
+ * Delivery: healthchecks.io → its integrations (ntfy, email). Each check below is one healthchecks.io check, addressed by SLUG under
  * the project's ping key (https://hc-ping.com/<HEALTHCHECKS_PING_KEY>/<slug>). The poller evaluates every
  * rule at the END of its own cycle, while the database is already awake (alerts/evaluate.ts), and pings
  * each check: success, `/fail` (pages now), or `/log` (recorded, no state change). healthchecks.io pages on

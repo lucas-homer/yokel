@@ -47,7 +47,7 @@ container as an environment variable.
 
 The Mini's Grafana alerts, ported. The rules live in `apps/docketclock/src/alerts/` and the poller checks
 them at the end of every cycle, then pings [healthchecks.io](https://healthchecks.io), which pages through
-the project's integrations (Signal and email).
+the project's integrations (ntfy and email).
 
 | Check                  | Pages when                                                                                                                        |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -60,8 +60,8 @@ the project's integrations (Signal and email).
 
 Setup, once:
 
-1. Make sure the healthchecks.io project has an integration that reaches your phone. Ours uses Signal
-   (ntfy pushes never reached Lucas's iPhone).
+1. Make sure the healthchecks.io project has an integration that reaches your phone (ours: ntfy, plus
+   email). Press its Test! button to confirm.
 2. In project Settings, create a ping key and a read-write API key.
 3. Add GitHub secrets `HEALTHCHECKS_PING_KEY` and `HEALTHCHECKS_API_KEY`.
 4. Run **Alerts sync** from the Actions tab. It creates the checks from `checks.ts` and keeps them in step
