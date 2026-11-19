@@ -125,7 +125,7 @@ export const chainReconcile = (
     const rows = yield* loadCandidateRows(sql);
 
     // The pure engine, CPU only. chainCore computes BOTH the confident links (rules 1–5) and the ambiguous
-    // tail in one pass over the pairs, so the O(amendments x candidates) loop runs once per cycle.
+    // tail in one pass over the pairs that can link (CandidateIndex in chain.ts), once per cycle.
     const { candidates, amendments, confident, ambiguousPairs } =
       yield* Effect.sync(() => {
         const candidates = rows.map(toCandidate);
