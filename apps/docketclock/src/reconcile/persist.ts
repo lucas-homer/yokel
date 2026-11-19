@@ -997,6 +997,8 @@ export interface ChainReconcileOnceResult extends ChainPersistResult {
   cacheHits: number;
   /** FRESH LLM calls made this cycle (cache misses that had budget). ≤ cap. A throw still counts. */
   llmCalls: number;
+  /** fresh LLM calls that failed (skipped, no link). Feeds the LLM error alert (alerts/evaluate.ts). */
+  llmErrors: number;
   /** affirmed pairs promoted to a cross_window link (each carries `llm_corroborated`). */
   llmLinked: number;
   /** uncached pairs DEFERRED this cycle because the per-cycle fresh-call budget was exhausted. */

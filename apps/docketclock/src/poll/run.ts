@@ -105,6 +105,9 @@ const { cycleOutcome, recordPollCycle, scalarSummary } =
 const { telemetryLayer } = await import("../telemetry.js");
 const { withAmbient } = await import("../ambient.js");
 const { chainReconcile } = await import("../reconcile/chain-pass.js");
+const { evaluate, isTopOfHour } = await import("../alerts/evaluate.js");
+const { alertConfig, deliver, probeApi, recentPassFailures } =
+  await import("../alerts/report.js");
 const { Cause, Effect, Schedule } = await import("effect");
 
 const log = componentLogger("poller");
@@ -149,6 +152,13 @@ const annotateSummary = (fields: Record<string, number | boolean>) =>
 // The passes of the cycle in progress, in run order, for its poll_cycles row (cycle-log.ts). `tick`
 // resets it; cycles never overlap within a process (Effect.repeat runs them one after another).
 let cyclePasses: PassRecord[] = [];
+
+// What the verify and queue_stats passes read that the alert rules need (alerts/evaluate.ts). Reset by
+// `tick` with cyclePasses; null = the pass did not get that far this cycle.
+let cycleSignals: {
+  accuracy: { ratio: number | null; sample: number } | null;
+  queue: { escalated: number; oldestAgeSeconds: number | null } | null;
+} = { accuracy: null, queue: null };
 
 const errorText = (err: unknown) =>
   (err instanceof Error ? err.message : String(err)).slice(0, 300);
@@ -327,6 +337,7 @@ const program = Effect.gen(function* () {
         recordVerifyCycle(verify);
         const { ratio, sample } = await highCorrectRatio90d(sql);
         setAccuracyHighRatio(ratio, sample);
+        cycleSignals.accuracy = { ratio, sample };
         log.debug({ ratio, sample }, "accuracy high-ratio 90d rollup");
       },
     );
@@ -339,9 +350,46 @@ const program = Effect.gen(function* () {
       (queue) => {
         log.info({ summary: queue }, "review queue stats");
         recordReviewQueue(queue);
+        cycleSignals.queue = {
+          escalated: queue.byReason.escalated,
+          oldestAgeSeconds: queue.oldestAgeSeconds,
+        };
       },
     );
   });
+
+  // CLOUD ALERTS (alerts/): pinged at the end of every cycle, while the database is still awake. Off
+  // unless HEALTHCHECKS_PING_KEY / NTFY_URL are set (only the Cloudflare deploy sets them).
+  const alerts = alertConfig();
+  const sendAlerts = async (
+    now: Date,
+    outcome: import("./cycle-log.js").PollCycleOutcome,
+    passesRun: PassRecord[],
+  ) => {
+    if (!alerts.pingKey && !alerts.ntfyUrl) return;
+    const ran = outcome === "ok" || outcome === "pass_failed";
+    const [recent, api] = await Promise.all([
+      ran
+        ? recentPassFailures(sql).catch((err) => {
+            log.warn({ err }, "alerts: pass failure look-back failed");
+            return null;
+          })
+        : null,
+      alerts.apiUrl && isTopOfHour(now) ? probeApi(alerts.apiUrl) : null,
+    ]);
+    await deliver(
+      alerts,
+      evaluate({
+        now,
+        outcome,
+        passes: passesRun,
+        recentPassFailures: recent,
+        accuracy: cycleSignals.accuracy,
+        queue: cycleSignals.queue,
+        api,
+      }),
+    );
+  };
 
   let cycleFailed = false; // set when a cycle could not run at all (run-once mode exits 1 on it)
 
@@ -350,6 +398,7 @@ const program = Effect.gen(function* () {
   const tick = Effect.gen(function* () {
     const cycleStart = Date.now();
     cyclePasses = [];
+    cycleSignals = { accuracy: null, queue: null };
     let traceId: string | null = null;
     let failed = false;
     const outcome = yield* cycleLock(lockSession, passes, {
@@ -389,15 +438,16 @@ const program = Effect.gen(function* () {
     // The durable per-cycle row for long-term trends (cycle-log.ts). Written after the lock is released;
     // a failed write (e.g. the database is the reason the cycle failed) is logged and never fails the loop.
     const passesRun = cyclePasses;
+    const cycleResult = cycleOutcome({
+      failed,
+      skipped: !!outcome && !outcome.acquired,
+      passes: passesRun,
+    });
     yield* Effect.tryPromise(() =>
       recordPollCycle(sql, {
         startedAt: new Date(cycleStart),
         finishedAt: new Date(),
-        outcome: cycleOutcome({
-          failed,
-          skipped: !!outcome && !outcome.acquired,
-          passes: passesRun,
-        }),
+        outcome: cycleResult,
         runOnce: ONCE,
         traceId,
         passes: passesRun,
@@ -405,6 +455,15 @@ const program = Effect.gen(function* () {
     ).pipe(
       Effect.catch((err) =>
         Effect.sync(() => log.warn({ err }, "poll cycle record write failed")),
+      ),
+    );
+    // Alerts read the row just written (the pass look-back), so they go after it. deliver() never throws;
+    // the catch is for the look-back's own bugs.
+    yield* Effect.tryPromise(() =>
+      sendAlerts(new Date(cycleStart), cycleResult, passesRun),
+    ).pipe(
+      Effect.catch((err) =>
+        Effect.sync(() => log.warn({ err }, "alerts failed")),
       ),
     );
     // Mark this cycle SETTLED (liveness #25) — even after a pass-level failure, which is isolated and must

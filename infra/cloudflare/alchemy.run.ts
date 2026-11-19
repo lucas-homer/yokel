@@ -15,6 +15,7 @@
 import * as Cloudflare from "@alchemy.run/cloudflare";
 import * as Neon from "@alchemy.run/neon";
 import * as Alchemy from "alchemy";
+import * as Output from "alchemy/Output";
 import * as Config from "effect/Config";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
@@ -58,6 +59,14 @@ export default Alchemy.Stack(
     const otelEndpoint = yield* Config.String(
       "OTEL_EXPORTER_OTLP_ENDPOINT",
     ).pipe(Config.withDefault(""));
+    // Cloud alerts (apps/docketclock/src/alerts/): the poller pings healthchecks.io after each cycle and
+    // sends a daily review nag to ntfy. Each is off while its secret is unset.
+    const healthchecksPingKey = yield* Config.String(
+      "HEALTHCHECKS_PING_KEY",
+    ).pipe(Config.withDefault(""));
+    const ntfyUrl = yield* Config.String("NTFY_URL").pipe(
+      Config.withDefault(""),
+    );
 
     const db = yield* Neon.Project("Db", {
       name: "docketclock",
@@ -67,6 +76,28 @@ export default Alchemy.Stack(
       roleName: "docketclock",
       // Neon free plan caps history retention at 6h; the 24h default is rejected.
       historyRetentionSeconds: 21600,
+    });
+
+    const api = yield* Cloudflare.Worker("Api", {
+      main: `${import.meta.dirname}/src/api.ts`,
+      observability: OBSERVABILITY,
+      // workers.dev until the docketclock.app zone is on the account (then set DOCKETCLOCK_API_DOMAIN).
+      domain: apiDomain || undefined,
+      env: {
+        API: Cloudflare.Container<ApiContainer>("ApiContainer", {
+          className: "ApiContainer",
+          context: REPO_ROOT,
+          dockerfile: DOCKERFILE,
+          observability: { logs: { enabled: true } },
+          // Run near Neon (aws-us-west-2). Unpinned, the first cycle landed in IAD and every query crossed
+          // the country (8.5-minute cycle).
+          constraints: { regions: ["WNAM"] },
+          instanceType: "basic",
+          maxInstances: 2,
+        }),
+        DATABASE_URL: db.connectionUri,
+        DOCKETCLOCK_API_KEYS: secret("DOCKETCLOCK_API_KEYS"),
+      },
     });
 
     const poller = yield* Cloudflare.Worker("Poller", {
@@ -100,28 +131,12 @@ export default Alchemy.Stack(
               OTEL_EXPORTER_OTLP_HEADERS: secret("OTEL_EXPORTER_OTLP_HEADERS"),
             }
           : {}),
-      },
-    });
-
-    const api = yield* Cloudflare.Worker("Api", {
-      main: `${import.meta.dirname}/src/api.ts`,
-      observability: OBSERVABILITY,
-      // workers.dev until the docketclock.app zone is on the account (then set DOCKETCLOCK_API_DOMAIN).
-      domain: apiDomain || undefined,
-      env: {
-        API: Cloudflare.Container<ApiContainer>("ApiContainer", {
-          className: "ApiContainer",
-          context: REPO_ROOT,
-          dockerfile: DOCKERFILE,
-          observability: { logs: { enabled: true } },
-          // Run near Neon (aws-us-west-2). Unpinned, the first cycle landed in IAD and every query crossed
-          // the country (8.5-minute cycle).
-          constraints: { regions: ["WNAM"] },
-          instanceType: "basic",
-          maxInstances: 2,
-        }),
-        DATABASE_URL: db.connectionUri,
-        DOCKETCLOCK_API_KEYS: secret("DOCKETCLOCK_API_KEYS"),
+        // The API's base URL, which the poller probes at /readyz once an hour (the `api` check).
+        DOCKETCLOCK_API_URL: Output.map(api.url, (u) => u ?? ""),
+        ...(healthchecksPingKey
+          ? { HEALTHCHECKS_PING_KEY: secret("HEALTHCHECKS_PING_KEY") }
+          : {}),
+        ...(ntfyUrl ? { NTFY_URL: secret("NTFY_URL") } : {}),
       },
     });
 
