@@ -59,14 +59,11 @@ export default Alchemy.Stack(
     const otelEndpoint = yield* Config.String(
       "OTEL_EXPORTER_OTLP_ENDPOINT",
     ).pipe(Config.withDefault(""));
-    // Cloud alerts (apps/docketclock/src/alerts/): the poller pings healthchecks.io after each cycle and
-    // sends a daily review nag to ntfy. Each is off while its secret is unset.
+    // Cloud alerts (apps/docketclock/src/alerts/): the poller pings healthchecks.io after each cycle. Off
+    // while the secret is unset.
     const healthchecksPingKey = yield* Config.String(
       "HEALTHCHECKS_PING_KEY",
     ).pipe(Config.withDefault(""));
-    const ntfyUrl = yield* Config.String("NTFY_URL").pipe(
-      Config.withDefault(""),
-    );
 
     const db = yield* Neon.Project("Db", {
       name: "docketclock",
@@ -136,7 +133,6 @@ export default Alchemy.Stack(
         ...(healthchecksPingKey
           ? { HEALTHCHECKS_PING_KEY: secret("HEALTHCHECKS_PING_KEY") }
           : {}),
-        ...(ntfyUrl ? { NTFY_URL: secret("NTFY_URL") } : {}),
       },
     });
 

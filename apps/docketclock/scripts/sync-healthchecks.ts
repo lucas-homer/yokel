@@ -6,7 +6,7 @@
  *
  * For each check: create it if no check has its slug, otherwise update name, timeout, grace and description
  * in place (its ping history and status are kept). Every check is attached to ALL of the project's
- * integrations (`channels: "*"`), so the ntfy integration set up in the healthchecks.io project pages for
+ * integrations (`channels: "*"`), so whatever integrations the healthchecks.io project has (ntfy, email) page for
  * all of them. Checks in the project that are not in checks.ts are listed, never deleted.
  *
  * The API key is the project's read-write key (healthchecks.io → project Settings → API Access). It is
