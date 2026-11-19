@@ -33,6 +33,8 @@ Both containers run the **existing** image (`apps/docketclock/Dockerfile`), so t
 | `DOCKETCLOCK_API_KEYS`   | GitHub secret; repo-root `.env` locally          | yes (the API)                                               |
 | `DOCKETCLOCK_POLL_CRON`  | GitHub variable / `.env`                         | no (unset means the cron is off; `*/15 * * * *` at cutover) |
 | `DOCKETCLOCK_API_DOMAIN` | GitHub variable / `.env`                         | no (for example `api.docketclock.app`)                      |
+| `HEALTHCHECKS_PING_KEY`  | GitHub secret / `.env`                           | no (unset means no alerts; see [Alerts](#alerts))           |
+| `NTFY_URL`               | GitHub secret / `.env`                           | no (unset means no daily review nag)                        |
 
 LLM adjudication goes through Cloudflare AI Gateway. The live model is not a setting: it is
 `ADJUDICATOR_MODEL` in `apps/docketclock/src/adjudicator/model.ts`, so changing models is a reviewed
@@ -41,6 +43,32 @@ one-line diff. `CLOUDFLARE_AI_TOKEN` is an account API token with Account > Work
 `REGS_API_KEY`, `CLOUDFLARE_AI_TOKEN` and `DOCKETCLOCK_API_KEYS` are GitHub secrets. Use the values the
 cluster uses today. Alchemy binds each one as a Worker secret, and the Durable Object hands it to its
 container as an environment variable.
+
+## Alerts
+
+The Mini's Grafana alerts, ported. The rules live in `apps/docketclock/src/alerts/` and the poller checks
+them at the end of every cycle, then pings [healthchecks.io](https://healthchecks.io), which pages through
+the project's ntfy integration.
+
+| Check                  | Pages when                                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `docketclock-poller`   | no cycle has finished for 45 minutes (Cloudflare, the container or Neon is down), or a cycle failed outright |
+| `docketclock-api`      | the API's `/readyz` is not 200 (checked hourly by the poller)                                                |
+| `docketclock-passes`   | one pass failed in 3 or more cycles in the last hour                                                         |
+| `docketclock-llm`      | more than 3 AI Gateway calls failed in one cycle                                                             |
+| `docketclock-accuracy` | HIGH-confidence deadlines were right less than 95% of the time over 90 days (sample of 20 or more)           |
+
+Escalations waiting on a human, and conflicts older than 7 days, go to ntfy directly once a day at
+16:00 UTC (8 AM Pacific), since healthchecks.io only notifies on a change.
+
+Setup, once:
+
+1. Make sure the healthchecks.io project has an ntfy integration (Integrations → ntfy). Ours already does.
+2. In project Settings, create a ping key and a read-write API key.
+3. Add GitHub secrets `HEALTHCHECKS_PING_KEY`, `HEALTHCHECKS_API_KEY` and `NTFY_URL` (the topic URL).
+4. Run **Alerts sync** from the Actions tab. It creates the checks from `checks.ts` and keeps them in step
+   whenever that file changes on main.
+5. Run **Cloud deploy** so the poller gets the ping key.
 
 ## Run it
 

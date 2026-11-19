@@ -186,6 +186,7 @@ export const chainReconcile = (
       ambiguous: adjudicated.ambiguous,
       cacheHits: adjudicated.cacheHits,
       llmCalls: adjudicated.llmCalls,
+      llmErrors: adjudicated.llmErrors,
       llmLinked: adjudicated.llmLinked,
       deferred: adjudicated.deferred,
       ...persisted,

@@ -96,6 +96,8 @@ export interface ChainAdjudicateResult {
   cacheHits: number;
   /** FRESH LLM calls made this cycle (cache misses that had budget). ≤ cap. A throw still counts (budget spent). */
   llmCalls: number;
+  /** fresh LLM calls that FAILED (down / timeout / malformed) and were skipped. ≤ llmCalls. Feeds the LLM alert. */
+  llmErrors: number;
   /** uncached pairs SKIPPED this cycle because the fresh-call budget was exhausted (surface again next cycle). */
   deferred: number;
   /** affirmed pairs promoted to a cross_window link (carry llm_corroborated) — from cache hits + fresh calls. */
@@ -145,6 +147,7 @@ export const adjudicateAmbiguous = (
         ambiguous,
         cacheHits: 0,
         llmCalls: 0,
+        llmErrors: 0,
         deferred: 0,
         llmLinked: 0,
         links: [],
@@ -162,6 +165,7 @@ export const adjudicateAmbiguous = (
     const links: ChainConflict[] = [];
     let cacheHits = 0;
     let llmCalls = 0;
+    let llmErrors = 0;
     let deferred = 0;
 
     for (const { a, b } of ambiguousPairs) {
@@ -227,6 +231,7 @@ export const adjudicateAmbiguous = (
           Effect.result,
         );
         if (consulted._tag === "Failure") {
+          llmErrors++;
           // PER-PAIR ERROR ISOLATION: a failed adjudication (down/timeout/malformed) is logged and SKIPPED
           // (no link). One bad call must not abort the cycle or the other pairs — worst case is today's
           // output. The budget unit was already spent above (deliberate — see the flapping-provider note).
@@ -256,6 +261,7 @@ export const adjudicateAmbiguous = (
           surfaced: ambiguous,
           cacheHits,
           llmCalls,
+          llmErrors,
           deferred,
           llmLinked: links.length,
           cap,
@@ -268,6 +274,7 @@ export const adjudicateAmbiguous = (
       "docketclock.chain.ambiguous": ambiguous,
       "docketclock.chain.cache_hits": cacheHits,
       "docketclock.chain.llm_calls": llmCalls,
+      "docketclock.chain.llm_errors": llmErrors,
       "docketclock.chain.deferred": deferred,
       "docketclock.chain.llm_linked": links.length,
     });
@@ -276,6 +283,7 @@ export const adjudicateAmbiguous = (
       ambiguous,
       cacheHits,
       llmCalls,
+      llmErrors,
       deferred,
       llmLinked: links.length,
       links,
