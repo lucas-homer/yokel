@@ -1,10 +1,9 @@
 /**
  * alerts/report.ts — the I/O around alerts/evaluate.ts: gather the signals evaluate() needs that the
- * cycle did not already hold, then deliver its pings (healthchecks.io) and its daily nag (ntfy).
+ * cycle did not already hold, then deliver its pings to healthchecks.io.
  *
  * Configuration (all optional; unset = that part is off, so local, test and Mac mini runs send nothing):
  *   HEALTHCHECKS_PING_KEY  the healthchecks.io project's ping key (pings go to hc-ping.com/<key>/<slug>)
- *   NTFY_URL               the ntfy topic URL for the daily nag (a `?template=` query is dropped)
  *   DOCKETCLOCK_API_URL    the API's base URL, probed at /readyz once an hour
  *
  * NEVER THROWS, and every request has a timeout: an alerting hiccup must not fail or hang the cycle.
@@ -21,15 +20,12 @@ const PING_BASE = "https://hc-ping.com";
 
 export interface AlertConfig {
   pingKey: string;
-  ntfyUrl: string;
   apiUrl: string;
 }
 
 export function alertConfig(env: NodeJS.ProcessEnv = process.env): AlertConfig {
-  const ntfy = (env.NTFY_URL ?? "").trim();
   return {
     pingKey: (env.HEALTHCHECKS_PING_KEY ?? "").trim(),
-    ntfyUrl: ntfy ? ntfy.split("?")[0]! : "",
     apiUrl: (env.DOCKETCLOCK_API_URL ?? "").trim().replace(/\/+$/, ""),
   };
 }
@@ -81,7 +77,7 @@ export async function probeApi(
 
 const SUFFIX = { success: "", fail: "/fail", log: "/log" } as const;
 
-/** Send every ping and the nag, in parallel. Logs failures; never throws. */
+/** Send every ping, in parallel. Logs failures; never throws. */
 export async function deliver(
   cfg: AlertConfig,
   ev: Evaluation,
@@ -103,14 +99,6 @@ export async function deliver(
       );
     }
   }
-  if (cfg.ntfyUrl && ev.nag) {
-    sends.push(
-      post(fetchImpl, cfg.ntfyUrl, ev.nag.message, {
-        Title: ev.nag.title,
-        Tags: "clipboard",
-      }).then((ok) => log.info({ delivered: ok }, "daily review nag sent")),
-    );
-  }
   await Promise.all(sends);
 }
 
@@ -120,7 +108,7 @@ async function post(
   body: string,
   headers: Record<string, string>,
 ): Promise<boolean> {
-  // The ping key and ntfy topic are secrets: log the host only.
+  // The ping key is a secret: log the host only.
   const host = new URL(url).host;
   try {
     const res = await fetchImpl(url, {

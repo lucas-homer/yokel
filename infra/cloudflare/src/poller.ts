@@ -23,10 +23,9 @@ export interface PollerEnv {
   /** Optional OTLP trace export (apps/docketclock/src/telemetry.ts); both unset = off. */
   OTEL_EXPORTER_OTLP_ENDPOINT?: string;
   OTEL_EXPORTER_OTLP_HEADERS?: string;
-  /** Cloud alerts (apps/docketclock/src/alerts/). Each unset = that part off. */
+  /** Cloud alerts (apps/docketclock/src/alerts/). Unset = off. */
   DOCKETCLOCK_API_URL?: string;
   HEALTHCHECKS_PING_KEY?: string;
-  NTFY_URL?: string;
 }
 
 /** The DO instance name. Fixed, so every cron fire reaches the same container. */
@@ -60,7 +59,6 @@ export class PollerContainer extends Container<PollerEnv> {
         CLOUDFLARE_AI_TOKEN: e.CLOUDFLARE_AI_TOKEN,
         DOCKETCLOCK_API_URL: e.DOCKETCLOCK_API_URL ?? "",
         HEALTHCHECKS_PING_KEY: e.HEALTHCHECKS_PING_KEY ?? "",
-        NTFY_URL: e.NTFY_URL ?? "",
         ...(e.OTEL_EXPORTER_OTLP_ENDPOINT
           ? {
               OTEL_EXPORTER_OTLP_ENDPOINT: e.OTEL_EXPORTER_OTLP_ENDPOINT,

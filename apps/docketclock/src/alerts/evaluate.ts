@@ -44,8 +44,6 @@ export interface CycleSignals {
 
 export interface Evaluation {
   pings: Ping[];
-  /** The daily ntfy nag (slow-burn state healthchecks.io would page only once for), or null. */
-  nag: { title: string; message: string } | null;
 }
 
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
@@ -54,10 +52,6 @@ const days = (s: number) => `${(s / 86_400).toFixed(1)}d`;
 /** True for the one 15-minute cron slot of the day the hourly/daily jobs run in. */
 export function isTopOfHour(now: Date): boolean {
   return now.getUTCMinutes() < 15;
-}
-
-export function isDailyNagSlot(now: Date): boolean {
-  return now.getUTCHours() === RULES.dailyNagUtcHour && isTopOfHour(now);
 }
 
 export function evaluate(s: CycleSignals): Evaluation {
@@ -87,7 +81,7 @@ export function evaluate(s: CycleSignals): Evaluation {
   if (s.outcome === "failed" || s.outcome === "skipped") {
     // Nothing else was measured. The API probe does not need the database, so it still reports.
     if (s.api) pings.push(apiPing(s.api));
-    return { pings, nag: null };
+    return { pings };
   }
 
   // passes — the same pass failed in N+ cycles of the last hour.
@@ -146,8 +140,9 @@ export function evaluate(s: CycleSignals): Evaluation {
   }
 
   if (s.api) pings.push(apiPing(s.api));
+  if (s.queue && passOk("queue_stats")) pings.push(reviewPing(s.queue));
 
-  return { pings, nag: dailyNag(s) };
+  return { pings };
 }
 
 function apiPing(api: { ok: boolean; detail: string }): Ping {
@@ -158,26 +153,26 @@ function apiPing(api: { ok: boolean; detail: string }): Ping {
   };
 }
 
-/** The review-queue nags (Mini: "Review queue rot", "Escalations pending"), once a day, only when true. */
-function dailyNag(s: CycleSignals): Evaluation["nag"] {
-  if (!isDailyNagSlot(s.now) || !s.queue) return null;
+/**
+ * The review queue (Mini: "Escalations pending", "Review queue rot"). Pinged every cycle; healthchecks.io
+ * notifies only when the state flips, so this pages once when work starts waiting and once when it clears.
+ */
+function reviewPing(queue: NonNullable<CycleSignals["queue"]>): Ping {
   const lines: string[] = [];
-  if (s.queue.escalated > 0) {
+  if (queue.escalated > 0) {
     lines.push(
-      `${s.queue.escalated} escalated window(s) are parked waiting on a human.`,
+      `${queue.escalated} escalated window(s) are parked waiting on a human.`,
     );
   }
   if (
-    s.queue.oldestAgeSeconds !== null &&
-    s.queue.oldestAgeSeconds > RULES.reviewRotSeconds
+    queue.oldestAgeSeconds !== null &&
+    queue.oldestAgeSeconds > RULES.reviewRotSeconds
   ) {
     lines.push(
-      `The oldest open conflict has waited ${days(s.queue.oldestAgeSeconds)} (over ${days(RULES.reviewRotSeconds)}).`,
+      `The oldest open conflict has waited ${days(queue.oldestAgeSeconds)} (over ${days(RULES.reviewRotSeconds)}).`,
     );
   }
-  if (!lines.length) return null;
-  return {
-    title: "DocketClock review queue needs you",
-    message: lines.join("\n"),
-  };
+  return lines.length
+    ? { check: "review", kind: "fail", body: lines.join("\n") }
+    : { check: "review", kind: "success", body: "review queue clear" };
 }

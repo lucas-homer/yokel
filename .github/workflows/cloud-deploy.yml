@@ -8,7 +8,7 @@ name: Cloud deploy
 # Repo variables: CLOUDFLARE_ACCOUNT_ID (required); DOCKETCLOCK_POLL_CRON (optional; unset = cron OFF);
 # DOCKETCLOCK_API_DOMAIN (optional; unset = workers.dev); OTEL_EXPORTER_OTLP_ENDPOINT (optional; unset =
 # no trace export) with its secret OTEL_EXPORTER_OTLP_HEADERS (e.g. Grafana Cloud's Authorization header).
-# Optional alert secrets (apps/docketclock/src/alerts/; unset = off): HEALTHCHECKS_PING_KEY, NTFY_URL.
+# Optional alert secrets (apps/docketclock/src/alerts/; unset = off): HEALTHCHECKS_PING_KEY.
 on:
   workflow_dispatch:
     inputs:
@@ -46,7 +46,6 @@ jobs:
       OTEL_EXPORTER_OTLP_ENDPOINT: ${{ vars.OTEL_EXPORTER_OTLP_ENDPOINT }}
       OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}
       HEALTHCHECKS_PING_KEY: ${{ secrets.HEALTHCHECKS_PING_KEY }}
-      NTFY_URL: ${{ secrets.NTFY_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

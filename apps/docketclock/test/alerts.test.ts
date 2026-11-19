@@ -1,6 +1,6 @@
 /**
  * alerts.test.ts — the cloud alert rules (src/alerts/):
- *   - evaluate(): each Mini rule ported (poller, passes, llm, accuracy, api, daily review nag), and the
+ *   - evaluate(): each Mini rule ported (poller, passes, llm, accuracy, api, review queue), and the
  *     "no input → no ping" rule for checks whose pass did not run;
  *   - report.ts: config parsing, delivery URLs (hc-ping.com/<key>/<slug>[/fail]), never throws;
  *   - recentPassFailures(): the poll_cycles look-back (needs a THROWAWAY Postgres, like cycle-log.test.ts).
@@ -12,7 +12,6 @@ import { runMigrations } from "../src/db/migrate.js";
 import { CHECKS, RULES } from "../src/alerts/checks.js";
 import {
   evaluate,
-  isDailyNagSlot,
   type CycleSignals,
   type Ping,
 } from "../src/alerts/evaluate.js";
@@ -47,11 +46,10 @@ const bad = (name: string, error = "boom"): PassRecord => ({
   error,
 });
 
-const NOT_NAG = new Date("2026-11-19T10:31:00Z");
-const NAG = new Date(`2026-11-19T${RULES.dailyNagUtcHour}:00:30Z`);
+const NOW = new Date("2026-11-19T10:31:00Z");
 
 const base = (over: Partial<CycleSignals> = {}): CycleSignals => ({
-  now: NOT_NAG,
+  now: NOW,
   outcome: "ok",
   passes: [
     ok("chain", { llmCalls: 10, llmErrors: 0 }),
@@ -82,7 +80,10 @@ try {
       "healthy cycle: no api ping when not probed",
       !ping(ev.pings, "api"),
     );
-    assert("healthy cycle: no nag", ev.nag === null);
+    assert(
+      "healthy cycle: review queue clear → review success",
+      ping(ev.pings, "review")?.kind === "success",
+    );
   }
   {
     const ev = evaluate(base({ outcome: "failed", passes: [] }));
@@ -213,57 +214,52 @@ try {
     );
   }
   {
-    assert("nag slot: 16:00Z", isDailyNagSlot(NAG));
-    assert(
-      "nag slot: not 16:15Z",
-      !isDailyNagSlot(new Date("2026-11-19T16:15:00Z")),
-    );
-    const quiet = evaluate(base({ now: NAG }));
-    assert("nag slot, empty queue → no nag", quiet.nag === null);
     const esc = evaluate(
-      base({ now: NAG, queue: { escalated: 2, oldestAgeSeconds: 60 } }),
+      base({ queue: { escalated: 2, oldestAgeSeconds: 60 } }),
     );
+    const e = ping(esc.pings, "review");
     assert(
-      "nag slot, escalations → nag",
-      !!esc.nag && /2 escalated/.test(esc.nag.message),
+      "escalations → review /fail",
+      e?.kind === "fail" && /2 escalated/.test(e.body),
     );
     const rot = evaluate(
       base({
-        now: NAG,
         queue: { escalated: 0, oldestAgeSeconds: RULES.reviewRotSeconds + 1 },
       }),
     );
+    const r = ping(rot.pings, "review");
     assert(
-      "nag slot, oldest conflict > 7d → nag",
-      !!rot.nag && /oldest/.test(rot.nag.message),
+      "oldest conflict > 7d → review /fail",
+      r?.kind === "fail" && /oldest/.test(r.body),
     );
-    const offSlot = evaluate(
-      base({ queue: { escalated: 2, oldestAgeSeconds: 60 } }),
+    const noQueue = evaluate(
+      base({
+        passes: [
+          ok("chain", { llmCalls: 0, llmErrors: 0 }),
+          ok("verify"),
+          bad("queue_stats"),
+        ],
+      }),
     );
-    assert("escalations outside the nag slot → no nag", offSlot.nag === null);
+    assert(
+      "queue_stats failed → no review ping",
+      !ping(noQueue.pings, "review"),
+    );
   }
 
   // ── report: config + delivery ────────────────────────────────────────────────────────────────────
   {
     const cfg = alertConfig({
       HEALTHCHECKS_PING_KEY: " key123 ",
-      NTFY_URL: "https://ntfy.sh/topic?template=grafana",
       DOCKETCLOCK_API_URL: "https://api.example/",
     });
     assert("config trims the ping key", cfg.pingKey === "key123");
-    assert(
-      "config drops the ntfy ?template query",
-      cfg.ntfyUrl === "https://ntfy.sh/topic",
-    );
     assert(
       "config drops the API URL's trailing slash",
       cfg.apiUrl === "https://api.example",
     );
     const off = alertConfig({});
-    assert(
-      "unset config → all off",
-      !off.pingKey && !off.ntfyUrl && !off.apiUrl,
-    );
+    assert("unset config → all off", !off.pingKey && !off.apiUrl);
   }
   {
     const calls: { url: string; body: string; title?: string }[] = [];
@@ -276,14 +272,13 @@ try {
       return new Response("OK", { status: 200 });
     }) as unknown as typeof fetch;
     await deliver(
-      { pingKey: "K", ntfyUrl: "https://ntfy.sh/t", apiUrl: "" },
+      { pingKey: "K", apiUrl: "" },
       {
         pings: [
           { check: "poller", kind: "success", body: "a" },
           { check: "llm", kind: "fail", body: "b" },
           { check: "passes", kind: "log", body: "c" },
         ],
-        nag: { title: "T", message: "m" },
       },
       fake,
     );
@@ -295,13 +290,6 @@ try {
         urls.includes(`https://hc-ping.com/K/${CHECKS.passes.slug}/log`),
       urls.join(" "),
     );
-    assert(
-      "deliver: nag goes to ntfy with a Title",
-      calls.some(
-        (c) =>
-          c.url === "https://ntfy.sh/t" && c.title === "T" && c.body === "m",
-      ),
-    );
   }
   {
     const boom = (async () => {
@@ -310,10 +298,9 @@ try {
     let threw = false;
     try {
       await deliver(
-        { pingKey: "K", ntfyUrl: "https://ntfy.sh/t", apiUrl: "" },
+        { pingKey: "K", apiUrl: "" },
         {
           pings: [{ check: "poller", kind: "success", body: "" }],
-          nag: { title: "t", message: "m" },
         },
         boom,
       );

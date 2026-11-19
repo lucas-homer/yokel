@@ -359,14 +359,14 @@ const program = Effect.gen(function* () {
   });
 
   // CLOUD ALERTS (alerts/): pinged at the end of every cycle, while the database is still awake. Off
-  // unless HEALTHCHECKS_PING_KEY / NTFY_URL are set (only the Cloudflare deploy sets them).
+  // unless HEALTHCHECKS_PING_KEY is set (only the Cloudflare deploy sets them).
   const alerts = alertConfig();
   const sendAlerts = async (
     now: Date,
     outcome: import("./cycle-log.js").PollCycleOutcome,
     passesRun: PassRecord[],
   ) => {
-    if (!alerts.pingKey && !alerts.ntfyUrl) return;
+    if (!alerts.pingKey) return;
     const ran = outcome === "ok" || outcome === "pass_failed";
     const [recent, api] = await Promise.all([
       ran

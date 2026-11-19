@@ -1,14 +1,14 @@
 /**
  * alerts/checks.ts — the cloud alert definitions, in code (the Mac mini's Grafana rules, ported).
  *
- * Delivery: healthchecks.io → ntfy. Each check below is one healthchecks.io check, addressed by SLUG under
+ * Delivery: healthchecks.io → its integrations (Signal, email). Each check below is one healthchecks.io check, addressed by SLUG under
  * the project's ping key (https://hc-ping.com/<HEALTHCHECKS_PING_KEY>/<slug>). The poller evaluates every
  * rule at the END of its own cycle, while the database is already awake (alerts/evaluate.ts), and pings
  * each check: success, `/fail` (pages now), or `/log` (recorded, no state change). healthchecks.io pages on
  * a `/fail` AND on silence past `timeout + grace`, so a dead poller, Cloudflare outage or Neon outage pages
  * through the `poller` check with nothing of ours running. scripts/sync-healthchecks.ts applies these
  * definitions (period, grace, description) from CI; nothing is configured by hand except the project's
- * ntfy integration.
+ * integrations themselves.
  *
  * Rules with a long timeout only page on an explicit `/fail`: while the poller is down they stay quiet and
  * the `poller` check speaks for them (one page per outage, not five).
@@ -73,6 +73,16 @@ export const CHECKS = {
       "/fail when HIGH-confidence deadlines were correct < 95% of the time over 90 days on a sample of " +
       "20+ (Mini: 'Accuracy degraded'). The product's headline promise.",
   },
+  review: {
+    slug: "docketclock-review",
+    name: "DocketClock review queue needs you",
+    timeout: 1 * DAY,
+    grace: 1 * HOUR,
+    desc:
+      "/fail while windows are escalated to a human or the oldest open conflict is over 7 days old " +
+      "(Mini: 'Escalations pending', 'Review queue rot'). Pages once when work starts waiting and " +
+      "again when the queue is clear.",
+  },
 } as const satisfies Record<string, HealthcheckDef>;
 
 export type CheckKey = keyof typeof CHECKS;
@@ -84,6 +94,4 @@ export const RULES = {
   accuracyBar: 0.95,
   accuracyMinSample: 20,
   reviewRotSeconds: 7 * DAY,
-  /** The daily nag (ntfy, direct) goes out in the first cycle that starts in this UTC hour: 8 AM PT. */
-  dailyNagUtcHour: 16,
 } as const;
