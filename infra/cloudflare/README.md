@@ -63,7 +63,7 @@ Escalations waiting on a human, and conflicts older than 7 days, go to ntfy dire
 
 Setup, once:
 
-1. In the healthchecks.io project, add an ntfy integration (Integrations → ntfy) for your topic.
+1. Make sure the healthchecks.io project has an ntfy integration (Integrations → ntfy). Ours already does.
 2. In project Settings, create a ping key and a read-write API key.
 3. Add GitHub secrets `HEALTHCHECKS_PING_KEY`, `HEALTHCHECKS_API_KEY` and `NTFY_URL` (the topic URL).
 4. Run **Alerts sync** from the Actions tab. It creates the checks from `checks.ts` and keeps them in step
