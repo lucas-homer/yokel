@@ -420,7 +420,7 @@ function docStateAt(doc: CorpusDoc, atMs: number): FrAmendmentRow | null {
 }
 
 /** The raw keys every reader downstream of the corpus consults (extractFr, isDenied, derivedIsCorrection). */
-const CORPUS_RAW_KEYS = [
+export const CORPUS_RAW_KEYS = [
   "document_number",
   "publication_date",
   "title",
@@ -434,7 +434,7 @@ const CORPUS_RAW_KEYS = [
   "corrections",
 ] as const;
 
-function slimRaw(raw: unknown): Record<string, unknown> {
+export function slimRaw(raw: unknown): Record<string, unknown> {
   const src =
     raw && typeof raw === "object" && !Array.isArray(raw)
       ? (raw as Record<string, unknown>)
@@ -443,6 +443,19 @@ function slimRaw(raw: unknown): Record<string, unknown> {
   for (const k of CORPUS_RAW_KEYS) if (k in src) out[k] = src[k];
   return out;
 }
+
+/**
+ * SQL for `slimRaw(o.raw)`, computed in the database so only those keys cross the network. Same result:
+ * a non-object raw becomes {}, and an absent key stays absent. Use it wherever a per-cycle read needs an
+ * FR observation's raw only for extractFr (the full payload averages ~4.5 KB; reading 8k of them every
+ * cycle exhausted Neon's free-plan transfer quota on 2026-11-19).
+ */
+export const slimFrRaw = (sql: SqlHandle) => sql`
+  case when jsonb_typeof(o.raw) = 'object' then coalesce(
+    (select jsonb_object_agg(e.key, e.value) from jsonb_each(o.raw) e
+      where e.key = any(${[...CORPUS_RAW_KEYS]}::text[])),
+    '{}'::jsonb)
+  else '{}'::jsonb end`;
 
 const collapseWs = (s: string) => s.replace(/\s+/g, " ");
 
@@ -498,7 +511,9 @@ async function buildAmendmentCorpus(
     )
     select o.observation_id, o.ocd_id, o.source, o.fr_document_number,
            o.is_extension, o.is_correction, o.is_withdrawal, o.is_reopening,
-           case when o.source = 'federal_register' then o.raw end as raw,
+           -- Only the keys the corpus reads leave the database (see slimFrRaw): the full FR payload
+           -- averages ~4.5 KB, and this runs every cycle (Neon transfer quota, 2026-11-19).
+           case when o.source = 'federal_register' then ${slimFrRaw(sql)} end as raw,
            o.raw_dates_text, o.fetched_at, o.payload_hash
     from amend a
     join observations o

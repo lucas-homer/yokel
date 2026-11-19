@@ -32,6 +32,7 @@ import {
 } from "./chain-adjudicate.js";
 import { derivedIsCorrection, extractFr } from "./extract.js";
 import {
+  slimFrRaw,
   persistChainConflicts,
   type ChainReconcileOnceOptions,
   type ChainReconcileOnceResult,
@@ -64,7 +65,9 @@ const loadCandidateRows = (sql: Sql) =>
       select distinct on (w.ocd_id)
         w.ocd_id,
         o.observation_id as fr_observation_id,
-        o.is_extension, o.is_correction, o.is_withdrawal, o.is_reopening, o.raw,
+        o.is_extension, o.is_correction, o.is_withdrawal, o.is_reopening,
+        -- only the keys extractFr reads (slimFrRaw): the full payload is ~38 MB per cycle
+        ${slimFrRaw(sql)} as raw,
         w.status, w.resolved_close_utc, w.govinfo_url,
         (select g.raw_dates_text from observations g
           where g.ocd_id = w.ocd_id and g.source = 'govinfo'
