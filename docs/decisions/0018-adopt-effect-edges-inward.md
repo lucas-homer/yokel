@@ -88,3 +88,24 @@ is re-exported from `persist.ts`) and reject with the driver's own error.
 
 Motivation: production traces show the chain pass at about 63 of 142 seconds per cycle, with no LLM
 calls and nothing inside it to say why. The step spans answer that before any optimisation is attempted.
+
+Outcome: the step spans put 48 of those seconds in `chain.core`, the pure rulebook walking every
+(amendment, candidate) pair. Indexing the candidates on the three keys a link needs (#169) brought it to
+about 2 seconds, and the chain pass to about 18.
+
+## Update, 2026-11-18: window derivation, status refresh and amended originals (slice 5b)
+
+`reconcileOcdId`, the one path every write takes to derive a window, is an Effect program
+(`src/reconcile/reconcile-window.ts`, re-exported from `persist.ts`). Each derivation is a
+`reconcile.window` span with the window's ocd_id, and its steps are child spans: `SELECT observations`,
+`reconcile.amendment_inputs` (with the amendment loader's own queries inside it), `reconcile.core` and
+`TRANSACTION reconciliation`. A failure is a `WindowFailure` naming the step, and the Promise form rejects
+with the error that step threw, as before.
+
+The status refresh (`statusRefresh`) and amended originals (`amendedOriginals`, moved to `rederive.ts`)
+passes are Effect programs that `run.ts` runs directly, built on the shared `rederiveWindows` loop. The
+amendment loader in `persist.ts` is still Promise code; its queries go through `ambientQuery`, which is
+`dbQuery` run with `runAmbient`, so they nest under the caller's span and reject with the driver's error.
+
+Motivation: those two passes take about 30 and 22 seconds per cycle, for 168 and 94 windows. The spans
+show which step of a window's derivation costs that time.

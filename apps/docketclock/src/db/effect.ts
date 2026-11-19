@@ -8,6 +8,7 @@
  * `db.system.name` and `db.operation.name`. Query text and parameters never go on the span.
  */
 import { Data, Effect } from "effect";
+import { runAmbient } from "../ambient.js";
 
 export class SqlError extends Data.TaggedError("SqlError")<{
   /** the span name of the query that failed, e.g. "SELECT chain candidates" */
@@ -46,4 +47,20 @@ export const dbQuery = <A>(
         "db.operation.name": name.split(" ")[0] ?? name,
       },
     }),
+  );
+
+/**
+ * `dbQuery` for Promise code that still runs inside an Effect caller (see ambient.ts): the query gets its
+ * span under the caller's, and the Promise rejects with the driver's own error, exactly as an unwrapped
+ * `await sql\`...\`` would. Retire it with ambient.ts once its callers are Effect code.
+ */
+export const ambientQuery = <A>(
+  name: string,
+  run: () => PromiseLike<A>,
+  annotate?: (result: A) => Record<string, unknown>,
+): Promise<A> =>
+  runAmbient(
+    dbQuery(name, run, annotate).pipe(
+      Effect.catch((err) => Effect.die(err.cause)),
+    ),
   );
