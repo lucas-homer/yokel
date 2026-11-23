@@ -139,6 +139,8 @@ export interface PollOptions {
   deadLetterRetryStaleAfterMs?: number;
   /** Max seen-open windows re-polled per cycle (default regsMaxRepolls() / env REGS_MAX_REPOLLS_PER_CYCLE). */
   maxRepollsPerCycle?: number;
+  /** Wall-clock cap on the re-poll loop (default REGS_REPOLL_TIME_BUDGET_MS); the rest is deferred. */
+  repollTimeBudgetMs?: number;
 }
 
 /**
@@ -153,6 +155,18 @@ export interface PollOptions {
  * differential + drain passes. Tunable: a bound on per-cycle request volume, not on eventual coverage.
  */
 export const REGS_DEFAULT_MAX_REPOLLS = 200;
+
+/**
+ * REGS_REPOLL_TIME_BUDGET_MS — a WALL-CLOCK cap on the re-poll loop, on top of the count budget above.
+ * In Nov 2026 the cloud poller saw the regs pass run 20-40 min a few times a day while re-polling only
+ * ~150 windows (regulations.gov slowing each fetch, via 429 back-off or slow responses; the shared HTTP
+ * retry is silent, so which one is unproven). A cycle that long blocks the next cron slots, the poller's
+ * healthchecks.io ping goes silent past its grace, and a DOWN/UP page pair fires for a poller that never
+ * failed. Stopping the loop at this budget defers the rest exactly like the count budget does (they stay
+ * stalest, so the next cycle picks them up first), so a slow source costs coverage latency, never a
+ * stalled cycle. 8 min keeps a worst-case cycle (~2 min of other passes) inside its 15-min slot.
+ */
+export const REGS_REPOLL_TIME_BUDGET_MS = 8 * 60_000;
 
 /**
  * Resolve the per-cycle re-poll budget, sane positive-integer default. Both an explicit `override` (the
@@ -181,6 +195,7 @@ const DEFAULTS = {
   // #21: a dead-lettered doc is re-attempted by the drain sweep at most this often — a SLOW cadence so a
   // perma-failing doc cannot become a hot retry loop, while a recovered doc still self-heals within ~6h.
   deadLetterRetryStaleAfterMs: 6 * 3_600_000,
+  repollTimeBudgetMs: REGS_REPOLL_TIME_BUDGET_MS,
 };
 
 function resolveDeps(deps?: Partial<PollDeps>): PollDeps {
@@ -399,7 +414,20 @@ export async function pollRegsOnce(
       "regs re-poll budget hit — deferring stalest tail to next cycle",
     );
   }
-  for (const win of stale) {
+  const repollStartedMs = d.now().getTime();
+  for (const [i, win] of stale.entries()) {
+    const elapsedMs = d.now().getTime() - repollStartedMs;
+    if (elapsedMs > o.repollTimeBudgetMs) {
+      // TIME BUDGET: the source is slow this cycle. Defer the rest (still stalest → first next cycle)
+      // rather than overrun the 15-min slot and silence the poller's dead-man ping.
+      const left = stale.length - i;
+      summary.repollDeferred += left;
+      log.warn(
+        { elapsedMs, budgetMs: o.repollTimeBudgetMs, repolled: i, deferred: left },
+        "regs re-poll time budget hit — deferring the rest to next cycle",
+      );
+      break;
+    }
     summary.repolled++;
     try {
       const detail = await d.fetchDetail(win.regs_document_id);
