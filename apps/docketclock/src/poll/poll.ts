@@ -423,7 +423,12 @@ export async function pollRegsOnce(
       const left = stale.length - i;
       summary.repollDeferred += left;
       log.warn(
-        { elapsedMs, budgetMs: o.repollTimeBudgetMs, repolled: i, deferred: left },
+        {
+          elapsedMs,
+          budgetMs: o.repollTimeBudgetMs,
+          repolled: i,
+          deferred: left,
+        },
         "regs re-poll time budget hit — deferring the rest to next cycle",
       );
       break;
