@@ -972,6 +972,51 @@ try {
       bBogus.repolled === N && bBogus.repollDeferred === 0,
       `repolled=${bBogus.repolled} deferred=${bBogus.repollDeferred}`,
     );
+
+    // TIME BUDGET (Nov 2026 false poller pages): a SLOW source must not stretch the re-poll loop past its
+    // wall-clock budget. Each fetch advances the injected clock 5 min; with an 8-min budget the loop does 2
+    // fetches, then defers the other 3 (still stalest) instead of running ~25 min. The next cycle, on a
+    // normal clock, drains exactly those 3 — deferral is lossless.
+    await sql.unsafe(
+      "drop schema if exists public cascade; create schema public;",
+    );
+    await runMigrations(sql);
+    for (let i = 0; i < N; i++) {
+      const frnum = `2025-BUD${i}`;
+      const detail = details[`BUDGET-000${i}`];
+      await ingestObservation(sql, {
+        ...parseRegsObservation(detail),
+        fetched_at: "2026-05-01T00:00:00Z",
+      });
+      await reconcileOcdId(
+        sql,
+        `ocd-participation-window/federal/${frnum}`,
+        new Date("2026-05-01T00:00:00Z"),
+      );
+    }
+    let clockMs = NOW.getTime();
+    const slowDeps: Partial<PollDeps> = {
+      ...budgetDeps(),
+      now: () => new Date(clockMs),
+      fetchDetail: async (documentId: string) => {
+        clockMs += 5 * 60_000;
+        return details[documentId];
+      },
+    };
+    const bSlow = await pollRegsOnce(sql, slowDeps, {
+      repollTimeBudgetMs: 8 * 60_000,
+    });
+    assert(
+      "TIME BUDGET: a slow source stops the re-poll loop at the budget (2 fetches at 5 min each, 8 min budget)",
+      bSlow.repolled === 2 && bSlow.repollDeferred === N - 2,
+      `repolled=${bSlow.repolled} deferred=${bSlow.repollDeferred}`,
+    );
+    const bAfter = await pollRegsOnce(sql, budgetDeps(), {});
+    assert(
+      "TIME BUDGET: the next cycle drains exactly the deferred windows (lossless)",
+      bAfter.repolled === N - 2 && bAfter.repollDeferred === 0,
+      `repolled=${bAfter.repolled} deferred=${bAfter.repollDeferred}`,
+    );
   }
 
   // ════════════════════════════════════════════════════════════════════════════════════════════════════
