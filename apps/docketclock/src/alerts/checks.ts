@@ -32,9 +32,11 @@ export const CHECKS = {
     slug: "docketclock-poller",
     name: "DocketClock poller",
     timeout: 15 * MIN,
-    grace: 30 * MIN,
+    // 60m, not 30m: one slow-but-healthy cycle (e.g. a slow regulations.gov pass) can block two cron slots;
+    // 30m paged a DOWN/UP pair for that in Nov 2026. 75m of silence is still an unambiguous outage.
+    grace: 60 * MIN,
     desc:
-      "Pinged after every poll cycle that ran (Mini: 'Poller stalled'). Silence for 45m = the cron, the " +
+      "Pinged after every poll cycle that ran (Mini: 'Poller stalled'). Silence for 75m = the cron, the " +
       "container, Cloudflare or Neon is down. /fail = the cycle itself failed (lock or DB lost).",
   },
   api: {
