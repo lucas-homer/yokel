@@ -65,6 +65,11 @@ export default Alchemy.Stack(
       "HEALTHCHECKS_PING_KEY",
     ).pipe(Config.withDefault(""));
 
+    // SAM.gov public API key (apps/docketclock/src/sam/). Off while the secret is unset.
+    const samApiKey = yield* Config.String("SAM_API_KEY").pipe(
+      Config.withDefault(""),
+    );
+
     const db = yield* Neon.Project("Db", {
       name: "docketclock",
       region: "aws-us-west-2",
@@ -133,6 +138,7 @@ export default Alchemy.Stack(
         ...(healthchecksPingKey
           ? { HEALTHCHECKS_PING_KEY: secret("HEALTHCHECKS_PING_KEY") }
           : {}),
+        ...(samApiKey ? { SAM_API_KEY: secret("SAM_API_KEY") } : {}),
       },
     });
 

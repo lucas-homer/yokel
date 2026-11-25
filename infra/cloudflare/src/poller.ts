@@ -17,6 +17,8 @@ export interface PollerEnv {
   POLLER: DurableObjectNamespace<PollerContainer>;
   DATABASE_URL: string;
   REGS_API_KEY: string;
+  /** SAM.gov public API key (apps/docketclock/src/sam/). Unset = the SAM pass skips. */
+  SAM_API_KEY?: string;
   CLOUDFLARE_ACCOUNT_ID: string;
   CLOUDFLARE_AI_TOKEN: string;
   LOG_LEVEL?: string;
@@ -55,6 +57,7 @@ export class PollerContainer extends Container<PollerEnv> {
         LOG_LEVEL: e.LOG_LEVEL ?? "info",
         DATABASE_URL: e.DATABASE_URL,
         REGS_API_KEY: e.REGS_API_KEY,
+        SAM_API_KEY: e.SAM_API_KEY ?? "",
         CLOUDFLARE_ACCOUNT_ID: e.CLOUDFLARE_ACCOUNT_ID,
         CLOUDFLARE_AI_TOKEN: e.CLOUDFLARE_AI_TOKEN,
         DOCKETCLOCK_API_URL: e.DOCKETCLOCK_API_URL ?? "",

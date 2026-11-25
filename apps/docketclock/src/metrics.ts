@@ -144,6 +144,7 @@ export function recordPollPassFailure(
     | "amended_originals"
     | "status_refresh"
     | "verify"
+    | "sam"
     | "queue_stats",
 ): void {
   pollPassFailures.inc({ pass });

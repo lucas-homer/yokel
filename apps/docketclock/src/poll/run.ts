@@ -86,6 +86,7 @@ const { selectAdjudicator } = await import("../adjudicator/select.js");
 const { pollFrOnce } = await import("./fr-poll.js");
 const { pollRegsOnce } = await import("./poll.js");
 const { verifyOnce, highCorrectRatio90d } = await import("../verify/run.js");
+const { samSyncOnce } = await import("../sam/sync.js");
 const {
   recordFrPoll,
   recordRegsPoll,
@@ -339,6 +340,18 @@ const program = Effect.gen(function* () {
         setAccuracyHighRatio(ratio, sample);
         cycleSignals.accuracy = { ratio, sample };
         log.debug({ ratio, sample }, "accuracy high-ratio 90d rollup");
+      },
+    );
+    // 5b — SAM.gov agency tree + contract opportunities (src/sam/sync.ts). Independent of the comment-window
+    // passes; budgeted to ~9 requests per UTC day, so most cycles make no request. Off without SAM_API_KEY.
+    yield* pass(
+      "sam",
+      "sam",
+      "sam sync failed",
+      withAmbient(() => samSyncOnce(sql, new Date())),
+      (sam) => {
+        if (sam.requests > 0) log.info({ summary: sam }, "sam sync cycle");
+        else log.debug({ summary: sam }, "sam sync cycle");
       },
     );
     // 6 — review-queue observability (Slice R, PR-R4). READ-ONLY; last, it reads what every pass wrote.
