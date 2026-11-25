@@ -101,10 +101,11 @@ const dcHost = secrets.DOCKETCLOCK_API_URL
   : null;
 
 // ── items: optional strata filter, then a stratified sample ────────────────────────────────────────
-let items: Item[] = readFileSync(values.key!, "utf8")
+let items: (Item & { dropped?: boolean })[] = readFileSync(values.key!, "utf8")
   .trim()
   .split("\n")
   .map((l) => JSON.parse(l) as Item);
+items = items.filter((i) => !i.dropped);
 if (values.strata) {
   const keep = new Set(values.strata.split(","));
   items = items.filter((i) => keep.has(i.stratum));

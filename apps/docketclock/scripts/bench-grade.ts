@@ -47,7 +47,8 @@ const dcHost = dcUrl ? new URL(dcUrl.replace(/^['"]|['"]$/g, "")).host : null;
 
 const items = new Map<string, Item>();
 for (const l of readFileSync(values.key!, "utf8").trim().split("\n")) {
-  const i = JSON.parse(l) as Item;
+  const i = JSON.parse(l) as Item & { dropped?: boolean };
+  if (i.dropped) continue;
   if (i.needs_check && !values["include-unchecked"]) continue;
   items.set(i.id, i);
 }

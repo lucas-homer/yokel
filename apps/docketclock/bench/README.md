@@ -43,9 +43,11 @@ If preflight shows MCP servers, extra tools or memory files, stop: the isolation
 # 1. export the key (read-only; needs DATABASE_URL for Neon)
 DATABASE_URL=… pnpm --filter @yokel/docketclock bench:export
 
-# 2. hand-check: items with "needs_check": true (misses, routine, "never moved") are graded by
-#    DocketClock's own post-close check. Check them against the live sources, fix any key, and set
-#    needs_check to false. The grader skips unchecked items unless --include-unchecked.
+# 2. hand-check the items marked "needs_check" (misses, routine, "never moved": their keys come from
+#    DocketClock's own post-close check). The workbench puts each next to the live FR and portal values,
+#    groups the ones where both agree for a one-click confirm, and saves decisions into the key file.
+#    The grader skips unchecked items unless --include-unchecked.
+node tools/bench-check.mjs            # → http://127.0.0.1:8792/
 
 # 3. pilot: 20 items spread across strata, arms B and C, both models
 pnpm --filter @yokel/docketclock bench:run --sample 20 --arms B,C --models opus,fable --dry-run
