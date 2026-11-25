@@ -9,6 +9,7 @@ name: Cloud deploy
 # DOCKETCLOCK_API_DOMAIN (optional; unset = workers.dev); OTEL_EXPORTER_OTLP_ENDPOINT (optional; unset =
 # no trace export) with its secret OTEL_EXPORTER_OTLP_HEADERS (e.g. Grafana Cloud's Authorization header).
 # Optional alert secrets (apps/docketclock/src/alerts/; unset = off): HEALTHCHECKS_PING_KEY.
+# Optional SAM.gov key (apps/docketclock/src/sam/; unset = the SAM pass skips): SAM_API_KEY.
 on:
   workflow_dispatch:
     inputs:
@@ -46,6 +47,7 @@ jobs:
       OTEL_EXPORTER_OTLP_ENDPOINT: ${{ vars.OTEL_EXPORTER_OTLP_ENDPOINT }}
       OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}
       HEALTHCHECKS_PING_KEY: ${{ secrets.HEALTHCHECKS_PING_KEY }}
+      SAM_API_KEY: ${{ secrets.SAM_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
